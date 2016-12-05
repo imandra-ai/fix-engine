@@ -1,0 +1,7 @@
+OASISFormat: 0.4
+Name:        FIXEngine
+Version:     0.1
+Synopsis:    Generic FIX engine implementation
+Authors:     Denis Ignatovich
+License:     LGPL-2.1 with OCaml linking exception
+
