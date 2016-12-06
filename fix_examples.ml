@@ -143,20 +143,34 @@ let example_2 () =
 record_example ("// Example 2: successfully created a session\n", example_2);;
 
 
-(*
-(** Login, send incorrect packet, force the second engine into recovery the second *)
+(** Login, then send an application data message, ensure it get to the second fix engine. *)
 let example_3 () = 
-    (true, init_fix_engine_state, init_fix_engine_state)
+    let engine = {
+        init_fix_engine_state with 
+            comp_id = 1;
+    } and 
+    msgs = [
+        `INT_MSG (TimeChange (1));
+        `INT_MSG (CreateSession { dest_comp_id = 123 });
+        `FIX_MSG ( {
+            
+            header = {
+                default_fix_header with 
+                    target_comp_id = 1;
+            };
+            
+            msg_data = FIX_logon { 
+                encrypt_method = 123;
+                heartbeat_interval = 123;
+                raw_data_length = 123;
+                };
+            
+            trailer = default_fix_trailer;
+
+         });
+         `INT_MSG (ApplicationData)
+    ] in
+    run_through_msgs (engine, msgs)
 ;;
 
-record_example ("// Example 3: ", example_3);;
-
-
-(**  *)
-let example_4 () = 
-    (true, init_fix_engine_state, init_fix_engine_state)
-;;
-
-record_example ("// Example 4: ", example_4);;
-
-*)
+record_example ("// Example 2: successfully created a session + submit application message \n", example_3);;

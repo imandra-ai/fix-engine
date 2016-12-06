@@ -178,19 +178,18 @@ let run_retransmit ( engine : fix_engine_state ) =
 (** Are all the messages with correct IDs? *)
 let rec is_msg_list_complete = function
     | [] -> true
-    | x::y::xs -> 
+    | x::y::xs -> true
 ;;
 
 (** Check to see whether we have all of the data necessary to transition out of recovery mode. *)
 let is_cache_complete ( engine : fix_engine_state ) =
-
+    true
 
 ;;
 
 (** We need to ensure we're inserting it in the correct order and there're no duplicates *)
 let insert_into_cache (m, msgs : fix_message * fix_message list) =
-    match msgs with 
-
+    true
 ;;
 
 
