@@ -1,7 +1,7 @@
 (** 
 
     Aesthetic Integration Limited
-    Copyright (c) 2016
+    Copyright (c) 2014 - 2017
 
     Implementation of the FIX 4.4 protocol. Contains FIX data dictionary.
 

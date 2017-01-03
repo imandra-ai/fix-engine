@@ -1,10 +1,11 @@
 (** 
+
     Aesthetic Integration Limited
-    Copyright (c) 2016
+    Copyright (c) 2014 - 2017
 
     Implementation of the FIX 4.4 engine. Printers/parsers.
 
-    fix_pp.ml
+    fix_pp.ml 
 *)
 
 open Yojson
@@ -225,12 +226,12 @@ let filter_nulls =
 
 let header_to_json (fh : fix_header) : Yojson.Basic.json =
     let list_assoc = [
-        ( "begin_string"   , `Int fh.begin_string   );                        
-        ( "body_length"    , `Int fh.body_length    );
-(*        ( "msg_type"       , `Int fh.msg_type       ); *)
-        ( "sender_comp_id" , `Int fh.sender_comp_id );
-        ( "target_comp_id" , `Int fh.target_comp_id );
-        ( "msg_seq_num"    , `Int fh.msg_seq_num    );
+        ( "begin_string"               , `Int fh.begin_string                           );                        
+        ( "body_length"                , `Int fh.body_length                            );
+(*        ( "msg_type"                  , `Int fh.msg_type       ); *)
+        ( "sender_comp_id"             , `Int fh.sender_comp_id                         );
+        ( "target_comp_id"             , `Int fh.target_comp_id                         );
+        ( "msg_seq_num"                , `Int fh.msg_seq_num                            );
                                        
         ( "on_behalf_of_comp_id"       , intopt_to_json fh.on_behalf_of_comp_id         );
         ( "deliver_to_comp_id"         , intopt_to_json fh.deliver_to_comp_id           );
@@ -404,6 +405,10 @@ let fix_msg_to_json ( m : fix_message) =
     ]
 ;;
 
+let fixmsg_opt_to_json : ( fix_message option -> Yojson.Basic.json) = 
+    function None -> `Null | Some m -> fix_msg_to_json (m)
+;;
+
 (** This is used in a couple of places. *)
 let msg_list_to_json ( msgs : fix_message list) = 
     `List (List.map fix_msg_to_json msgs)
@@ -411,4 +416,8 @@ let msg_list_to_json ( msgs : fix_message list) =
 
 let fix_msg_to_str m =
     Yojson.Basic.pretty_to_string (fix_msg_to_json m)
+;;
+
+let msg_list_to_string (msgs : fix_message list) = 
+    String.concat "\n" (List.map fix_msg_to_str msgs)
 ;;

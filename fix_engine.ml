@@ -1,16 +1,18 @@
 (** 
 
     Aesthetic Integration Limited
-    Copyright (c) 2016
+    Copyright (c) 2014 - 2017
 
     Implementation of the FIX 4.4 engine.
 
     High-level TODOs:
-        -- Change incoming/outgoing message queues (both fix and internal) to be 
+    -- Change incoming/outgoing message queues (both fix and internal) to be 
                 'msg option' type instead of lists
 
-    --> Concept of a 'frame' --> how any two systems should communicate with each other 
+    -- Concept of a 'frame' --> how any two systems should communicate with each other 
         within a single time frame.
+
+    -- 
 
     fix_engine.ml
 *)
@@ -24,9 +26,9 @@ type manual_int_data = {
     session_reset : bool;                       (* Should we reset the engine? *)
 };;
 
-(* Request to initiate a session *)
+(* Request to initiate a session. *)
 type session_data = {
-    dest_comp_id : int;                         (* Destination company ID *)
+    dest_comp_id : int;                         (* Destination company ID. *)
 };;
 
 (* These are internal messages into the Engine. *)
@@ -40,12 +42,14 @@ type fix_engine_int_msg =
 (* Represents 'modes' of the engine.            *)
 type fix_engine_mode =      
     | NoActiveSession                           (* State of the engine before logon *)
-    | LogonInitiated                            (* Middle of logon session *)
+    | LogonInitiated                            (* Middle of logon session. *)
     | ActiveSession                             (* Application messages are now processed *)
-    | Recovery                                  (* In recovery mode because we've *)
-    | Retransmit                                (* In the middle of retransmitting sequence of messages *)
-    | ShutdownInitiated                         (* Shutting-down protocol *)
-    | Error                                     (* We've received a non-dup message with earlier sequence number *)
+    | Recovery                                  (* In recovery mode because we've detected out-of-sequence message. *)
+    | CacheReplay                               (* We're in the middle of replaying the cache *)
+    | Retransmit                                (* In the middle of retransmitting sequence of messages because 
+                                                    we were asked to retransmit. *)
+    | ShutdownInitiated                         (* Shutting-down protocol. *)
+    | Error                                     (* We've received a non-dup message with earlier sequence number. *)
 ;;
 
 (** Structure containing state of the FIX engine. 
@@ -54,68 +58,68 @@ type fix_engine_mode =
         be 'msg option' types, otherwise test suite generation becomes
         too difficult, it also forces design to be more 'one-step'-like.
 *)
-
 type fix_engine_state = {
-    curr_mode : fix_engine_mode;                (* High-level mode of the engine. *)
+    curr_mode           : fix_engine_mode;              (* High-level mode of the engine. *)
 
-    curr_time : int;                            (** Need to define time so we're aware of heartbeat status. *)
+    initiator           : bool option;                  (* initiator = True if we've received an internal message to initiate 
+                                                            the connection. It's False if we've received a Logon request first.
+                                                            It's None by default prior to any Logon sequences. *)
 
-    comp_id : int;                              (* Our company ID *)
-    target_comp_id : int;                       (* Target company ID *)
+    curr_time           : int;                          (* Need to define time so we're aware of heartbeat status. *)
 
-    incoming_int_msgs : fix_engine_int_msg list;  (* Incoming internal messages (application). *)
-    outgoing_int_msgs : fix_engine_int_msg list;  (* These are messages we send back to our owner *)
+    comp_id             : int;                          (* Our company ID *)
+    target_comp_id      : int;                          (* Target company ID *)
 
-    incoming_seq_num : int;                     (* Sequence number of the last processed incoming message. *)
-    outgoing_seq_num : int;                     (* Sequence number of the last sent message. *)
+    incoming_int_msg    : fix_engine_int_msg option;    (* Incoming internal messages (application). *)
+    outgoing_int_msg    : fix_engine_int_msg option;    (* These are messages we send back to our owner *)
 
-    incoming_fix_msgs : fix_message list;       (* Messages we will send out *)
-    outgoing_fix_msgs : fix_message list;       (* Messages we receive *)
+    incoming_seq_num    : int;                          (* Sequence number of the last processed incoming message. *)
+    outgoing_seq_num    : int;                          (* Sequence number of the last sent message. *)
 
-    cache : fix_message list;                   (* Maintain a cache of messages in case we detect out of sequence message. *)
-    history : fix_message list;                 (* We maintain history of our outgoing messages in case we're asked to retransmit. *)
+    incoming_fix_msg    : fix_message option;           (* Messages we will send out *)
+    outgoing_fix_msg    : fix_message option;           (* Messages we receive *)
 
-    last_heartbeat_received : int;              (* Last time we received a heartbeat message. *)
-    heartbeat_interval : int;                   (* Negotiated heartbeat interval. *)
+    cache               : fix_message list;             (* Maintain a cache of messages in case we detect out of sequence message. *)
+    history             : fix_message list;             (* We maintain history of our outgoing messages in case we're asked to retransmit. *)
 
-    history_to_send : fix_message list;         (* Used in message retransmission. *)
+    last_hbeat_recived  : int;                          (* Last time we received a heartbeat message. *)
+    heartbeat_interval  : int;                          (* Negotiated heartbeat interval. *)
+
+    history_to_send     : fix_message list;             (* Used in message retransmission. *)
+
 };;
 
 (** Initial engine state. *)
 let init_fix_engine_state = {
 
-    curr_mode = NoActiveSession;
-    curr_time = 0; (** TODO define a function that converts to milliseconds. *)
+    initiator           = None;                         
+    curr_mode           = NoActiveSession;              
+    curr_time           = 0;                            
 
-    comp_id = 1;
-    target_comp_id = 2;
+    comp_id             = 1;                            
+    target_comp_id      = 2;
 
-    incoming_int_msgs = [];
-    outgoing_int_msgs = [];
+    incoming_int_msg    = None;                           
+    outgoing_int_msg    = None;
 
-    incoming_seq_num = 0;
-    outgoing_seq_num = 1;       (** This should be the first ID that's outgoing. *)
+    incoming_seq_num    = 0;                         
+    outgoing_seq_num    = 1; 
 
-    incoming_fix_msgs = [];
-    outgoing_fix_msgs = [];
+    incoming_fix_msg    = None;
+    outgoing_fix_msg    = None;
 
-    cache = [];                         
-    history = [];
+    cache               = [];
+    history             = [];
 
-    last_heartbeat_received = 0;
-    heartbeat_interval = -1;
-
-    history_to_send = [];
+    last_hbeat_recived  = 0;              
+    heartbeat_interval  = -1;
+    history_to_send     = [];
 };;
 
-(** Return none if there're no messages *)
-let get_next_fix_msg ( engine : fix_engine_state ) =
-    match engine.incoming_fix_msgs with 
-    | [] -> None
-    | x::xs -> Some x
-;;
-
-(** TODO Are there any other checks? *)
+(** 
+    TODO Are there any other checks? 
+    Answer: Yes - we need to add those checks to raw OCaml parser.
+*)
 let incoming_header_correct ( fh, comp_id : fix_header * int) =
     fh.target_comp_id = comp_id
 ;;
@@ -141,24 +145,20 @@ let incoming_header_correct ( fh, comp_id : fix_header * int) =
     this phase of the session."
 *)
 
-let run_logon_seq ( engine : fix_engine_state ) =
-    match engine.incoming_fix_msgs with
-    | [] -> engine
-    | x::xs -> (
-        let engine' = {
-            engine with incoming_fix_msgs = xs;
-        } in
-        if x.header.target_comp_id <> engine.comp_id then 
-            engine'
-        else
-            match x.msg_data with 
-            | FIX_logon d -> {
-                engine' with 
-                    curr_mode = ActiveSession;
-                    incoming_seq_num = x.header.msg_seq_num;
-            }
-            | _ -> engine'
-    )
+let run_logon_sequence ( m, engine : fix_message * fix_engine_state ) =
+    let engine' = {
+        engine with incoming_fix_msg = None;
+    } in
+    if m.header.target_comp_id <> engine.comp_id then 
+        engine'
+    else
+        match m.msg_data with 
+        | FIX_logon d -> {
+            engine' with 
+                curr_mode = ActiveSession;
+                incoming_seq_num = m.header.msg_seq_num;
+         }
+        | _ -> engine'
 ;;
 
 (** We're in the middle of retransmitting historic messages. 
@@ -171,36 +171,24 @@ let run_retransmit ( engine : fix_engine_state ) =
     | x::xs -> {
             engine with 
                 history_to_send = xs;
-                outgoing_fix_msgs = x::engine.outgoing_fix_msgs;
+                outgoing_fix_msg = None;
         }
 ;;
 
-(** Are all the messages with correct IDs? *)
-let rec is_msg_list_complete = function
-    | [] -> true
-    | x::y::xs -> true
-;;
+(** 
+    Is the message with the right sequence number?
 
-(** Check to see whether we have all of the data necessary to transition out of recovery mode. *)
-let is_cache_complete ( engine : fix_engine_state ) =
-    true
-
-;;
-
-(** We need to ensure we're inserting it in the correct order and there're no duplicates *)
-let insert_into_cache (m, msgs : fix_message * fix_message list) =
-    true
-;;
-
-
-(** Is the message a non-duplicate and is older than latest sequence number? *)
-let msg_inconsistent ( engine, msg_header : fix_engine_state * fix_header ) = 
+    This is when we need to transfer into Recovery Mode and request the 
+    missing sequence to be retransmitted. 
+*)
+let msg_consistent ( engine, msg_header : fix_engine_state * fix_header ) = 
+    let seq_num_correct = msg_header.msg_seq_num = (engine.incoming_seq_num + 1) in 
     match msg_header.poss_dup_flag with 
-    | None -> msg_header.msg_seq_num < engine.incoming_seq_num
-    | Some b -> (not b) && (msg_header.msg_seq_num < engine.incoming_seq_num)
+    | None -> seq_num_correct
+    | Some dup -> dup || ((not dup) && seq_num_correct)
 ;;
 
-(** Create outbound FIX message with the appropriate headers, etc. *)
+(** Create outbound FIX message with the appropriate header and trailer. *)
 let create_outbound_fix_msg ( engine, msg, is_duplicate ) = {
     header = {
         default_fix_header with 
@@ -210,8 +198,10 @@ let create_outbound_fix_msg ( engine, msg, is_duplicate ) = {
             sender_comp_id = engine.comp_id;
     };
     
+    (* We're simply attaching the message data here. *)
     msg_data = msg;
 
+    (** Trailers would be augmented by raw OCaml printers/parsers. *)
     trailer = {
         signature_length = 0;
         signature = 0;
@@ -219,11 +209,14 @@ let create_outbound_fix_msg ( engine, msg, is_duplicate ) = {
     };
 };;
 
-(** Create a logon message we would send out to initiate a connection 
-    with another FIX engine *)
+(** 
+    Create a logon message we would send out to initiate a connection 
+    with another FIX engine.
+*)
 let create_logon_msg ( targetID, last_seq_num : int * int ) = {
         header = {
-            default_fix_header with msg_seq_num = last_seq_num + 1;
+            default_fix_header 
+                with msg_seq_num = last_seq_num + 1;
         };
 
         msg_data = FIX_logon {
@@ -232,11 +225,8 @@ let create_logon_msg ( targetID, last_seq_num : int * int ) = {
             raw_data_length     = 1; 
         };
         
-        trailer = {
-            signature_length    = 0;
-            signature           = 0;
-            check_sum           = 0;
-        };
+        (* This will be augmented by raw OCaml printer/parser library. *)
+        trailer = default_fix_trailer;
     }
 ;;
 
@@ -248,13 +238,6 @@ let create_heartbeat_msg ( engine: fix_engine_state) =
     create_outbound_fix_msg ( engine, msg_data, false)
 ;;
 
-(** TODO: Need to optimize this -> engine state shouldn't be passed around like this! *)
-let process_fix_msg ( f, engine : fix_message * fix_engine_state) = 
-    match engine.incoming_fix_msgs with 
-    | [] -> engine
-    | x::xs -> { engine with incoming_fix_msgs = xs }
-;;
-
 (** ********************************************************************************************************** *)
 (**  Mode transition functions.                                                                                *)
 (** ********************************************************************************************************** *)
@@ -263,18 +246,19 @@ let process_fix_msg ( f, engine : fix_message * fix_engine_state) =
 let run_init_seq (engine : fix_engine_state) = 
     let engine' = {
         engine with 
-            incoming_fix_msgs = [];
+            incoming_fix_msg = None;
     } in
-    match engine.incoming_int_msgs with 
-    | [] -> engine'
-    | x::xs ->
+    match engine.incoming_int_msg with 
+    | None -> engine
+    | Some x ->
         match x with 
         | TimeChange t -> { engine' with curr_time = t }
         | CreateSession sd ->
             let msg = create_logon_msg (sd.dest_comp_id, engine.outgoing_seq_num) in { 
                 engine' with 
+
                     curr_mode = LogonInitiated;
-                    outgoing_fix_msgs = [ msg ];
+                    outgoing_fix_msg = Some msg;
                     target_comp_id = sd.dest_comp_id;
                     outgoing_seq_num = engine.outgoing_seq_num + 1;
             } 
@@ -315,20 +299,30 @@ let process_int_msg (m, engine : fix_engine_int_msg * fix_engine_state) =
                 outgoing_seq_num = new_msg.header.msg_seq_num;
             }
     | ManualIntervention d -> engine
-    
 ;;
 *)
+
+(** Here we will only accept an incoming Logon message to establish a connection. *)
+let run_no_active_session (m, engine : fix_message * fix_engine_state) =
+    match m.msg_data with 
+    | FIX_logon d -> 
+        let logon_msg = create_logon_msg (m.header.sender_comp_id, engine.outgoing_seq_num) in 
+        { 
+            engine with
+                initiator = Some false;
+                outgoing_fix_msg = Some logon_msg;
+                outgoing_seq_num = logon_msg.header.msg_seq_num;
+                target_comp_id = m.header.sender_comp_id;
+                curr_mode = ActiveSession;            
+        }
+    | _ -> { engine with incoming_fix_msg = None }
+;;
 
 (** ********************************************************************************************************** *)
 (** We're operating in a normal mode.                                                                          *)
 (** ********************************************************************************************************** *)
-let run_active_session (engine : fix_engine_state) = 
-    let msg = get_next_fix_msg (engine) in
-    match msg with 
-    | None -> engine
-    | Some m ->
-    (** Make sure the message is in the right sequence. *)
-    if msg_inconsistent (engine, m.header) then (
+let run_active_session (m, engine : fix_message * fix_engine_state) = 
+    if not (msg_consistent (engine, m.header)) then (
         (** We need to add it to the cache and transition to recovery mode. *)
         let cache' = [ m ] in { 
             engine with 
@@ -338,8 +332,8 @@ let run_active_session (engine : fix_engine_state) =
     ) else (** We should be processing this now. *) 
     if fix_is_admin_msg (m.msg_data) then (
         match m.msg_data with 
-        | FIX_logout lo -> engine
-        | FIX_heartbeat hb -> engine
+        | FIX_logout        lo -> engine
+        | FIX_heartbeat     hb -> engine
         | _ -> engine
     ) else 
         (** We're processing an application type of message. We just need 
@@ -347,96 +341,177 @@ let run_active_session (engine : fix_engine_state) =
         engine
 ;;
 
+(* Here we can only handle a subset of the FIX messages. *)
+let replay_single_msg (m, engine : fix_message * fix_engine_state) =
+    if fix_is_msg_reject (m.msg_data) then 
+        engine
+    else if not (fix_is_admin_msg (m.msg_data)) then (
+        let new_int_msg = ApplicationData (m.msg_data) in {
+            engine with 
+                outgoing_int_msg = Some new_int_msg;
+            }
+    ) else engine
+;; 
+
 (** Run the engine through the replay messages. This is used during recovery. 
 
     Note that the only session-level message we should receive at this point
-    should be a Reject message. *)
-let rec replay_msgs (engine, msgs : fix_engine_state * fix_message list) = 
-    match msgs with 
-    | [] -> engine
+    should be a Reject message. We need to ensure that this function cannot 
+    lead to another Recovery state. *)
+let run_cache_replay (engine : fix_engine_state) = 
+    match engine.cache with 
+    | [] -> (* Nothing to process in cache, we've recovered *) {
+        engine with
+            curr_mode = ActiveSession;
+        }
+    | x::xs -> replay_single_msg (x, engine)
+;;
+
+(** Check to make sure there're no sequence gaps *)
+let rec no_seq_gaps ( msg_list, last_seq_num : fix_message list * int) = 
+    match msg_list with 
+    | [] -> true
     | x::xs ->
-        if fix_is_msg_reject (x.msg_data) then 
-            (** Not sure what should be done here -> perhaps this is custom logic. *)
-           engine
-        else if not (fix_is_admin_msg (x.msg_data)) then (
-            let new_int_msg = ApplicationData (x.msg_data) in {
-                engine with 
-                    outgoing_int_msgs = new_int_msg :: engine.outgoing_int_msgs;
-            }
-        ) 
-        else 
-            (** We're only processing business and session-level reject messages,
-                hence we're skipping everything else. *)
-            { engine with incoming_fix_msgs = xs; }
+        if x.header.msg_seq_num <> (last_seq_num + 1) then 
+            false
+        else
+            no_seq_gaps ( xs, x.header.msg_seq_num )
 ;;
 
-(** Here we should transition from our Recovery state to Normal. 
-    We assume that our cache is valid here. *)
-let transition_from_recovery (engine : fix_engine_state) = 
-    let engine' = replay_msgs (engine, engine.cache) in {
-        engine' with
-            curr_mode = ActiveSession
-    }
-;; 
+(** Is cache valid so that we can transition from recovery?
 
-(** Is cache valid so that we can transition from recovery. *)
-let is_cache_complete (engine : fix_engine_state) = 
-    engine
-;; 
+    Cache is considered valid when:
+    1. It is non-empty
+    2. The sequence IDs of the messages within cache are continuous (i.e. there're no gaps)
+    3. First sequence ID (of the cache) is next message from the last one correctly
+        processed. *)
+let is_cache_complete (cache, last_seq_processed : fix_message list * int) = 
+    match cache with 
+    | [] -> false
+    | x::xs -> 
+        let correct_seq_num = x.header.msg_seq_num = (last_seq_processed + 1) in 
+        let no_gaps = no_seq_gaps ( xs, x.header.msg_seq_num ) in 
+        correct_seq_num && no_gaps
+;;
 
-(** We're in recovery mode. We should add any received messages.
+(** Add message to cache so that ordering is maintained. *)
+let rec add_to_cache (m, cache : fix_message * fix_message list) = 
+    match cache with 
+    | []        -> [ m ]
+    | x::[]     -> if x.header.msg_seq_num > m.header.msg_seq_num then [m; x] else [ x; m ]
+    | x::xs     -> if x.header.msg_seq_num > m.header.msg_seq_num then 
+                    m::x::xs else x:: ( add_to_cache (m, xs) )
+;;
+
+(** We're in recovery mode. We should add any received messages to our cache.
     Check to see whether next message is complete. *)
-let run_recovery (engine : fix_engine_state) = 
+let run_recovery (m, engine : fix_message * fix_engine_state) = 
+    let new_cache = add_to_cache (m, engine.cache) in 
+    if is_cache_complete (new_cache, engine.incoming_seq_num) then {
+        engine with 
+            curr_mode = CacheReplay;
+            incoming_fix_msg = None;
+    } else {
+        engine with
+            cache = new_cache;
+            incoming_fix_msg = None;
+    }
+;;
+
+(** We're in the processing of closing the session. *) 
+let run_shutdown (m, engine : fix_message * fix_engine_state) = 
     engine
-;;
-
-(** We're in the processing of closing the session. *)
-let run_shutdown (engine : fix_engine_state) = 
-    let msg = get_next_fix_msg (engine) in 
-    match msg with 
-    | None -> engine
-    | Some x -> engine
-;;
-
-(** We're in error sequence mode. *)
-let run_err_seq (engine : fix_engine_state) = 
-    let msg = get_next_fix_msg (engine) in 
-    match msg with 
-    | None -> engine
-    | Some x -> engine
 ;;
 
 (** ********************************************************************************************************** *)
 (** End of Mode Transitions                                                                                    *)
 (** ********************************************************************************************************** *)
 
+(* Process incoming internal transition message. *)
+let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) = 
+    match x with 
+    | TimeChange t          -> { engine with curr_time = t; incoming_int_msg = None; }
+    | CreateSession sd      ->
+        if engine.curr_mode = NoActiveSession then (
+            (* Let's initiate a session here. *)
+            let logon_msg = create_logon_msg ( sd.dest_comp_id, engine.outgoing_seq_num ) in { 
+                engine with 
+                    outgoing_fix_msg    = Some logon_msg;
+                    curr_mode           = LogonInitiated;
+                    initiator           = Some true;
+                    incoming_fix_msg    = None;
+                }
+            ) 
+        else 
+        (* We just disregard it here - this may vary for different implementations. *)
+            { engine with incoming_int_msg = None; }
+        
+    | ApplicationData ad    -> (
+        match engine.curr_mode with 
+        | ActiveSession     -> 
+            let msg = create_outbound_fix_msg (engine, ad, false) in 
+            { engine with outgoing_fix_msg = Some msg; incoming_int_msg = None }
+        | _                 ->
+            (* TODO How should all of this be handled? *)
+            { engine with incoming_int_msg = None }
+        )
+        
+    | ManualIntervention mi -> 
+        { engine with incoming_int_msg = None }
+;;
+
+(* A NO-OPeration *)
+let noop (m, engine : fix_message * fix_engine_state) = 
+    engine
+;;
+
+(* Process incoming FIX message here. *)
+let proc_incoming_fix_msg ( m, engine : fix_message * fix_engine_state) = 
+    match engine.curr_mode with
+    | NoActiveSession       -> run_no_active_session (m, engine)
+    | LogonInitiated        -> run_logon_sequence (m, engine)
+    | ActiveSession         -> run_active_session (m, engine)
+    | Recovery              -> run_recovery (m, engine)
+    | Retransmit            -> noop (m, engine)
+    | ShutdownInitiated     -> run_shutdown (m, engine)
+    | Error                 -> noop (m, engine)
+    | CacheReplay           -> noop (m, engine)
+;; 
 
 (** This sets validity of the incoming internal messages. *)
 let is_int_message_valid (engine, int_msg : fix_engine_state * fix_engine_int_msg) =
     match int_msg with 
-    | TimeChange t         -> engine.curr_time < t && t <= Imarkets.end_of_day
-    | ApplicationData d    -> not (fix_is_admin_msg (d))   (* Just as long as it's application data *)
-    | CreateSession d      -> (
+    | TimeChange t          -> engine.curr_time < t && t <= Imarkets.end_of_day
+    | ApplicationData d     -> not (fix_is_admin_msg (d))   (* Just as long as it's application data *)
+    | CreateSession d       -> (
         match engine.curr_mode with
-        | NoActiveSession -> true
+        | NoActiveSession   -> true
         | _ -> false
     )
-    | ManualIntervention _ -> true
+    | ManualIntervention _  -> true
 ;;
 
 (** ********************************************************************************************************** *)
 (**  Our main transition function.                                                                             *)
 (** ********************************************************************************************************** *)
 let one_step ( engine : fix_engine_state ) =
-    match engine.curr_mode with 
-    | NoActiveSession ->    run_init_seq (engine)
-    | LogonInitiated ->     run_logon_seq (engine)
-    | ActiveSession ->      run_active_session (engine)
-    | Recovery ->           run_recovery (engine)
-    | Retransmit ->         run_retransmit (engine)
-    | ShutdownInitiated ->  run_shutdown (engine)
-    | Error ->              run_err_seq (engine)
+
+    (* First, check if we're in the middle of replaying our cache. *)
+    if engine.curr_mode = CacheReplay then
+        run_cache_replay (engine)
+
+    (* Second, let's check that we're resending to *)
+    else if engine.curr_mode = Retransmit then 
+        run_retransmit (engine)
+    else 
+        match engine.incoming_int_msg with 
+        | Some i -> proc_incoming_int_msg (i, engine)
+        | None -> 
+            match engine.incoming_fix_msg with 
+            | Some m -> proc_incoming_fix_msg (m, engine)
+            | None -> engine
 ;;
+
 
 (** Run until there's nothing to do. Helpful in simulations, etc. *)
 let rec run_global_step ( engine : fix_engine_state ) = 

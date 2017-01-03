@@ -1,7 +1,7 @@
 (** 
 
     Aesthetic Integration Limited
-    Copyright (c) 2016
+    Copyright (c) 2014 - 2017
 
     Implementation of the FIX 4.4 engine
     
@@ -17,7 +17,7 @@ open Fix_engine_pp
 
 let add_int_msg msg engine = {
     engine with 
-        incoming_int_msgs = msg :: engine.incoming_int_msgs
+        incoming_int_msg = Some msg
 };;
 
 let (>>=) s f = f s;;
@@ -37,26 +37,20 @@ let run_step (time_step, engine1, engine2) =
     match engine2.outgoing_fix_msgs with 
     | None ->
     | Some x ->
-
-;;
-*)
+;;*)
 
 (** Process a single internal step *)
-let proc_int_msg (s, im : fix_engine_state * fix_engine_int_msg) = 
-
-    let s' = {
-        s with incoming_int_msgs = [ im ]
-    } in 
-    one_step (s')
+let proc_int_msg (s, im : fix_engine_state * fix_engine_int_msg) =  
+    one_step ({
+        s with incoming_int_msg = Some im
+    })
 ;;
 
 let proc_fix_msg (s, fm : fix_engine_state * fix_message) = 
-    let s' = {
-        s with incoming_fix_msgs = [ fm ]
-    } in 
-    one_step (s')
+    one_step ({
+        s with incoming_fix_msg = Some fm 
+    })
 ;;
-
 
 type msg_to_proc = [
     | `FIX_MSG of fix_message 
@@ -153,12 +147,10 @@ let example_3 () =
         `INT_MSG (TimeChange (1));
         `INT_MSG (CreateSession { dest_comp_id = 123 });
         `FIX_MSG ( {
-            
             header = {
                 default_fix_header with 
                     target_comp_id = 1;
             };
-            
             msg_data = FIX_logon { 
                 encrypt_method = 123;
                 heartbeat_interval = 123;
@@ -166,11 +158,49 @@ let example_3 () =
                 };
             
             trailer = default_fix_trailer;
-
          });
-         `INT_MSG (ApplicationData)
+         `INT_MSG (ApplicationData (
+                FIX_logon {
+                encrypt_method = 123;
+                heartbeat_interval = 123;
+                raw_data_length = 123;
+            }
+         ));
     ] in
     run_through_msgs (engine, msgs)
 ;;
 
-record_example ("// Example 2: successfully created a session + submit application message \n", example_3);;
+record_example ("// Example 3: successfully created a session + submit application message \n", example_3);;
+
+
+(* Process an out-of-sequence message and transition into recovery *)
+let example_4 () =
+    let engine = {
+        init_fix_engine_state with 
+            comp_id = 1;
+            curr_mode = ActiveSession;
+            initiator = Some false;
+            incoming_seq_num = 1;
+    } and 
+    msgs = [
+        `FIX_MSG ( {
+            header = {
+                default_fix_header with 
+                    target_comp_id = 1;
+                    msg_seq_num = 3;        (* Should be 2 *)
+            };
+            msg_data = FIX_trade_report_ae {
+                trade_report_id = 1;
+                previously_reported = FIX_Yes;
+                order_id = 1;
+                filled_qty = 10;
+            };
+            trailer = default_fix_trailer;
+        }
+
+        )
+    ] in
+    run_through_msgs (engine, msgs)
+;;
+
+record_example ("// Example 4: transition into Recovery when processing an out-of-sequence message \n", example_4);;
