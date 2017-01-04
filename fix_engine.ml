@@ -6,20 +6,17 @@
     Implementation of the FIX 4.4 engine.
 
     High-level TODOs:
-    -- Change incoming/outgoing message queues (both fix and internal) to be 
-                'msg option' type instead of lists
-
     -- Concept of a 'frame' --> how any two systems should communicate with each other 
         within a single time frame.
 
-    -- 
+    -- Implement basic types from the FIX spec.
 
     fix_engine.ml
 *)
 
 (** Module depends on FIX4.4 data dictionary. *)
 open Imarkets;;
-open Fix_data_dictionary;;
+open Fix_data_dictionary;;  (* Note this may be generated for DSL-based FIX engines *)
 
 (* Define set of actions + data for manual intervention by the user. *)
 type manual_int_data = {
@@ -86,7 +83,6 @@ type fix_engine_state = {
     heartbeat_interval  : int;                          (* Negotiated heartbeat interval. *)
 
     history_to_send     : fix_message list;             (* Used in message retransmission. *)
-
 };;
 
 (** Initial engine state. *)
@@ -175,12 +171,10 @@ let run_retransmit ( engine : fix_engine_state ) =
         }
 ;;
 
-(** 
-    Is the message with the right sequence number?
+(** Is the message with the right sequence number?
 
     This is when we need to transfer into Recovery Mode and request the 
-    missing sequence to be retransmitted. 
-*)
+    missing sequence to be retransmitted. *)
 let msg_consistent ( engine, msg_header : fix_engine_state * fix_header ) = 
     let seq_num_correct = msg_header.msg_seq_num = (engine.incoming_seq_num + 1) in 
     match msg_header.poss_dup_flag with 
@@ -209,10 +203,8 @@ let create_outbound_fix_msg ( engine, msg, is_duplicate ) = {
     };
 };;
 
-(** 
-    Create a logon message we would send out to initiate a connection 
-    with another FIX engine.
-*)
+(** Create a logon message we would send out to initiate a connection 
+    with another FIX engine. *)
 let create_logon_msg ( targetID, last_seq_num : int * int ) = {
         header = {
             default_fix_header 
@@ -244,63 +236,22 @@ let create_heartbeat_msg ( engine: fix_engine_state) =
 
 (** We reject anything here that's not an internal message (either time change or request to create a session) *)
 let run_init_seq (engine : fix_engine_state) = 
-    let engine' = {
-        engine with 
-            incoming_fix_msg = None;
-    } in
     match engine.incoming_int_msg with 
     | None -> engine
     | Some x ->
         match x with 
-        | TimeChange t -> { engine' with curr_time = t }
+        | TimeChange t -> { engine with curr_time = t }
         | CreateSession sd ->
             let msg = create_logon_msg (sd.dest_comp_id, engine.outgoing_seq_num) in { 
-                engine' with 
-
-                    curr_mode = LogonInitiated;
-                    outgoing_fix_msg = Some msg;
-                    target_comp_id = sd.dest_comp_id;
-                    outgoing_seq_num = engine.outgoing_seq_num + 1;
+                engine with 
+                    curr_mode           = LogonInitiated;
+                    outgoing_fix_msg    = Some msg;
+                    target_comp_id      = sd.dest_comp_id;
+                    outgoing_seq_num    = engine.outgoing_seq_num + 1;
+                    incoming_fix_msg    = None;
             } 
-        | _ -> engine'
+        | _ -> { engine with incoming_fix_msg = None }
 ;;
-
-(*
-(** We have an incoming internal message. *)
-let process_int_msg (m, engine : fix_engine_int_msg * fix_engine_state) = 
-    match m with 
-    | TimeChange t ->
-        (** We only need to check for heartbeats if we have an active session. *)
-        let new_engine = { engine with curr_time = t } in
-
-        if engine.curr_mode = ActiveSession then
-            let error_mode = t > (engine.last_heartbeat_received + engine.heartbeat_interval) in 
-            
-            let out_heartbeat = create_heartbeat_msg (engine) in 
-            let outgoing = add_outgoing_msg (out_heartbeat, new_engine, false) in
-            { new_engine with outgoing_fix_msgs = outgoing }
-
-        else 
-            new_engine
-    
-    | CreateSession sd ->
-        let msg = create_logon_msg (engine) in 
-        let outgoing = add_outgoing_msg (msg, engine, false) in { 
-            engine with 
-                curr_mode = LogonInitiated;
-                outgoing_fix_msgs = outgoing;
-                outgoing_seq_num = msg.header.msg_seq_num;
-        } 
-
-    | ApplicationData d -> 
-        let new_msg = create_outbound_fix_msg ( engine, d, false ) in {
-            engine with 
-                outgoing_fix_msgs = engine.outgoing_fix_msgs @ [new_msg];
-                outgoing_seq_num = new_msg.header.msg_seq_num;
-            }
-    | ManualIntervention d -> engine
-;;
-*)
 
 (** Here we will only accept an incoming Logon message to establish a connection. *)
 let run_no_active_session (m, engine : fix_message * fix_engine_state) =
@@ -315,7 +266,10 @@ let run_no_active_session (m, engine : fix_message * fix_engine_state) =
                 target_comp_id = m.header.sender_comp_id;
                 curr_mode = ActiveSession;            
         }
-    | _ -> { engine with incoming_fix_msg = None }
+    | _ -> { 
+        engine with 
+            incoming_fix_msg = None 
+    }
 ;;
 
 (** ********************************************************************************************************** *)
@@ -337,20 +291,30 @@ let run_active_session (m, engine : fix_message * fix_engine_state) =
         | _ -> engine
     ) else 
         (** We're processing an application type of message. We just need 
-            to append it to the list of outgoing application messages. *)
-        engine
+        to append it to the list of outgoing application messages and 
+        update the last seq number processed. *) {
+        engine with
+            incoming_seq_num = m.header.msg_seq_num;
+            outgoing_int_msg = Some (ApplicationData m.msg_data);
+            incoming_fix_msg = None;
+    }
 ;;
 
 (* Here we can only handle a subset of the FIX messages. *)
 let replay_single_msg (m, engine : fix_message * fix_engine_state) =
     if fix_is_msg_reject (m.msg_data) then 
+        (* This is the only session-level type of message that we would
+            process under these conditions. *)
         engine
-    else if not (fix_is_admin_msg (m.msg_data)) then (
-        let new_int_msg = ApplicationData (m.msg_data) in {
-            engine with 
-                outgoing_int_msg = Some new_int_msg;
-            }
-    ) else engine
+    else if not (fix_is_admin_msg (m.msg_data)) then {
+        engine with 
+            incoming_seq_num = m.header.msg_seq_num;
+            outgoing_int_msg = Some (ApplicationData m.msg_data);
+        }
+    else {
+        engine with 
+            incoming_seq_num = m.header.msg_seq_num;
+    }
 ;; 
 
 (** Run the engine through the replay messages. This is used during recovery. 
@@ -418,14 +382,15 @@ let run_recovery (m, engine : fix_message * fix_engine_state) =
     }
 ;;
 
-(** We're in the processing of closing the session. *) 
+(** We've sent out a Logout message and are now waiting for a confirmation. *) 
 let run_shutdown (m, engine : fix_message * fix_engine_state) = 
-    engine
+    match m.msg_data with
+    | FIX_logout x          ->  {
+        engine with
+            curr_mode = NoActiveSession;
+    }
+    | _                     -> run_active_session (m, engine)
 ;;
-
-(** ********************************************************************************************************** *)
-(** End of Mode Transitions                                                                                    *)
-(** ********************************************************************************************************** *)
 
 (* Process incoming internal transition message. *)
 let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) = 
@@ -449,20 +414,28 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
     | ApplicationData ad    -> (
         match engine.curr_mode with 
         | ActiveSession     -> 
-            let msg = create_outbound_fix_msg (engine, ad, false) in 
-            { engine with outgoing_fix_msg = Some msg; incoming_int_msg = None }
+            let msg = create_outbound_fix_msg (engine, ad, false) in { 
+                engine with 
+                    outgoing_fix_msg = Some msg; 
+                    incoming_int_msg = None;
+                    outgoing_seq_num = msg.header.msg_seq_num;
+            }
         | _                 ->
             (* TODO How should all of this be handled? *)
             { engine with incoming_int_msg = None }
         )
         
     | ManualIntervention mi -> 
+        (* TODO implement this to have more detailed user data
+            that would reset engine state. *)
         { engine with incoming_int_msg = None }
 ;;
 
 (* A NO-OPeration *)
-let noop (m, engine : fix_message * fix_engine_state) = 
+let noop (m, engine : fix_message * fix_engine_state) = { 
     engine
+        with incoming_fix_msg = None
+}
 ;;
 
 (* Process incoming FIX message here. *)
@@ -494,28 +467,21 @@ let is_int_message_valid (engine, int_msg : fix_engine_state * fix_engine_int_ms
 (** ********************************************************************************************************** *)
 (**  Our main transition function.                                                                             *)
 (** ********************************************************************************************************** *)
+(** Note that the choice of order, i.e. in which we process messages, etc is completely 
+    arbitrary. The FIX specification does not at all describe how this should be done.  *)
 let one_step ( engine : fix_engine_state ) =
-
     (* First, check if we're in the middle of replaying our cache. *)
     if engine.curr_mode = CacheReplay then
         run_cache_replay (engine)
-
     (* Second, let's check that we're resending to *)
     else if engine.curr_mode = Retransmit then 
         run_retransmit (engine)
     else 
+        (* Now we look for internal and then external messages. *)
         match engine.incoming_int_msg with 
         | Some i -> proc_incoming_int_msg (i, engine)
         | None -> 
             match engine.incoming_fix_msg with 
             | Some m -> proc_incoming_fix_msg (m, engine)
             | None -> engine
-;;
-
-
-(** Run until there's nothing to do. Helpful in simulations, etc. *)
-let rec run_global_step ( engine : fix_engine_state ) = 
-    let engine' = one_step (engine) in 
-    if engine' = engine then engine
-    else run_global_step (engine')
 ;;

@@ -2,8 +2,6 @@
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
-    Implementation of the FIX 4.4 engine
     
     Usage examples.
 
@@ -14,11 +12,8 @@ open Fix_data_dictionary
 open Fix_engine
 open Fix_pp
 open Fix_engine_pp
+open Fix_global
 
-let add_int_msg msg engine = {
-    engine with 
-        incoming_int_msg = Some msg
-};;
 
 let (>>=) s f = f s;;
 
@@ -26,49 +21,6 @@ let examples = ref [];;
 
 let record_example x =
     examples := x :: (!examples)
-;;
-
-(* Run single time step 
-let run_step (time_step, engine1, engine2) = 
-    match engine1.outgoing_fix_msgs with 
-    | None -> 
-    | Some x ->
-
-    match engine2.outgoing_fix_msgs with 
-    | None ->
-    | Some x ->
-;;*)
-
-(** Process a single internal step *)
-let proc_int_msg (s, im : fix_engine_state * fix_engine_int_msg) =  
-    one_step ({
-        s with incoming_int_msg = Some im
-    })
-;;
-
-let proc_fix_msg (s, fm : fix_engine_state * fix_message) = 
-    one_step ({
-        s with incoming_fix_msg = Some fm 
-    })
-;;
-
-type msg_to_proc = [
-    | `FIX_MSG of fix_message 
-    | `INT_MSG of fix_engine_int_msg
-];;
-
-let run_single (x, last_state) = 
-    match x with
-    | `FIX_MSG f -> proc_fix_msg ( last_state, f )
-    | `INT_MSG i -> proc_int_msg ( last_state, i )
-;;
-
-let rec run_through_msgs ( last_state, msgs : fix_engine_state * msg_to_proc list) = 
-    match msgs with 
-    | [] -> []
-    | x::xs ->
-        let new_state = run_single (x, last_state) in
-        (new_state, x) :: run_through_msgs ( new_state, xs )
 ;;
 
 let rec print_results ( events : (fix_engine_state * msg_to_proc) list ) =
@@ -172,7 +124,6 @@ let example_3 () =
 
 record_example ("// Example 3: successfully created a session + submit application message \n", example_3);;
 
-
 (* Process an out-of-sequence message and transition into recovery *)
 let example_4 () =
     let engine = {
@@ -204,3 +155,89 @@ let example_4 () =
 ;;
 
 record_example ("// Example 4: transition into Recovery when processing an out-of-sequence message \n", example_4);;
+
+
+let example_5 () =
+    let engine = {
+        init_fix_engine_state with 
+            comp_id = 1;
+            curr_mode = Recovery;
+            initiator = Some false;
+            incoming_seq_num = 1;
+            cache = [
+
+            ];
+    } and 
+    msgs = [
+        `FIX_MSG ( {
+            header = {
+                default_fix_header with
+                    target_comp_id = 1;
+                    msg_seq_num = 3;
+            };
+            msg_data = FIX_trade_report_ae {
+                trade_report_id = 1;
+                previously_reported = FIX_No;
+                order_id = 2;
+                filled_qty = 10;
+            };
+            trailer = default_fix_trailer;
+        })
+    ] in
+    run_through_msgs (engine, msgs)
+;;
+
+record_example ("// Example 5: In Recovery mode,receiving missing message and recovering.\n", example_5);;
+
+let example_6 () =
+    let engine = {
+        init_fix_engine_state with 
+            comp_id = 1;
+            curr_mode = ActiveSession;
+            initiator = Some false;
+            incoming_seq_num = 1;
+            cache = [
+
+            ];
+    } and 
+    msgs = [
+        `FIX_MSG ( {
+            header = {
+                default_fix_header with
+                    target_comp_id = 1;
+                    msg_seq_num = 3;
+            };
+            msg_data = FIX_trade_report_ae {
+                trade_report_id = 1;
+                previously_reported = FIX_No;
+                order_id = 2;
+                filled_qty = 10;
+            };
+            trailer = default_fix_trailer;
+        })
+    ] in 
+    run_through_msgs (engine, msgs)
+;;
+
+record_example ("// Example 6: In Recovery mode and adding further msgs into the cache.\n", example_6);;
+
+let example_7 () =
+    let engine = {
+        init_fix_engine_state with 
+            comp_id = 1;
+            curr_time = 10;
+
+            last_hbeat_recived = 1;
+            hbeat_interval = 10;
+
+            curr_mode = ActiveSession;
+            initiator = Some false;
+            incoming_seq_num = 1;
+    } and 
+    msgs = [
+        `INT_MSG ( TimeChange 1000 )
+    ] in 
+    run_through_msgs (engine, msgs)
+;;
+
+record_example ("// Example 7: Internal time clock is updated, yet no heartbeat - transitioning to Shutdown mode.", example_7);;

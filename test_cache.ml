@@ -1,8 +1,20 @@
+(** 
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+
+    Implementation of the FIX 4.4 engine.
+
+    Scratch-pad for checking cache handling logic.
+
+*)
 
 open Fix_data_dictionary
 open Fix_engine
 open Fix_engine_pp
 open Fix_pp
+
+let pe = print_endline;;
 
 let def_fix_msg = {
     header = default_fix_header;
@@ -12,7 +24,7 @@ let def_fix_msg = {
     trailer = default_fix_trailer;
 };;
 
-let make_fix_msg i = { 
+let make_fix_msg i = {
     def_fix_msg with 
         header = {
             default_fix_header with 
@@ -34,17 +46,6 @@ let new_cache = add_to_cache (make_fix_msg (12), cache);;
 print_string (msg_list_to_string (new_cache));;
 
 (** Can we transition correctly? *)
-
-
-let cache_2 = [
-    make_fix_msg (1);
-    make_fix_msg (2);
-    make_fix_msg (3);
-    make_fix_msg (4);
-];;
-
-
-
 let check_cache (c, idx) = 
     if is_cache_complete (c, idx) then
         print_endline "\nCache complete"
@@ -52,9 +53,15 @@ let check_cache (c, idx) =
         print_endline "\nCache incomplete"
 ;;
 
-check_cache(cache_2, 0);;
+pe "\nShould be fine - since 0th we have everything";;
+check_cache([
+    make_fix_msg (1);
+    make_fix_msg (2);
+    make_fix_msg (3);
+    make_fix_msg (4);
+], 0);;
 
-
+pe "\nFails - missing 5-9";;
 check_cache([
     make_fix_msg (1);
     make_fix_msg (2);
@@ -63,10 +70,11 @@ check_cache([
     make_fix_msg (10);
 ], 0);;
 
-
+pe "\Fails - missing 1st";; 
 check_cache([
     make_fix_msg (2);
     make_fix_msg (3);
     make_fix_msg (4);
     make_fix_msg (5);
 ], 0);;
+
