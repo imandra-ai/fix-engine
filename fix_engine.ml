@@ -10,13 +10,13 @@
         within a single time frame.
 
     -- Implement basic types from the FIX spec.
-
+    
     fix_engine.ml
 *)
 
 (** Module depends on FIX4.4 data dictionary. *)
 open Imarkets;;
-open Fix_data_dictionary;;  (* Note this may be generated for DSL-based FIX engines *)
+open Fix_data_dictionary;;  (* Note this may be generated for DSL-based FIX engines. *)
 
 (* Define set of actions + data for manual intervention by the user. *)
 type manual_int_data = {
@@ -87,7 +87,6 @@ type fix_engine_state = {
 
 (** Initial engine state. *)
 let init_fix_engine_state = {
-
     initiator           = None;                         
     curr_mode           = NoActiveSession;              
     curr_time           = 0;                            

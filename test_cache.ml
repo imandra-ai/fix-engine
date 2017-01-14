@@ -7,6 +7,8 @@
 
     Scratch-pad for checking cache handling logic.
 
+    test_cache.ml
+    
 *)
 
 open Fix_data_dictionary

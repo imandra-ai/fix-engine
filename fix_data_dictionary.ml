@@ -343,12 +343,10 @@ type fix_msg_data =
     | FIX_trade_report_ae           of tradereport_ae_data      (* MsgType = AE *)
 ;;
 
-(*  
-    TODO: Each FIX Message also contains information about it's conversion from 
+(*  TODO: Each FIX Message also contains information about it's conversion from 
     outside the logic (i.e. how it was parsed) and this should be reflected in 
     additional status fields. So, if a message was parsed incorrectly, it should
-    be reflected in the structure. 
-*)
+    be reflected in the structure. *)
 type fix_message = {
     header                          : fix_header;
     msg_data                        : fix_msg_data;
