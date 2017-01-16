@@ -101,7 +101,7 @@ type fix_order_type =
 ;;
 
 
-(** Reject reasons *)
+(** Session rejection reasons *)
 type fix_session_reject_reason =
     | InvalidTagNumber
     | RequiredTagMissing
@@ -122,6 +122,15 @@ type fix_session_reject_reason =
     | IncorrectNumInGroupCountForRepeatingGroup
     | NonDataValueIncludesFieldDelimiter
 ;;
+
+
+(* Business rejection reasons *)
+type fix_business_reject_reason = 
+    | ApplicationDown
+    | MessageTypeNotSupported
+    | FieldMissing
+;;
+
 
 (** Standard FIX header. 
     Note that the standard header has tag Tag 35 that is the message type. 
@@ -290,7 +299,7 @@ type resendrequest_data = {
 
 (** Session reject data *)
 type session_reject_data = {
-    ref_seq_num                     : int;  (* Tag 45. MsgSeqNum of rejected message *)
+    sr_ref_seq_num                  : int;  (* Tag 45. MsgSeqNum of rejected message *)
     session_reject_reason           : fix_session_reject_reason option; (* Tag 373.  *)
 };;
 
@@ -328,6 +337,13 @@ type tradereport_ae_data = {
     filled_qty                      : int;
 };;
 
+(** Business Reject Message <j> *)
+type business_reject_data = {
+    br_ref_seq_num                  : int;              (* Tag 45: reference seq number of the rejected message *)
+    (* TODO Need to add message type here as well. *)
+    business_reject_reason          : fix_business_reject_reason;
+};;
+
 (** This is just a small subset -> we would want to cover the full spec, 
     it would need to be auto-generated. *)
 type fix_msg_data = 
@@ -341,17 +357,38 @@ type fix_msg_data =
     | FIX_new_order_single          of new_order_single_data    (* MsgType = D *)
     | FIX_cancel_order              of cancel_order_data        (* MsgType = ? *)
     | FIX_trade_report_ae           of tradereport_ae_data      (* MsgType = AE *)
+    | FIX_business_reject           of business_reject_data     (* MsgType = j *)
 ;;
 
-(*  TODO: Each FIX Message also contains information about it's conversion from 
-    outside the logic (i.e. how it was parsed) and this should be reflected in 
-    additional status fields. So, if a message was parsed incorrectly, it should
-    be reflected in the structure. *)
+(** TODO We need to incorporate more precise information here. *)
+type fix_reject_flags = {
+    garbled                         : bool;
+    session_invalid                 : fix_session_reject_reason option;
+    app_invalid                     : fix_business_reject_reason option;
+};;
+
 type fix_message = {
     header                          : fix_header;
     msg_data                        : fix_msg_data;
     trailer                         : fix_trailer;
+
+    (* Note: the field below is used iternally only - it separates rejection logic
+        between parser/generator vs. engine iml-comparible logic. *)
+    reject_flags                    : fix_reject_flags;
 };;
+
+
+let fix_is_msg_session_invalid m =
+    match m.reject_flags.session_invalid with 
+    | None -> false
+    | Some _ -> true
+;;
+
+let fix_is_msg_biz_invalid m = 
+    match m.reject_flags.app_invalid with
+    | None -> false
+    | Some _ -> true
+;;
 
 (* Is this an administrative message? (vs application-level) *)
 let fix_is_admin_msg (m_data : fix_msg_data) =

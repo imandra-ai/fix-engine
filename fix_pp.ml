@@ -13,7 +13,7 @@ open String
 open List
 open Fix_data_dictionary
 
-(** Rejection reasons *)
+(** Session rejection reasons *)
 let fix_session_reject_to_string = function 
     | InvalidTagNumber                                  -> "Invalid Tag Number"
     | RequiredTagMissing                                -> "Required Tag Missing"
@@ -38,6 +38,18 @@ let fix_session_reject_to_string = function
 let reject_reason_opt_to_string = function
     | None -> None
     | Some x -> Some (fix_session_reject_to_string x)
+;;
+
+(** Business rejection reasons. *)
+let fix_business_reject_to_string = function
+    | ApplicationDown                                   -> "ApplicationDown"
+    | MessageTypeNotSupported                           -> "MessageTypeNotSupported"
+    | FieldMissing                                      -> "FieldMissing"
+;;
+
+let biz_reject_opt_to_string = function
+    | None -> None
+    | Some x -> Some (fix_business_reject_to_string x)
 ;;
 
 (** http://www.onixs.biz/fix-dictionary/4.4/tagNum_423.html *)
@@ -321,10 +333,17 @@ let resend_request_data_to_json x =
 
 let session_reject_data_to_json x = 
     let list_assoc = [
-        ( "ref_seq_num",        `Int x.ref_seq_num);
+        ( "ref_seq_num",        `Int x.sr_ref_seq_num);
         ( "session_reject_reason", stringopt_to_json (reject_reason_opt_to_string x.session_reject_reason))
     ] |> filter_nulls in 
     `Assoc list_assoc
+;;
+
+let business_reject_data_to_json x = 
+    `Assoc [
+        ( "br_ref_seq_num",     `Int x.br_ref_seq_num );
+        ( "business_reject_reason", `String (fix_business_reject_to_string x.business_reject_reason ));
+    ]
 ;;
 
 let sequence_reset_data_to_json x = 
@@ -336,13 +355,14 @@ let sequence_reset_data_to_json x =
 ;;
 
 let order_qty_block_to_json oq =
-    `Assoc [
+    let list_assoc = [
         ( "order_qty",          intopt_to_json oq.order_qty );
         ( "cash_order_qty",     intopt_to_json oq.cash_order_qty );
         ( "order_percent",      intopt_to_json oq.order_percent );
         ( "rounding_direction", intopt_to_json oq.rounding_direction );
         ( "rounding_modulus",   intopt_to_json oq.rounding_modulus );
-    ]
+    ] |> filter_nulls in 
+    `Assoc list_assoc
 ;;
 
 let create_order_data_to_json x = 
@@ -385,9 +405,10 @@ let msg_data_to_json = function
     | FIX_new_order_single x -> `Assoc [ ( "new_order_single",  create_order_data_to_json x) ]
     | FIX_cancel_order x ->     `Assoc [ ( "cancel_order",      cancel_order_data_to_json x) ]
     | FIX_trade_report_ae x ->  `Assoc [ ( "trade_report_ae",   trade_report_data_to_json x) ]
+    | FIX_business_reject x ->  `Assoc [ ( "business_reject",   business_reject_data_to_json x)]
 ;;
 
-(** trailer to JSON *)
+(** Trailer to JSON conversion. *)
 let trailer_to_json (t: fix_trailer) = 
     `Assoc [
         ( "signature_length",   `Int t.signature_length);
@@ -396,12 +417,21 @@ let trailer_to_json (t: fix_trailer) =
     ]
 ;;
 
-(** This will print us the whole message *)
+(* Reject reasons *)
+let reject_flags_to_json rf = 
+    `Assoc [
+        ( "garbled",            `Bool rf.garbled);
+        ( "session_invalid",    stringopt_to_json (reject_reason_opt_to_string rf.session_invalid));
+        ( "business_invalid",   stringopt_to_json (biz_reject_opt_to_string rf.app_invalid));
+    ]
+;;
+
 let fix_msg_to_json ( m : fix_message) = 
     `Assoc [
         ( "header",             (header_to_json m.header));
         ( "data",               (msg_data_to_json m.msg_data));
-        ( "trailer",            (trailer_to_json m.trailer))
+        ( "trailer",            (trailer_to_json m.trailer));
+        ( "reject_flags",       (reject_flags_to_json m.reject_flags));
     ]
 ;;
 

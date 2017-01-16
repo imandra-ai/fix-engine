@@ -44,22 +44,22 @@ let intmsg_opt_to_json : ( fix_engine_int_msg option -> Yojson.Basic.json) =
 
 let fix_engine_state_to_json s = 
     `Assoc [ 
-        ( "curr_mode",              `String (fix_engine_mode_to_string s.curr_mode));
-        ( "initiator",              (boolopt_to_json s.initiator));
-        ( "curr_time",              `Int s.curr_time);
-        ( "comp_id",                `Int s.comp_id);
-        ( "target_comp_id",         `Int s.target_comp_id);
+        ( "curr_mode",              `String (fix_engine_mode_to_string s.fe_curr_mode));
+        ( "initiator",              (boolopt_to_json s.fe_initiator));
+        ( "curr_time",              `Int s.fe_curr_time);
+        ( "comp_id",                `Int s.fe_comp_id);
+        ( "target_comp_id",         `Int s.fe_target_comp_id);
         ( "incoming_int_msgs",      (intmsg_opt_to_json s.incoming_int_msg));
         ( "outgoing_int_msgs",      (intmsg_opt_to_json s.outgoing_int_msg));
         ( "incoming_seq_num",       `Int s.incoming_seq_num);
         ( "outgoing_seq_num",       `Int s.outgoing_seq_num);
         ( "incoming_fix_msgs",      (fixmsg_opt_to_json s.incoming_fix_msg));
         ( "outgoing_fix_msgs",      (fixmsg_opt_to_json s.outgoing_fix_msg));
-        ( "cache",                  (msg_list_to_json s.cache));
-        ( "history",                (msg_list_to_json s.history));
-        ( "last_hearbeat_received", `Int s.last_hbeat_recived);
-        ( "heartbeat_interval",     `Int s.heartbeat_interval);
-        ( "history_to_send",        (msg_list_to_json s.history_to_send));
+        ( "cache",                  (msg_list_to_json s.fe_cache));
+        ( "history",                (msg_list_to_json s.fe_history));
+        ( "last_hearbeat_received", `Int s.fe_last_hbeat_recived);
+        ( "heartbeat_interval",     `Int s.fe_heartbeat_interval);
+        ( "history_to_send",        (msg_list_to_json s.fe_history_to_send));
     ]
 ;;
 
