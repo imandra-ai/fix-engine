@@ -1,8 +1,7 @@
 (** 
-
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-    
+
     Usage examples.
 
     fix_examples.ml
@@ -14,7 +13,6 @@ open Fix_pp
 open Fix_engine_pp
 open Fix_global
 
-
 let pe = print_endline;;
 
 let (>>=) s f = f s;;
@@ -25,32 +23,13 @@ let record_example x =
     examples := x :: (!examples)
 ;;
 
-let rec print_results ( events : (fix_engine_state * msg_to_proc) list ) =
-    match events with 
-    | [] -> ()
-    | (s, m) :: xs ->
-        let m_str = 
-            match m with 
-            | `FIX_MSG f -> fix_msg_to_str f
-            | `INT_MSG m -> int_msg_to_str m
-        in let () =
-        begin 
-            pe "event:";
-            pe m_str;
-            pe "\n\n";
-            pe "state:";
-            pe (engine_state_to_str s);
-        end in
-        print_results (xs)
-;;
-
 (** Instantiate a new session between 2 fix engines. *)
 let example_1 () =
     let engine = {
         init_fix_engine_state with 
-            comp_id = 1;
-    } and
-    msgs = [
+            fe_comp_id = 1;
+    } in
+    let msgs = [
         `INT_MSG (TimeChange (1));
         `INT_MSG (CreateSession { dest_comp_id = 123 });
     ] in 
@@ -62,9 +41,9 @@ record_example ("// Example 1: Session Creation\n", example_1);;
 let example_2 () =
     let engine = {
         init_fix_engine_state with 
-            comp_id = 1;
-    } and 
-    msgs = [
+            fe_comp_id = 1;
+    } in 
+    let msgs = [
         `INT_MSG (TimeChange (1));
         `INT_MSG (CreateSession { dest_comp_id = 123 });
     ] in 
@@ -77,9 +56,9 @@ record_example ("// Example 2: Session termination\n", example_2);;
 let example_3 () = 
     let engine = {
         init_fix_engine_state with 
-            comp_id = 1;
-    } and 
-    msgs = [
+            fe_comp_id = 1;
+    } in 
+    let msgs = [
         `INT_MSG (TimeChange (1));
         `INT_MSG (CreateSession { dest_comp_id = 123 });
         `FIX_MSG ( {
@@ -96,7 +75,8 @@ let example_3 () =
                 };
             
             trailer = default_fix_trailer;
-
+        
+            reject_flags = default_reject_flags;
          });
     ] in
     run_through_msgs (engine, msgs)
@@ -109,9 +89,9 @@ record_example ("// Example 3: successfully created a session\n", example_3);;
 let example_4 () = 
     let engine = {
         init_fix_engine_state with 
-            comp_id = 1;
-    } and 
-    msgs = [
+            fe_comp_id = 1;
+    } in  
+    let msgs = [
         `INT_MSG (TimeChange (1));
         `INT_MSG (CreateSession { dest_comp_id = 123 });
         `FIX_MSG ( {
@@ -126,7 +106,10 @@ let example_4 () =
                 };
             
             trailer = default_fix_trailer;
+            reject_flags = default_reject_flags;
+
          });
+
          `INT_MSG (ApplicationData (
                 FIX_logon {
                 encrypt_method = 123;
@@ -144,12 +127,12 @@ record_example ("// Example 4: successfully created a session + submit applicati
 let example_5 () =
     let engine = {
         init_fix_engine_state with 
-            comp_id = 1;
-            curr_mode = ActiveSession;
-            initiator = Some false;
+            fe_comp_id = 1;
+            fe_curr_mode = ActiveSession;
+            fe_initiator = Some false;
             incoming_seq_num = 1;
-    } and 
-    msgs = [
+    } in 
+    let msgs = [
         `FIX_MSG ( {
             header = {
                 default_fix_header with 
@@ -163,6 +146,7 @@ let example_5 () =
                 filled_qty = 10;
             };
             trailer = default_fix_trailer;
+            reject_flags = default_reject_flags;
         }
 
         )
@@ -176,12 +160,13 @@ record_example ("// Example 5: transition into Recovery when processing an out-o
 let example_6 () =
     let engine = {
         init_fix_engine_state with 
-            comp_id = 1;
-            curr_mode = Recovery;
-            initiator = Some false;
+            fe_comp_id = 1;
+            fe_curr_mode = Recovery;
+            fe_initiator = Some false;
             incoming_seq_num = 1;
-    } and 
-    msgs = [
+            fe_cache = [];
+    } in 
+    let msgs = [
         `FIX_MSG ( {
             header = {
                 default_fix_header with
@@ -195,6 +180,8 @@ let example_6 () =
                 filled_qty = 10;
             };
             trailer = default_fix_trailer;
+            reject_flags = default_reject_flags;
+
         })
     ] in
     run_through_msgs (engine, msgs)
@@ -205,15 +192,13 @@ record_example ("// Example 6: In Recovery mode,receiving missing message and re
 let example_7 () =
     let engine = {
         init_fix_engine_state with 
-            comp_id = 1;
-            curr_mode = ActiveSession;
-            initiator = Some false;
+            fe_comp_id = 1;
+            fe_curr_mode = ActiveSession;
+            fe_initiator = Some false;
             incoming_seq_num = 1;
-            cache = [
-
-            ];
-    } and 
-    msgs = [
+            fe_cache = [];
+    } in 
+    let msgs = [
         `FIX_MSG ( {
             header = {
                 default_fix_header with
@@ -227,6 +212,8 @@ let example_7 () =
                 filled_qty = 10;
             };
             trailer = default_fix_trailer;
+            reject_flags = default_reject_flags;
+
         })
     ] in 
     run_through_msgs (engine, msgs)
@@ -237,14 +224,14 @@ record_example ("// Example 7: In Recovery mode and adding further msgs into the
 let example_8 () =
     let engine = {
         init_fix_engine_state with 
-            comp_id = 1;
-            curr_time = 10;
+            fe_comp_id = 1;
+            fe_curr_time = 10;
 
-            last_hbeat_recived = 1;
-            hbeat_interval = 10;
+            fe_last_hbeat_recived = 1;
+            fe_heartbeat_interval = 10;
 
-            curr_mode = ActiveSession;
-            initiator = Some false;
+            fe_curr_mode = ActiveSession;
+            fe_initiator = Some false;
             incoming_seq_num = 1;
     } and 
     msgs = [
@@ -257,11 +244,12 @@ record_example ("// Example 8: Internal time clock is updated, yet no heartbeat 
 
 let example_9 () = 
     let engine = {
-        comp_id = 1;
-        curr_time = 10;
-    } and 
-    msgs = [
-        `FIX_MSG ( TimeChange 100 )
+        init_fix_engine_state with
+            fe_comp_id = 1;
+            fe_curr_time = 10;
+    } in 
+    let msgs = [
+        `INT_MSG ( TimeChange 100 )
     ] in 
     run_through_msgs (engine, msgs)
 ;;

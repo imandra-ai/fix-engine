@@ -66,3 +66,7 @@ let fix_engine_state_to_json s =
 let engine_state_to_str s =
     Yojson.Basic.pretty_to_string (fix_engine_state_to_json s)
 ;;
+
+let print_states states = 
+    String.concat "\n" (List.map engine_state_to_str states)
+;;

@@ -20,21 +20,16 @@ let single example =
     let (title, results) = example in 
     begin 
         pe title;
-        print_results (results);
+        pe (print_states (results));
     end
 ;;
 
-(*let run_examples (cases) = 
-    let res = List.map single cases in
-    String.concat "" res
-;;*)
-
 let print_menu () =
-    begin 
+    begin
         pe "1. Print menu";
         pe "2. List examples";
         pe "3. Run specific example";
-        pe "4. Get initial state";
+        pe "4. Print the messages sequence";
         pe "5. Exit";
     end
 ;;
@@ -71,7 +66,7 @@ let rec commander () =
             let () = 
             begin
                 pe title;
-                print_results (results());
+                pe (print_states (results()));
             end in
             commander()
         )

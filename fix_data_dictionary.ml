@@ -367,6 +367,13 @@ type fix_reject_flags = {
     app_invalid                     : fix_business_reject_reason option;
 };;
 
+(** When nothing's rejected... *)
+let default_reject_flags = {
+    garbled                         = false;
+    session_invalid                 = None;
+    app_invalid                     = None;
+};;
+
 type fix_message = {
     header                          : fix_header;
     msg_data                        : fix_msg_data;
