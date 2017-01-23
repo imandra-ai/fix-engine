@@ -196,15 +196,16 @@ let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, msg, is_duplicat
 
     (** Trailers would be augmented by raw OCaml printers/parsers. *)
     trailer = {
-        signature_length = 0;
-        signature = 0;
-        check_sum = 0;
+        signature_length    = 0;
+        signature           = 0;
+        check_sum           = 0;
     };
 
+    (* Same goes for the rejection flags. *)
     reject_flags = {
-        garbled = false;
-        session_invalid = None;
-        app_invalid = None;
+        garbled             = false;
+        session_invalid     = None;
+        business_invalid    = None;
     };
 };;
 
@@ -226,9 +227,9 @@ let create_logon_msg ( targetID, last_seq_num, hbeat_interval : int * int * int)
     trailer = default_fix_trailer;
 
     reject_flags = {
-        garbled = false;
-        session_invalid = None;
-        app_invalid = None;
+        garbled             = false;
+        session_invalid     = None;
+        business_invalid    = None;
     };
 };;
 
@@ -252,7 +253,7 @@ let create_session_reject ( engine, m ) =
     the parser would not have access to this information. *)
 let create_business_reject ( engine, m ) =
     let reason = 
-        match m.reject_flags.app_invalid with 
+        match m.reject_flags.business_invalid with 
         | None -> ApplicationDown
         | Some x -> x in 
     let msg_data = FIX_business_reject {

@@ -422,7 +422,7 @@ let reject_flags_to_json rf =
     `Assoc [
         ( "garbled",            `Bool rf.garbled);
         ( "session_invalid",    stringopt_to_json (reject_reason_opt_to_string rf.session_invalid));
-        ( "business_invalid",   stringopt_to_json (biz_reject_opt_to_string rf.app_invalid));
+        ( "business_invalid",   stringopt_to_json (biz_reject_opt_to_string rf.business_invalid));
     ]
 ;;
 

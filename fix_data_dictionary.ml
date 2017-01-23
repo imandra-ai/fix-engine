@@ -364,14 +364,14 @@ type fix_msg_data =
 type fix_reject_flags = {
     garbled                         : bool;
     session_invalid                 : fix_session_reject_reason option;
-    app_invalid                     : fix_business_reject_reason option;
+    business_invalid                : fix_business_reject_reason option;
 };;
 
 (** When nothing's rejected... *)
 let default_reject_flags = {
     garbled                         = false;
     session_invalid                 = None;
-    app_invalid                     = None;
+    business_invalid                = None;
 };;
 
 type fix_message = {
@@ -392,9 +392,16 @@ let fix_is_msg_session_invalid m =
 ;;
 
 let fix_is_msg_biz_invalid m = 
-    match m.reject_flags.app_invalid with
+    match m.reject_flags.business_invalid with
     | None -> false
     | Some _ -> true
+;;
+
+(* Does not apply to custom message rejections! *)
+let fix_msg_base_not_rejected m = 
+    not (m.reject_flags.garbled) && 
+    fix_is_msg_session_invalid m &&
+    fix_is_msg_biz_invalid m
 ;;
 
 (* Is this an administrative message? (vs application-level) *)
