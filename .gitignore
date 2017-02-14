@@ -1,2 +1,3 @@
 _build/*
 *.native
+.imandra_init.log
