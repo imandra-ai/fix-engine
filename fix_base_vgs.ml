@@ -2,7 +2,7 @@
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
+    
     Implementation of the FIX 4.4 protocol. Verification goals - the base.
 
     fix_base_vgs.ml

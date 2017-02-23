@@ -1,7 +1,7 @@
 (** 
 
     Aesthetic Integration Limited
-    Copyright 2014 - 2017
+    Copyright (c) 2014 - 2017
     
     fix_iso_types.ml
 
@@ -15,6 +15,43 @@ type fix_symbol = int;;
 type fix_string = int;;
 type fix_bool = bool;;
 
+type fix_yes_no_type = 
+    | FIX_Yes 
+    | FIX_No 
+    | FIX_YesNo_Invalid
+;;
+
+
+(** Session rejection reasons. *)
+type fix_session_reject_reason =
+    | InvalidTagNumber
+    | RequiredTagMissing
+    | TagNotDefined
+    | UndefinedTag
+    | TagSecifiedWithoutAValue
+    | ValueIsIncorrect
+    | IncorrectDataFormatForValue
+    | DecryptionProblem
+    | SignatureProblem
+    | CompIDProblem
+    | SendingTimeAccuracyProblem
+    | InvalidMsgType
+    | XMLValidationError
+    | TagAppearsMoreThanOnce
+    | TagSpecifiedOutOfRequiredOrder
+    | RepeatingGroupFieldsOutOfOrder
+    | IncorrectNumInGroupCountForRepeatingGroup
+    | NonDataValueIncludesFieldDelimiter
+;;
+
+(* Business rejection reasons *)
+type fix_business_reject_reason = 
+    | ApplicationDown
+    | MessageTypeNotSupported
+    | FieldMissing
+;;
+
+(* Application rejection reasons. *)
 type fix_app_reject_reason = 
     | FIX_App_Reject_MissingReqField
     | FIX_App_Reject_InvalidField

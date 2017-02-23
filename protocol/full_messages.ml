@@ -174,6 +174,57 @@ let init_fix_msg_execution_report_data = {
 }
 ;;
 
+
+type full_fix_msg_heartbeat_data = {
+    hb_test_req_id                                  : int option;   (* Tag 112: Required when the heartbeat 
+                                                                       is the result of a Test Request message. *)
+}
+;;
+
+type full_fix_msg_logon_data = {
+    encrypt_method                                  : int;          (* Tag 98   *)
+    heartbeat_interval                              : fix_duration; (* Tag 108  *)
+    raw_data_length                                 : int;          (* Tag 95   *)
+}
+;;
+
+type full_fix_msg_logoff_data = {
+    encoded_text_len                                : int option;           (* Tag 354 *)
+    encoded_text                                    : fix_string option;    (* Tag 355 *)
+}
+;;
+
+type full_fix_msg_session_reject_data = {
+    sr_ref_seq_num                                  : int;  (* Tag 45. MsgSeqNum of rejected message *)
+    session_reject_reason                           : fix_session_reject_reason option; (* Tag 373.  *)
+}
+;;
+
+type full_fix_msg_business_reject_data = {
+    br_ref_seq_num                                  : int;  (* Tag 45: reference seq number of the rejected message *)
+    
+    (* TODO Need to add message type here as well. *)
+    business_reject_reason                          : fix_business_reject_reason;
+}
+;;
+
+type full_fix_msg_resend_request_data = {
+    begin_seq_num                                   : int;  (* Tag 7 *)
+    end_seq_num                                     : int;  (* Tag 16 *)
+}
+;;
+
+type full_fix_msg_sequence_reset_data = {
+    new_seq_no                                      : int;                      (* Tag 36 *)
+    gap_fill_flag                                   : fix_yes_no_type option;   (* Tag 123 *)
+}
+;;
+
+type full_fix_msg_test_request_data = {
+    test_req_id                                     : int;  (* Tag 112 *)
+}
+;;
+
 (* Global type with all of the messages. *)
 type full_fix_app_msg = 
     | Full_Msg_ExecutionReport                       of full_fix_msg_execution_report_data

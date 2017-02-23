@@ -1,3 +1,8 @@
 PKG yojson
 S *
 B _build/
+S model
+S protocol
+B _build/model
+B _build/protocol
+PKG yojson
