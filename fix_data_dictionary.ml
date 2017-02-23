@@ -8,6 +8,9 @@
     fix_data_dictionary.ml
 *)
 
+(* @meta[imandra_ignore] on @end *)
+open Datetime;;
+(* @meta[imandra_ignore] off @end *)
 
 (** Need to finish the custom string type. *)
 type fix_string = int;;
@@ -123,7 +126,6 @@ type fix_session_reject_reason =
     | NonDataValueIncludesFieldDelimiter
 ;;
 
-
 (* Business rejection reasons *)
 type fix_business_reject_reason = 
     | ApplicationDown
@@ -131,10 +133,10 @@ type fix_business_reject_reason =
     | FieldMissing
 ;;
 
-
 (** Standard FIX header. 
-    Note that the standard header has tag Tag 35 that is the message type. 
-    We do not need this tag as message type is explicit. *)
+    Note that the standard header has tag Tag 35 that is the 
+    message type. We do not need this tag as message type is 
+    explicit. *)
 type fix_header = {
     begin_string                    : int;          (* Tag 8    *)
     body_length                     : int;          (* Tag 9    *)
@@ -163,8 +165,8 @@ type fix_header = {
     message_enconding               : int option;   (* Tag 347  *)
     last_msg_seq_num_processed      : int option;   (* Tag 369  *)
     no_hops                         : int option;   (* Tag 627  *)
-};;
-
+}
+;;
 
 let default_fix_header = {
     begin_string                    = 0;
@@ -193,20 +195,23 @@ let default_fix_header = {
     message_enconding               = None;
     last_msg_seq_num_processed      = None;
     no_hops                         = None;
-};;
+}
+;;
 
 (** Standard FIX trailer *)
 type fix_trailer = {
     signature_length                : int;  (* Tag 93: Signature Length *)
     signature                       : int;  (* Tag 89: Signature text *)
     check_sum                       : int;  (* Tag 10: TODO: need to  *)
-};;
+}
+;;
 
 let default_fix_trailer = {
     signature_length                = 0;
     signature                       = 0;
     check_sum                       = 0;
-};;
+}
+;;
 
 (**  Common Component Blocks - used in various Application Messages *)
 type fix_order_qty_block = {
@@ -215,7 +220,8 @@ type fix_order_qty_block = {
     order_percent                   : int option;
     rounding_direction              : int option;
     rounding_modulus                : int option;
-};;
+}
+;;
 
 (** At least one of the first 3 fields must be specified. *)
 let is_order_block_valid b = 
@@ -249,7 +255,8 @@ type fix_instrument_block = {
     repurchase_rate                 : int option;   (* Tag 227 *)
     factor                          : int option;   (* Tag 228 *)
     (** TODO finish this! *)
-};;
+}
+;;
 
 (** CommType: Tag 13 -  http://www.onixs.biz/fix-dictionary/4.4/tagNum_13.html *)
 type fix_comm_type = 
@@ -266,12 +273,13 @@ type fix_commission_data_block = {
     comm_type                       : fix_comm_type option;     (* Tag 13 *)
     comm_currency                   : int option;               (* Tag 479 *)
     fund_renew_waiv                 : fix_yes_no_type option;   (* Tag 497 *)
-};;
+}
+;;
 
 (* Logon message *)
 type logon_data = {
     encrypt_method                  : int;                      (* Tag 98 *)
-    heartbeat_interval              : int;                      (* Tag 108 *)
+    heartbeat_interval              : fix_duration;             (* Tag 108 *)
     raw_data_length                 : int;                      (* Tag 95 *)
 };;
 
@@ -279,35 +287,41 @@ type logon_data = {
 type logout_data = {
     encoded_text_len                : int option;               (* Tag 354 *)
     encoded_text                    : fix_string option;        (* Tag 355 *)
-};;
+}
+;;
 
 (** Heartbeat *)
 type heartbeat_data = {
     hb_test_req_id                  : int option;               (* Tag 112: Required when the heartbeat is the result of a Test Request message. *)
-};;
+}
+;;
 
 (** Test request_data *)
 type testrequest_data = {
     test_req_id                     : int;                      (* Tag 112 *)
-};;
+}
+;;
 
 (** Resend request data *)
 type resendrequest_data = {
     begin_seq_num                   : int;                      (* Tag 7 *)
     end_seq_num                     : int;                      (* Tag 16 *)
-};;
+}
+;;
 
 (** Session reject data *)
 type session_reject_data = {
     sr_ref_seq_num                  : int;  (* Tag 45. MsgSeqNum of rejected message *)
     session_reject_reason           : fix_session_reject_reason option; (* Tag 373.  *)
-};;
+}
+;;
 
 (** Sequence reset data. Note that gap_fill_flag is set as Yes/No type for appropriate printing. *)
 type sequence_reset_data = {
     new_seq_no                      : int;                      (* Tag 36 *)
     gap_fill_flag                   : fix_yes_no_type option;   (* Tag 123 *)
-};;
+}
+;;
 
 (** Creating new order: http://www.onixs.biz/fix-dictionary/4.4/msgType_D_68.html *)
 type new_order_single_data = {
@@ -320,12 +334,14 @@ type new_order_single_data = {
     price                           : fix_price option;                 (* Tag 44 *)
     stop_px                         : fix_price option;                 (* Tag 99 *)
 
-};;
+}
+;;
 
 (** Cancel order *)
 type cancel_order_data = {
     cl_order_id                     : int;
-};;
+}
+;;
 
 
 (** Trade Capture Report <AE> *)
@@ -365,14 +381,16 @@ type fix_reject_flags = {
     garbled                         : bool;
     session_invalid                 : fix_session_reject_reason option;
     business_invalid                : fix_business_reject_reason option;
-};;
+}
+;;
 
 (** When nothing's rejected... *)
 let default_reject_flags = {
     garbled                         = false;
     session_invalid                 = None;
     business_invalid                = None;
-};;
+}
+;;
 
 type fix_message = {
     header                          : fix_header;
@@ -382,8 +400,8 @@ type fix_message = {
     (* Note: the field below is used iternally only - it separates rejection logic
         between parser/generator vs. engine iml-comparible logic. *)
     reject_flags                    : fix_reject_flags;
-};;
-
+}
+;;
 
 let fix_is_msg_session_invalid m =
     match m.reject_flags.session_invalid with 
