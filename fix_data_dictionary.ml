@@ -396,10 +396,6 @@ type fix_message = {
     header                          : fix_header;
     msg_data                        : fix_msg_data;
     trailer                         : fix_trailer;
-
-    (* Note: the field below is used iternally only - it separates rejection logic
-        between parser/generator vs. engine iml-comparible logic. *)
-    reject_flags                    : fix_reject_flags;
 }
 ;;
 

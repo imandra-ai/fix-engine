@@ -12,6 +12,7 @@
 (* @meta[imandra_ignore] on @end *)
 open Basic_types;;
 open Datetime;;
+open Full_session_core;;
 open Full_fix_fields;;
 (* @meta[imandra_ignore] off @end *)
 
@@ -226,7 +227,7 @@ type full_fix_msg_test_request_data = {
 ;;
 
 (* Global type with all of the messages. *)
-type full_fix_app_msg = 
+type full_fix_app_msg_data = 
     | Full_Msg_ExecutionReport                       of full_fix_msg_execution_report_data
     | Full_Msg_OrderCancelRequest                    of full_fix_msg_order_cancel_request_data
     | Full_Msg_OrderCancelReplaceRequest             of full_fix_msg_order_cancel_replace_request_data
@@ -234,7 +235,7 @@ type full_fix_app_msg =
     | Full_Msg_CancelReject                          of full_fix_msg_cancel_reject_data                           
 ;;
 
-type full_fix_admin_msg = 
+type full_fix_admin_msg_data = 
     | Full_Msg_Hearbeat                              of full_fix_msg_heartbeat_data
     | Full_Msg_Logon                                 of full_fix_msg_logon_data
     | Full_Msg_Logoff                                of full_fix_msg_logoff_data
@@ -261,12 +262,44 @@ type full_field_missing_data = {
 }
 ;;
 
+(** Admin messages *)
+type full_fix_admin_msg = {
+    admin_headerr                                   : fix_header;
+    admin_data                                      : full_fix_admin_msg_data;
+    admin_trailer                                   : fix_trailer;
+}
+;;
+
+
+type full_fix_msg_data = 
+    | Full_FIX_Admin_Msg                            of full_fix_admin_msg_data
+    | Full_FIX_App_Msg                              of full_fix_app_msg_data
+;;
+
+(** Applicatoin messages *)
+type full_fix_msg = {
+    app_header                                      : fix_header;
+    app_data                                        : full_fix_msg_data;
+    app_trailer                                     : fix_header;
+}
+;;
+
+type session_rejected_msg_data = {
+    two : int;
+    one : int;
+}
+;;
+
+type biz_rejected_msg_data = {
+
+
+}
+;;
+
 (** Contains the complete fix. *)
 type full_top_level_msg = 
-    | ValidAdminMsg                                 of full_fix_admin_msg
-    | ValidAppMsg                                   of full_fix_app_msg
-    | ReqFieldMissing                               of full_field_missing_data
-   (* | InvalidField                                  of full_fix_msg *)
-    | UnsupportedByApp                              of full_fix_app_msg
+    | ValidMsg                                      of full_fix_msg
+    | SessionRejectedMsg                            of session_rejected_msg_data
+    | BusinessRejectedMsg                           of biz_rejected_msg_data
     | Gargled
 ;;

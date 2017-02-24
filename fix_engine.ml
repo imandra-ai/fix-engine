@@ -10,9 +10,9 @@
 
 
 (* @meta[imandra_ignore] on @end *)
-open Datetime;;
-open Imarkets;;             
-open Fix_data_dictionary;;
+open Datetime;;        
+(*open Fix_data_dictionary;; *)
+open Full_messages;;
 (* @meta[imandra_ignore] off @end *)
 
 (* Define set of actions + data for manual intervention by the user. *)
@@ -29,7 +29,7 @@ type session_data = {
 type fix_engine_int_msg = 
     | TimeChange            of fix_utctimestamp             (* TODO change this to appropriate time datatype. Waiting on support of basic datatypes. *)
     | CreateSession         of session_data                 (* Create sessions command. *)
-    | ApplicationData       of fix_msg_data                 (* These should only be Application message data types. See 'is_admin_msg'.  *)
+    | ApplicationMsg        of full_fix_app_msg             (* These should only be Application message data types. See 'is_admin_msg'.  *)
     | ManualIntervention    of manual_int_data              (* TODO Define what can be done here. *)
 ;;
 
@@ -64,16 +64,16 @@ type fix_engine_state = {
     incoming_seq_num        : int;                          (* Sequence number of the last processed incoming message. *)
     outgoing_seq_num        : int;                          (* Sequence number of the last sent message. *)
 
-    incoming_fix_msg        : fix_message option;           (* Messages we will send out *)
-    outgoing_fix_msg        : fix_message option;           (* Messages we receive *)
+    incoming_fix_msg        : full_top_level_msg option;    (* Messages we will send out *)
+    outgoing_fix_msg        : full_top_level_msg option;    (* Messages we receive *)
 
-    fe_cache                : fix_message list;             (* Maintain a cache of messages in case we detect out of sequence message. *)
-    fe_history              : fix_message list;             (* We maintain history of our outgoing messages in case we're asked to retransmit. *)
+    fe_cache                : full_top_level_msg list;      (* Maintain a cache of messages in case we detect out of sequence message. *)
+    fe_history              : full_top_level_msg list;      (* We maintain history of our outgoing messages in case we're asked to retransmit. *)
 
     fe_last_hbeat_recived   : fix_utctimestamp;             (* Last time we received a heartbeat message. *)
     fe_heartbeat_interval   : fix_duration;                 (* Negotiated heartbeat interval. *)
 
-    fe_history_to_send      : fix_message list;             (* Used in message retransmission. *)
+    fe_history_to_send      : full_top_level_msg list;      (* Used in message retransmission. *)
 
     fe_application_up       : bool;                         (* Is the application (that's receiving messages up and running?) 
                                                                 TODO: we might need to constitute a heartbeat to enforce this. *)
@@ -433,7 +433,7 @@ let rec no_seq_gaps ( msg_list, last_seq_num : fix_message list * int) =
     match msg_list with 
     | [] -> true
     | x::xs ->
-        if x.header.msg_seq_num <> (last_seq_num + 1) then 
+        if x.header.msg_seq_num <> ( last_seq_num + 1 ) then 
             false
         else
             no_seq_gaps ( xs, x.header.msg_seq_num )
