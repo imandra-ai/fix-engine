@@ -16,6 +16,17 @@ open Full_session_core;;
 open Full_fix_fields;;
 (* @meta[imandra_ignore] off @end *)
 
+(** Message tags - a way for us to identify messages without their full data. *)
+type full_fix_msg_tag = 
+    | Full_Msg_ExecutionReport_Tag
+    | Full_Msg_OrderCancelRequest_Tag
+    | Full_Msg_OrderCancelReplaceRequest_Tag
+    | Full_Msg_NewOrderSingle_Tag
+    | Full_Msg_CancelReject_Tag
+    | Full_Msg_Reject_Tag
+    | Full_Msg_BusinessReject_Tag
+;;
+
 type full_fix_msg_new_order_single_data = {
     full_newOrderSingle_Account                     : fix_string option;
     full_newOrderSingle_ClOrdID                     : fix_string option;
@@ -195,9 +206,14 @@ type full_fix_msg_logoff_data = {
 }
 ;;
 
-type full_fix_msg_session_reject_data = {
-    sr_ref_seq_num                                  : int;  (* Tag 45. MsgSeqNum of rejected message *)
-    session_reject_reason                           : fix_session_reject_reason option; (* Tag 373.  *)
+type full_fix_msg_reject_data = {
+    sr_ref_seq_num                                  : int;                              (* Tag 45. MsgSeqNum of rejected message *)
+    sr_ref_tag_id                                   : fix_string;                       (* *)
+    sr_ref_msg_type                                 : full_fix_msg_tag option;          (* *)
+    sr_session_reject_reason                        : fix_session_reject_reason option; (* Tag 373.  *)
+    sr_text                                         : fix_string option;                (* *)
+    sr_encoded_text_len                             : int option;                       (* *)
+    sr_encoded_text                                 : fix_string;                       (* *)
 }
 ;;
 
@@ -239,20 +255,11 @@ type full_fix_admin_msg_data =
     | Full_Msg_Hearbeat                              of full_fix_msg_heartbeat_data
     | Full_Msg_Logon                                 of full_fix_msg_logon_data
     | Full_Msg_Logoff                                of full_fix_msg_logoff_data
-    | Full_Msg_Session_Reject                        of full_fix_msg_session_reject_data
+    | Full_Msg_Reject                                of full_fix_msg_reject_data
     | Full_Msg_Business_Reject                       of full_fix_msg_business_reject_data
     | Full_Msg_Resend_Request                        of full_fix_msg_resend_request_data
     | Full_Msg_Sequence_Reset                        of full_fix_msg_sequence_reset_data
     | Full_Msg_Test_Request                          of full_fix_msg_test_request_data
-;;
-
-(** Message tags - a way for us to identify messages without their full data. *)
-type full_fix_msg_tag = 
-    | Full_Msg_ExecutionReport_Tag
-    | Full_Msg_OrderCancelRequest_Tag
-    | Full_Msg_OrderCancelReplaceRequest_Tag
-    | Full_Msg_NewOrderSingle_Tag
-    | Full_Msg_CancelReject_Tag
 ;;
 
 (** Contains the missing field information. *)
@@ -262,15 +269,6 @@ type full_field_missing_data = {
 }
 ;;
 
-(** Admin messages *)
-type full_fix_admin_msg = {
-    admin_headerr                                   : fix_header;
-    admin_data                                      : full_fix_admin_msg_data;
-    admin_trailer                                   : fix_trailer;
-}
-;;
-
-
 type full_fix_msg_data = 
     | Full_FIX_Admin_Msg                            of full_fix_admin_msg_data
     | Full_FIX_App_Msg                              of full_fix_app_msg_data
@@ -278,25 +276,60 @@ type full_fix_msg_data =
 
 (** Applicatoin messages *)
 type full_fix_msg = {
-    app_header                                      : fix_header;
-    app_data                                        : full_fix_msg_data;
-    app_trailer                                     : fix_header;
+    full_msg_header                                 : fix_header;
+    full_msg_data                                   : full_fix_msg_data;
+    full_msg_trailer                                : fix_trailer;
 }
 ;;
 
+(** 
+    Note that information contained in the data structures for Business and Session
+        Rejected messages should be enough to send out the 'Reject' and 'BusinessReject' messages.
+
+    Reject message
+
+    45	RefSeqNum               - Required - MsgSeqNum <34> of rejected message
+    371	RefTagID                - Optional - The tag number of the FIX field being referenced.
+    372	RefMsgType              - Optional - The MsgType <35> of the FIX message being referenced.
+    373	SessionRejectReason	    - Optional - Code to identify reason for a session-level Reject <3> message.
+    58	Text	                - Optional - Where possible, message to explain reason for rejection
+    354	EncodedTextLen	        - Optional - Must be set if EncodedText <355> field is specified and must immediately precede it.
+    355	EncodedText	            - Optional - Encoded (non-ASCII characters) representation of the Text <58> field in the encoded 
+                                                format specified via the MessageEncoding <347> field.
+*)
 type session_rejected_msg_data = {
-    two : int;
-    one : int;
+    srej_msg_msg_seq_num                            : int;
+    srej_msg_field_tag                              : full_fix_field;
+    srej_msg_msg_type                               : full_fix_msg_tag;
+    srej_msg_reject_reason                          : fix_session_reject_reason;
+    srej_text                                       : fix_string;
+    srej_encoded_text                               : fix_string;
 }
 ;;
+
+(** 
+    Business Reject message
+
+    45	RefSeqNum	            - Optional - MsgSeqNum <34> of rejected message
+    372	RefMsgType	Y	        - Required - The MsgType <35> of the FIX message being referenced.
+    379	BusinessRejectRefID	    - Optional - The value of the business-level 'ID' field on the message being referenced. 
+                                                Required unless the corresponding ID field (see list above) was not specified.
+    380	BusinessRejectReason    - Required - Code to identify reason for a Business Message Reject <j> message.
+    58	Text	                - Optional - Where possible, message to explain reason for rejection
+    354	EncodedTextLen	        - Optional - Must be set if EncodedText <355> field is specified and must immediately precede it.
+    355	EncodedText	            - Optional - Encoded (non-ASCII characters) representation of the Text <58> field in the encoded 
+                                                format specified via the MessageEncoding <347> field.
+*)
 
 type biz_rejected_msg_data = {
-
-
+    brej_msg_ref_seq_num                            : int;
+    brej_msg_msg_tag                                : full_fix_msg_tag;
+    brej_msg_reject_reason                          : fix_business_reject_reason;
+    brej_msg_text                                   : fix_string option;
+    brej_msg_encoded_text                           : fix_string option;
 }
 ;;
 
-(** Contains the complete fix. *)
 type full_top_level_msg = 
     | ValidMsg                                      of full_fix_msg
     | SessionRejectedMsg                            of session_rejected_msg_data
