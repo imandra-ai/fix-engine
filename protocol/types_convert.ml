@@ -3,7 +3,7 @@
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    Conversion b/w different types.
+    Conversion b/w full and model types.
 
     type_convert.ml
 

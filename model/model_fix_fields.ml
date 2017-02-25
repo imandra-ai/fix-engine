@@ -1,7 +1,7 @@
 (** 
 
     Aesthetic Integration Limited
-    Copyright 2014 - 2017
+    Copyright (c) 2014 - 2017
 
 
     model_fix_fields.ml
