@@ -8,7 +8,7 @@
     runner.ml 
 *)
 
-open Fix_data_dictionary
+open Full_messages
 open Fix_engine
 
 type fix_engine_global_state = {

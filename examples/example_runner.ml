@@ -3,7 +3,7 @@
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    Runs the hand-written examples.
+    Runs examples.
 
     example_runner.ml
     

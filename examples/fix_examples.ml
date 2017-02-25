@@ -1,4 +1,5 @@
-(** 
+(**
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
@@ -7,7 +8,7 @@
     fix_examples.ml
 *)
 
-open Fix_data_dictionary
+
 open Fix_engine
 open Fix_pp
 open Fix_engine_pp

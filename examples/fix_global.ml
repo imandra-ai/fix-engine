@@ -1,20 +1,21 @@
 (** 
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    Implementation of the FIX 4.4 engine.
+
 
     fix_global.ml 
 *)
 
-open Fix_data_dictionary
+open Full_messages
 open Fix_engine
 open Fix_engine_pp
 
 (* We're combining these to make it easier to run simulations and demonstrate
     examples, etc. *)
 type msg_to_proc = [
-    | `FIX_MSG of fix_message 
+    | `FIX_MSG of full_top_level_msg 
     | `INT_MSG of fix_engine_int_msg
 ];;
 
