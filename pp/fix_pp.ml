@@ -14,6 +14,7 @@ open List
 open Basic_types
 open Datetime
 open Full_fix_fields
+open Full_messages
 open Full_session_core
 
 let fix_field_to_string = function 
@@ -41,6 +42,11 @@ let fix_field_to_string = function
     | Full_FIX_Field_LocateBroker                       -> "LocateBroker"
     | Full_FIX_Field_LocateReqd                         -> "LocateReqd"
     | Full_FIX_Field_ExecInst                           -> "ExecInst"
+;;
+
+let fix_field_opt_to_string = function
+    | None                                              -> None
+    | Some x                                            -> Some ( fix_field_to_string x )
 ;;
 
 (** Session rejection reasons *)
@@ -132,6 +138,11 @@ let side_to_string = function
     | FIX_Side_Borrow                                   -> "G"
 ;;
 
+let sideopt_to_string = function
+    | None                                              -> None
+    | Some x                                            -> Some ( side_to_string x )
+;;
+
 let string_to_side = function 
     | "1"                                               -> FIX_Side_Buy
     | "2"                                               -> FIX_Side_Sell
@@ -218,6 +229,11 @@ let ord_type_to_string = function
     | FIX_Ord_Type_Pegged                               -> "P"
 ;;
 
+let ordtype_opt_to_string = function
+    | None                                              -> None
+    | Some x                                            -> Some ( ord_type_to_string x )
+;;
+
 let string_to_ord_type = function 
     | "1"                                               -> FIX_Ord_Type_Market
     | "2"                                               -> FIX_Ord_Type_Limit
@@ -253,6 +269,7 @@ let intopt_to_json : ( int option -> Yojson.Basic.json ) =
     function None -> `Null | Some n -> `Int  n
 ;;
 
+
 let boolopt_to_json : ( bool option -> Yojson.Basic.json ) = 
     function None -> `Null | Some b -> `Bool b
 ;;
@@ -262,7 +279,7 @@ let stringopt_to_json : ( string option -> Yojson.Basic.json) =
 ;;
 
 
-let utctimestampt_to_json ( ts : fix_utctimestamp ) =
+let utctimestamp_to_json ( ts : fix_utctimestamp ) =
     let list_assoc = [
         ( "utc_timestamp_year"                          , `Int ts.utc_timestamp_year                     );
         ( "utc_timestamp_month"                         , `Int ts.utc_timestamp_month                    );
@@ -273,6 +290,11 @@ let utctimestampt_to_json ( ts : fix_utctimestamp ) =
         ( "uts_timestamp_millisec"                      , intopt_to_json ts.uts_timestamp_millisec       );
     ] |> filter_nulls in
     `Assoc list_assoc
+;;
+
+let utctimestamp_opt_to_json = function
+    | None                                              -> `Null
+    | Some x                                            -> utctimestamp_to_json x
 ;;
 
 let utcduration_to_json ( d : fix_duration ) = 
@@ -345,4 +367,93 @@ let priceopt_to_string p =
     match p with 
     | None                                              -> None
     | Some k                                            -> Some (Printf.sprintf "%.1d" k)
+;;
+
+let msg_tag_to_string mtag =
+    match mtag with 
+    | Full_Msg_ExecutionReport_Tag                      -> Some "ExecutionReport"
+    | Full_Msg_OrderCancelRequest_Tag                   -> Some "OrderCancelRequest"
+    | Full_Msg_OrderCancelReplaceRequest_Tag            -> Some "OrderCancelReplaceRequest"
+    | Full_Msg_NewOrderSingle_Tag                       -> Some "NewOrderSingle"
+    | Full_Msg_CancelReject_Tag                         -> Some "CancelReject"
+    | Full_Msg_Reject_Tag                               -> Some "Reject"
+    | Full_Msg_BusinessReject_Tag                       -> Some "BusinessReject"
+;;
+
+let msg_opt_tag_to_string mtag = 
+    match mtag with 
+    | None                                              -> None
+    | Some m                                            -> msg_tag_to_string m
+;;
+
+
+let currency_to_string = function
+    | GBP                                               -> "GBP"
+    | USD                                               -> "USD"
+;;
+
+let currency_opt_to_string = function
+    | None                                              -> None
+    | Some x                                            -> Some ( currency_to_string x )
+;;
+
+let exectype_to_string = function 
+    | FIX_ExecType_New                                  -> "New"
+    | FIX_ExecType_PartialFill                          -> "PartialFill"
+    | FIX_ExecType_Fill                                 -> "Fill"
+    | FIX_ExecType_DoneForDay                           -> "DoneForDay"
+    | FIX_ExecType_Canceled                             -> "Canceled"
+    | FIX_ExecType_Replace                              -> "Replace"
+    | FIX_ExecType_PendingCancel                        -> "PendingCancel"
+    | FIX_ExecType_Stopped                              -> "Stopped"
+    | FIX_ExecType_Rejected                             -> "Rejected"
+    | FIX_ExecType_Suspended                            -> "Suspended"
+    | FIX_ExecType_PendingNew                           -> "PendingNew"
+    | FIX_ExecType_Calculated                           -> "Calculated"
+;;
+
+let exectype_opt_to_string = function
+    | None                                              -> None
+    | Some x                                            -> Some ( exectype_to_string x )
+;;
+
+let handleinst_to_string = function
+    | FIX_HandlInst_Automated_NoInt                     -> "Automated_NoInt"
+    | FIX_HandlInst_Automated_Int                       -> "Automated_Int"
+    | FIX_HandlInst_Manual                              -> "Manual"
+;;
+
+let handleinst_opt_to_string = function
+    | None                                              -> None
+    | Some x                                            -> Some ( handleinst_to_string x )
+;;
+
+let execinst_to_string = function 
+    | FIX_ExecInst_NotHeld                              -> "NotHeld"
+    | FIX_ExecInst_Work                                 -> "Work"
+    | FIX_ExecInst_GoAlong                              -> "GoAlong"
+    | FIX_ExecInst_OverTheDay                           -> "OverTheDay"
+    | FIX_ExecInst_Held                                 -> "Held"
+    | FIX_ExecInst_MidpointPeg                          -> "MidpointPeg"
+    | FIX_ExecInst_MarketPeg                            -> "MarketPeg"
+    | FIX_ExecInst_PrimaryPeg                           -> "PrimaryPeg"
+;;
+
+let execinst_opt_to_string = function
+    | None                                              -> None
+    | Some x                                            -> Some ( execinst_to_string x )
+;;
+
+let timeinforce_to_string = function
+    | FIX_TimeInForce_Day                               -> "Day"
+    | FIX_TimeInForce_IOC                               -> "IOC"
+    | FIX_TimeInForce_OPG                               -> "OPG"
+    | FIX_TimeInForce_FOK                               -> "FOK"
+    | FIX_TimeInForce_GTK                               -> "GTK"
+    | FIX_TimeInForce_GoodTillDate                      -> "GoodTillDate"
+;;
+
+let timeinforce_opt_to_string = function 
+    | None                                              -> None
+    | Some x                                            -> Some ( timeinforce_to_string x )
 ;;
