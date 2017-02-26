@@ -11,6 +11,8 @@
 (* @meta[imandra_ignore] on @end *)
 open Datetime;;        
 open Full_session_core;;
+open Full_admin_messages;;
+open Full_app_messages;;
 open Full_messages;;
 (* @meta[imandra_ignore] off @end *)
 
@@ -137,7 +139,7 @@ let init_fix_engine_state = {
 (** TODO Are there any other checks? 
     Answer: Yes - we need to add those checks to raw OCaml parser (these will result in invalid messages) *)
 let incoming_header_correct ( fh, comp_id : fix_header * int) =
-    fh.target_comp_id = comp_id
+    fh.h_target_comp_id = comp_id
 ;;
 
 (** We're running within Logon sequence. Here's the specification: 
@@ -162,7 +164,7 @@ let run_logon_sequence ( m, engine : full_fix_msg * fix_engine_state ) =
     let engine' = {
         engine with incoming_fix_msg = None;
     } in
-    if m.full_msg_header.target_comp_id <> engine.fe_comp_id then 
+    if m.full_msg_header.h_target_comp_id <> engine.fe_comp_id then 
         engine'
     else
         match m.full_msg_data with 
@@ -171,7 +173,7 @@ let run_logon_sequence ( m, engine : full_fix_msg * fix_engine_state ) =
             | Full_Msg_Logon d -> {
                 engine' with 
                     fe_curr_mode = ActiveSession;
-                    incoming_seq_num = m.full_msg_header.msg_seq_num;
+                    incoming_seq_num = m.full_msg_header.h_msg_seq_num;
             }
             | _ -> engine'
             )
@@ -197,8 +199,8 @@ let run_retransmit ( engine : fix_engine_state ) =
     This is when we need to transfer into Recovery Mode and request the 
     missing sequence to be retransmitted. *)
 let msg_consistent ( engine, msg_header : fix_engine_state * fix_header ) = 
-    let seq_num_correct = msg_header.msg_seq_num = (engine.incoming_seq_num + 1) in 
-    match msg_header.poss_dup_flag with 
+    let seq_num_correct = msg_header.h_msg_seq_num = (engine.incoming_seq_num + 1) in 
+    match msg_header.h_poss_dup_flag with 
     | None -> seq_num_correct
     | Some dup -> dup || ((not dup) && seq_num_correct)
 ;;
@@ -207,10 +209,10 @@ let msg_consistent ( engine, msg_header : fix_engine_state * fix_header ) =
 let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, msg, is_duplicate ) = {
     full_msg_header = {
         default_fix_header with 
-            msg_seq_num = osn + 1;
-            poss_dup_flag = Some is_duplicate;
-            target_comp_id = target_comp_id;
-            sender_comp_id = our_comp_id;
+            h_msg_seq_num = osn + 1;
+            h_poss_dup_flag = Some is_duplicate;
+            h_target_comp_id = target_comp_id;
+            h_sender_comp_id = our_comp_id;
     };
     
     (* We're simply attaching the message data here. *)
@@ -230,7 +232,7 @@ let create_logon_msg ( targetID, last_seq_num, hbeat_interval : int * int * fix_
     ValidMsg ( {
         full_msg_header = {
             default_fix_header 
-                with msg_seq_num = last_seq_num + 1;
+                with h_msg_seq_num = last_seq_num + 1;
         };
 
         full_msg_data = Full_FIX_Admin_Msg ( 
@@ -310,13 +312,13 @@ let run_no_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
     | Full_FIX_Admin_Msg msg -> (
         match msg with 
         | Full_Msg_Logon d -> 
-            let logon_msg = create_logon_msg (m.full_msg_header.sender_comp_id, engine.outgoing_seq_num, engine.fe_heartbeat_interval) in 
+            let logon_msg = create_logon_msg (m.full_msg_header.h_sender_comp_id, engine.outgoing_seq_num, engine.fe_heartbeat_interval) in 
             { 
                 engine with
                     fe_initiator            = Some false;
                     outgoing_fix_msg        = Some logon_msg;
                     outgoing_seq_num        = engine.outgoing_seq_num;
-                    fe_target_comp_id       = m.full_msg_header.sender_comp_id;
+                    fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
                     fe_curr_mode            = ActiveSession;            
             }
         | _ -> { 
@@ -364,7 +366,7 @@ let run_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
         | Full_Msg_Hearbeat     hb -> {
             (* Update information about the last received heartbeat message. *)    
                 engine with 
-                    incoming_seq_num = m.full_msg_header.msg_seq_num;
+                    incoming_seq_num = m.full_msg_header.h_msg_seq_num;
                     incoming_fix_msg = None;
                     fe_last_hbeat_recived = engine.fe_curr_time;  (* TODO Should this be  *)
             }
@@ -376,7 +378,7 @@ let run_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
         update the last seq number processed. *) 
         {
             engine with
-                incoming_seq_num = m.full_msg_header.msg_seq_num;
+                incoming_seq_num = m.full_msg_header.h_msg_seq_num;
                 outgoing_int_msg = Some (ApplicationData app_msg );
                 incoming_fix_msg = None;
         }
@@ -388,12 +390,12 @@ let replay_single_msg ( m, engine : full_fix_msg * fix_engine_state ) =
     match m.full_msg_data with 
     | Full_FIX_App_Msg app_msg  -> {
             engine with 
-            incoming_seq_num = m.full_msg_header.msg_seq_num;
+            incoming_seq_num = m.full_msg_header.h_msg_seq_num;
             outgoing_int_msg = Some ( ApplicationData app_msg );
         }
     | Full_FIX_Admin_Msg msg    -> {
         engine with 
-            incoming_seq_num = m.full_msg_header.msg_seq_num;
+            incoming_seq_num = m.full_msg_header.h_msg_seq_num;
         }
 ;; 
 
@@ -416,10 +418,10 @@ let rec no_seq_gaps ( msg_list, last_seq_num : full_fix_msg list * int) =
     match msg_list with 
     | [] -> true
     | x::xs ->
-        if x.full_msg_header.msg_seq_num <> ( last_seq_num + 1 ) then 
+        if x.full_msg_header.h_msg_seq_num <> ( last_seq_num + 1 ) then 
             false
         else
-            no_seq_gaps ( xs, x.full_msg_header.msg_seq_num )
+            no_seq_gaps ( xs, x.full_msg_header.h_msg_seq_num )
 ;;
 
 (** Is cache valid so that we can transition from recovery?
@@ -433,8 +435,8 @@ let is_cache_complete ( cache, last_seq_processed : full_fix_msg list * int ) =
     match cache with 
     | [] -> false
     | x::xs -> 
-        let correct_seq_num = x.full_msg_header.msg_seq_num = (last_seq_processed + 1) in 
-        let no_gaps = no_seq_gaps ( xs, x.full_msg_header.msg_seq_num ) in 
+        let correct_seq_num = x.full_msg_header.h_msg_seq_num = (last_seq_processed + 1) in 
+        let no_gaps = no_seq_gaps ( xs, x.full_msg_header.h_msg_seq_num ) in 
         correct_seq_num && no_gaps
 ;;
 
@@ -442,8 +444,8 @@ let is_cache_complete ( cache, last_seq_processed : full_fix_msg list * int ) =
 let rec add_to_cache ( m, cache : full_fix_msg * full_fix_msg list ) = 
     match cache with 
     | []        -> [ m ]
-    | x::[]     -> if x.full_msg_header.msg_seq_num > m.full_msg_header.msg_seq_num then [m; x] else [ x; m ]
-    | x::xs     -> if x.full_msg_header.msg_seq_num > m.full_msg_header.msg_seq_num then 
+    | x::[]     -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then [m; x] else [ x; m ]
+    | x::xs     -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then 
                     m::x::xs else ( x :: ( add_to_cache (m, xs) ) )
 ;;
 
@@ -503,7 +505,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
                 engine with 
                     outgoing_fix_msg = Some ( ValidMsg ( msg )); 
                     incoming_int_msg = None;
-                    outgoing_seq_num = msg.full_msg_header.msg_seq_num;
+                    outgoing_seq_num = msg.full_msg_header.h_msg_seq_num;
             }
         | _                 ->
             (* TODO How should all of this be handled? *)

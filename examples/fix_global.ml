@@ -3,14 +3,13 @@
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-
-
     fix_global.ml 
+    
 *)
 
 open Full_messages
 open Fix_engine
-open Fix_engine_pp
+open Fix_engine_json
 
 (* We're combining these to make it easier to run simulations and demonstrate
     examples, etc. *)

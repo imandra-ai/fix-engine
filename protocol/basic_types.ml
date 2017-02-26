@@ -3,8 +3,6 @@
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
     
-
-
     fix_iso_types.ml
 
 *)
@@ -68,7 +66,7 @@ type fix_session_reject_reason =
 ;;
 
 (** Tag 39: http://www.onixs.biz/fix-dictionary/4.4/tagNum_39.html *)
-type fix_order_status = 
+type fix_ordstatus = 
     | FIX_Ord_Status_New
     | FIX_Ord_Status_PartiallyFilled
     | FIX_Ord_Status_Filled
@@ -211,24 +209,6 @@ type fix_side =
     | FIX_Side_Redeem
     | FIX_Side_Lend
     | FIX_Side_Borrow
-;;
-
-type fix_ordstatus =
-    | FIX_OrdStatus_PendingCancel
-    | FIX_OrdStatus_PendingReplace
-    | FIX_OrdStatus_DoneForDay
-    | FIX_OrdStatus_Calculated
-    | FIX_OrdStatus_Stopped
-    | FIX_OrdStatus_Suspended
-    | FIX_OrdStatus_Replaced
-    | FIX_OrdStatus_Rejected
-    | FIX_OrdStatus_PendingNew
-    | FIX_OrdStatus_AcceptedForBidding
-    | FIX_OrdStatus_New
-    | FIX_OrdStatus_PartiallyFilled
-    | FIX_OrdStatus_Filled
-    | FIX_OrdStatus_Canceled
-    | FIX_OrdStatus_Expired
 ;;
 
 type fix_float_data = {

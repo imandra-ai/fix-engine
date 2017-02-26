@@ -19,6 +19,17 @@ type fix_utctimestamp = {
 }
 ;;
 
+let make_utctimestamp ( year, month, day, hour, minute, second, millisec ) = {
+    utc_timestamp_year      = year;
+    utc_timestamp_month     = month;
+    utc_timestamp_day       = day;
+    utc_timestamp_hour      = hour;
+    utc_timestamp_minute    = minute;
+    utc_timestamp_second    = second;
+    uts_timestamp_millisec  = millisec;
+}
+;;
+
 let is_valid_utctimestamp ( ts : fix_utctimestamp ) =
     0 <= ts.utc_timestamp_year && ts.utc_timestamp_year <= 9999 && 
     1 <= ts.utc_timestamp_month && ts.utc_timestamp_month <= 12 && 
@@ -180,6 +191,18 @@ type fix_duration = {
     dur_seconds             : int option;
 }
 ;;
+
+let make_duration ( years, months, weeks, days, hours, minutes, seconds ) = {
+    dur_years               = years;
+    dur_months              = months;
+    dur_weeks               = weeks;
+    dur_days                = days;
+    dur_hours               = hours;
+    dur_minutes             = minutes;
+    dur_seconds             = seconds;
+}
+;;
+
 
 type fix_interval = {
     i_start                 : fix_utctimestamp;

@@ -14,6 +14,8 @@ open List
 open Basic_types
 open Datetime
 open Full_fix_fields
+open Full_admin_messages
+open Full_app_messages
 open Full_messages
 open Full_session_core
 
@@ -75,6 +77,13 @@ let reject_reason_opt_to_string = function
     | None                                              -> None
     | Some x                                            -> Some (fix_session_reject_to_string x)
 ;;
+
+let busines_reject_reason_to_string = function
+    | ApplicationDown                                   -> "ApplicationDown"
+    | MessageTypeNotSupported                           -> "MessageTypeNotSupported"
+    | FieldMissing                                      -> "FieldMissing"
+;;
+
 
 (** Business rejection reasons. *)
 let fix_business_reject_to_string = function
@@ -181,6 +190,11 @@ let ord_status_to_string = function
     | FIX_Ord_Status_PendingReplace                     -> "E"
 ;;
 
+let ord_status_opt_to_string = function
+    | None                                              -> None
+    | Some s                                            -> Some (ord_status_to_string (s))
+;;
+
 (** The opposite of above - notice that Invalid is mapped to all 
     incorrect strings *)
 let string_to_ord_status = function
@@ -269,13 +283,17 @@ let intopt_to_json : ( int option -> Yojson.Basic.json ) =
     function None -> `Null | Some n -> `Int  n
 ;;
 
-
 let boolopt_to_json : ( bool option -> Yojson.Basic.json ) = 
     function None -> `Null | Some b -> `Bool b
 ;;
 
 let stringopt_to_json : ( string option -> Yojson.Basic.json) = 
     function None -> `Null | Some s -> `String s
+;;
+
+let floatopt_to_json : ( fix_float option -> Yojson.Basic.json ) = function
+    | None -> `Null
+    | Some b -> `Float ( float_GetFloat ( b ) )
 ;;
 
 
@@ -311,40 +329,6 @@ let utcduration_to_json ( d : fix_duration ) =
 ;;
 
 
-let header_to_json (fh : fix_header) : Yojson.Basic.json =
-    let list_assoc = [
-        ( "begin_string"                                , `Int fh.begin_string                           );                        
-        ( "body_length"                                 , `Int fh.body_length                            );
-        ( "sender_comp_id"                              , `Int fh.sender_comp_id                         );
-        ( "target_comp_id"                              , `Int fh.target_comp_id                         );
-        ( "msg_seq_num"                                 , `Int fh.msg_seq_num                            );
-                                       
-        ( "on_behalf_of_comp_id"                        , intopt_to_json fh.on_behalf_of_comp_id         );
-        ( "deliver_to_comp_id"                          , intopt_to_json fh.deliver_to_comp_id           );
-        ( "secure_data_len"                             , intopt_to_json fh.secure_data_len              );
-        ( "secure_data"                                 , intopt_to_json fh.secure_data                  );
-        ( "sender_sub_id"                               , intopt_to_json fh.sender_sub_id                );
-        ( "sender_location_id"                          , intopt_to_json fh.sender_location_id           );
-        ( "target_sub_id"                               , intopt_to_json fh.target_sub_id                );
-        ( "target_location_id"                          , intopt_to_json fh.target_location_id           );
-        ( "on_behalf_of_sub_id"                         , intopt_to_json fh.on_behalf_of_sub_id          );
-        ( "on_behalf_of_location_id"                    , intopt_to_json fh.on_behalf_of_location_id     );
-        ( "deliver_to_sub_id"                           , intopt_to_json fh.deliver_to_sub_id            );
-        ( "deliver_to_location_id"                      , intopt_to_json fh.deliver_to_location_id       );   
-        ( "poss_dup_flag"                               , boolopt_to_json fh.poss_dup_flag               );
-        ( "poss_resend"                                 , boolopt_to_json fh.poss_resend                 );             
-        ( "sending_time"                                , intopt_to_json fh.sending_time                 );
-        ( "orig_sending_time"                           , intopt_to_json fh.orig_sending_time            );
-        ( "xml_data_len"                                , intopt_to_json fh.xml_data_len                 );
-        ( "xml_data"                                    , intopt_to_json fh.xml_data                     );
-        ( "message_enconding"                           , intopt_to_json fh.message_enconding            );
-        ( "last_msg_seq_num_processed"                  , intopt_to_json fh.last_msg_seq_num_processed   );
-        ( "no_hops"                                     , intopt_to_json fh.no_hops                      );
-        ] |> filter_nulls
-        in
-    `Assoc list_assoc
-;;
-
 (** Basic Yes/No type *)
 let yes_no_to_string = function
     | FIX_Yes                                           -> "Y"
@@ -369,21 +353,27 @@ let priceopt_to_string p =
     | Some k                                            -> Some (Printf.sprintf "%.1d" k)
 ;;
 
-let msg_tag_to_string mtag =
-    match mtag with 
-    | Full_Msg_ExecutionReport_Tag                      -> Some "ExecutionReport"
-    | Full_Msg_OrderCancelRequest_Tag                   -> Some "OrderCancelRequest"
-    | Full_Msg_OrderCancelReplaceRequest_Tag            -> Some "OrderCancelReplaceRequest"
-    | Full_Msg_NewOrderSingle_Tag                       -> Some "NewOrderSingle"
-    | Full_Msg_CancelReject_Tag                         -> Some "CancelReject"
-    | Full_Msg_Reject_Tag                               -> Some "Reject"
-    | Full_Msg_BusinessReject_Tag                       -> Some "BusinessReject"
+let msg_tag_to_string = function
+    | Full_Msg_ExecutionReport_Tag                      -> "ExecutionReport"
+    | Full_Msg_OrderCancelRequest_Tag                   -> "OrderCancelRequest"
+    | Full_Msg_OrderCancelReplaceRequest_Tag            -> "OrderCnacelReplaceRequest"
+    | Full_Msg_NewOrderSingle_Tag                       -> "NewOrderSingle"
+    | Full_Msg_CancelReject_Tag                         -> "CancelReject"
+    | Full_Msg_BusinessReject_Tag                       -> "BusinessReject"
+    | Full_Msg_Hearbeat_Tag                             -> "Heartbeat"
+    | Full_Msg_Logon_Tag                                -> "Logon"
+    | Full_Msg_Logoff_Tag                               -> "Logoff"
+    | Full_Msg_Reject_Tag                               -> "Reject"
+    | Full_Msg_Business_Reject_Tag                      -> "BusinessReject"
+    | Full_Msg_Resend_Request_Tag                       -> "ResendRequest"
+    | Full_Msg_Sequence_Reset_Tag                       -> "SequenceReset"
+    | Full_Msg_Test_Request_Tag                         -> "TestRequest"
 ;;
 
 let msg_opt_tag_to_string mtag = 
     match mtag with 
     | None                                              -> None
-    | Some m                                            -> msg_tag_to_string m
+    | Some m                                            -> Some ( msg_tag_to_string m )
 ;;
 
 
