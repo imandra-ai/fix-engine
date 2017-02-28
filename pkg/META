@@ -1,0 +1,8 @@
+description = "FIX Engine"
+version = "%%VERSION_NUM%%"
+requires = "yojson"
+
+archive(byte) = "fix-engine.cma"
+archive(native) = "fix-engine.cmxa"
+plugin(byte) = "fix-engine.cma"
+plugin(native) = "fix-engine.cmxs"

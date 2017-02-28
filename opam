@@ -1,0 +1,20 @@
+opam-version: "0.0.1"
+name: "fix-engine"
+version: "~unknown"
+maintainer: "Denis Ignatovich <denis@aestheticintegration.com>"
+authors: "Denis Ignatovich <denis@aestheticintegration.com>, Grant Passmore <grant@aestheticintegration.com>"
+homepage: "https://github.com/AestheticIntegration/fix-engine"
+bug-reports: "https://github.com/AestheticIntegration/fix-engine/issues"
+license: "APACHE-2.0"
+dev-repo: "https://github.com/AestheticIntegration/fix-engine"
+doc: "https://AestheticIntegration.github.io/fix-engine/doc"
+build: [
+  [ "ocaml" "pkg/pkg.ml" "build" "--pinned" "%{pinned}%" ]
+]
+depends: [
+  "ocamlfind" {build}
+  "ocamlbuild" {build}
+  "topkg" {build}
+  "ounit" {test}
+  "yojson"
+]
