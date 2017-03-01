@@ -209,3 +209,31 @@ verify session_rejects_are_rejected ( state : fix_engine_state ) =
     incoming_rejected ==> ( msg_rejected && seq_num_updated )
 ;;
 
+
+(** **************************************************************************************** *)
+(** 
+    Base VG.5
+
+    Out of sequence message would result in state transitioning into Recovery mode.          *)
+(** **************************************************************************************** *)
+
+let incoming_msg_wrong_seq_num ( state : fix_engine_state ) =
+    match state.incoming_fix_msg with
+    | None -> false
+    | Some m ->
+    match m with 
+    | Gargled               -> false
+    | BusinessRejectedMsg _ -> false
+    | SessionRejectedMsg _  -> false
+    | ValidMsg msg          ->
+    msg.full_msg_header.h_msg_seq_num > ( state.incoming_seq_num + 1) 
+;;
+
+verify out_of_seq_leads_to_recovery ( state : fix_engine_state ) =
+
+    let state' = one_step ( state ) in 
+    ( state.fe_curr_mode = ActiveSession && 
+    state.incoming_seq_num = 1 && 
+    incoming_msg_wrong_seq_num ( state ) ) 
+    ==> (state'.fe_curr_mode = Recovery)
+;;

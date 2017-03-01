@@ -57,10 +57,10 @@ let example_2 () =
 
 record_example ("// Example 2: Session termination\n", example_2);;
 
-(** Login, then send an application data message, ensure it get to the second fix engine. *)
+(** Login, then send an application data message, ensure it gets to the second fix engine. *)
 let example_3 () = 
     let engine = {
-        init_fix_engine_state with 
+        init_fix_engine_state with
             fe_comp_id = 1;
     } in 
     let msgs = [
@@ -89,7 +89,7 @@ let example_3 () =
 record_example ( "// Example 3: successfully created a session\n", example_3 );;
 
 
-(** Login, then send an application data message, ensure it get to the second fix engine. *)
+(** Login, then send an application data message, ensure it gets to the second fix engine. *)
 let example_4 () = 
     let engine = {
         init_fix_engine_state with 
@@ -112,25 +112,27 @@ let example_4 () =
             full_msg_trailer = default_fix_trailer;
          });
 
-(*
-         `INT_MSG ( ApplicationData ( Full_FIX_App_Msg (
-            full_msg_header = {
-                default_fix_header with 
-                    h_target_comp_id = 1;
-            };
-        
-            full_msg_data = 
-                Full_Msg_Logon {
-                    encrypt_method = 123;
-                    heartbeat_interval = 123;
-                    raw_data_length = 123;
-                };
-        
-            full_msg_trailer = default_fix_trailer;
-         
-        )))
-        ;
-*)
+         `INT_MSG ( ApplicationData ( 
+                Full_Msg_NewOrderSingle {
+                    full_newOrderSingle_Account                     = Some 0;
+                    full_newOrderSingle_ClOrdID                     = Some 0;
+                    full_newOrderSingle_OrigClOrdID                 = Some 0;
+                    full_newOrderSingle_ExecInst                    = Some FIX_ExecInst_MidpointPeg;
+                    full_newOrderSingle_HandlInst                   = Some FIX_HandlInst_Automated_NoInt;
+                    full_newOrderSingle_TransactTime                = Some ( make_utctimestamp (2017, 1, 1, 0, 1, 0, None) );
+                    full_newOrderSingle_Symbol                      = Some 0;
+                    full_newOrderSingle_SymbolSfx                   = Some 0;
+                    full_newOrderSingle_Side                        = Some FIX_Side_Buy;
+                    full_newOrderSingle_OrderQty                    = Some ( make_Float ( 10.0, 2) );
+                    full_newOrderSingle_OrdType                     = Some FIX_Ord_Type_Market;
+                    full_newOrderSingle_Price                       = None;
+                    full_newOrderSingle_MinQty                      = Some ( make_Float ( 0.0, 0) );
+                    full_newOrderSingle_TimeInForce                 = Some FIX_TimeInForce_Day;
+                    full_newOrderSingle_LocateReqd                  = Some false;
+                    full_newOrderSingle_LocateBroker                = None;
+                    full_newOrderSingle_Currency                    = Some GBP;
+                }         
+        ));
     ] in
     run_through_msgs ( engine, msgs )
 ;;
@@ -153,7 +155,7 @@ let example_5 () =
                     h_target_comp_id = 1;
                     h_msg_seq_num = 3;        (* Should be 2 *)
             };
-            full_msg_data = Full_FIX_App_Msg ( 
+            full_msg_data = Full_FIX_App_Msg (
                 Full_Msg_ExecutionReport {
                     init_fix_msg_execution_report_data with
                         full_executionReport_OrderID    = Some 1;
@@ -176,7 +178,9 @@ let example_6 () =
             fe_curr_mode            = Recovery;
             fe_initiator            = Some false;
             incoming_seq_num        = 1;
-            fe_cache                = [];
+            fe_cache                = [
+
+            ];
     } in 
     let msgs = [
         `FIX_MSG ( ValidMsg {
@@ -199,7 +203,7 @@ let example_6 () =
     run_through_msgs (engine, msgs)
 ;;
 
-record_example ( "// Example 6: In Recovery mode,receiving missing message and recovering.\n", example_6 );;
+record_example ( "// Example 6: In Recovery mode, receiving missing message and recovering.\n", example_6 );;
 
 let example_7 () =
     let engine = {

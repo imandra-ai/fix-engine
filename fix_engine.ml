@@ -194,7 +194,7 @@ let run_retransmit ( engine : fix_engine_state ) =
         }
 ;;
 
-(** Is the message with the right sequence number?
+(** Does the message have the right sequence number?
 
     This is when we need to transfer into Recovery Mode and request the 
     missing sequence to be retransmitted. *)
@@ -254,33 +254,41 @@ let create_heartbeat_msg ( engine: fix_engine_state) =
         Full_Msg_Hearbeat {
             hb_test_req_id = None;
         }
-     ) in create_outbound_fix_msg ( engine.outgoing_seq_num, engine.fe_target_comp_id, engine.fe_comp_id, msg_data, false)
+     ) in 
+    ValidMsg (create_outbound_fix_msg ( engine.outgoing_seq_num, engine.fe_target_comp_id, engine.fe_comp_id, msg_data, false))
 ;;
 
 (* Create session-rejection message. *)
-(*let create_session_reject ( m, engine : fix_engine_state * full_fix_msg ) = 
-    let msg_data = Full_FIX_Admin_Msg ( 
-        Full_Msg_Reject {
-            sr_ref_seq_num = m.full_msg_header.msg_seq_num;
-            sr_session_reject_reason = 
-    ) in create_outbound_fix_msg (engine.outgoing_seq_num, engine.fe_target_comp_id, engine.fe_comp_id, msg_data, false)
+let create_session_reject_msg ( reject_info, outbound_seq_num, target_comp_id, comp_id : session_rejected_msg_data * int * int * int ) = 
+    let msg_data = 
+        Full_FIX_Admin_Msg (
+            Full_Msg_Reject {
+                sr_ref_seq_num              = reject_info.srej_msg_msg_seq_num;
+                sr_ref_tag_id               = 0;
+                sr_ref_msg_type             = None;
+                sr_session_reject_reason    = Some reject_info.srej_msg_reject_reason;
+                sr_text                     = None;
+                sr_encoded_text_len         = None;
+                sr_encoded_text             = 0;
+            } ) in 
+    ValidMsg ( create_outbound_fix_msg (outbound_seq_num, target_comp_id, comp_id, msg_data, false) )
 ;;
-*)
+
 
 (* Create business reject message. 
     Note: the reason we're separating the ApplicationDown reason is that
     the parser would not have access to this information. *)
-(*let create_business_reject ( engine, m ) =
-    let reason = 
-        match m.reject_flags.business_invalid with 
-        | None -> ApplicationDown
-        | Some x -> x in 
-    let msg_data = FIX_business_reject {
-        business_reject_reason = reason;
-        br_ref_seq_num = m.header.msg_seq_num;
-    } in create_outbound_fix_msg (engine.outgoing_seq_num, engine.fe_target_comp_id, engine.fe_comp_id, msg_data, false)
+let create_business_reject_msg ( reject_info, outbound_seq_num, target_comp_id, comp_id  : biz_rejected_msg_data * int * int * int ) =
+    let msg_data = 
+        Full_FIX_Admin_Msg (
+            Full_Msg_Business_Reject {
+                br_ref_seq_num              = reject_info.brej_msg_ref_seq_num;
+                business_reject_reason      = reject_info.brej_msg_reject_reason;
+            }
+        ) in 
+    ValidMsg ( create_outbound_fix_msg (outbound_seq_num, target_comp_id, comp_id, msg_data, false) )
 ;;
-*)
+
 (** ********************************************************************************************************** *)
 (**  Mode transition functions.                                                                                *)
 (** ********************************************************************************************************** *)
@@ -317,7 +325,7 @@ let run_no_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
                 engine with
                     fe_initiator            = Some false;
                     outgoing_fix_msg        = Some logon_msg;
-                    outgoing_seq_num        = engine.outgoing_seq_num;
+                    outgoing_seq_num        = engine.outgoing_seq_num + 1;
                     fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
                     fe_curr_mode            = ActiveSession;            
             }
@@ -347,7 +355,7 @@ let run_no_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
     3. We check whether it's an application message - pass it on to the application.
 *)
 let run_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
-    
+
     if not ( msg_consistent ( engine, m.full_msg_header ) ) then {
         (* We've detected an out-of sequence message. We therefore need to 
             transition into Recovery mode and initialize engine state with 
@@ -487,10 +495,11 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
             (* Let's initiate a session here. *)
             let logon_msg = create_logon_msg ( sd.dest_comp_id, engine.outgoing_seq_num, engine.fe_heartbeat_interval ) in { 
                 engine with 
-                    outgoing_fix_msg    = Some logon_msg;
-                    fe_curr_mode        = LogonInitiated;
-                    fe_initiator        = Some true;
-                    incoming_fix_msg    = None;
+                    outgoing_fix_msg = Some logon_msg;
+                    fe_curr_mode     = LogonInitiated;
+                    fe_initiator     = Some true;
+                    incoming_fix_msg = None;
+                    outgoing_seq_num = engine.outgoing_seq_num + 1;
                 }
             ) 
         else 
@@ -513,8 +522,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
         )
         
     | ManualIntervention mi ->
-        (* TODO implement this to have more detailed user data
-            that would reset engine state. *)
+        (* TODO implement this to have more detailed user data that would reset engine state. *)
         { engine with incoming_int_msg = None }
 ;;
 
@@ -525,31 +533,26 @@ let noop (m, engine : full_fix_msg * fix_engine_state) = {
 }
 ;;
 
-let business_reject ( msg, engine : biz_rejected_msg_data * fix_engine_state ) =
-    engine
-    (* 
-            let reject = create_business_reject (m, engine ) in {
-            engine with
-                incoming_fix_msg = None;
-                outgoing_fix_msg = Some reject;
-                incoming_seq_num = m.full_msg_header.msg_seq_num;
-                outgoing_seq_num = reject.full_msg_header.msg_seq_num;
+(** Convert the rejection information into an outbound BusinessReject message. *)
+let business_reject ( rejected_data, engine : biz_rejected_msg_data * fix_engine_state ) =
+    let reject_msg = create_business_reject_msg ( rejected_data, engine.outgoing_seq_num, engine.fe_target_comp_id, engine.fe_comp_id ) in {
+        engine with
+            incoming_fix_msg = None;
+            outgoing_fix_msg = Some reject_msg;
+            incoming_seq_num = rejected_data.brej_msg_ref_seq_num;
+            outgoing_seq_num = engine.outgoing_seq_num + 1;
         }
-    *)
 ;;
 
-let session_reject ( msg, engine : session_rejected_msg_data * fix_engine_state ) =
-    engine
-    (* 
-            let reject = create_session_reject ( m, engine ) in {
-            engine with 
-                incoming_fix_msg = None;
-                outgoing_fix_msg = Some reject;
-                incoming_seq_num = m.full_msg_header.msg_seq_num;
-                outgoing_seq_num = reject.full_msg_header.msg_seq_num;
+(** Convert the rejection information into an outbound Reject message. *)
+let session_reject ( rejected_data, engine : session_rejected_msg_data * fix_engine_state ) =
+    let reject_msg = create_session_reject_msg (rejected_data, engine.outgoing_seq_num, engine.fe_target_comp_id, engine.fe_comp_id ) in {
+        engine with 
+            incoming_fix_msg = None;
+            outgoing_fix_msg = Some reject_msg;
+            incoming_seq_num = rejected_data.srej_msg_msg_seq_num;
+            outgoing_seq_num = engine.outgoing_seq_num + 1;
         }
-    
-    *)
 ;;
 
 (* Process incoming FIX message here. *)
@@ -583,8 +586,7 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
 
 (** This sets validity of the incoming internal messages. 
 
-    TODO: Use the generated validity flags for the.
-*)
+    TODO: Use the DSL-generated validity checks. *)
 let is_int_message_valid ( engine, int_msg : fix_engine_state * fix_engine_int_msg ) =
     match int_msg with 
     | TimeChange t          -> utctimestamp_lessThan ( engine.fe_curr_time, t)
@@ -616,12 +618,9 @@ let one_step ( engine : fix_engine_state ) =
         (* Now we look to process internal (coming from our application) and external (coming from
             another FIX engine) messages. *)
         match engine.incoming_int_msg with 
-        | Some i -> proc_incoming_int_msg (i, engine)
-        | None -> 
-            match engine.incoming_fix_msg with 
-            | Some m -> 
-                (* Check whether the application is up, if not,
-                    then we need to reject with Business Reject msg. *)
-                proc_incoming_fix_msg (m, engine)
-            | None -> engine
+        | Some i    -> proc_incoming_int_msg (i, engine)
+        | None      -> 
+        match engine.incoming_fix_msg with 
+        | Some m    -> proc_incoming_fix_msg (m, engine)
+        | None      -> engine
 ;;
