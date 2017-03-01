@@ -55,7 +55,13 @@ let is_msg_valid_logon ( msg, next_seq_num : full_top_level_msg option * int ) =
 let no_msg ( msg : full_top_level_msg option ) =
     match msg with 
     | None  -> true
-    |  _    -> false
+    | _     -> false
+;;
+
+let no_int_msg ( msg : fix_engine_int_msg option ) = 
+    match msg with 
+    | None  -> true
+    | _     -> false
 ;;
 
 verify logon_msg_first ( state : fix_engine_state ) =
@@ -68,12 +74,13 @@ verify logon_msg_first ( state : fix_engine_state ) =
 
     let incoming_fix_valid_logon = is_msg_valid_logon ( state.incoming_fix_msg, ( state.incoming_seq_num + 1) ) in
     
+    let no_inc_int_msg = no_int_msg ( state.incoming_int_msg ) in
     let state' = one_step ( state ) in
     let next_msg_logon = is_msg_valid_logon ( state'.outgoing_fix_msg, state'.outgoing_seq_num ) in 
 
     ( state.fe_curr_mode = NoActiveSession && 
       state.incoming_seq_num = 0 && state.outgoing_seq_num = 1 &&
-      ( incoming_msg_create_session || incoming_fix_valid_logon ) && 
+      ( incoming_msg_create_session || ( incoming_fix_valid_logon && no_inc_int_msg ) ) && 
       state.fe_cache = [] && no_msg ( state.outgoing_fix_msg ) )
     ==> next_msg_logon
  ;;

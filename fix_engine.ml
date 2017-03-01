@@ -303,11 +303,11 @@ let run_init_seq ( engine : fix_engine_state ) =
         | CreateSession sd ->
             let msg = create_logon_msg (sd.dest_comp_id, engine.outgoing_seq_num, engine.fe_heartbeat_interval) in { 
                 engine with 
-                    fe_curr_mode        = LogonInitiated;
-                    outgoing_fix_msg    = Some msg;
-                    fe_target_comp_id   = sd.dest_comp_id;
-                    outgoing_seq_num    = engine.outgoing_seq_num + 1;
-                    incoming_fix_msg    = None;
+                    fe_curr_mode            = LogonInitiated;
+                    outgoing_fix_msg        = Some msg;
+                    fe_target_comp_id       = sd.dest_comp_id;
+                    outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                    incoming_fix_msg        = None;
             } 
         | _ -> { 
                 engine with incoming_fix_msg = None 
@@ -329,10 +329,7 @@ let run_no_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
                     fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
                     fe_curr_mode            = ActiveSession;            
             }
-        | _ -> { 
-            engine with 
-                incoming_fix_msg = None 
-        }
+        | _ -> engine
         )
     | Full_FIX_App_Msg _ -> engine
 ;;
@@ -555,23 +552,23 @@ let session_reject ( rejected_data, engine : session_rejected_msg_data * fix_eng
         }
 ;;
 
-(* Process incoming FIX message here. *)
+(** Process incoming FIX message here. *)
 let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) = 
     match m with
-    | Gargled               -> engine   (* Gargled messages are simply ignored. *)
-    | SessionRejectedMsg data  -> (
+    | Gargled                   -> engine   (* Gargled messages are simply ignored. *)
+    | SessionRejectedMsg data   -> (
             match engine.fe_curr_mode with 
             | NoActiveSession   -> engine
             | ActiveSession     -> session_reject ( data, engine )
             | _                 -> engine
         )
-    | BusinessRejectedMsg data -> (
+    | BusinessRejectedMsg data  -> (
             match engine.fe_curr_mode with 
             | NoActiveSession   -> engine
             | ActiveSession     -> business_reject ( data, engine )
             | _                 -> engine
         )
-    | ValidMsg msg          -> (
+    | ValidMsg msg              -> (
     match engine.fe_curr_mode with
         | NoActiveSession       -> run_no_active_session ( msg, engine)
         | LogonInitiated        -> run_logon_sequence ( msg, engine)
@@ -589,14 +586,14 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
     TODO: Use the DSL-generated validity checks. *)
 let is_int_message_valid ( engine, int_msg : fix_engine_state * fix_engine_int_msg ) =
     match int_msg with 
-    | TimeChange t          -> utctimestamp_lessThan ( engine.fe_curr_time, t)
-    | ApplicationData d     -> true
-    | CreateSession d       -> (
+    | TimeChange t              -> utctimestamp_lessThan ( engine.fe_curr_time, t)
+    | ApplicationData d         -> true
+    | CreateSession d           -> (
         match engine.fe_curr_mode with
-        | NoActiveSession   -> true
-        | _ -> false
+        | NoActiveSession       -> true
+        | _                     -> false
     )
-    | ManualIntervention _  -> true
+    | ManualIntervention _      -> true
 ;;
 
 (** ********************************************************************************************************** *)
@@ -618,9 +615,10 @@ let one_step ( engine : fix_engine_state ) =
         (* Now we look to process internal (coming from our application) and external (coming from
             another FIX engine) messages. *)
         match engine.incoming_int_msg with 
-        | Some i    -> proc_incoming_int_msg (i, engine)
-        | None      -> 
+        | Some i    -> proc_incoming_int_msg (i, { engine with incoming_int_msg = None } )
+        | None      -> (
         match engine.incoming_fix_msg with 
-        | Some m    -> proc_incoming_fix_msg (m, engine)
+        | Some m    -> proc_incoming_fix_msg (m, { engine with incoming_fix_msg = None } )
         | None      -> engine
+        )
 ;;
