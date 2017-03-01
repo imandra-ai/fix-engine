@@ -8,11 +8,15 @@
     fix_vgs.ml
 *)
 
-:load fix_data_dictionary.ml
-:load imarkets.ml
-:load fix_engine.ml
+:l src-protocol/datetime.ml
+:l src-protocol/basic_types.ml
+:l src-protocol/full_session_core.ml
+:l src-protocol/full_admin_messages.ml
+:l src-protocol/full_app_messages.ml
+:l src-protocol/full_fix_fields.ml
+:l src-protocol/full_messages.ml
+:l fix_engine.ml
 
+:l vgs/fix_base_vgs.ml
 
-:load fix_base_vgs.ml
-
-(*:load fix_seq_num_vgs.ml*)
+(*:l vgs/fix_seq_num_vgs.ml*)

@@ -10,10 +10,10 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Basic_types
-open Datetime
-open Full_session_core
-open Full_fix_fields
+open Basic_types;;
+open Datetime;;
+open Full_session_core;;
+open Full_fix_fields;;
 (* @meta[imandra_ignore] off @end *)
 
 (** Message tags - a way for us to identify messages without their full data. *)
