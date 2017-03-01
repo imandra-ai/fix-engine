@@ -3,141 +3,209 @@
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
     
-    Implementation of the FIX 4.4 protocol. Verification goals - the base.
+    Verification goals: base vgs.
 
     fix_base_vgs.ml
 *)
 
 
 (* @meta[imandra_ignore] on @end *)
+open Imandra_pervasives;;
+open Datetime;;
+open Basic_types;;
 open Fix_engine;;
-open Fix_data_dictionary;;
+open Full_session_core;;
+open Full_admin_messages;;
+open Full_messages;;
 (* @meta[imandra_ignore] off @end *)
 
-(** When in ActiveSession (normal mode) and receiving a non grabled and non session-level
+
+(** **************************************************************************************** *)
+(** 
+    Base VG.1
+
+    When in ActiveSession (normal mode) and receiving a non grabled and non session-level
     rejected message and the application is down. Such message would be sent back with a
     Business Reject. *)
+(** **************************************************************************************** *)
+let msg_is_biz_reject ( msg : full_top_level_msg option ) =
+    match msg with
+    | None          -> false
+    | Some m        ->
+    match m with 
+    | ValidMsg msg_data    -> (
+        match msg_data.full_msg_data with 
+        | Full_FIX_Admin_Msg adm_msg    -> (
+            match adm_msg with
+            | Full_Msg_Business_Reject _    -> true
+            | _                             -> false
+        )
+        | _ -> false
+     )
+    | _ -> false
+;;
+
+let msg_is_valid ( msg : full_top_level_msg option ) = 
+    match msg with 
+    | None          -> false
+    | Some m        ->     
+    match m with 
+    | ValidMsg _    -> true
+    | _             -> false
+;;
+
 verify app_down_get_biz_reject ( state : fix_engine_state ) =
-    let incoming_biz_rejected =
-       match state.incoming_fix_msg with
-       | Some x -> not (x.reject_flags.garbled) && not (fix_is_msg_session_invalid (x))
-       | None -> false in
+    let incoming_biz_rejected = msg_is_valid ( state.incoming_fix_msg ) in 
 
     let no_incoming_msgs =
         match state.incoming_int_msg with
-            | None -> true
-            | Some _ -> false in
+            | None      -> true
+            | Some _    -> false in
 
     let state' = one_step (state) in
 
-    let result_biz_reject =
-        match state'.outgoing_fix_msg with
-        | None -> false
-        | Some x ->
-            match x.msg_data with
-            | FIX_business_reject _ -> true
-            | _ -> false
-    in
+    let result_biz_reject = msg_is_biz_reject ( state'.outgoing_fix_msg ) in 
 
-    ( incoming_biz_rejected &&
-    not (state.fe_application_up) &&
-    state.fe_curr_mode = ActiveSession &&
-    no_incoming_msgs)
-    ==>
+    ( incoming_biz_rejected && not (state.fe_application_up) &&
+      state.fe_curr_mode = ActiveSession && no_incoming_msgs )
+    ==> 
     result_biz_reject
 ;;
 
-(** From Vol 2. Page 9. "In *ALL* cases except the Sequence Reset - message, the FIX session should be terminated
-if the incoming sequence number is less than expected and the PossDupFlag is not set. A Logout
-message with some descriptive text should be sent to the other side before closing the session." *)
+(** **************************************************************************************** *)
+(** 
+    Base VG.2
+
+    From Vol 2. Page 9. "In *ALL* cases except the Sequence Reset - message, the FIX session 
+    should be terminated if the incoming sequence number is less than expected and the 
+    PossDupFlag is not set. A Logout message with some descriptive text should be sent to the 
+    other side before closing the session." *)
+(** **************************************************************************************** *)
 
 (** TODO: should this just be a bool type? *)
-let poss_dup_flag_not_set ( m : fix_message ) =
-    match m.header.poss_dup_flag with
+let poss_dup_flag_not_set ( flag : bool option ) =
+    match flag with
     | None -> true
     | Some _ -> false
 ;;
 
+let incoming_msg_not_valid ( msg, state_inc_seq_num : full_top_level_msg option * int ) =
+  match msg with
+  | None            -> false
+  | Some m          -> 
+  match m with 
+  | ValidMsg vmsg   -> (
+      let seq_num_incorrect = vmsg.full_msg_header.h_msg_seq_num < state_inc_seq_num in
+      let msg_is_seq_reset = 
+      match vmsg.full_msg_data with 
+      | Full_FIX_Admin_Msg admin_msg    -> (
+            match admin_msg with 
+            | Full_Msg_Sequence_Reset _ -> true
+            | _                         -> false
+      )
+      | _   -> false in
+      seq_num_incorrect && msg_is_seq_reset && 
+      poss_dup_flag_not_set ( vmsg.full_msg_header.h_poss_dup_flag )
+  ) 
+  | _   -> false 
+;;
 
-let is_msg_seq_reset ( x : fix_message ) =
-    match x.msg_data with
-    | FIX_sequence_reset _ -> true
+let msg_is_logout ( msg : full_top_level_msg option ) = 
+    match msg with 
+    | None  -> false
+    | Some m    ->
+    match m with 
+    | ValidMsg vmsg -> (
+        match vmsg.full_msg_data with 
+        | Full_FIX_Admin_Msg amsg -> ( 
+            match amsg with 
+            | Full_Msg_Logoff _ -> true
+            | _ -> false
+        )
+        | _ -> false
+     )
     | _ -> false
 ;;
 
-let incoming_msg_bad ( state : fix_engine_state ) =
-  match state.incoming_fix_msg with
-  | None -> false
-  | Some m ->
-     fix_msg_base_not_rejected (m) &&
-       poss_dup_flag_not_set (m) &&
-
-         (  is_msg_seq_reset (m) || ( m.header.msg_seq_num < state.incoming_seq_num ))
-;;
-
 verify less_seq_num_logout ( state : fix_engine_state ) =
-    let no_incoming_internals =
+    let no_incoming_int_msgs =
         match state.incoming_int_msg with
         | None -> true
         | Some _ -> false in
 
-    let state_good = not ( state.fe_application_up ) && ( state.fe_curr_mode = ActiveSession) in
+    let state_good = not ( state.fe_application_up ) && ( state.fe_curr_mode = ActiveSession ) in
 
     let state' = one_step (state) in
 
-    let logout_sent =
-        match state'.outgoing_fix_msg with
-        | None -> false
-        | Some m ->
-            match m.msg_data with
-            | FIX_logout _ -> true
-            | _ -> false in
-
-    ( no_incoming_internals && state_good && incoming_msg_bad (state) ) ==> logout_sent
+    ( no_incoming_int_msgs && state_good && 
+    incoming_msg_not_valid ( state.incoming_fix_msg, 1 ) ) 
+    ==> msg_is_logout ( state'.outgoing_fix_msg )
 ;;
 
-(** Messages that are garbled will be ignore (not sequence counter would be incremented) *)
-(*let garbled_are_ignored ( state : fix_engine_state ) =
-    let incoming_has_garbled = (
-        false
-    ) in
+(** **************************************************************************************** *)
+(** 
+    Base VG.3
 
-    let state' = one_step (state) in
-
-    let msg_ignored =
-
-    in
-    let msg_seq_num_same = (state'.fe_msg_seq_num = state.fe_msg_seq_num) in
-
-    incoming_has_garbled ==> msg_ignored
-;;
+    Messages that are garbled will be ignore (not sequence counter would be incremented).
+    
 *)
+(** **************************************************************************************** *)
 
-(** Session rejected messages are rejected with the right reason and
-    counter is incremented. *)
-(*
-let session_rejects_are_rejected ( state : fix_engine_state ) =
-    let incoming_has_reject = (
-        match state.incoming_fix_msg with
-        | None -> false
-        | Some x -> (
-            match
-        )
-    ) in
-
-    let state' = one_step (state) in
-
-    ) in
-    let msg_rejected =
-        match state'.outgoing_fix_msg with
-        | None -> false
-        | Some x ->
-            match x.msg_data with
-            | FIX_reject _ -> true
-            | _ -> false in
-
-    let seq_num_updated = ((state.fe_seq_num + 1) = state'.fe_seq_num) in
-
-    incoming_has_reject ==> ( msg_rejected && seq_num_updated )
+let incoming_msg_garblged ( msg : full_top_level_msg option ) =
+    match msg with 
+    | None      -> false
+    | Some m    ->
+    match m with 
+    | Gargled   -> true
+    | _         -> false
 ;;
-*)
+
+verify garbled_are_ignored ( state : fix_engine_state ) =
+    let state' = one_step (state) in
+    let msg_ignored = ( state' = state ) in 
+    incoming_msg_garblged (state.incoming_fix_msg) ==> msg_ignored
+;;
+
+
+(** **************************************************************************************** *)
+(** 
+    Base VG.4
+
+    Session rejected messages are rejected with the right reason and counter is incremented. *)
+(** **************************************************************************************** *)
+
+let incoming_msg_session_reject ( msg : full_top_level_msg option ) =
+    match msg with 
+    | None                  -> false
+    | Some m                ->
+    match m with 
+    | SessionRejectedMsg _  -> true
+    | _                     -> false
+;;
+
+let msg_is_reject ( msg : full_top_level_msg option ) =
+    match msg with
+    | None                  -> false
+    | Some m                -> 
+    match m with
+    | ValidMsg vmsg         -> (
+        match vmsg.full_msg_data with 
+        | Full_FIX_Admin_Msg amsg -> ( 
+            match amsg with 
+            | Full_Msg_Reject _ -> true
+            | _ -> false  
+         )
+        | _ -> false
+     )
+    | _ -> false
+;;
+
+verify session_rejects_are_rejected ( state : fix_engine_state ) =
+    let incoming_rejected = incoming_msg_session_reject ( state.incoming_fix_msg ) in
+    let state' = one_step (state) in
+    let msg_rejected = msg_is_reject ( state'.outgoing_fix_msg ) in 
+    let seq_num_updated = ( ( state.outgoing_seq_num + 1 ) = state'.outgoing_seq_num ) in
+
+    incoming_rejected ==> ( msg_rejected && seq_num_updated )
+;;
+
