@@ -9,7 +9,8 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Datetime;;        
+open Datetime;;
+open Basic_types;;
 open Full_session_core;;
 open Full_admin_messages;;
 open Full_app_messages;;
@@ -569,15 +570,15 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
             | _                 -> engine
         )
     | ValidMsg msg              -> (
-    match engine.fe_curr_mode with
-        | NoActiveSession       -> run_no_active_session ( msg, engine)
-        | LogonInitiated        -> run_logon_sequence ( msg, engine)
-        | ActiveSession         -> run_active_session ( msg, engine)
-        | Recovery              -> run_recovery ( msg, engine)
-        | Retransmit            -> noop (msg, engine)
-        | ShutdownInitiated     -> run_shutdown ( msg, engine)
-        | Error                 -> noop ( msg, engine)
-        | CacheReplay           -> noop ( msg, engine)
+            match engine.fe_curr_mode with
+            | NoActiveSession       -> run_no_active_session ( msg, engine)
+            | LogonInitiated        -> run_logon_sequence ( msg, engine)
+            | ActiveSession         -> run_active_session ( msg, engine)
+            | Recovery              -> run_recovery ( msg, engine)
+            | Retransmit            -> noop (msg, engine)
+            | ShutdownInitiated     -> run_shutdown ( msg, engine)
+            | Error                 -> noop ( msg, engine)
+            | CacheReplay           -> noop ( msg, engine)
     )
 ;; 
 
@@ -594,6 +595,23 @@ let is_int_message_valid ( engine, int_msg : fix_engine_state * fix_engine_int_m
         | _                     -> false
     )
     | ManualIntervention _      -> true
+;;
+
+
+let check_app_down ( m, app_up : full_top_level_msg * bool ) =
+    match m with
+    | Gargled                   -> m
+    | SessionRejectedMsg _      -> m
+    | BusinessRejectedMsg _     -> m
+    | ValidMsg msg              ->
+        if app_up then m else
+        BusinessRejectedMsg {
+            brej_msg_ref_seq_num        = msg.full_msg_header.h_msg_seq_num;
+            brej_msg_msg_tag            = get_full_msg_tag ( msg.full_msg_data );
+            brej_msg_reject_reason      = ApplicationDown;
+            brej_msg_text               = None;
+            brej_msg_encoded_text       = None;
+        }
 ;;
 
 (** ********************************************************************************************************** *)
@@ -618,7 +636,9 @@ let one_step ( engine : fix_engine_state ) =
         | Some i    -> proc_incoming_int_msg (i, { engine with incoming_int_msg = None } )
         | None      -> (
         match engine.incoming_fix_msg with 
-        | Some m    -> proc_incoming_fix_msg (m, { engine with incoming_fix_msg = None } )
+        | Some m    -> 
+            let m = check_app_down ( m, engine.fe_application_up ) in
+            proc_incoming_fix_msg (m, { engine with incoming_fix_msg = None } )
         | None      -> engine
         )
 ;;

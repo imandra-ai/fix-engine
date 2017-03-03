@@ -66,7 +66,8 @@ verify app_down_get_biz_reject ( state : fix_engine_state ) =
 
     let result_biz_reject = msg_is_biz_reject ( state'.outgoing_fix_msg ) in 
 
-    ( incoming_biz_rejected && not (state.fe_application_up) &&
+    ( state.fe_cache = [] &&
+      incoming_biz_rejected && not (state.fe_application_up) &&
       state.fe_curr_mode = ActiveSession && no_incoming_msgs )
     ==> 
     result_biz_reject
@@ -137,7 +138,7 @@ verify less_seq_num_logout ( state : fix_engine_state ) =
 
     let state' = one_step (state) in
 
-    ( no_incoming_int_msgs && state_good && 
+    ( no_incoming_int_msgs && state_good && state.fe_cache = [] &&
     incoming_msg_not_valid ( state.incoming_fix_msg, 1 ) ) 
     ==> msg_is_logout ( state'.outgoing_fix_msg )
 ;;
@@ -162,8 +163,10 @@ let incoming_msg_garblged ( msg : full_top_level_msg option ) =
 
 verify garbled_are_ignored ( state : fix_engine_state ) =
     let state' = one_step (state) in
-    let msg_ignored = ( state' = state ) in 
-    incoming_msg_garblged (state.incoming_fix_msg) ==> msg_ignored
+    let msg_ignored = ( state' =  { state with incoming_fix_msg = None } ) in 
+    let no_internal_msgs = state.incoming_int_msg = None in
+    let no_cache_replay_or_retransmit = not ( state.fe_curr_mode = CacheReplay || state.fe_curr_mode = Retransmit ) in
+    ( incoming_msg_garblged (state.incoming_fix_msg) && no_cache_replay_or_retransmit && no_internal_msgs ) ==> msg_ignored
 ;;
 
 
@@ -209,31 +212,3 @@ verify session_rejects_are_rejected ( state : fix_engine_state ) =
     incoming_rejected ==> ( msg_rejected && seq_num_updated )
 ;;
 
-
-(** **************************************************************************************** *)
-(** 
-    Base VG.5
-
-    Out of sequence message would result in state transitioning into Recovery mode.          *)
-(** **************************************************************************************** *)
-
-let incoming_msg_wrong_seq_num ( state : fix_engine_state ) =
-    match state.incoming_fix_msg with
-    | None -> false
-    | Some m ->
-    match m with 
-    | Gargled               -> false
-    | BusinessRejectedMsg _ -> false
-    | SessionRejectedMsg _  -> false
-    | ValidMsg msg          ->
-    msg.full_msg_header.h_msg_seq_num > ( state.incoming_seq_num + 1) 
-;;
-
-verify out_of_seq_leads_to_recovery ( state : fix_engine_state ) =
-
-    let state' = one_step ( state ) in 
-    ( state.fe_curr_mode = ActiveSession && 
-    state.incoming_seq_num = 1 && 
-    incoming_msg_wrong_seq_num ( state ) ) 
-    ==> (state'.fe_curr_mode = Recovery)
-;;

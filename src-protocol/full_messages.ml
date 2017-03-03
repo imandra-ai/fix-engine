@@ -18,7 +18,6 @@ open Full_admin_messages;;
 open Full_app_messages;;
 (* @meta[imandra_ignore] off @end *)
 
-
 (** Contains the missing field information. *)
 type full_field_missing_data = {
     field_missing_field                             : full_fix_field;
@@ -37,6 +36,29 @@ type full_fix_msg = {
     full_msg_data                                   : full_fix_msg_data;
     full_msg_trailer                                : fix_trailer;
 }
+;;
+
+let get_full_msg_tag ( m : full_fix_msg_data ) =
+    match m with
+    | Full_FIX_Admin_Msg msg -> (
+        match msg with 
+        | Full_Msg_Hearbeat                     _ -> Full_Msg_Hearbeat_Tag
+        | Full_Msg_Logon                        _ -> Full_Msg_Logon_Tag
+        | Full_Msg_Logoff                       _ -> Full_Msg_Logoff_Tag
+        | Full_Msg_Reject                       _ -> Full_Msg_Reject_Tag 
+        | Full_Msg_Business_Reject              _ -> Full_Msg_Business_Reject_Tag
+        | Full_Msg_Resend_Request               _ -> Full_Msg_Resend_Request_Tag
+        | Full_Msg_Sequence_Reset               _ -> Full_Msg_Sequence_Reset_Tag
+        | Full_Msg_Test_Request                 _ -> Full_Msg_Test_Request_Tag
+     )
+    | Full_FIX_App_Msg msg -> (
+        match msg with
+        | Full_Msg_ExecutionReport              _ -> Full_Msg_ExecutionReport_Tag
+        | Full_Msg_OrderCancelRequest           _ -> Full_Msg_OrderCancelRequest_Tag
+        | Full_Msg_OrderCancelReplaceRequest    _ -> Full_Msg_OrderCancelReplaceRequest_Tag
+        | Full_Msg_NewOrderSingle               _ -> Full_Msg_NewOrderSingle_Tag
+        | Full_Msg_CancelReject                 _ -> Full_Msg_CancelReject_Tag
+     )
 ;;
 
 (** 
