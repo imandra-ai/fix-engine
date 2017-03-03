@@ -138,7 +138,7 @@ verify less_seq_num_logout ( state : fix_engine_state ) =
 
     let state' = one_step (state) in
 
-    ( no_incoming_int_msgs && state_good && state.fe_cache = [] &&
+    ( state.fe_application_up && no_incoming_int_msgs && state_good && state.fe_cache = [] &&
     incoming_msg_not_valid ( state.incoming_fix_msg, 1 ) ) 
     ==> msg_is_logout ( state'.outgoing_fix_msg )
 ;;
