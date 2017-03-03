@@ -52,8 +52,8 @@ type fix_engine_state = {
     fe_curr_mode            : fix_engine_mode;              (* High-level mode of the engine. *)
 
     fe_initiator            : bool option;                  (* initiator = True if we've received an internal message to initiate 
-                                                            the connection. It's False if we've received a Logon request first.
-                                                            It's None by default prior to any Logon sequences. *)
+                                                                the connection. It's False if we've received a Logon request first.
+                                                                It's None by default prior to any Logon sequences. *)
 
     fe_curr_time            : fix_utctimestamp;             (* Need to define time so we're aware of heartbeat status. *)
 
@@ -77,7 +77,7 @@ type fix_engine_state = {
 
     fe_history_to_send      : full_fix_msg list;            (* Used in message retransmission. *)
 
-    fe_application_up       : bool;                         (* Is the application (that's receiving messages up and running?) 
+    fe_application_up       : bool;                         (* Is the application that's receiving messages up and running?
                                                                 TODO: we might need to constitute a heartbeat to enforce this. *)
 }
 ;;
@@ -86,17 +86,9 @@ type fix_engine_state = {
 let init_fix_engine_state = {
     fe_initiator            = None;                         
     fe_curr_mode            = NoActiveSession;              
-    fe_curr_time            = { 
-        utc_timestamp_year      = 0;
-        utc_timestamp_month     = 0;
-        utc_timestamp_day       = 0;
-        utc_timestamp_hour      = 0;
-        utc_timestamp_minute    = 0;
-        utc_timestamp_second    = 0;
-        uts_timestamp_millisec  = None;  
-    };                            
+    fe_curr_time            = make_utctimestamp (2017, 1, 1, 0, 1, 0, None);
 
-    fe_comp_id              = 1;                            
+    fe_comp_id              = 1;
     fe_target_comp_id       = 2;
 
     incoming_int_msg        = None;                           
@@ -111,25 +103,8 @@ let init_fix_engine_state = {
     fe_cache                = [];
     fe_history              = [];
 
-    fe_last_hbeat_recived   = {
-        utc_timestamp_year      = 0;
-        utc_timestamp_month     = 0;
-        utc_timestamp_day       = 0;
-        utc_timestamp_hour      = 0;
-        utc_timestamp_minute    = 0;
-        utc_timestamp_second    = 0;
-        uts_timestamp_millisec  = None; 
-    };
-
-    fe_heartbeat_interval   = {
-        dur_years               = None;
-        dur_months              = None;
-        dur_weeks               = None;
-        dur_days                = None;
-        dur_hours               = None;
-        dur_minutes             = None;
-        dur_seconds             = Some 30;
-    };
+    fe_last_hbeat_recived   = make_utctimestamp (2017, 1, 1, 0, 1, 0, None);
+    fe_heartbeat_interval   = make_duration ( None, None, None, None, None, None, Some 30 );
 
     fe_history_to_send      = [];
 
@@ -311,7 +286,7 @@ let run_init_seq ( engine : fix_engine_state ) =
                     incoming_fix_msg        = None;
             } 
         | _ -> { 
-                engine with incoming_fix_msg = None 
+                engine with incoming_fix_msg = None
             }
 ;;
 
@@ -320,7 +295,7 @@ let run_no_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
     match m.full_msg_data with 
     | Full_FIX_Admin_Msg msg -> (
         match msg with 
-        | Full_Msg_Logon d -> 
+        | Full_Msg_Logon d ->
             let logon_msg = create_logon_msg (m.full_msg_header.h_sender_comp_id, engine.outgoing_seq_num, engine.fe_heartbeat_interval) in 
             { 
                 engine with
@@ -335,23 +310,15 @@ let run_no_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
     | Full_FIX_App_Msg _ -> engine
 ;;
 
+
+(** Response to resent request. *)
+let initiate_Resend ( request, engine : full_fix_msg_resend_request_data * fix_engine_state ) =
+    engine
+;;
+
 (** ********************************************************************************************************** *)
 (** We're operating in a normal mode.                                                                          *)
 (** ********************************************************************************************************** *)
-
-(** From the specification: Rejected messages should be logged and incoming sequence number incremented.       
-
-    The logic is as follows:
-    1. We look to see whether the message should be rejected:
-        --> there are 3 types of reasons why we might reject a message at this time
-            --> i.   The format is all wrong (the message is ignored)
-            --> ii.  
-            --> iii. The application is down (i.e. unable to receive messages) 
-        --> the information that we should reject these should come from the parser
-
-    2. We check whether it's an administrative message - handle it internally.
-    3. We check whether it's an application message - pass it on to the application.
-*)
 let run_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
 
     if not ( msg_consistent ( engine, m.full_msg_header ) ) then {
@@ -376,6 +343,7 @@ let run_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
                     incoming_fix_msg = None;
                     fe_last_hbeat_recived = engine.fe_curr_time;  (* TODO Should this be  *)
             }
+        | Full_Msg_Resend_Request rr -> initiate_Resend ( rr, engine )
         | _ -> engine
     ) 
     | Full_FIX_App_Msg app_msg -> ( 
@@ -450,7 +418,7 @@ let is_cache_complete ( cache, last_seq_processed : full_fix_msg list * int ) =
 let rec add_to_cache ( m, cache : full_fix_msg * full_fix_msg list ) = 
     match cache with 
     | []        -> [ m ]
-    | x::[]     -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then [m; x] else [ x; m ]
+    | x::[]     -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then [ m; x ] else [ x; m ]
     | x::xs     -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then 
                     m::x::xs else ( x :: ( add_to_cache (m, xs) ) )
 ;;
@@ -484,7 +452,7 @@ let run_shutdown ( m, engine : full_fix_msg * fix_engine_state ) =
     )
 ;;
 
-(* Process incoming internal transition message. *)
+(** Process incoming internal transition message. *)
 let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) = 
     match x with 
     | TimeChange t          -> { engine with fe_curr_time = t; incoming_int_msg = None; }
@@ -524,7 +492,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
         { engine with incoming_int_msg = None }
 ;;
 
-(* A NO-OPeration *)
+(** A NO-OPeration *)
 let noop (m, engine : full_fix_msg * fix_engine_state) = { 
     engine
         with incoming_fix_msg = None
@@ -571,19 +539,18 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
         )
     | ValidMsg msg              -> (
             match engine.fe_curr_mode with
-            | NoActiveSession       -> run_no_active_session ( msg, engine)
-            | LogonInitiated        -> run_logon_sequence ( msg, engine)
-            | ActiveSession         -> run_active_session ( msg, engine)
-            | Recovery              -> run_recovery ( msg, engine)
-            | Retransmit            -> noop (msg, engine)
-            | ShutdownInitiated     -> run_shutdown ( msg, engine)
-            | Error                 -> noop ( msg, engine)
-            | CacheReplay           -> noop ( msg, engine)
+            | NoActiveSession   -> run_no_active_session ( msg, engine)
+            | LogonInitiated    -> run_logon_sequence ( msg, engine)
+            | ActiveSession     -> run_active_session ( msg, engine)
+            | Recovery          -> run_recovery ( msg, engine)
+            | Retransmit        -> noop (msg, engine)
+            | ShutdownInitiated -> run_shutdown ( msg, engine)
+            | Error             -> noop ( msg, engine)
+            | CacheReplay       -> noop ( msg, engine)
     )
 ;; 
 
-(** This sets validity of the incoming internal messages. 
-
+(** This sets validity of the incoming internal messages.
     TODO: Use the DSL-generated validity checks. *)
 let is_int_message_valid ( engine, int_msg : fix_engine_state * fix_engine_int_msg ) =
     match int_msg with 
@@ -598,6 +565,7 @@ let is_int_message_valid ( engine, int_msg : fix_engine_state * fix_engine_int_m
 ;;
 
 
+(** Check whether application is down and change the message into Business Rejected if so. *)
 let check_app_down ( m, app_up : full_top_level_msg * bool ) =
     match m with
     | Gargled                   -> m
@@ -606,11 +574,11 @@ let check_app_down ( m, app_up : full_top_level_msg * bool ) =
     | ValidMsg msg              ->
         if app_up then m else
         BusinessRejectedMsg {
-            brej_msg_ref_seq_num        = msg.full_msg_header.h_msg_seq_num;
-            brej_msg_msg_tag            = get_full_msg_tag ( msg.full_msg_data );
-            brej_msg_reject_reason      = ApplicationDown;
-            brej_msg_text               = None;
-            brej_msg_encoded_text       = None;
+            brej_msg_ref_seq_num    = msg.full_msg_header.h_msg_seq_num;
+            brej_msg_msg_tag        = get_full_msg_tag ( msg.full_msg_data );
+            brej_msg_reject_reason  = ApplicationDown;
+            brej_msg_text           = None;
+            brej_msg_encoded_text   = None;
         }
 ;;
 
