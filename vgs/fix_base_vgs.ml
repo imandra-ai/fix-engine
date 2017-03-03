@@ -203,12 +203,19 @@ let msg_is_reject ( msg : full_top_level_msg option ) =
     | _ -> false
 ;;
 
+(** Note that it's important to remember that a message may only be rejected if we're in ActiveSession state. 
+    It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or 
+    Retransmit modes. *)
 verify session_rejects_are_rejected ( state : fix_engine_state ) =
+    let no_incoming_int_msgs =
+        match state.incoming_int_msg with
+        | None -> true
+        | Some _ -> false in
     let incoming_rejected = incoming_msg_session_reject ( state.incoming_fix_msg ) in
     let state' = one_step (state) in
     let msg_rejected = msg_is_reject ( state'.outgoing_fix_msg ) in 
     let seq_num_updated = ( ( state.outgoing_seq_num + 1 ) = state'.outgoing_seq_num ) in
 
-    incoming_rejected ==> ( msg_rejected && seq_num_updated )
+    ( no_incoming_int_msgs && incoming_rejected && state.fe_curr_mode = ActiveSession) ==> ( msg_rejected && seq_num_updated )
 ;;
 
