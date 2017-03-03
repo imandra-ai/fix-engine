@@ -250,10 +250,8 @@ let create_session_reject_msg ( reject_info, outbound_seq_num, target_comp_id, c
     ValidMsg ( create_outbound_fix_msg (outbound_seq_num, target_comp_id, comp_id, msg_data, false) )
 ;;
 
-
 (* Create business reject message. 
-    Note: the reason we're separating the ApplicationDown reason is that
-    the parser would not have access to this information. *)
+    Note: the reason we're separating the ApplicationDown reason is that the parser would not have access to this information. *)
 let create_business_reject_msg ( reject_info, outbound_seq_num, target_comp_id, comp_id  : biz_rejected_msg_data * int * int * int ) =
     let msg_data = 
         Full_FIX_Admin_Msg (
