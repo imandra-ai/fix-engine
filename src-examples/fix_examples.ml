@@ -75,9 +75,9 @@ let example_3 () =
 
                 full_msg_data = Full_FIX_Admin_Msg( 
                     Full_Msg_Logon { 
-                        encrypt_method = 123;
-                        heartbeat_interval = make_duration ( None, None, None, None, None, None, Some 30 );
-                        raw_data_length = 123;
+                        ln_encrypt_method = 123;
+                        ln_heartbeat_interval = make_duration ( None, None, None, None, None, Some 30 );
+                        ln_raw_data_length = 123;
                     });
                 
                 full_msg_trailer = default_fix_trailer;
@@ -105,9 +105,9 @@ let example_4 () =
             };
             full_msg_data = Full_FIX_Admin_Msg (
                 Full_Msg_Logon { 
-                    encrypt_method = 123;
-                    heartbeat_interval = make_duration ( None, None, None, None, None, None, Some 30 );
-                    raw_data_length = 123;
+                    ln_encrypt_method = 123;
+                    ln_heartbeat_interval = make_duration ( None, None, None, None, None, Some 30 );
+                    ln_raw_data_length = 123;
                 });
             full_msg_trailer = default_fix_trailer;
          });
@@ -242,8 +242,8 @@ let example_8 () =
         init_fix_engine_state with 
             fe_comp_id              = 1;
             fe_curr_time            = make_utctimestamp ( 2017, 1, 1, 0, 0, 0, None ); 
-            fe_last_hbeat_recived   = make_utctimestamp ( 2017, 1, 1, 0, 0, 0, None );
-            fe_heartbeat_interval   = make_duration ( None, None, None, None, None, None, Some 30 );
+            fe_last_data_received   = make_utctimestamp ( 2017, 1, 1, 0, 0, 0, None );
+            fe_heartbeat_interval   = make_duration ( None, None, None, None, None, Some 30 );
 
             fe_curr_mode            = ActiveSession;
             fe_initiator            = Some false;

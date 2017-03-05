@@ -305,7 +305,7 @@ let utctimestamp_to_json ( ts : fix_utctimestamp ) =
         ( "utc_timestamp_hour"                          , `Int ts.utc_timestamp_hour                     );
         ( "utc_timestamp_minute"                        , `Int ts.utc_timestamp_minute                   );
         ( "utc_timestamp_second"                        , `Int ts.utc_timestamp_second                   );
-        ( "uts_timestamp_millisec"                      , intopt_to_json ts.uts_timestamp_millisec       );
+        ( "utc_timestamp_millisec"                      , intopt_to_json ts.utc_timestamp_millisec       );
     ] |> filter_nulls in
     `Assoc list_assoc
 ;;
@@ -319,7 +319,6 @@ let utcduration_to_json ( d : fix_duration ) =
     let list_assoc = [
         ( "dur_years"                                   , intopt_to_json d.dur_years                     );
         ( "dur_months"                                  , intopt_to_json d.dur_months                    );
-        ( "dur_weeks"                                   , intopt_to_json d.dur_weeks                     );
         ( "dur_days"                                    , intopt_to_json d.dur_days                      );
         ( "dur_hours"                                   , intopt_to_json d.dur_hours                     );
         ( "dur_minutes"                                 , intopt_to_json d.dur_minutes                   );

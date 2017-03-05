@@ -19,7 +19,7 @@ type fix_utctimestamp = {
 }
 ;;
 
-let make_utctimestamp ( year, month, day, hour, minute, second, millisec ) = {
+let make_utctimestamp ( year, month, day, hour, minute, second, millisec : int * int * int * int * int * int * int option ) = {
     utc_timestamp_year      = year;
     utc_timestamp_month     = month;
     utc_timestamp_day       = day;
@@ -31,30 +31,30 @@ let make_utctimestamp ( year, month, day, hour, minute, second, millisec ) = {
 ;;
 
 let is_valid_utctimestamp ( ts : fix_utctimestamp ) =
-    0 <= ts.utc_timestamp_year && ts.utc_timestamp_year <= 9999 && 
-    1 <= ts.utc_timestamp_month && ts.utc_timestamp_month <= 12 && 
-    1 <= ts.utc_timestamp_day && ts.utc_timestamp_day <= 31 && 
-    0 <= ts.utc_timestamp_hour && ts.utc_timestamp_hour <= 23 && 
-    0 <= ts.utc_timestamp_minute && ts.utc_timestamp_minute <= 59 && 
-    0 <= ts.utc_timestamp_second && ts.utc_timestamp_second <= 59 && (
+    0 <= ts.utc_timestamp_year      && ts.utc_timestamp_year    <= 9999 && 
+    1 <= ts.utc_timestamp_month     && ts.utc_timestamp_month   <= 12   && 
+    1 <= ts.utc_timestamp_day       && ts.utc_timestamp_day     <= 31   && 
+    0 <= ts.utc_timestamp_hour      && ts.utc_timestamp_hour    <= 23   && 
+    0 <= ts.utc_timestamp_minute    && ts.utc_timestamp_minute  <= 59   && 
+    0 <= ts.utc_timestamp_second    && ts.utc_timestamp_second  <= 59   && (
         match ts.utc_timestamp_millisec with
         | None -> true
         | Some ms -> 0 <= ms && ms <= 999 )
 ;;
 
 let utctimestamp_greaterThan ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
-    if tOne.utc_timestamp_year > tTwo.utc_timestamp_year then true
-    else if tOne.utc_timestamp_year < tTwo.utc_timestamp_year then false 
-    else if tOne.utc_timestamp_month > tTwo.utc_timestamp_month then true
-    else if tOne.utc_timestamp_month < tTwo.utc_timestamp_month then false
-    else if tOne.utc_timestamp_day > tTwo.utc_timestamp_day then true
-    else if tOne.utc_timestamp_day < tTwo.utc_timestamp_day then false
-    else if tOne.utc_timestamp_hour > tTwo.utc_timestamp_hour then true
-    else if tOne.utc_timestamp_hour < tTwo.utc_timestamp_hour then false
-    else if tOne.utc_timestamp_minute > tTwo.utc_timestamp_minute then true
-    else if tOne.utc_timestamp_minute < tTwo.utc_timestamp_minute then false
-    else if tOne.utc_timestamp_second > tTwo.utc_timestamp_second then true
-    else if tOne.utc_timestamp_second < tTwo.utc_timestamp_second then false
+    if tOne.utc_timestamp_year          > tTwo.utc_timestamp_year   then true
+    else if tOne.utc_timestamp_year     < tTwo.utc_timestamp_year   then false 
+    else if tOne.utc_timestamp_month    > tTwo.utc_timestamp_month  then true
+    else if tOne.utc_timestamp_month    < tTwo.utc_timestamp_month  then false
+    else if tOne.utc_timestamp_day      > tTwo.utc_timestamp_day    then true
+    else if tOne.utc_timestamp_day      < tTwo.utc_timestamp_day    then false
+    else if tOne.utc_timestamp_hour     > tTwo.utc_timestamp_hour   then true
+    else if tOne.utc_timestamp_hour     < tTwo.utc_timestamp_hour   then false
+    else if tOne.utc_timestamp_minute   > tTwo.utc_timestamp_minute then true
+    else if tOne.utc_timestamp_minute   < tTwo.utc_timestamp_minute then false
+    else if tOne.utc_timestamp_second   > tTwo.utc_timestamp_second then true
+    else if tOne.utc_timestamp_second   < tTwo.utc_timestamp_second then false
     else 
         match tOne.utc_timestamp_millisec, tTwo.utc_timestamp_millisec with 
         | None      , None      -> true
@@ -189,7 +189,6 @@ let is_valid_utcdateonly ( d : fix_utcdateonly ) =
 type fix_duration = {
     dur_years               : int option;
     dur_months              : int option;
-    dur_weeks               : int option;
     dur_days                : int option;
     dur_hours               : int option;
     dur_minutes             : int option;
@@ -197,15 +196,35 @@ type fix_duration = {
 }
 ;;
 
-let make_duration ( years, months, weeks, days, hours, minutes, seconds ) = {
+let make_duration ( years, months, days, hours, minutes, seconds ) = {
     dur_years               = years;
     dur_months              = months;
-    dur_weeks               = weeks;
     dur_days                = days;
     dur_hours               = hours;
     dur_minutes             = minutes;
     dur_seconds             = seconds;
 }
+;;
+
+let is_valid_duration ( d : fix_duration ) =
+    match d.dur_years with 
+    | Some y    -> 0 <= y && y <= 100
+    | None      ->
+    match d.dur_months with 
+    | Some m    -> 0 <= m && m <= 12
+    | None      -> 
+    match d.dur_days with
+    | Some d    -> 0 <= d && d <= 31
+    | None      -> 
+    match d.dur_hours with 
+    | Some h    -> 0 <= h && h <= 24
+    | None      ->
+    match d.dur_minutes with
+    | Some m    -> 0 <= m && m <= 59
+    | None      -> 
+    match d.dur_seconds with
+    | Some s    -> 0 <= s && s <= 59
+    | None      -> true
 ;;
 
 let utctimestamp_sub ( t, dur : fix_utctimestamp * fix_duration ) =
@@ -240,9 +259,9 @@ type field_carryover = {
 }
 ;;
 
-let calculate_carry ( field, max_value : int * int ) =
+let calculate_carry ( field, max_value, min_value : int * int * int ) =
     if field >= max_value then {
-        new_field = field - max_value;
+        new_field = field - max_value + min_value;
         carry_over = true;
     } else {
         new_field = field;
@@ -251,23 +270,23 @@ let calculate_carry ( field, max_value : int * int ) =
 ;;
 
 let normalise_timestamp ( ts : fix_utctimestamp ) =
-    let carry_secs  = calculate_carry ( ts.utc_timestamp_second, 60) in
-    let new_minute  = if carry_secs.carry_over then ( ts.utc_timestamp_minute + 1) else ts.utc_timestamp_minute in 
-    let carry_mins  = calculate_carry ( new_minute, 60 ) in
-    let new_hour    = if carry_mins.carry_over then ( ts.utc_timestamp_hour + 1 ) else ts.utc_timestamp_hour in 
-    let carry_hours = calculate_carry ( new_hour, 24 ) in 
-    let new_days    = if carry_hours.carry_over then ( ts.utc_timestamp_day + 1 ) else ts.utc_timestamp_day in 
-    let carry_days  = calculate_carry ( new_days, how_many_days ( ts.utc_timestamp_month, ts.utc_timestamp_year )) in
-    let new_months  = if carry_days.carry_over then ( ts.utc_timestamp_month + 1 ) else ts.utc_timestamp_month in
-    let carry_months = calculate_carry ( new_months, 13 ) in 
+    let carry_secs  = calculate_carry ( ts.utc_timestamp_second, 60, 0) in
+    let new_minute  = if carry_secs.carry_over then ( ts.utc_timestamp_minute + 1)  else ts.utc_timestamp_minute in 
+    let carry_mins  = calculate_carry ( new_minute,     60, 0 ) in
+    let new_hour    = if carry_mins.carry_over then ( ts.utc_timestamp_hour + 1 )   else ts.utc_timestamp_hour in 
+    let carry_hours = calculate_carry ( new_hour,       24, 0 ) in 
+    let new_days    = if carry_hours.carry_over then ( ts.utc_timestamp_day + 1 )   else ts.utc_timestamp_day in 
+    let carry_days  = calculate_carry ( new_days, how_many_days ( ts.utc_timestamp_month, ts.utc_timestamp_year ), 1) in
+    let new_months  = if carry_days.carry_over then ( ts.utc_timestamp_month + 1 )  else ts.utc_timestamp_month in
+    let carry_months = calculate_carry ( new_months,    13, 1 ) in 
     let new_years   = if carry_months.carry_over then ( ts.utc_timestamp_year + 1 ) else ts.utc_timestamp_year in {
-        utc_timestamp_millisec = ts.utc_timestamp_millisec;
-        utc_timestamp_second = carry_secs.new_field;
-        utc_timestamp_minute = carry_mins.new_field;
-        utc_timestamp_hour  = carry_hours.new_field;
-        utc_timestamp_day   = carry_days.new_field;
-        utc_timestamp_month = carry_months.new_field;
-        utc_timestamp_year  = new_years;
+        utc_timestamp_millisec  = ts.utc_timestamp_millisec;
+        utc_timestamp_second    = carry_secs.new_field;
+        utc_timestamp_minute    = carry_mins.new_field;
+        utc_timestamp_hour      = carry_hours.new_field;
+        utc_timestamp_day       = carry_days.new_field;
+        utc_timestamp_month     = carry_months.new_field;
+        utc_timestamp_year      = new_years;
     }
 ;;
 
@@ -302,3 +321,26 @@ let utctimestamp_add ( t, dur : fix_utctimestamp * fix_duration ) =
     } in
     normalise_timestamp ( new_ts )
 ;;
+
+(** 
+verify ts_correct ( ) = 
+let ts = make_utctimestamp ( 2017, 1, 1, 1, 0, 0, None ) in 
+let dOne = make_duration ( None, None, None, None, None, Some 30 ) in
+let dTwo = make_duration ( None, None, None, None, Some 1, Some 30 ) in 
+let tsOne = utctimestamp_add ( ts, dOne ) in 
+let tsTwo = utctimestamp_add ( ts, dTwo ) in
+
+utctimestamp_greaterThan (tsOne, tsTwo)
+;;
+
+
+verify ts_correct (ts : fix_utctimestamp ) = 
+let dOne = make_duration ( None, None, None, None, None, Some 30 ) in
+let dTwo = make_duration ( None, None, None, None, Some 1, Some 30 ) in 
+let tsOne = utctimestamp_add ( ts, dOne ) in 
+let tsTwo = utctimestamp_add ( ts, dTwo ) in
+
+is_valid_utctimestamp ( ts) ==>
+utctimestamp_greaterThan (tsTwo, tsOne)
+;;
+*)

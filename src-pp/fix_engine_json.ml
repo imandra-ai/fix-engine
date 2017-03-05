@@ -21,11 +21,13 @@ let fix_engine_mode_to_string = function
     | NoActiveSession                                   -> "NoActiveSession"
     | LogonInitiated                                    -> "LogonInitiated"
     | ActiveSession                                     -> "ActiveSession"
+    | GapDetected                                       -> "GapDetected"
     | Recovery                                          -> "Recovery"
     | Retransmit                                        -> "Retransmit"
     | ShutdownInitiated                                 -> "ShutdownInitiated"
     | Error                                             -> "Error"
     | CacheReplay                                       -> "CacheReplay"
+    | WaitingForHeartbeat                               -> "WaitingForHeartbeat"
 ;;
 
 (* These are the messages going in/out of the engine to the owner. *)
@@ -63,11 +65,10 @@ let fix_engine_state_to_json s =
         ( "outgoing_fix_msgs"                           , ( full_top_level_msg_opt_to_json s.outgoing_fix_msg ) );
         ( "cache"                                       , ( full_fix_msg_list_to_json s.fe_cache )              );
         ( "history"                                     , ( full_fix_msg_list_to_json s.fe_history )            );
-        ( "last_hearbeat_received"                      , utctimestamp_to_json s.fe_last_hbeat_recived          );
+        ( "last_hearbeat_received"                      , utctimestamp_to_json s.fe_last_data_received           );
         ( "heartbeat_interval"                          , utcduration_to_json s.fe_heartbeat_interval           );
         ( "history_to_send"                             , ( full_fix_msg_list_to_json s.fe_history_to_send )    );
         ( "application_up"                              , `Bool s.fe_application_up                             );
-        ( "resend_request_time"                         , utcduration_to_json s.feresend_request_time           );
     ]
 ;;
 
