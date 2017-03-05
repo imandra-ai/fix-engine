@@ -1,7 +1,13 @@
-let (==>) p q =
-  match (p, q) with
-  | true, false -> false
-  | _ -> true
+(**
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    imandra_pervasives.ml
+*)
+
+
+let (==>) p q = not (p) || q;;
 
 let min (x,y) = min x y;;
 

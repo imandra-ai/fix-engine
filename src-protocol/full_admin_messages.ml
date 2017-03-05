@@ -41,15 +41,15 @@ type full_fix_msg_heartbeat_data = {
 ;;
 
 type full_fix_msg_logon_data = {
-    encrypt_method                                  : int;          (* Tag 98   *)
-    heartbeat_interval                              : fix_duration; (* Tag 108  *)
-    raw_data_length                                 : int;          (* Tag 95   *)
+    ln_encrypt_method                               : int;          (* Tag 98   *)
+    ln_heartbeat_interval                           : fix_duration; (* Tag 108  *)
+    ln_raw_data_length                              : int;          (* Tag 95   *)
 }
 ;;
 
 type full_fix_msg_logoff_data = {
-    encoded_text_len                                : int option;           (* Tag 354 *)
-    encoded_text                                    : fix_string option;    (* Tag 355 *)
+    lo_encoded_text_len                             : int option;           (* Tag 354 *)
+    lo_encoded_text                                 : fix_string option;    (* Tag 355 *)
 }
 ;;
 
@@ -68,19 +68,19 @@ type full_fix_msg_business_reject_data = {
     br_ref_seq_num                                  : int;  (* Tag 45: reference seq number of the rejected message *)
     
     (* TODO Need to add message type here as well. *)
-    business_reject_reason                          : fix_business_reject_reason;
+    br_business_reject_reason                       : fix_business_reject_reason;
 }
 ;;
 
 type full_fix_msg_resend_request_data = {
-    begin_seq_num                                   : int;  (* Tag 7 *)
-    end_seq_num                                     : int;  (* Tag 16 *)
+    rr_begin_seq_num                                : int;  (* Tag 7 *)
+    rr_end_seq_num                                  : int;  (* Tag 16 *)
 }
 ;;
 
 type full_fix_msg_sequence_reset_data = {
-    new_seq_no                                      : int;                      (* Tag 36 *)
-    gap_fill_flag                                   : fix_yes_no_type option;   (* Tag 123 *)
+    seqr_new_seq_no                                 : int;                      (* Tag 36 *)
+    seqr_gap_fill_flag                              : fix_yes_no_type option;   (* Tag 123 *)
 }
 ;;
 
