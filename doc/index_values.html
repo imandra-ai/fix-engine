@@ -1,0 +1,173 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Fix_engine" rel="Chapter" href="Fix_engine.html"><title>Index of values</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Index of values</h1>
+<table>
+<tr><td align="left"><br>A</td></tr>
+<tr><td><a href="Fix_engine.html#VALadd_to_cache">add_to_cache</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Add message to cache so that ordering is maintained.
+</div>
+</td></tr>
+<tr><td align="left"><br>B</td></tr>
+<tr><td><a href="Fix_engine.html#VALbusiness_reject">business_reject</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Convert the rejection information into an outbound BusinessReject message.
+</div>
+</td></tr>
+<tr><td align="left"><br>C</td></tr>
+<tr><td><a href="Fix_engine.html#VALcheck_app_down">check_app_down</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Check whether application is down and change the message into Business Rejected if so.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALcreate_business_reject_msg">create_business_reject_msg</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td></td></tr>
+<tr><td><a href="Fix_engine.html#VALcreate_heartbeat_msg">create_heartbeat_msg</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Create a heartbeat message
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALcreate_logoff_msg">create_logoff_msg</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Create a Logoff message.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALcreate_logon_msg">create_logon_msg</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Create a logon message we would send out to initiate a connection 
+    with another FIX engine.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALcreate_outbound_fix_msg">create_outbound_fix_msg</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Create outbound FIX message with the appropriate header and trailer.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALcreate_session_reject_msg">create_session_reject_msg</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td></td></tr>
+<tr><td><a href="Fix_engine.html#VALcreate_test_request_msg">create_test_request_msg</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td></td></tr>
+<tr><td align="left"><br>I</td></tr>
+<tr><td><a href="Fix_engine.html#VALincoming_header_correct">incoming_header_correct</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+TODO Are there any other checks? 
+    Answer: Yes - we need to add those checks to raw OCaml parser (these will result in invalid messages)
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALinit_fix_engine_state">init_fix_engine_state</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Initial engine state.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALinitiate_Resend">initiate_Resend</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Response to resent request.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALis_cache_complete">is_cache_complete</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Is cache valid so that we can transition from recovery?
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALis_int_message_valid">is_int_message_valid</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+This sets validity of the incoming internal messages.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALis_state_valid">is_state_valid</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Properties of a valid state.
+</div>
+</td></tr>
+<tr><td align="left"><br>M</td></tr>
+<tr><td><a href="Fix_engine.html#VALmsg_consistent">msg_consistent</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Does the message have the right sequence number?
+</div>
+</td></tr>
+<tr><td align="left"><br>N</td></tr>
+<tr><td><a href="Fix_engine.html#VALno_seq_gaps">no_seq_gaps</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Check to make sure there're no sequence gaps
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALnoop">noop</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+A NO-OPeration
+</div>
+</td></tr>
+<tr><td align="left"><br>O</td></tr>
+<tr><td><a href="Fix_engine.html#VALone_step">one_step</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Note that the choice of order, i.e.
+</div>
+</td></tr>
+<tr><td align="left"><br>P</td></tr>
+<tr><td><a href="Fix_engine.html#VALproc_incoming_fix_msg">proc_incoming_fix_msg</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Process incoming FIX message here.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALproc_incoming_int_msg">proc_incoming_int_msg</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Process incoming internal transition message.
+</div>
+</td></tr>
+<tr><td align="left"><br>R</td></tr>
+<tr><td><a href="Fix_engine.html#VALreplay_single_msg">replay_single_msg</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td></td></tr>
+<tr><td><a href="Fix_engine.html#VALrun_active_session">run_active_session</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+**********************************************************************************************************
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALrun_cache_replay">run_cache_replay</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Run the engine through the replay messages.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALrun_logon_sequence">run_logon_sequence</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+We're running within Logon sequence.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALrun_no_active_session">run_no_active_session</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Here we will only accept an incoming Logon message to establish a connection.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALrun_recovery">run_recovery</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+We're in recovery mode.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALrun_retransmit">run_retransmit</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+We're in the middle of retransmitting historic messages.
+</div>
+</td></tr>
+<tr><td><a href="Fix_engine.html#VALrun_shutdown">run_shutdown</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+We've sent out a Logout message and are now waiting for a confirmation of logout.
+</div>
+</td></tr>
+<tr><td align="left"><br>S</td></tr>
+<tr><td><a href="Fix_engine.html#VALsession_reject">session_reject</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
+<td><div class="info">
+Convert the rejection information into an outbound Reject message.
+</div>
+</td></tr>
+</table>
+</body>
+</html>
