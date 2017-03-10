@@ -1,4 +1,4 @@
-opam-version: "0.0.1"
+opam-version: "1.2"
 name: "fix-engine"
 version: "~unknown"
 maintainer: "Denis Ignatovich <denis@aestheticintegration.com>"
@@ -15,6 +15,5 @@ depends: [
   "ocamlfind" {build}
   "ocamlbuild" {build}
   "topkg" {build}
-  "ounit" {test}
   "yojson"
 ]
