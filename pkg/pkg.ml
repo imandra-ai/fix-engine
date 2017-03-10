@@ -13,7 +13,7 @@ let examples =
 let () =
   Pkg.describe "fix-engine" @@ fun c ->
   let examples = Conf.value c examples in
-  Ok [ Pkg.mllib ~api:["Engineio_client"; "Socketio_client"] "src/socketio_client.mllib"
-     ; Pkg.test ~dir:"src" "test/main"
+  Ok [ Pkg.mllib ~api:["fix_engine"] "src/fix_engine.mllib"
+(*     ; Pkg.test ~dir:"src" "test/main" *)
      ; Pkg.bin ~cond:examples "src-examples/fix_examples"
      ]

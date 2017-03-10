@@ -1,4 +1,4 @@
-PKG yojson
+PKG yojson topkg
 S *
 B _build/
 S src-model
@@ -10,4 +10,3 @@ B _build/src-model
 B _build/src-protocol
 B _build/src-pp
 B _build/src-examples
-PKG yojson

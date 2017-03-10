@@ -1,7 +1,7 @@
 # Makefile
 #
 build:
-	ocamlbuild -use-ocamlfind example_runner.native
+	ocamlbuild -use-ocamlfind src-examples/example_runner.native
 
 run:
 	_build/example_runner.native
