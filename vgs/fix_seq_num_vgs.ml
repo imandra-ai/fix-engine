@@ -39,7 +39,7 @@ let is_msg_valid_logon ( msg, next_seq_num : full_top_level_msg option * int ) =
     match msg with 
     | None          -> false
     | Some m        -> 
-    match m with 
+    match m with
     | ValidMsg msg_data -> (
         match msg_data.full_msg_data with 
         | Full_FIX_Admin_Msg adm_msg -> (

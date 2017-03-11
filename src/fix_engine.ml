@@ -19,28 +19,22 @@ open Full_messages;;
 
 (** Define set of actions + data for manual intervention by the user. *)
 type manual_int_data = {
-    (** Should we reset the engine? *)
-    session_reset           : bool;
+    session_reset           : bool; (** Should we reset the engine? *)
 }
 ;;
 
 (** Request to initiate a session. *)
 type session_data = {
-    (** Destination company ID. *)
-    dest_comp_id            : int;
+    dest_comp_id            : int; (** Destination company ID. *)
 }
 ;;
 
 (** These are internal messages into the Engine. *)
 type fix_engine_int_msg = 
-    (** Updates internal time of the engine. *)
-    | TimeChange            of fix_utctimestamp
-    (** Create sessions command. *)
-    | CreateSession         of session_data
-    (** App messages to be transmitted over. *)
-    | ApplicationData       of full_fix_app_msg_data
-    (** TODO: create 'richer' manual commands. *)
-    | ManualIntervention    of manual_int_data
+    | TimeChange            of fix_utctimestamp (** Updates internal time of the engine. *)
+    | CreateSession         of session_data (** Create sessions command. *)
+    | ApplicationData       of full_fix_app_msg_data (** App messages to be transmitted over. *)
+    | ManualIntervention    of manual_int_data (** TODO: create 'richer' manual commands. *)
 ;;
 
 (** Represents 'status' of the engine. *)
@@ -54,89 +48,56 @@ type fix_engine_status =
 
 (** Represents 'modes' of the engine. *)
 type fix_engine_mode =
-    (** State of the engine before logon. *)
-    | NoActiveSession
-    (** Middle of logon session. *)
-    | LogonInitiated
-    (** Application messages are now processed. *)
-    | ActiveSession
-    (** Detected out-of-sequence message. Waiting to receive it. *)
-    | GapDetected
-    (** RequestResend has been sent out. Waiting to recover the messages. *)
-    | Recovery
-    (** Replaying the cache. *)
-    | CacheReplay
-    (** Retransmitting sequence of messages because we were asked to retransmit. *)
-    | Retransmit
-    (** Shutting-down protocol. *)
-    | ShutdownInitiated
-    (** Received a non-dup message with earlier sequence number. *)
-    | Error
-    (** Sent out TestRequest message.  *)
-    | WaitingForHeartbeat
+    | NoActiveSession (** State of the engine before logon. *)
+    | LogonInitiated (** Middle of logon session. *)
+    | ActiveSession (** Application messages are now processed. *)
+    | GapDetected (** Detected out-of-sequence message. Waiting to receive it. *)
+    | Recovery (** RequestResend has been sent out. Waiting to recover the messages. *)
+    | CacheReplay (** Replaying the cache. *)
+    | Retransmit (** Retransmitting sequence of messages because we were asked to retransmit. *)
+    | ShutdownInitiated (** Shutting-down protocol. *)
+    | Error (** Received a non-dup message with earlier sequence number. *)
+    | WaitingForHeartbeat (** Sent out TestRequest message.  *)
 ;;
 
 (** Engine state structure containing all of the information required for it operate. *)
 type fix_engine_state = {
-    (** Status. *)
-    fe_curr_status          : fix_engine_status;
-    (** High-level mode of the engine. *)
-    fe_curr_mode            : fix_engine_mode;
-
-    (** initiator = True if we've received an internal message to initiate 
+    fe_curr_status          : fix_engine_status; (** Status. *)
+    fe_curr_mode            : fix_engine_mode; (** High-level mode of the engine. *)
+    fe_initiator            : bool option; (** initiator = True if we've received an internal message to initiate 
         the connection. It's False if we've received a Logon request first.
         It's None by default prior to any Logon sequences. *)
-    fe_initiator            : bool option;
 
-    (** Need to define time so we're aware of heartbeat status. *)
-    fe_curr_time            : fix_utctimestamp;
+    fe_curr_time            : fix_utctimestamp; (** Need to define time so we're aware of heartbeat status. *)
 
-    (** Our company ID *)
-    fe_comp_id              : int;
-    (** Target company ID *)
-    fe_target_comp_id       : int;
+    fe_comp_id              : int; (** Our company ID *)
+    fe_target_comp_id       : int; (** Target company ID *)
 
-    (** Incoming internal messages (application). *)
-    incoming_int_msg        : fix_engine_int_msg option;
-    (** These are messages we send back to our owner *)
-    outgoing_int_msg        : fix_engine_int_msg option;
+    incoming_int_msg        : fix_engine_int_msg option; (** Incoming internal messages (application). *)
+    outgoing_int_msg        : fix_engine_int_msg option; (** These are messages we send back to our owner *)
 
-    (** Sequence number of the last processed incoming message. *)
-    incoming_seq_num        : int;
-    (** Sequence number of the last sent message. *)
-    outgoing_seq_num        : int;
+    incoming_seq_num        : int; (** Sequence number of the last processed incoming message. *)
+    outgoing_seq_num        : int; (** Sequence number of the last sent message. *)
 
-    (** Messages we will send out *)
-    incoming_fix_msg        : full_top_level_msg option;
-    (** Messages we receive *)
-    outgoing_fix_msg        : full_top_level_msg option;
+    incoming_fix_msg        : full_top_level_msg option; (** Messages we will send out *)
+    outgoing_fix_msg        : full_top_level_msg option; (** Messages we receive *)
 
-    (** Maintain a cache of messages in case we detect out of sequence message. *)
-    fe_cache                : full_fix_msg list;
-    (** We maintain history of our outgoing messages in case we're asked to retransmit. *)
-    fe_history              : full_fix_msg list;
+    fe_cache                : full_fix_msg list; (** Maintain a cache of messages in case we detect out of sequence message. *)
+    fe_history              : full_fix_msg list; (** We maintain history of our outgoing messages in case we're asked to retransmit. *)
 
-    (** Last time we sent out data to the corresponding engine *)
-    fe_last_time_data_sent  : fix_utctimestamp;
-    (** Last time we received a heartbeat or other message. *)
-    fe_last_data_received   : fix_utctimestamp;
-    (** Negotiated heartbeat interval. *)
-    fe_heartbeat_interval   : fix_duration;
-    (** Interval used to 'pad' heartbeat interval before a TestRequest message is sent out. *)
-    fe_testreq_interval     : fix_duration;
+    fe_last_time_data_sent  : fix_utctimestamp; (** Last time we sent out data to the corresponding engine *)
+    fe_last_data_received   : fix_utctimestamp; (** Last time we received a heartbeat or other message. *)
+    fe_heartbeat_interval   : fix_duration; (** Negotiated heartbeat interval. *)
+    fe_testreq_interval     : fix_duration; (** Interval used to 'pad' heartbeat interval before a TestRequest message is sent out. *)
 
-    (** Used in message retransmission. *)
-    fe_history_to_send      : full_fix_msg list;
+    fe_history_to_send      : full_fix_msg list; (** Used in message retransmission. *)
 
-    (** Is the application that's receiving messages up and running?
+    fe_application_up       : bool; (** Is the application that's receiving messages up and running?
         TODO: we might need to constitute a heartbeat to enforce this. *)
-    fe_application_up       : bool;
-
-    (** These are used to send out TestRequest messages that should be replied 
+                         
+    last_test_req_id        : int; (** These are used to send out TestRequest messages that should be replied 
         with Heartbeat messages containing the testrequest ID. Any string
-        may be used, we use int's for now. *)                          
-    last_test_req_id        : int;
-
+        may be used, we use int's for now. *) 
 }
 ;;
 
@@ -182,24 +143,7 @@ let incoming_header_correct ( fh, comp_id : fix_header * int) =
     fh.h_target_comp_id = comp_id
 ;;
 
-(** We're running within Logon sequence. Here's the specification: 
-    
-    " The initiator sends a Logon message.  The acceptor will authenticate the identity of the initiator by examining the Logon message.  
-    The Logon message will contain the data necessary to support the previously agreed upon authentication method.   If the initiator 
-    is successfully authenticated, the acceptor responds with a Logon message.  If authentication fails, the session acceptor should 
-    shut down the connection after optionally sending a Logout message to indicate the reason of failure. Sending a Logout in this case 
-    is not required because doing so would consume a sequence number for that session, which in some cases may be problematic.  The 
-    session initiator may begin to send messages immediately following the Logon message, however, the acceptor may not be ready to 
-    receive them. The initiator must wait for the confirming Logon message from the acceptor before declaring the session fully established.
-	
-    After the initiator has been authenticated, the acceptor will respond immediately with a confirming Logon message.  Depending on 
-    the encryption method being used for that session, this Logon message may or may not contain the same session encryption key.  The 
-    initiator side will use the Logon message being returned from the acceptor as confirmation that a FIX session has been established.  
-    
-    If the session acceptor has chosen to change the session encryption key, the session initiator must send a third Logon back to the 
-    other side in order to acknowledge the key change request. This also allows the session acceptor to know when the session initiator 
-    has started to encrypt using the new session key.  Both parties are responsible for infinite loop detection and prevention during 
-    this phase of the session." *)
+(** *)
 let run_logon_sequence ( m, engine : full_fix_msg * fix_engine_state ) =
     let engine' = {
         engine with incoming_fix_msg = None;
@@ -574,6 +518,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
     | CreateSession sd      ->
         if engine.fe_curr_mode = NoActiveSession then (
             (* Let's initiate a session here. *)
+            let engine = { engine with fe_target_comp_id = sd.dest_comp_id } in 
             let logon_msg = create_logon_msg ( engine ) in { 
                 engine with 
                     fe_last_time_data_sent = engine.fe_curr_time;

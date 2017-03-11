@@ -25,6 +25,7 @@ type full_field_missing_data = {
 }
 ;;
 
+(** *)
 type full_fix_msg_data = 
     | Full_FIX_Admin_Msg                            of full_fix_admin_msg_data
     | Full_FIX_App_Msg                              of full_fix_app_msg_data
@@ -74,8 +75,7 @@ let get_full_msg_tag ( m : full_fix_msg_data ) =
     58	Text	                - Optional - Where possible, message to explain reason for rejection
     354	EncodedTextLen	        - Optional - Must be set if EncodedText <355> field is specified and must immediately precede it.
     355	EncodedText	            - Optional - Encoded (non-ASCII characters) representation of the Text <58> field in the encoded 
-                                                format specified via the MessageEncoding <347> field.
-*)
+                                                format specified via the MessageEncoding <347> field. *)
 type session_rejected_msg_data = {
     srej_msg_msg_seq_num                            : int;
     srej_msg_field_tag                              : full_fix_field;
@@ -98,9 +98,7 @@ type session_rejected_msg_data = {
     58	Text	                - Optional - Where possible, message to explain reason for rejection
     354	EncodedTextLen	        - Optional - Must be set if EncodedText <355> field is specified and must immediately precede it.
     355	EncodedText	            - Optional - Encoded (non-ASCII characters) representation of the Text <58> field in the encoded 
-                                                format specified via the MessageEncoding <347> field.
-*)
-
+                                                format specified via the MessageEncoding <347> field. *)
 type biz_rejected_msg_data = {
     brej_msg_ref_seq_num                            : int;
     brej_msg_msg_tag                                : full_fix_msg_tag;
@@ -110,6 +108,7 @@ type biz_rejected_msg_data = {
 }
 ;;
 
+(** *)
 type full_top_level_msg = 
     | ValidMsg                                      of full_fix_msg
     | SessionRejectedMsg                            of session_rejected_msg_data

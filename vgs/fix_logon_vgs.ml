@@ -34,22 +34,48 @@ open Full_messages;;
 *)
 (** **************************************************************************************** *)
 
-
-let incoming_int_create_session ( create_session : incoming_int_msg option ) {
-
-
-
-}
+let incoming_int_create_session ( m, targetID : fix_engine_int_msg option * int ) = 
+    match m with 
+    | None      -> false
+    | Some msg  ->
+    match msg with
+    | CreateSession data    -> data.dest_comp_id = targetID
+    | _                     -> false
 ;;
 
-
-verify logon_msg_is_first ( engine : fix_engine_state ) =
-    
-    ( engine = init_fix_engine_state ) 
-
+let state_is_init ( engine : fix_engine_state ) =
+    engine.incoming_seq_num = 1 && 
+    engine.outgoing_seq_num = 1 && 
+    engine.fe_initiator = None && 
+    engine.fe_curr_mode = NoActiveSession && 
+    engine.fe_curr_status = Normal && 
+    engine.fe_history = [] && 
+    engine.fe_cache = []
 ;;
 
+let outbound_msg_logon ( m, targetID : full_top_level_msg option * int ) =
+    match m with 
+    | None      -> false
+    | Some msg  -> 
+    match msg with 
+    | ValidMsg vmsg -> (
+    let correct_target_id = vmsg.full_msg_header.h_target_comp_id = targetID in
+    match vmsg.full_msg_data with 
+    | Full_FIX_App_Msg _        -> false
+    | Full_FIX_Admin_Msg amsg   -> 
+    match amsg with 
+    | Full_Msg_Logon _          -> correct_target_id
+    | _                         -> false
+    )
+    | _             -> false
+;;
 
+verify logon_msg_is_first ( engine, targetID : fix_engine_state * int ) =
+    let engine' = one_step ( engine ) in 
+    ( state_is_init ( engine ) && 
+    incoming_int_create_session ( engine.incoming_int_msg, targetID ) ) ==> 
+    outbound_msg_logon ( engine'.outgoing_fix_msg, targetID )
+;;
 
 (** **************************************************************************************** *)
 (**

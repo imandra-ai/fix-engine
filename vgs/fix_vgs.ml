@@ -15,7 +15,7 @@
 :l src-protocol/full_app_messages.ml
 :l src-protocol/full_fix_fields.ml
 :l src-protocol/full_messages.ml
-:l fix_engine.ml
+:l src/fix_engine.ml
 
 (*:l vgs/fix_base_vgs.ml*)
 

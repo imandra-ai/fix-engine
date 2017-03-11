@@ -219,34 +219,3 @@ verify session_rejects_are_rejected ( state : fix_engine_state ) =
     ( no_incoming_int_msgs && incoming_rejected && state.fe_curr_mode = ActiveSession) ==> ( msg_rejected && seq_num_updated )
 ;;
 
-(** **************************************************************************************** *)
-(** 
-    Base VG.5
-
-    Skipped heartbeat causes logout to be sent out and a session closure.                    *)
-(** **************************************************************************************** *)
-
-verify skipped_heartbeat_causes_logout ( state : fix_engine_state ) = 
-    true
-;;
-
-(** **************************************************************************************** *)
-(** 
-    Base VG.6
-
-    Incoming message updated time of the last heartbeat received.                            *)
-(** **************************************************************************************** *)
-
-verify heartbeat_updated_correctly ( state : fix_engine_state ) =
-    true
-;;
-
-(** **************************************************************************************** *)
-(** 
-    Base VG.7
-
-    Heartbeat sent out correctly.                                                            *)
-(** **************************************************************************************** *)
-verify heartbeat_sent_out_correctly ( state : fix_engine_state ) =
-    true
-;;
