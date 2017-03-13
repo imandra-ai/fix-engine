@@ -44,60 +44,67 @@ type fix_engine_status =
     | BusinessRejectReceived
     | TargetAppIsDown
     | ConnTerminatedWithoutLogoff
+    | MaxNumLogonMsgsViolated
 ;;
 
 (** Represents 'modes' of the engine. *)
 type fix_engine_mode =
-    | NoActiveSession (** State of the engine before logon. *)
-    | LogonInitiated (** Middle of logon session. *)
-    | ActiveSession (** Application messages are now processed. *)
-    | GapDetected (** Detected out-of-sequence message. Waiting to receive it. *)
-    | Recovery (** RequestResend has been sent out. Waiting to recover the messages. *)
-    | CacheReplay (** Replaying the cache. *)
-    | Retransmit (** Retransmitting sequence of messages because we were asked to retransmit. *)
-    | ShutdownInitiated (** Shutting-down protocol. *)
-    | Error (** Received a non-dup message with earlier sequence number. *)
-    | WaitingForHeartbeat (** Sent out TestRequest message.  *)
+    | NoActiveSession       (** State of the engine before logon. *)
+    | LogonInitiated        (** Middle of logon session. *)
+    | ActiveSession         (** Application messages are now processed. *)
+    | GapDetected           (** Detected out-of-sequence message. Waiting to receive it. *)
+    | Recovery              (** RequestResend has been sent out. Waiting to recover the messages. *)
+    | CacheReplay           (** Replaying the cache. *)
+    | Retransmit            (** Retransmitting sequence of messages because we were asked to retransmit. *)
+    | ShutdownInitiated     (** Shutting-down protocol. *)
+    | Error                 (** Received a non-dup message with earlier sequence number. *)
+    | WaitingForHeartbeat   (** Sent out TestRequest message.  *)
 ;;
 
 (** Engine state structure containing all of the information required for it operate. *)
 type fix_engine_state = {
-    fe_curr_status          : fix_engine_status; (** Status. *)
-    fe_curr_mode            : fix_engine_mode; (** High-level mode of the engine. *)
-    fe_initiator            : bool option; (** initiator = True if we've received an internal message to initiate 
-        the connection. It's False if we've received a Logon request first.
-        It's None by default prior to any Logon sequences. *)
+    fe_curr_status          : fix_engine_status;            (** Status. *)
+    fe_curr_mode            : fix_engine_mode;              (** High-level mode of the engine. *)
+    fe_initiator            : bool option;                  (** initiator = True if we've received an internal message to initiate 
+                                                                the connection. It's False if we've received a Logon request first.
+                                                                It's None by default prior to any Logon sequences. *)
 
-    fe_curr_time            : fix_utctimestamp; (** Need to define time so we're aware of heartbeat status. *)
+    fe_curr_time            : fix_utctimestamp;             (** Need to define time so we're aware of heartbeat status. *)
 
-    fe_comp_id              : int; (** Our company ID *)
-    fe_target_comp_id       : int; (** Target company ID *)
+    fe_comp_id              : int;                          (** Our company ID *)
+    fe_target_comp_id       : int;                          (** Target company ID *)
 
-    incoming_int_msg        : fix_engine_int_msg option; (** Incoming internal messages (application). *)
-    outgoing_int_msg        : fix_engine_int_msg option; (** These are messages we send back to our owner *)
+    incoming_int_msg        : fix_engine_int_msg option;    (** Incoming internal messages (application). *)
+    outgoing_int_msg        : fix_engine_int_msg option;    (** These are messages we send back to our owner *)
 
-    incoming_seq_num        : int; (** Sequence number of the last processed incoming message. *)
-    outgoing_seq_num        : int; (** Sequence number of the last sent message. *)
+    incoming_seq_num        : int;                          (** Sequence number of the last processed incoming message. *)
+    outgoing_seq_num        : int;                          (** Sequence number of the last sent message. *)
 
-    incoming_fix_msg        : full_top_level_msg option; (** Messages we will send out *)
-    outgoing_fix_msg        : full_top_level_msg option; (** Messages we receive *)
+    incoming_fix_msg        : full_top_level_msg option;    (** Messages we will send out *)
+    outgoing_fix_msg        : full_top_level_msg option;    (** Messages we receive *)
 
-    fe_cache                : full_fix_msg list; (** Maintain a cache of messages in case we detect out of sequence message. *)
-    fe_history              : full_fix_msg list; (** We maintain history of our outgoing messages in case we're asked to retransmit. *)
+    fe_cache                : full_fix_msg list;            (** Maintain a cache of messages in case we detect out of sequence message. *)
+    fe_history              : full_fix_msg list;            (** We maintain history of our outgoing messages in case we're asked to retransmit. *)
 
-    fe_last_time_data_sent  : fix_utctimestamp; (** Last time we sent out data to the corresponding engine *)
-    fe_last_data_received   : fix_utctimestamp; (** Last time we received a heartbeat or other message. *)
-    fe_heartbeat_interval   : fix_duration; (** Negotiated heartbeat interval. *)
-    fe_testreq_interval     : fix_duration; (** Interval used to 'pad' heartbeat interval before a TestRequest message is sent out. *)
+    fe_last_time_data_sent  : fix_utctimestamp;             (** Last time we sent out data to the corresponding engine *)
+    fe_last_data_received   : fix_utctimestamp;             (** Last time we received a heartbeat or other message. *)
+    fe_heartbeat_interval   : fix_duration;                 (** Negotiated heartbeat interval. *)
+    fe_testreq_interval     : fix_duration;                 (** Interval used to 'pad' heartbeat interval before a TestRequest message is sent out. *)
 
-    fe_history_to_send      : full_fix_msg list; (** Used in message retransmission. *)
+    fe_history_to_send      : full_fix_msg list;            (** Used in message retransmission. *)
 
-    fe_application_up       : bool; (** Is the application that's receiving messages up and running?
-        TODO: we might need to constitute a heartbeat to enforce this. *)
-                         
-    last_test_req_id        : int; (** These are used to send out TestRequest messages that should be replied 
-        with Heartbeat messages containing the testrequest ID. Any string
-        may be used, we use int's for now. *) 
+    fe_application_up       : bool;                         (** Is the application that's receiving messages up and running?
+                                                                TODO: we might need to constitute a heartbeat to enforce this. *)
+
+    last_test_req_id        : int;                          (** These are used to send out TestRequest messages that should be replied 
+                                                                with Heartbeat messages containing the testrequest ID. Any string
+                                                                may be used, we use int's for now. *) 
+
+    fe_num_logons_sent      : int;                          (** Number of logons sent during session initialization. This is done to 
+                                                                ensure that the engine does not go into infinite loop. *)
+    fe_max_num_logons_sent  : int;                          (** Setting: maximum number of logons to be sent out. *)
+    fe_encrypt_method       : fix_encryption_method;
+
 }
 ;;
 
@@ -134,6 +141,9 @@ let init_fix_engine_state = {
 
     last_test_req_id        = 0;
 
+    fe_num_logons_sent      = 0;
+    fe_max_num_logons_sent  = 0;
+    fe_encrypt_method       = NoEncryption;
 }
 ;;
 
@@ -143,27 +153,6 @@ let incoming_header_correct ( fh, comp_id : fix_header * int) =
     fh.h_target_comp_id = comp_id
 ;;
 
-(** *)
-let run_logon_sequence ( m, engine : full_fix_msg * fix_engine_state ) =
-    let engine' = {
-        engine with incoming_fix_msg = None;
-    } in
-    if m.full_msg_header.h_target_comp_id <> engine.fe_comp_id then 
-        engine'
-    else
-        match m.full_msg_data with 
-        | Full_FIX_Admin_Msg msg -> (
-            match msg with 
-            | Full_Msg_Logon d -> {
-                engine' with 
-                    fe_curr_mode = ActiveSession;
-                    incoming_seq_num = m.full_msg_header.h_msg_seq_num;
-            }
-            | _ -> engine'
-            )
-        | Full_FIX_App_Msg msg -> engine'
-;;
-
 (** We're in the middle of retransmitting historic messages. 
     Note: when we transition into Retransmit mode, we set up a 
     queue with messages that should be sent out. These messages are a function
@@ -171,8 +160,21 @@ let run_logon_sequence ( m, engine : full_fix_msg * fix_engine_state ) =
 let run_retransmit ( engine : fix_engine_state ) = 
     match engine.fe_history_to_send with 
     | [] -> { engine with fe_curr_mode = ActiveSession; } (* We're done - need to change mode. *)
-    | x::xs -> {
+    | x::xs -> 
+        let should_be_sent = (
+            match x.full_msg_data with 
+            | Full_FIX_App_Msg _ -> true
+            | Full_FIX_Admin_Msg amsg ->
+            match amsg with 
+            | Full_Msg_Reject _ -> true
+            | _ -> false
+        ) in
+        if should_be_sent then {
             engine with 
+                fe_history_to_send = xs;
+                outgoing_fix_msg = Some ( ValidMsg x );
+        } else {
+            engine with
                 fe_history_to_send = xs;
                 outgoing_fix_msg = None;
         }
@@ -188,6 +190,10 @@ let msg_consistent ( engine, msg_header : fix_engine_state * fix_header ) =
     | None -> seq_num_correct
     | Some dup -> dup || ((not dup) && seq_num_correct)
 ;;
+
+(** ********************************************************************************************************** *)
+(**  Message creation helper functions.                                                                        *)
+(** ********************************************************************************************************** *)
 
 (** Create outbound FIX message with the appropriate header and trailer. *)
 let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, msg, is_duplicate ) = {
@@ -215,9 +221,18 @@ let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, msg, is_duplicat
 let create_logon_msg ( engine : fix_engine_state ) = 
     let msg_data = Full_FIX_Admin_Msg ( 
         Full_Msg_Logon {
-            ln_encrypt_method      = 1;
-            ln_heartbeat_interval  = engine.fe_heartbeat_interval;
-            ln_raw_data_length     = 1; 
+            ln_encrypt_method               = engine.fe_encrypt_method;
+            ln_heartbeat_interval           = engine.fe_heartbeat_interval;
+            ln_raw_data_length              = None; 
+            ln_raw_data                     = None;
+            ln_reset_seq_num_flag           = None;
+            ln_next_expected_msg_seq_num    = None;
+            ln_max_message_size             = None;
+
+            ln_test_message_indicator       = None;
+            ln_username                     = None;
+            ln_password                     = None;
+
         } 
     ) in 
     ValidMsg ( create_outbound_fix_msg ( engine.outgoing_seq_num, engine.fe_target_comp_id, engine.fe_comp_id, msg_data, false) )
@@ -293,22 +308,60 @@ let run_no_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
     | Full_FIX_Admin_Msg msg -> (
         match msg with 
         | Full_Msg_Logon d ->
-            let logon_msg = create_logon_msg ( engine ) in 
-            { 
-                engine with
-                    fe_initiator            = Some false;
-                    outgoing_fix_msg        = Some logon_msg;
-                    outgoing_seq_num        = engine.outgoing_seq_num + 1;
-                    fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
-                    fe_curr_mode            = ActiveSession;  
-                    fe_last_time_data_sent = engine.fe_curr_time;
-          
-            }
+
+            if ( engine.fe_encrypt_method <> d.ln_encrypt_method && 
+                engine.fe_num_logons_sent >= engine.fe_max_num_logons_sent ) then { 
+                    engine with 
+                        fe_curr_mode = Error;
+                        fe_curr_status = MaxNumLogonMsgsViolated;
+            } else (
+                let engine' = { engine with fe_encrypt_method = d.ln_encrypt_method } in 
+                let logon_msg = create_logon_msg ( engine' ) in { 
+                    engine' with
+                        fe_initiator            = Some false;
+                        outgoing_fix_msg        = Some logon_msg;
+                        outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                        fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
+                        fe_curr_mode            = ActiveSession;  
+                        fe_last_time_data_sent  = engine.fe_curr_time;
+                        fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
+                } )
         | _ -> engine
         )
     | Full_FIX_App_Msg _ -> engine
 ;;
 
+(**  *)
+let run_logon_sequence ( m, engine : full_fix_msg * fix_engine_state ) =
+    let engine' = {
+        engine with incoming_fix_msg = None;
+    } in
+    if m.full_msg_header.h_target_comp_id <> engine.fe_comp_id then 
+        engine'
+    else
+        match m.full_msg_data with
+        | Full_FIX_Admin_Msg msg -> (
+            match msg with
+            | Full_Msg_Logon d -> 
+            if engine.fe_encrypt_method <> d.ln_encrypt_method then (
+                let engine' = { engine with fe_encrypt_method = d.ln_encrypt_method } in 
+                let logon_msg = create_logon_msg ( engine' ) in {
+                    engine' with
+                        outgoing_fix_msg        = Some logon_msg;
+                        outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                        fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
+                        fe_last_time_data_sent  = engine.fe_curr_time;
+                        fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
+                }
+            ) else {
+                engine' with 
+                    fe_curr_mode = ActiveSession;
+                    incoming_seq_num = m.full_msg_header.h_msg_seq_num;
+            }
+            | _ -> engine'
+            )
+        | Full_FIX_App_Msg msg -> engine'
+;;
 
 (** Response to resent request. *)
 let initiate_Resend ( request, engine : full_fix_msg_resend_request_data * fix_engine_state ) =
@@ -328,16 +381,16 @@ let run_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
     
     } else
     match m.full_msg_data with 
-    | Full_FIX_Admin_Msg adm_msg    -> (
+    | Full_FIX_Admin_Msg adm_msg        -> (
         match adm_msg with 
-        | Full_Msg_Hearbeat hb  -> {
+        | Full_Msg_Hearbeat hb          -> {
             (* Update information about the last received message. *)    
                 engine with 
                     incoming_seq_num = m.full_msg_header.h_msg_seq_num;
                     incoming_fix_msg = None;
             }
-        | Full_Msg_Logon data   -> engine
-        | Full_Msg_Logoff data  -> 
+        | Full_Msg_Logon data           -> engine
+        | Full_Msg_Logoff data          -> 
             let logoff_msg = create_logoff_msg ( engine ) in {
                 engine with
                     fe_last_time_data_sent  = engine.fe_curr_time;
@@ -387,7 +440,7 @@ let replay_single_msg ( m, engine : full_fix_msg * fix_engine_state ) =
     Note that the only session-level message we should receive at this point
     should be a Reject message. We need to ensure that this function cannot 
     lead to another Recovery state. *)
-let run_cache_replay ( engine : fix_engine_state ) = 
+let run_cache_replay ( engine : fix_engine_state ) =
     match engine.fe_cache with 
     | [] -> (* Nothing to process in cache, we've recovered *) {
         engine with
@@ -464,15 +517,14 @@ let run_shutdown ( m, engine : full_fix_msg * fix_engine_state ) =
 
 (** Process incoming internal transition message. *)
 let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) = 
-    match x with 
+    match x with
     | TimeChange t          -> 
         let engine' =  { engine with fe_curr_time = t } in
         if engine.fe_curr_mode = ActiveSession then (
-            (* We have 2 checks:
+            (** We have 2 checks:
                 - need to check whether we need to send out a Heartbeat
                 - need to check whether we haven't received a heartbeat or any other data
-                    from the counterparty. *) 
-
+                    from the counterparty. *)
             let sent_cutoff = utctimestamp_add ( engine.fe_last_time_data_sent, engine.fe_heartbeat_interval ) in
             let sent_cutoff_violated =  utctimestamp_greaterThan ( t, sent_cutoff ) in 
 
@@ -494,8 +546,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
                         last_test_req_id        = engine'.last_test_req_id + 1;
                         fe_last_time_data_sent  = engine'.fe_curr_time;
                 }
-
-            ) else  
+            ) else
                 engine'
 
         ) else if engine.fe_curr_mode = WaitingForHeartbeat then (
@@ -603,12 +654,11 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
         | ActiveSession         -> run_active_session ( msg, engine )
         | GapDetected           -> run_recovery ( msg, engine )
         | Recovery              -> run_recovery ( msg, engine )
-        | Retransmit            -> { engine with incoming_fix_msg = Some ( ValidMsg msg ) }
         | ShutdownInitiated     -> run_shutdown ( msg, engine )
         | Error                 -> noop ( msg, engine )
-        | CacheReplay           -> { engine with incoming_fix_msg = Some ( ValidMsg msg ) }
         | WaitingForHeartbeat   -> noop ( msg, engine) 
-    )
+        | _                     -> { engine with incoming_fix_msg = Some ( ValidMsg msg ) }
+        )
 ;; 
 
 (** This sets validity of the incoming internal messages.
@@ -663,16 +713,13 @@ let check_app_down ( m, app_up : full_top_level_msg * bool ) =
         }
 ;;
 
-(**  Our main transition function.
-    Note that the choice of order, i.e. in which we process messages, etc is completely 
-    arbitrary. The FIX specification does not at all describe how this should be done.  *)
+(** The main transition function. *)
 let one_step ( engine : fix_engine_state ) =
-    (** First, check if we're in the middle of replaying our cache (sending out messages 
-        to the receiving engine that it has requested for. *)
+    (** First, check if we're in the middle of replaying our cache. *)
     if engine.fe_curr_mode = CacheReplay then
         run_cache_replay (engine)
-
-    (** Check if we still need to retransmit our messages out to the receiving engine. *)
+    
+    (** If we still need to retransmit our messages out to the receiving engine. *)
     else if engine.fe_curr_mode = Retransmit then 
         run_retransmit (engine)
 

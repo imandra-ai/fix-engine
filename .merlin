@@ -1,10 +1,11 @@
 PKG yojson topkg
-S *
-B _build/
+S src
 S src-model
 S src-protocol
 S src-pp
 S src-examples
+B _build/
+B _build/src
 B _build/src-cpp
 B _build/src-model
 B _build/src-protocol

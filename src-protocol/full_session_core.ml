@@ -83,7 +83,7 @@ let default_fix_header = {
 type fix_trailer = {
     signature_length                : int;  (* Tag 93: Signature Length *)
     signature                       : int;  (* Tag 89: Signature text *)
-    check_sum                       : int;  (* Tag 10: TODO: need to  *)
+    check_sum                       : int;  (* Tag 10: *)
 }
 ;;
 
@@ -92,4 +92,15 @@ let default_fix_trailer = {
     signature                       = 0;
     check_sum                       = 0;
 }
+;;
+
+(** Encryption methods available. *)
+type fix_encryption_method =
+    | PKCS          of int
+    | DES_ECB       of int
+    | PKCS_DES      of int
+    | PGP_DES       of int
+    | PGP_DES_MD5   of int
+    | PEM_DES_MD5   of int
+    | NoEncryption
 ;;

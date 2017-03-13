@@ -17,6 +17,3 @@
 :l src-protocol/full_messages.ml
 :l src/fix_engine.ml
 
-(*:l vgs/fix_base_vgs.ml*)
-
-(*:l vgs/fix_seq_num_vgs.ml*)
