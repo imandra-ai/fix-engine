@@ -1,0 +1,270 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Full_app_messages.html">
+<link rel="next" href="Full_session_core.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
+<link title="Datetime" rel="Chapter" href="Datetime.html">
+<link title="Basic_types" rel="Chapter" href="Basic_types.html">
+<link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
+<link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_messages" rel="Chapter" href="Full_messages.html">
+<link title="Full_session_core" rel="Chapter" href="Full_session_core.html"><title>Full_messages</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Full_app_messages.html" title="Full_app_messages">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Full_session_core.html" title="Full_session_core">Next</a>
+</div>
+<h1>Module <a href="type_Full_messages.html">Full_messages</a></h1>
+
+<pre><span class="keyword">module</span> Full_messages: <code class="code"><span class="keyword">sig</span></code> <a href="Full_messages.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+<p>
+
+    Contains implementation of the 'full' FIX messages.
+<p>
+
+    full_messages.ml<br>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEfull_field_missing_data"><span class="keyword">type</span> <code class="type"></code>full_field_missing_data</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_field_missing_data.field_missing_field">field_missing_field</span>&nbsp;: <code class="type">Full_fix_fields.full_fix_field</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_field_missing_data.field_missing_msg">field_missing_msg</span>&nbsp;: <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_tag">Full_admin_messages.full_fix_msg_tag</a></code>;</code></td>
+
+</tr></table>
+}
+
+<div class="info ">
+Contains the missing field information.<br>
+</div>
+
+
+<pre><code><span id="TYPEfull_fix_msg_data"><span class="keyword">type</span> <code class="type"></code>full_fix_msg_data</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_msg_data.Full_FIX_Admin_Msg"><span class="constructor">Full_FIX_Admin_Msg</span></span> <span class="keyword">of</span> <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_admin_msg_data">Full_admin_messages.full_fix_admin_msg_data</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_msg_data.Full_FIX_App_Msg"><span class="constructor">Full_FIX_App_Msg</span></span> <span class="keyword">of</span> <code class="type"><a href="Full_app_messages.html#TYPEfull_fix_app_msg_data">Full_app_messages.full_fix_app_msg_data</a></code></code></td>
+
+</tr></table>
+
+<div class="info ">
+</div>
+
+
+<pre><code><span id="TYPEfull_fix_msg"><span class="keyword">type</span> <code class="type"></code>full_fix_msg</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_msg.full_msg_header">full_msg_header</span>&nbsp;: <code class="type"><a href="Full_session_core.html#TYPEfix_header">Full_session_core.fix_header</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_msg.full_msg_data">full_msg_data</span>&nbsp;: <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg_data">full_fix_msg_data</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_msg.full_msg_trailer">full_msg_trailer</span>&nbsp;: <code class="type"><a href="Full_session_core.html#TYPEfix_trailer">Full_session_core.fix_trailer</a></code>;</code></td>
+
+</tr></table>
+}
+
+<div class="info ">
+Applicatoin messages<br>
+</div>
+
+
+<pre><span id="VALget_full_msg_tag"><span class="keyword">val</span> get_full_msg_tag</span> : <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg_data">full_fix_msg_data</a> -> <a href="Full_admin_messages.html#TYPEfull_fix_msg_tag">Full_admin_messages.full_fix_msg_tag</a></code></pre>
+<pre><code><span id="TYPEsession_rejected_msg_data"><span class="keyword">type</span> <code class="type"></code>session_rejected_msg_data</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsession_rejected_msg_data.srej_msg_msg_seq_num">srej_msg_msg_seq_num</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsession_rejected_msg_data.srej_msg_field_tag">srej_msg_field_tag</span>&nbsp;: <code class="type">Full_fix_fields.full_fix_field</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsession_rejected_msg_data.srej_msg_msg_type">srej_msg_msg_type</span>&nbsp;: <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_tag">Full_admin_messages.full_fix_msg_tag</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsession_rejected_msg_data.srej_msg_reject_reason">srej_msg_reject_reason</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_session_reject_reason">Basic_types.fix_session_reject_reason</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsession_rejected_msg_data.srej_text">srej_text</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_string">Basic_types.fix_string</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsession_rejected_msg_data.srej_encoded_text_len">srej_encoded_text_len</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsession_rejected_msg_data.srej_encoded_text">srej_encoded_text</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_string">Basic_types.fix_string</a></code>;</code></td>
+
+</tr></table>
+}
+
+<div class="info ">
+Note that information contained in the data structures for Business and Session
+        Rejected messages should be enough to send out the 'Reject' and 'BusinessReject' messages.
+<p>
+
+    Reject message
+<p>
+
+    45	RefSeqNum               - Required - MsgSeqNum &lt;34&gt; of rejected message
+    371	RefTagID                - Optional - The tag number of the FIX field being referenced.
+    372	RefMsgType              - Optional - The MsgType &lt;35&gt; of the FIX message being referenced.
+    373	SessionRejectReason	    - Optional - Code to identify reason for a session-level Reject &lt;3&gt; message.
+    58	Text	                - Optional - Where possible, message to explain reason for rejection
+    354	EncodedTextLen	        - Optional - Must be set if EncodedText &lt;355&gt; field is specified and must immediately precede it.
+    355	EncodedText	            - Optional - Encoded (non-ASCII characters) representation of the Text &lt;58&gt; field in the encoded 
+                                                format specified via the MessageEncoding &lt;347&gt; field.<br>
+</div>
+
+
+<pre><code><span id="TYPEbiz_rejected_msg_data"><span class="keyword">type</span> <code class="type"></code>biz_rejected_msg_data</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbiz_rejected_msg_data.brej_msg_ref_seq_num">brej_msg_ref_seq_num</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbiz_rejected_msg_data.brej_msg_msg_tag">brej_msg_msg_tag</span>&nbsp;: <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_tag">Full_admin_messages.full_fix_msg_tag</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbiz_rejected_msg_data.brej_msg_reject_reason">brej_msg_reject_reason</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_business_reject_reason">Basic_types.fix_business_reject_reason</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbiz_rejected_msg_data.brej_msg_text">brej_msg_text</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_string">Basic_types.fix_string</a> option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbiz_rejected_msg_data.brej_msg_encoded_text">brej_msg_encoded_text</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_string">Basic_types.fix_string</a> option</code>;</code></td>
+
+</tr></table>
+}
+
+<div class="info ">
+Business Reject message
+<p>
+
+    45	RefSeqNum	            - Optional - MsgSeqNum &lt;34&gt; of rejected message
+    372	RefMsgType	Y	        - Required - The MsgType &lt;35&gt; of the FIX message being referenced.
+    379	BusinessRejectRefID	    - Optional - The value of the business-level 'ID' field on the message being referenced. 
+                                                Required unless the corresponding ID field (see list above) was not specified.
+    380	BusinessRejectReason    - Required - Code to identify reason for a Business Message Reject &lt;j&gt; message.
+    58	Text	                - Optional - Where possible, message to explain reason for rejection
+    354	EncodedTextLen	        - Optional - Must be set if EncodedText &lt;355&gt; field is specified and must immediately precede it.
+    355	EncodedText	            - Optional - Encoded (non-ASCII characters) representation of the Text &lt;58&gt; field in the encoded 
+                                                format specified via the MessageEncoding &lt;347&gt; field.<br>
+</div>
+
+
+<pre><code><span id="TYPEfull_top_level_msg"><span class="keyword">type</span> <code class="type"></code>full_top_level_msg</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_top_level_msg.ValidMsg"><span class="constructor">ValidMsg</span></span> <span class="keyword">of</span> <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">full_fix_msg</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_top_level_msg.SessionRejectedMsg"><span class="constructor">SessionRejectedMsg</span></span> <span class="keyword">of</span> <code class="type"><a href="Full_messages.html#TYPEsession_rejected_msg_data">session_rejected_msg_data</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_top_level_msg.BusinessRejectedMsg"><span class="constructor">BusinessRejectedMsg</span></span> <span class="keyword">of</span> <code class="type"><a href="Full_messages.html#TYPEbiz_rejected_msg_data">biz_rejected_msg_data</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_top_level_msg.Gargled"><span class="constructor">Gargled</span></span></code></td>
+
+</tr></table>
+
+<div class="info ">
+</div>
+
+</body></html>

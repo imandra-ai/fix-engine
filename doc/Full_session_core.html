@@ -1,0 +1,317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Full_messages.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
+<link title="Datetime" rel="Chapter" href="Datetime.html">
+<link title="Basic_types" rel="Chapter" href="Basic_types.html">
+<link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
+<link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_messages" rel="Chapter" href="Full_messages.html">
+<link title="Full_session_core" rel="Chapter" href="Full_session_core.html"><title>Full_session_core</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Full_messages.html" title="Full_messages">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_Full_session_core.html">Full_session_core</a></h1>
+
+<pre><span class="keyword">module</span> Full_session_core: <code class="code"><span class="keyword">sig</span></code> <a href="Full_session_core.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+<p>
+
+    Implementation of the FIX 4.4 protocol. Contains FIX data dictionary.
+<p>
+
+    fix_data_dictionary.ml<br>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEfix_header"><span class="keyword">type</span> <code class="type"></code>fix_header</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_begin_string">h_begin_string</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_body_length">h_body_length</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_sender_comp_id">h_sender_comp_id</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_target_comp_id">h_target_comp_id</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_msg_seq_num">h_msg_seq_num</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_on_behalf_of_comp_id">h_on_behalf_of_comp_id</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_deliver_to_comp_id">h_deliver_to_comp_id</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_secure_data_len">h_secure_data_len</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_secure_data">h_secure_data</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_sender_sub_id">h_sender_sub_id</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_sender_location_id">h_sender_location_id</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_target_sub_id">h_target_sub_id</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_target_location_id">h_target_location_id</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_on_behalf_of_sub_id">h_on_behalf_of_sub_id</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_on_behalf_of_location_id">h_on_behalf_of_location_id</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_deliver_to_sub_id">h_deliver_to_sub_id</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_deliver_to_location_id">h_deliver_to_location_id</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_poss_dup_flag">h_poss_dup_flag</span>&nbsp;: <code class="type">bool option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_poss_resend">h_poss_resend</span>&nbsp;: <code class="type">bool option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_sending_time">h_sending_time</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_orig_sending_time">h_orig_sending_time</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_xml_data_len">h_xml_data_len</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_xml_data">h_xml_data</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_message_enconding">h_message_enconding</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_last_msg_seq_num_processed">h_last_msg_seq_num_processed</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_header.h_no_hops">h_no_hops</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr></table>
+}
+
+<div class="info ">
+Standard FIX header. 
+    Note that the standard header has tag Tag 35 that is the 
+    message type. We do not need this tag as message type is 
+    explicit.<br>
+</div>
+
+
+<pre><span id="VALdefault_fix_header"><span class="keyword">val</span> default_fix_header</span> : <code class="type"><a href="Full_session_core.html#TYPEfix_header">fix_header</a></code></pre>
+<pre><code><span id="TYPEfix_trailer"><span class="keyword">type</span> <code class="type"></code>fix_trailer</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_trailer.signature_length">signature_length</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_trailer.signature">signature</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_trailer.check_sum">check_sum</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+<div class="info ">
+Standard FIX trailer<br>
+</div>
+
+
+<pre><span id="VALdefault_fix_trailer"><span class="keyword">val</span> default_fix_trailer</span> : <code class="type"><a href="Full_session_core.html#TYPEfix_trailer">fix_trailer</a></code></pre>
+<pre><code><span id="TYPEfix_encryption_method"><span class="keyword">type</span> <code class="type"></code>fix_encryption_method</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_encryption_method.PKCS"><span class="constructor">PKCS</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_encryption_method.DES_ECB"><span class="constructor">DES_ECB</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_encryption_method.PKCS_DES"><span class="constructor">PKCS_DES</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_encryption_method.PGP_DES"><span class="constructor">PGP_DES</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_encryption_method.PGP_DES_MD5"><span class="constructor">PGP_DES_MD5</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_encryption_method.PEM_DES_MD5"><span class="constructor">PEM_DES_MD5</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_encryption_method.NoEncryption"><span class="constructor">NoEncryption</span></span></code></td>
+
+</tr></table>
+
+<div class="info ">
+Encryption methods available.<br>
+</div>
+
+</body></html>

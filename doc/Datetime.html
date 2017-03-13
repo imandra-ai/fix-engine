@@ -1,0 +1,363 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Fix_engine.html">
+<link rel="next" href="Basic_types.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
+<link title="Datetime" rel="Chapter" href="Datetime.html">
+<link title="Basic_types" rel="Chapter" href="Basic_types.html">
+<link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
+<link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_messages" rel="Chapter" href="Full_messages.html">
+<link title="Full_session_core" rel="Chapter" href="Full_session_core.html"><title>Datetime</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Fix_engine.html" title="Fix_engine">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Basic_types.html" title="Basic_types">Next</a>
+</div>
+<h1>Module <a href="type_Datetime.html">Datetime</a></h1>
+
+<pre><span class="keyword">module</span> Datetime: <code class="code"><span class="keyword">sig</span></code> <a href="Datetime.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+<p>
+
+    Implementation of the date time types.
+<p>
+
+    datetime.ml<br>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEfix_utctimestamp"><span class="keyword">type</span> <code class="type"></code>fix_utctimestamp</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utctimestamp.utc_timestamp_year">utc_timestamp_year</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utctimestamp.utc_timestamp_month">utc_timestamp_month</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utctimestamp.utc_timestamp_day">utc_timestamp_day</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utctimestamp.utc_timestamp_hour">utc_timestamp_hour</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utctimestamp.utc_timestamp_minute">utc_timestamp_minute</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utctimestamp.utc_timestamp_second">utc_timestamp_second</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utctimestamp.utc_timestamp_millisec">utc_timestamp_millisec</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><span id="VALmake_utctimestamp"><span class="keyword">val</span> make_utctimestamp</span> : <code class="type">int * int * int * int * int * int * int option -> <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a></code></pre>
+<pre><span id="VALis_valid_utctimestamp"><span class="keyword">val</span> is_valid_utctimestamp</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> -> bool</code></pre>
+<pre><span id="VALutctimestamp_greaterThan"><span class="keyword">val</span> utctimestamp_greaterThan</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> * <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> -> bool</code></pre>
+<pre><span id="VALutctimestamp_Equal"><span class="keyword">val</span> utctimestamp_Equal</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> * <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> -> bool</code></pre>
+<pre><span id="VALutctimestamp_greaterThanEqual"><span class="keyword">val</span> utctimestamp_greaterThanEqual</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> * <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> -> bool</code></pre>
+<pre><span id="VALutctimestamp_lessThan"><span class="keyword">val</span> utctimestamp_lessThan</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> * <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> -> bool</code></pre>
+<pre><span id="VALutctimestamp_lessThanEqual"><span class="keyword">val</span> utctimestamp_lessThanEqual</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> * <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> -> bool</code></pre>
+<pre><code><span id="TYPEfix_localmktdate"><span class="keyword">type</span> <code class="type"></code>fix_localmktdate</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_localmktdate.localmktdate_year">localmktdate_year</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_localmktdate.localmktdate_month">localmktdate_month</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_localmktdate.localmktdate_day">localmktdate_day</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><span id="VALis_valid_localmktdate"><span class="keyword">val</span> is_valid_localmktdate</span> : <code class="type"><a href="Datetime.html#TYPEfix_localmktdate">fix_localmktdate</a> -> bool</code></pre>
+<pre><code><span id="TYPEfix_week"><span class="keyword">type</span> <code class="type"></code>fix_week</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_week.Week_1"><span class="constructor">Week_1</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_week.Week_2"><span class="constructor">Week_2</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_week.Week_3"><span class="constructor">Week_3</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_week.Week_4"><span class="constructor">Week_4</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_week.Week_5"><span class="constructor">Week_5</span></span></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEfix_monthyear"><span class="keyword">type</span> <code class="type"></code>fix_monthyear</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_monthyear.monthyear_year">monthyear_year</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_monthyear.monthyear_month">monthyear_month</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_monthyear.monthyear_day">monthyear_day</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_monthyear.monthyear_week">monthyear_week</span>&nbsp;: <code class="type"><a href="Datetime.html#TYPEfix_week">fix_week</a> option</code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><span id="VALis_valid_monthyear"><span class="keyword">val</span> is_valid_monthyear</span> : <code class="type"><a href="Datetime.html#TYPEfix_monthyear">fix_monthyear</a> -> bool</code></pre>
+<pre><code><span id="TYPEfix_utctimeonly"><span class="keyword">type</span> <code class="type"></code>fix_utctimeonly</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utctimeonly.utc_timeonly_hour">utc_timeonly_hour</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utctimeonly.utc_timeonly_minute">utc_timeonly_minute</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utctimeonly.utc_timeonly_second">utc_timeonly_second</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utctimeonly.utc_timeonly_millisec">utc_timeonly_millisec</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><span id="VALis_valid_utctimeonly"><span class="keyword">val</span> is_valid_utctimeonly</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> -> bool</code></pre>
+<pre><span id="VALutc_timeonly_greaterThan"><span class="keyword">val</span> utc_timeonly_greaterThan</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> * <a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> -> bool</code></pre>
+<pre><span id="VALutc_timeonly_Equal"><span class="keyword">val</span> utc_timeonly_Equal</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> * <a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> -> bool</code></pre>
+<pre><span id="VALutc_timeonly_lessThan"><span class="keyword">val</span> utc_timeonly_lessThan</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> * <a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> -> bool</code></pre>
+<pre><span id="VALutc_timeonly_lessThanEqual"><span class="keyword">val</span> utc_timeonly_lessThanEqual</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> * <a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> -> bool</code></pre>
+<pre><span id="VALutc_timeonly_greaterThanEqual"><span class="keyword">val</span> utc_timeonly_greaterThanEqual</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> * <a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> -> bool</code></pre>
+<pre><code><span id="TYPEfix_utcdateonly"><span class="keyword">type</span> <code class="type"></code>fix_utcdateonly</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utcdateonly.utc_dateonly_year">utc_dateonly_year</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utcdateonly.utc_dateonly_month">utc_dateonly_month</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_utcdateonly.utc_dateonly_day">utc_dateonly_day</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><span id="VALis_valid_utcdateonly"><span class="keyword">val</span> is_valid_utcdateonly</span> : <code class="type"><a href="Datetime.html#TYPEfix_utcdateonly">fix_utcdateonly</a> -> bool</code></pre>
+<pre><code><span id="TYPEfix_duration"><span class="keyword">type</span> <code class="type"></code>fix_duration</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_duration.dur_years">dur_years</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_duration.dur_months">dur_months</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_duration.dur_days">dur_days</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_duration.dur_hours">dur_hours</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_duration.dur_minutes">dur_minutes</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_duration.dur_seconds">dur_seconds</span>&nbsp;: <code class="type">int option</code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><span id="VALmake_duration"><span class="keyword">val</span> make_duration</span> : <code class="type">int option * int option * int option * int option * int option * int option -><br>       <a href="Datetime.html#TYPEfix_duration">fix_duration</a></code></pre>
+<pre><span id="VALis_valid_duration"><span class="keyword">val</span> is_valid_duration</span> : <code class="type"><a href="Datetime.html#TYPEfix_duration">fix_duration</a> -> bool</code></pre>
+<pre><span id="VALutctimestamp_sub"><span class="keyword">val</span> utctimestamp_sub</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> * <a href="Datetime.html#TYPEfix_duration">fix_duration</a> -><br>       <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a></code></pre>
+<pre><span id="VALis_leapyear"><span class="keyword">val</span> is_leapyear</span> : <code class="type">int -> bool</code></pre>
+<pre><span id="VALhow_many_days"><span class="keyword">val</span> how_many_days</span> : <code class="type">int * int -> int</code></pre>
+<pre><code><span id="TYPEfield_carryover"><span class="keyword">type</span> <code class="type"></code>field_carryover</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfield_carryover.carry_over">carry_over</span>&nbsp;: <code class="type">bool</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfield_carryover.new_field">new_field</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><span id="VALcalculate_carry"><span class="keyword">val</span> calculate_carry</span> : <code class="type">int * int * int -> <a href="Datetime.html#TYPEfield_carryover">field_carryover</a></code></pre>
+<pre><span id="VALnormalise_timestamp"><span class="keyword">val</span> normalise_timestamp</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> -> <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a></code></pre>
+<pre><span id="VALutctimestamp_add"><span class="keyword">val</span> utctimestamp_add</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> * <a href="Datetime.html#TYPEfix_duration">fix_duration</a> -><br>       <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a></code></pre><br>
+verify ts_correct ( ) = 
+let ts = make_utctimestamp ( 2017, 1, 1, 1, 0, 0, None ) in 
+let dOne = make_duration ( None, None, None, None, None, Some 30 ) in
+let dTwo = make_duration ( None, None, None, None, Some 1, Some 30 ) in 
+let tsOne = utctimestamp_add ( ts, dOne ) in 
+let tsTwo = utctimestamp_add ( ts, dTwo ) in
+<p>
+
+utctimestamp_greaterThan (tsOne, tsTwo)
+;;
+<p>
+
+verify ts_correct (ts : fix_utctimestamp ) = 
+let dOne = make_duration ( None, None, None, None, None, Some 30 ) in
+let dTwo = make_duration ( None, None, None, None, Some 1, Some 30 ) in 
+let tsOne = utctimestamp_add ( ts, dOne ) in 
+let tsTwo = utctimestamp_add ( ts, dTwo ) in
+<p>
+
+is_valid_utctimestamp ( ts) ==&gt;
+utctimestamp_greaterThan (tsTwo, tsOne)
+;;<br>
+</body></html>
