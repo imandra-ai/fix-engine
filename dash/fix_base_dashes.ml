@@ -56,7 +56,7 @@ let msg_is_valid ( msg : full_top_level_msg option ) =
     | _             -> false
 ;;
 
-dash app_down_get_biz_reject ( state : fix_engine_state ) =
+let app_down_get_biz_reject ( state : fix_engine_state ) =
     let incoming_biz_rejected = msg_is_valid ( state.incoming_fix_msg ) in 
 
     let no_incoming_msgs =
@@ -130,7 +130,7 @@ let msg_is_logout ( msg : full_top_level_msg option ) =
     | _ -> false
 ;;
 
-dash less_seq_num_logout ( state : fix_engine_state ) =
+let less_seq_num_logout ( state : fix_engine_state ) =
     let no_incoming_int_msgs =
         match state.incoming_int_msg with
         | None -> true
@@ -163,7 +163,7 @@ let incoming_msg_garblged ( msg : full_top_level_msg option ) =
     | _         -> false
 ;;
 
-dash garbled_are_ignored ( state : fix_engine_state ) =
+let garbled_are_ignored ( state : fix_engine_state ) =
     let state' = one_step (state) in
     let msg_ignored = ( state' =  { state with incoming_fix_msg = None } ) in 
     let no_internal_msgs = state.incoming_int_msg = None in
@@ -208,7 +208,7 @@ let msg_is_reject ( msg : full_top_level_msg option ) =
 (** Note that it's important to remember that a message may only be rejected if we're in ActiveSession state. 
     It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or 
     Retransmit modes. *)
-dash session_rejects_are_rejected ( state : fix_engine_state ) =
+let session_rejects_are_rejected ( state : fix_engine_state ) =
     let no_incoming_int_msgs =
         match state.incoming_int_msg with
         | None -> true
@@ -228,7 +228,7 @@ dash session_rejects_are_rejected ( state : fix_engine_state ) =
     Skipped heartbeat causes logout to be sent out and a session closure.                    *)
 (** **************************************************************************************** *)
 
-dash skipped_heartbeat_causes_logout ( state : fix_engine_state ) = 
+let skipped_heartbeat_causes_logout ( state : fix_engine_state ) = 
     true
 ;;
 
@@ -239,7 +239,7 @@ dash skipped_heartbeat_causes_logout ( state : fix_engine_state ) =
     Incoming message updated time of the last heartbeat received.                            *)
 (** **************************************************************************************** *)
 
-dash heartbeat_updated_correctly ( state : fix_engine_state ) =
+let heartbeat_updated_correctly ( state : fix_engine_state ) =
     true
 ;;
 
@@ -249,6 +249,6 @@ dash heartbeat_updated_correctly ( state : fix_engine_state ) =
 
     Heartbeat sent out correctly.                                                            *)
 (** **************************************************************************************** *)
-dash heartbeat_sent_out_correctly ( state : fix_engine_state ) =
+let heartbeat_sent_out_correctly ( state : fix_engine_state ) =
     true
 ;;

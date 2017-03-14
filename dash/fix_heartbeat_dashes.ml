@@ -35,7 +35,7 @@ open Full_messages;;
 (** **************************************************************************************** *)
 
 (** VG.1.1 *)
-dash last_time_data_sent_gets_updated ( engine : fix_engine_state ) =
+let last_time_data_sent_gets_updated ( engine : fix_engine_state ) =
     let engine' = one_step ( engine ) in
     ( engine.outgoing_fix_msg = None && engine'.outgoing_fix_msg <> None ) 
     ==> (engine'.fe_last_time_data_sent = engine'.fe_curr_time )
@@ -73,7 +73,7 @@ let time_update_received ( m, last_time_data_sent, hbeat_interval : fix_engine_i
     | _ -> false
 ;;
 
-dash hbeat_sent_if_no_data_received ( engine : fix_engine_state ) =
+let hbeat_sent_if_no_data_received ( engine : fix_engine_state ) =
     let engine' = one_step ( engine ) in ( 
     engine.fe_curr_mode = ActiveSession && 
     is_int_message_valid ( engine) && 
@@ -107,7 +107,7 @@ let incoming_is_not_gargled ( m : full_top_level_msg option ) =
     | _ -> true
 ;;
 
-dash non_grabled_updates_clock ( engine : fix_engine_state ) =
+let non_grabled_updates_clock ( engine : fix_engine_state ) =
     let engine' = one_step (engine) in 
     let received_ts_correct =  ( engine.fe_curr_time = engine'.fe_last_data_received ) in 
     let incoming_processed = engine.incoming_fix_msg <> engine'.incoming_fix_msg in 
@@ -156,7 +156,7 @@ let msg_is_test_request ( m : full_top_level_msg option ) =
     | _ -> false
 ;;
 
-dash test_request_sent_out ( engine : fix_engine_state ) =
+let test_request_sent_out ( engine : fix_engine_state ) =
     let engine' = one_step ( engine ) in
     ( is_int_message_valid ( engine ) &&
       is_state_valid ( engine ) &&
@@ -196,7 +196,7 @@ let no_heartbeats_received_logoff ( m, data_sent_out, hbeat_interval, pad_interv
     | _ -> false
 ;;
 
-dash no_response_logoff ( engine : fix_engine_state ) =
+let no_response_logoff ( engine : fix_engine_state ) =
     let engine' = one_step ( engine ) in 
     
     ( is_int_message_valid ( engine ) &&
@@ -310,7 +310,7 @@ let correct_hbeat_sent ( m, tr_id : full_top_level_msg option * int ) =
     | _ -> false
 ;;
 
-dash heartbeat_has_correct_id ( test_req_id, engine : int * fix_engine_state ) =
+let heartbeat_has_correct_id ( test_req_id, engine : int * fix_engine_state ) =
     let engine' = one_step ( engine ) in 
     (   test_req_id > 0 && 
         engine.incoming_int_msg = None && 
