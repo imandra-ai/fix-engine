@@ -1,0 +1,4 @@
+{
+    "name": "@ai/fix-engine",
+    "main": "dash/dash_analyser.ml"
+}
