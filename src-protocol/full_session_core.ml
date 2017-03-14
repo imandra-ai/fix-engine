@@ -104,3 +104,14 @@ type fix_encryption_method =
     | PEM_DES_MD5   of int
     | NoEncryption
 ;;
+
+let fix_encryption_method_to_str (x : fix_encryption_method) : string =
+  match x with
+  | PKCS _ -> "PKCS"
+  | DES_ECB _ -> "DES_ECB"
+  | PKCS_DES _ -> "PKCS_DES"
+  | PGP_DES _ -> "PGP_DES"
+  | PGP_DES_MD5 _ -> "PGP_DES_MD5"
+  | PEM_DES_MD5 _ -> "PEM_DES_MD5"
+  | NoEncryption -> "NoEncryption"
+;;

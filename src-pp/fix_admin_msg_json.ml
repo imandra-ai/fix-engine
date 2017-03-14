@@ -17,9 +17,9 @@ open Fix_basics_json
 
 let logon_data_to_json x =
     `Assoc [
-        ( "ln_encrypt_method"           , `Int x.ln_encrypt_method                                                      );
+        ( "ln_encrypt_method"           , `String (fix_encryption_method_to_str x.ln_encrypt_method)                    );
         ( "ln_heartbeat_interval"       , utcduration_to_json x.ln_heartbeat_interval                                   );
-        ( "ln_raw_data_length"          , `Int x.ln_raw_data_length                                                     );
+        ( "ln_raw_data_length"          , `Int (match x.ln_raw_data_length with | None -> 0 | Some len -> len)          );
     ]
 ;;
 
