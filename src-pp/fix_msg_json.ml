@@ -9,13 +9,15 @@
 
 *)
 
-open Yojson
-open List
-open Full_session_core
-open Full_messages
-open Fix_admin_msg_json
-open Fix_app_msg_json
-open Fix_basics_json
+(* @meta[imandra_ignore] on @end *)
+open Yojson;;
+open List;;
+open Full_session_core;;
+open Full_messages;;
+open Fix_admin_msg_json;;
+open Fix_app_msg_json;;
+open Fix_basics_json;;
+(* @meta[imandra_ignore] off @end *)
 
 let msg_data_to_json = function 
     | Full_FIX_Admin_Msg x                              -> `Assoc [ ( "admin_msg",          full_fix_admin_msg_data_to_json x ) ]

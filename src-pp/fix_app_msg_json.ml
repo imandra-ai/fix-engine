@@ -9,15 +9,17 @@
 
 *)
 
-open Yojson
-open String
-open List
-open Basic_types
-open Datetime
-open Full_fix_fields
-open Full_session_core
-open Fix_basics_json
-open Full_app_messages
+(* @meta[imandra_ignore] on @end *)
+open Yojson;;
+open String;;
+open List;;
+open Basic_types;;
+open Datetime;;
+open Full_fix_fields;;
+open Full_session_core;;
+open Fix_basics_json;;
+open Full_app_messages;;
+(* @meta[imandra_ignore] off @end *)
 
 let new_order_single_to_json x = 
     let list_assoc = [

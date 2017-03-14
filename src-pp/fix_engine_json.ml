@@ -9,13 +9,15 @@
 
 *)
 
-open Datetime
-open Fix_engine
-open String
-open Yojson
-open Fix_basics_json
-open Fix_app_msg_json
-open Fix_msg_json
+(* @meta[imandra_ignore] on @end *)
+open Datetime;;
+open String;;
+open Yojson;;
+open Fix_engine;;
+open Fix_basics_json;;
+open Fix_app_msg_json;;
+open Fix_msg_json;;
+(* @meta[imandra_ignore] off @end *)
 
 let fix_engine_mode_to_string = function
     | NoActiveSession                                   -> "NoActiveSession"

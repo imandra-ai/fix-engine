@@ -8,16 +8,18 @@
     fix_pp.ml 
 *)
 
-open Yojson
-open String
-open List
-open Basic_types
-open Datetime
-open Full_fix_fields
-open Full_admin_messages
-open Full_app_messages
-open Full_messages
-open Full_session_core
+(* @meta[imandra_ignore] on @end *)
+open Yojson;;
+open String;;
+open List;;
+open Basic_types;;
+open Datetime;;
+open Full_fix_fields;;
+open Full_admin_messages;;
+open Full_app_messages;;
+open Full_messages;;
+open Full_session_core;;
+(* @meta[imandra_ignore] off @end *)
 
 let fix_field_to_string = function 
     | Full_FIX_Field_OrigClOrdID                        -> "OrigClOrdID"
