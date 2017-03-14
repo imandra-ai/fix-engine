@@ -1,9 +1,9 @@
 (** 
 
+    Implementation of the date time types.
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
-    Implementation of the date time types.
 
     datetime.ml
 *)

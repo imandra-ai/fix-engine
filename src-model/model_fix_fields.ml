@@ -1,8 +1,9 @@
 (** 
 
+    Type for field tags.
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
 
     model_fix_fields.ml
 

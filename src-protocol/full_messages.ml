@@ -1,9 +1,9 @@
 (** 
 
+    Implementation of the 'full' FIX messages.
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
-    Contains implementation of the 'full' FIX messages.
 
     full_messages.ml
     
