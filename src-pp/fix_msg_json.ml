@@ -1,9 +1,9 @@
 (** 
 
+    JSON printers for admin and app messages.
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
-    JSON printers for admin and app messages.
     
     fix_msg_json.ml
 

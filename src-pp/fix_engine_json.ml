@@ -1,9 +1,9 @@
 (** 
 
+    JSON printers for engine model state.
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
-    JSON printers for engine model state.
 
     fix_engine_json.ml
 

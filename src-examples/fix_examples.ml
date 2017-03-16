@@ -1,9 +1,9 @@
 (**
 
+    Usage examples.
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
-    Usage examples.
 
     fix_examples.ml
 *)

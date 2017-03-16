@@ -1,9 +1,9 @@
 (** 
 
+    JSON parsers/printers for application messages.
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
-    JSON printers for app messages.
 
     fix_app_msg_json.ml
 

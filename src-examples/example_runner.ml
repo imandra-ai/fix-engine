@@ -1,9 +1,9 @@
 (** 
 
+    Usage examples.
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
-    Runs examples.
 
     example_runner.ml
     

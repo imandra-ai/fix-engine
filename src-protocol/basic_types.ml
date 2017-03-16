@@ -1,9 +1,11 @@
 (** 
 
+    ISO types used within the FIX models.
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
     
-    fix_iso_types.ml
+    basic_types.ml
 
 *)
 
