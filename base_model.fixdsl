@@ -1,0 +1,100 @@
+(** 
+    Aesthetic Integration Limited
+    Copyright 2014 - 2017
+
+
+    basic_model.fixdsl
+*)
+
+
+
+imandramarkets : 0.0.1
+import FIX_4_4
+
+(* Note that the fields here should be named after the tags. *)
+internal state {
+    
+
+}
+
+
+(* Define the actions *)
+action fill {
+
+}
+
+(* How should they modify the state *)
+receive ( act : fill ) {
+
+}
+
+(** ********************************************************** *)
+action time_change {
+    new_time : int;
+
+}
+
+receive ( act : time_change ) {
+
+
+
+}
+
+(** ********************************************************** *)
+
+
+
+(* Define the incoming messages *)
+message NewOrderSingle {
+}
+
+
+receive ( msg : NewOrderSingle ) {
+
+}
+
+
+reject ( msg : NewOrderSingle, field : FIX_Field) {
+
+
+    send ()
+}
+
+reject ( msg : NewOrderSingle, customReason : CustomReasonEnum ) {
+
+    send ()
+}
+
+(* CancelReplaceRequest: is only rejected by  *)
+message OrderCancelReplaceRequest {
+    
+
+}
+
+
+receive ( msg : OrderCancelReplaceRequest ) {
+
+    // update our own state 
+
+    send ExecutionReport {
+
+    }
+
+}
+
+reject ( msg : OrderCancelReplaceRequest, ) {
+
+    send CancelReject {
+
+    }
+
+}
+
+reject ( msg : OrderCancelReplaceRequest, customReason : CustomReasonEnum) {
+
+
+
+    send CancelReject {
+
+    }
+}
