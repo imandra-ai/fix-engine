@@ -1,6 +1,5 @@
-(** 
-
-    Type for field tags.
+(** Full fields tags. *)
+(***
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017

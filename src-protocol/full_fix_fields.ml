@@ -1,7 +1,5 @@
-(** 
-
-    FIX Field types.
-
+(** FIX Field types. *)
+(***
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
@@ -14,7 +12,7 @@ open Basic_types;;
 open Datetime;;
 (* @meta[imandra_ignore] off @end *)
 
-(** This is used when the actual field data is not needed. *)
+(** Used for specifying reasons for rejection/etc. *)
 type full_fix_field =
     | Full_FIX_Field_OrigClOrdID
     | Full_FIX_Field_OrderID

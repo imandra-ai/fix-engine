@@ -1,7 +1,6 @@
-(** 
+(** Code components of the FIX data dictionary. *)
 
-    Code components of the FIX data dictionary.
-
+(***
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 

@@ -12,10 +12,9 @@
 open Yojson;;
 open String;;
 open List;;
-open Basic_types;;
+open Base_types;;
 open Datetime;;
 open Full_fix_fields;;
-open Full_admin_messages;;
 open Full_app_messages;;
 open Full_messages;;
 open Full_session_core;;

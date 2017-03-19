@@ -1,6 +1,5 @@
-(** 
-
-    Implementation of the 'full' FIX messages.
+(** Implementation of the 'full' FIX messages. *)
+(***
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017

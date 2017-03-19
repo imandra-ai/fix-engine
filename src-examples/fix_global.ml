@@ -1,13 +1,13 @@
 (** 
 
+    Utilities for running examples.
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    fix_global.ml 
-    
 *)
 
-open Full_messages
+open Messages
 open Fix_engine
 open Fix_engine_json
 
