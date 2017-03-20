@@ -1,3 +1,3 @@
 true : package(yojson)
-<src-model> or <src-protocol> or <src-examples> or <vgs> or <src-pp> or <src-tests> or <src> : include
+<src> or <src-core> or <src-core-pp> or <src-examples> or <src-model> or <src-model-pp> or <src-protocol> or <src-protocol-pp> or <src-tests> : include
 

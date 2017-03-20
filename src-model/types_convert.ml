@@ -8,7 +8,7 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Basic_types;;
+open Base_types;;
 open Datetime;;
 open Fix_fields;;
 open Model_messages;;

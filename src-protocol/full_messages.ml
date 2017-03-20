@@ -5,11 +5,11 @@
     Copyright (c) 2014 - 2017
 
     full_messages.ml
-    
+
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Basic_types;;
+open Base_types;;
 open Datetime;;
 open Full_session_core;;
 open Full_fix_fields;;
@@ -17,27 +17,28 @@ open Full_admin_messages;;
 open Full_app_messages;;
 (* @meta[imandra_ignore] off @end *)
 
-(** Contains the missing field information. *)
+(** Contains missing field information. *)
 type full_field_missing_data = {
     field_missing_field                             : full_fix_field;
     field_missing_msg                               : full_fix_msg_tag;
 }
 ;;
 
-(** *)
+(** Full FIX message data may be of 2 types: Admin and Application. *)
 type full_fix_msg_data = 
     | Full_FIX_Admin_Msg                            of full_fix_admin_msg_data
     | Full_FIX_App_Msg                              of full_fix_app_msg_data
 ;;
 
-(** Applicatoin messages *)
-type full_fix_msg = {
+(** Full FIX valid message data. *)
+type full_valid_fix_msg = {
     full_msg_header                                 : fix_header;
     full_msg_data                                   : full_fix_msg_data;
     full_msg_trailer                                : fix_trailer;
 }
 ;;
 
+(** We maintain a type 'Full_Msg_Tag' that represents *)
 let get_full_msg_tag ( m : full_fix_msg_data ) =
     match m with
     | Full_FIX_Admin_Msg msg -> (
@@ -87,7 +88,7 @@ type session_rejected_msg_data = {
 ;;
 
 (** 
-    Business Reject message
+    Business Reject message data.
 
     45	RefSeqNum	            - Optional - MsgSeqNum <34> of rejected message
     372	RefMsgType	Y	        - Required - The MsgType <35> of the FIX message being referenced.
@@ -99,7 +100,7 @@ type session_rejected_msg_data = {
     355	EncodedText	            - Optional - Encoded (non-ASCII characters) representation of the Text <58> field in the encoded 
                                                 format specified via the MessageEncoding <347> field. *)
 type biz_rejected_msg_data = {
-    brej_msg_ref_seq_num                            : int;
+    brej_msg_ref_seq_num                            : int; (** *)
     brej_msg_msg_tag                                : full_fix_msg_tag;
     brej_msg_reject_reason                          : fix_business_reject_reason;
     brej_msg_text                                   : fix_string option;
@@ -107,10 +108,10 @@ type biz_rejected_msg_data = {
 }
 ;;
 
-(** *)
+(** Union 'full' message type. *)
 type full_top_level_msg = 
-    | ValidMsg                                      of full_fix_msg
+    | ValidMsg                                      of full_valid_fix_msg
     | SessionRejectedMsg                            of session_rejected_msg_data
     | BusinessRejectedMsg                           of biz_rejected_msg_data
-    | Gargled
+    | Garbled
 ;;

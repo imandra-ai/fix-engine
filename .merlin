@@ -1,12 +1,17 @@
 PKG yojson topkg
 S src
+S src-core
+S src-core-pp
 S src-model
+S src-model-pp
 S src-protocol
+S src-protocol-pp
 S src-pp
 S src-examples
 B _build/
 B _build/src
-B _build/src-cpp
+B _build/src-core
+B _build/src-pp
 B _build/src-model
 B _build/src-protocol
 B _build/src-pp

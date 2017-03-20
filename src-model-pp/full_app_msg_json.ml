@@ -1,7 +1,5 @@
-(** 
-
-    JSON parsers/printers for application messages.
-
+(** JSON parsers/printers for application messages. *)
+(***
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
@@ -13,15 +11,15 @@
 open Yojson;;
 open String;;
 open List;;
-open Basic_types;;
+open Base_types;;
 open Datetime;;
 open Full_fix_fields;;
 open Full_session_core;;
-open Fix_basics_json;;
+open Base_types_json;;
 open Full_app_messages;;
 (* @meta[imandra_ignore] off @end *)
 
-let new_order_single_to_json x = 
+let full_new_order_single_to_json x = 
     let list_assoc = [
         ( "Account"                 , intopt_to_json x.full_newOrderSingle_Account                                                      );
         ( "ClOrdID"                 , intopt_to_json x.full_newOrderSingle_ClOrdID                                                      );
@@ -44,7 +42,7 @@ let new_order_single_to_json x =
     `Assoc list_assoc
 ;;
 
-let cancel_order_request_data_to_json x = 
+let full_cancel_order_request_data_to_json x = 
     let list_assoc = [
         ( "ClOrdID"                 , intopt_to_json x.full_orderCancelRequest_ClOrdID                                                  );
         ( "OrigClOrdID"             , intopt_to_json x.full_orderCancelRequest_OrigClOrdID                                              );
@@ -57,7 +55,7 @@ let cancel_order_request_data_to_json x =
     `Assoc list_assoc
 ;;
 
-let execution_report_data_to_json x = 
+let full_execution_report_data_to_json x = 
     let list_assoc = [
         ( "OrderID"                 , intopt_to_json x.full_executionReport_OrderID                                                     );
         ( "ClOrdID"                 , intopt_to_json x.full_executionReport_ClOrdID                                                     );
@@ -74,7 +72,7 @@ let execution_report_data_to_json x =
     `Assoc list_assoc
 ;;
 
-let order_cancel_replace_request_data_to_json x = 
+let full_order_cancel_replace_request_data_to_json x = 
     let list_assoc = [
         ( "Account"                 , intopt_to_json x.full_orderCancelReplaceRequest_Account                                           );
         ( "ClOrdID"                 , intopt_to_json x.full_orderCancelReplaceRequest_ClOrdID                                           );
@@ -97,7 +95,7 @@ let order_cancel_replace_request_data_to_json x =
     `Assoc list_assoc
 ;;
 
-let cancel_reject_data_to_json x = 
+let full_cancel_reject_data_to_json x = 
     let list_assoc = [
 
     ] |> filter_nulls in 
@@ -105,9 +103,9 @@ let cancel_reject_data_to_json x =
 ;;
 
 let full_fix_app_msg_data_to_json = function
-    | Full_Msg_NewOrderSingle x             -> `Assoc [ ( "new_order_single",   new_order_single_to_json x )                            ]
-    | Full_Msg_OrderCancelRequest x         -> `Assoc [ ( "cancel_order",       cancel_order_request_data_to_json x )                   ]
-    | Full_Msg_OrderCancelReplaceRequest x  -> `Assoc [ ( "order_cancel_replace_request", order_cancel_replace_request_data_to_json x)  ]
-    | Full_Msg_ExecutionReport x            -> `Assoc [ ( "execution_report",   execution_report_data_to_json x )                       ]
-    | Full_Msg_CancelReject x               -> `Assoc [ ( "business_reject",    cancel_reject_data_to_json x)                           ]
+    | Full_Msg_NewOrderSingle x             -> `Assoc [ ( "new_order_single",   full_new_order_single_to_json x )   ]
+    | Full_Msg_OrderCancelRequest x         -> `Assoc [ ( "cancel_order",       full_cancel_order_request_data_to_json x )  ]
+    | Full_Msg_OrderCancelReplaceRequest x  -> `Assoc [ ( "order_cancel_replace_request", full_order_cancel_replace_request_data_to_json x) ]
+    | Full_Msg_ExecutionReport x            -> `Assoc [ ( "execution_report",   full_execution_report_data_to_json x )  ]
+    | Full_Msg_CancelReject x               -> `Assoc [ ( "business_reject",    full_cancel_reject_data_to_json x)  ]
 ;;

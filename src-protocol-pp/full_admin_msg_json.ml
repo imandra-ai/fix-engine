@@ -13,7 +13,7 @@ open Yojson;;
 open Full_fix_fields;;
 open Full_session_core;;
 open Full_admin_messages;;
-open Fix_basics_json;;
+open Base_types_json;;
 (* @meta[imandra_ignore] off @end *)
 
 let logon_data_to_json x =

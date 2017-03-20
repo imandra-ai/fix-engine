@@ -9,7 +9,7 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Basic_types;;
+open Base_types;;
 open Datetime;;
 (* @meta[imandra_ignore] off @end *)
 

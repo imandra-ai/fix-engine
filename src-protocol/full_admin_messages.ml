@@ -1,4 +1,4 @@
-(** Full messages - administrative *)
+(** Full messages - administrative. *)
 (***
 
     Aesthetic Integration Limited
@@ -9,7 +9,7 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Basic_types;;
+open Base_types;;
 open Datetime;;
 open Full_session_core;;
 open Full_fix_fields;;
@@ -33,14 +33,14 @@ type full_fix_msg_tag =
     | Full_Msg_Test_Request_Tag
 ;;
 
-(** *)
+(** Heartbeat message data. *)
 type full_fix_msg_heartbeat_data = {
     hb_test_req_id                                  : int option;                       (** Tag 112: Required when the heartbeat 
                                                                                             is the result of a Test Request message. *)
 }
 ;;
 
-(** *)
+(** Logon message data. *)
 type full_fix_msg_logon_data = {
     ln_encrypt_method                               : fix_encryption_method;            (** Tag  98 *)
     ln_heartbeat_interval                           : fix_duration;                     (** Tag 108 *)
@@ -56,14 +56,14 @@ type full_fix_msg_logon_data = {
 }
 ;;
 
-(**  *)
+(** Logoff message data. *)
 type full_fix_msg_logoff_data = {
     lo_encoded_text_len                             : int option;                       (** Tag 354 *)
     lo_encoded_text                                 : fix_string option;                (** Tag 355 *)
 }
 ;;
 
-(**  *)
+(** Reject message data. *)
 type full_fix_msg_reject_data = {
     sr_ref_seq_num                                  : int;                              (** Tag 45. MsgSeqNum of rejected message. *)
     sr_ref_tag_id                                   : fix_string;                       (** *)
@@ -75,7 +75,7 @@ type full_fix_msg_reject_data = {
 }
 ;;
 
-(**  *)
+(** Business Reject message data. *)
 type full_fix_msg_business_reject_data = {
     br_ref_seq_num                                  : int;                              (** Tag 45: reference seq number 
                                                                                             of the rejected message *)
@@ -83,27 +83,27 @@ type full_fix_msg_business_reject_data = {
 }
 ;;
 
-(**  *)
+(** Resend Request message data. *)
 type full_fix_msg_resend_request_data = {
     rr_begin_seq_num                                : int;                              (** Tag 7 *)
     rr_end_seq_num                                  : int;                              (** Tag 16 *)
 }
 ;;
 
-(**  *)
+(** Sequence Reset message data. *)
 type full_fix_msg_sequence_reset_data = {
     seqr_new_seq_no                                 : int;                              (** Tag 36 *)
     seqr_gap_fill_flag                              : fix_yes_no_type option;           (** Tag 123 *)
 }
 ;;
 
-(**  *)
+(** Test Request message data.  *)
 type full_fix_msg_test_request_data = {
     test_req_id                                     : int;                              (** Tag 112 *)
 }
 ;;
 
-(** *)
+(** Top-level full administrative message data type. *)
 type full_fix_admin_msg_data = 
     | Full_Msg_Hearbeat                              of full_fix_msg_heartbeat_data
     | Full_Msg_Logon                                 of full_fix_msg_logon_data

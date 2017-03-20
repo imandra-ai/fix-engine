@@ -12,15 +12,18 @@ let examples =
 
 let () =
   Pkg.describe "fix-engine" @@ fun c ->
-  let examples = Conf.value c examples in
-  Ok [ Pkg.mllib ~api:["fix_engine"] "src/fix_engine.mllib"
-       ; Pkg.mllib ~api:["datetime"
-                        ; "full_messages"
-                        ; "full_admin_messages"
-                        ; "full_app_messages"
-                        ; "full_session_core"
-                        ; "basic_types"
-                        ; "full_fix_fields"] "src-protocol/fix_protocol.mllib"
-(*     ; Pkg.test ~dir:"src" "test/main" *)
-     ; Pkg.bin ~cond:examples "src-examples/fix_examples"
-     ]
+  let examples = Conf.value c examples in Ok 
+  [ Pkg.mllib ~api: [ "fix_engine" ] "src/fix_engine.mllib";
+    Pkg.mllib ~api: [ "full_messages";
+                      "full_fix_fields";
+                      "full_admin_messages";
+                      "full_session_core";
+                      "full_fix_fields"] "src-protocol/protocol.mllib";
+    Pkg.mllib ~api: [ "fix_engine_json";
+                      "full_admin_msg_json";
+                      "full_msg_json"] "src-protocol-pp/protocol_pp.mllib";
+    Pkg.mllib ~api: [ "base_types"] "src-core/core.mllib";
+    Pkg.mllib ~api: [ "base_types_json"] "src-core-pp/core_pp.mllib";
+    Pkg.mllib ~api: [ "full_app_messages"] "src-model/model.mllib"; 
+    Pkg.bin ~cond:examples "src-examples/fix_examples"
+  ]

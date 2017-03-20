@@ -1,7 +1,6 @@
-(** 
-
-    JSON printers for engine model state.
-
+(** JSON printers for engine model state. *)
+(***
+    
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
@@ -14,9 +13,9 @@ open Datetime;;
 open String;;
 open Yojson;;
 open Fix_engine;;
-open Fix_basics_json;;
-open Fix_app_msg_json;;
-open Fix_msg_json;;
+open Base_types_json;;
+open Full_app_msg_json;;
+open Full_msg_json;;
 (* @meta[imandra_ignore] off @end *)
 
 let fix_engine_mode_to_string = function

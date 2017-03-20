@@ -1,3 +1,4 @@
-Basic_types
+Base_types
 Datetime
-Imandra_pervasives
+Numeric
+Imandra_utils

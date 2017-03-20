@@ -1,6 +1,6 @@
-(** 
-    Implementation of the FIX 4.4 engine.
-
+(** Implementation of the FIX 4.4 engine. *)
+(***
+    
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
@@ -9,7 +9,7 @@
 
 (* @meta[imandra_ignore] on @end *)
 open Datetime;;
-open Basic_types;;
+open Base_types;;
 open Full_session_core;;
 open Full_admin_messages;;
 open Full_app_messages;;
@@ -18,11 +18,11 @@ open Full_messages;;
 
 (** Define set of actions + data for manual intervention by the user. *)
 type manual_int_data = {
-    session_reset           : bool; (** Should we reset the engine? *)
+    session_reset           : bool;
 }
 ;;
 
-(** Request to initiate a session. *)
+(** Request to initiate a new session. *)
 type session_data = {
     dest_comp_id            : int; (** Destination company ID. *)
 }
@@ -82,15 +82,15 @@ type fix_engine_state = {
     incoming_fix_msg        : full_top_level_msg option;    (** Messages we will send out *)
     outgoing_fix_msg        : full_top_level_msg option;    (** Messages we receive *)
 
-    fe_cache                : full_fix_msg list;            (** Maintain a cache of messages in case we detect out of sequence message. *)
-    fe_history              : full_fix_msg list;            (** We maintain history of our outgoing messages in case we're asked to retransmit. *)
+    fe_cache                : full_valid_fix_msg list;      (** Maintain a cache of messages in case we detect out of sequence message. *)
+    fe_history              : full_valid_fix_msg list;      (** We maintain history of our outgoing messages in case we're asked to retransmit. *)
 
     fe_last_time_data_sent  : fix_utctimestamp;             (** Last time we sent out data to the corresponding engine *)
     fe_last_data_received   : fix_utctimestamp;             (** Last time we received a heartbeat or other message. *)
     fe_heartbeat_interval   : fix_duration;                 (** Negotiated heartbeat interval. *)
     fe_testreq_interval     : fix_duration;                 (** Interval used to 'pad' heartbeat interval before a TestRequest message is sent out. *)
 
-    fe_history_to_send      : full_fix_msg list;            (** Used in message retransmission. *)
+    fe_history_to_send      : full_valid_fix_msg list;      (** Used in message retransmission. *)
 
     fe_application_up       : bool;                         (** Is the application that's receiving messages up and running?
                                                                 TODO: we might need to constitute a heartbeat to enforce this. *)
@@ -302,7 +302,7 @@ let create_business_reject_msg ( reject_info, outbound_seq_num, target_comp_id, 
 (** ********************************************************************************************************** *)
 
 (** Here we will only accept an incoming Logon message to establish a connection. *)
-let run_no_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
+let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     match m.full_msg_data with 
     | Full_FIX_Admin_Msg msg -> (
         match msg with 
@@ -331,7 +331,7 @@ let run_no_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
 ;;
 
 (**  *)
-let run_logon_sequence ( m, engine : full_fix_msg * fix_engine_state ) =
+let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     let engine' = {
         engine with incoming_fix_msg = None;
     } in
@@ -368,7 +368,7 @@ let initiate_Resend ( request, engine : full_fix_msg_resend_request_data * fix_e
 ;;
 
 (** We're operating in a normal mode. *)
-let run_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
+let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 
     if not ( msg_consistent ( engine, m.full_msg_header ) ) then {
         (** We've detected an out-of sequence message. We therefore need to 
@@ -421,7 +421,7 @@ let run_active_session ( m, engine : full_fix_msg * fix_engine_state ) =
 ;;
 
 (** Here we can only handle a subset of the FIX messages. *)
-let replay_single_msg ( m, engine : full_fix_msg * fix_engine_state ) =
+let replay_single_msg ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     match m.full_msg_data with 
     | Full_FIX_App_Msg app_msg  -> {
             engine with 
@@ -449,7 +449,7 @@ let run_cache_replay ( engine : fix_engine_state ) =
 ;;
 
 (** Check to make sure there're no sequence gaps *)
-let rec no_seq_gaps ( msg_list, last_seq_num : full_fix_msg list * int) = 
+let rec no_seq_gaps ( msg_list, last_seq_num : full_valid_fix_msg list * int) = 
     match msg_list with 
     | [] -> true
     | x::xs ->
@@ -466,7 +466,7 @@ let rec no_seq_gaps ( msg_list, last_seq_num : full_fix_msg list * int) =
     2. The sequence IDs of the messages within cache are continuous (i.e. there're no gaps)
     3. First sequence ID (of the cache) is next message from the last one correctly
         processed. *)
-let is_cache_complete ( cache, last_seq_processed : full_fix_msg list * int ) = 
+let is_cache_complete ( cache, last_seq_processed : full_valid_fix_msg list * int ) = 
     match cache with 
     | [] -> false
     | x::xs -> 
@@ -476,7 +476,7 @@ let is_cache_complete ( cache, last_seq_processed : full_fix_msg list * int ) =
 ;;
 
 (** Add message to cache so that ordering is maintained. *)
-let rec add_to_cache ( m, cache : full_fix_msg * full_fix_msg list ) = 
+let rec add_to_cache ( m, cache : full_valid_fix_msg * full_valid_fix_msg list ) = 
     match cache with 
     | []        -> [ m ]
     | x::[]     -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then [ m; x ] else [ x; m ]
@@ -486,7 +486,7 @@ let rec add_to_cache ( m, cache : full_fix_msg * full_fix_msg list ) =
 
 (** We're in recovery mode. We should add any received messages to our cache.
     Check to see whether next message is complete. *)
-let run_recovery ( m, engine : full_fix_msg * fix_engine_state ) = 
+let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) = 
     let new_cache = add_to_cache (m, engine.fe_cache) in 
     if is_cache_complete (new_cache, engine.incoming_seq_num) then {
         engine with 
@@ -500,7 +500,7 @@ let run_recovery ( m, engine : full_fix_msg * fix_engine_state ) =
 ;;
 
 (** We've sent out a Logout message and are now waiting for a confirmation of logout. *) 
-let run_shutdown ( m, engine : full_fix_msg * fix_engine_state ) = 
+let run_shutdown ( m, engine : full_valid_fix_msg * fix_engine_state ) = 
     match m.full_msg_data with 
     | Full_FIX_App_Msg app_msg      -> engine
     | Full_FIX_Admin_Msg admin_msg  -> (
@@ -600,7 +600,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
 ;;
 
 (** A NO-OPeration *)
-let noop (m, engine : full_fix_msg * fix_engine_state) = { 
+let noop (m, engine : full_valid_fix_msg * fix_engine_state) = { 
     engine
         with incoming_fix_msg = None
 }
@@ -633,7 +633,7 @@ let session_reject ( rejected_data, engine : session_rejected_msg_data * fix_eng
 (** Process incoming FIX message here. *)
 let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) = 
     match m with
-    | Gargled                   -> engine   (* Gargled messages are simply ignored. *)
+    | Garbled                   -> engine   (* Gargled messages are simply ignored. *)
     | SessionRejectedMsg data   -> (
         match engine.fe_curr_mode with 
         | NoActiveSession       -> engine
@@ -698,7 +698,7 @@ let is_state_valid ( engine : fix_engine_state ) =
 (** Check whether application is down and change the message into Business Rejected if so. *)
 let check_app_down ( m, app_up : full_top_level_msg * bool ) =
     match m with
-    | Gargled                   -> m
+    | Garbled                   -> m
     | SessionRejectedMsg _      -> m
     | BusinessRejectedMsg _     -> m
     | ValidMsg msg              ->

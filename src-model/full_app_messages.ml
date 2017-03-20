@@ -9,6 +9,7 @@
 
 (* @meta[imandra_ignore] on @end *)
 open Base_types;;
+open Numeric;;
 open Datetime;;
 open Full_session_core;;
 (* @meta[imandra_ignore] off @end *)

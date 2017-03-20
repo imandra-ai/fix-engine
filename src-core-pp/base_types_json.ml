@@ -1,9 +1,8 @@
-(** 
+(** JSON printers/parsers for base FIX types. *)
+(***
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
-    Implementation of the FIX 4.4 engine. Printers/parsers.
 
     fix_pp.ml 
 *)
@@ -13,9 +12,11 @@ open Yojson;;
 open String;;
 open List;;
 open Base_types;;
+open Numeric;;
 open Datetime;;
 open Full_fix_fields;;
 open Full_app_messages;;
+open Full_admin_messages;;
 open Full_messages;;
 open Full_session_core;;
 (* @meta[imandra_ignore] off @end *)
@@ -446,4 +447,14 @@ let timeinforce_to_string = function
 let timeinforce_opt_to_string = function 
     | None                                              -> None
     | Some x                                            -> Some ( timeinforce_to_string x )
+;;
+
+let fix_encryption_method_to_str = function
+    | PKCS x                                            -> "PKCS"
+    | DES_ECB x                                         -> "DES_ECB"
+    | PKCS_DES x                                        -> "PKCS_DES"
+    | PGP_DES x                                         -> "PGP_DES"
+    | PGP_DES_MD5 x                                     -> "PGP_DES_MD5"
+    | PEM_DES_MD5 x                                     -> "PEM_DES_MD5"
+    | NoEncryption                                      -> "NoEncryption"
 ;;

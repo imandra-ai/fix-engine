@@ -1,10 +1,10 @@
-(** Imandra pervasives. *)
+(** Imandra utilities. *)
 (***
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
     
-    imandra_pervasives.ml
+    imandra_utils.ml
 *)
 
 

@@ -7,6 +7,7 @@
     datetime.ml
 *)
 
+(** UTC Timestamp *)
 type fix_utctimestamp = {
     utc_timestamp_year      : int;
     utc_timestamp_month     : int;
@@ -95,6 +96,7 @@ let is_valid_localmktdate ( lmd : fix_localmktdate ) =
     1 <= lmd.localmktdate_day && lmd.localmktdate_day <= 31
 ;;
 
+(** Week *)
 type fix_week = 
     | Week_1
     | Week_2
@@ -103,6 +105,7 @@ type fix_week =
     | Week_5
 ;;
 
+(** MonthYear *)
 type fix_monthyear = {
     monthyear_year          : int;
     monthyear_month         : int;
@@ -124,6 +127,7 @@ let is_valid_monthyear ( my : fix_monthyear ) =
     )
 ;;
 
+(** UTC Timeonly *)
 type fix_utctimeonly = {
     utc_timeonly_hour       : int;
     utc_timeonly_minute     : int;
@@ -173,6 +177,7 @@ let utc_timeonly_greaterThanEqual ( tOne, tTwo : fix_utctimeonly * fix_utctimeon
     utc_timeonly_greaterThan (tOne, tTwo) || utc_timeonly_Equal (tOne, tTwo)
 ;;
 
+(** UTC Dateonly *)
 type fix_utcdateonly = {
     utc_dateonly_year       : int;
     utc_dateonly_month      : int;
@@ -185,6 +190,7 @@ let is_valid_utcdateonly ( d : fix_utcdateonly ) =
     1 <= d.utc_dateonly_day && d.utc_dateonly_day <= 31
 ;;
 
+(** Duration *)
 type fix_duration = {
     dur_years               : int option;
     dur_months              : int option;
@@ -320,26 +326,3 @@ let utctimestamp_add ( t, dur : fix_utctimestamp * fix_duration ) =
     } in
     normalise_timestamp ( new_ts )
 ;;
-
-(** 
-verify ts_correct ( ) = 
-let ts = make_utctimestamp ( 2017, 1, 1, 1, 0, 0, None ) in 
-let dOne = make_duration ( None, None, None, None, None, Some 30 ) in
-let dTwo = make_duration ( None, None, None, None, Some 1, Some 30 ) in 
-let tsOne = utctimestamp_add ( ts, dOne ) in 
-let tsTwo = utctimestamp_add ( ts, dTwo ) in
-
-utctimestamp_greaterThan (tsOne, tsTwo)
-;;
-
-
-verify ts_correct (ts : fix_utctimestamp ) = 
-let dOne = make_duration ( None, None, None, None, None, Some 30 ) in
-let dTwo = make_duration ( None, None, None, None, Some 1, Some 30 ) in 
-let tsOne = utctimestamp_add ( ts, dOne ) in 
-let tsTwo = utctimestamp_add ( ts, dTwo ) in
-
-is_valid_utctimestamp ( ts) ==>
-utctimestamp_greaterThan (tsTwo, tsOne)
-;;
-*)

@@ -1,6 +1,5 @@
-(** 
-
-    JSON printers for admin and app messages.
+(** JSON printer/parser for Full message a type (top-level). *)
+(***
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
@@ -14,9 +13,9 @@ open Yojson;;
 open List;;
 open Full_session_core;;
 open Full_messages;;
-open Fix_admin_msg_json;;
-open Fix_app_msg_json;;
-open Fix_basics_json;;
+open Full_admin_msg_json;;
+open Full_app_msg_json;;
+open Base_types_json;;
 (* @meta[imandra_ignore] off @end *)
 
 let msg_data_to_json = function 
@@ -72,7 +71,7 @@ let header_to_json ( fh : fix_header ) =
     `Assoc list_assoc
 ;;
 
-let full_fix_msg_to_json ( m : full_fix_msg) = 
+let full_fix_msg_to_json ( m : full_valid_fix_msg) = 
     `Assoc [
         ( "header"                                      , ( header_to_json m.full_msg_header )                                  );
         ( "msg_data"                                    , ( msg_data_to_json m.full_msg_data )                                  );
@@ -117,7 +116,7 @@ let full_top_level_msg_to_json = function
     | ValidMsg x                                        -> `Assoc [ ( "valid_msg"         , full_fix_msg_to_json x )            ]
     | SessionRejectedMsg x                              -> `Assoc [ ( "session_rejected"  , (session_rejected_data_to_json x) ) ]
     | BusinessRejectedMsg x                             -> `Assoc [ ( "business_rejected" , (business_rejected_msg_to_json x) ) ]
-    | Gargled                                           -> `String "gargled"
+    | Garbled                                           -> `String "garbled"
 ;;
 
 let full_top_level_msg_opt_to_json = function

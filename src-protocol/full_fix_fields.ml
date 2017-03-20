@@ -1,5 +1,6 @@
-(** FIX Field types. *)
+(** Full FIX field types. *)
 (***
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
@@ -8,7 +9,7 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Basic_types;;
+open Base_types;;
 open Datetime;;
 (* @meta[imandra_ignore] off @end *)
 
