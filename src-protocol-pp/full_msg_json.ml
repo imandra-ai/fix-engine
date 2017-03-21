@@ -12,11 +12,16 @@
 open Yojson;;
 open List;;
 open Full_session_core;;
+open Full_admin_messages;;
 open Full_messages;;
 open Full_admin_msg_json;;
 open Full_app_msg_json;;
 open Base_types_json;;
 (* @meta[imandra_ignore] off @end *)
+
+let filter_nulls =
+    List.filter (function ( _, `Null ) -> false | _ -> true )
+;;
 
 let msg_data_to_json = function 
     | Full_FIX_Admin_Msg x                              -> `Assoc [ ( "admin_msg",          full_fix_admin_msg_data_to_json x ) ]
@@ -135,4 +140,3 @@ let fill_top_level_msg_list_to_string msgs =
 let full_top_level_msg_list_to_json msgs = 
     `List ( List.map full_top_level_msg_to_json msgs )
 ;;
-

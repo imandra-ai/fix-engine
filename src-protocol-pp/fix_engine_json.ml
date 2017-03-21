@@ -9,10 +9,10 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Datetime;;
 open String;;
 open Yojson;;
 open Fix_engine;;
+open Datetime_json;;
 open Base_types_json;;
 open Full_app_msg_json;;
 open Full_msg_json;;

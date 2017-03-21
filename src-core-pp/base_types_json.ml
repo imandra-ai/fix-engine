@@ -4,7 +4,7 @@
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    fix_pp.ml 
+    base_types_json.ml 
 *)
 
 (* @meta[imandra_ignore] on @end *)
@@ -277,10 +277,6 @@ let string_to_ord_type = function
     | _                                                 -> FIX_Ord_Type_Pegged
 ;;
 
-let filter_nulls =
-    List.filter (function ( _, `Null ) -> false | _ -> true )
-;;
-
 let intopt_to_json : ( int option -> Yojson.Basic.json ) = 
     function None -> `Null | Some n -> `Int  n
 ;;
@@ -297,38 +293,6 @@ let floatopt_to_json : ( fix_float option -> Yojson.Basic.json ) = function
     | None -> `Null
     | Some b -> `Float ( float_GetFloat ( b ) )
 ;;
-
-
-let utctimestamp_to_json ( ts : fix_utctimestamp ) =
-    let list_assoc = [
-        ( "utc_timestamp_year"                          , `Int ts.utc_timestamp_year                     );
-        ( "utc_timestamp_month"                         , `Int ts.utc_timestamp_month                    );
-        ( "utc_timestamp_day"                           , `Int ts.utc_timestamp_day                      );
-        ( "utc_timestamp_hour"                          , `Int ts.utc_timestamp_hour                     );
-        ( "utc_timestamp_minute"                        , `Int ts.utc_timestamp_minute                   );
-        ( "utc_timestamp_second"                        , `Int ts.utc_timestamp_second                   );
-        ( "utc_timestamp_millisec"                      , intopt_to_json ts.utc_timestamp_millisec       );
-    ] |> filter_nulls in
-    `Assoc list_assoc
-;;
-
-let utctimestamp_opt_to_json = function
-    | None                                              -> `Null
-    | Some x                                            -> utctimestamp_to_json x
-;;
-
-let utcduration_to_json ( d : fix_duration ) = 
-    let list_assoc = [
-        ( "dur_years"                                   , intopt_to_json d.dur_years                     );
-        ( "dur_months"                                  , intopt_to_json d.dur_months                    );
-        ( "dur_days"                                    , intopt_to_json d.dur_days                      );
-        ( "dur_hours"                                   , intopt_to_json d.dur_hours                     );
-        ( "dur_minutes"                                 , intopt_to_json d.dur_minutes                   );
-        ( "dur_seconds"                                 , intopt_to_json d.dur_seconds                   );
-    ] |> filter_nulls in 
-    `Assoc list_assoc
-;;
-
 
 (** Basic Yes/No type *)
 let yes_no_to_string = function
@@ -352,29 +316,6 @@ let priceopt_to_string p =
     match p with 
     | None                                              -> None
     | Some k                                            -> Some (Printf.sprintf "%.1d" k)
-;;
-
-let msg_tag_to_string = function
-    | Full_Msg_ExecutionReport_Tag                      -> "ExecutionReport"
-    | Full_Msg_OrderCancelRequest_Tag                   -> "OrderCancelRequest"
-    | Full_Msg_OrderCancelReplaceRequest_Tag            -> "OrderCnacelReplaceRequest"
-    | Full_Msg_NewOrderSingle_Tag                       -> "NewOrderSingle"
-    | Full_Msg_CancelReject_Tag                         -> "CancelReject"
-    | Full_Msg_BusinessReject_Tag                       -> "BusinessReject"
-    | Full_Msg_Hearbeat_Tag                             -> "Heartbeat"
-    | Full_Msg_Logon_Tag                                -> "Logon"
-    | Full_Msg_Logoff_Tag                               -> "Logoff"
-    | Full_Msg_Reject_Tag                               -> "Reject"
-    | Full_Msg_Business_Reject_Tag                      -> "BusinessReject"
-    | Full_Msg_Resend_Request_Tag                       -> "ResendRequest"
-    | Full_Msg_Sequence_Reset_Tag                       -> "SequenceReset"
-    | Full_Msg_Test_Request_Tag                         -> "TestRequest"
-;;
-
-let msg_opt_tag_to_string mtag = 
-    match mtag with 
-    | None                                              -> None
-    | Some m                                            -> Some ( msg_tag_to_string m )
 ;;
 
 

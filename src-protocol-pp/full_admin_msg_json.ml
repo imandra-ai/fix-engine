@@ -14,13 +14,40 @@ open Full_fix_fields;;
 open Full_session_core;;
 open Full_admin_messages;;
 open Base_types_json;;
+open Datetime_json;;
+open Full_app_msg_tag_json;;
 (* @meta[imandra_ignore] off @end *)
+
+let filter_nulls =
+    List.filter (function ( _, `Null ) -> false | _ -> true )
+;;
+
+let admin_msg_tag_to_string = function
+    | Full_Msg_Business_Reject_Tag      -> "BusinessReject"
+    | Full_Msg_Hearbeat_Tag             -> "Heartbeat"
+    | Full_Msg_Logon_Tag                -> "Logon"
+    | Full_Msg_Logoff_Tag               -> "Logoff"
+    | Full_Msg_Reject_Tag               -> "Reject"
+    | Full_Msg_Resend_Request_Tag       -> "ResendRequest"
+    | Full_Msg_Sequence_Reset_Tag       -> "SequenceReset"
+    | Full_Msg_Test_Request_Tag         -> "TestRequest"
+;;
+
+let msg_tag_to_string = function
+    | Full_FIX_Admin_Msg_Tag admin_tag  -> ( admin_msg_tag_to_string admin_tag )
+    | Full_FIX_App_Msg_Tag app_tag      -> ( app_msg_tag_to_string app_tag ) 
+;;
+
+let msg_tag_opt_to_string = function
+    | None                              -> None
+    | Some m                            -> Some ( msg_tag_to_string m )
+;;
 
 let logon_data_to_json x =
     `Assoc [
-        ( "ln_encrypt_method"           , `String (fix_encryption_method_to_str x.ln_encrypt_method)                    );
+        ( "ln_encrypt_method"           , `String ( fix_encryption_method_to_str x.ln_encrypt_method )                  );
         ( "ln_heartbeat_interval"       , utcduration_to_json x.ln_heartbeat_interval                                   );
-        ( "ln_raw_data_length"          , `Int (match x.ln_raw_data_length with | None -> 0 | Some len -> len)          );
+        ( "ln_raw_data_length"          , `Int ( match x.ln_raw_data_length with | None -> 0 | Some len -> len )        );
     ]
 ;;
 
@@ -56,7 +83,7 @@ let session_reject_data_to_json x =
     let list_assoc = [
         ( "sr_ref_seq_num"              , `Int x.sr_ref_seq_num                                                         );
         ( "sr_ref_tag_id"               , `Int x.sr_ref_tag_id                                                          );
-        ( "sr_ref_msg_type"             , stringopt_to_json ( msg_opt_tag_to_string x.sr_ref_msg_type )                 );
+        ( "sr_ref_msg_type"             , stringopt_to_json ( msg_tag_opt_to_string x.sr_ref_msg_type )                 );
         ( "sr_session_reject_reason"    , stringopt_to_json ( reject_reason_opt_to_string x.sr_session_reject_reason )  );
         ( "sr_text"                     , `Int x.sr_ref_seq_num                                                         );
         ( "sr_encoded_text_len"         , `Int x.sr_ref_seq_num                                                         );

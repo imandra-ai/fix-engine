@@ -92,14 +92,3 @@ let default_fix_trailer = {
     check_sum                       = 0;
 }
 ;;
-
-(** Encryption methods available. *)
-type fix_encryption_method =
-    | PKCS          of int
-    | DES_ECB       of int
-    | PKCS_DES      of int
-    | PGP_DES       of int
-    | PGP_DES_MD5   of int
-    | PEM_DES_MD5   of int
-    | NoEncryption
-;;

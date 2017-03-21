@@ -16,14 +16,8 @@ open Full_app_message_tag;;
 open Full_fix_fields;;
 (* @meta[imandra_ignore] off @end *)
 
-(** Message tags - a way for us to identify messages without their full data. *)
-type full_fix_admin_msg_tag = 
-    | Full_Msg_ExecutionReport_Tag
-    | Full_Msg_OrderCancelRequest_Tag
-    | Full_Msg_OrderCancelReplaceRequest_Tag
-    | Full_Msg_NewOrderSingle_Tag
-    | Full_Msg_CancelReject_Tag
-    | Full_Msg_BusinessReject_Tag
+(** Admin message tags. *)
+type full_fix_admin_msg_tag_data = 
     | Full_Msg_Hearbeat_Tag
     | Full_Msg_Logon_Tag
     | Full_Msg_Logoff_Tag
@@ -34,9 +28,10 @@ type full_fix_admin_msg_tag =
     | Full_Msg_Test_Request_Tag
 ;;
 
+(** Union tag type - needs to be here because it's used within rejection messages. *)
 type full_fix_msg_tag =
-    | Full_FIX_Admin_Msg_Tag of full_fix_admin_msg_tag
-    | Full_FIX_App_Msg_Tag of full_fix_app_msg_tag
+    | Full_FIX_Admin_Msg_Tag of full_fix_admin_msg_tag_data
+    | Full_FIX_App_Msg_Tag of full_fix_app_msg_tag_data
 ;;
 
 (** Heartbeat message data. *)
@@ -119,4 +114,17 @@ type full_fix_admin_msg_data =
     | Full_Msg_Resend_Request                        of full_fix_msg_resend_request_data
     | Full_Msg_Sequence_Reset                        of full_fix_msg_sequence_reset_data
     | Full_Msg_Test_Request                          of full_fix_msg_test_request_data
+;;
+
+
+let get_full_admin_msg_tag ( msg : full_fix_admin_msg_data ) =
+        match msg with 
+        | Full_Msg_Hearbeat                         _ -> Full_Msg_Hearbeat_Tag
+        | Full_Msg_Logon                            _ -> Full_Msg_Logon_Tag
+        | Full_Msg_Logoff                           _ -> Full_Msg_Logoff_Tag
+        | Full_Msg_Reject                           _ -> Full_Msg_Reject_Tag 
+        | Full_Msg_Business_Reject                  _ -> Full_Msg_Business_Reject_Tag
+        | Full_Msg_Resend_Request                   _ -> Full_Msg_Resend_Request_Tag
+        | Full_Msg_Sequence_Reset                   _ -> Full_Msg_Sequence_Reset_Tag
+        | Full_Msg_Test_Request                     _ -> Full_Msg_Test_Request_Tag
 ;;

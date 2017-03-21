@@ -1,4 +1,4 @@
-(** Full application message tags *)
+(** Full application message tags. *)
 (***
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
@@ -7,7 +7,7 @@
 
 *)
 
-type full_fix_app_msg_tag = 
+type full_fix_app_msg_tag_data = 
     | Full_Msg_ExecutionReport_Tag
     | Full_Msg_OrderCancelRequest_Tag
     | Full_Msg_OrderCancelReplaceRequest_Tag

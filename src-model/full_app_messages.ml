@@ -12,6 +12,7 @@ open Base_types;;
 open Numeric;;
 open Datetime;;
 open Full_session_core;;
+open Full_app_message_tag;;
 (* @meta[imandra_ignore] off @end *)
 
 (** New Order Single message data. {{: http://www.onixs.biz/fix-dictionary/4.4/msgType_D_68.html} More details. } *)
@@ -189,3 +190,11 @@ type full_fix_app_msg_data =
     | Full_Msg_CancelReject                          of full_fix_msg_cancel_reject_data                           
 ;;
 
+let get_full_app_msg_tag ( msg : full_fix_app_msg_data ) = 
+    match msg with
+    | Full_Msg_ExecutionReport _                    -> Full_Msg_ExecutionReport_Tag
+    | Full_Msg_OrderCancelRequest _                 -> Full_Msg_OrderCancelRequest_Tag
+    | Full_Msg_OrderCancelReplaceRequest _          -> Full_Msg_OrderCancelReplaceRequest_Tag
+    | Full_Msg_NewOrderSingle _                     -> Full_Msg_NewOrderSingle_Tag
+    | Full_Msg_CancelReject _                       -> Full_Msg_CancelReject_Tag
+;;
