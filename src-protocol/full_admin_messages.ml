@@ -12,11 +12,12 @@
 open Base_types;;
 open Datetime;;
 open Full_session_core;;
+open Full_app_message_tag;;
 open Full_fix_fields;;
 (* @meta[imandra_ignore] off @end *)
 
 (** Message tags - a way for us to identify messages without their full data. *)
-type full_fix_msg_tag = 
+type full_fix_admin_msg_tag = 
     | Full_Msg_ExecutionReport_Tag
     | Full_Msg_OrderCancelRequest_Tag
     | Full_Msg_OrderCancelReplaceRequest_Tag
@@ -31,6 +32,11 @@ type full_fix_msg_tag =
     | Full_Msg_Resend_Request_Tag
     | Full_Msg_Sequence_Reset_Tag
     | Full_Msg_Test_Request_Tag
+;;
+
+type full_fix_msg_tag =
+    | Full_FIX_Admin_Msg_Tag of full_fix_admin_msg_tag
+    | Full_FIX_App_Msg_Tag of full_fix_app_msg_tag
 ;;
 
 (** Heartbeat message data. *)
