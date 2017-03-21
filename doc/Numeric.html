@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Base_types_json.html">
+<link rel="next" href="Full_admin_messages.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
+<link title="Datetime" rel="Chapter" href="Datetime.html">
+<link title="Base_types" rel="Chapter" href="Base_types.html">
+<link title="Base_types_json" rel="Chapter" href="Base_types_json.html">
+<link title="Numeric" rel="Chapter" href="Numeric.html">
+<link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
+<link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_fix_fields" rel="Chapter" href="Full_fix_fields.html">
+<link title="Full_messages" rel="Chapter" href="Full_messages.html">
+<link title="Full_session_core" rel="Chapter" href="Full_session_core.html">
+<link title="Fix_engine_json" rel="Chapter" href="Fix_engine_json.html">
+<link title="Full_admin_msg_json" rel="Chapter" href="Full_admin_msg_json.html">
+<link title="Full_msg_json" rel="Chapter" href="Full_msg_json.html"><title>Numeric</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Base_types_json.html" title="Base_types_json">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Full_admin_messages.html" title="Full_admin_messages">Next</a>
+</div>
+<h1>Module <a href="type_Numeric.html">Numeric</a></h1>
+
+<pre><span class="keyword">module</span> Numeric: <code class="code"><span class="keyword">sig</span></code> <a href="Numeric.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+Numeric types.<br>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEfix_float_data"><span class="keyword">type</span> <code class="type"></code>fix_float_data</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_float_data.fix_float_whole">fix_float_whole</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_float_data.fix_float_fraction">fix_float_fraction</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><code><span id="TYPEfix_float"><span class="keyword">type</span> <code class="type"></code>fix_float</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_float.Float_0"><span class="constructor">Float_0</span></span> <span class="keyword">of</span> <code class="type"><a href="Numeric.html#TYPEfix_float_data">fix_float_data</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_float.Float_1"><span class="constructor">Float_1</span></span> <span class="keyword">of</span> <code class="type"><a href="Numeric.html#TYPEfix_float_data">fix_float_data</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_float.Float_2"><span class="constructor">Float_2</span></span> <span class="keyword">of</span> <code class="type"><a href="Numeric.html#TYPEfix_float_data">fix_float_data</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_float.Float_3"><span class="constructor">Float_3</span></span> <span class="keyword">of</span> <code class="type"><a href="Numeric.html#TYPEfix_float_data">fix_float_data</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfix_float.Float_4"><span class="constructor">Float_4</span></span> <span class="keyword">of</span> <code class="type"><a href="Numeric.html#TYPEfix_float_data">fix_float_data</a></code></code></td>
+
+</tr></table>
+
+
+
+<pre><span id="VALfloat_Create"><span class="keyword">val</span> float_Create</span> : <code class="type"><a href="Numeric.html#TYPEfix_float_data">fix_float_data</a> * int -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre>
+<pre><span id="VALfloat_GetData"><span class="keyword">val</span> float_GetData</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float_data">fix_float_data</a></code></pre>
+<pre><span id="VALfloat_GetDecs"><span class="keyword">val</span> float_GetDecs</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> -> int</code></pre>
+<pre><span id="VALfloat_GetFloat"><span class="keyword">val</span> float_GetFloat</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> -> float</code></pre>
+<pre><span id="VALgetDecPow"><span class="keyword">val</span> getDecPow</span> : <code class="type">int -> float</code></pre>
+<pre><span id="VALmake_Float"><span class="keyword">val</span> make_Float</span> : <code class="type">float * int -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre>
+<pre><span id="VALfloat_Add"><span class="keyword">val</span> float_Add</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre>
+<pre><span id="VALfloat_Div"><span class="keyword">val</span> float_Div</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre>
+<pre><span id="VALfloat_Mult"><span class="keyword">val</span> float_Mult</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre>
+<pre><span id="VALfloat_GreaterThan"><span class="keyword">val</span> float_GreaterThan</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre>
+<pre><span id="VALfloat_LessThan"><span class="keyword">val</span> float_LessThan</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre>
+<pre><span id="VALfloat_GreaterThanEqual"><span class="keyword">val</span> float_GreaterThanEqual</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre>
+<pre><span id="VALfloat_Equal"><span class="keyword">val</span> float_Equal</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre><div class="info ">
+TODO need to do something intelligent here.<br>
+</div>
+
+<pre><span id="VALfloat_LessThanEqual"><span class="keyword">val</span> float_LessThanEqual</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre></body></html>

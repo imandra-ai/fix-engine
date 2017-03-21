@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="style.css" type="text/css">
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <link rel="Start" href="index.html">
-<link rel="previous" href="Basic_types.html">
+<link rel="previous" href="Numeric.html">
 <link rel="next" href="Full_app_messages.html">
 <link rel="Up" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
@@ -12,130 +12,111 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
 <link title="Datetime" rel="Chapter" href="Datetime.html">
-<link title="Basic_types" rel="Chapter" href="Basic_types.html">
+<link title="Base_types" rel="Chapter" href="Base_types.html">
+<link title="Base_types_json" rel="Chapter" href="Base_types_json.html">
+<link title="Numeric" rel="Chapter" href="Numeric.html">
 <link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
 <link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_fix_fields" rel="Chapter" href="Full_fix_fields.html">
 <link title="Full_messages" rel="Chapter" href="Full_messages.html">
-<link title="Full_session_core" rel="Chapter" href="Full_session_core.html"><title>Full_admin_messages</title>
+<link title="Full_session_core" rel="Chapter" href="Full_session_core.html">
+<link title="Fix_engine_json" rel="Chapter" href="Fix_engine_json.html">
+<link title="Full_admin_msg_json" rel="Chapter" href="Full_admin_msg_json.html">
+<link title="Full_msg_json" rel="Chapter" href="Full_msg_json.html"><title>Full_admin_messages</title>
 </head>
 <body>
-<div class="navbar"><a class="pre" href="Basic_types.html" title="Basic_types">Previous</a>
+<div class="navbar"><a class="pre" href="Numeric.html" title="Numeric">Previous</a>
 &nbsp;<a class="up" href="index.html" title="Index">Up</a>
 &nbsp;<a class="post" href="Full_app_messages.html" title="Full_app_messages">Next</a>
 </div>
 <h1>Module <a href="type_Full_admin_messages.html">Full_admin_messages</a></h1>
 
 <pre><span class="keyword">module</span> Full_admin_messages: <code class="code"><span class="keyword">sig</span></code> <a href="Full_admin_messages.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
-Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
-<p>
-
-    full_admin_messages.ml<br>
+Full messages - administrative.<br>
 </div>
 <hr width="100%">
+
+<pre><code><span id="TYPEfull_fix_admin_msg_tag_data"><span class="keyword">type</span> <code class="type"></code>full_fix_admin_msg_tag_data</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_admin_msg_tag_data.Full_Msg_Hearbeat_Tag"><span class="constructor">Full_Msg_Hearbeat_Tag</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_admin_msg_tag_data.Full_Msg_Logon_Tag"><span class="constructor">Full_Msg_Logon_Tag</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_admin_msg_tag_data.Full_Msg_Logoff_Tag"><span class="constructor">Full_Msg_Logoff_Tag</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_admin_msg_tag_data.Full_Msg_Reject_Tag"><span class="constructor">Full_Msg_Reject_Tag</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_admin_msg_tag_data.Full_Msg_Business_Reject_Tag"><span class="constructor">Full_Msg_Business_Reject_Tag</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_admin_msg_tag_data.Full_Msg_Resend_Request_Tag"><span class="constructor">Full_Msg_Resend_Request_Tag</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_admin_msg_tag_data.Full_Msg_Sequence_Reset_Tag"><span class="constructor">Full_Msg_Sequence_Reset_Tag</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTfull_fix_admin_msg_tag_data.Full_Msg_Test_Request_Tag"><span class="constructor">Full_Msg_Test_Request_Tag</span></span></code></td>
+
+</tr></table>
+
+<div class="info ">
+Admin message tags.<br>
+</div>
+
 
 <pre><code><span id="TYPEfull_fix_msg_tag"><span class="keyword">type</span> <code class="type"></code>full_fix_msg_tag</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_ExecutionReport_Tag"><span class="constructor">Full_Msg_ExecutionReport_Tag</span></span></code></td>
+<code><span id="TYPEELTfull_fix_msg_tag.Full_FIX_Admin_Msg_Tag"><span class="constructor">Full_FIX_Admin_Msg_Tag</span></span> <span class="keyword">of</span> <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_admin_msg_tag_data">full_fix_admin_msg_tag_data</a></code></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_OrderCancelRequest_Tag"><span class="constructor">Full_Msg_OrderCancelRequest_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_OrderCancelReplaceRequest_Tag"><span class="constructor">Full_Msg_OrderCancelReplaceRequest_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_NewOrderSingle_Tag"><span class="constructor">Full_Msg_NewOrderSingle_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_CancelReject_Tag"><span class="constructor">Full_Msg_CancelReject_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_BusinessReject_Tag"><span class="constructor">Full_Msg_BusinessReject_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_Hearbeat_Tag"><span class="constructor">Full_Msg_Hearbeat_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_Logon_Tag"><span class="constructor">Full_Msg_Logon_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_Logoff_Tag"><span class="constructor">Full_Msg_Logoff_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_Reject_Tag"><span class="constructor">Full_Msg_Reject_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_Business_Reject_Tag"><span class="constructor">Full_Msg_Business_Reject_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_Resend_Request_Tag"><span class="constructor">Full_Msg_Resend_Request_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_Sequence_Reset_Tag"><span class="constructor">Full_Msg_Sequence_Reset_Tag</span></span></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_tag.Full_Msg_Test_Request_Tag"><span class="constructor">Full_Msg_Test_Request_Tag</span></span></code></td>
+<code><span id="TYPEELTfull_fix_msg_tag.Full_FIX_App_Msg_Tag"><span class="constructor">Full_FIX_App_Msg_Tag</span></span> <span class="keyword">of</span> <code class="type">Full_app_message_tag.full_fix_app_msg_tag_data</code></code></td>
 
 </tr></table>
 
 <div class="info ">
-Message tags - a way for us to identify messages without their full data.<br>
+Union tag type - needs to be here because it's used within rejection messages.<br>
 </div>
 
 
@@ -151,6 +132,7 @@ Message tags - a way for us to identify messages without their full data.<br>
 }
 
 <div class="info ">
+Heartbeat message data.<br>
 </div>
 
 
@@ -159,7 +141,7 @@ Message tags - a way for us to identify messages without their full data.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_logon_data.ln_encrypt_method">ln_encrypt_method</span>&nbsp;: <code class="type"><a href="Full_session_core.html#TYPEfix_encryption_method">Full_session_core.fix_encryption_method</a></code>;</code></td>
+<code><span id="TYPEELTfull_fix_msg_logon_data.ln_encrypt_method">ln_encrypt_method</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_encryption_method">Base_types.fix_encryption_method</a></code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Tag  98</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
@@ -180,7 +162,7 @@ Message tags - a way for us to identify messages without their full data.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_logon_data.ln_raw_data">ln_raw_data</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_string">Basic_types.fix_string</a> option</code>;</code></td>
+<code><span id="TYPEELTfull_fix_msg_logon_data.ln_raw_data">ln_raw_data</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_string">Base_types.fix_string</a> option</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Tag  96</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
@@ -215,19 +197,20 @@ Message tags - a way for us to identify messages without their full data.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_logon_data.ln_username">ln_username</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_string">Basic_types.fix_string</a> option</code>;</code></td>
+<code><span id="TYPEELTfull_fix_msg_logon_data.ln_username">ln_username</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_string">Base_types.fix_string</a> option</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Tag 553</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_logon_data.ln_password">ln_password</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_string">Basic_types.fix_string</a> option</code>;</code></td>
+<code><span id="TYPEELTfull_fix_msg_logon_data.ln_password">ln_password</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_string">Base_types.fix_string</a> option</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Tag 554</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 }
 
 <div class="info ">
+Logon message data.<br>
 </div>
 
 
@@ -243,12 +226,13 @@ Message tags - a way for us to identify messages without their full data.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_logoff_data.lo_encoded_text">lo_encoded_text</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_string">Basic_types.fix_string</a> option</code>;</code></td>
+<code><span id="TYPEELTfull_fix_msg_logoff_data.lo_encoded_text">lo_encoded_text</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_string">Base_types.fix_string</a> option</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Tag 355</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 }
 
 <div class="info ">
+Logoff message data.<br>
 </div>
 
 
@@ -264,7 +248,7 @@ Message tags - a way for us to identify messages without their full data.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_reject_data.sr_ref_tag_id">sr_ref_tag_id</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_string">Basic_types.fix_string</a></code>;</code></td>
+<code><span id="TYPEELTfull_fix_msg_reject_data.sr_ref_tag_id">sr_ref_tag_id</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_string">Base_types.fix_string</a></code>;</code></td>
 
 </tr>
 <tr>
@@ -278,14 +262,14 @@ Message tags - a way for us to identify messages without their full data.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_reject_data.sr_session_reject_reason">sr_session_reject_reason</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_session_reject_reason">Basic_types.fix_session_reject_reason</a> option</code>;</code></td>
+<code><span id="TYPEELTfull_fix_msg_reject_data.sr_session_reject_reason">sr_session_reject_reason</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_session_reject_reason">Base_types.fix_session_reject_reason</a> option</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Tag 373.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_reject_data.sr_text">sr_text</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_string">Basic_types.fix_string</a> option</code>;</code></td>
+<code><span id="TYPEELTfull_fix_msg_reject_data.sr_text">sr_text</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_string">Base_types.fix_string</a> option</code>;</code></td>
 
 </tr>
 <tr>
@@ -299,12 +283,13 @@ Message tags - a way for us to identify messages without their full data.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_reject_data.sr_encoded_text">sr_encoded_text</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_string">Basic_types.fix_string</a></code>;</code></td>
+<code><span id="TYPEELTfull_fix_msg_reject_data.sr_encoded_text">sr_encoded_text</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_string">Base_types.fix_string</a></code>;</code></td>
 
 </tr></table>
 }
 
 <div class="info ">
+Reject message data.<br>
 </div>
 
 
@@ -321,12 +306,13 @@ Message tags - a way for us to identify messages without their full data.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_business_reject_data.br_business_reject_reason">br_business_reject_reason</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_business_reject_reason">Basic_types.fix_business_reject_reason</a></code>;</code></td>
+<code><span id="TYPEELTfull_fix_msg_business_reject_data.br_business_reject_reason">br_business_reject_reason</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_business_reject_reason">Base_types.fix_business_reject_reason</a></code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >TODO Need to add message type here as well.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 }
 
 <div class="info ">
+Business Reject message data.<br>
 </div>
 
 
@@ -348,6 +334,7 @@ Message tags - a way for us to identify messages without their full data.<br>
 }
 
 <div class="info ">
+Resend Request message data.<br>
 </div>
 
 
@@ -363,12 +350,13 @@ Message tags - a way for us to identify messages without their full data.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfull_fix_msg_sequence_reset_data.seqr_gap_fill_flag">seqr_gap_fill_flag</span>&nbsp;: <code class="type"><a href="Basic_types.html#TYPEfix_yes_no_type">Basic_types.fix_yes_no_type</a> option</code>;</code></td>
+<code><span id="TYPEELTfull_fix_msg_sequence_reset_data.seqr_gap_fill_flag">seqr_gap_fill_flag</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_yes_no_type">Base_types.fix_yes_no_type</a> option</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Tag 123</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 }
 
 <div class="info ">
+Sequence Reset message data.<br>
 </div>
 
 
@@ -383,6 +371,7 @@ Message tags - a way for us to identify messages without their full data.<br>
 }
 
 <div class="info ">
+Test Request message data.<br>
 </div>
 
 
@@ -445,6 +434,8 @@ Message tags - a way for us to identify messages without their full data.<br>
 </tr></table>
 
 <div class="info ">
+Top-level full administrative message data type.<br>
 </div>
 
-</body></html>
+
+<pre><span id="VALget_full_admin_msg_tag"><span class="keyword">val</span> get_full_admin_msg_tag</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_admin_msg_data">full_fix_admin_msg_data</a> -><br>       <a href="Full_admin_messages.html#TYPEfull_fix_admin_msg_tag_data">full_fix_admin_msg_tag_data</a></code></pre></body></html>

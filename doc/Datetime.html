@@ -5,37 +5,42 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <link rel="Start" href="index.html">
 <link rel="previous" href="Fix_engine.html">
-<link rel="next" href="Basic_types.html">
+<link rel="next" href="Base_types.html">
 <link rel="Up" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
 <link title="Datetime" rel="Chapter" href="Datetime.html">
-<link title="Basic_types" rel="Chapter" href="Basic_types.html">
+<link title="Base_types" rel="Chapter" href="Base_types.html">
+<link title="Base_types_json" rel="Chapter" href="Base_types_json.html">
+<link title="Numeric" rel="Chapter" href="Numeric.html">
 <link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
 <link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_fix_fields" rel="Chapter" href="Full_fix_fields.html">
 <link title="Full_messages" rel="Chapter" href="Full_messages.html">
-<link title="Full_session_core" rel="Chapter" href="Full_session_core.html"><title>Datetime</title>
+<link title="Full_session_core" rel="Chapter" href="Full_session_core.html">
+<link title="Fix_engine_json" rel="Chapter" href="Fix_engine_json.html">
+<link title="Full_admin_msg_json" rel="Chapter" href="Full_admin_msg_json.html">
+<link title="Full_msg_json" rel="Chapter" href="Full_msg_json.html"><title>Datetime</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Fix_engine.html" title="Fix_engine">Previous</a>
 &nbsp;<a class="up" href="index.html" title="Index">Up</a>
-&nbsp;<a class="post" href="Basic_types.html" title="Basic_types">Next</a>
+&nbsp;<a class="post" href="Base_types.html" title="Base_types">Next</a>
 </div>
 <h1>Module <a href="type_Datetime.html">Datetime</a></h1>
 
 <pre><span class="keyword">module</span> Datetime: <code class="code"><span class="keyword">sig</span></code> <a href="Datetime.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
-Implementation of the date time types.
-<p>
-
-    Aesthetic Integration Limited
+Implementation of the date/time types.<br>
+</div>
+<hr width="100%">
+<br>
+Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 <p>
 
     datetime.ml<br>
-</div>
-<hr width="100%">
 
 <pre><code><span id="TYPEfix_utctimestamp"><span class="keyword">type</span> <code class="type"></code>fix_utctimestamp</span> = {</code></pre><table class="typetable">
 <tr>
@@ -89,6 +94,9 @@ Implementation of the date time types.
 </tr></table>
 }
 
+<div class="info ">
+UTC Timestamp<br>
+</div>
 
 
 <pre><span id="VALmake_utctimestamp"><span class="keyword">val</span> make_utctimestamp</span> : <code class="type">int * int * int * int * int * int * int option -> <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a></code></pre>
@@ -162,6 +170,9 @@ Implementation of the date time types.
 
 </tr></table>
 
+<div class="info ">
+Week<br>
+</div>
 
 
 <pre><code><span id="TYPEfix_monthyear"><span class="keyword">type</span> <code class="type"></code>fix_monthyear</span> = {</code></pre><table class="typetable">
@@ -195,6 +206,9 @@ Implementation of the date time types.
 </tr></table>
 }
 
+<div class="info ">
+MonthYear<br>
+</div>
 
 
 <pre><span id="VALis_valid_monthyear"><span class="keyword">val</span> is_valid_monthyear</span> : <code class="type"><a href="Datetime.html#TYPEfix_monthyear">fix_monthyear</a> -> bool</code></pre>
@@ -229,6 +243,9 @@ Implementation of the date time types.
 </tr></table>
 }
 
+<div class="info ">
+UTC Timeonly<br>
+</div>
 
 
 <pre><span id="VALis_valid_utctimeonly"><span class="keyword">val</span> is_valid_utctimeonly</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> -> bool</code></pre>
@@ -261,6 +278,9 @@ Implementation of the date time types.
 </tr></table>
 }
 
+<div class="info ">
+UTC Dateonly<br>
+</div>
 
 
 <pre><span id="VALis_valid_utcdateonly"><span class="keyword">val</span> is_valid_utcdateonly</span> : <code class="type"><a href="Datetime.html#TYPEfix_utcdateonly">fix_utcdateonly</a> -> bool</code></pre>
@@ -309,6 +329,9 @@ Implementation of the date time types.
 </tr></table>
 }
 
+<div class="info ">
+Duration<br>
+</div>
 
 
 <pre><span id="VALmake_duration"><span class="keyword">val</span> make_duration</span> : <code class="type">int option * int option * int option * int option * int option * int option -><br>       <a href="Datetime.html#TYPEfix_duration">fix_duration</a></code></pre>
@@ -337,27 +360,4 @@ Implementation of the date time types.
 
 <pre><span id="VALcalculate_carry"><span class="keyword">val</span> calculate_carry</span> : <code class="type">int * int * int -> <a href="Datetime.html#TYPEfield_carryover">field_carryover</a></code></pre>
 <pre><span id="VALnormalise_timestamp"><span class="keyword">val</span> normalise_timestamp</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> -> <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a></code></pre>
-<pre><span id="VALutctimestamp_add"><span class="keyword">val</span> utctimestamp_add</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> * <a href="Datetime.html#TYPEfix_duration">fix_duration</a> -><br>       <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a></code></pre><br>
-verify ts_correct ( ) = 
-let ts = make_utctimestamp ( 2017, 1, 1, 1, 0, 0, None ) in 
-let dOne = make_duration ( None, None, None, None, None, Some 30 ) in
-let dTwo = make_duration ( None, None, None, None, Some 1, Some 30 ) in 
-let tsOne = utctimestamp_add ( ts, dOne ) in 
-let tsTwo = utctimestamp_add ( ts, dTwo ) in
-<p>
-
-utctimestamp_greaterThan (tsOne, tsTwo)
-;;
-<p>
-
-verify ts_correct (ts : fix_utctimestamp ) = 
-let dOne = make_duration ( None, None, None, None, None, Some 30 ) in
-let dTwo = make_duration ( None, None, None, None, Some 1, Some 30 ) in 
-let tsOne = utctimestamp_add ( ts, dOne ) in 
-let tsTwo = utctimestamp_add ( ts, dTwo ) in
-<p>
-
-is_valid_utctimestamp ( ts) ==&gt;
-utctimestamp_greaterThan (tsTwo, tsOne)
-;;<br>
-</body></html>
+<pre><span id="VALutctimestamp_add"><span class="keyword">val</span> utctimestamp_add</span> : <code class="type"><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> * <a href="Datetime.html#TYPEfix_duration">fix_duration</a> -><br>       <a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a></code></pre></body></html>

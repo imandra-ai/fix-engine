@@ -8,11 +8,17 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
 <link title="Datetime" rel="Chapter" href="Datetime.html">
-<link title="Basic_types" rel="Chapter" href="Basic_types.html">
+<link title="Base_types" rel="Chapter" href="Base_types.html">
+<link title="Base_types_json" rel="Chapter" href="Base_types_json.html">
+<link title="Numeric" rel="Chapter" href="Numeric.html">
 <link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
 <link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_fix_fields" rel="Chapter" href="Full_fix_fields.html">
 <link title="Full_messages" rel="Chapter" href="Full_messages.html">
-<link title="Full_session_core" rel="Chapter" href="Full_session_core.html"><title>Index of types</title>
+<link title="Full_session_core" rel="Chapter" href="Full_session_core.html">
+<link title="Fix_engine_json" rel="Chapter" href="Fix_engine_json.html">
+<link title="Full_admin_msg_json" rel="Chapter" href="Full_admin_msg_json.html">
+<link title="Full_msg_json" rel="Chapter" href="Full_msg_json.html"><title>Index of types</title>
 </head>
 <body>
 <div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
@@ -22,36 +28,39 @@
 <tr><td align="left"><br>B</td></tr>
 <tr><td><a href="Full_messages.html#TYPEbiz_rejected_msg_data">biz_rejected_msg_data</a> [<a href="Full_messages.html">Full_messages</a>]</td>
 <td><div class="info">
-Business Reject message
+Business Reject message data.
 </div>
 </td></tr>
 <tr><td align="left"><br>F</td></tr>
 <tr><td><a href="Datetime.html#TYPEfield_carryover">field_carryover</a> [<a href="Datetime.html">Datetime</a>]</td>
 <td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_app_reject_reason">fix_app_reject_reason</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_app_reject_reason">fix_app_reject_reason</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_bool">fix_bool</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_bool">fix_bool</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_business_reject_reason">fix_business_reject_reason</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_business_reject_reason">fix_business_reject_reason</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_commtype">fix_commtype</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_commtype">fix_commtype</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td><div class="info">
 CommType: Tag 13 -  http://www.onixs.biz/fix-dictionary/4.4/tagNum_13.html
 </div>
 </td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_country">fix_country</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_country">fix_country</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td><div class="info">
 Country
 </div>
 </td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_currency">fix_currency</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_currency">fix_currency</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td><div class="info">
 This should be built-in.
 </div>
 </td></tr>
 <tr><td><a href="Datetime.html#TYPEfix_duration">fix_duration</a> [<a href="Datetime.html">Datetime</a>]</td>
-<td></td></tr>
-<tr><td><a href="Full_session_core.html#TYPEfix_encryption_method">fix_encryption_method</a> [<a href="Full_session_core.html">Full_session_core</a>]</td>
+<td><div class="info">
+Duration
+</div>
+</td></tr>
+<tr><td><a href="Base_types.html#TYPEfix_encryption_method">fix_encryption_method</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td><div class="info">
 Encryption methods available.
 </div>
@@ -76,56 +85,62 @@ Engine state structure containing all of the information required for it operate
 Represents 'status' of the engine.
 </div>
 </td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_exchange">fix_exchange</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_exchange">fix_exchange</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td><div class="info">
 There's a list for this as well.
 </div>
 </td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_execinst">fix_execinst</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_execinst">fix_execinst</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_exectype">fix_exectype</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_exectype">fix_exectype</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_float">fix_float</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Numeric.html#TYPEfix_float">fix_float</a> [<a href="Numeric.html">Numeric</a>]</td>
 <td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_float_data">fix_float_data</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Numeric.html#TYPEfix_float_data">fix_float_data</a> [<a href="Numeric.html">Numeric</a>]</td>
 <td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_handlinst">fix_handlinst</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_handlinst">fix_handlinst</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
 <tr><td><a href="Full_session_core.html#TYPEfix_header">fix_header</a> [<a href="Full_session_core.html">Full_session_core</a>]</td>
 <td><div class="info">
 Standard FIX header.
 </div>
 </td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_last_liquidity_ind">fix_last_liquidity_ind</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_last_liquidity_ind">fix_last_liquidity_ind</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
 <tr><td><a href="Datetime.html#TYPEfix_localmktdate">fix_localmktdate</a> [<a href="Datetime.html">Datetime</a>]</td>
 <td></td></tr>
 <tr><td><a href="Datetime.html#TYPEfix_monthyear">fix_monthyear</a> [<a href="Datetime.html">Datetime</a>]</td>
+<td><div class="info">
+MonthYear
+</div>
+</td></tr>
+<tr><td><a href="Base_types.html#TYPEfix_ordertype">fix_ordertype</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_ordertype">fix_ordertype</a> [<a href="Basic_types.html">Basic_types</a>]</td>
-<td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_ordstatus">fix_ordstatus</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_ordstatus">fix_ordstatus</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td><div class="info">
 Tag 39: http://www.onixs.biz/fix-dictionary/4.4/tagNum_39.html
 </div>
 </td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_pricetype">fix_pricetype</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_pricetype">fix_pricetype</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td><div class="info">
 Tag 423: http://www.onixs.biz/fix-dictionary/4.4/tagNum_423.html
 </div>
 </td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_session_reject_reason">fix_session_reject_reason</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_session_reject_reason">fix_session_reject_reason</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td><div class="info">
 Session rejection reasons.
 </div>
 </td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_side">fix_side</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_side">fix_side</a> [<a href="Base_types.html">Base_types</a>]</td>
+<td><div class="info">
+Side
+</div>
+</td></tr>
+<tr><td><a href="Base_types.html#TYPEfix_string">fix_string</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_string">fix_string</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_symbol">fix_symbol</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_symbol">fix_symbol</a> [<a href="Basic_types.html">Basic_types</a>]</td>
-<td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_timeinforce">fix_timeinforce</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<tr><td><a href="Base_types.html#TYPEfix_timeinforce">fix_timeinforce</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
 <tr><td><a href="Full_session_core.html#TYPEfix_trailer">fix_trailer</a> [<a href="Full_session_core.html">Full_session_core</a>]</td>
 <td><div class="info">
@@ -133,84 +148,135 @@ Standard FIX trailer
 </div>
 </td></tr>
 <tr><td><a href="Datetime.html#TYPEfix_utcdateonly">fix_utcdateonly</a> [<a href="Datetime.html">Datetime</a>]</td>
-<td></td></tr>
+<td><div class="info">
+UTC Dateonly
+</div>
+</td></tr>
 <tr><td><a href="Datetime.html#TYPEfix_utctimeonly">fix_utctimeonly</a> [<a href="Datetime.html">Datetime</a>]</td>
-<td></td></tr>
+<td><div class="info">
+UTC Timeonly
+</div>
+</td></tr>
 <tr><td><a href="Datetime.html#TYPEfix_utctimestamp">fix_utctimestamp</a> [<a href="Datetime.html">Datetime</a>]</td>
-<td></td></tr>
+<td><div class="info">
+UTC Timestamp
+</div>
+</td></tr>
 <tr><td><a href="Datetime.html#TYPEfix_week">fix_week</a> [<a href="Datetime.html">Datetime</a>]</td>
-<td></td></tr>
-<tr><td><a href="Basic_types.html#TYPEfix_yes_no_type">fix_yes_no_type</a> [<a href="Basic_types.html">Basic_types</a>]</td>
+<td><div class="info">
+Week
+</div>
+</td></tr>
+<tr><td><a href="Base_types.html#TYPEfix_yes_no_type">fix_yes_no_type</a> [<a href="Base_types.html">Base_types</a>]</td>
 <td></td></tr>
 <tr><td><a href="Full_messages.html#TYPEfull_field_missing_data">full_field_missing_data</a> [<a href="Full_messages.html">Full_messages</a>]</td>
 <td><div class="info">
-Contains the missing field information.
+Contains missing field information.
 </div>
 </td></tr>
 <tr><td><a href="Full_admin_messages.html#TYPEfull_fix_admin_msg_data">full_fix_admin_msg_data</a> [<a href="Full_admin_messages.html">Full_admin_messages</a>]</td>
 <td><div class="info">
+Top-level full administrative message data type.
+</div>
+</td></tr>
+<tr><td><a href="Full_admin_messages.html#TYPEfull_fix_admin_msg_tag_data">full_fix_admin_msg_tag_data</a> [<a href="Full_admin_messages.html">Full_admin_messages</a>]</td>
+<td><div class="info">
+Admin message tags.
 </div>
 </td></tr>
 <tr><td><a href="Full_app_messages.html#TYPEfull_fix_app_msg_data">full_fix_app_msg_data</a> [<a href="Full_app_messages.html">Full_app_messages</a>]</td>
-<td></td></tr>
-<tr><td><a href="Full_messages.html#TYPEfull_fix_msg">full_fix_msg</a> [<a href="Full_messages.html">Full_messages</a>]</td>
 <td><div class="info">
-Applicatoin messages
+Application message union type.
+</div>
+</td></tr>
+<tr><td><a href="Full_fix_fields.html#TYPEfull_fix_field">full_fix_field</a> [<a href="Full_fix_fields.html">Full_fix_fields</a>]</td>
+<td><div class="info">
+Used for specifying reasons for rejection/etc.
 </div>
 </td></tr>
 <tr><td><a href="Full_admin_messages.html#TYPEfull_fix_msg_business_reject_data">full_fix_msg_business_reject_data</a> [<a href="Full_admin_messages.html">Full_admin_messages</a>]</td>
 <td><div class="info">
+Business Reject message data.
 </div>
 </td></tr>
 <tr><td><a href="Full_app_messages.html#TYPEfull_fix_msg_cancel_reject_data">full_fix_msg_cancel_reject_data</a> [<a href="Full_app_messages.html">Full_app_messages</a>]</td>
-<td></td></tr>
+<td><div class="info">
+Order Cancel Reject message data.
+</div>
+</td></tr>
 <tr><td><a href="Full_messages.html#TYPEfull_fix_msg_data">full_fix_msg_data</a> [<a href="Full_messages.html">Full_messages</a>]</td>
 <td><div class="info">
+Full FIX message data may be of 2 types: Admin and Application.
 </div>
 </td></tr>
 <tr><td><a href="Full_app_messages.html#TYPEfull_fix_msg_execution_report_data">full_fix_msg_execution_report_data</a> [<a href="Full_app_messages.html">Full_app_messages</a>]</td>
-<td></td></tr>
+<td><div class="info">
+Execution Report message data.
+</div>
+</td></tr>
 <tr><td><a href="Full_admin_messages.html#TYPEfull_fix_msg_heartbeat_data">full_fix_msg_heartbeat_data</a> [<a href="Full_admin_messages.html">Full_admin_messages</a>]</td>
 <td><div class="info">
+Heartbeat message data.
 </div>
 </td></tr>
 <tr><td><a href="Full_admin_messages.html#TYPEfull_fix_msg_logoff_data">full_fix_msg_logoff_data</a> [<a href="Full_admin_messages.html">Full_admin_messages</a>]</td>
 <td><div class="info">
+Logoff message data.
 </div>
 </td></tr>
 <tr><td><a href="Full_admin_messages.html#TYPEfull_fix_msg_logon_data">full_fix_msg_logon_data</a> [<a href="Full_admin_messages.html">Full_admin_messages</a>]</td>
 <td><div class="info">
+Logon message data.
 </div>
 </td></tr>
 <tr><td><a href="Full_app_messages.html#TYPEfull_fix_msg_new_order_single_data">full_fix_msg_new_order_single_data</a> [<a href="Full_app_messages.html">Full_app_messages</a>]</td>
-<td></td></tr>
+<td><div class="info">
+New Order Single message data.
+</div>
+</td></tr>
 <tr><td><a href="Full_app_messages.html#TYPEfull_fix_msg_order_cancel_replace_request_data">full_fix_msg_order_cancel_replace_request_data</a> [<a href="Full_app_messages.html">Full_app_messages</a>]</td>
-<td></td></tr>
+<td><div class="info">
+Order Cancel/Replace Request message data.
+</div>
+</td></tr>
 <tr><td><a href="Full_app_messages.html#TYPEfull_fix_msg_order_cancel_request_data">full_fix_msg_order_cancel_request_data</a> [<a href="Full_app_messages.html">Full_app_messages</a>]</td>
-<td></td></tr>
+<td><div class="info">
+Order Cancel Request message data.
+</div>
+</td></tr>
 <tr><td><a href="Full_admin_messages.html#TYPEfull_fix_msg_reject_data">full_fix_msg_reject_data</a> [<a href="Full_admin_messages.html">Full_admin_messages</a>]</td>
 <td><div class="info">
+Reject message data.
 </div>
 </td></tr>
 <tr><td><a href="Full_admin_messages.html#TYPEfull_fix_msg_resend_request_data">full_fix_msg_resend_request_data</a> [<a href="Full_admin_messages.html">Full_admin_messages</a>]</td>
 <td><div class="info">
+Resend Request message data.
 </div>
 </td></tr>
 <tr><td><a href="Full_admin_messages.html#TYPEfull_fix_msg_sequence_reset_data">full_fix_msg_sequence_reset_data</a> [<a href="Full_admin_messages.html">Full_admin_messages</a>]</td>
 <td><div class="info">
+Sequence Reset message data.
 </div>
 </td></tr>
 <tr><td><a href="Full_admin_messages.html#TYPEfull_fix_msg_tag">full_fix_msg_tag</a> [<a href="Full_admin_messages.html">Full_admin_messages</a>]</td>
 <td><div class="info">
-Message tags - a way for us to identify messages without their full data.
+Union tag type - needs to be here because it's used within rejection messages.
 </div>
 </td></tr>
 <tr><td><a href="Full_admin_messages.html#TYPEfull_fix_msg_test_request_data">full_fix_msg_test_request_data</a> [<a href="Full_admin_messages.html">Full_admin_messages</a>]</td>
 <td><div class="info">
+Test Request message data.
 </div>
 </td></tr>
 <tr><td><a href="Full_messages.html#TYPEfull_top_level_msg">full_top_level_msg</a> [<a href="Full_messages.html">Full_messages</a>]</td>
 <td><div class="info">
+Union 'full' message type.
+</div>
+</td></tr>
+<tr><td><a href="Full_messages.html#TYPEfull_valid_fix_msg">full_valid_fix_msg</a> [<a href="Full_messages.html">Full_messages</a>]</td>
+<td><div class="info">
+Full FIX valid message data.
 </div>
 </td></tr>
 <tr><td align="left"><br>M</td></tr>
@@ -222,7 +288,7 @@ Define set of actions + data for manual intervention by the user.
 <tr><td align="left"><br>S</td></tr>
 <tr><td><a href="Fix_engine.html#TYPEsession_data">session_data</a> [<a href="Fix_engine.html">Fix_engine</a>]</td>
 <td><div class="info">
-Request to initiate a session.
+Request to initiate a new session.
 </div>
 </td></tr>
 <tr><td><a href="Full_messages.html#TYPEsession_rejected_msg_data">session_rejected_msg_data</a> [<a href="Full_messages.html">Full_messages</a>]</td>

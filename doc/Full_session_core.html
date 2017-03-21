@@ -5,33 +5,34 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <link rel="Start" href="index.html">
 <link rel="previous" href="Full_messages.html">
+<link rel="next" href="Fix_engine_json.html">
 <link rel="Up" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
 <link title="Datetime" rel="Chapter" href="Datetime.html">
-<link title="Basic_types" rel="Chapter" href="Basic_types.html">
+<link title="Base_types" rel="Chapter" href="Base_types.html">
+<link title="Base_types_json" rel="Chapter" href="Base_types_json.html">
+<link title="Numeric" rel="Chapter" href="Numeric.html">
 <link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
 <link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_fix_fields" rel="Chapter" href="Full_fix_fields.html">
 <link title="Full_messages" rel="Chapter" href="Full_messages.html">
-<link title="Full_session_core" rel="Chapter" href="Full_session_core.html"><title>Full_session_core</title>
+<link title="Full_session_core" rel="Chapter" href="Full_session_core.html">
+<link title="Fix_engine_json" rel="Chapter" href="Fix_engine_json.html">
+<link title="Full_admin_msg_json" rel="Chapter" href="Full_admin_msg_json.html">
+<link title="Full_msg_json" rel="Chapter" href="Full_msg_json.html"><title>Full_session_core</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Full_messages.html" title="Full_messages">Previous</a>
 &nbsp;<a class="up" href="index.html" title="Index">Up</a>
-&nbsp;</div>
+&nbsp;<a class="post" href="Fix_engine_json.html" title="Fix_engine_json">Next</a>
+</div>
 <h1>Module <a href="type_Full_session_core.html">Full_session_core</a></h1>
 
 <pre><span class="keyword">module</span> Full_session_core: <code class="code"><span class="keyword">sig</span></code> <a href="Full_session_core.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
-Code components of the FIX data dictionary.
-<p>
-
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
-<p>
-
-    fix_data_dictionary.ml<br>
+Code components of the FIX data dictionary.<br>
 </div>
 <hr width="100%">
 
@@ -258,60 +259,4 @@ Standard FIX trailer<br>
 </div>
 
 
-<pre><span id="VALdefault_fix_trailer"><span class="keyword">val</span> default_fix_trailer</span> : <code class="type"><a href="Full_session_core.html#TYPEfix_trailer">fix_trailer</a></code></pre>
-<pre><code><span id="TYPEfix_encryption_method"><span class="keyword">type</span> <code class="type"></code>fix_encryption_method</span> = </code></pre><table class="typetable">
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfix_encryption_method.PKCS"><span class="constructor">PKCS</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfix_encryption_method.DES_ECB"><span class="constructor">DES_ECB</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfix_encryption_method.PKCS_DES"><span class="constructor">PKCS_DES</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfix_encryption_method.PGP_DES"><span class="constructor">PGP_DES</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfix_encryption_method.PGP_DES_MD5"><span class="constructor">PGP_DES_MD5</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfix_encryption_method.PEM_DES_MD5"><span class="constructor">PEM_DES_MD5</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTfix_encryption_method.NoEncryption"><span class="constructor">NoEncryption</span></span></code></td>
-
-</tr></table>
-
-<div class="info ">
-Encryption methods available.<br>
-</div>
-
-</body></html>
+<pre><span id="VALdefault_fix_trailer"><span class="keyword">val</span> default_fix_trailer</span> : <code class="type"><a href="Full_session_core.html#TYPEfix_trailer">fix_trailer</a></code></pre></body></html>

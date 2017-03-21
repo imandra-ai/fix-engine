@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Fix_engine_json.html">
+<link rel="next" href="Full_msg_json.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
+<link title="Datetime" rel="Chapter" href="Datetime.html">
+<link title="Base_types" rel="Chapter" href="Base_types.html">
+<link title="Base_types_json" rel="Chapter" href="Base_types_json.html">
+<link title="Numeric" rel="Chapter" href="Numeric.html">
+<link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
+<link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_fix_fields" rel="Chapter" href="Full_fix_fields.html">
+<link title="Full_messages" rel="Chapter" href="Full_messages.html">
+<link title="Full_session_core" rel="Chapter" href="Full_session_core.html">
+<link title="Fix_engine_json" rel="Chapter" href="Fix_engine_json.html">
+<link title="Full_admin_msg_json" rel="Chapter" href="Full_admin_msg_json.html">
+<link title="Full_msg_json" rel="Chapter" href="Full_msg_json.html"><title>Full_admin_msg_json</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Fix_engine_json.html" title="Fix_engine_json">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Full_msg_json.html" title="Full_msg_json">Next</a>
+</div>
+<h1>Module <a href="type_Full_admin_msg_json.html">Full_admin_msg_json</a></h1>
+
+<pre><span class="keyword">module</span> Full_admin_msg_json: <code class="code"><span class="keyword">sig</span></code> <a href="Full_admin_msg_json.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+Printers/parsers for administrative messages.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="VALfilter_nulls"><span class="keyword">val</span> filter_nulls</span> : <code class="type">(string * Yojson.Basic.json) list -> (string * Yojson.Basic.json) list</code></pre>
+<pre><span id="VALadmin_msg_tag_to_string"><span class="keyword">val</span> admin_msg_tag_to_string</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_admin_msg_tag_data">Full_admin_messages.full_fix_admin_msg_tag_data</a> -> string</code></pre>
+<pre><span id="VALmsg_tag_to_string"><span class="keyword">val</span> msg_tag_to_string</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_tag">Full_admin_messages.full_fix_msg_tag</a> -> string</code></pre>
+<pre><span id="VALmsg_tag_opt_to_string"><span class="keyword">val</span> msg_tag_opt_to_string</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_tag">Full_admin_messages.full_fix_msg_tag</a> option -> string option</code></pre>
+<pre><span id="VALlogon_data_to_json"><span class="keyword">val</span> logon_data_to_json</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_logon_data">Full_admin_messages.full_fix_msg_logon_data</a> -><br>       [> `Assoc of<br>            (string *<br>             [> `Assoc of (string * Yojson.Basic.json) list<br>              | `Int of int<br>              | `String of string ])<br>            list ]</code></pre>
+<pre><span id="VALlogout_data_to_json"><span class="keyword">val</span> logout_data_to_json</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_logoff_data">Full_admin_messages.full_fix_msg_logoff_data</a> -><br>       [> `Assoc of (string * Yojson.Basic.json) list ]</code></pre>
+<pre><span id="VALheartbeat_data_to_json"><span class="keyword">val</span> heartbeat_data_to_json</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_heartbeat_data">Full_admin_messages.full_fix_msg_heartbeat_data</a> -><br>       [> `Assoc of (string * Yojson.Basic.json) list ]</code></pre>
+<pre><span id="VALtestrequest_data_to_json"><span class="keyword">val</span> testrequest_data_to_json</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_test_request_data">Full_admin_messages.full_fix_msg_test_request_data</a> -><br>       [> `Assoc of (string * [> `Int of int ]) list ]</code></pre>
+<pre><span id="VALresend_request_data_to_json"><span class="keyword">val</span> resend_request_data_to_json</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_resend_request_data">Full_admin_messages.full_fix_msg_resend_request_data</a> -><br>       [> `Assoc of (string * [> `Int of int ]) list ]</code></pre>
+<pre><span id="VALsession_reject_data_to_json"><span class="keyword">val</span> session_reject_data_to_json</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_reject_data">Full_admin_messages.full_fix_msg_reject_data</a> -><br>       [> `Assoc of (string * Yojson.Basic.json) list ]</code></pre>
+<pre><span id="VALbusiness_reject_data_to_json"><span class="keyword">val</span> business_reject_data_to_json</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_business_reject_data">Full_admin_messages.full_fix_msg_business_reject_data</a> -><br>       [> `Assoc of (string * [> `Int of int | `String of string ]) list ]</code></pre>
+<pre><span id="VALsequence_reset_data_to_json"><span class="keyword">val</span> sequence_reset_data_to_json</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_sequence_reset_data">Full_admin_messages.full_fix_msg_sequence_reset_data</a> -><br>       [> `Assoc of (string * Yojson.Basic.json) list ]</code></pre>
+<pre><span id="VALtest_request_data_to_json"><span class="keyword">val</span> test_request_data_to_json</span> : <code class="type">'a -> [> `Assoc of (string * Yojson.Basic.json) list ]</code></pre>
+<pre><span id="VALfull_fix_admin_msg_data_to_json"><span class="keyword">val</span> full_fix_admin_msg_data_to_json</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_admin_msg_data">Full_admin_messages.full_fix_admin_msg_data</a> -><br>       [> `Assoc of (string * [> `Assoc of (string * Yojson.Basic.json) list ]) list ]</code></pre></body></html>

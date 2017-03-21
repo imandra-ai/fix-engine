@@ -11,11 +11,17 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
 <link title="Datetime" rel="Chapter" href="Datetime.html">
-<link title="Basic_types" rel="Chapter" href="Basic_types.html">
+<link title="Base_types" rel="Chapter" href="Base_types.html">
+<link title="Base_types_json" rel="Chapter" href="Base_types_json.html">
+<link title="Numeric" rel="Chapter" href="Numeric.html">
 <link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
 <link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_fix_fields" rel="Chapter" href="Full_fix_fields.html">
 <link title="Full_messages" rel="Chapter" href="Full_messages.html">
-<link title="Full_session_core" rel="Chapter" href="Full_session_core.html"><title>Fix_engine</title>
+<link title="Full_session_core" rel="Chapter" href="Full_session_core.html">
+<link title="Fix_engine_json" rel="Chapter" href="Fix_engine_json.html">
+<link title="Full_admin_msg_json" rel="Chapter" href="Full_admin_msg_json.html">
+<link title="Full_msg_json" rel="Chapter" href="Full_msg_json.html"><title>Fix_engine</title>
 </head>
 <body>
 <div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
@@ -24,14 +30,7 @@
 <h1>Module <a href="type_Fix_engine.html">Fix_engine</a></h1>
 
 <pre><span class="keyword">module</span> Fix_engine: <code class="code"><span class="keyword">sig</span></code> <a href="Fix_engine.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
-Implementation of the FIX 4.4 engine.
-<p>
-
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
-<p>
-
-    fix_engine.ml<br>
+Implementation of the FIX 4.4 engine.<br>
 </div>
 <hr width="100%">
 
@@ -41,7 +40,7 @@ Implementation of the FIX 4.4 engine.
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTmanual_int_data.session_reset">session_reset</span>&nbsp;: <code class="type">bool</code>;</code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Should we reset the engine?</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+
 </tr></table>
 }
 
@@ -61,7 +60,7 @@ Define set of actions + data for manual intervention by the user.<br>
 }
 
 <div class="info ">
-Request to initiate a session.<br>
+Request to initiate a new session.<br>
 </div>
 
 
@@ -317,14 +316,14 @@ Represents 'modes' of the engine.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfix_engine_state.fe_cache">fe_cache</span>&nbsp;: <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> list</code>;</code></td>
+<code><span id="TYPEELTfix_engine_state.fe_cache">fe_cache</span>&nbsp;: <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> list</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Maintain a cache of messages in case we detect out of sequence message.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfix_engine_state.fe_history">fe_history</span>&nbsp;: <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> list</code>;</code></td>
+<code><span id="TYPEELTfix_engine_state.fe_history">fe_history</span>&nbsp;: <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> list</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >We maintain history of our outgoing messages in case we're asked to retransmit.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
@@ -359,7 +358,7 @@ Represents 'modes' of the engine.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfix_engine_state.fe_history_to_send">fe_history_to_send</span>&nbsp;: <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> list</code>;</code></td>
+<code><span id="TYPEELTfix_engine_state.fe_history_to_send">fe_history_to_send</span>&nbsp;: <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> list</code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Used in message retransmission.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
@@ -398,7 +397,7 @@ Represents 'modes' of the engine.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfix_engine_state.fe_encrypt_method">fe_encrypt_method</span>&nbsp;: <code class="type"><a href="Full_session_core.html#TYPEfix_encryption_method">Full_session_core.fix_encryption_method</a></code>;</code></td>
+<code><span id="TYPEELTfix_engine_state.fe_encrypt_method">fe_encrypt_method</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_encryption_method">Base_types.fix_encryption_method</a></code>;</code></td>
 
 </tr></table>
 }
@@ -438,7 +437,7 @@ Message creation helper functions.<br>
 <br>
 **********************************************************************************************************<br>
 
-<pre><span id="VALcreate_outbound_fix_msg"><span class="keyword">val</span> create_outbound_fix_msg</span> : <code class="type">int * int * int * <a href="Full_messages.html#TYPEfull_fix_msg_data">Full_messages.full_fix_msg_data</a> * bool -><br>       <a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a></code></pre><div class="info ">
+<pre><span id="VALcreate_outbound_fix_msg"><span class="keyword">val</span> create_outbound_fix_msg</span> : <code class="type">int * int * int * <a href="Full_messages.html#TYPEfull_fix_msg_data">Full_messages.full_fix_msg_data</a> * bool -><br>       <a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a></code></pre><div class="info ">
 Create outbound FIX message with the appropriate header and trailer.<br>
 </div>
 
@@ -474,22 +473,22 @@ Mode transition functions.<br>
 <br>
 **********************************************************************************************************<br>
 
-<pre><span id="VALrun_no_active_session"><span class="keyword">val</span> run_no_active_session</span> : <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
+<pre><span id="VALrun_no_active_session"><span class="keyword">val</span> run_no_active_session</span> : <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 Here we will only accept an incoming Logon message to establish a connection.<br>
 </div>
 
-<pre><span id="VALrun_logon_sequence"><span class="keyword">val</span> run_logon_sequence</span> : <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
+<pre><span id="VALrun_logon_sequence"><span class="keyword">val</span> run_logon_sequence</span> : <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 </div>
 
 <pre><span id="VALinitiate_Resend"><span class="keyword">val</span> initiate_Resend</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_resend_request_data">Full_admin_messages.full_fix_msg_resend_request_data</a> *<br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -> <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 Response to resent request.<br>
 </div>
 
-<pre><span id="VALrun_active_session"><span class="keyword">val</span> run_active_session</span> : <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
+<pre><span id="VALrun_active_session"><span class="keyword">val</span> run_active_session</span> : <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 We're operating in a normal mode.<br>
 </div>
 
-<pre><span id="VALreplay_single_msg"><span class="keyword">val</span> replay_single_msg</span> : <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
+<pre><span id="VALreplay_single_msg"><span class="keyword">val</span> replay_single_msg</span> : <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 Here we can only handle a subset of the FIX messages.<br>
 </div>
 
@@ -502,11 +501,11 @@ Run the engine through the replay messages. This is used during recovery.
     lead to another Recovery state.<br>
 </div>
 
-<pre><span id="VALno_seq_gaps"><span class="keyword">val</span> no_seq_gaps</span> : <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> list * int -> bool</code></pre><div class="info ">
+<pre><span id="VALno_seq_gaps"><span class="keyword">val</span> no_seq_gaps</span> : <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> list * int -> bool</code></pre><div class="info ">
 Check to make sure there're no sequence gaps<br>
 </div>
 
-<pre><span id="VALis_cache_complete"><span class="keyword">val</span> is_cache_complete</span> : <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> list * int -> bool</code></pre><div class="info ">
+<pre><span id="VALis_cache_complete"><span class="keyword">val</span> is_cache_complete</span> : <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> list * int -> bool</code></pre><div class="info ">
 Is cache valid so that we can transition from recovery?
 <p>
 
@@ -517,16 +516,16 @@ Is cache valid so that we can transition from recovery?
         processed.<br>
 </div>
 
-<pre><span id="VALadd_to_cache"><span class="keyword">val</span> add_to_cache</span> : <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> * <a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> list -><br>       <a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> list</code></pre><div class="info ">
+<pre><span id="VALadd_to_cache"><span class="keyword">val</span> add_to_cache</span> : <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> * <a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> list -><br>       <a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> list</code></pre><div class="info ">
 Add message to cache so that ordering is maintained.<br>
 </div>
 
-<pre><span id="VALrun_recovery"><span class="keyword">val</span> run_recovery</span> : <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
+<pre><span id="VALrun_recovery"><span class="keyword">val</span> run_recovery</span> : <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 We're in recovery mode. We should add any received messages to our cache.
     Check to see whether next message is complete.<br>
 </div>
 
-<pre><span id="VALrun_shutdown"><span class="keyword">val</span> run_shutdown</span> : <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
+<pre><span id="VALrun_shutdown"><span class="keyword">val</span> run_shutdown</span> : <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 We've sent out a Logout message and are now waiting for a confirmation of logout.<br>
 </div>
 
@@ -534,7 +533,7 @@ We've sent out a Logout message and are now waiting for a confirmation of logout
 Process incoming internal transition message.<br>
 </div>
 
-<pre><span id="VALnoop"><span class="keyword">val</span> noop</span> : <code class="type"><a href="Full_messages.html#TYPEfull_fix_msg">Full_messages.full_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
+<pre><span id="VALnoop"><span class="keyword">val</span> noop</span> : <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 A NO-OPeration<br>
 </div>
 

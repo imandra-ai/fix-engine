@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Base_types.html">
+<link rel="next" href="Numeric.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
+<link title="Datetime" rel="Chapter" href="Datetime.html">
+<link title="Base_types" rel="Chapter" href="Base_types.html">
+<link title="Base_types_json" rel="Chapter" href="Base_types_json.html">
+<link title="Numeric" rel="Chapter" href="Numeric.html">
+<link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
+<link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_fix_fields" rel="Chapter" href="Full_fix_fields.html">
+<link title="Full_messages" rel="Chapter" href="Full_messages.html">
+<link title="Full_session_core" rel="Chapter" href="Full_session_core.html">
+<link title="Fix_engine_json" rel="Chapter" href="Fix_engine_json.html">
+<link title="Full_admin_msg_json" rel="Chapter" href="Full_admin_msg_json.html">
+<link title="Full_msg_json" rel="Chapter" href="Full_msg_json.html"><title>Base_types_json</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Base_types.html" title="Base_types">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Numeric.html" title="Numeric">Next</a>
+</div>
+<h1>Module <a href="type_Base_types_json.html">Base_types_json</a></h1>
+
+<pre><span class="keyword">module</span> Base_types_json: <code class="code"><span class="keyword">sig</span></code> <a href="Base_types_json.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+JSON printers/parsers for base FIX types.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="VALfix_field_to_string"><span class="keyword">val</span> fix_field_to_string</span> : <code class="type"><a href="Full_fix_fields.html#TYPEfull_fix_field">Full_fix_fields.full_fix_field</a> -> string</code></pre>
+<pre><span id="VALfix_field_opt_to_string"><span class="keyword">val</span> fix_field_opt_to_string</span> : <code class="type"><a href="Full_fix_fields.html#TYPEfull_fix_field">Full_fix_fields.full_fix_field</a> option -> string option</code></pre>
+<pre><span id="VALfix_session_reject_to_string"><span class="keyword">val</span> fix_session_reject_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_session_reject_reason">Base_types.fix_session_reject_reason</a> -> string</code></pre><div class="info ">
+Session rejection reasons<br>
+</div>
+
+<pre><span id="VALreject_reason_opt_to_string"><span class="keyword">val</span> reject_reason_opt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_session_reject_reason">Base_types.fix_session_reject_reason</a> option -> string option</code></pre>
+<pre><span id="VALbusines_reject_reason_to_string"><span class="keyword">val</span> busines_reject_reason_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_business_reject_reason">Base_types.fix_business_reject_reason</a> -> string</code></pre>
+<pre><span id="VALfix_business_reject_to_string"><span class="keyword">val</span> fix_business_reject_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_business_reject_reason">Base_types.fix_business_reject_reason</a> -> string</code></pre><div class="info ">
+Business rejection reasons.<br>
+</div>
+
+<pre><span id="VALbiz_reject_opt_to_string"><span class="keyword">val</span> biz_reject_opt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_business_reject_reason">Base_types.fix_business_reject_reason</a> option -> string option</code></pre>
+<pre><span id="VALprice_type_to_string"><span class="keyword">val</span> price_type_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_pricetype">Base_types.fix_pricetype</a> -> string</code></pre><div class="info ">
+http://www.onixs.biz/fix-dictionary/4.4/tagNum_423.html<br>
+</div>
+
+<pre><span id="VALprice_type_opt_to_string"><span class="keyword">val</span> price_type_opt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_pricetype">Base_types.fix_pricetype</a> option -> string option</code></pre>
+<pre><span id="VALstring_to_price_type"><span class="keyword">val</span> string_to_price_type</span> : <code class="type">string -> <a href="Base_types.html#TYPEfix_pricetype">Base_types.fix_pricetype</a></code></pre>
+<pre><span id="VALside_to_string"><span class="keyword">val</span> side_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_side">Base_types.fix_side</a> -> string</code></pre><div class="info ">
+http://www.onixs.biz/fix-dictionary/4.4/tagNum_54.html<br>
+</div>
+
+<pre><span id="VALsideopt_to_string"><span class="keyword">val</span> sideopt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_side">Base_types.fix_side</a> option -> string option</code></pre>
+<pre><span id="VALstring_to_side"><span class="keyword">val</span> string_to_side</span> : <code class="type">string -> <a href="Base_types.html#TYPEfix_side">Base_types.fix_side</a></code></pre>
+<pre><span id="VALord_status_to_string"><span class="keyword">val</span> ord_status_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_ordstatus">Base_types.fix_ordstatus</a> -> string</code></pre><div class="info ">
+Order statuses: http://www.onixs.biz/fix-dictionary/4.4/tagNum_39.html<br>
+</div>
+
+<pre><span id="VALord_status_opt_to_string"><span class="keyword">val</span> ord_status_opt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_ordstatus">Base_types.fix_ordstatus</a> option -> string option</code></pre>
+<pre><span id="VALstring_to_ord_status"><span class="keyword">val</span> string_to_ord_status</span> : <code class="type">string -> <a href="Base_types.html#TYPEfix_ordstatus">Base_types.fix_ordstatus</a></code></pre><div class="info ">
+The opposite of above - notice that Invalid is mapped to all 
+    incorrect strings<br>
+</div>
+
+<pre><span id="VALord_type_to_string"><span class="keyword">val</span> ord_type_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_ordertype">Base_types.fix_ordertype</a> -> string</code></pre><div class="info ">
+Order types: http://www.onixs.biz/fix-dictionary/4.4/tagNum_40.html<br>
+</div>
+
+<pre><span id="VALordtype_opt_to_string"><span class="keyword">val</span> ordtype_opt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_ordertype">Base_types.fix_ordertype</a> option -> string option</code></pre>
+<pre><span id="VALstring_to_ord_type"><span class="keyword">val</span> string_to_ord_type</span> : <code class="type">string -> <a href="Base_types.html#TYPEfix_ordertype">Base_types.fix_ordertype</a></code></pre>
+<pre><span id="VALintopt_to_json"><span class="keyword">val</span> intopt_to_json</span> : <code class="type">int option -> Yojson.Basic.json</code></pre>
+<pre><span id="VALboolopt_to_json"><span class="keyword">val</span> boolopt_to_json</span> : <code class="type">bool option -> Yojson.Basic.json</code></pre>
+<pre><span id="VALstringopt_to_json"><span class="keyword">val</span> stringopt_to_json</span> : <code class="type">string option -> Yojson.Basic.json</code></pre>
+<pre><span id="VALfloatopt_to_json"><span class="keyword">val</span> floatopt_to_json</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">Numeric.fix_float</a> option -> Yojson.Basic.json</code></pre>
+<pre><span id="VALyes_no_to_string"><span class="keyword">val</span> yes_no_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_yes_no_type">Base_types.fix_yes_no_type</a> -> string</code></pre><div class="info ">
+Basic Yes/No type<br>
+</div>
+
+<pre><span id="VALyes_no_opt_to_string"><span class="keyword">val</span> yes_no_opt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_yes_no_type">Base_types.fix_yes_no_type</a> option -> string option</code></pre>
+<pre><span id="VALstring_to_yes_no"><span class="keyword">val</span> string_to_yes_no</span> : <code class="type">string -> <a href="Base_types.html#TYPEfix_yes_no_type">Base_types.fix_yes_no_type</a></code></pre>
+<pre><span id="VALpriceopt_to_string"><span class="keyword">val</span> priceopt_to_string</span> : <code class="type">int option -> string option</code></pre>
+<pre><span id="VALcurrency_to_string"><span class="keyword">val</span> currency_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_currency">Base_types.fix_currency</a> -> string</code></pre>
+<pre><span id="VALcurrency_opt_to_string"><span class="keyword">val</span> currency_opt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_currency">Base_types.fix_currency</a> option -> string option</code></pre>
+<pre><span id="VALexectype_to_string"><span class="keyword">val</span> exectype_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_exectype">Base_types.fix_exectype</a> -> string</code></pre>
+<pre><span id="VALexectype_opt_to_string"><span class="keyword">val</span> exectype_opt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_exectype">Base_types.fix_exectype</a> option -> string option</code></pre>
+<pre><span id="VALhandleinst_to_string"><span class="keyword">val</span> handleinst_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_handlinst">Base_types.fix_handlinst</a> -> string</code></pre>
+<pre><span id="VALhandleinst_opt_to_string"><span class="keyword">val</span> handleinst_opt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_handlinst">Base_types.fix_handlinst</a> option -> string option</code></pre>
+<pre><span id="VALexecinst_to_string"><span class="keyword">val</span> execinst_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_execinst">Base_types.fix_execinst</a> -> string</code></pre>
+<pre><span id="VALexecinst_opt_to_string"><span class="keyword">val</span> execinst_opt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_execinst">Base_types.fix_execinst</a> option -> string option</code></pre>
+<pre><span id="VALtimeinforce_to_string"><span class="keyword">val</span> timeinforce_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_timeinforce">Base_types.fix_timeinforce</a> -> string</code></pre>
+<pre><span id="VALtimeinforce_opt_to_string"><span class="keyword">val</span> timeinforce_opt_to_string</span> : <code class="type"><a href="Base_types.html#TYPEfix_timeinforce">Base_types.fix_timeinforce</a> option -> string option</code></pre>
+<pre><span id="VALfix_encryption_method_to_str"><span class="keyword">val</span> fix_encryption_method_to_str</span> : <code class="type"><a href="Base_types.html#TYPEfix_encryption_method">Base_types.fix_encryption_method</a> -> string</code></pre></body></html>
