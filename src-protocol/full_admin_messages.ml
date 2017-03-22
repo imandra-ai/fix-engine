@@ -13,7 +13,8 @@ open Base_types;;
 open Datetime;;
 open Full_session_core;;
 open Full_app_message_tag;;
-open Full_fix_fields;;
+open Full_protocol_fields;;
+open Model_fields;;
 (* @meta[imandra_ignore] off @end *)
 
 (** Admin message tags. *)
@@ -28,11 +29,18 @@ type full_fix_admin_msg_tag_data =
     | Full_Msg_Test_Request_Tag
 ;;
 
-(** Union tag type - needs to be here because it's used within rejection messages. *)
+(** Union message tag type - needs to be here because it's used within rejection messages. *)
 type full_fix_msg_tag =
     | Full_FIX_Admin_Msg_Tag of full_fix_admin_msg_tag_data
     | Full_FIX_App_Msg_Tag of full_fix_app_msg_tag_data
 ;;
+
+(** Union field tag type -  *)
+type full_field_tag = 
+    | Full_FIX_Protocol_Field of full_protocol_field_tag
+    | Full_FIX_Model_Field of full_model_field_tag
+;;
+
 
 (** Heartbeat message data. *)
 type full_fix_msg_heartbeat_data = {

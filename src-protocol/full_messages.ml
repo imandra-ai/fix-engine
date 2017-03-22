@@ -12,14 +12,13 @@
 open Base_types;;
 open Datetime;;
 open Full_session_core;;
-open Full_fix_fields;;
 open Full_admin_messages;;
 open Full_app_messages;;
 (* @meta[imandra_ignore] off @end *)
 
 (** Contains missing field information. *)
 type full_field_missing_data = {
-    field_missing_field                             : full_fix_field;
+    field_missing_field                             : full_field_tag;
     field_missing_msg                               : full_fix_msg_tag;
 }
 ;;
@@ -41,8 +40,8 @@ type full_valid_fix_msg = {
 (** We maintain a type 'Full_Msg_Tag' that represents *)
 let get_full_msg_tag ( m : full_fix_msg_data ) =
     match m with
-    | Full_FIX_Admin_Msg msg    -> Full_FIX_Admin_Msg_Tag ( get_full_admin_msg_tag ( msg ) )
-    | Full_FIX_App_Msg msg      -> Full_FIX_App_Msg_Tag ( get_full_app_msg_tag (msg ) )
+    | Full_FIX_Admin_Msg msg                        -> Full_FIX_Admin_Msg_Tag ( get_full_admin_msg_tag ( msg ) )
+    | Full_FIX_App_Msg msg                          -> Full_FIX_App_Msg_Tag ( get_full_app_msg_tag (msg ) )
 ;;
 
 
@@ -62,7 +61,7 @@ let get_full_msg_tag ( m : full_fix_msg_data ) =
                                                 format specified via the MessageEncoding <347> field. *)
 type session_rejected_msg_data = {
     srej_msg_msg_seq_num                            : int;
-    srej_msg_field_tag                              : full_fix_field;
+    srej_msg_field_tag                              : full_field_tag;
     srej_msg_msg_type                               : full_fix_msg_tag;
     srej_msg_reject_reason                          : fix_session_reject_reason;
     srej_text                                       : fix_string;
@@ -84,7 +83,7 @@ type session_rejected_msg_data = {
     355	EncodedText	            - Optional - Encoded (non-ASCII characters) representation of the Text <58> field in the encoded 
                                                 format specified via the MessageEncoding <347> field. *)
 type biz_rejected_msg_data = {
-    brej_msg_ref_seq_num                            : int; (** *)
+    brej_msg_ref_seq_num                            : int;
     brej_msg_msg_tag                                : full_fix_msg_tag;
     brej_msg_reject_reason                          : fix_business_reject_reason;
     brej_msg_text                                   : fix_string option;

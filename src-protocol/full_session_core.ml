@@ -4,7 +4,8 @@
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    fix_data_dictionary.ml
+    full_session_core.ml
+
 *)
 
 (* @meta[imandra_ignore] on @end *)

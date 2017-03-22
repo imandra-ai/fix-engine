@@ -8,50 +8,9 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Yojson;;
-open String;;
-open List;;
 open Base_types;;
 open Numeric;;
-open Datetime;;
-open Full_fix_fields;;
-open Full_app_messages;;
-open Full_admin_messages;;
-open Full_messages;;
-open Full_session_core;;
 (* @meta[imandra_ignore] off @end *)
-
-let fix_field_to_string = function 
-    | Full_FIX_Field_OrigClOrdID                        -> "OrigClOrdID"
-    | Full_FIX_Field_OrderID                            -> "OrderID"
-    | Full_FIX_Field_ClOrdID                            -> "ClOrdID"
-    | Full_FIX_Field_ExecType                           -> "ExecType"
-    | Full_FIX_Field_ExecID                             -> "ExecID"
-    | Full_FIX_Field_Account                            -> "Account"
-    | Full_FIX_Field_Side                               -> "Side"
-    | Full_FIX_Field_OrdType                            -> "OrdType"
-    | Full_FIX_Field_OrdStatus                          -> "OrdStatus"
-    | Full_FIX_Field_AvgPx                              -> "AvgPx"
-    | Full_FIX_Field_Price                              -> "Price"
-    | Full_FIX_Field_LeavesQty                          -> "LeavesQty"
-    | Full_FIX_Field_CumQty                             -> "CumQty"
-    | Full_FIX_Field_OrderQty                           -> "OrderQty"
-    | Full_FIX_Field_MinQty                             -> "MinQty"
-    | Full_FIX_Field_HandlInst                          -> "HandlInst"
-    | Full_FIX_Field_TransactTime                       -> "TransactTime"
-    | Full_FIX_Field_Symbol                             -> "Symbol"
-    | Full_FIX_Field_SymbolSfx                          -> "SymbolSfx"
-    | Full_FIX_Field_TimeInForce                        -> "TimeInForce"
-    | Full_FIX_Field_Currency                           -> "Currency"
-    | Full_FIX_Field_LocateBroker                       -> "LocateBroker"
-    | Full_FIX_Field_LocateReqd                         -> "LocateReqd"
-    | Full_FIX_Field_ExecInst                           -> "ExecInst"
-;;
-
-let fix_field_opt_to_string = function
-    | None                                              -> None
-    | Some x                                            -> Some ( fix_field_to_string x )
-;;
 
 (** Session rejection reasons *)
 let fix_session_reject_to_string = function 

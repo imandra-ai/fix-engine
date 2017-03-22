@@ -7,7 +7,10 @@
     full_app_msg_tag_json.ml
 
 *)
+
+(* @meta[imandra_ignore] on @end *)
 open Full_app_message_tag;;
+(* @meta[imandra_ignore] off @end *)
 
 
 let app_msg_tag_to_string = function

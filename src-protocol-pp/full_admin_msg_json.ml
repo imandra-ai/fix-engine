@@ -10,7 +10,8 @@
 
 (* @meta[imandra_ignore] on @end *)
 open Yojson;;
-open Full_fix_fields;;
+open Model_field_json;;
+open Full_protocol_fields;;
 open Full_session_core;;
 open Full_admin_messages;;
 open Base_types_json;;
@@ -34,9 +35,48 @@ let admin_msg_tag_to_string = function
 ;;
 
 let msg_tag_to_string = function
-    | Full_FIX_Admin_Msg_Tag admin_tag  -> ( admin_msg_tag_to_string admin_tag )
-    | Full_FIX_App_Msg_Tag app_tag      -> ( app_msg_tag_to_string app_tag ) 
+    | Full_FIX_Admin_Msg_Tag admin_tag  -> admin_msg_tag_to_string admin_tag
+    | Full_FIX_App_Msg_Tag app_tag      -> app_msg_tag_to_string app_tag
 ;;
+
+let protocol_field_to_string = function
+    | Full_FIX_Field_OrigClOrdID        -> "OrigClOrdID"
+    | Full_FIX_Field_OrderID            -> "OrderID"
+    | Full_FIX_Field_ClOrdID            -> "ClOrdID"
+    | Full_FIX_Field_ExecType           -> "ExecType"
+    | Full_FIX_Field_ExecID             -> "ExecID"
+    | Full_FIX_Field_Account            -> "Account"
+    | Full_FIX_Field_Side               -> "Side"
+    | Full_FIX_Field_OrdType            -> "OrdType"
+    | Full_FIX_Field_OrdStatus          -> "OrdStatus"
+    | Full_FIX_Field_AvgPx              -> "AvgPx"
+    | Full_FIX_Field_Price              -> "Price"
+    | Full_FIX_Field_LeavesQty          -> "LeavesQty"
+    | Full_FIX_Field_CumQty             -> "CumQty"
+    | Full_FIX_Field_OrderQty           -> "OrderQty"
+    | Full_FIX_Field_MinQty             -> "MinQty"
+    | Full_FIX_Field_HandlInst          -> "HandlInst"
+    | Full_FIX_Field_TransactTime       -> "TransactTime"
+    | Full_FIX_Field_Symbol             -> "Symbol"
+    | Full_FIX_Field_SymbolSfx          -> "SymbolSfx"
+    | Full_FIX_Field_TimeInForce        -> "TimeInForce"
+    | Full_FIX_Field_Currency           -> "Currency"
+    | Full_FIX_Field_LocateBroker       -> "LocateBroker"
+    | Full_FIX_Field_LocateReqd         -> "LocateReqd"
+    | Full_FIX_Field_ExecInst           -> "ExecInst"
+;;
+
+
+let full_field_to_string = function
+    | Full_FIX_Protocol_Field t         -> protocol_field_to_string t
+    | Full_FIX_Model_Field t            -> model_field_to_string t
+;;
+
+let field_tag_opt_to_string = function
+    | None                              -> None
+    | Some x                            -> Some ( full_field_to_string x )
+;;
+
 
 let msg_tag_opt_to_string = function
     | None                              -> None

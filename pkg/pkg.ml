@@ -16,10 +16,9 @@ let () =
   [   Pkg.mllib ~api: [ "fix_engine" ] "src/fix_engine.mllib"
 
     ; Pkg.mllib ~api: [ "full_messages"
-                      ; "full_fix_fields"
                       ; "full_admin_messages"
                       ; "full_session_core"
-                      ; "full_fix_fields" ] "src-protocol/protocol.mllib"
+                      ; "full_protocol_fields" ] "src-protocol/protocol.mllib"
     
     ; Pkg.mllib ~api: [ "fix_engine_json"
                       ; "full_admin_msg_json"
@@ -34,7 +33,8 @@ let () =
                       ; "datetime_json" ] "src-core-pp/core_pp.mllib"
 
     ; Pkg.mllib ~api: [ "full_app_messages"
-                      ; "full_app_message_tag" ] "src-model/model.mllib"
+                      ; "full_app_message_tag"
+                      ; "model_fields" ] "src-model/model.mllib"
   
     ; Pkg.bin ~cond:examples "src-examples/fix_examples"
   ]

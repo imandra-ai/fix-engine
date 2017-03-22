@@ -104,7 +104,7 @@ let business_rejected_msg_to_json x =
 let session_rejected_data_to_json x =
     `Assoc [
         ( "srej_msg_msg_seq_num"                        , `Int x.srej_msg_msg_seq_num                                           );
-        ( "srej_msg_field_tag"                          , `String ( fix_field_to_string x.srej_msg_field_tag)                   );
+        ( "srej_msg_field_tag"                          , `String ( full_field_to_string x.srej_msg_field_tag)                   );
         ( "srej_msg_msg_type"                           , `String ( msg_tag_to_string x.srej_msg_msg_type )                     );
         ( "srej_msg_reject_reason"                      , `String ( fix_session_reject_to_string x.srej_msg_reject_reason )     );
         ( "srej_text"                                   , `Int x.srej_text                                                      );

@@ -1,10 +1,10 @@
-(** Full FIX field types. *)
+(** Protocol (standard) field tags. *)
 (***
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    full_fix_fields.ml
+    Full_protocol_field_tags.ml
 
 *)
 
@@ -14,7 +14,7 @@ open Datetime;;
 (* @meta[imandra_ignore] off @end *)
 
 (** Used for specifying reasons for rejection/etc. *)
-type full_fix_field =
+type full_protocol_field_tag =
     | Full_FIX_Field_OrigClOrdID
     | Full_FIX_Field_OrderID
     | Full_FIX_Field_ClOrdID
