@@ -1,4 +1,4 @@
-(** 
+(**
 
     Usage examples.
 
@@ -6,19 +6,19 @@
     Copyright (c) 2014 - 2017
 
     example_runner.ml
-    
+
 *)
 
 open Fix_engine
 open Fix_engine_json
-open Fix_examples
+open Examples
 open String
 
 let pe = print_endline;;
 
-let single example = 
-    let (title, results) = example in 
-    begin 
+let single example =
+    let (title, results) = example in
+    begin
         pe title;
         pe (print_states (results));
     end
@@ -47,23 +47,23 @@ let rec commander () =
         commander ()
     )
     else if i = 2 then (
-        let () = pe "The existing examples are:" in 
-        let ex_names = List.map (fun (t, res) -> t) !Fix_examples.examples in 
-        let () = pe (String.concat "" ex_names) in 
+        let () = pe "The existing examples are:" in
+        let ex_names = List.map (fun (t, res) -> t) !Examples.examples in
+        let () = pe (String.concat "" ex_names) in
         commander()
     ) else if i = 3 then (
-        let () = print_string "example #" in 
+        let () = print_string "example #" in
         let ex_id = read_int () in
-        if (ex_id < 0) || (ex_id > ( List.length !Fix_examples.examples)) then (
+        if (ex_id < 0) || (ex_id > ( List.length !Examples.examples)) then (
             let () =
-                pe (Printf.sprintf "invalid id : min = 1; max = %i" 
-                    (List.length !Fix_examples.examples))
+                pe (Printf.sprintf "invalid id : min = 1; max = %i"
+                    (List.length !Examples.examples))
             in
                 commander()
         ) else (
-            let example = (List.nth !Fix_examples.examples (convert_id !Fix_examples.examples ex_id)) in 
-            let (title, results) = example in 
-            let () = 
+            let example = (List.nth !Examples.examples (convert_id !Examples.examples ex_id)) in
+            let (title, results) = example in
+            let () =
             begin
                 pe title;
                 pe (print_states (results()));
@@ -72,12 +72,12 @@ let rec commander () =
         )
     ) else if i = 4 then (
         let () = print_string "example #" in
-        let ex_id = read_int () in 
-        if (ex_id < 0) || (ex_id > (List.length !Fix_examples.examples)) then
+        let ex_id = read_int () in
+        if (ex_id < 0) || (ex_id > (List.length !Examples.examples)) then
             (
                 let () = (
-                    pe (Printf.sprintf "invalid id : min = 1; max = %d" (List.length !Fix_examples.examples))
-                ) in 
+                    pe (Printf.sprintf "invalid id : min = 1; max = %d" (List.length !Examples.examples))
+                ) in
                 commander ()
             )
     ) else ()

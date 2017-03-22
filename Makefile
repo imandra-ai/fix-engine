@@ -1,12 +1,12 @@
 # Makefile
 #
 build:
-	ocamlbuild -use-ocamlfind src-examples/example_runner.native
+	ocaml pkg/pkg.ml build --build-examples true
 
 run:
-	_build/example_runner.native
+	topkg run src-examples/example_runner
 
 clean:
-	ocamlbuild -clean
+	ocaml pkg/pkg.ml clean
 
 .PHONY: build run clean
