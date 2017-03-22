@@ -22,7 +22,7 @@ open Yojson;;
 :load src-protocol/full_session_core.ml
 :load src-protocol/full_admin_messages.ml
 :load src-protocol/full_app_messages.ml
-:load src-protocol/full_fix_fields.ml
+:load src-protocol/full_protocol_fields.ml
 :load src-protocol/full_messages.ml
 :load src/fix_engine.ml
 :load src-pp/fix_basics_json.ml

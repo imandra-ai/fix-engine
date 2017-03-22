@@ -5,7 +5,7 @@ Base_types_json
 Numeric
 Full_admin_messages
 Full_app_messages
-Full_fix_fields
+Full_protocol_fields
 Full_messages
 Full_session_core
 Fix_engine_json

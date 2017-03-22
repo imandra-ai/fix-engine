@@ -6,7 +6,7 @@
 :l src-protocol/full_session_core.ml
 :l src-protocol/full_admin_messages.ml
 :l src-protocol/full_app_messages.ml
-:l src-protocol/full_fix_fields.ml
+:l src-protocol/full_protocol_fields.ml
 :l src-protocol/full_messages.ml
 :l fix_engine.ml
 

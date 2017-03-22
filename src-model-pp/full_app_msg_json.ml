@@ -13,7 +13,7 @@ open String;;
 open List;;
 open Base_types;;
 open Datetime;;
-(*open Full_fix_fields;;*)
+(*open Full_protocol_fields;;*)
 open Full_session_core;;
 open Base_types_json;;
 open Datetime_json;;

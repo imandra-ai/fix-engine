@@ -10,7 +10,7 @@
 (* @meta[imandra_ignore] on @end *)
 open Base_types;;
 open Datetime;;
-open Full_fix_fields;;
+open Full_protocol_fields;;
 open Model_messages;;
 open Full_messages;;
 (* @meta[imandra_ignore] off @end *)
