@@ -3,3 +3,4 @@ _build/*
 .imandra_init.log
 fix-engine.install
 .vscode*
+module_graph.svg

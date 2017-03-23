@@ -37,4 +37,6 @@ let () =
                       ; "model_fields" ] "src-model-types/model_types.mllib"
 
     ; Pkg.bin ~cond:examples "src-examples/example_runner"
+
+    ; Pkg.doc "doc/all_modules.docdir/all_modules.dot"
   ]
