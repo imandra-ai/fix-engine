@@ -1,21 +1,25 @@
-(** Conversion b/w full and model types. *)
+(** Conversion b/w model and full (i.e. FIX data dictionary) types. *)
 (***
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    type_convert.ml
+    type_converter.ml
 
 *)
 
 (* @meta[imandra_ignore] on @end *)
 open Base_types;;
 open Datetime;;
-open Full_protocol_fields;;
-open Model_messages;;
+open Numeric;;
+open Fix_fields;;
+open Model_app_messages;;
+open Full_app_messages;;
+open Full_session_core;;
 open Full_messages;;
 (* @meta[imandra_ignore] off @end *)
 
-(** Convert full NewOrderSingle to model message type. *)
+(** *)
 let convert_FullNewOrderSingle ( m : full_fix_msg_new_order_single_data ) =
 
     match m.full_newOrderSingle_ClOrdID with 
@@ -91,14 +95,17 @@ let convert_FullNewOrderSingle ( m : full_fix_msg_new_order_single_data ) =
     FIX_TL_Normal ( NewOrderSingle fix_msg_data )
 ;;
 
+(** *)
 let convert_FullExecutionReport ( m : full_fix_msg_execution_report_data ) =
     FIX_TL_Req_Field_Missing { field_missing_data_msg = NewOrderSingle_Tag; field_missing_data_field = FIX_Field_OrdType_Tag } 
 ;;
 
+(** *)
 let convert_FullCancelReject ( m : full_fix_msg_cancel_reject_data ) = 
     FIX_TL_Req_Field_Missing { field_missing_data_msg = NewOrderSingle_Tag; field_missing_data_field = FIX_Field_OrdType_Tag } 
 ;;
 
+(** *)
 let convert_FullOrderCancelRequest ( m : full_fix_msg_order_cancel_request_data ) =
     let fix_msg_data = {
         orderCancelRequest_ClOrdID          = m.full_orderCancelRequest_ClOrdID;
@@ -113,6 +120,7 @@ let convert_FullOrderCancelRequest ( m : full_fix_msg_order_cancel_request_data 
     FIX_TL_Normal ( OrderCancelRequest fix_msg_data )
 ;;
 
+(** *)
 let convert_FullOrderCancelReplaceRequest ( m : full_fix_msg_order_cancel_replace_request_data ) = 
     match m.full_orderCancelReplaceRequest_ClOrdID with 
     | None      -> FIX_TL_Req_Field_Missing { field_missing_data_msg = NewOrderSingle_Tag; field_missing_data_field = FIX_Field_ClOrdID_Tag }
@@ -186,9 +194,8 @@ let convert_FullOrderCancelReplaceRequest ( m : full_fix_msg_order_cancel_replac
     FIX_TL_Normal ( OrderCancelReplaceRequest fix_msg_data )
 ;;
 
-(** Convert from full message type to model message type. Note that  *)
-let convert_full_to_model_fix ( msg : full_fix_msg ) =
-    match msg with
+(** Convert from the full-blown model to model-specific one. *)
+let convert_full_to_model_fix : ( full_fix_app_msg_data -> fix_top_level_msg ) = function
     | Full_Msg_ExecutionReport msg_data             -> convert_FullExecutionReport ( msg_data )
     | Full_Msg_OrderCancelRequest msg_data          -> convert_FullOrderCancelRequest ( msg_data )
     | Full_Msg_OrderCancelReplaceRequest msg_data   -> convert_FullOrderCancelReplaceRequest ( msg_data )
@@ -196,11 +203,13 @@ let convert_full_to_model_fix ( msg : full_fix_msg ) =
     | Full_Msg_CancelReject msg_data                -> convert_FullCancelReject ( msg_data )
 ;;
 
-(** **************************************************************************************************** *)
-(**                                                                                                      *)
-(** **************************************************************************************************** *)
-let convert_ExecutionReport ( m : fix_msg_execution_report_data ) =
-    Format_Validated ( Full_Msg_ExecutionReport {
+(*** *************************************************************************************************** *)
+(***                                                                                                     *)
+(*** *************************************************************************************************** *)
+
+(** *)
+let convert_ExecutionReport ( m : fix_msg_execution_report_data ) : full_fix_app_msg_data =
+  Full_Msg_ExecutionReport {
     full_executionReport_OrderID                     = m.executionReport_OrderID;
     full_executionReport_ClOrdID                     = m.executionReport_ClOrdID;
     full_executionReport_ExecType                    = m.executionReport_ExecType;
@@ -212,11 +221,12 @@ let convert_ExecutionReport ( m : fix_msg_execution_report_data ) =
     full_executionReport_AvgPx                       = m.executionReport_AvgPx;
     full_executionReport_LeavesQty                   = m.executionReport_LeavesQty;
     full_executionReport_CumQty                      = m.executionReport_CumQty;
-} )
+  }
 ;;
 
-let convert_OrderCancelRequest ( m : fix_msg_order_cancel_request_data ) = 
-    Format_Validated ( Full_Msg_OrderCancelRequest {
+(** *)
+let convert_OrderCancelRequest ( m : fix_msg_order_cancel_request_data ) =
+  Full_Msg_OrderCancelRequest {
     full_orderCancelRequest_ClOrdID                 = m.orderCancelRequest_ClOrdID;
     full_orderCancelRequest_OrigClOrdID             = m.orderCancelRequest_OrigClOrdID;
     full_orderCancelRequest_OrderID                 = m.orderCancelRequest_OrderID;
@@ -224,11 +234,12 @@ let convert_OrderCancelRequest ( m : fix_msg_order_cancel_request_data ) =
     full_orderCancelRequest_Symbol                  = m.orderCancelRequest_Symbol;
     full_orderCancelRequest_SymbolSfx               = m.orderCancelRequest_SymbolSfx;
     full_orderCancelRequest_Side                    = m.orderCancelRequest_Side;
-} )
+  }
 ;;
 
-let convert_OrderCancelReplaceRequest ( m : fix_msg_order_cancel_replace_request_data ) = 
-    Format_Validated ( Full_Msg_OrderCancelReplaceRequest {
+(** *)
+let convert_OrderCancelReplaceRequest ( m : fix_msg_order_cancel_replace_request_data ) =
+  Full_Msg_OrderCancelReplaceRequest {
     full_orderCancelReplaceRequest_Account          = m.orderCancelReplaceRequest_Account;
     full_orderCancelReplaceRequest_ClOrdID          = Some m.orderCancelReplaceRequest_ClOrdID;
     full_orderCancelReplaceRequest_HandlInst        = Some m.orderCancelReplaceRequest_HandlInst;
@@ -245,11 +256,12 @@ let convert_OrderCancelReplaceRequest ( m : fix_msg_order_cancel_replace_request
     full_orderCancelReplaceRequest_TimeInForce      = Some m.orderCancelReplaceRequest_TimeInForce;
     full_orderCancelReplaceRequest_LocateReqd       = Some m.orderCancelReplaceRequest_LocateReqd;
     full_orderCancelReplaceRequest_LocateBroker     = m.orderCancelReplaceRequest_LocateBroker;
-} )
+  }
 ;;
 
-let convert_NewOrderSingle ( m : fix_msg_new_order_single_data ) = 
-    Format_Validated ( Full_Msg_NewOrderSingle {
+(** *)
+let convert_NewOrderSingle ( m : fix_msg_new_order_single_data ) =
+  Full_Msg_NewOrderSingle {
     full_newOrderSingle_Account                     = m.newOrderSingle_Account;
     full_newOrderSingle_ClOrdID                     = Some m.newOrderSingle_ClOrdID;
     full_newOrderSingle_OrigClOrdID                 = Some m.newOrderSingle_OrigClOrdID;
@@ -267,11 +279,12 @@ let convert_NewOrderSingle ( m : fix_msg_new_order_single_data ) =
     full_newOrderSingle_LocateReqd                  = Some m.newOrderSingle_LocateReqd;
     full_newOrderSingle_LocateBroker                = m.newOrderSingle_LocateBroker;
     full_newOrderSingle_Currency                    = m.newOrderSingle_Currency;
-} )
+  }
 ;;
 
-let convert_CancelReject ( m : fix_msg_cancel_reject_data ) = 
-    Format_Validated ( Full_Msg_CancelReject {
+(** *)
+let convert_CancelReject ( m : fix_msg_cancel_reject_data ) =
+  Full_Msg_CancelReject {
     full_cancelReject_Account                       = m.cancelReject_Account;
     full_cancelReject_ClOrdID                       = m.cancelReject_ClOrdID;
     full_cancelReject_OrigClOrdID                   = m.cancelReject_OrigClOrdID;
@@ -279,15 +292,20 @@ let convert_CancelReject ( m : fix_msg_cancel_reject_data ) =
     full_cancelReject_OrdStatus                     = m.cancelReject_OrdStatus;
     full_cancelReject_CxlRejReason                  = m.cancelReject_CxlRejReason;
     full_cancelReject_Text                          = m.cancelReject_Text;
-} )
+  }
 ;;
 
-(** Convert model message type to full message type. *)
-let convert_model_to_full_fix ( msg: fix_msg ) = 
-    match msg with 
-    | ExecutionReport msg_data                      -> convert_ExecutionReport ( msg_data )
-    | OrderCancelRequest msg_data                   -> convert_OrderCancelRequest ( msg_data )
-    | OrderCancelReplaceRequest msg_data            -> convert_OrderCancelReplaceRequest ( msg_data )
-    | NewOrderSingle msg_data                       -> convert_NewOrderSingle ( msg_data )
-    | CancelReject msg_data                         -> convert_CancelReject ( msg_data )
-;; 
+(** *)
+let convert_model_to_full_fix : fix_msg -> full_fix_app_msg_data = function
+  | ExecutionReport msg_data                      -> convert_ExecutionReport ( msg_data )
+  | OrderCancelRequest msg_data                   -> convert_OrderCancelRequest ( msg_data )
+  | OrderCancelReplaceRequest msg_data            -> convert_OrderCancelReplaceRequest ( msg_data )
+  | NewOrderSingle msg_data                       -> convert_NewOrderSingle ( msg_data )
+  | CancelReject msg_data                         -> convert_CancelReject ( msg_data )
+
+;;
+
+
+(** **************************************************************************************************** *)
+(**                                                                                                      *)
+(** **************************************************************************************************** *)

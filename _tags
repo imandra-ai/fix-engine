@@ -3,7 +3,7 @@ true : package(yojson)
 <src-core>          : include
 <src-core-pp>       : include
 <src-examples>      : include
-<src-model>         : include
+<src-model-types>   : include
 <src-model-pp>      : include
 <src-protocol>      : include
 <src-protocol-pp>   : include

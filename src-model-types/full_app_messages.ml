@@ -1,7 +1,10 @@
-(** Full messages - application *)
+(** Full application messages. *)
 (***
+
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright 2014 - 2017
+
+    Contains implementation of the 'full' FIX messages.
 
     full_app_messages.ml
 

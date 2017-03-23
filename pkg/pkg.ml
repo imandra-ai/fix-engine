@@ -34,7 +34,7 @@ let () =
 
     ; Pkg.mllib ~api: [ "full_app_messages"
                       ; "full_app_message_tag"
-                      ; "model_fields" ] "src-model/model.mllib"
+                      ; "model_fields" ] "src-model-types/model_types.mllib"
 
     ; Pkg.bin ~cond:examples "src-examples/example_runner"
   ]
