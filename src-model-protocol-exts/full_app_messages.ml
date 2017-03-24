@@ -14,7 +14,6 @@
 open Base_types;;
 open Numeric;;
 open Datetime;;
-open Full_session_core;;
 open Full_app_message_tag;;
 (* @meta[imandra_ignore] off @end *)
 

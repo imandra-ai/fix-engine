@@ -32,9 +32,17 @@ let () =
     ; Pkg.mllib ~api: [ "base_types_json"
                       ; "datetime_json" ] "src-core-pp/core_pp.mllib"
 
-    ; Pkg.mllib ~api: [ "full_app_messages"
+    ; Pkg.mllib ~api: [ "model_app_messages"
+                      ] "src-model-types/model_types.mllib"
+
+    ; Pkg.mllib ~api: [ "fix_fields"
                       ; "full_app_message_tag"
-                      ; "model_fields" ] "src-model-types/model_types.mllib"
+                      ; "full_app_messages"
+                      ; "model_fields"
+                      ] "src-model-protocol-exts/model_protocol_exts.mllib"
+
+    ; Pkg.mllib ~api: [ "type_converter"
+                      ] "src-model-conversions/model_conversions.mllib"
 
     ; Pkg.bin ~cond:examples "src-examples/example_runner"
 
