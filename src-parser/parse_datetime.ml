@@ -1,6 +1,6 @@
 open Datetime;;
 
-let read_DateOnly str =
+let parse_DateOnly str =
     if String.length str != 8 then None else
     let year, month, day = Scanf.sscanf str "%04u%02u%02u" 
         ( fun y m d -> (y,m,d) ) in
@@ -11,7 +11,7 @@ let read_DateOnly str =
     }
 ;;
 
-let read_UTCTimeOnly str = 
+let parse_UTCTimeOnly str = 
     let length = String.length str in
     if (length != 8) && (length != 12) then None else
     let hours, minutes, seconds, mseconds = 
@@ -28,11 +28,11 @@ let read_UTCTimeOnly str =
     }
 ;;
 
-let read_UTCTimeStamp str = 
+let parse_UTCTimeStamp str = 
     let length = String.length str in
     if (length != 17) && (length != 21) then None else
     let date, time = Scanf.sscanf str "%s@-%s" 
-        ( fun d t -> (read_DateOnly d , read_UTCTimeOnly t) ) in
+        ( fun d t -> (parse_DateOnly d , parse_UTCTimeOnly t) ) in
     match date, time with 
         | (Some date, Some time) -> Some {
             utc_timestamp_year     = date.utc_dateonly_year;
@@ -45,7 +45,7 @@ let read_UTCTimeStamp str =
         | _ -> None
 ;;
 
-let read_MonthYear str =
+let parse_MonthYear str =
     let length = String.length str in
     if (length < 6) then None else
     let year, month, tail = Scanf.sscanf str "%04u%02u%s" (fun y m t -> (y,m,t)) in

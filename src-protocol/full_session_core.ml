@@ -18,10 +18,10 @@ open Datetime;;
     message type. We do not need this tag as message type is 
     explicit. *)
 type fix_header = {
-    h_begin_string                    : int;          (* Tag 8    *)
+    h_begin_string                    : string;       (* Tag 8    *)
     h_body_length                     : int;          (* Tag 9    *)
-    h_sender_comp_id                  : int;          (* Tag 49   *)
-    h_target_comp_id                  : int;          (* Tag 56   *)
+    h_sender_comp_id                  : string;       (* Tag 49   *)
+    h_target_comp_id                  : string;       (* Tag 56   *)
     h_msg_seq_num                     : int;          (* Tag 34   *)
 
     h_on_behalf_of_comp_id            : int option;   (* Tag 115  *)
@@ -39,8 +39,8 @@ type fix_header = {
     h_poss_dup_flag                   : bool option;  (* Tag 43   *)
     
     h_poss_resend                     : bool option;  (* Tag 97   *)
-    h_sending_time                    : int option;   (* Tag 52   *)
-    h_orig_sending_time               : int option;   (* Tag 122  *)
+    h_sending_time                    : fix_utctimestamp option;   (* Tag 52   *)
+    h_orig_sending_time               : fix_utctimestamp option;   (* Tag 122  *)
     h_xml_data_len                    : int option;   (* Tag 212  *)
     h_xml_data                        : int option;   (* Tag 213  *)
     h_message_enconding               : int option;   (* Tag 347  *)
@@ -50,12 +50,12 @@ type fix_header = {
 ;;
 
 let default_fix_header = {
-    h_begin_string                    = 0;
+    h_begin_string                    = "";
     h_body_length                     = 0;
     h_msg_seq_num                     = 0;
     h_poss_dup_flag                   = None;
-    h_target_comp_id                  = 0;
-    h_sender_comp_id                  = 0;
+    h_target_comp_id                  = "";
+    h_sender_comp_id                  = "";
     h_on_behalf_of_comp_id            = None;
     h_deliver_to_comp_id              = None;
     h_secure_data_len                 = None;
