@@ -18,10 +18,10 @@ open Datetime;;
     message type. We do not need this tag as message type is 
     explicit. *)
 type fix_header = {
-    h_begin_string                    : string;       (* Tag 8    *)
+    h_begin_string                    : fix_string;   (* Tag 8    *)
     h_body_length                     : int;          (* Tag 9    *)
-    h_sender_comp_id                  : string;       (* Tag 49   *)
-    h_target_comp_id                  : string;       (* Tag 56   *)
+    h_sender_comp_id                  : fix_string;   (* Tag 49   *)
+    h_target_comp_id                  : fix_string;   (* Tag 56   *)
     h_msg_seq_num                     : int;          (* Tag 34   *)
 
     h_on_behalf_of_comp_id            : int option;   (* Tag 115  *)
@@ -50,12 +50,12 @@ type fix_header = {
 ;;
 
 let default_fix_header = {
-    h_begin_string                    = "";
+    h_begin_string                    = 0;
     h_body_length                     = 0;
     h_msg_seq_num                     = 0;
     h_poss_dup_flag                   = None;
-    h_target_comp_id                  = "";
-    h_sender_comp_id                  = "";
+    h_target_comp_id                  = 1;
+    h_sender_comp_id                  = 2;
     h_on_behalf_of_comp_id            = None;
     h_deliver_to_comp_id              = None;
     h_secure_data_len                 = None;

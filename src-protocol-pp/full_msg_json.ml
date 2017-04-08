@@ -17,6 +17,7 @@ open Full_messages;;
 open Full_admin_msg_json;;
 open Full_app_msg_json;;
 open Base_types_json;;
+open Datetime_json;;
 (* @meta[imandra_ignore] off @end *)
 
 let filter_nulls =
@@ -64,8 +65,8 @@ let header_to_json ( fh : fix_header ) =
         ( "deliver_to_location_id"                      , intopt_to_json fh.h_deliver_to_location_id                            );   
         ( "poss_dup_flag"                               , boolopt_to_json fh.h_poss_dup_flag                                    );
         ( "poss_resend"                                 , boolopt_to_json fh.h_poss_resend                                      );             
-        ( "sending_time"                                , intopt_to_json fh.h_sending_time                                      );
-        ( "orig_sending_time"                           , intopt_to_json fh.h_orig_sending_time                                 );
+        ( "sending_time"                                , utctimestamp_opt_to_json fh.h_sending_time                             );
+        ( "orig_sending_time"                           , utctimestamp_opt_to_json fh.h_orig_sending_time                        );
         ( "xml_data_len"                                , intopt_to_json fh.h_xml_data_len                                      );
         ( "xml_data"                                    , intopt_to_json fh.h_xml_data                                          );
         ( "message_enconding"                           , intopt_to_json fh.h_message_enconding                                 );

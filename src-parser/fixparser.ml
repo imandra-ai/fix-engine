@@ -1,6 +1,7 @@
-open Base_types;;
-open Datetime;;
 open Full_session_core;;
+
+open Parse_basic_types;;
+open Parse_datetime;;
 
 (**  Splits a stream of characters into a stream of key*value pairs *)
 let split_into_key_value (spliton : char) ( stream : char Stream.t ) : (string * string) Stream.t =
@@ -86,7 +87,7 @@ let valid_checksum ( msg : (string * string) list ) : bool  =
     try checksum = int_of_string msg_checksum with _ -> false
 ;;
 
-let parse_fix_header msg = 
+(* let parse_fix_header msg = 
     let parse_str = fun x -> Some x in
     let assoc key parser = 
         if List.mem_assoc key msg then begin
@@ -157,3 +158,4 @@ let parse_fix_header msg =
         h_no_hops                          
     }
 ;;
+*)

@@ -19,6 +19,17 @@ type fix_utctimestamp = {
 }
 ;;
 
+let default_utctimestamp = {
+    utc_timestamp_year      = 1970;
+    utc_timestamp_month     = 1;
+    utc_timestamp_day       = 1;
+    utc_timestamp_hour      = 0;
+    utc_timestamp_minute    = 0;
+    utc_timestamp_second    = 0;
+    utc_timestamp_millisec  = Some 0;
+}
+;;
+
 let make_utctimestamp ( year, month, day, hour, minute, second, millisec : int * int * int * int * int * int * int option ) = {
     utc_timestamp_year      = year;
     utc_timestamp_month     = month;
@@ -84,10 +95,17 @@ let utctimestamp_lessThanEqual ( tOne, tTwo : fix_utctimestamp * fix_utctimestam
     not ( utctimestamp_greaterThan (tOne, tTwo) )
 ;;
 
+(** LocalMktDate *)
 type fix_localmktdate = {
     localmktdate_year       : int;
     localmktdate_month      : int;
     localmktdate_day        : int;
+};;
+
+let default_localmktdate = {
+    localmktdate_year       = 1970;
+    localmktdate_month      = 1;
+    localmktdate_day        = 1;
 };;
 
 let is_valid_localmktdate ( lmd : fix_localmktdate ) =
@@ -113,6 +131,13 @@ type fix_monthyear = {
     monthyear_week          : fix_week option;
 };;
 
+let default_monthyear = {
+    monthyear_year   = 1970;
+    monthyear_month  = 1;
+    monthyear_day    = Some 1;
+    monthyear_week   = None;
+};;
+
 let is_valid_monthyear ( my : fix_monthyear ) =
     0 <= my.monthyear_year && my.monthyear_year <= 9999 && 
     0 <= my.monthyear_month && my.monthyear_month <= 12 && (
@@ -133,6 +158,13 @@ type fix_utctimeonly = {
     utc_timeonly_minute     : int;
     utc_timeonly_second     : int;
     utc_timeonly_millisec   : int option;
+};;
+
+let default_utctimeonly = {
+    utc_timeonly_hour       = 0;
+    utc_timeonly_minute     = 0;
+    utc_timeonly_second     = 0;
+    utc_timeonly_millisec   = Some 0;
 };;
 
 let is_valid_utctimeonly ( t : fix_utctimeonly ) =
@@ -182,6 +214,13 @@ type fix_utcdateonly = {
     utc_dateonly_year       : int;
     utc_dateonly_month      : int;
     utc_dateonly_day        : int;
+};;
+
+(** UTC Dateonly *)
+let default_utcdateonly = {
+    utc_dateonly_year       = 1970;
+    utc_dateonly_month      = 1;
+    utc_dateonly_day        = 1;
 };;
 
 let is_valid_utcdateonly ( d : fix_utcdateonly ) =

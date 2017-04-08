@@ -70,8 +70,8 @@ type fix_engine_state = {
 
     fe_curr_time            : fix_utctimestamp;             (** Need to define time so we're aware of heartbeat status. *)
 
-    fe_comp_id              : int;                          (** Our company ID *)
-    fe_target_comp_id       : int;                          (** Target company ID *)
+    fe_comp_id              : fix_string;                   (** Our company ID *)
+    fe_target_comp_id       : fix_string;                   (** Target company ID *)
 
     incoming_int_msg        : fix_engine_int_msg option;    (** Incoming internal messages (application). *)
     outgoing_int_msg        : fix_engine_int_msg option;    (** These are messages we send back to our owner *)
@@ -148,9 +148,10 @@ let init_fix_engine_state = {
 
 (** TODO Are there any other checks? 
     Answer: Yes - we need to add those checks to raw OCaml parser (these will result in invalid messages) *)
+(*
 let incoming_header_correct ( fh, comp_id : fix_header * int) =
     fh.h_target_comp_id = comp_id
-;;
+;; *)
 
 (** We're in the middle of retransmitting historic messages. 
     Note: when we transition into Retransmit mode, we set up a 

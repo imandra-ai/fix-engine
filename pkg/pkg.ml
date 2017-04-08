@@ -35,6 +35,11 @@ let () =
     ; Pkg.mllib ~api: [ "model_app_messages"
                       ] "src-model-types/model_types.mllib"
 
+    ; Pkg.mllib ~api: [ "fixparser"
+                      ; "parse_basic_types"
+                      ; "parse_datetime"
+                      ] "src-parser/fixparser.mllib" 
+
     ; Pkg.mllib ~api: [ "fix_fields"
                       ; "full_app_message_tag"
                       ; "full_app_messages"
