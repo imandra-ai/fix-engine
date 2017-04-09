@@ -29,13 +29,13 @@ This README will give you a brief overview of the project. For further informati
 Having a complete formal model of the FIX protocol brings many
 benefits. To name a few:
 
-- Concensus: With the formal model, the industry has a precise
-  mechanism for describing, evaluating and improving the mechanics of
-  the protocol
+- Concensus: With the formal model, the industry has a precise,
+  unambiguous foundation for describing, evaluating and
+  improving the definitions and mechanics of the protocol.
 
-- Queryable behaviour: With a formal verification engine like Imandra,
-  deep questions may be asked and answered about the behaviour of the
-  model, without the need for you to understand the code
+- Queryable: A formal verification engine like Imandra can be used to
+  ask and answer deep questions about the behaviour of the model
+  automatically
 
 - Testing: Powerful model-based testing techniques can be used to
   automatically generate high-coverage test suites (see Test Suite
@@ -60,8 +60,8 @@ The model is written in two languages: OCaml and IML. OCaml is a
 functional language that is gaining tremendous momentum within the
 financial services industry. For more information, please see
 www.ocaml.org. For example, Jane Street a well-known market
-participant is a strong supported of the language - check out their
-[blog](https://blogs.janestreet.com/category/ocaml/).
+participant is a strong supporter of the language, with an active
+[blog](https://blogs.janestreet.com/category/ocaml/.
 
 IML stands for Imandra Modelling Language - it is a pure subset of
 OCaml for which AI has developed a mechanised formal semantics. This
