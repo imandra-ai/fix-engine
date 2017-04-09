@@ -233,15 +233,15 @@ And here are links to some great interactive and automated theorem provers:
 
 For a great non-technical introduction to the discipline of formal
 verification and some of its history, we recommend ["Mechanizing
-Proof" by Donald
-Mackenzie](https://mitpress.mit.edu/books/mechanizing-proof).
+Proof"](https://mitpress.mit.edu/books/mechanizing-proof) by Donald
+Mackenzie.
 
 For learning the mathematics behind the techniques, we suggest:
 - [Handbook of Practical Logic and Automated Reasoning](http://www.cambridge.org/catalogue/catalogue.asp?isbn=9780521899574) by John Harrison, Intel
 - [Coq'Art](https://www.labri.fr/perso/casteran/CoqArt/) by Yves Bertot and Pierre Castéran, INRIA
 - [A Computational Logic](https://www.cs.utexas.edu/users/boyer/acl.pdf) and subsequent books by Robert S. Boyer and J Strother Moore, UT Austin
 - [Decision Procedures - An Algorithmic Point of View](http://www.decision-procedures.org/) by Daniel Kroening, Oxford and Ofer Strichman, Technion
-- [Quantifier Elimination and Cylindrical Algebraic Decomposition(http://www.springer.com/us/book/9783211827949) by Bob Caviness and Jeremy Johnson (Eds.)
+- [Quantifier Elimination and Cylindrical Algebraic Decomposition](http://www.springer.com/us/book/9783211827949) by Bob Caviness and Jeremy Johnson (Eds.)
 
 If you have other relevant publications or academic papers related to
 application of formal verification (or formal methods, etc) to
