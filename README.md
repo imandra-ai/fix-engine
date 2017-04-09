@@ -1,8 +1,9 @@
 # FIX Engine Model
 ## Overview
 
-The FIX Engine model development started at AI as part of the [Imandra
-Markets product](https://m.imandra.ai). The model consists of an
+The development of the FIX Engine model began at [Aesthetic
+Integration](http://www.imandra.ai) (AI) as part of the [Imandra
+Markets](https://m.imandra.ai) product. The model consists of an
 executable formalisation of an administrative-level FIX engine, a
 sample application-level model and a set of verified precise
 statements about the engine's behaviour. The properties we verify are
@@ -224,6 +225,11 @@ And here are links to some great interactive and automated theorem provers:
 - [Coq](https://coq.inria.fr)
 - [ALC2](http://www.cs.utexas.edu/users/moore/acl2/)
 - [Lean](https://leanprover.github.io)
+- [MetiTarski](https://www.cl.cam.ac.uk/~lp15/papers/Arith/)
+- [Agda](http://wiki.portal.chalmers.se/agda/pmwiki.php)
+- [Prover9 and Mace4](https://www.cs.unm.edu/~mccune/mace4/)
+- [SPASS](http://www.mpi-inf.mpg.de/departments/automation-of-logic/software/spass-workbench/)
+- [Z3](https://github.com/Z3Prover/z3)
 
 For a great non-technical introduction to the discipline of formal
 verification and some of its history, we recommend ["Mechanizing
