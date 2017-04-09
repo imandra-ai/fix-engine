@@ -209,13 +209,18 @@ type fix_side =
     | FIX_Side_Borrow
 ;;
 
+type fix_GapFillFlag =
+    | FIX_GapFillFlag_Y
+    | FIX_GapFillFlag_N
+;;
+
 (** Encryption methods available. *)
 type fix_encryption_method =
-    | PKCS          of int
-    | DES_ECB       of int
-    | PKCS_DES      of int
-    | PGP_DES       of int
-    | PGP_DES_MD5   of int
-    | PEM_DES_MD5   of int
+    | PKCS          
+    | DES_ECB       
+    | PKCS_DES      
+    | PGP_DES       
+    | PGP_DES_MD5   
+    | PEM_DES_MD5   
     | NoEncryption
 ;;

@@ -19,7 +19,7 @@ let parse_bool ( str : string) : fix_bool option =
 ;;
 
 
-let read_float ( str : string ) : fix_float option =
+let parse_float ( str : string ) : fix_float option =
     let mkfloat w f = {fix_float_whole = w; fix_float_fraction = f } in
     let whole, tail = Scanf.sscanf str "%d%s" (fun w f -> (w,f)) in
     if (tail = "") || (tail = ".") then Some ( Float_0 (mkfloat whole 0) ) else

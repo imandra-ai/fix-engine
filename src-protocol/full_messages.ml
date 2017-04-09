@@ -61,12 +61,12 @@ let get_full_msg_tag ( m : full_fix_msg_data ) =
                                                 format specified via the MessageEncoding <347> field. *)
 type session_rejected_msg_data = {
     srej_msg_msg_seq_num                            : int;
-    srej_msg_field_tag                              : full_field_tag;
-    srej_msg_msg_type                               : full_fix_msg_tag;
-    srej_msg_reject_reason                          : fix_session_reject_reason;
-    srej_text                                       : fix_string;
-    srej_encoded_text_len                           : int;
-    srej_encoded_text                               : fix_string;
+    srej_msg_field_tag                              : full_field_tag option;
+    srej_msg_msg_type                               : full_fix_msg_tag option;
+    srej_msg_reject_reason                          : fix_session_reject_reason option;
+    srej_text                                       : fix_string option;
+    srej_encoded_text_len                           : int option;
+    srej_encoded_text                               : fix_string option;
 }
 ;;
 

@@ -65,3 +65,12 @@ let parse_MonthYear str =
         monthyear_week  = week;
     }
 ;;
+
+let parse_Duration str =
+    let parse_int ( str : string ) : int option = 
+        try  Some(int_of_string str) 
+        with _ -> None
+    in
+    match parse_int str with None -> None | Some seconds ->
+    Some (seconds_to_duration seconds)
+;;

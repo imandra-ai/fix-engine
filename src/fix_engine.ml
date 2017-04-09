@@ -275,12 +275,12 @@ let create_session_reject_msg ( reject_info, outbound_seq_num, target_comp_id, c
         Full_FIX_Admin_Msg (
             Full_Msg_Reject {
                 sr_ref_seq_num              = reject_info.srej_msg_msg_seq_num;
-                sr_ref_tag_id               = 0;
+                sr_ref_tag_id               = Some 0;
                 sr_ref_msg_type             = None;
-                sr_session_reject_reason    = Some reject_info.srej_msg_reject_reason;
+                sr_session_reject_reason    = reject_info.srej_msg_reject_reason;
                 sr_text                     = None;
                 sr_encoded_text_len         = None;
-                sr_encoded_text             = 0;
+                sr_encoded_text             = Some 0;
             } ) in 
     ValidMsg ( create_outbound_fix_msg (outbound_seq_num, target_comp_id, comp_id, msg_data, false) )
 ;;

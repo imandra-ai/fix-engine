@@ -349,12 +349,19 @@ let timeinforce_opt_to_string = function
     | Some x                                            -> Some ( timeinforce_to_string x )
 ;;
 
+
+let fix_GapFillFlag_opt_to_string = function
+    | Some FIX_GapFillFlag_Y -> Some "Y"
+    | Some FIX_GapFillFlag_N -> Some "N"
+    | None ->  None
+;;
+
 let fix_encryption_method_to_str = function
-    | PKCS x                                            -> "PKCS"
-    | DES_ECB x                                         -> "DES_ECB"
-    | PKCS_DES x                                        -> "PKCS_DES"
-    | PGP_DES x                                         -> "PGP_DES"
-    | PGP_DES_MD5 x                                     -> "PGP_DES_MD5"
-    | PEM_DES_MD5 x                                     -> "PEM_DES_MD5"
-    | NoEncryption                                      -> "NoEncryption"
+    | PKCS                                             -> "PKCS"
+    | DES_ECB                                          -> "DES_ECB"
+    | PKCS_DES                                         -> "PKCS_DES"
+    | PGP_DES                                          -> "PGP_DES"
+    | PGP_DES_MD5                                      -> "PGP_DES_MD5"
+    | PEM_DES_MD5                                      -> "PEM_DES_MD5"
+    | NoEncryption                                     -> "NoEncryption"
 ;;

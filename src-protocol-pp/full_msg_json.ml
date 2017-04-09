@@ -104,13 +104,13 @@ let business_rejected_msg_to_json x =
 
 let session_rejected_data_to_json x =
     `Assoc [
-        ( "srej_msg_msg_seq_num"                        , `Int x.srej_msg_msg_seq_num                                           );
-        ( "srej_msg_field_tag"                          , `String ( full_field_to_string x.srej_msg_field_tag)                   );
-        ( "srej_msg_msg_type"                           , `String ( msg_tag_to_string x.srej_msg_msg_type )                     );
-        ( "srej_msg_reject_reason"                      , `String ( fix_session_reject_to_string x.srej_msg_reject_reason )     );
-        ( "srej_text"                                   , `Int x.srej_text                                                      );
-        ( "srej_encoded_text_len"                       , `Int x.srej_encoded_text_len                                          );
-        ( "srej_encoded_text"                           , `Int x.srej_encoded_text                                              );
+        ( "srej_msg_msg_seq_num"                        , `Int x.srej_msg_msg_seq_num                                                );
+        ( "srej_msg_field_tag"                          , full_field_opt_to_json x.srej_msg_field_tag                                );
+        ( "srej_msg_msg_type"                           , stringopt_to_json ( msg_tag_opt_to_string x.srej_msg_msg_type )            );
+        ( "srej_msg_reject_reason"                      , stringopt_to_json ( reject_reason_opt_to_string x.srej_msg_reject_reason ) );
+        ( "srej_text"                                   , intopt_to_json x.srej_text                                                 );
+        ( "srej_encoded_text_len"                       , intopt_to_json x.srej_encoded_text_len                                     );
+        ( "srej_encoded_text"                           , intopt_to_json x.srej_encoded_text                                         );
     ]
 ;;
 

@@ -365,3 +365,22 @@ let utctimestamp_add ( t, dur : fix_utctimestamp * fix_duration ) =
     } in
     normalise_timestamp ( new_ts )
 ;;
+
+let seconds_to_duration ( seconds ) = 
+    let ts = normalise_timestamp {
+        utc_timestamp_year      = 0;
+        utc_timestamp_month     = 0;
+        utc_timestamp_day       = 0;
+        utc_timestamp_hour      = 0;
+        utc_timestamp_minute    = 0;
+        utc_timestamp_second    = seconds;
+        utc_timestamp_millisec  = None;
+    } in { 
+        dur_years    = ( match ts.utc_timestamp_year   with 0 -> None | x -> Some x) ; 
+        dur_months   = ( match ts.utc_timestamp_month  with 0 -> None | x -> Some x) ; 
+        dur_days     = ( match ts.utc_timestamp_day    with 0 -> None | x -> Some x) ; 
+        dur_hours    = ( match ts.utc_timestamp_hour   with 0 -> None | x -> Some x) ; 
+        dur_minutes  = ( match ts.utc_timestamp_minute with 0 -> None | x -> Some x) ; 
+        dur_seconds  = ( match ts.utc_timestamp_second with 0 -> None | x -> Some x) ; 
+    }
+;;

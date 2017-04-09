@@ -75,12 +75,12 @@ type full_fix_msg_logoff_data = {
 (** Reject message data. *)
 type full_fix_msg_reject_data = {
     sr_ref_seq_num                                  : int;                              (** Tag 45. MsgSeqNum of rejected message. *)
-    sr_ref_tag_id                                   : fix_string;                       (** *)
+    sr_ref_tag_id                                   : fix_string option;                (** *)
     sr_ref_msg_type                                 : full_fix_msg_tag option;          (** *)
     sr_session_reject_reason                        : fix_session_reject_reason option; (** Tag 373. *)
     sr_text                                         : fix_string option;                (** *)
     sr_encoded_text_len                             : int option;                       (** *)
-    sr_encoded_text                                 : fix_string;                       (** *)
+    sr_encoded_text                                 : fix_string option;                (** *)
 }
 ;;
 
@@ -102,7 +102,7 @@ type full_fix_msg_resend_request_data = {
 (** Sequence Reset message data. *)
 type full_fix_msg_sequence_reset_data = {
     seqr_new_seq_no                                 : int;                              (** Tag 36 *)
-    seqr_gap_fill_flag                              : fix_yes_no_type option;           (** Tag 123 *)
+    seqr_gap_fill_flag                              : fix_GapFillFlag option;           (** Tag 123 *)
 }
 ;;
 

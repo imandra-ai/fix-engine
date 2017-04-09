@@ -72,6 +72,11 @@ let full_field_to_string = function
     | Full_FIX_Model_Field t            -> model_field_to_string t
 ;;
 
+let full_field_opt_to_json = function
+    | Some t -> `String (full_field_to_string t)
+    | None -> `Assoc []
+;;
+
 let field_tag_opt_to_string = function
     | None                              -> None
     | Some x                            -> Some ( full_field_to_string x )
@@ -122,7 +127,7 @@ let resend_request_data_to_json x =
 let session_reject_data_to_json x = 
     let list_assoc = [
         ( "sr_ref_seq_num"              , `Int x.sr_ref_seq_num                                                         );
-        ( "sr_ref_tag_id"               , `Int x.sr_ref_tag_id                                                          );
+        ( "sr_ref_tag_id"               , intopt_to_json x.sr_ref_tag_id                                                );
         ( "sr_ref_msg_type"             , stringopt_to_json ( msg_tag_opt_to_string x.sr_ref_msg_type )                 );
         ( "sr_session_reject_reason"    , stringopt_to_json ( reject_reason_opt_to_string x.sr_session_reject_reason )  );
         ( "sr_text"                     , `Int x.sr_ref_seq_num                                                         );
@@ -142,7 +147,7 @@ let business_reject_data_to_json x =
 let sequence_reset_data_to_json x = 
     let list_assoc = [
         ( "seqr_new_seq_no"             , `Int x.seqr_new_seq_no                                                        );
-        ( "seqr_gap_fill_flag"          , stringopt_to_json ( yes_no_opt_to_string x.seqr_gap_fill_flag )               );
+        ( "seqr_gap_fill_flag"          , stringopt_to_json ( fix_GapFillFlag_opt_to_string x.seqr_gap_fill_flag )       );
     ] |> filter_nulls in
     `Assoc list_assoc
 ;;

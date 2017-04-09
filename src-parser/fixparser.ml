@@ -1,5 +1,5 @@
 open Full_session_core;;
-
+open Full_messages;;
 open Parse_basic_types;;
 open Parse_datetime;;
 
@@ -87,49 +87,85 @@ let valid_checksum ( msg : (string * string) list ) : bool  =
     try checksum = int_of_string msg_checksum with _ -> false
 ;;
 
-(* let parse_fix_header msg = 
-    let parse_str = fun x -> Some x in
-    let assoc key parser = 
+(** Checks that the message doesnt contain duplicate tags *)
+let valid_no_duplicate_keys ( msg : (string * string) list ) : string option =
+    let rec has_duplicates lst = match lst with
+        | a::b::tl when a = b -> Some a
+        | a::tl -> has_duplicates tl
+        | [] -> None
+        in
+    List.map fst msg 
+        |> List.sort String.compare
+        |> has_duplicates
+;;
+
+(* -
+*)
+
+module Util = struct
+    type 'a parse_field_result =
+        | ParseSuccess of 'a
+        | WrongFieldFormat of string
+        | RequiredFieldMissing of string
+        
+    let assoc msg key parser = 
         if List.mem_assoc key msg then begin
             match List.assoc key msg |> parser with
             | Some v -> Some ( Some v )
             | None   -> None
         end else Some None
-        in
-    let assoc_strict key parser =
-        match assoc key parser with
-        | Some ( Some v ) -> Some v
-        | _ -> None
-        in
-    (* These matches require that the tags are present *)
-    match assoc_strict  "8" parse_str with None -> None | Some h_begin_string   ->
-    match assoc_strict  "9" parse_int with None -> None | Some h_body_length    ->
-    match assoc_strict "49" parse_str with None -> None | Some h_sender_comp_id ->
-    match assoc_strict "56" parse_str with None -> None | Some h_target_comp_id ->
-    match assoc_strict "34" parse_int with None -> None | Some h_msg_seq_num    ->
-    (* Standard parsing  *)
-    match assoc "115" parse_int  with None -> None | Some h_on_behalf_of_comp_id        -> 
-    match assoc "128" parse_int  with None -> None | Some h_deliver_to_comp_id          ->  
-    match assoc "90"  parse_int  with None -> None | Some h_secure_data_len             ->   
-    match assoc "91"  parse_int  with None -> None | Some h_secure_data                 ->   
-    match assoc "50"  parse_int  with None -> None | Some h_sender_sub_id               ->   
-    match assoc "142" parse_int  with None -> None | Some h_sender_location_id          ->  
-    match assoc "57"  parse_int  with None -> None | Some h_target_sub_id               ->   
-    match assoc "143" parse_int  with None -> None | Some h_target_location_id          ->  
-    match assoc "116" parse_int  with None -> None | Some h_on_behalf_of_sub_id         ->  
-    match assoc "114" parse_int  with None -> None | Some h_on_behalf_of_location_id    ->  
-    match assoc "129" parse_int  with None -> None | Some h_deliver_to_sub_id           ->  
-    match assoc "145" parse_int  with None -> None | Some h_deliver_to_location_id      ->  
-    match assoc "43"  parse_bool with None -> None | Some h_poss_dup_flag               ->    
-    match assoc "97"  parse_bool with None -> None | Some h_poss_resend                 ->    
-    match assoc "52"  parse_UTCTimeStamp  with None -> None | Some h_sending_time       ->   
-    match assoc "122" parse_UTCTimeStamp  with None -> None | Some h_orig_sending_time  ->  
-    match assoc "212" parse_int  with None -> None | Some h_xml_data_len                ->  
-    match assoc "213" parse_int  with None -> None | Some h_xml_data                    ->  
-    match assoc "347" parse_int  with None -> None | Some h_message_enconding           ->  
-    match assoc "369" parse_int  with None -> None | Some h_last_msg_seq_num_processed  ->  
-    match assoc "627" parse_int  with None -> None | Some h_no_hops                     ->      
-    Some {   
+
+    let opt msg tag parser f =
+        match assoc msg tag parser with 
+        | None -> WrongFieldFormat tag 
+        | Some t -> f t
+
+    let req msg tag parser f =
+        match assoc msg tag parser with 
+        | None -> WrongFieldFormat tag 
+        | Some None -> RequiredFieldMissing tag
+        | Some (Some t) -> f t
+        
+    let make_reject_data seq_num = {
+        srej_msg_msg_seq_num    = seq_num;
+        srej_msg_field_tag      = None;      
+        srej_msg_msg_type       = None;     
+        srej_msg_reject_reason  = None;     
+        srej_text               = None;      
+        srej_encoded_text_len   = None;      
+        srej_encoded_text       = None;      
+    }
+end;;
+
+let parse_fix_header msg = 
+    let open Util in 
+    req msg "8"   parse_str           @@ fun h_begin_string                ->
+    req msg "9"   parse_int           @@ fun h_body_length                 ->
+    req msg "49"  parse_str           @@ fun h_sender_comp_id              ->
+    req msg "56"  parse_str           @@ fun h_target_comp_id              ->
+    req msg "34"  parse_int           @@ fun h_msg_seq_num                 ->
+    opt msg "115" parse_int           @@ fun h_on_behalf_of_comp_id        -> 
+    opt msg "128" parse_int           @@ fun h_deliver_to_comp_id          ->  
+    opt msg "90"  parse_int           @@ fun h_secure_data_len             ->   
+    opt msg "91"  parse_int           @@ fun h_secure_data                 ->   
+    opt msg "50"  parse_int           @@ fun h_sender_sub_id               ->   
+    opt msg "142" parse_int           @@ fun h_sender_location_id          ->  
+    opt msg "57"  parse_int           @@ fun h_target_sub_id               ->   
+    opt msg "143" parse_int           @@ fun h_target_location_id          ->  
+    opt msg "116" parse_int           @@ fun h_on_behalf_of_sub_id         ->  
+    opt msg "114" parse_int           @@ fun h_on_behalf_of_location_id    ->  
+    opt msg "129" parse_int           @@ fun h_deliver_to_sub_id           ->  
+    opt msg "145" parse_int           @@ fun h_deliver_to_location_id      ->  
+    opt msg "43"  parse_bool          @@ fun h_poss_dup_flag               ->    
+    opt msg "97"  parse_bool          @@ fun h_poss_resend                 ->    
+    opt msg "52"  parse_UTCTimeStamp  @@ fun h_sending_time                ->   
+    opt msg "122" parse_UTCTimeStamp  @@ fun h_orig_sending_time           ->  
+    opt msg "212" parse_int           @@ fun h_xml_data_len                ->  
+    opt msg "213" parse_int           @@ fun h_xml_data                    ->  
+    opt msg "347" parse_int           @@ fun h_message_enconding           ->  
+    opt msg "369" parse_int           @@ fun h_last_msg_seq_num_processed  ->  
+    opt msg "627" parse_int           @@ fun h_no_hops                     ->    
+    ParseSuccess {   
         h_begin_string               ;    
         h_body_length                ;    
         h_sender_comp_id             ;   
@@ -158,4 +194,5 @@ let valid_checksum ( msg : (string * string) list ) : bool  =
         h_no_hops                          
     }
 ;;
-*)
+
+
