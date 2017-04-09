@@ -221,12 +221,12 @@ If you're interested in further background on techniques underlying Imandra, see
 - [Collaborative Verification-Driven Engineering of Hybrid Systems](http://arxiv.org/abs/1403.6085)
 
 And here are links to some great interactive and automated theorem provers:
-- [Isabelle](https://isabelle.in.tum.de)
-- [Coq](https://coq.inria.fr)
-- [ALC2](http://www.cs.utexas.edu/users/moore/acl2/)
-- [Lean](https://leanprover.github.io)
-- [MetiTarski](https://www.cl.cam.ac.uk/~lp15/papers/Arith/)
+- [ACL2](http://www.cs.utexas.edu/users/moore/acl2/)
 - [Agda](http://wiki.portal.chalmers.se/agda/pmwiki.php)
+- [Coq](https://coq.inria.fr)
+- [Lean](https://leanprover.github.io)
+- [Isabelle](https://isabelle.in.tum.de)
+- [MetiTarski](https://www.cl.cam.ac.uk/~lp15/papers/Arith/)
 - [Prover9 and Mace4](https://www.cs.unm.edu/~mccune/mace4/)
 - [SPASS](http://www.mpi-inf.mpg.de/departments/automation-of-logic/software/spass-workbench/)
 - [Z3](https://github.com/Z3Prover/z3)
@@ -235,6 +235,13 @@ For a great non-technical introduction to the discipline of formal
 verification and some of its history, we recommend ["Mechanizing
 Proof" by Donald
 Mackenzie](https://mitpress.mit.edu/books/mechanizing-proof).
+
+For learning the mathematics behind the techniques, we suggest:
+- [Handbook of Practical Logic and Automated Reasoning](http://www.cambridge.org/catalogue/catalogue.asp?isbn=9780521899574) by John Harrison, Intel
+- [Coq'Art](https://www.labri.fr/perso/casteran/CoqArt/) by Yves Bertot and Pierre Castéran, INRIA
+- [A Computational Logic](https://www.cs.utexas.edu/users/boyer/acl.pdf) and subsequent books by Robert S. Boyer and J Strother Moore, UT Austin
+- [Decision Procedures - An Algorithmic Point of View](http://www.decision-procedures.org/) by Daniel Kroening, Oxford and Ofer Strichman, Technion
+- [Quantifier Elimination and Cylindrical Algebraic Decomposition(http://www.springer.com/us/book/9783211827949) by Bob Caviness and Jeremy Johnson (Eds.)
 
 If you have other relevant publications or academic papers related to
 application of formal verification (or formal methods, etc) to
