@@ -61,7 +61,7 @@ functional language that is gaining tremendous momentum within the
 financial services industry. For more information, please see
 www.ocaml.org. For example, Jane Street a well-known market
 participant is a strong supporter of the language, with an active
-[blog](https://blogs.janestreet.com/category/ocaml/.
+[blog](https://blogs.janestreet.com/category/ocaml/).
 
 IML stands for Imandra Modelling Language - it is a pure subset of
 OCaml for which AI has developed a mechanised formal semantics. This
