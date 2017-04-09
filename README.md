@@ -50,8 +50,7 @@ verify last_time_data_sent_gets_updated ( engine : fix_engine_state ) =
 ;;
 
 (** VG.1.2 *)
-
-let outbound_msg_heartbeat ( m : full_top_level_msg option )=
+let outbound_msg_heartbeat ( m : full_top_level_msg option ) =
     match m with 
     | None  -> false
     | Some msg  ->
