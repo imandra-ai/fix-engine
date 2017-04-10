@@ -30,7 +30,7 @@ This README will give you a brief overview of the project. For further informati
 Having a complete formal model of the FIX protocol brings many
 benefits. To name a few:
 
-- Concensus: With the formal model, the industry has a precise,
+- Consensus: With the formal model, the industry has a precise,
   unambiguous foundation for describing, evaluating and
   improving the definitions and mechanics of the protocol.
 
