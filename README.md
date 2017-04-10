@@ -151,7 +151,8 @@ It's important to note that the 'translation' of the English-prose
 statements into IML (or other mathematically precise languages) may
 not be unique due to the natural ambiguity of English. This inherent
 ambiguity in natural languages is a major reason why the efforts of
-formalising protocol specifications must be industry-led.
+formalising protocol specifications must be collaborative and industry
+wide.
 
 Notice how this approach differs from traditional 'testing'. In the
 statement above, we're making a high-level claim about the model
@@ -173,16 +174,19 @@ in a virtually infinite number of possible states. That is, there are
 infinitely many (or infeasibly many) possible sequences of incoming
 messages which they may have to process.
 
-With Imandra, we've built on recent breakthroughs in formal
-verification to develop fundamentally new forms of model-based
-testing. These approaches construct high-coverage test suites by
-'decomposing' the state-space of the system model into a finite number
-of symbolically described 'regions' of behaviour. Each region contains
-a set of symbolic constraints for the input parameters and a
-corresponding invariant that the system should obey whenever its
-inputs satisfy the constraints. Imandra also generates corresponding
-coverage proofs that the collection of the generated regions properly
-covers the possible behaviours of the decomposed algorithm.
+With Imandra, we've built on recent advances in formal verification to
+develop powerful new forms of model-based testing. These approaches
+construct high-coverage test suites by 'decomposing' the state-space
+of the system model into a finite number of symbolically described
+'regions' of behaviour and then 'solving' for relevant
+test-cases. Each region contains a set of symbolic constraints for the
+input parameters and a corresponding invariant that the system should
+obey whenever its inputs satisfy the constraints. Imandra also
+generates corresponding coverage proofs verifying that the collection
+of the generated regions properly covers the possible behaviours of
+the decomposed algorithm. This forms part of our "Testflow" framework
+for architecting and automatically deriving test suites meeting
+rigorous state-space coverage metrics.
 
 We will seek to ensure that the repository contains up-to-date Imandra
 region decomposition for the latest models.
@@ -196,10 +200,10 @@ such as avionics and microprocessor design.
 
 At AI, our mission is to democratize formal verification, bringing its
 power to new industries in a user-friendly and scalable way. These
-highly automated applications to new industries are powered by recent
-breakthroughs, including CDCL-based Satisfiability (SAT) and
-Satisfiability Modulo Theories (SMT) solving, nonlinear decision
-procedures and scalable techniques for symbolic execution.
+applications to new industries are powered by recent advances,
+including CDCL-based Satisfiability (SAT) and Satisfiability Modulo
+Theories (SMT) solving, nonlinear decision procedures and scalable
+techniques for symbolic execution.
 
 For more on our vision for formal verification for finance, see our
 short explainer [video](https://vimeo.com/123746101) that gives the
@@ -231,8 +235,9 @@ And here are links to some great interactive and automated theorem provers:
 - [SPASS](http://www.mpi-inf.mpg.de/departments/automation-of-logic/software/spass-workbench/)
 - [Z3](https://github.com/Z3Prover/z3)
 
-For a great non-technical introduction to the discipline of formal
-verification and some of its history, we recommend ["Mechanizing
+For a great non-technical introduction to the discipline of
+formal verification and some of its history, we recommend
+["Mechanizing
 Proof"](https://mitpress.mit.edu/books/mechanizing-proof) by Donald
 Mackenzie.
 
