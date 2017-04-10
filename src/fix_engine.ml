@@ -10,7 +10,7 @@
 (* @meta[imandra_ignore] on @end *)
 open Datetime;;
 open Base_types;;
-open Full_session_core;;
+open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_app_messages;;
 open Full_messages;;
@@ -32,7 +32,7 @@ type session_data = {
 type fix_engine_int_msg = 
     | TimeChange            of fix_utctimestamp (** Updates internal time of the engine. *)
     | CreateSession         of session_data (** Create sessions command. *)
-    | ApplicationData       of full_fix_app_msg_data (** App messages to be transmitted over. *)
+    | ApplicationData       of full_app_msg_data (** App messages to be transmitted over. *)
     | ManualIntervention    of manual_int_data (** TODO: create 'richer' manual commands. *)
 ;;
 
@@ -163,8 +163,8 @@ let run_retransmit ( engine : fix_engine_state ) =
     | x::xs -> 
         let should_be_sent = (
             match x.full_msg_data with 
-            | Full_FIX_App_Msg _ -> true
-            | Full_FIX_Admin_Msg amsg ->
+            | Full_App_Msg _ -> true
+            | Full_Admin_Msg amsg ->
             match amsg with 
             | Full_Msg_Reject _ -> true
             | _ -> false
@@ -219,7 +219,7 @@ let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, msg, is_duplicat
 (** Create a logon message we would send out to initiate a connection 
     with another FIX engine. *)
 let create_logon_msg ( engine : fix_engine_state ) = 
-    let msg_data = Full_FIX_Admin_Msg ( 
+    let msg_data = Full_Admin_Msg ( 
         Full_Msg_Logon {
             ln_encrypt_method               = engine.fe_encrypt_method;
             ln_heartbeat_interval           = engine.fe_heartbeat_interval;
@@ -240,7 +240,7 @@ let create_logon_msg ( engine : fix_engine_state ) =
 
 (** Create a Logoff message. *)
 let create_logoff_msg ( engine : fix_engine_state ) = 
-    let msg_data = Full_FIX_Admin_Msg (
+    let msg_data = Full_Admin_Msg (
         Full_Msg_Logoff {
             lo_encoded_text_len     = None;
             lo_encoded_text         = None;
@@ -251,8 +251,8 @@ let create_logoff_msg ( engine : fix_engine_state ) =
 
 (** Create a heartbeat message *)
 let create_heartbeat_msg ( engine, tr_id : fix_engine_state * int option) =
-    let msg_data = Full_FIX_Admin_Msg (
-        Full_Msg_Hearbeat {
+    let msg_data = Full_Admin_Msg (
+        Full_Msg_Heartbeat {
             hb_test_req_id = tr_id;
         }
      ) in 
@@ -261,7 +261,7 @@ let create_heartbeat_msg ( engine, tr_id : fix_engine_state * int option) =
 
 (** Create Test Request message. *)
 let create_test_request_msg ( engine : fix_engine_state ) =
-    let msg_data = Full_FIX_Admin_Msg (
+    let msg_data = Full_Admin_Msg (
         Full_Msg_Test_Request {
             test_req_id = engine.last_test_req_id;
         }
@@ -272,7 +272,7 @@ let create_test_request_msg ( engine : fix_engine_state ) =
 (** Create session-rejection message. *)
 let create_session_reject_msg ( reject_info, outbound_seq_num, target_comp_id, comp_id : session_rejected_msg_data * int * int * int ) = 
     let msg_data = 
-        Full_FIX_Admin_Msg (
+        Full_Admin_Msg (
             Full_Msg_Reject {
                 sr_ref_seq_num              = reject_info.srej_msg_msg_seq_num;
                 sr_ref_tag_id               = Some 0;
@@ -289,7 +289,7 @@ let create_session_reject_msg ( reject_info, outbound_seq_num, target_comp_id, c
     Note: the reason we're separating the ApplicationDown reason is that the parser would not have access to this information. *)
 let create_business_reject_msg ( reject_info, outbound_seq_num, target_comp_id, comp_id  : biz_rejected_msg_data * int * int * int ) =
     let msg_data = 
-        Full_FIX_Admin_Msg (
+        Full_Admin_Msg (
             Full_Msg_Business_Reject {
                 br_ref_seq_num              = reject_info.brej_msg_ref_seq_num;
                 br_business_reject_reason   = reject_info.brej_msg_reject_reason;
@@ -305,7 +305,7 @@ let create_business_reject_msg ( reject_info, outbound_seq_num, target_comp_id, 
 (** Here we will only accept an incoming Logon message to establish a connection. *)
 let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     match m.full_msg_data with 
-    | Full_FIX_Admin_Msg msg -> (
+    | Full_Admin_Msg msg -> (
         match msg with 
         | Full_Msg_Logon d ->
 
@@ -328,7 +328,7 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                 } )
         | _ -> engine
         )
-    | Full_FIX_App_Msg _ -> engine
+    | Full_App_Msg _ -> engine
 ;;
 
 (**  *)
@@ -340,7 +340,7 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         engine'
     else
         match m.full_msg_data with
-        | Full_FIX_Admin_Msg msg -> (
+        | Full_Admin_Msg msg -> (
             match msg with
             | Full_Msg_Logon d -> 
             if engine.fe_encrypt_method <> d.ln_encrypt_method then (
@@ -360,11 +360,11 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
             }
             | _ -> engine'
             )
-        | Full_FIX_App_Msg msg -> engine'
+        | Full_App_Msg msg -> engine'
 ;;
 
 (** Response to resent request. *)
-let initiate_Resend ( request, engine : full_fix_msg_resend_request_data * fix_engine_state ) =
+let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engine_state ) =
     engine
 ;;
 
@@ -381,9 +381,9 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     
     } else
     match m.full_msg_data with 
-    | Full_FIX_Admin_Msg adm_msg        -> (
+    | Full_Admin_Msg adm_msg        -> (
         match adm_msg with 
-        | Full_Msg_Hearbeat hb          -> {
+        | Full_Msg_Heartbeat hb          -> {
             (* Update information about the last received message. *)    
                 engine with 
                     incoming_seq_num = m.full_msg_header.h_msg_seq_num;
@@ -408,7 +408,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                     outgoing_fix_msg        = Some hearbeat_msg;
             }
     ) 
-    | Full_FIX_App_Msg app_msg          -> ( 
+    | Full_App_Msg app_msg          -> ( 
         (** We're processing an application type of message. We just need 
         to append it to the list of outgoing application messages and 
         update the last seq number processed. *) 
@@ -424,12 +424,12 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 (** Here we can only handle a subset of the FIX messages. *)
 let replay_single_msg ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     match m.full_msg_data with 
-    | Full_FIX_App_Msg app_msg  -> {
+    | Full_App_Msg app_msg  -> {
             engine with 
             incoming_seq_num = m.full_msg_header.h_msg_seq_num;
             outgoing_int_msg = Some ( ApplicationData app_msg );
         }
-    | Full_FIX_Admin_Msg msg    -> {
+    | Full_Admin_Msg msg    -> {
         engine with 
             incoming_seq_num = m.full_msg_header.h_msg_seq_num;
         }
@@ -503,8 +503,8 @@ let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 (** We've sent out a Logout message and are now waiting for a confirmation of logout. *) 
 let run_shutdown ( m, engine : full_valid_fix_msg * fix_engine_state ) = 
     match m.full_msg_data with 
-    | Full_FIX_App_Msg app_msg      -> engine
-    | Full_FIX_Admin_Msg admin_msg  -> (
+    | Full_App_Msg app_msg      -> engine
+    | Full_Admin_Msg admin_msg  -> (
         match admin_msg with 
         | Full_Msg_Logoff m         -> {
             engine with
@@ -586,7 +586,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
     | ApplicationData ad    -> (
         match engine.fe_curr_mode with 
         | ActiveSession     -> 
-            let app_msg_data = Full_FIX_App_Msg ad in 
+            let app_msg_data = Full_App_Msg ad in 
             let msg = create_outbound_fix_msg (engine.outgoing_seq_num, engine.fe_target_comp_id, engine.fe_comp_id, app_msg_data, false) in { 
                 engine with 
                     fe_last_time_data_sent = engine.fe_curr_time;
