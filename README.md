@@ -100,9 +100,10 @@ One way to formalise that statement is to create two VGs:
 (* VG.1.1 *)
 verify last_time_data_sent_gets_updated ( engine : fix_engine_state ) =
   let engine' = one_step ( engine ) in
-     engine.outgoing_fix_msg = None && engine'.outgoing_fix_msg <> None
-
-     ==> engine'.fe_last_time_data_sent = engine'.fe_curr_time
+  engine.outgoing_fix_msg = None
+  && engine'.outgoing_fix_msg <> None
+   ==>
+  engine'.fe_last_time_data_sent = engine'.fe_curr_time
 ;;
 
 (** VG.1.2 *)
@@ -138,11 +139,11 @@ let time_update_received ( m, last_time_data_sent, hbeat_interval : fix_engine_i
 verify hbeat_sent_if_no_data_received ( engine : fix_engine_state ) =
   let engine' = one_step ( engine ) in (
     engine.fe_curr_mode = ActiveSession
-    && is_int_message_valid (engine)
-    && is_state_valid (engine)
+    && is_int_message_valid ( engine )
+    && is_state_valid ( engine )
     && time_update_received ( engine.incoming_int_msg, engine.fe_last_time_data_sent, engine.fe_heartbeat_interval ) )
-
-    ==> outbound_msg_heartbeat ( engine'.outgoing_fix_msg )
+     ==>
+    outbound_msg_heartbeat ( engine'.outgoing_fix_msg )
 ;;
 ```
 
