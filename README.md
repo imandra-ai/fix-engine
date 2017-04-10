@@ -54,7 +54,7 @@ benefits. To name a few:
 
 - Simulation: The model can be used as the basis of simulation
   environments, using the verified engine as a semantic
-  `gold-standard` and test oracle.
+  "gold-standard" and test oracle.
 
 ## How
 
