@@ -14,7 +14,7 @@ There's an explicit interface between administrative and application
 models to make it easier to generate the application-level logic from
 a higher-level language (e.g., AI's FIX DSL or FIX Orchestra).
 
-We hope this project will be the beginning of industry-led effort to
+We hope this project will be the beginning of an industry-wide effort to
 mathematically formalise the rules and algorithms that run the
 financial markets. This formalisation will significantly benefit the
 industry, cutting down time and costs for connecting (and ensuring
@@ -222,6 +222,7 @@ If you're interested in further background on techniques underlying Imandra, see
 - [Decidability of Univariate Real Algebra with Predicates for Rational and Integer Powers](http://www.cl.cam.ac.uk/~gp351/passmore-cade25-univqri.pdf)
 - [A Complete Decision Procedure for Univariate Polynomial Problems in Isabelle/HOL](https://arxiv.org/abs/1506.08238)
 - [Computation in Real Closed Infinitesimal and Transcendental Extensions of the Rationals](http://www.cl.cam.ac.uk/~gp351/infinitesimals.pdf)
+- [The Strategy Challenge in SMT Solving](http://dl.acm.org/citation.cfm?id=2554475)
 - [Collaborative Verification-Driven Engineering of Hybrid Systems](http://arxiv.org/abs/1403.6085)
 
 And here are links to some great interactive and automated theorem provers:
