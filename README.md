@@ -83,12 +83,12 @@ versions. View the technical documentation for further information.
 ## Model Verification
 
 In addition to the model source code, you will find a set of
-Verification Goals (VG's). VGs are statements in IML expressing
+Verification Goals (VGs). VGs are statements in IML expressing
 properties of the FIX engine model that we wish to verify. It's
 important to note that IML is used for both building the model and
-describing the properties we verify about it.
+describing the properties we wish to verify about it.
 
-Consider the following quote from Volume 2 of the 4.4 specification:
+Consider the following quote from Volume 2 of the FIX 4.4 specification:
 > When either end of a FIX connection has not sent any data for [HeartBtInt] seconds, it will transmit a Heartbeat message.
 
 One way to formalise that statement is to create two VGs:
@@ -151,8 +151,8 @@ It's important to note that the 'translation' of the English-prose
 statements into IML (or other mathematically precise languages) may
 not be unique due to the natural ambiguity of English. This inherent
 ambiguity in natural languages is a major reason why the efforts of
-formalising protocol specifications must be collaborative and industry
-wide.
+formalising protocol specifications must be collaborative and
+industry-wide.
 
 Notice how this approach differs from traditional 'testing'. In the
 statement above, we're making a high-level claim about the model
@@ -184,12 +184,12 @@ input parameters and a corresponding invariant that the system should
 obey whenever its inputs satisfy the constraints. Imandra also
 generates corresponding coverage proofs verifying that the collection
 of the generated regions properly covers the possible behaviours of
-the decomposed algorithm. This forms part of our "Testflow" framework
-for architecting and automatically deriving test suites meeting
-rigorous state-space coverage metrics.
+the decomposed algorithm. This forms a core part of Imandra's
+"Testflow" framework for architecting and automatically deriving test
+suites meeting rigorous state-space coverage metrics.
 
 We will seek to ensure that the repository contains up-to-date Imandra
-region decomposition for the latest models.
+region decompositions and test packs for the latest models.
 
 ## Formal Verification
 
