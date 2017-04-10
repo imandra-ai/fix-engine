@@ -43,8 +43,8 @@ benefits. To name a few:
   section below).
 
 - Executable: Outside of the Imandra-specific commands used in
-  verification, the model itself is a valid OCaml code. You may use
-  the full OCaml stack to compile it and run the binary.
+  verification, the model itself is all valid OCaml code. You may use
+  the full OCaml stack to compile and run the engine.
 
 - Exportable: Using the OCaml stack, the model can be compiled into a
   number of target languages and library formats. The community can
@@ -246,8 +246,12 @@ For learning the mathematics behind the techniques, we suggest:
 - [Handbook of Practical Logic and Automated Reasoning](http://www.cambridge.org/catalogue/catalogue.asp?isbn=9780521899574) by John Harrison, Intel
 - [Coq'Art](https://www.labri.fr/perso/casteran/CoqArt/) by Yves Bertot and Pierre Castéran, INRIA
 - [A Computational Logic](https://www.cs.utexas.edu/users/boyer/acl.pdf) and subsequent books by Robert S. Boyer and J Strother Moore, UT Austin
+- [Isabelle/HOL - A Proof Assistant for Higher-Order Logic](https://www21.in.tum.de/~nipkow/LNCS2283/) by Tobias Nipkow, Lawrence C. Paulson and Markus Wenzel, Cambridge and T.U. München
 - [Decision Procedures - An Algorithmic Point of View](http://www.decision-procedures.org/) by Daniel Kroening, Oxford and Ofer Strichman, Technion
 - [Quantifier Elimination and Cylindrical Algebraic Decomposition](http://www.springer.com/us/book/9783211827949) by Bob Caviness and Jeremy Johnson (Eds.)
+- [Symbolic Logic and Mechanical Theorem Proving](http://dl.acm.org/citation.cfm?id=550421) by Chin-Liang Chang and Richard Char-Tung Lee, NIH
+- [Principles of Model Checking](https://mitpress.mit.edu/books/principles-model-checking) by Christel Baier and Joost-Pieter Katoen, T.U. Dresden and RWTH Aachen
+- [Handbook of Automated Reasoning](http://www.sciencedirect.com/science/book/9780444508133) by Alan Robinson and Andrei Voronkov (Eds.)
 
 If you have other relevant publications or academic papers related to
 application of formal verification (or formal methods, etc) to
