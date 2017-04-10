@@ -53,7 +53,8 @@ benefits. To name a few:
   libraries.
 
 - Simulation: The model can be used as the basis of simulation
-  environments.
+  environments, using the verified engine as a semantic
+  `gold-standard` and test oracle.
 
 ## How
 
