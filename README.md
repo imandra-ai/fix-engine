@@ -148,11 +148,10 @@ verify hbeat_sent_if_no_data_received ( engine : fix_engine_state ) =
 ```
 
 It's important to note that the 'translation' of the English-prose
-statements into IML (or other mathematically precise languages) may
-not be unique due to the natural ambiguity of English. This inherent
-ambiguity in natural languages is a major reason why the efforts of
-formalising protocol specifications must be collaborative and
-industry-wide.
+statements into IML (or other mathematically precise formal languages)
+may not be unique. The inherent ambiguity of natural languages is a
+major reason why the efforts of formalising protocol specifications
+must be collaborative and industry-wide.
 
 Notice how this approach differs from traditional 'testing'. In the
 statement above, we're making a high-level claim about the model
@@ -230,8 +229,10 @@ And here are links to some great interactive and automated theorem provers:
 - [Coq](https://coq.inria.fr)
 - [Lean](https://leanprover.github.io)
 - [Isabelle](https://isabelle.in.tum.de)
+- [Matita](http://matita.cs.unibo.it/)
 - [MetiTarski](https://www.cl.cam.ac.uk/~lp15/papers/Arith/)
 - [Prover9 and Mace4](https://www.cs.unm.edu/~mccune/mace4/)
+- [PVS](http://pvs.csl.sri.com/)
 - [SPASS](http://www.mpi-inf.mpg.de/departments/automation-of-logic/software/spass-workbench/)
 - [Z3](https://github.com/Z3Prover/z3)
 
