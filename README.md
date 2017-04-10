@@ -36,11 +36,11 @@ benefits. To name a few:
 
 - Queryable: A formal verification engine like Imandra can be used to
   ask and answer deep questions about the behaviour of the model
-  automatically
+  automatically.
 
 - Testing: Powerful model-based testing techniques can be used to
   automatically generate high-coverage test suites (see Test Suite
-  section below)
+  section below).
 
 - Executable: Outside of the Imandra-specific commands used in
   verification, the model itself is a valid OCaml code. You may use
