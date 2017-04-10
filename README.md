@@ -82,7 +82,7 @@ versions. View the technical documentation for further information.
 
 ## Model Verification
 
-In addition to the model source code, you will find a set of
+In addition to the model source code, you will find a collection of
 Verification Goals (VGs). VGs are statements in IML expressing
 properties of the FIX engine model that we wish to verify. It's
 important to note that IML is used for both building the model and
@@ -99,52 +99,51 @@ One way to formalise that statement is to create two VGs:
 
 (* VG.1.1 *)
 verify last_time_data_sent_gets_updated ( engine : fix_engine_state ) =
-        let engine' = one_step ( engine ) in
+  let engine' = one_step ( engine ) in
+     engine.outgoing_fix_msg = None && engine'.outgoing_fix_msg <> None
 
-        ( engine.outgoing_fix_msg = None && engine'.outgoing_fix_msg <> None )
-        ==> (engine'.fe_last_time_data_sent = engine'.fe_curr_time )
+     ==> engine'.fe_last_time_data_sent = engine'.fe_curr_time
 ;;
 
 (** VG.1.2 *)
 let outbound_msg_heartbeat ( m : full_top_level_msg option ) =
-    match m with
-    | None  -> false
-    | Some msg  ->
+  match m with
+  | None      -> false
+  | Some msg  ->
     match msg with
     | ValidMsg vmsg -> (
-        match vmsg.full_msg_data with
-        | Full_FIX_Admin_Msg admin_msg  -> (
-            match admin_msg with
-            | Full_Msg_Hearbeat _       -> true
-            | Full_Msg_Test_Request _   -> true
-            | _                         -> false
-        )
-        | _ -> false
+      match vmsg.full_msg_data with
+      | Full_FIX_Admin_Msg admin_msg -> (
+        match admin_msg with
+        | Full_Msg_Hearbeat _        -> true
+        | Full_Msg_Test_Request _    -> true
+        | _                          -> false
+      )
+      | _ -> false
     )
     | _ -> false
 ;;
 
 let time_update_received ( m, last_time_data_sent, hbeat_interval : fix_engine_int_msg option * fix_utctimestamp * fix_duration ) =
-    match m with
-    | None -> false
-    | Some mint ->
+  match m with
+  | None -> false
+  | Some mint ->
     match mint with
     | TimeChange tc_data ->
-        let valid_time = utctimestamp_add ( last_time_data_sent, hbeat_interval ) in
-        utctimestamp_greaterThan ( tc_data, valid_time )
+       let valid_time = utctimestamp_add ( last_time_data_sent, hbeat_interval ) in
+       utctimestamp_greaterThan ( tc_data, valid_time )
     | _ -> false
 ;;
 
 verify hbeat_sent_if_no_data_received ( engine : fix_engine_state ) =
-    let engine' = one_step ( engine ) in (
-    engine.fe_curr_mode = ActiveSession &&
-    is_int_message_valid ( engine) &&
-    is_state_valid ( engine ) &&
-    time_update_received ( engine.incoming_int_msg, engine.fe_last_time_data_sent, engine.fe_heartbeat_interval ) )
+  let engine' = one_step ( engine ) in (
+    engine.fe_curr_mode = ActiveSession
+    && is_int_message_valid (engine)
+    && is_state_valid (engine)
+    && time_update_received ( engine.incoming_int_msg, engine.fe_last_time_data_sent, engine.fe_heartbeat_interval ) )
 
     ==> outbound_msg_heartbeat ( engine'.outgoing_fix_msg )
 ;;
-
 ```
 
 It's important to note that the 'translation' of the English-prose
@@ -206,8 +205,7 @@ Theories (SMT) solving, nonlinear decision procedures and scalable
 techniques for symbolic execution.
 
 For more on our vision for formal verification for finance, see our
-short explainer [video](https://vimeo.com/123746101) that gives the
-big picture.
+short explainer [video](https://vimeo.com/123746101).
 
 AI has published several technical white papers about current application of FV to financial markets:
 - [Case Study: 2015 SEC Fine Against UBS ATS](https://www.imandra.ai/case-study-2015-sec-fine-against-ubs-ats/)
