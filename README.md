@@ -77,9 +77,9 @@ provers, see Formal Verification section below.
 
 ## What
 
-The model is currently targeting version 4.4 of the FIX
-protocol. The goal is to expand the model to cover the other relevant
-versions. View the technical documentation for further information.
+The model is currently targeting version 4.4 of the FIX protocol. Over
+time, we plan to cover other relevant versions. View the technical
+documentation for further information.
 
 ## Model Verification
 
@@ -101,8 +101,7 @@ One way to formalise that statement is to create two VGs:
 (* VG.1.1 *)
 verify last_time_data_sent_gets_updated ( engine : fix_engine_state ) =
   let engine' = one_step ( engine ) in
-  engine.outgoing_fix_msg = None
-  && engine'.outgoing_fix_msg <> None
+  engine.outgoing_fix_msg = None && engine'.outgoing_fix_msg <> None
    ==>
   engine'.fe_last_time_data_sent = engine'.fe_curr_time
 ;;
