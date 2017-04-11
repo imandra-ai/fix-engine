@@ -1,4 +1,3 @@
-
 type full_app_msg_tag = 
     | Full_Msg_ExecutionReport_Tag
     | Full_Msg_OrderCancelRequest_Tag
@@ -7,25 +6,24 @@ type full_app_msg_tag =
     | Full_Msg_CancelReject_Tag               
 ;;
 
-
 type full_msg_NewOrderSingle_field_tag = 
-    | Full_Msg_NewOrderSingle_Account     
-    | Full_Msg_NewOrderSingle_ClOrdID     
-    | Full_Msg_NewOrderSingle_OrigClOrdID 
-    | Full_Msg_NewOrderSingle_ExecInst    
-    | Full_Msg_NewOrderSingle_HandlInst   
-    | Full_Msg_NewOrderSingle_TransactTimeon
-    | Full_Msg_NewOrderSingle_Symbol      
-    | Full_Msg_NewOrderSingle_SymbolSfx   
-    | Full_Msg_NewOrderSingle_Side        
-    | Full_Msg_NewOrderSingle_OrderQty    
-    | Full_Msg_NewOrderSingle_OrdType     
-    | Full_Msg_NewOrderSingle_Price       
-    | Full_Msg_NewOrderSingle_MinQty      
-    | Full_Msg_NewOrderSingle_TimeInForce 
-    | Full_Msg_NewOrderSingle_LocateReqd  
-    | Full_Msg_NewOrderSingle_LocateBroker
-    | Full_Msg_NewOrderSingle_Currency    
+    | Full_Msg_NewOrderSingle_Account_Tag     
+    | Full_Msg_NewOrderSingle_ClOrdID_Tag     
+    | Full_Msg_NewOrderSingle_OrigClOrdID_Tag 
+    | Full_Msg_NewOrderSingle_ExecInst_Tag    
+    | Full_Msg_NewOrderSingle_HandlInst_Tag   
+    | Full_Msg_NewOrderSingle_TransactTimeon_Tag
+    | Full_Msg_NewOrderSingle_Symbol_Tag      
+    | Full_Msg_NewOrderSingle_SymbolSfx_Tag   
+    | Full_Msg_NewOrderSingle_Side_Tag        
+    | Full_Msg_NewOrderSingle_OrderQty_Tag    
+    | Full_Msg_NewOrderSingle_OrdType_Tag     
+    | Full_Msg_NewOrderSingle_Price_Tag       
+    | Full_Msg_NewOrderSingle_MinQty_Tag      
+    | Full_Msg_NewOrderSingle_TimeInForce_Tag 
+    | Full_Msg_NewOrderSingle_LocateReqd_Tag  
+    | Full_Msg_NewOrderSingle_LocateBroker_Tag
+    | Full_Msg_NewOrderSingle_Currency_Tag    
 ;;
 
 type full_msg_OrderCancelReplaceRequest_field_tag = 
