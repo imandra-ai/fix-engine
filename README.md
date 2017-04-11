@@ -162,7 +162,7 @@ in *all* possible scenarios. When such a claim does not hold, Imandra
 works to construct a precise sequence of events (a "counterexample")
 which exhibits a violation of the property.
 
-For further information on model verification, see [Model
+For further information on model verification, see the [Model
 Verification](https://fix.readme.io/docs/verification-overview)
 section of the project's homepage.
 
