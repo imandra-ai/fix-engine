@@ -1,4 +1,4 @@
-###`Base_types` 
+### `Base_types` 
 * `fix_string` 
   * &#10003; type declaration (currently just `int`)
   * &#10007; operators
@@ -18,14 +18,14 @@
 *  `fix_encryption_method`, `fix_GapFillFlag`
   *  &#9986;  Enums needed for admin messages,  shouldn't they also be in protocol-related module, not in `Base_types`?
 
-###`Datetime`
+### `Datetime`
 * &#10003;  `fix_utctimestamp`
 * &#10003;  `fix_localmktdate`
 * &#10003;  `fix_utctimeonly`
 * `fix_duration`
    * &#10067; FIX specs do not really have a duration type 
 
-#### `Numeric`
+### `Numeric`
  * &#10003;  `fix_float` 
  * &#10067; This module is called `Numeric`, but devoted to fix_float
 
