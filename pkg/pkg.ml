@@ -38,13 +38,15 @@ let () =
     ; Pkg.mllib ~api: [ "full_app_enums_json"
                       ; "full_app_tags_json"
                       ; "full_app_messages_json" ] "src-protocol-exts-pp/protocol_exts_pp.mllib" 
-(*
-    ; Pkg.mllib ~api: [ "fix_engine_json"
-                      ; "full_admin_msg_json"
-                      ; "full_msg_json" ] "src-protocol-pp/protocol_pp.mllib"
 
-    ; Pkg.mllib ~api: [ "base_types_json"
-                      ; "datetime_json" ] "src-core-pp/core_pp.mllib"
+    ; Pkg.mllib ~api: [ "fix_engine_json"
+                      ; "full_admin_enums_json"
+                      ; "full_admin_messages_json"
+                      ; "full_admin_tags_json"
+                      ; "full_messages_json"
+                      ; "full_message_tags_json" ] "src-protocol-pp/protocol_pp.mllib"
+
+(*
 
     ; Pkg.mllib ~api: [ "model_app_messages"
                       ] "src-model-types/model_types.mllib"

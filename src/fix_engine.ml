@@ -209,11 +209,7 @@ let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, msg, is_duplicat
     full_msg_data = msg;
 
     (** Trailers would be augmented by raw OCaml printers/parsers. *)
-    full_msg_trailer = {
-        signature_length    = 0;
-        signature           = 0;
-        check_sum           = 0;
-    };
+    full_msg_trailer = default_fix_trailer
 };;
 
 (** Create a logon message we would send out to initiate a connection 

@@ -150,15 +150,15 @@ let default_fix_header = {
 
 (** Standard FIX trailer *)
 type fix_trailer = {
-    signature_length                : int;  (* Tag 93: Signature Length *)
-    signature                       : int;  (* Tag 89: Signature text *)
+    signature_length                : int option;  (* Tag 93: Signature Length *)
+    signature                       : int option;  (* Tag 89: Signature text *)
     check_sum                       : int;  (* Tag 10: *)
 }
 ;;
 
 let default_fix_trailer = {
-    signature_length                = 0;
-    signature                       = 0;
+    signature_length                = None;
+    signature                       = None;
     check_sum                       = 0;
 }
 ;;

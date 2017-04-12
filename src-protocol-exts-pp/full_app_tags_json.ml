@@ -92,18 +92,8 @@ let full_app_field_tag_to_string = function
     | Full_Msg_CancelReject_Field_Tag              x -> full_msg_CancelReject_field_tag_to_string              x               
 ;;
 
-let full_app_msg_tag_to_json                             x : json = `String ( full_app_msg_tag_to_string                             x ) ;; 
-let full_msg_NewOrderSingle_field_tag_to_json            x : json = `String ( full_msg_NewOrderSingle_field_tag_to_string            x ) ;; 
-let full_msg_OrderCancelReplaceRequest_field_tag_to_json x : json = `String ( full_msg_OrderCancelReplaceRequest_field_tag_to_string x ) ;; 
-let full_msg_OrderCancelRequest_field_tag_to_json        x : json = `String ( full_msg_OrderCancelRequest_field_tag_to_string        x ) ;; 
-let full_msg_CancelReject_field_tag_to_json              x : json = `String ( full_msg_CancelReject_field_tag_to_string              x ) ;; 
-let full_msg_ExecutionReport_field_tag_to_json           x : json = `String ( full_msg_ExecutionReport_field_tag_to_string           x ) ;; 
-let full_app_field_tag_to_json                           x : json = `String ( full_app_field_tag_to_string                           x ) ;; 
+let full_app_msg_tag_to_json x : json = `String ( full_app_msg_tag_to_string   x ) ;; 
+let full_app_msg_tag_opt_to_json = function None -> `Null  | Some x -> full_app_msg_tag_to_json   x ;;
 
-let full_app_msg_tag_opt_to_json                             = function None -> `Assoc [] | Some x -> full_app_msg_tag_to_json                             x ;;
-let full_msg_NewOrderSingle_field_tag_opt_to_json            = function None -> `Assoc [] | Some x -> full_msg_NewOrderSingle_field_tag_to_json            x ;;
-let full_msg_OrderCancelReplaceRequest_field_tag_opt_to_json = function None -> `Assoc [] | Some x -> full_msg_OrderCancelReplaceRequest_field_tag_to_json x ;;
-let full_msg_OrderCancelRequest_field_tag_opt_to_json        = function None -> `Assoc [] | Some x -> full_msg_OrderCancelRequest_field_tag_to_json        x ;;
-let full_msg_CancelReject_field_tag_opt_to_json              = function None -> `Assoc [] | Some x -> full_msg_CancelReject_field_tag_to_json              x ;;
-let full_msg_ExecutionReport_field_tag_opt_to_json           = function None -> `Assoc [] | Some x -> full_msg_ExecutionReport_field_tag_to_json           x ;;
-let full_app_field_tag_opt_to_json                           = function None -> `Assoc [] | Some x -> full_app_field_tag_to_json                           x ;;
+let full_app_field_tag_to_json x : json = `String ( full_app_field_tag_to_string x ) ;; 
+let full_app_field_tag_opt_to_json  = function None -> `Null | Some x -> full_app_field_tag_to_json x ;;
