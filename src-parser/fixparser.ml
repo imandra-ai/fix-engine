@@ -2,50 +2,7 @@ open Full_session_core;;
 open Full_messages;;
 open Parse_basic_types;;
 open Parse_datetime;;
-
-(**  Splits a stream of characters into a stream of key*value pairs *)
-let split_into_key_value (spliton : char) ( stream : char Stream.t ) : (string * string) Stream.t =
-    let current = ref [] in
-    let listref_to_string lst =
-        !lst |> List.rev |> String.concat "" in
-    let rec next i =
-        try 
-            let c = Stream.next stream in
-            if c = spliton then (
-                let entry = listref_to_string current in
-                current := [];
-                Scanf.sscanf entry " %s@=%s " (fun k v -> Some (k,v))
-            ) else (
-                current := Char.escaped c :: !current;
-                next i
-            )
-        with Stream.Failure -> None in
-    Stream.from next
-;;
-
-(** Splits a stream of key-value paris into stream of  messages *)
-let split_into_messages (stream : (string * string) Stream.t) =
-    let current = ref [] in
-    let rec next i =
-        try 
-            let key,value = Stream.next stream in    
-            if (int_of_string key = 8) && (!current != []) then (
-                let message = List.rev !current in
-                current := [(key,value)];
-                Some message
-            ) else (
-                current := (key,value) :: !current;
-                next i
-            )
-        with Stream.Failure -> (
-            if (!current != []) then (
-                let message = List.rev !current in
-                current := [];
-                Some message
-            ) else None
-        ) in
-    Stream.from next
-;; 
+open Parse_utils;;
 
 (**  Checks that the message contains BodyLength<9> field as a second entry 
      in the message. And that the value equals to the number of bytes between 
@@ -99,46 +56,7 @@ let valid_no_duplicate_keys ( msg : (string * string) list ) : string option =
         |> has_duplicates
 ;;
 
-(* -
-*)
-
-module Util = struct
-    type 'a parse_field_result =
-        | ParseSuccess of 'a
-        | WrongFieldFormat of string
-        | RequiredFieldMissing of string
-        
-    let assoc msg key parser = 
-        if List.mem_assoc key msg then begin
-            match List.assoc key msg |> parser with
-            | Some v -> Some ( Some v )
-            | None   -> None
-        end else Some None
-
-    let opt msg tag parser f =
-        match assoc msg tag parser with 
-        | None -> WrongFieldFormat tag 
-        | Some t -> f t
-
-    let req msg tag parser f =
-        match assoc msg tag parser with 
-        | None -> WrongFieldFormat tag 
-        | Some None -> RequiredFieldMissing tag
-        | Some (Some t) -> f t
-        
-    let make_reject_data seq_num = {
-        srej_msg_msg_seq_num    = seq_num;
-        srej_msg_field_tag      = None;      
-        srej_msg_msg_type       = None;     
-        srej_msg_reject_reason  = None;     
-        srej_text               = None;      
-        srej_encoded_text_len   = None;      
-        srej_encoded_text       = None;      
-    }
-end;;
-
 let parse_fix_header msg = 
-    let open Util in 
     req msg "8"   parse_str           @@ fun h_begin_string                ->
     req msg "9"   parse_int           @@ fun h_body_length                 ->
     req msg "49"  parse_str           @@ fun h_sender_comp_id              ->

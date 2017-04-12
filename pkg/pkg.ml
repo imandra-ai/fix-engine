@@ -60,7 +60,8 @@ let () =
                       ] "src-model-conversions/model_conversions.mllib"
 
     ; Pkg.bin ~cond:examples "src-examples/example_runner"
+*)
 
     ; Pkg.doc "doc/all_modules.docdir/all_modules.dot"
-*)
+
   ]
