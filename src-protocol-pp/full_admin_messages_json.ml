@@ -80,13 +80,13 @@ let full_msg_business_reject_to_json x =
     ] |> assoc_filter_nulls 
 ;;
 
-let full_admin_msg_to_json = function
-    | Full_Msg_Heartbeat        x -> full_msg_heartbeat_to_json x       
-    | Full_Msg_Logon            x -> full_msg_logon_to_json x           
-    | Full_Msg_Logoff           x -> full_msg_logoff_to_json x          
-    | Full_Msg_Reject           x -> full_msg_reject_to_json x          
-    | Full_Msg_Business_Reject  x -> full_msg_business_reject_to_json x 
-    | Full_Msg_Resend_Request   x -> full_msg_resend_request_to_json x  
-    | Full_Msg_Sequence_Reset   x -> full_msg_sequence_reset_to_json x  
-    | Full_Msg_Test_Request     x -> full_msg_test_request_to_json x    
+let full_admin_msg_to_json x : json = match x with
+    | Full_Msg_Heartbeat        x -> `Assoc [ ( "Heartbeat"       , full_msg_heartbeat_to_json x       ) ]
+    | Full_Msg_Logon            x -> `Assoc [ ( "Logon"           , full_msg_logon_to_json x           ) ]
+    | Full_Msg_Logoff           x -> `Assoc [ ( "Logoff"          , full_msg_logoff_to_json x          ) ]
+    | Full_Msg_Reject           x -> `Assoc [ ( "Reject"          , full_msg_reject_to_json x          ) ]
+    | Full_Msg_Business_Reject  x -> `Assoc [ ( "Business_Reject" , full_msg_business_reject_to_json x ) ]
+    | Full_Msg_Resend_Request   x -> `Assoc [ ( "Resend_Request"  , full_msg_resend_request_to_json x  ) ]
+    | Full_Msg_Sequence_Reset   x -> `Assoc [ ( "Sequence_Reset"  , full_msg_sequence_reset_to_json x  ) ]
+    | Full_Msg_Test_Request     x -> `Assoc [ ( "Test_Request"    , full_msg_test_request_to_json x    ) ]
 ;;

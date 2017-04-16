@@ -53,17 +53,22 @@ module Parse_field_result = struct
         if not (List.mem_assoc tag msg) then f None else
         let value = List.assoc tag msg in
         if value = "" then EmptyField tag else
-        match parser value with 
-        | None   -> WrongFieldFormat tag 
-        | Some t -> f (Some t)
+        try 
+            match parser value with 
+            | None   -> WrongFieldFormat tag 
+            | Some t -> f (Some t)
+        with _ -> WrongFieldFormat tag
 
     let req msg tag parser f =
         if not (List.mem_assoc tag msg) then RequiredFieldMissing tag else
         let value = List.assoc tag msg in
         if value = "" then EmptyField tag else
-        match parser value with 
-        | None   -> WrongFieldFormat tag 
-        | Some t -> f t
+        try 
+            match parser value with 
+            | None   -> WrongFieldFormat tag 
+            | Some t -> f t
+        with _ -> WrongFieldFormat tag
+            
 end
 
 module Parse_message_result = struct 

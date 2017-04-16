@@ -74,17 +74,16 @@ let parse_msg_business_reject_field_tag = function
     |    _  -> None
 ;;
 
-let parse_admin_tag msg_tag str = 
+let parse_admin_field_tag msg_tag str = 
     let wrap parse f = match parse str with None -> None | Some x -> Some ( f x ) in
     match msg_tag with
-    | Some Full_Msg_Heartbeat_Tag        -> wrap parse_msg_heartbeat_field_tag       @@ fun x -> Full_Msg_Heartbeat_Field_Tag       x 
-    | Some Full_Msg_Test_Request_Tag     -> wrap parse_msg_test_request_field_tag    @@ fun x -> Full_Msg_Test_Request_Field_Tag    x     
-    | Some Full_Msg_Resend_Request_Tag   -> wrap parse_msg_resend_request_field_tag  @@ fun x -> Full_Msg_Resend_Request_Field_Tag  x    
-    | Some Full_Msg_Reject_Tag           -> wrap parse_msg_reject_field_tag          @@ fun x -> Full_Msg_Reject_Field_Tag          x           
-    | Some Full_Msg_Sequence_Reset_Tag   -> wrap parse_msg_sequence_reset_field_tag  @@ fun x -> Full_Msg_Sequence_Reset_Field_Tag  x   
-    | Some Full_Msg_Logoff_Tag           -> wrap parse_msg_logon_field_tag           @@ fun x -> Full_Msg_Logon_Field_Tag           x            
-    | Some Full_Msg_Logon_Tag            -> wrap parse_msg_logoff_field_tag          @@ fun x -> Full_Msg_Logoff_Field_Tag          x           
-    | Some Full_Msg_Business_Reject_Tag  -> wrap parse_msg_business_reject_field_tag @@ fun x -> Full_Msg_Business_Reject_Field_Tag x  
-    | None -> None
+    | Full_Msg_Heartbeat_Tag        -> wrap parse_msg_heartbeat_field_tag       @@ fun x -> Full_Msg_Heartbeat_Field_Tag       x 
+    | Full_Msg_Test_Request_Tag     -> wrap parse_msg_test_request_field_tag    @@ fun x -> Full_Msg_Test_Request_Field_Tag    x     
+    | Full_Msg_Resend_Request_Tag   -> wrap parse_msg_resend_request_field_tag  @@ fun x -> Full_Msg_Resend_Request_Field_Tag  x    
+    | Full_Msg_Reject_Tag           -> wrap parse_msg_reject_field_tag          @@ fun x -> Full_Msg_Reject_Field_Tag          x           
+    | Full_Msg_Sequence_Reset_Tag   -> wrap parse_msg_sequence_reset_field_tag  @@ fun x -> Full_Msg_Sequence_Reset_Field_Tag  x   
+    | Full_Msg_Logoff_Tag           -> wrap parse_msg_logon_field_tag           @@ fun x -> Full_Msg_Logon_Field_Tag           x            
+    | Full_Msg_Logon_Tag            -> wrap parse_msg_logoff_field_tag          @@ fun x -> Full_Msg_Logoff_Field_Tag          x           
+    | Full_Msg_Business_Reject_Tag  -> wrap parse_msg_business_reject_field_tag @@ fun x -> Full_Msg_Business_Reject_Field_Tag x  
 ;;
 

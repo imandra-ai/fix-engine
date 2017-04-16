@@ -90,15 +90,9 @@ let parse_msg_ExecutionReport_field_tag = function
 let parse_app_field_tag msg_tag str = 
     let wrap parse f = match parse str with None -> None | Some x -> Some ( f x ) in
     match msg_tag with
-    | Some Full_Msg_ExecutionReport_Tag            -> wrap parse_msg_ExecutionReport_field_tag           @@ fun x -> 
-                                                            Full_Msg_ExecutionReport_Field_Tag x
-    | Some Full_Msg_OrderCancelRequest_Tag         -> wrap parse_msg_OrderCancelRequest_field_tag        @@ fun x -> 
-                                                            Full_Msg_OrderCancelRequest_Field_Tag x
-    | Some Full_Msg_OrderCancelReplaceRequest_Tag  -> wrap parse_msg_OrderCancelReplaceRequest_field_tag @@ fun x -> 
-                                                            Full_Msg_OrderCancelReplaceRequest_Field_Tag x
-    | Some Full_Msg_NewOrderSingle_Tag             -> wrap parse_msg_NewOrderSingle_field_tag            @@ fun x -> 
-                                                            Full_Msg_NewOrderSingle_Field_Tag x
-    | Some Full_Msg_CancelReject_Tag               -> wrap parse_msg_CancelReject_field_tag              @@ fun x -> 
-                                                            Full_Msg_CancelReject_Field_Tag x
-    | None -> None
+    | Full_Msg_ExecutionReport_Tag            -> wrap parse_msg_ExecutionReport_field_tag           @@ fun x -> Full_Msg_ExecutionReport_Field_Tag x
+    | Full_Msg_OrderCancelRequest_Tag         -> wrap parse_msg_OrderCancelRequest_field_tag        @@ fun x -> Full_Msg_OrderCancelRequest_Field_Tag x
+    | Full_Msg_OrderCancelReplaceRequest_Tag  -> wrap parse_msg_OrderCancelReplaceRequest_field_tag @@ fun x -> Full_Msg_OrderCancelReplaceRequest_Field_Tag x
+    | Full_Msg_NewOrderSingle_Tag             -> wrap parse_msg_NewOrderSingle_field_tag            @@ fun x -> Full_Msg_NewOrderSingle_Field_Tag x
+    | Full_Msg_CancelReject_Tag               -> wrap parse_msg_CancelReject_field_tag              @@ fun x -> Full_Msg_CancelReject_Field_Tag x
 ;;

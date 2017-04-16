@@ -168,20 +168,49 @@ let message_basic_check msg =
     if not (valid_checksum      msg ) then GarbledMessage else  
     if not (valid_body_length   msg ) then GarbledMessage else  
     match find_duplicate_tags msg with Some tag -> DuplicateTag tag | None ->
-    if not (List.mem_assoc "34" msg ) then RequiredTagMissing "34" else
-    match ( List.assoc "34" msg |> parse_int) with None -> WrongValueFormat "34" | Some _ ->
     ParseSuccess ()
 ;;
 
-let parse_top_level_msg msg = 
-    message_basic_check msg >>= fun () ->
-    parse_header        msg >>= fun full_msg_header  ->
-    parse_trailer       msg >>= fun full_msg_trailer ->
-    let msg_tag_str = List.assoc "35" msg in
-    match ( msg_tag_str |> parse_full_msg_tag ) with None -> UnknownMessageTag msg_tag_str | Some msg_tag ->
-    parse_msg_data  msg_tag msg >>= fun full_msg_data    -> ParseSuccess 
-    { full_msg_header
-    ; full_msg_data
-    ; full_msg_trailer
+let make_session_reject reason tagstr msg =
+    if not (List.mem_assoc "34" msg ) then Garbled else
+    match ( List.assoc "34" msg |> parse_int ) with None -> Garbled | Some seq_num ->
+    let msg_tag = List.assoc "35" msg |> parse_full_msg_tag in
+    let field_tag = match msg_tag with 
+        | None -> None 
+        | Some msg_tag -> parse_full_field_tag msg_tag tagstr 
+        in
+    SessionRejectedMsg {
+        srej_msg_msg_seq_num   = seq_num   ;
+        srej_msg_field_tag     = field_tag ;     
+        srej_msg_msg_type      = msg_tag;
+        srej_msg_reject_reason = Some reason ;
+        srej_text              = None ;              
+        srej_encoded_text_len  = None ;
+        srej_encoded_text      = None ;      
     }
+;;
+
+    
+
+let parse_top_level_msg msg = 
+    let parse_result = begin
+        message_basic_check msg >>= fun () ->
+        parse_header        msg >>= fun full_msg_header   ->
+        parse_trailer       msg >>= fun full_msg_trailer  ->
+        let msg_tag_str = List.assoc "35" msg in
+        match ( msg_tag_str |> parse_full_msg_tag ) with None -> UnknownMessageTag msg_tag_str | Some msg_tag ->
+        parse_msg_data  msg_tag msg >>= fun full_msg_data -> ParseSuccess 
+        { full_msg_header
+        ; full_msg_data
+        ; full_msg_trailer
+        }
+    end in match parse_result with
+        | ParseSuccess msg       -> ValidMsg msg
+        | GarbledMessage         -> Garbled 
+        | UnknownMessageTag  tagstr -> make_session_reject Full_admin_enums.InvalidMsgType tagstr msg
+        | RequiredTagMissing tagstr -> make_session_reject Full_admin_enums.RequiredTagMissing tagstr msg
+        | DuplicateTag       tagstr -> make_session_reject Full_admin_enums.TagAppearsMoreThanOnce tagstr msg
+        | WrongValueFormat   tagstr -> make_session_reject Full_admin_enums.IncorrectDataFormatForValue tagstr msg
+        | UndefinedTag       tagstr -> make_session_reject Full_admin_enums.UndefinedTag tagstr msg
+        | EmptyValue         tag -> make_session_reject Full_admin_enums.TagSecifiedWithoutAValue tag msg
 ;;

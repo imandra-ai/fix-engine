@@ -54,6 +54,8 @@ let () =
                       ; "parse_admin_tags"
                       ] "src-protocol-pp/protocol_pp.mllib"
 
+    ; Pkg.bin "src-examples/wire_to_json"
+
 (*
 
     ; Pkg.mllib ~api: [ "model_app_messages"

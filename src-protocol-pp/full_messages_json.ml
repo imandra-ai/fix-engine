@@ -86,7 +86,7 @@ let trailer_to_json x : json =
 ;;
 
 let full_valid_msg_to_json x : json =  
-    [ ( "StandardTrailer", header_to_json    x.full_msg_header  ) 
+    [ ( "StandardHeader" , header_to_json    x.full_msg_header  ) 
     ; ( "MessageBody",     full_msg_to_json  x.full_msg_data    ) 
     ; ( "StandardTrailer", trailer_to_json   x.full_msg_trailer ) 
     ] |> assoc_filter_nulls 
