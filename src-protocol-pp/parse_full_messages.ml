@@ -9,30 +9,26 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
+open Full_message_tags;;
 open Full_messages;;
 open Parser_utils;;
+open Parser_utils.Parse_message_result;;
 open Parse_base_types;;
 open Parse_datetime;;
-
-let parse_app_msg msg_tag msg = UnknownMessageTag msg_tag;;
+open Parse_full_tags;;
 (* @meta[imandra_ignore] off @end *)
 
-let parse_msg_data msg_tag msg = 
-    match parse_admin_msg msg_tag msg with 
-    | ParseSuccess         x -> ParseSuccess ( Full_Admin_Msg x )
-    | WrongFieldFormat     x -> WrongFieldFormat x 
-    | RequiredFieldMissing x -> RequiredFieldMissing x
-    | UnknownMessageTag msg_tag -> 
-    begin
-        match parse_app_msg msg_tag msg with
-        | ParseSuccess         x -> ParseSuccess ( Full_App_Msg x )
-        | WrongFieldFormat     x -> WrongFieldFormat     x 
-        | RequiredFieldMissing x -> RequiredFieldMissing x
-        | UnknownMessageTag    x -> UnknownMessageTag    x
-    end
+let parse_msg_data msg_tag msg =
+    match msg_tag with
+    | Full_Admin_Msg_Tag msg_tag -> Parse_admin_messages.parse_admin_msg_data msg_tag msg
+                                 >>= fun x -> ParseSuccess ( Full_Admin_Msg x )
+    | Full_App_Msg_Tag   msg_tag -> Parse_app_messages.parse_app_msg_data     msg_tag msg
+                                 >>= fun x -> ParseSuccess ( Full_App_Msg x )
 ;;
 
 let parse_header msg = 
+    Parse_message_result.from_parse_field_result @@
+    let open Parse_field_result in 
     req msg "8"   parse_str           @@ fun h_begin_string                ->
     req msg "9"   parse_int           @@ fun h_body_length                 ->
     req msg "49"  parse_str           @@ fun h_sender_comp_id              ->
@@ -90,6 +86,8 @@ let parse_header msg =
 
 
 let parse_trailer msg =  
+    Parse_message_result.from_parse_field_result @@
+    let open Parse_field_result in 
     opt msg "93" parse_int  @@ fun signature_length ->
     opt msg "89" parse_int  @@ fun signature        ->
     req msg "10" parse_int  @@ fun check_sum        -> ParseSuccess 
@@ -97,6 +95,17 @@ let parse_trailer msg =
     ; signature       
     ; check_sum       
     }
+;;
+
+
+
+let check_first_three_tags ( msg : (string * string) list ) : string option =
+    if List.hd msg |> fst <> "8" then Some "8" else
+    let msg = List.tl msg in
+    if List.hd msg |> fst <> "9" then Some "9" else
+    let msg = List.tl msg in
+    if List.hd msg |> fst <> "35" then Some "35" else
+    None
 ;;
 
 (**  Checks that the message contains BodyLength<9> field as a second entry 
@@ -140,44 +149,39 @@ let valid_checksum ( msg : (string * string) list ) : bool  =
 ;;
 
 (** Checks that the message doesnt contain duplicate tags *)
-let find_duplicate_keys ( msg : (string * string) list ) : string option =
-    let rec has_duplicates lst = match lst with
+let find_duplicate_tags ( msg : (string * string) list ) : string option =
+    let rec get_duplicates lst = match lst with
         | a::b::tl when a = b -> Some a
-        | a::tl -> has_duplicates tl
+        | a::tl -> get_duplicates tl
         | [] -> None
         in
     List.map fst msg 
         |> List.sort String.compare
-        |> has_duplicates
+        |> get_duplicates
 ;;
 
+(**
+    Runs basic message intergrity checks. Returns ParseSuccess ()  on success.
+*)
 let message_basic_check msg = 
-    if not (valid_checksum      msg ) then Some Garbled else  
-    if not (valid_body_length   msg ) then Some Garbled else  
-    if not (List.mem_assoc "34" msg ) then Some Garbled else
-    match ( List.assoc "34" msg |> parse_int) with None -> Some Garbled | Some seq_num ->
-    let rej_reason = { srej_msg_msg_seq_num   = seq_num 
-                     ; srej_msg_field_tag     = None 
-                     ; srej_msg_msg_type      = None 
-                     ; srej_msg_reject_reason = None 
-                     ; srej_text              = None 
-                     ; srej_encoded_text_len  = None 
-                     ; srej_encoded_text      = None 
-                     } in
-        
+    match check_first_three_tags msg with Some tag -> RequiredTagMissing tag | None ->
+    if not (valid_checksum      msg ) then GarbledMessage else  
+    if not (valid_body_length   msg ) then GarbledMessage else  
+    match find_duplicate_tags msg with Some tag -> DuplicateTag tag | None ->
+    if not (List.mem_assoc "34" msg ) then RequiredTagMissing "34" else
+    match ( List.assoc "34" msg |> parse_int) with None -> WrongValueFormat "34" | Some _ ->
+    ParseSuccess ()
 ;;
-
 
 let parse_top_level_msg msg = 
-    match assoc msg "35" (fun x -> Some x ) with  | 
-    parse_header    msg          >>= fun full_msg_header   ->
-    parse_trailer   msg          >>= fun full_msg_trailer  ->
-    parse_msg_data  msg_tag msg  >>= fun full_msg_data     -> ( ParseSuccess 
-    { full_msg_header 
+    message_basic_check msg >>= fun () ->
+    parse_header        msg >>= fun full_msg_header  ->
+    parse_trailer       msg >>= fun full_msg_trailer ->
+    let msg_tag_str = List.assoc "35" msg in
+    match ( msg_tag_str |> parse_full_msg_tag ) with None -> UnknownMessageTag msg_tag_str | Some msg_tag ->
+    parse_msg_data  msg_tag msg >>= fun full_msg_data    -> ParseSuccess 
+    { full_msg_header
+    ; full_msg_data
     ; full_msg_trailer
-    ; full_msg_data   
-    })  |> fun parse_result -> 
-    match parse_result with
-        | ParseSuccess msg_data -> ValidMsg msg_data
-        | _ -> Garbled  
+    }
 ;;

@@ -5,11 +5,16 @@ let parse_str (str : string) : fix_string option =
     Some ( Hashtbl.hash str)
 ;; 
 
+let parse_symbol (str : string) : fix_symbol option = 
+    Some ( Hashtbl.hash str)
+;;
+
 let parse_int ( str : string ) : int option = 
     try 
         Some(int_of_string str) 
     with _ -> None
 ;;
+
 
 let parse_bool ( str : string) : fix_bool option = 
     match str with 
@@ -17,7 +22,6 @@ let parse_bool ( str : string) : fix_bool option =
     | "N" -> Some false 
     | _ -> None
 ;;
-
 
 let parse_float ( str : string ) : fix_float option =
     let mkfloat w f = {fix_float_whole = w; fix_float_fraction = f } in
@@ -32,3 +36,27 @@ let parse_float ( str : string ) : fix_float option =
         | 4 -> Some ( Float_4 ( mkfloat whole fraction ) )
         | _ -> None
 ;;
+
+
+let parse_currency = function
+    | "GBP" -> Some GBP
+    | "USD" -> Some USD
+    | _ -> None
+;;
+
+let parse_country = function
+    | "UK"      -> Some UK
+    | "USA"     -> Some USA
+    | "France"  -> Some France
+    | "Germany" -> Some Germany
+    | _ -> None
+;;
+
+let parse_exchange = function
+    | "BATS"     -> Some BATS
+    | "DBSuperX" -> Some DBSuperX
+    | _ -> None
+;;
+
+
+

@@ -4,3 +4,7 @@ Full_admin_messages_json
 Full_admin_tags_json
 Full_messages_json
 Full_message_tags_json
+Parse_admin_enums
+Parse_admin_tags
+Parse_admin_messages
+Parse_full_tags

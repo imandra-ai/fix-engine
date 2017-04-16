@@ -42,37 +42,55 @@ let split_into_messages (stream : (string * string) Stream.t) =
     Stream.from next
 ;; 
 
-type 'a parse_field_result =
-    | ParseSuccess of 'a
-    | WrongFieldFormat of string
-    | RequiredFieldMissing of string 
-    | UnknownMessageTag of string
-;;
+module Parse_field_result = struct 
+    type 'a t =
+        | ParseSuccess of 'a
+        | WrongFieldFormat of string
+        | RequiredFieldMissing of string 
+        | EmptyField of string 
 
-let assoc msg key parser = 
-    if List.mem_assoc key msg then begin
-        match List.assoc key msg |> parser with
-        | Some v -> Some ( Some v )
-        | None   -> None
-    end else Some None
-;;
+    let opt msg tag parser f =
+        if not (List.mem_assoc tag msg) then f None else
+        let value = List.assoc tag msg in
+        if value = "" then EmptyField tag else
+        match parser value with 
+        | None   -> WrongFieldFormat tag 
+        | Some t -> f (Some t)
 
-let opt msg tag parser f =
-    match assoc msg tag parser with 
-    | None -> WrongFieldFormat tag 
-    | Some t -> f t
-;;
+    let req msg tag parser f =
+        if not (List.mem_assoc tag msg) then RequiredFieldMissing tag else
+        let value = List.assoc tag msg in
+        if value = "" then EmptyField tag else
+        match parser value with 
+        | None   -> WrongFieldFormat tag 
+        | Some t -> f t
+end
 
-let req msg tag parser f =
-    match assoc msg tag parser with 
-    | None -> WrongFieldFormat tag 
-    | Some None -> RequiredFieldMissing tag
-    | Some (Some t) -> f t
-;;
+module Parse_message_result = struct 
+    type 'a t =
+        | ParseSuccess         of 'a
+        | UnknownMessageTag    of string 
+        | RequiredTagMissing   of string 
+        | DuplicateTag         of string 
+        | WrongValueFormat     of string
+        | UndefinedTag         of string
+        | EmptyValue           of string
+        | GarbledMessage
 
-let ( >>= ) x f = match x with
-    | ParseSuccess x -> f x   
-    | WrongFieldFormat x     -> WrongFieldFormat x 
-    | RequiredFieldMissing x -> RequiredFieldMissing x
-    | UnknownMessageTag x    -> UnknownMessageTag x   
-;;
+
+    let from_parse_field_result = function
+        | Parse_field_result.ParseSuccess         x -> ParseSuccess x   
+        | Parse_field_result.WrongFieldFormat     x -> WrongValueFormat x 
+        | Parse_field_result.RequiredFieldMissing x -> RequiredTagMissing x
+
+
+    let ( >>= ) x f = match x with
+        | ParseSuccess       x -> f x   
+        | UnknownMessageTag  x -> UnknownMessageTag  x
+        | RequiredTagMissing x -> RequiredTagMissing x
+        | DuplicateTag       x -> DuplicateTag       x
+        | WrongValueFormat   x -> WrongValueFormat   x
+        | UndefinedTag       x -> UndefinedTag       x
+        | EmptyValue         x -> EmptyValue         x
+        | GarbledMessage       -> GarbledMessage
+end

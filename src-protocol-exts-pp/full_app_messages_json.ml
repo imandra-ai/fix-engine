@@ -27,7 +27,6 @@ let full_msg_new_order_single_to_json x =
     ; ( "MinQty"       , float_opt_to_json         x.full_newOrderSingle_MinQty       ) 
     ; ( "TimeInForce"  , timeinforce_opt_to_json   x.full_newOrderSingle_TimeInForce  ) 
     ; ( "LocateReqd"   , bool_opt_to_json          x.full_newOrderSingle_LocateReqd   ) 
-    ; ( "LocateBroker" , string_opt_to_json        x.full_newOrderSingle_LocateBroker ) 
     ; ( "Currency"     , currency_opt_to_json      x.full_newOrderSingle_Currency     ) 
     ] |> assoc_filter_nulls
 ;;
@@ -48,7 +47,6 @@ let full_msg_order_cancel_replace_request_to_json x =
     ; ( "MinQty"       , float_opt_to_json        x.full_orderCancelReplaceRequest_MinQty        )   
     ; ( "TimeInForce"  , timeinforce_opt_to_json  x.full_orderCancelReplaceRequest_TimeInForce   )   
     ; ( "LocateReqd"   , bool_opt_to_json         x.full_orderCancelReplaceRequest_LocateReqd    )   
-    ; ( "LocateBroker" , string_opt_to_json       x.full_orderCancelReplaceRequest_LocateBroker  )   
     ] |> assoc_filter_nulls
 ;;
 

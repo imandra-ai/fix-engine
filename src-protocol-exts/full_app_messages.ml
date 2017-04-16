@@ -10,7 +10,7 @@ open Full_app_tags;;
 type full_msg_new_order_single_data = {
     full_newOrderSingle_Account                     : fix_string option;
     full_newOrderSingle_ClOrdID                     : fix_string option;
-    full_newOrderSingle_OrigClOrdID                 : fix_string option;
+    full_newOrderSingle_OrigClOrdID                 : fix_string option; (*?? This field is not in NewOrderSingle *)
     full_newOrderSingle_ExecInst                    : fix_execinst option;
     full_newOrderSingle_HandlInst                   : fix_handlinst option;
     full_newOrderSingle_TransactTime                : fix_utctimestamp option;
@@ -23,7 +23,6 @@ type full_msg_new_order_single_data = {
     full_newOrderSingle_MinQty                      : fix_float option;
     full_newOrderSingle_TimeInForce                 : fix_timeinforce option;
     full_newOrderSingle_LocateReqd                  : fix_bool option;
-    full_newOrderSingle_LocateBroker                : fix_string option;
     full_newOrderSingle_Currency                    : fix_currency option;
 }
 ;;
@@ -45,7 +44,6 @@ let init_full_msg_new_order_single_data = {
     full_newOrderSingle_MinQty                      = None;
     full_newOrderSingle_TimeInForce                 = None;
     full_newOrderSingle_LocateReqd                  = None;
-    full_newOrderSingle_LocateBroker                = None;
     full_newOrderSingle_Currency                    = None;
 }
 ;;
@@ -67,7 +65,6 @@ type full_msg_order_cancel_replace_request_data = {
     full_orderCancelReplaceRequest_MinQty           : fix_float option;
     full_orderCancelReplaceRequest_TimeInForce      : fix_timeinforce option;
     full_orderCancelReplaceRequest_LocateReqd       : fix_bool option;
-    full_orderCancelReplaceRequest_LocateBroker     : fix_string option;
 }
 ;;
 
@@ -88,7 +85,6 @@ let init_msg_ordercancel_replacerequest_data = {
     full_orderCancelReplaceRequest_MinQty            = None;
     full_orderCancelReplaceRequest_TimeInForce       = None;
     full_orderCancelReplaceRequest_LocateReqd        = None;
-    full_orderCancelReplaceRequest_LocateBroker      = None;
 }
 ;;
 

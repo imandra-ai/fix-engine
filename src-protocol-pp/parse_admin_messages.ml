@@ -9,20 +9,25 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
+open Full_admin_tags;;
 open Full_admin_messages;;
 open Parser_utils ;;
 open Parse_base_types;;
 open Parse_datetime;;
-open Parse_full_admin_enums;;
-open Parse_full_message_tags;;
+open Parse_admin_enums;;
+open Parse_full_tags;;
 (* @meta[imandra_ignore] off @end *)
 
 let parse_msg_heartbeat_data msg =
+    Parse_message_result.from_parse_field_result @@
+    let open Parse_field_result in 
     opt msg "112" parse_int @@ fun hb_test_req_id ->
     ParseSuccess { hb_test_req_id }
 ;;
 
 let parse_msg_logon_data msg =
+    Parse_message_result.from_parse_field_result @@
+    let open Parse_field_result in 
     req msg "98"  parse_encryption_method @@ fun ln_encrypt_method            ->
     req msg "108" parse_duration          @@ fun ln_heartbeat_interval        ->
     opt msg "95"  parse_int               @@ fun ln_raw_data_length           ->
@@ -47,6 +52,8 @@ let parse_msg_logon_data msg =
 ;;
 
 let parse_msg_logoff_data msg = 
+    Parse_message_result.from_parse_field_result @@
+    let open Parse_field_result in 
     opt msg "355" parse_int @@ fun lo_encoded_text_len -> 
     opt msg "354" parse_str @@ fun lo_encoded_text     -> ParseSuccess 
     { lo_encoded_text_len 
@@ -55,6 +62,8 @@ let parse_msg_logoff_data msg =
 ;;
 
 let parse_msg_resend_request_data msg = 
+    Parse_message_result.from_parse_field_result @@
+    let open Parse_field_result in 
     req msg "7"  parse_int @@ fun rr_begin_seq_num -> 
     req msg "16" parse_str @@ fun rr_end_seq_num   -> ParseSuccess 
     { rr_begin_seq_num  
@@ -63,6 +72,8 @@ let parse_msg_resend_request_data msg =
 ;;
 
 let parse_msg_reject_data msg = 
+    Parse_message_result.from_parse_field_result @@
+    let open Parse_field_result in 
     req msg "45"  parse_int                    @@ fun sr_ref_seq_num           -> 
     opt msg "371" parse_str                    @@ fun sr_ref_tag_id            -> 
     opt msg "372" parse_full_msg_tag           @@ fun sr_ref_msg_type          -> 
@@ -81,6 +92,8 @@ let parse_msg_reject_data msg =
 ;;
 
 let parse_msg_sequence_reset_data msg = 
+    Parse_message_result.from_parse_field_result @@
+    let open Parse_field_result in 
     req msg "" parse_int         @@ fun seqr_new_seq_no    ->
     opt msg "" parse_GapFillFlag @@ fun seqr_gap_fill_flag -> ParseSuccess
     { seqr_new_seq_no     
@@ -89,11 +102,15 @@ let parse_msg_sequence_reset_data msg =
 ;;
 
 let parse_msg_test_request_data msg = 
+    Parse_message_result.from_parse_field_result @@
+    let open Parse_field_result in 
     req msg "" parse_int @@ fun test_req_id -> ParseSuccess
     { test_req_id }
 ;;
 
 let parse_msg_business_reject_data msg = 
+    Parse_message_result.from_parse_field_result @@
+    let open Parse_field_result in 
     req msg "" parse_int                    @@ fun br_ref_seq_num            ->
     req msg "" parse_business_reject_reason @@ fun br_business_reject_reason -> ParseSuccess
     { br_ref_seq_num           
@@ -101,14 +118,15 @@ let parse_msg_business_reject_data msg =
     }
 ;;
 
-let parse_admin_msg msg_tag msg = match msg_tag with
-    | "0" -> parse_msg_heartbeat_data       msg >>= fun x -> ParseSuccess ( Full_Msg_Heartbeat       x )    
-    | "1" -> parse_msg_test_request_data    msg >>= fun x -> ParseSuccess ( Full_Msg_Test_Request    x )  
-    | "2" -> parse_msg_resend_request_data  msg >>= fun x -> ParseSuccess ( Full_Msg_Resend_Request  x )
-    | "3" -> parse_msg_reject_data          msg >>= fun x -> ParseSuccess ( Full_Msg_Reject          x )       
-    | "4" -> parse_msg_sequence_reset_data  msg >>= fun x -> ParseSuccess ( Full_Msg_Sequence_Reset  x )
-    | "5" -> parse_msg_logon_data           msg >>= fun x -> ParseSuccess ( Full_Msg_Logon           x )        
-    | "A" -> parse_msg_logoff_data          msg >>= fun x -> ParseSuccess ( Full_Msg_Logoff          x )       
-    | "j" -> parse_msg_business_reject_data msg >>= fun x -> ParseSuccess ( Full_Msg_Business_Reject x )
-    | tag -> UnknownMessageTag tag
+let parse_admin_msg_data msg_tag msg = 
+    let open Parse_message_result in
+    match msg_tag with
+    | Full_Msg_Heartbeat_Tag        -> parse_msg_heartbeat_data       msg >>= fun x -> ParseSuccess ( Full_Msg_Heartbeat       x )    
+    | Full_Msg_Test_Request_Tag     -> parse_msg_test_request_data    msg >>= fun x -> ParseSuccess ( Full_Msg_Test_Request    x )  
+    | Full_Msg_Resend_Request_Tag   -> parse_msg_resend_request_data  msg >>= fun x -> ParseSuccess ( Full_Msg_Resend_Request  x )
+    | Full_Msg_Reject_Tag           -> parse_msg_reject_data          msg >>= fun x -> ParseSuccess ( Full_Msg_Reject          x )       
+    | Full_Msg_Sequence_Reset_Tag   -> parse_msg_sequence_reset_data  msg >>= fun x -> ParseSuccess ( Full_Msg_Sequence_Reset  x )
+    | Full_Msg_Logoff_Tag           -> parse_msg_logon_data           msg >>= fun x -> ParseSuccess ( Full_Msg_Logon           x )        
+    | Full_Msg_Logon_Tag            -> parse_msg_logoff_data          msg >>= fun x -> ParseSuccess ( Full_Msg_Logoff          x )       
+    | Full_Msg_Business_Reject_Tag  -> parse_msg_business_reject_data msg >>= fun x -> ParseSuccess ( Full_Msg_Business_Reject x )
 ;;

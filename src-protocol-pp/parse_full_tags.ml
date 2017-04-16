@@ -1,8 +1,7 @@
 (* @meta[imandra_ignore] on @end *)
 open Full_message_tags;;
-(* open Parse_full_app_tags;; *)
-let parse_app_msg_tag str = None;;
-open Parse_full_admin_tags;;
+open Parse_app_tags;; 
+open Parse_admin_tags;;
 (* @meta[imandra_ignore] off @end *)
 
 let parse_full_msg_tag str = 

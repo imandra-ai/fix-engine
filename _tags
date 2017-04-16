@@ -6,4 +6,4 @@ true : package(yojson)
 
 <src-core-pp>                : include
 <src-protocol-exts-pp>       : include
-<src-protocol-pp>            : include
+<src-protocol-pp>       : include
