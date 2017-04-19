@@ -4,6 +4,7 @@ open Numeric;;
 open Datetime;;
 open Full_app_enums;;
 open Full_app_tags;;
+open Full_app_records;;
 (* @meta[imandra_ignore] off @end *)
 
 (** New Order Single message data. {{: http://www.onixs.biz/fix-dictionary/4.4/msgType_D_68.html} More details. } *)
@@ -14,8 +15,6 @@ type full_msg_new_order_single_data = {
     full_newOrderSingle_ExecInst                    : fix_execinst option;
     full_newOrderSingle_HandlInst                   : fix_handlinst option;
     full_newOrderSingle_TransactTime                : fix_utctimestamp option;
-    full_newOrderSingle_Symbol                      : fix_string option;
-    full_newOrderSingle_SymbolSfx                   : fix_string option;
     full_newOrderSingle_Side                        : fix_side option;
     full_newOrderSingle_OrderQty                    : fix_float option;
     full_newOrderSingle_OrdType                     : fix_ordertype option;
@@ -24,6 +23,7 @@ type full_msg_new_order_single_data = {
     full_newOrderSingle_TimeInForce                 : fix_timeinforce option;
     full_newOrderSingle_LocateReqd                  : fix_bool option;
     full_newOrderSingle_Currency                    : fix_currency option;
+    full_newOrderSingle_Instrument                  : fix_Instrument;
 }
 ;;
 
@@ -35,8 +35,6 @@ let init_full_msg_new_order_single_data = {
     full_newOrderSingle_ExecInst                    = None;
     full_newOrderSingle_HandlInst                   = None;
     full_newOrderSingle_TransactTime                = None;
-    full_newOrderSingle_Symbol                      = None;
-    full_newOrderSingle_SymbolSfx                   = None;
     full_newOrderSingle_Side                        = None;
     full_newOrderSingle_OrderQty                    = None;
     full_newOrderSingle_OrdType                     = None;
@@ -45,6 +43,7 @@ let init_full_msg_new_order_single_data = {
     full_newOrderSingle_TimeInForce                 = None;
     full_newOrderSingle_LocateReqd                  = None;
     full_newOrderSingle_Currency                    = None;
+    full_newOrderSingle_Instrument                  = init_fix_Instrument
 }
 ;;
 

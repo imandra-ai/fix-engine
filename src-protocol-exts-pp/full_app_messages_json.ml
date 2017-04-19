@@ -4,6 +4,7 @@ open Full_app_messages;;
 open Base_types_json;;
 open Datetime_json;;
 open Full_app_enums_json;;
+open Full_app_records_json;;
 (* @meta[imandra_ignore] off @end *)
 
 let assoc_filter_nulls l : json =
@@ -18,8 +19,6 @@ let full_msg_new_order_single_to_json x =
     ; ( "ExecInst"     , execinst_opt_to_json      x.full_newOrderSingle_ExecInst     ) 
     ; ( "HandlInst"    , handlinst_opt_to_json     x.full_newOrderSingle_HandlInst    ) 
     ; ( "TransactTime" , utctimestamp_opt_to_json  x.full_newOrderSingle_TransactTime ) 
-    ; ( "Symbol"       , string_opt_to_json        x.full_newOrderSingle_Symbol       ) 
-    ; ( "SymbolSfx"    , string_opt_to_json        x.full_newOrderSingle_SymbolSfx    ) 
     ; ( "Side"         , side_opt_to_json          x.full_newOrderSingle_Side         ) 
     ; ( "OrderQty"     , float_opt_to_json         x.full_newOrderSingle_OrderQty     ) 
     ; ( "OrdType"      , ordertype_opt_to_json     x.full_newOrderSingle_OrdType      ) 
@@ -28,6 +27,7 @@ let full_msg_new_order_single_to_json x =
     ; ( "TimeInForce"  , timeinforce_opt_to_json   x.full_newOrderSingle_TimeInForce  ) 
     ; ( "LocateReqd"   , bool_opt_to_json          x.full_newOrderSingle_LocateReqd   ) 
     ; ( "Currency"     , currency_opt_to_json      x.full_newOrderSingle_Currency     ) 
+    ; ( "Instrument"   , instrument_to_json        x.full_newOrderSingle_Instrument   ) 
     ] |> assoc_filter_nulls
 ;;
 

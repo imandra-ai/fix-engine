@@ -127,22 +127,126 @@ let side_to_string = function
     | FIX_Side_Borrow                         -> "Borrow"
 ;;
 
-let pricetype_to_json   x : json = `String ( pricetype_to_string   x ) ;;
-let commtype_to_json    x : json = `String ( commtype_to_string    x ) ;;
-let ordstatus_to_json   x : json = `String ( ordstatus_to_string   x ) ;;
-let timeinforce_to_json x : json = `String ( timeinforce_to_string x ) ;;
-let execinst_to_json    x : json = `String ( execinst_to_string    x ) ;;
-let handlinst_to_json   x : json = `String ( handlinst_to_string   x ) ;;
-let exectype_to_json    x : json = `String ( exectype_to_string    x ) ;;
-let ordertype_to_json   x : json = `String ( ordertype_to_string   x ) ;;
-let side_to_json        x : json = `String ( side_to_string        x ) ;;
+(** Tag 167 *)
+let securitytype_to_string = function
+    | FIX_SecurityType_Future                                   -> "Future"     
+    | FIX_SecurityType_Option                                   -> "Option" 
+    | FIX_SecurityType_EuroSupranationalCoupons                 -> "EuroSupranationalCoupons" 
+    | FIX_SecurityType_FederalAgencyCoupon                      -> "FederalAgencyCoupon" 
+    | FIX_SecurityType_FederalAgencyDiscountNote                -> "FederalAgencyDiscountNote" 
+    | FIX_SecurityType_PrivateExportFunding                     -> "PrivateExportFunding" 
+    | FIX_SecurityType_USDSupranationalCoupons                  -> "USDSupranationalCoupons" 
+    | FIX_SecurityType_CorporateBond                            -> "CorporateBond" 
+    | FIX_SecurityType_CorporatePrivatePlacement                -> "CorporatePrivatePlacement" 
+    | FIX_SecurityType_ConvertibleBond                          -> "ConvertibleBond" 
+    | FIX_SecurityType_DualCurrency                             -> "DualCurrency" 
+    | FIX_SecurityType_EuroCorporateBond                        -> "EuroCorporateBond" 
+    | FIX_SecurityType_IndexedLinked                            -> "IndexedLinked" 
+    | FIX_SecurityType_StructuredNotes                          -> "StructuredNotes" 
+    | FIX_SecurityType_YankeeCorporateBond                      -> "YankeeCorporateBond" 
+    | FIX_SecurityType_ForeignExchangeContract                  -> "ForeignExchangeContract" 
+    | FIX_SecurityType_CommonStock                              -> "CommonStock" 
+    | FIX_SecurityType_PreferredStock                           -> "PreferredStock" 
+    | FIX_SecurityType_BradyBond                                -> "BradyBond" 
+    | FIX_SecurityType_EuroSovereigns                           -> "EuroSovereigns" 
+    | FIX_SecurityType_USTreasuryBond                           -> "USTreasuryBond" 
+    | FIX_SecurityType_InterestStripFromAnyBondOrNote           -> "InterestStripFromAnyBondOrNote" 
+    | FIX_SecurityType_TreasuryInflationProtectedSecurities     -> "TreasuryInflationProtectedSecurities" 
+    | FIX_SecurityType_PrincipalStripOfACallableBondOrNote      -> "PrincipalStripOfACallableBondOrNote" 
+    | FIX_SecurityType_PrincipalStripFromANonCallableBondOrNote -> "PrincipalStripFromANonCallableBondOrNote" 
+    | FIX_SecurityType_USTreasuryNoteOld                        -> "USTreasuryNoteOld" 
+    | FIX_SecurityType_USTreasuryBillOld                        -> "USTreasuryBillOld" 
+    | FIX_SecurityType_USTreasuryNote                           -> "USTreasuryNote" 
+    | FIX_SecurityType_USTreasuryBill                           -> "USTreasuryBill" 
+    | FIX_SecurityType_Repurchase                               -> "Repurchase" 
+    | FIX_SecurityType_Forward                                  -> "Forward" 
+    | FIX_SecurityType_BuySellback                              -> "BuySellback" 
+    | FIX_SecurityType_SecuritiesLoan                           -> "SecuritiesLoan" 
+    | FIX_SecurityType_SecuritiesPledge                         -> "SecuritiesPledge" 
+    | FIX_SecurityType_TermLoan                                 -> "TermLoan" 
+    | FIX_SecurityType_RevolverLoan                             -> "RevolverLoan" 
+    | FIX_SecurityType_Revolver                                 -> "Revolver" 
+    | FIX_SecurityType_BridgeLoan                               -> "BridgeLoan" 
+    | FIX_SecurityType_LetterOfCredit                           -> "LetterOfCredit" 
+    | FIX_SecurityType_SwingLineFacility                        -> "SwingLineFacility" 
+    | FIX_SecurityType_DebtorInPossession                       -> "DebtorInPossession" 
+    | FIX_SecurityType_Defaulted                                -> "Defaulted" 
+    | FIX_SecurityType_Withdrawn                                -> "Withdrawn" 
+    | FIX_SecurityType_Replaced                                 -> "Replaced" 
+    | FIX_SecurityType_Matured                                  -> "Matured" 
+    | FIX_SecurityType_Amended                                  -> "Amended" 
+    | FIX_SecurityType_Retired                                  -> "Retired" 
+    | FIX_SecurityType_BankersAcceptance                        -> "BankersAcceptance" 
+    | FIX_SecurityType_BankNotes                                -> "BankNotes" 
+    | FIX_SecurityType_BillOfExchanges                          -> "BillOfExchanges" 
+    | FIX_SecurityType_CertificateOfDeposit                     -> "CertificateOfDeposit" 
+    | FIX_SecurityType_CallLoans                                -> "CallLoans" 
+    | FIX_SecurityType_CommercialPaper                          -> "CommercialPaper" 
+    | FIX_SecurityType_DepositNotes                             -> "DepositNotes" 
+    | FIX_SecurityType_EuroCertificateOfDeposit                 -> "EuroCertificateOfDeposit" 
+    | FIX_SecurityType_EuroCommercialPaper                      -> "EuroCommercialPaper" 
+    | FIX_SecurityType_LiquidityNote                            -> "LiquidityNote" 
+    | FIX_SecurityType_MediumTermNotes                          -> "MediumTermNotes" 
+    | FIX_SecurityType_Overnight                                -> "Overnight" 
+    | FIX_SecurityType_PromissoryNote                           -> "PromissoryNote" 
+    | FIX_SecurityType_PlazosFijos                              -> "PlazosFijos" 
+    | FIX_SecurityType_ShortTermLoanNote                        -> "ShortTermLoanNote" 
+    | FIX_SecurityType_TimeDeposit                              -> "TimeDeposit" 
+    | FIX_SecurityType_ExtendedCommNote                         -> "ExtendedCommNote" 
+    | FIX_SecurityType_YankeeCertificateOfDeposit               -> "YankeeCertificateOfDeposit" 
+    | FIX_SecurityType_AssetBackedSecurities                    -> "AssetBackedSecurities" 
+    | FIX_SecurityType_Corp                                     -> "Corp" 
+    | FIX_SecurityType_CollateralizedMortgageObligation         -> "CollateralizedMortgageObligation" 
+    | FIX_SecurityType_IOETTEMortgage                           -> "IOETTEMortgage" 
+    | FIX_SecurityType_MortgageBackedSecurities                 -> "MortgageBackedSecurities" 
+    | FIX_SecurityType_MortgageInterestOnly                     -> "MortgageInterestOnly" 
+    | FIX_SecurityType_MortgagePrincipalOnly                    -> "MortgagePrincipalOnly" 
+    | FIX_SecurityType_MortgagePrivatePlacement                 -> "MortgagePrivatePlacement" 
+    | FIX_SecurityType_MiscellaneousPassThrough                 -> "MiscellaneousPassThrough" 
+    | FIX_SecurityType_Pfandbriefe                              -> "Pfandbriefe" 
+    | FIX_SecurityType_ToBeAnnounced                            -> "ToBeAnnounced" 
+    | FIX_SecurityType_OtherAnticipationNotes                   -> "OtherAnticipationNotes" 
+    | FIX_SecurityType_CertificateOfObligation                  -> "CertificateOfObligation" 
+    | FIX_SecurityType_CertificateOfParticipation               -> "CertificateOfParticipation" 
+    | FIX_SecurityType_GeneralObligationBonds                   -> "GeneralObligationBonds" 
+    | FIX_SecurityType_MandatoryTender                          -> "MandatoryTender" 
+    | FIX_SecurityType_RevenueAnticipationNote                  -> "RevenueAnticipationNote" 
+    | FIX_SecurityType_RevenueBonds                             -> "RevenueBonds" 
+    | FIX_SecurityType_SpecialAssessment                        -> "SpecialAssessment" 
+    | FIX_SecurityType_SpecialObligation                        -> "SpecialObligation" 
+    | FIX_SecurityType_SpecialTax                               -> "SpecialTax" 
+    | FIX_SecurityType_TaxAnticipationNote                      -> "TaxAnticipationNote" 
+    | FIX_SecurityType_TaxAllocation                            -> "TaxAllocation" 
+    | FIX_SecurityType_TaxExemptCommercialPaper                 -> "TaxExemptCommercialPaper" 
+    | FIX_SecurityType_TaxRevenueAnticipationNote               -> "TaxRevenueAnticipationNote" 
+    | FIX_SecurityType_VariableRateDemandNote                   -> "VariableRateDemandNote" 
+    | FIX_SecurityType_Warrant                                  -> "Warrant" 
+    | FIX_SecurityType_MutualFund                               -> "MutualFund" 
+    | FIX_SecurityType_MultilegInstrument                       -> "MultilegInstrument" 
+    | FIX_SecurityType_NoSecurityType                           -> "NoSecurityType" 
+;;
 
-let pricetype_opt_to_json   = function None -> `Null | Some x -> pricetype_to_json   x ;;
-let commtype_opt_to_json    = function None -> `Null | Some x -> commtype_to_json    x ;;
-let ordstatus_opt_to_json   = function None -> `Null | Some x -> ordstatus_to_json   x ;;
-let timeinforce_opt_to_json = function None -> `Null | Some x -> timeinforce_to_json x ;;
-let execinst_opt_to_json    = function None -> `Null | Some x -> execinst_to_json    x ;;
-let handlinst_opt_to_json   = function None -> `Null | Some x -> handlinst_to_json   x ;;
-let exectype_opt_to_json    = function None -> `Null | Some x -> exectype_to_json    x ;;
-let ordertype_opt_to_json   = function None -> `Null | Some x -> ordertype_to_json   x ;;
-let side_opt_to_json        = function None -> `Null | Some x -> side_to_json        x ;;
+
+let pricetype_to_json    x : json = `String ( pricetype_to_string    x ) ;;
+let commtype_to_json     x : json = `String ( commtype_to_string     x ) ;;
+let ordstatus_to_json    x : json = `String ( ordstatus_to_string    x ) ;;
+let timeinforce_to_json  x : json = `String ( timeinforce_to_string  x ) ;;
+let execinst_to_json     x : json = `String ( execinst_to_string     x ) ;;
+let handlinst_to_json    x : json = `String ( handlinst_to_string    x ) ;;
+let exectype_to_json     x : json = `String ( exectype_to_string     x ) ;;
+let ordertype_to_json    x : json = `String ( ordertype_to_string    x ) ;;
+let side_to_json         x : json = `String ( side_to_string         x ) ;;
+let securitytype_to_json x : json = `String ( securitytype_to_string x ) ;;
+
+let pricetype_opt_to_json    = function None -> `Null | Some x -> pricetype_to_json    x ;;
+let commtype_opt_to_json     = function None -> `Null | Some x -> commtype_to_json     x ;;
+let ordstatus_opt_to_json    = function None -> `Null | Some x -> ordstatus_to_json    x ;;
+let timeinforce_opt_to_json  = function None -> `Null | Some x -> timeinforce_to_json  x ;;
+let execinst_opt_to_json     = function None -> `Null | Some x -> execinst_to_json     x ;;
+let handlinst_opt_to_json    = function None -> `Null | Some x -> handlinst_to_json    x ;;
+let exectype_opt_to_json     = function None -> `Null | Some x -> exectype_to_json     x ;;
+let ordertype_opt_to_json    = function None -> `Null | Some x -> ordertype_to_json    x ;;
+let side_opt_to_json         = function None -> `Null | Some x -> side_to_json         x ;;
+let securitytype_opt_to_json = function None -> `Null | Some x -> securitytype_to_json x ;;
+
+

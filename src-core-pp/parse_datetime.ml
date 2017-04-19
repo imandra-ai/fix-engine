@@ -12,6 +12,17 @@ let parse_dateonly str =
     }
 ;;
 
+let parse_localmktdate str =
+    if String.length str != 8 then None else
+    let year, month, day = Scanf.sscanf str "%04u%02u%02u" 
+        ( fun y m d -> (y,m,d) ) in
+    Some {
+        localmktdate_year  = year;
+        localmktdate_month = month;
+        localmktdate_day   = day
+    }
+;;
+
 let parse_utctimeonly str = 
     let length = String.length str in
     if (length != 8) && (length != 12) then None else

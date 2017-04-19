@@ -44,7 +44,7 @@ let split_into_messages (stream : (string * string) Stream.t) =
 
 module Parse_field_result = struct 
     type 'a t =
-        | ParseSuccess of 'a
+        | ParseFieldSuccess of 'a
         | WrongFieldFormat of string
         | RequiredFieldMissing of string 
         | EmptyField of string 
@@ -84,7 +84,7 @@ module Parse_message_result = struct
 
 
     let from_parse_field_result = function
-        | Parse_field_result.ParseSuccess         x -> ParseSuccess x   
+        | Parse_field_result.ParseFieldSuccess    x -> ParseSuccess x   
         | Parse_field_result.WrongFieldFormat     x -> WrongValueFormat x 
         | Parse_field_result.RequiredFieldMissing x -> RequiredTagMissing x
 

@@ -54,7 +54,8 @@ let parse_header msg =
     opt msg "213" parse_int           @@ fun h_xml_data                    ->  
     opt msg "347" parse_int           @@ fun h_message_enconding           ->  
     opt msg "369" parse_int           @@ fun h_last_msg_seq_num_processed  ->  
-    opt msg "627" parse_int           @@ fun h_no_hops                     -> ParseSuccess    
+    opt msg "627" parse_int           @@ fun h_no_hops                     -> 
+    ParseFieldSuccess    
     { h_begin_string                   
     ; h_body_length                    
     ; h_sender_comp_id                
@@ -90,7 +91,8 @@ let parse_trailer msg =
     let open Parse_field_result in 
     opt msg "93" parse_int  @@ fun signature_length ->
     opt msg "89" parse_int  @@ fun signature        ->
-    req msg "10" parse_int  @@ fun check_sum        -> ParseSuccess 
+    req msg "10" parse_int  @@ fun check_sum        -> 
+    ParseFieldSuccess 
     { signature_length
     ; signature       
     ; check_sum       
