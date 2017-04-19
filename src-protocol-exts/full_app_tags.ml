@@ -24,6 +24,9 @@ type full_msg_NewOrderSingle_field_tag =
     | Full_Msg_NewOrderSingle_LocateReqd_Tag  
     | Full_Msg_NewOrderSingle_LocateBroker_Tag
     | Full_Msg_NewOrderSingle_Currency_Tag    
+    | Full_Msg_NewOrderSingle_IssueDate_Tag    
+    | Full_Msg_NewOrderSingle_Issuer_Tag       
+    | Full_Msg_NewOrderSingle_SecurityType_Tag 
 ;;
 
 type full_msg_OrderCancelReplaceRequest_field_tag = 

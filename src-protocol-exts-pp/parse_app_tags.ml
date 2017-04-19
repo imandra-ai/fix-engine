@@ -20,6 +20,9 @@ let parse_msg_NewOrderSingle_field_tag = function
     | "60"  -> Some Full_Msg_NewOrderSingle_TransactTimeon_Tag
     | "55"  -> Some Full_Msg_NewOrderSingle_Symbol_Tag      
     | "65"  -> Some Full_Msg_NewOrderSingle_SymbolSfx_Tag   
+    | "225" -> Some Full_Msg_NewOrderSingle_IssueDate_Tag    
+    | "106" -> Some Full_Msg_NewOrderSingle_Issuer_Tag       
+    | "167" -> Some Full_Msg_NewOrderSingle_SecurityType_Tag 
     | "54"  -> Some Full_Msg_NewOrderSingle_Side_Tag        
     | "38"  -> Some Full_Msg_NewOrderSingle_OrderQty_Tag    
     | "40"  -> Some Full_Msg_NewOrderSingle_OrdType_Tag     
