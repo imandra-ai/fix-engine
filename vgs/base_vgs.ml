@@ -157,7 +157,7 @@ let incoming_msg_garblged ( msg : full_top_level_msg option ) =
     | None      -> false
     | Some m    ->
     match m with 
-    | Gargled   -> true
+    | Garbled   -> true
     | _         -> false
 ;;
 
