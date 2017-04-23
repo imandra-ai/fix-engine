@@ -97,7 +97,7 @@ let incoming_msg_wrong_seq_num ( state : fix_engine_state ) =
     | None -> false
     | Some m ->
     match m with 
-    | Gargled               -> false
+    | Garbled               -> false
     | BusinessRejectedMsg _ -> false
     | SessionRejectedMsg _  -> false
     | ValidMsg msg          ->
