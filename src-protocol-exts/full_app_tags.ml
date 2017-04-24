@@ -6,7 +6,7 @@ type full_app_msg_tag =
     | Full_Msg_CancelReject_Tag               
 ;;
 
-type full_msg_NewOrderSingle_field_tag = 
+type full_msg_newordersingle_field_tag = 
     | Full_Msg_NewOrderSingle_Account_Tag     
     | Full_Msg_NewOrderSingle_ClOrdID_Tag     
     | Full_Msg_NewOrderSingle_OrigClOrdID_Tag 
@@ -29,7 +29,7 @@ type full_msg_NewOrderSingle_field_tag =
     | Full_Msg_NewOrderSingle_SecurityType_Tag 
 ;;
 
-type full_msg_OrderCancelReplaceRequest_field_tag = 
+type full_msg_ordercancelreplacerequest_field_tag = 
     | Full_Msg_OrderCancelReplaceRequest_Account_Tag          
     | Full_Msg_OrderCancelReplaceRequest_ClOrdID_Tag          
     | Full_Msg_OrderCancelReplaceRequest_HandlInst_Tag        
@@ -48,7 +48,7 @@ type full_msg_OrderCancelReplaceRequest_field_tag =
     | Full_Msg_OrderCancelReplaceRequest_LocateBroker_Tag     
 ;;
 
-type full_msg_OrderCancelRequest_field_tag = 
+type full_msg_ordercancelrequest_field_tag = 
     | Full_Msg_OrderCancelRequest_ClOrdID_Tag
     | Full_Msg_OrderCancelRequest_OrigClOrdID_Tag
     | Full_Msg_OrderCancelRequest_OrderID_Tag
@@ -58,7 +58,7 @@ type full_msg_OrderCancelRequest_field_tag =
     | Full_Msg_OrderCancelRequest_Side_Tag
 ;;
 
-type full_msg_CancelReject_field_tag = 
+type full_msg_cancelreject_field_tag = 
     | Full_Msg_CancelReject_Account_Tag
     | Full_Msg_CancelReject_ClOrdID_Tag
     | Full_Msg_CancelReject_OrigClOrdID_Tag
@@ -68,7 +68,7 @@ type full_msg_CancelReject_field_tag =
     | Full_Msg_CancelReject_Text_Tag
 ;;
 
-type full_msg_ExecutionReport_field_tag = 
+type full_msg_executionreport_field_tag = 
     | Full_Msg_ExecutionReport_OrderID_Tag
     | Full_Msg_ExecutionReport_ClOrdID_Tag
     | Full_Msg_ExecutionReport_ExecType_Tag
@@ -83,9 +83,9 @@ type full_msg_ExecutionReport_field_tag =
 ;;
 
 type full_app_field_tag = 
-    | Full_Msg_ExecutionReport_Field_Tag           of full_msg_ExecutionReport_field_tag           
-    | Full_Msg_OrderCancelRequest_Field_Tag        of full_msg_OrderCancelRequest_field_tag        
-    | Full_Msg_OrderCancelReplaceRequest_Field_Tag of full_msg_OrderCancelReplaceRequest_field_tag 
-    | Full_Msg_NewOrderSingle_Field_Tag            of full_msg_NewOrderSingle_field_tag            
-    | Full_Msg_CancelReject_Field_Tag              of full_msg_CancelReject_field_tag               
+    | Full_Msg_ExecutionReport_Field_Tag           of full_msg_executionreport_field_tag           
+    | Full_Msg_OrderCancelRequest_Field_Tag        of full_msg_ordercancelrequest_field_tag        
+    | Full_Msg_OrderCancelReplaceRequest_Field_Tag of full_msg_ordercancelreplacerequest_field_tag 
+    | Full_Msg_NewOrderSingle_Field_Tag            of full_msg_newordersingle_field_tag            
+    | Full_Msg_CancelReject_Field_Tag              of full_msg_cancelreject_field_tag               
 ;;

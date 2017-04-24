@@ -23,7 +23,7 @@ type full_msg_new_order_single_data = {
     full_newOrderSingle_TimeInForce                 : fix_timeinforce option;
     full_newOrderSingle_LocateReqd                  : fix_bool option;
     full_newOrderSingle_Currency                    : fix_currency option;
-    full_newOrderSingle_Instrument                  : fix_Instrument;
+    full_newOrderSingle_Instrument                  : fix_instrument;
 }
 ;;
 
@@ -43,7 +43,7 @@ let init_full_msg_new_order_single_data = {
     full_newOrderSingle_TimeInForce                 = None;
     full_newOrderSingle_LocateReqd                  = None;
     full_newOrderSingle_Currency                    = None;
-    full_newOrderSingle_Instrument                  = init_fix_Instrument
+    full_newOrderSingle_Instrument                  = init_fix_instrument
 }
 ;;
 
