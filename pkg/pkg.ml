@@ -56,22 +56,16 @@ let () =
 
     ; Pkg.bin "src-examples/wire_to_json"
 
-(*
+
 
     ; Pkg.mllib ~api: [ "model_app_messages"
-                      ] "src-model-types/model_types.mllib"
-
-    ; Pkg.mllib ~api: [ "fixparser"
-                      ; "parse_basic_types"
-                      ; "parse_datetime"
-                      ] "src-parser/fixparser.mllib" 
-
-    ; Pkg.mllib ~api: [ "type_converter"
-                      ] "src-model-conversions/model_conversions.mllib"
+                      ] "src-types/model_types.mllib"
 
     ; Pkg.bin ~cond:examples "src-examples/example_runner"
-
-    ; Pkg.doc "doc/all_modules.docdir/all_modules.dot"
+(*
+    ; Pkg.mllib ~api: [ "type_converter"
+                      ] "src-conversions/model_conversions.mllib"
 *)
+    ; Pkg.doc "doc/all_modules.docdir/all_modules.dot"
 
   ]

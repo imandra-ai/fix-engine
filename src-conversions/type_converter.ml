@@ -12,15 +12,12 @@
 open Base_types;;
 open Datetime;;
 open Numeric;;
-open Fix_fields;;
 open Model_app_messages;;
 open Full_app_messages;;
-open Full_session_core;;
-open Full_messages;;
 (* @meta[imandra_ignore] off @end *)
 
 (** *)
-let convert_FullNewOrderSingle ( m : full_fix_msg_new_order_single_data ) =
+let convert_FullNewOrderSingle ( m : full_msg_new_order_single_data ) =
 
     match m.full_newOrderSingle_ClOrdID with 
     | None      -> FIX_TL_Req_Field_Missing { field_missing_data_msg = NewOrderSingle_Tag; field_missing_data_field = FIX_Field_ClOrdID_Tag }
@@ -96,17 +93,17 @@ let convert_FullNewOrderSingle ( m : full_fix_msg_new_order_single_data ) =
 ;;
 
 (** *)
-let convert_FullExecutionReport ( m : full_fix_msg_execution_report_data ) =
+let convert_FullExecutionReport ( m : full_msg_execution_report_data ) =
     FIX_TL_Req_Field_Missing { field_missing_data_msg = NewOrderSingle_Tag; field_missing_data_field = FIX_Field_OrdType_Tag } 
 ;;
 
 (** *)
-let convert_FullCancelReject ( m : full_fix_msg_cancel_reject_data ) = 
+let convert_FullCancelReject ( m : full_msg_cancel_reject_data ) = 
     FIX_TL_Req_Field_Missing { field_missing_data_msg = NewOrderSingle_Tag; field_missing_data_field = FIX_Field_OrdType_Tag } 
 ;;
 
 (** *)
-let convert_FullOrderCancelRequest ( m : full_fix_msg_order_cancel_request_data ) =
+let convert_FullOrderCancelRequest ( m : full_msg_order_cancel_request_data ) =
     let fix_msg_data = {
         orderCancelRequest_ClOrdID          = m.full_orderCancelRequest_ClOrdID;
         orderCancelRequest_OrigClOrdID      = m.full_orderCancelRequest_OrigClOrdID;
@@ -121,7 +118,7 @@ let convert_FullOrderCancelRequest ( m : full_fix_msg_order_cancel_request_data 
 ;;
 
 (** *)
-let convert_FullOrderCancelReplaceRequest ( m : full_fix_msg_order_cancel_replace_request_data ) = 
+let convert_FullOrderCancelReplaceRequest ( m : full_msg_order_cancel_replace_request_data ) = 
     match m.full_orderCancelReplaceRequest_ClOrdID with 
     | None      -> FIX_TL_Req_Field_Missing { field_missing_data_msg = NewOrderSingle_Tag; field_missing_data_field = FIX_Field_ClOrdID_Tag }
     | Some x    -> 

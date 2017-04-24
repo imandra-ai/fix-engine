@@ -13,11 +13,11 @@ open Base_types
 open Numeric
 open Fix_engine
 open Fix_engine_json
-open Fix_global
-open Full_session_core
 open Full_admin_messages
 open Full_app_messages
+open Full_app_records
 open Full_messages
+open Fix_global
 
 let pe = print_endline;;
 
@@ -88,7 +88,7 @@ let example_3 () =
                 };
 
 
-                full_msg_data = Full_FIX_Admin_Msg(
+                full_msg_data = Full_Admin_Msg(
                     Full_Msg_Logon init_full_fix_msg_logon_data);
 
                 full_msg_trailer = default_fix_trailer;
@@ -114,7 +114,7 @@ let example_4 () =
                 default_fix_header with
                     h_target_comp_id = 1;
             };
-            full_msg_data = Full_FIX_Admin_Msg (
+            full_msg_data = Full_Admin_Msg (
                 Full_Msg_Logon init_full_fix_msg_logon_data);
             full_msg_trailer = default_fix_trailer;
          });
@@ -127,8 +127,13 @@ let example_4 () =
                     full_newOrderSingle_ExecInst                    = Some FIX_ExecInst_MidpointPeg;
                     full_newOrderSingle_HandlInst                   = Some FIX_HandlInst_Automated_NoInt;
                     full_newOrderSingle_TransactTime                = Some ( make_utctimestamp (2017, 1, 1, 0, 1, 0, None) );
-                    full_newOrderSingle_Symbol                      = Some 0;
-                    full_newOrderSingle_SymbolSfx                   = Some 0;
+                    full_newOrderSingle_Instrument                  = {
+                        f_Instrument_IssueDate    = None; 
+                        f_Instrument_Issuer       = None;
+                        f_Instrument_SecurityType = None;
+                        f_Instrument_Symbol       = Some 0;
+                        f_Instrument_SymbolSfx    = Some 0;
+                    };
                     full_newOrderSingle_Side                        = Some FIX_Side_Buy;
                     full_newOrderSingle_OrderQty                    = Some ( make_Float ( 10.0, 2) );
                     full_newOrderSingle_OrdType                     = Some FIX_Ord_Type_Market;
@@ -136,7 +141,6 @@ let example_4 () =
                     full_newOrderSingle_MinQty                      = Some ( make_Float ( 0.0, 0) );
                     full_newOrderSingle_TimeInForce                 = Some FIX_TimeInForce_Day;
                     full_newOrderSingle_LocateReqd                  = Some false;
-                    full_newOrderSingle_LocateBroker                = None;
                     full_newOrderSingle_Currency                    = Some GBP;
                 }
         ));
@@ -162,9 +166,9 @@ let example_5 () =
                     h_target_comp_id = 1;
                     h_msg_seq_num = 3;        (* Should be 2 *)
             };
-            full_msg_data = Full_FIX_App_Msg (
+            full_msg_data = Full_App_Msg (
                 Full_Msg_ExecutionReport {
-                    init_fix_msg_execution_report_data with
+                    init_msg_execution_report_data with
                         full_executionReport_OrderID    = Some 1;
                         full_executionReport_CumQty     = Some ( make_Float ( 20.0, 0 ));
             });
@@ -197,9 +201,9 @@ let example_6 () =
                     h_msg_seq_num = 3;
             };
 
-            full_msg_data = Full_FIX_App_Msg (
+            full_msg_data = Full_App_Msg (
                 Full_Msg_ExecutionReport {
-                    init_fix_msg_execution_report_data with
+                    init_msg_execution_report_data with
                         full_executionReport_OrderID    = Some 1;
                         full_executionReport_CumQty     = Some ( make_Float ( 20.0, 0 ));
             });
@@ -229,9 +233,9 @@ let example_7 () =
                     h_msg_seq_num = 3;
             };
 
-            full_msg_data = Full_FIX_App_Msg (
+            full_msg_data = Full_App_Msg (
                 Full_Msg_ExecutionReport {
-                    init_fix_msg_execution_report_data with
+                    init_msg_execution_report_data with
                         full_executionReport_OrderID    = Some 1;
                         full_executionReport_CumQty     = Some ( make_Float ( 20.0, 0 ));
             });
