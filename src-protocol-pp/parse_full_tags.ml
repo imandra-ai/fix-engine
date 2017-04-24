@@ -15,14 +15,12 @@ let parse_full_msg_tag str =
 ;;
 
 
-let parse_full_field_tag msg_tag str = 
-    match msg_tag with
-    | Full_Admin_Msg_Tag msg_tag -> (
-        match parse_admin_field_tag msg_tag str with 
-        | None   -> None 
-        | Some x -> Some (Full_Admin_Field_Tag x)  )
-    | Full_App_Msg_Tag   msg_tag -> (
-        match parse_app_field_tag msg_tag str with 
-        | None   -> None 
-        | Some x -> Some (Full_App_Field_Tag x) )
+let parse_full_field_tag str = 
+    match parse_admin_field_tag str with 
+        | Some x -> Some (Full_Admin_Field_Tag x)  
+        | None  -> begin
+            match parse_app_field_tag str with
+            | Some x -> Some (Full_App_Field_Tag x) 
+            | None   -> None 
+        end
 ;;
