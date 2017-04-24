@@ -10,7 +10,7 @@
 (* @meta[imandra_ignore] on @end *)
 open Datetime;;
 open Base_types;;
-open Full_session_core;;
+open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_app_messages;;
 open Full_messages;;
@@ -32,7 +32,7 @@ type session_data = {
 type fix_engine_int_msg = 
     | TimeChange            of fix_utctimestamp (** Updates internal time of the engine. *)
     | CreateSession         of session_data (** Create sessions command. *)
-    | ApplicationData       of full_fix_app_msg_data (** App messages to be transmitted over. *)
+    | ApplicationData       of full_app_msg_data (** App messages to be transmitted over. *)
     | ManualIntervention    of manual_int_data (** TODO: create 'richer' manual commands. *)
 ;;
 
@@ -70,8 +70,8 @@ type fix_engine_state = {
 
     fe_curr_time            : fix_utctimestamp;             (** Need to define time so we're aware of heartbeat status. *)
 
-    fe_comp_id              : int;                          (** Our company ID *)
-    fe_target_comp_id       : int;                          (** Target company ID *)
+    fe_comp_id              : fix_string;                   (** Our company ID *)
+    fe_target_comp_id       : fix_string;                   (** Target company ID *)
 
     incoming_int_msg        : fix_engine_int_msg option;    (** Incoming internal messages (application). *)
     outgoing_int_msg        : fix_engine_int_msg option;    (** These are messages we send back to our owner *)
@@ -148,9 +148,10 @@ let init_fix_engine_state = {
 
 (** TODO Are there any other checks? 
     Answer: Yes - we need to add those checks to raw OCaml parser (these will result in invalid messages) *)
+(*
 let incoming_header_correct ( fh, comp_id : fix_header * int) =
     fh.h_target_comp_id = comp_id
-;;
+;; *)
 
 (** We're in the middle of retransmitting historic messages. 
     Note: when we transition into Retransmit mode, we set up a 
@@ -208,11 +209,7 @@ let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, msg, is_duplicat
     full_msg_data = msg;
 
     (** Trailers would be augmented by raw OCaml printers/parsers. *)
-    full_msg_trailer = {
-        signature_length    = 0;
-        signature           = 0;
-        check_sum           = 0;
-    };
+    full_msg_trailer = default_fix_trailer
 };;
 
 (** Create a logon message we would send out to initiate a connection 
@@ -251,7 +248,7 @@ let create_logoff_msg ( engine : fix_engine_state ) =
 (** Create a heartbeat message *)
 let create_heartbeat_msg ( engine, tr_id : fix_engine_state * int option) =
     let msg_data = Full_FIX_Admin_Msg (
-        Full_Msg_Hearbeat {
+        Full_Msg_Heartbeat {
             hb_test_req_id = tr_id;
         }
      ) in 
@@ -274,12 +271,12 @@ let create_session_reject_msg ( reject_info, outbound_seq_num, target_comp_id, c
         Full_FIX_Admin_Msg (
             Full_Msg_Reject {
                 sr_ref_seq_num              = reject_info.srej_msg_msg_seq_num;
-                sr_ref_tag_id               = 0;
+                sr_ref_tag_id               = Some 0;
                 sr_ref_msg_type             = None;
-                sr_session_reject_reason    = Some reject_info.srej_msg_reject_reason;
+                sr_session_reject_reason    = reject_info.srej_msg_reject_reason;
                 sr_text                     = None;
                 sr_encoded_text_len         = None;
-                sr_encoded_text             = 0;
+                sr_encoded_text             = Some 0;
             } ) in 
     ValidMsg ( create_outbound_fix_msg (outbound_seq_num, target_comp_id, comp_id, msg_data, false) )
 ;;
@@ -363,7 +360,7 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 ;;
 
 (** Response to resent request. *)
-let initiate_Resend ( request, engine : full_fix_msg_resend_request_data * fix_engine_state ) =
+let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engine_state ) =
     engine
 ;;
 
@@ -382,7 +379,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     match m.full_msg_data with 
     | Full_FIX_Admin_Msg adm_msg        -> (
         match adm_msg with 
-        | Full_Msg_Hearbeat hb          -> {
+        | Full_Msg_Heartbeat hb          -> {
             (* Update information about the last received message. *)    
                 engine with 
                     incoming_seq_num = m.full_msg_header.h_msg_seq_num;
