@@ -21,9 +21,9 @@ open Parse_full_tags;;
 let parse_msg_data msg_tag msg =
     match msg_tag with
     | Full_Admin_Msg_Tag msg_tag -> Parse_admin_messages.parse_admin_msg_data msg_tag msg
-                                 >>= fun x -> ParseSuccess ( Full_Admin_Msg x )
+                                 >>= fun x -> ParseSuccess ( Full_FIX_Admin_Msg x )
     | Full_App_Msg_Tag   msg_tag -> Parse_app_messages.parse_app_msg_data     msg_tag msg
-                                 >>= fun x -> ParseSuccess ( Full_App_Msg x )
+                                 >>= fun x -> ParseSuccess ( Full_FIX_App_Msg x )
 ;;
 
 let parse_header msg = 

@@ -88,7 +88,7 @@ let example_3 () =
                 };
 
 
-                full_msg_data = Full_Admin_Msg(
+                full_msg_data = Full_FIX_Admin_Msg(
                     Full_Msg_Logon init_full_fix_msg_logon_data);
 
                 full_msg_trailer = default_fix_trailer;
@@ -114,7 +114,7 @@ let example_4 () =
                 default_fix_header with
                     h_target_comp_id = 1;
             };
-            full_msg_data = Full_Admin_Msg (
+            full_msg_data = Full_FIX_Admin_Msg (
                 Full_Msg_Logon init_full_fix_msg_logon_data);
             full_msg_trailer = default_fix_trailer;
          });
@@ -166,7 +166,7 @@ let example_5 () =
                     h_target_comp_id = 1;
                     h_msg_seq_num = 3;        (* Should be 2 *)
             };
-            full_msg_data = Full_App_Msg (
+            full_msg_data = Full_FIX_App_Msg (
                 Full_Msg_ExecutionReport {
                     init_msg_execution_report_data with
                         full_executionReport_OrderID    = Some 1;
@@ -201,7 +201,7 @@ let example_6 () =
                     h_msg_seq_num = 3;
             };
 
-            full_msg_data = Full_App_Msg (
+            full_msg_data = Full_FIX_App_Msg (
                 Full_Msg_ExecutionReport {
                     init_msg_execution_report_data with
                         full_executionReport_OrderID    = Some 1;
@@ -233,7 +233,7 @@ let example_7 () =
                     h_msg_seq_num = 3;
             };
 
-            full_msg_data = Full_App_Msg (
+            full_msg_data = Full_FIX_App_Msg (
                 Full_Msg_ExecutionReport {
                     init_msg_execution_report_data with
                         full_executionReport_OrderID    = Some 1;

@@ -24,15 +24,15 @@ open Full_app_messages;;
 
 (** Full FIX message data may be of 2 types: Admin and Application. *)
 type full_msg_data = 
-    | Full_Admin_Msg                            of full_admin_msg_data
-    | Full_App_Msg                              of full_app_msg_data
+    | Full_FIX_Admin_Msg                            of full_admin_msg_data
+    | Full_FIX_App_Msg                              of full_app_msg_data
 ;;
 
 (** We maintain a type 'Full_Msg_Tag' that represents *)
 let get_full_msg_tag ( m : full_msg_data ) =
     match m with
-    | Full_Admin_Msg msg                        -> Full_Admin_Msg_Tag ( get_full_admin_msg_tag ( msg ) )
-    | Full_App_Msg msg                          -> Full_App_Msg_Tag ( get_full_app_msg_tag (msg ) )
+    | Full_FIX_Admin_Msg msg                        -> Full_Admin_Msg_Tag ( get_full_admin_msg_tag ( msg ) )
+    | Full_FIX_App_Msg msg                          -> Full_App_Msg_Tag ( get_full_app_msg_tag (msg ) )
 ;;
 
 

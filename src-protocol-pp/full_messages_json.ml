@@ -24,8 +24,8 @@ let assoc_filter_nulls l : json =
 ;;
 
 let full_msg_to_json = function
-    | Full_Admin_Msg x -> full_admin_msg_to_json x
-    | Full_App_Msg   x -> full_app_msg_to_json x
+    | Full_FIX_Admin_Msg x -> full_admin_msg_to_json x
+    | Full_FIX_App_Msg   x -> full_app_msg_to_json x
 ;;
 
 let session_rejected_msg_to_json x : json =  
