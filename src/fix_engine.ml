@@ -630,7 +630,7 @@ let session_reject ( rejected_data, engine : session_rejected_msg_data * fix_eng
 (** Process incoming FIX message here. *)
 let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) = 
     match m with
-    | Garbled                   -> engine   (* Gargled messages are simply ignored. *)
+    | Garbled                   -> engine   (* Garbled messages are simply ignored. *)
     | SessionRejectedMsg data   -> (
         match engine.fe_curr_mode with 
         | NoActiveSession       -> engine

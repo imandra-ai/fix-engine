@@ -98,12 +98,12 @@ dash hbeat_sent_if_no_data_received ( engine : fix_engine_state ) =
 *)
 (** **************************************************************************************** *)
 
-let incoming_is_not_gargled ( m : full_top_level_msg option ) = 
+let incoming_is_not_garbled ( m : full_top_level_msg option ) = 
     match m with 
     | None -> false
     | Some msg ->
     match msg with
-    | Gargled -> false
+    | Garbled -> false
     | _ -> true
 ;;
 
@@ -111,7 +111,7 @@ dash non_grabled_updates_clock ( engine : fix_engine_state ) =
     let engine' = one_step (engine) in 
     let received_ts_correct =  ( engine.fe_curr_time = engine'.fe_last_data_received ) in 
     let incoming_processed = engine.incoming_fix_msg <> engine'.incoming_fix_msg in 
-    ( incoming_is_not_gargled ( engine.incoming_fix_msg ) && incoming_processed) ==> received_ts_correct
+    ( incoming_is_not_garbled ( engine.incoming_fix_msg ) && incoming_processed) ==> received_ts_correct
 ;;
 
 (** **************************************************************************************** *)
