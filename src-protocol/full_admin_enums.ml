@@ -37,7 +37,7 @@ type fix_app_reject_reason =
 
 
 (** GapFillFlag <123> field *)
-type fix_GapFillFlag =
+type fix_gapfillflag =
     | FIX_GapFillFlag_Y
     | FIX_GapFillFlag_N
 ;;

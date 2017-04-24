@@ -71,7 +71,7 @@ type full_msg_reject_data = {
 (** Sequence Reset message data. *)
 type full_msg_sequence_reset_data = {
     seqr_new_seq_no                                 : int;                              (** Tag 36 *)
-    seqr_gap_fill_flag                              : fix_GapFillFlag option;           (** Tag 123 *)
+    seqr_gap_fill_flag                              : fix_gapfillflag option;           (** Tag 123 *)
 }
 ;;
 

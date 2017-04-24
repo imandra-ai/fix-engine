@@ -127,7 +127,7 @@ type fix_side =
 ;;
 
 (** Tag 167 *)
-type fix_SecurityType =
+type fix_securitytype =
     | FIX_SecurityType_Future 
     | FIX_SecurityType_Option 
     | FIX_SecurityType_EuroSupranationalCoupons 
