@@ -179,7 +179,7 @@ let make_session_reject reason tagstr msg =
     let msg_tag = List.assoc "35" msg |> parse_full_msg_tag in
     let field_tag = match msg_tag with 
         | None -> None 
-        | Some msg_tag -> parse_full_field_tag msg_tag tagstr 
+        | Some msg_tag -> parse_full_field_tag tagstr 
         in
     SessionRejectedMsg {
         srej_msg_msg_seq_num   = seq_num   ;
