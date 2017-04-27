@@ -1,3 +1,40 @@
+# Generated modules
+
+The following modules are to be generated
+
+### `src-protocol-exts`
+
+* `src-protocol-exts/full_app_tags.ml`
+    Tags for application messages and fields
+    * type full_app_msg_tag
+    * type full_app_field_tag 
+
+* `src-protocol-exts/full_app_enums.ml`
+    Applicaton-level enums
+    * type fix_{fieldname} 
+
+* `src-protocol-exts/full_app_record.ml`
+    Applicaton-level records
+    * type fix_{blockname} 
+    Default values (all None) for the records
+    * val init_{blockname} 
+
+* `src-protocol-exts/full_app_messages.ml`
+    Applicaton message data
+    * type full_msg_{messagename}_data
+    Initial values (all None) for the message data types 
+    * val init_msg_{messagename}_data : full_msg_{messagename}_data
+    Common type for all application messages
+    * type full_app_msg_data
+    Get_tag function for messages
+    * val get_full_app_msg_tag : full_app_msg_data -> full_app_msg_tag
+
+### `src-protocol-exts-pp`
+JSON pretty-printers and FIX wire parsers for all `src-protocol-exts` types
+
+
+# Fixed modules
+
 The following modules are fixed -- no code is supposed to be generated there
 
 ### `src`
@@ -58,6 +95,7 @@ The following modules are fixed -- no code is supposed to be generated there
     * type full_msg_sequence_reset_data
     * type full_msg_test_request_data
     * type full_msg_business_reject_data
+    Common type for all admin messages
     * type full_admin_msg_data
 
 * `src-protocol/full_messages.ml`
