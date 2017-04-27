@@ -58,14 +58,8 @@ let () =
 
 
 
-    ; Pkg.mllib ~api: [ "model_app_messages"
-                      ] "src-types/model_types.mllib"
-
     ; Pkg.bin ~cond:examples "src-examples/example_runner"
-(*
-    ; Pkg.mllib ~api: [ "type_converter"
-                      ] "src-conversions/model_conversions.mllib"
-*)
+
     ; Pkg.doc "doc/all_modules.docdir/all_modules.dot"
 
   ]
