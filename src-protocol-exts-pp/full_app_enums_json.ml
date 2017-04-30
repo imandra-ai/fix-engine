@@ -2,7 +2,7 @@
 open Yojson;;
 open Full_app_enums;;
 (* @meta[imandra_ignore] off @end *)
-
+(*
 let pricetype_to_string = function 
     | FIX_Price_Percentage                    -> "Percentage"
     | FIX_Price_PerUnit                       -> "PerUnit"
@@ -247,6 +247,6 @@ let handlinst_opt_to_json    = function None -> `Null | Some x -> handlinst_to_j
 let exectype_opt_to_json     = function None -> `Null | Some x -> exectype_to_json     x ;;
 let ordertype_opt_to_json    = function None -> `Null | Some x -> ordertype_to_json    x ;;
 let side_opt_to_json         = function None -> `Null | Some x -> side_to_json         x ;;
-let securitytype_opt_to_json = function None -> `Null | Some x -> securitytype_to_json x ;;
+let securitytype_opt_to_json = function None -> `Null | Some x -> securitytype_to_json x ;;*)
 
 

@@ -7,7 +7,7 @@ open Full_app_enums_json;;
 open Full_app_records_json;;
 (* @meta[imandra_ignore] off @end *)
 
-let assoc_filter_nulls l : json =
+(*let assoc_filter_nulls l : json =
     `Assoc ( List.filter (function ( _, `Null ) -> false | _ -> true ) l )
 ;;
 
@@ -97,5 +97,5 @@ let full_app_msg_to_json x : json = match x with
     | Full_Msg_NewOrderSingle             x -> 
             `Assoc [( "NewOrderSingle"            , full_msg_new_order_single_to_json             x )] 
     | Full_Msg_CancelReject               x -> 
-            `Assoc [( "CancelReject"              , full_msg_cancel_reject_to_json                x )]  
+            `Assoc [( "CancelReject"              , full_msg_cancel_reject_to_json                x )]  *)
 ;;

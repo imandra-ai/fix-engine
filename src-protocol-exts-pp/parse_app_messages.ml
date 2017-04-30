@@ -10,7 +10,7 @@ open Parse_app_records;;
 (* @meta[imandra_ignore] off @end *)
 
 let parse_msg_new_order_single_data msg =
-    parse_instrument msg >>= fun full_newOrderSingle_Instrument ->
+    parse_instrument msg >= fun full_newOrderSingle_Instrument ->
     from_parse_field_result (
     opt msg "1"   parse_str          @@ fun full_newOrderSingle_Account      ->
     opt msg "11"  parse_str          @@ fun full_newOrderSingle_ClOrdID      ->

@@ -1,13 +1,16 @@
 open Numeric;;
 open Base_types;;
 
-let parse_str (str : string) : fix_string option = 
+let parse_string (str : string) : fix_string option = 
     Some ( Hashtbl.hash str)
 ;; 
 
 let parse_symbol (str : string) : fix_symbol option = 
     Some ( Hashtbl.hash str)
 ;;
+
+let parse_char (str: string) : int option =
+    Some (Char.code str.[0])
 
 let parse_int ( str : string ) : int option = 
     try 
@@ -38,13 +41,13 @@ let parse_float ( str : string ) : fix_float option =
 ;;
 
 
-let parse_currency = function
+let parse_Currency = function
     | "GBP" -> Some GBP
     | "USD" -> Some USD
     | _ -> None
 ;;
 
-let parse_country = function
+let parse_Country = function
     | "UK"      -> Some UK
     | "USA"     -> Some USA
     | "France"  -> Some France
@@ -52,7 +55,7 @@ let parse_country = function
     | _ -> None
 ;;
 
-let parse_exchange = function
+let parse_Exchange = function
     | "BATS"     -> Some BATS
     | "DBSuperX" -> Some DBSuperX
     | _ -> None

@@ -1,7 +1,7 @@
 open Datetime;;
 open Parse_base_types;;
 
-let parse_dateonly str =
+let parse_UtcDateOnly str =
     if String.length str != 8 then None else
     let year, month, day = Scanf.sscanf str "%04u%02u%02u" 
         ( fun y m d -> (y,m,d) ) in
@@ -12,7 +12,7 @@ let parse_dateonly str =
     }
 ;;
 
-let parse_localmktdate str =
+let parse_LocalMktDate str =
     if String.length str != 8 then None else
     let year, month, day = Scanf.sscanf str "%04u%02u%02u" 
         ( fun y m d -> (y,m,d) ) in
@@ -23,7 +23,7 @@ let parse_localmktdate str =
     }
 ;;
 
-let parse_utctimeonly str = 
+let parse_UtcTimeOnly str = 
     let length = String.length str in
     if (length != 8) && (length != 12) then None else
     let hours, minutes, seconds, mseconds = 
@@ -40,11 +40,11 @@ let parse_utctimeonly str =
     }
 ;;
 
-let parse_utctimestamp str = 
+let parse_UtcTimeStamp str = 
     let length = String.length str in
     if (length != 17) && (length != 21) then None else
     let date, time = Scanf.sscanf str "%s@-%s" 
-        ( fun d t -> (parse_dateonly d , parse_utctimeonly t) ) in
+        ( fun d t -> (parse_UtcDateOnly d , parse_UtcTimeOnly t) ) in
     match date, time with 
         | (Some date, Some time) -> Some {
             utc_timestamp_year     = date.utc_dateonly_year;
@@ -57,7 +57,7 @@ let parse_utctimestamp str =
         | _ -> None
 ;;
 
-let parse_monthyear str =
+let parse_MonthYear str =
     let length = String.length str in
     if (length < 6) then None else
     let year, month, tail = Scanf.sscanf str "%04u%02u%s" (fun y m t -> (y,m,t)) in
@@ -78,7 +78,7 @@ let parse_monthyear str =
     }
 ;;
 
-let parse_duration str =
+let parse_Duration str =
     let parse_int ( str : string ) : int option = 
         try  Some(int_of_string str) 
         with _ -> None
