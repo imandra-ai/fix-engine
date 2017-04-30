@@ -112,7 +112,7 @@ let init_fix_engine_state = {
     fe_curr_status          = Normal;
     fe_initiator            = None;                         
     fe_curr_mode            = NoActiveSession;              
-    fe_curr_time            = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
+    fe_curr_time            = make_UTCTimestamp ( 2017, 1, 1, 0, 1, 0, None );
 
     fe_comp_id              = 1;
     fe_target_comp_id       = 2;
@@ -129,9 +129,9 @@ let init_fix_engine_state = {
     fe_cache                = [];
     fe_history              = [];
 
-    fe_last_data_received   = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
+    fe_last_data_received   = make_UTCTimestamp ( 2017, 1, 1, 0, 1, 0, None );
     fe_heartbeat_interval   = make_duration ( None, None, None, None, None, Some 30 ); (* 30 seconds *)
-    fe_last_time_data_sent  = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
+    fe_last_time_data_sent  = make_UTCTimestamp ( 2017, 1, 1, 0, 1, 0, None );
     fe_testreq_interval     = make_duration ( None, None, None, None, None, Some 30 );
 
     fe_history_to_send      = [];

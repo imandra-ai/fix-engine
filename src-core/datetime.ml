@@ -30,7 +30,7 @@ let default_utctimestamp = {
 }
 ;;
 
-let make_utctimestamp ( year, month, day, hour, minute, second, millisec : int * int * int * int * int * int * int option ) = {
+let make_UTCTimestamp ( year, month, day, hour, minute, second, millisec : int * int * int * int * int * int * int option ) = {
     utc_timestamp_year      = year;
     utc_timestamp_month     = month;
     utc_timestamp_day       = day;

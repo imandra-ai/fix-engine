@@ -1,7 +1,7 @@
 open Datetime;;
 open Parse_base_types;;
 
-let parse_UtcDateOnly str =
+let parse_UTCDateOnly str =
     if String.length str != 8 then None else
     let year, month, day = Scanf.sscanf str "%04u%02u%02u" 
         ( fun y m d -> (y,m,d) ) in
@@ -23,7 +23,7 @@ let parse_LocalMktDate str =
     }
 ;;
 
-let parse_UtcTimeOnly str = 
+let parse_UTCTimeOnly str = 
     let length = String.length str in
     if (length != 8) && (length != 12) then None else
     let hours, minutes, seconds, mseconds = 
@@ -40,11 +40,11 @@ let parse_UtcTimeOnly str =
     }
 ;;
 
-let parse_UtcTimeStamp str = 
+let parse_UTCTimestamp str = 
     let length = String.length str in
     if (length != 17) && (length != 21) then None else
     let date, time = Scanf.sscanf str "%s@-%s" 
-        ( fun d t -> (parse_UtcDateOnly d , parse_UtcTimeOnly t) ) in
+        ( fun d t -> (parse_UTCDateOnly d , parse_UTCTimeOnly t) ) in
     match date, time with 
         | (Some date, Some time) -> Some {
             utc_timestamp_year     = date.utc_dateonly_year;
