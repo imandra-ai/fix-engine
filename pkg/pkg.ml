@@ -27,7 +27,7 @@ let () =
     ; Pkg.mllib ~api: [ "full_messages"
                       ; "full_admin_messages"
                       ; "full_session_core"
-                      ; "full_protocol_fields" ] "src-protocol/protocol.mllib"
+                      ] "src-protocol/protocol.mllib"
 
     ; Pkg.mllib ~api: [ "fix_engine" ] "src/fix_engine.mllib"
 
