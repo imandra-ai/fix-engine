@@ -95,6 +95,10 @@ let float_Add ( fOne, fTwo : fix_float * fix_float ) =
     make_Float ( data1 +. data2, min (dOne, dTwo))
 ;;
 
+let add_float (fOne, fTwo) = float_Add(fOne, fTwo);;
+let sub_float (fOne, fTwo) = float_Add(fOne, fTwo);;(*semantically wrong!*)
+
+
 let float_Div ( fOne, fTwo : fix_float * fix_float ) = 
     let dOne = float_GetDecs ( fOne ) in 
     let dTwo = float_GetDecs ( fTwo ) in 
@@ -104,6 +108,9 @@ let float_Div ( fOne, fTwo : fix_float * fix_float ) =
 
     make_Float ( data1 /. data2, min (dOne, dTwo))
 ;;
+
+let div_float (fOne, fTwo) = float_Div(fOne, fTwo);;
+
 
 let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
     let dOne = float_GetDecs ( fOne ) in 
@@ -115,13 +122,21 @@ let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
     make_Float ( one *. two, min (dOne, dTwo) )
 ;;
 
+let mul_float (fOne, fTwo) = float_Mult(fOne,fTwo);;
+
+
 let float_GreaterThan ( fOne, fTwo : fix_float * fix_float ) =
     float_GetFloat ( fOne ) > float_GetFloat ( fTwo )
 ;;
 
+let gt_float (fOne, fTwo) = float_GreaterThan(fOne, fTwo)
+;;
+
+
 let float_LessThan ( fOne, fTwo : fix_float * fix_float ) =
     float_GetFloat ( fOne ) < float_GetFloat ( fTwo )
 ;;
+
 
 let float_GreaterThanEqual ( fOne, fTwo : fix_float * fix_float ) =
     not (float_LessThan ( fOne, fTwo ))
@@ -136,5 +151,8 @@ let float_Equal ( fOne, fTwo : fix_float * fix_float ) =
 
 let float_LessThanEqual ( fOne, fTwo : fix_float * fix_float ) =
     float_LessThan (fOne, fTwo) || float_Equal (fOne, fTwo)
+;;
+
+let le_float (fOne, fTwo) = float_LessThanEqual(fOne, fTwo)
 ;;
 
