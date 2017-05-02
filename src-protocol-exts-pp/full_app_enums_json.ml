@@ -248,5 +248,3 @@ let exectype_opt_to_json     = function None -> `Null | Some x -> exectype_to_js
 let ordertype_opt_to_json    = function None -> `Null | Some x -> ordertype_to_json    x ;;
 let side_opt_to_json         = function None -> `Null | Some x -> side_to_json         x ;;
 let securitytype_opt_to_json = function None -> `Null | Some x -> securitytype_to_json x ;;
-
-

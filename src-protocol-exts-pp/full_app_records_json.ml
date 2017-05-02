@@ -19,4 +19,3 @@ let instrument_to_json x : json =
     ; ( "SymbolSfx"    , string_opt_to_json       x.f_Instrument_SymbolSfx    )
     ] 
 ;;
-

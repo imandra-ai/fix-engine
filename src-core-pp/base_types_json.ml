@@ -79,13 +79,13 @@ let symbol_opt_to_json = function
   *  FIX_Bool
   *)
 
-let bool_to_json : fix_bool -> json = function
+let bool_to_json : bool -> json = function
     | true  -> `String "true" 
     | false -> `String "false" 
 ;;
 
 
-let bool_opt_to_json : fix_bool option -> json = function
+let bool_opt_to_json : bool option -> json = function
     | None   -> `Null
     | Some x -> bool_to_json x 
 ;;

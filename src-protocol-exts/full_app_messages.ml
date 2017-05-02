@@ -21,7 +21,7 @@ type full_msg_new_order_single_data = {
     full_newOrderSingle_Price                       : fix_float option;
     full_newOrderSingle_MinQty                      : fix_float option;
     full_newOrderSingle_TimeInForce                 : fix_timeinforce option;
-    full_newOrderSingle_LocateReqd                  : fix_bool option;
+    full_newOrderSingle_LocateReqd                  : bool option;
     full_newOrderSingle_Currency                    : fix_currency option;
     full_newOrderSingle_Instrument                  : fix_instrument;
 }
@@ -63,7 +63,7 @@ type full_msg_order_cancel_replace_request_data = {
     full_orderCancelReplaceRequest_Price            : fix_float option;
     full_orderCancelReplaceRequest_MinQty           : fix_float option;
     full_orderCancelReplaceRequest_TimeInForce      : fix_timeinforce option;
-    full_orderCancelReplaceRequest_LocateReqd       : fix_bool option;
+    full_orderCancelReplaceRequest_LocateReqd       : bool option;
 }
 ;;
 

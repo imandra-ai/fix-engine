@@ -6,7 +6,7 @@
 
     datetime.ml
 *)
-
+open Numeric;;
 (** UTC Timestamp *)
 type fix_utctimestamp = {
     utc_timestamp_year      : int;
@@ -41,6 +41,8 @@ let make_utctimestamp ( year, month, day, hour, minute, second, millisec : int *
 }
 ;;
 
+(* also add addition stuff etc...*)
+
 let is_valid_utctimestamp ( ts : fix_utctimestamp ) =
     0 <= ts.utc_timestamp_year      && ts.utc_timestamp_year    <= 9999 && 
     1 <= ts.utc_timestamp_month     && ts.utc_timestamp_month   <= 12   && 
@@ -53,7 +55,7 @@ let is_valid_utctimestamp ( ts : fix_utctimestamp ) =
         | Some ms -> 0 <= ms && ms <= 999 )
 ;;
 
-let utctimestamp_greaterThan ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
+let utctimestamp_GreaterThan ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
     if tOne.utc_timestamp_year          > tTwo.utc_timestamp_year   then true
     else if tOne.utc_timestamp_year     < tTwo.utc_timestamp_year   then false 
     else if tOne.utc_timestamp_month    > tTwo.utc_timestamp_month  then true
@@ -75,24 +77,19 @@ let utctimestamp_greaterThan ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp 
 ;;
 
 let utctimestamp_Equal ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
-    tOne.utc_timestamp_year = tTwo.utc_timestamp_year && 
-    tOne.utc_timestamp_month = tTwo.utc_timestamp_month && 
-    tOne.utc_timestamp_day = tTwo.utc_timestamp_day && 
-    tOne.utc_timestamp_hour = tTwo.utc_timestamp_hour &&
-    tOne.utc_timestamp_minute = tTwo.utc_timestamp_minute && 
-    tOne.utc_timestamp_second = tTwo.utc_timestamp_second
+   (tOne = tTwo)
 ;;
 
-let utctimestamp_greaterThanEqual ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
-    utctimestamp_greaterThan (tOne, tTwo) || utctimestamp_Equal (tOne, tTwo)
+let utctimestamp_GreaterThanEqual ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
+    utctimestamp_GreaterThan (tOne, tTwo) || utctimestamp_Equal (tOne, tTwo)
 ;;
 
-let utctimestamp_lessThan ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
-    not ( utctimestamp_greaterThan (tOne, tTwo) || utctimestamp_Equal (tOne, tTwo))
+let utctimestamp_LessThan ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
+    not ( utctimestamp_GreaterThan (tOne, tTwo) || utctimestamp_Equal (tOne, tTwo))
 ;;
 
-let utctimestamp_lessThanEqual ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
-    not ( utctimestamp_greaterThan (tOne, tTwo) )
+let utctimestamp_LessThanEqual ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
+    not ( utctimestamp_GreaterThan (tOne, tTwo) )
 ;;
 
 (** LocalMktDate *)
@@ -107,6 +104,12 @@ let default_localmktdate = {
     localmktdate_month      = 1;
     localmktdate_day        = 1;
 };;
+
+let make_localmktdate(year,month,day: int*int*int) = {
+    localmktdate_year = year;
+    localmktdate_month = month;
+    localmktdate_day = day;
+}
 
 let is_valid_localmktdate ( lmd : fix_localmktdate ) =
     0 <= lmd.localmktdate_year && lmd.localmktdate_year <= 9999 && 
@@ -138,6 +141,14 @@ let default_monthyear = {
     monthyear_week   = None;
 };;
 
+
+let make_monthyear(year,month,week: int * int * fix_week option) = {
+    monthyear_year = year;
+    monthyear_month = month;
+    monthyear_day = None;
+    monthyear_week = week;
+    };;
+
 let is_valid_monthyear ( my : fix_monthyear ) =
     0 <= my.monthyear_year && my.monthyear_year <= 9999 && 
     0 <= my.monthyear_month && my.monthyear_month <= 12 && (
@@ -167,6 +178,14 @@ let default_utctimeonly = {
     utc_timeonly_millisec   = Some 0;
 };;
 
+
+let make_utctimeonly (hour,minute,second,millisec: int * int * int * int option) = {
+    utc_timeonly_hour  = hour;
+    utc_timeonly_minute  = minute;
+    utc_timeonly_second   = second;
+    utc_timeonly_millisec  = millisec;
+};;
+
 let is_valid_utctimeonly ( t : fix_utctimeonly ) =
     0 <= t.utc_timeonly_hour && 
     t.utc_timeonly_hour <= 23 &&
@@ -181,7 +200,7 @@ let is_valid_utctimeonly ( t : fix_utctimeonly ) =
 ;;
 
 (* TODO add logic for handling milliseconds. *)
-let utc_timeonly_greaterThan ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) =
+let utctimeonly_GreaterThan ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) =
     if tOne.utc_timeonly_hour > tTwo.utc_timeonly_hour then true
     else if tOne.utc_timeonly_hour < tTwo.utc_timeonly_hour then false
     else if tOne.utc_timeonly_minute > tTwo.utc_timeonly_minute then true
@@ -190,23 +209,22 @@ let utc_timeonly_greaterThan ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) 
     else false
 ;;
 
+
 (* TODO again, need to implement milliseconds *)
-let utc_timeonly_Equal ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) =
-    tOne.utc_timeonly_hour = tTwo.utc_timeonly_hour &&
-    tOne.utc_timeonly_minute = tTwo.utc_timeonly_minute && 
-    tOne.utc_timeonly_second = tTwo.utc_timeonly_second
+let utctimeonly_Equal ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) =
+  (tOne = tTwo)
 ;;
 
-let utc_timeonly_lessThan ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) =
-    not ( utc_timeonly_greaterThan (tOne, tTwo) || utc_timeonly_Equal (tOne, tTwo))
+let utctimeonly_LessThan ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) =
+    not ( utctimeonly_GreaterThan (tOne, tTwo) || utctimeonly_Equal (tOne, tTwo))
 ;;
 
-let utc_timeonly_lessThanEqual ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) =
-    not ( utc_timeonly_greaterThan (tOne, tTwo) )
+let utctimeonly_LessThanEqual ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) =
+    not ( utctimeonly_GreaterThan (tOne, tTwo) )
 ;;
 
-let utc_timeonly_greaterThanEqual ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) = 
-    utc_timeonly_greaterThan (tOne, tTwo) || utc_timeonly_Equal (tOne, tTwo)
+let utctimeonly_GreaterThanEqual ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) = 
+    utctimeonly_GreaterThan (tOne, tTwo) || utctimeonly_Equal (tOne, tTwo)
 ;;
 
 (** UTC Dateonly *)
@@ -221,6 +239,13 @@ let default_utcdateonly = {
     utc_dateonly_year       = 1970;
     utc_dateonly_month      = 1;
     utc_dateonly_day        = 1;
+};;
+
+
+let make_utcdateonly(year,month,day: int* int *int) = {
+    utc_dateonly_year = year;
+    utc_dateonly_month = month;
+    utc_dateonly_day = day;
 };;
 
 let is_valid_utcdateonly ( d : fix_utcdateonly ) =
@@ -269,10 +294,6 @@ let is_valid_duration ( d : fix_duration ) =
     match d.dur_seconds with
     | Some s    -> 0 <= s && s <= 59
     | None      -> true
-;;
-
-let utctimestamp_sub ( t, dur : fix_utctimestamp * fix_duration ) =
-    t
 ;;
 
 let is_leapyear ( year : int ) =

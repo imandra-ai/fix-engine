@@ -9,7 +9,6 @@
 
 type fix_symbol = int;;
 type fix_string = int;;
-type fix_bool = bool;;
 
 (** This should be built-in. *)
 type fix_currency =
