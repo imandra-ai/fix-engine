@@ -355,7 +355,7 @@ let normalise_timestamp ( ts : fix_utctimestamp ) =
     }
 ;;
 
-let utctimestamp_add ( t, dur : fix_utctimestamp * fix_duration ) = 
+let utctimestamp_duration_Add ( t, dur : fix_utctimestamp * fix_duration ) = 
 
     let new_seconds = match dur.dur_seconds with
         | None -> t.utc_timestamp_second
