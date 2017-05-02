@@ -55,10 +55,9 @@ let () =
                       ] "src-protocol-pp/protocol_pp.mllib"
 
     ; Pkg.bin "src-examples/wire_to_json"
-
-
-
+(*
     ; Pkg.bin ~cond:examples "src-examples/example_runner"
+    *)
 
     ; Pkg.doc "doc/all_modules.docdir/all_modules.dot"
 
