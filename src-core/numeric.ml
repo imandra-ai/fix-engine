@@ -12,6 +12,15 @@
 open Imandra_utils;;
 (* @meta[imandra_ignore] off @end *)
 
+let int_Add(x,y:int*int):int = x+y;;
+let int_Sub(x,y:int*int):int = x-y;;
+let int_Neg(x:int):int = -x;;
+let int_Mult(x,y:int*int):int = x*y;;
+let int_Div(x,y:int*int):int = x/y;;
+let int_GreaterThan(x,y:int*int):bool = x>y;;
+let int_GreaterThanEqual(x,y:int*int):bool = x>=y;;
+let int_LessThan(x,y:int*int):bool = x<y;;
+let int_LessThanEqual(x,y:int*int):bool = x<=y;;
 
 type fix_float_data = {
     fix_float_whole       : int;
@@ -95,9 +104,20 @@ let float_Add ( fOne, fTwo : fix_float * fix_float ) =
     make_Float ( data1 +. data2, min (dOne, dTwo))
 ;;
 
-let add_float (fOne, fTwo) = float_Add(fOne, fTwo);;
-let sub_float (fOne, fTwo) = float_Add(fOne, fTwo);;(*semantically wrong!*)
+let float_Sub( fOne, fTwo: fix_float * fix_float ) =
+  let dOne = float_GetDecs( fOne ) in
+  let dTwo = float_GetDecs( fTwo ) in
 
+  let data1 = float_GetFloat( fOne  ) in
+  let data2 = float_GetFloat ( fTwo ) in
+
+  make_Float (data1 -. data2, min(dOne,dTwo));;
+
+let float_Neg (fOne: fix_float ) =
+  let dOne = float_GetDecs (fOne) in
+  let data1 = float_GetFloat (fOne) in
+
+  make_Float(-. data1, dOne);;
 
 let float_Div ( fOne, fTwo : fix_float * fix_float ) = 
     let dOne = float_GetDecs ( fOne ) in 
@@ -109,9 +129,6 @@ let float_Div ( fOne, fTwo : fix_float * fix_float ) =
     make_Float ( data1 /. data2, min (dOne, dTwo))
 ;;
 
-let div_float (fOne, fTwo) = float_Div(fOne, fTwo);;
-
-
 let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
     let dOne = float_GetDecs ( fOne ) in 
     let dTwo = float_GetDecs ( fTwo ) in 
@@ -122,14 +139,9 @@ let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
     make_Float ( one *. two, min (dOne, dTwo) )
 ;;
 
-let mul_float (fOne, fTwo) = float_Mult(fOne,fTwo);;
-
 
 let float_GreaterThan ( fOne, fTwo : fix_float * fix_float ) =
     float_GetFloat ( fOne ) > float_GetFloat ( fTwo )
-;;
-
-let gt_float (fOne, fTwo) = float_GreaterThan(fOne, fTwo)
 ;;
 
 
@@ -153,6 +165,4 @@ let float_LessThanEqual ( fOne, fTwo : fix_float * fix_float ) =
     float_LessThan (fOne, fTwo) || float_Equal (fOne, fTwo)
 ;;
 
-let le_float (fOne, fTwo) = float_LessThanEqual(fOne, fTwo)
-;;
 

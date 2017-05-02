@@ -112,7 +112,7 @@ let init_fix_engine_state = {
     fe_curr_status          = Normal;
     fe_initiator            = None;                         
     fe_curr_mode            = NoActiveSession;              
-    fe_curr_time            = make_UTCTimestamp ( 2017, 1, 1, 0, 1, 0, None );
+    fe_curr_time            = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
 
     fe_comp_id              = 1;
     fe_target_comp_id       = 2;
@@ -129,10 +129,10 @@ let init_fix_engine_state = {
     fe_cache                = [];
     fe_history              = [];
 
-    fe_last_data_received   = make_UTCTimestamp ( 2017, 1, 1, 0, 1, 0, None );
-    fe_heartbeat_interval   = make_Duration ( None, None, None, None, None, Some 30 ); (* 30 seconds *)
-    fe_last_time_data_sent  = make_UTCTimestamp ( 2017, 1, 1, 0, 1, 0, None );
-    fe_testreq_interval     = make_Duration ( None, None, None, None, None, Some 30 );
+    fe_last_data_received   = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
+    fe_heartbeat_interval   = make_duration ( None, None, None, None, None, Some 30 ); (* 30 seconds *)
+    fe_last_time_data_sent  = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
+    fe_testreq_interval     = make_duration ( None, None, None, None, None, Some 30 );
 
     fe_history_to_send      = [];
 
@@ -522,11 +522,11 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
                 - need to check whether we haven't received a heartbeat or any other data
                     from the counterparty. *)
             let sent_cutoff = utctimestamp_add ( engine.fe_last_time_data_sent, engine.fe_heartbeat_interval ) in
-            let sent_cutoff_violated =  utctimestamp_greaterThan ( t, sent_cutoff ) in 
+            let sent_cutoff_violated =  utctimestamp_GreaterThan ( t, sent_cutoff ) in 
 
             let received_cutoff = utctimestamp_add ( engine.fe_last_data_received, engine.fe_heartbeat_interval ) in
             let received_cutoff_padded = utctimestamp_add ( received_cutoff, engine.fe_testreq_interval ) in
-            let received_cutoff_violated = utctimestamp_greaterThan ( t, received_cutoff_padded ) in 
+            let received_cutoff_violated = utctimestamp_GreaterThan ( t, received_cutoff_padded ) in 
 
             if sent_cutoff_violated && not ( received_cutoff_violated ) then (
                 let heatbeat_msg = create_heartbeat_msg ( engine, None ) in
@@ -549,7 +549,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
 
             let received_cutoff = utctimestamp_add ( engine.fe_last_time_data_sent, engine.fe_heartbeat_interval ) in
             let received_cutoff_padded = utctimestamp_add ( received_cutoff, engine.fe_testreq_interval ) in 
-            if utctimestamp_greaterThan ( t, received_cutoff_padded ) then (
+            if utctimestamp_GreaterThan ( t, received_cutoff_padded ) then (
             let logoff_msg = create_logoff_msg ( engine ) in { 
                  engine' with
                     fe_curr_mode            = NoActiveSession;
@@ -664,7 +664,7 @@ let is_int_message_valid ( engine : fix_engine_state ) =
     | None                      -> true
     | Some int_msg              ->
     match int_msg with 
-    | TimeChange t              -> utctimestamp_lessThan ( engine.fe_curr_time, t) && 
+    | TimeChange t              -> utctimestamp_LessThan ( engine.fe_curr_time, t) && 
                                     is_valid_utctimestamp ( t )
     | ApplicationData d         -> true
     | CreateSession d           -> (
@@ -683,8 +683,8 @@ let is_int_message_valid ( engine : fix_engine_state ) =
     we need to maintain that every state transition from a valid state 
     would result in another valid state. *)
 let is_state_valid ( engine : fix_engine_state ) =
-    utctimestamp_lessThanEqual ( engine.fe_last_data_received, engine.fe_curr_time ) &&
-    utctimestamp_lessThanEqual ( engine.fe_last_time_data_sent, engine.fe_curr_time ) &&
+    utctimestamp_LessThanEqual ( engine.fe_last_data_received, engine.fe_curr_time ) &&
+    utctimestamp_LessThanEqual ( engine.fe_last_time_data_sent, engine.fe_curr_time ) &&
     is_valid_utctimestamp ( engine.fe_curr_time ) && 
     is_valid_utctimestamp ( engine.fe_last_time_data_sent ) && 
     is_valid_utctimestamp ( engine.fe_last_data_received ) &&

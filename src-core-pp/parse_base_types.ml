@@ -19,7 +19,7 @@ let parse_int ( str : string ) : int option =
 ;;
 
 
-let parse_bool ( str : string) : fix_bool option = 
+let parse_bool ( str : string) : bool option = 
     match str with 
     | "Y" -> Some true 
     | "N" -> Some false 
