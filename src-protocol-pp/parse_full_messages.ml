@@ -1,14 +1,13 @@
-(** Implementation of the 'full' FIX messages. *)
+(** Parser for full administrative messages. *)
 (***
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    full_messages.ml
+    parse_full_messages.ml
 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Full_message_tags;;
 open Full_messages;;
 open Parser_utils;;
@@ -16,7 +15,6 @@ open Parser_utils.Parse_message_result;;
 open Parse_base_types;;
 open Parse_datetime;;
 open Parse_full_tags;;
-(* @meta[imandra_ignore] off @end *)
 
 let parse_msg_data msg_tag msg =
     match msg_tag with

@@ -1,3 +1,13 @@
+(** Parsers for datetime types. *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+
+    parse_datetime.ml
+    
+*)
+
 open Datetime;;
 open Parse_base_types;;
 

@@ -1,3 +1,12 @@
+(** Various parser utilities. *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+
+    parser_utils.ml 
+*)
+
 (**  Splits a stream of characters into a stream of key*value pairs *)
 let split_into_key_value (spliton : char) ( stream : char Stream.t ) : (string * string) Stream.t =
     let current = ref [] in

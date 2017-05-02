@@ -1,10 +1,10 @@
-(** Full messages - administrative. *)
+(** Parse full administrative messages. *)
 (***
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
     
-    full_admin_messages.ml
+    parse_admin_messages.ml
 
 *)
 

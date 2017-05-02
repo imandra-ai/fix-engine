@@ -1,3 +1,12 @@
+(** Parsers for base types. *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+
+    datetime_json.ml 
+*)
+
 open Numeric;;
 open Base_types;;
 

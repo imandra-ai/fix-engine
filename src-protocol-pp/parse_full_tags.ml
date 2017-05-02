@@ -1,8 +1,16 @@
-(* @meta[imandra_ignore] on @end *)
+(** Parser for full message tags. *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+
+    parse_full_tags.ml
+
+*)
+
 open Full_message_tags;;
 open Parse_app_tags;; 
 open Parse_admin_tags;;
-(* @meta[imandra_ignore] off @end *)
 
 let parse_full_msg_tag str = 
     match parse_admin_msg_tag str with

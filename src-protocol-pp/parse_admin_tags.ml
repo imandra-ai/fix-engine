@@ -1,6 +1,14 @@
-(* @meta[imandra_ignore] on @end *)
+(** Parse full administrative tags. *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    parse_admin_tags.ml
+
+*)
+
 open Full_admin_tags;;
-(* @meta[imandra_ignore] off @end *)
 
 let parse_admin_msg_tag = function
     |   "0" -> Some Full_Msg_Heartbeat_Tag       

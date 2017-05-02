@@ -1,4 +1,5 @@
-(**
+(** Wrapper for running the included examples. *)
+(***
 
     Usage examples.
 

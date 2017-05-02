@@ -5,7 +5,6 @@
     Copyright (c) 2014 - 2017
     
     base_types.ml
-
 *)
 
 type fix_symbol = int;;
