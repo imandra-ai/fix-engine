@@ -4,28 +4,52 @@
 <link rel="stylesheet" href="style.css" type="text/css">
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <link rel="Start" href="index.html">
-<link rel="next" href="Datetime.html">
+<link rel="next" href="Base_types.html">
 <link rel="Up" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Fix_engine" rel="Chapter" href="Fix_engine.html">
-<link title="Datetime" rel="Chapter" href="Datetime.html">
 <link title="Base_types" rel="Chapter" href="Base_types.html">
-<link title="Base_types_json" rel="Chapter" href="Base_types_json.html">
+<link title="Datetime" rel="Chapter" href="Datetime.html">
 <link title="Numeric" rel="Chapter" href="Numeric.html">
+<link title="Base_types_json" rel="Chapter" href="Base_types_json.html">
+<link title="Datetime_json" rel="Chapter" href="Datetime_json.html">
+<link title="Parse_base_types" rel="Chapter" href="Parse_base_types.html">
+<link title="Parse_datetime" rel="Chapter" href="Parse_datetime.html">
+<link title="Parser_utils" rel="Chapter" href="Parser_utils.html">
+<link title="Full_admin_enums" rel="Chapter" href="Full_admin_enums.html">
 <link title="Full_admin_messages" rel="Chapter" href="Full_admin_messages.html">
-<link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
-<link title="Full_fix_fields" rel="Chapter" href="Full_fix_fields.html">
+<link title="Full_admin_tags" rel="Chapter" href="Full_admin_tags.html">
+<link title="Full_message_tags" rel="Chapter" href="Full_message_tags.html">
 <link title="Full_messages" rel="Chapter" href="Full_messages.html">
-<link title="Full_session_core" rel="Chapter" href="Full_session_core.html">
+<link title="Full_app_enums" rel="Chapter" href="Full_app_enums.html">
+<link title="Full_app_messages" rel="Chapter" href="Full_app_messages.html">
+<link title="Full_app_records" rel="Chapter" href="Full_app_records.html">
+<link title="Full_app_tags" rel="Chapter" href="Full_app_tags.html">
+<link title="Full_app_enums_json" rel="Chapter" href="Full_app_enums_json.html">
+<link title="Full_app_messages_json" rel="Chapter" href="Full_app_messages_json.html">
+<link title="Full_app_records_json" rel="Chapter" href="Full_app_records_json.html">
+<link title="Full_app_tags_json" rel="Chapter" href="Full_app_tags_json.html">
+<link title="Parse_app_enums" rel="Chapter" href="Parse_app_enums.html">
+<link title="Parse_app_messages" rel="Chapter" href="Parse_app_messages.html">
+<link title="Parse_app_records" rel="Chapter" href="Parse_app_records.html">
+<link title="Parse_app_tags" rel="Chapter" href="Parse_app_tags.html">
 <link title="Fix_engine_json" rel="Chapter" href="Fix_engine_json.html">
-<link title="Full_admin_msg_json" rel="Chapter" href="Full_admin_msg_json.html">
-<link title="Full_msg_json" rel="Chapter" href="Full_msg_json.html"><title>Fix_engine</title>
+<link title="Full_admin_enums_json" rel="Chapter" href="Full_admin_enums_json.html">
+<link title="Full_admin_messages_json" rel="Chapter" href="Full_admin_messages_json.html">
+<link title="Full_admin_tags_json" rel="Chapter" href="Full_admin_tags_json.html">
+<link title="Full_message_tags_json" rel="Chapter" href="Full_message_tags_json.html">
+<link title="Full_messages_json" rel="Chapter" href="Full_messages_json.html">
+<link title="Parse_admin_enums" rel="Chapter" href="Parse_admin_enums.html">
+<link title="Parse_admin_messages" rel="Chapter" href="Parse_admin_messages.html">
+<link title="Parse_admin_tags" rel="Chapter" href="Parse_admin_tags.html">
+<link title="Parse_full_messages" rel="Chapter" href="Parse_full_messages.html">
+<link title="Parse_full_tags" rel="Chapter" href="Parse_full_tags.html"><title>Fix_engine</title>
 </head>
 <body>
 <div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
-&nbsp;<a class="post" href="Datetime.html" title="Datetime">Next</a>
+&nbsp;<a class="post" href="Base_types.html" title="Base_types">Next</a>
 </div>
 <h1>Module <a href="type_Fix_engine.html">Fix_engine</a></h1>
 
@@ -83,7 +107,7 @@ Request to initiate a new session.<br>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfix_engine_int_msg.ApplicationData"><span class="constructor">ApplicationData</span></span> <span class="keyword">of</span> <code class="type"><a href="Full_app_messages.html#TYPEfull_fix_app_msg_data">Full_app_messages.full_fix_app_msg_data</a></code></code></td>
+<code><span id="TYPEELTfix_engine_int_msg.ApplicationData"><span class="constructor">ApplicationData</span></span> <span class="keyword">of</span> <code class="type"><a href="Full_app_messages.html#TYPEfull_app_msg_data">Full_app_messages.full_app_msg_data</a></code></code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >App messages to be transmitted over.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
@@ -260,14 +284,14 @@ Represents 'modes' of the engine.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfix_engine_state.fe_comp_id">fe_comp_id</span>&nbsp;: <code class="type">int</code>;</code></td>
+<code><span id="TYPEELTfix_engine_state.fe_comp_id">fe_comp_id</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_string">Base_types.fix_string</a></code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Our company ID</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfix_engine_state.fe_target_comp_id">fe_target_comp_id</span>&nbsp;: <code class="type">int</code>;</code></td>
+<code><span id="TYPEELTfix_engine_state.fe_target_comp_id">fe_target_comp_id</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_string">Base_types.fix_string</a></code>;</code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Target company ID</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
@@ -397,7 +421,7 @@ Represents 'modes' of the engine.<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTfix_engine_state.fe_encrypt_method">fe_encrypt_method</span>&nbsp;: <code class="type"><a href="Base_types.html#TYPEfix_encryption_method">Base_types.fix_encryption_method</a></code>;</code></td>
+<code><span id="TYPEELTfix_engine_state.fe_encrypt_method">fe_encrypt_method</span>&nbsp;: <code class="type"><a href="Full_admin_enums.html#TYPEfix_encryption_method">Full_admin_enums.fix_encryption_method</a></code>;</code></td>
 
 </tr></table>
 }
@@ -410,11 +434,9 @@ Engine state structure containing all of the information required for it operate
 <pre><span id="VALinit_fix_engine_state"><span class="keyword">val</span> init_fix_engine_state</span> : <code class="type"><a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 Initial engine state.<br>
 </div>
-
-<pre><span id="VALincoming_header_correct"><span class="keyword">val</span> incoming_header_correct</span> : <code class="type"><a href="Full_session_core.html#TYPEfix_header">Full_session_core.fix_header</a> * int -> bool</code></pre><div class="info ">
+<br>
 TODO Are there any other checks? 
     Answer: Yes - we need to add those checks to raw OCaml parser (these will result in invalid messages)<br>
-</div>
 
 <pre><span id="VALrun_retransmit"><span class="keyword">val</span> run_retransmit</span> : <code class="type"><a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -> <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 We're in the middle of retransmitting historic messages. 
@@ -423,7 +445,7 @@ We're in the middle of retransmitting historic messages.
     of the parameters that were sent to the engine.<br>
 </div>
 
-<pre><span id="VALmsg_consistent"><span class="keyword">val</span> msg_consistent</span> : <code class="type"><a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> * <a href="Full_session_core.html#TYPEfix_header">Full_session_core.fix_header</a> -> bool</code></pre><div class="info ">
+<pre><span id="VALmsg_consistent"><span class="keyword">val</span> msg_consistent</span> : <code class="type"><a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> * <a href="Full_messages.html#TYPEfix_header">Full_messages.fix_header</a> -> bool</code></pre><div class="info ">
 Does the message have the right sequence number?
 <p>
 
@@ -437,7 +459,7 @@ Message creation helper functions.<br>
 <br>
 **********************************************************************************************************<br>
 
-<pre><span id="VALcreate_outbound_fix_msg"><span class="keyword">val</span> create_outbound_fix_msg</span> : <code class="type">int * int * int * <a href="Full_messages.html#TYPEfull_fix_msg_data">Full_messages.full_fix_msg_data</a> * bool -><br>       <a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a></code></pre><div class="info ">
+<pre><span id="VALcreate_outbound_fix_msg"><span class="keyword">val</span> create_outbound_fix_msg</span> : <code class="type">int * <a href="Base_types.html#TYPEfix_string">Base_types.fix_string</a> * <a href="Base_types.html#TYPEfix_string">Base_types.fix_string</a> *<br>       <a href="Full_messages.html#TYPEfull_msg_data">Full_messages.full_msg_data</a> * bool -> <a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a></code></pre><div class="info ">
 Create outbound FIX message with the appropriate header and trailer.<br>
 </div>
 
@@ -480,7 +502,7 @@ Here we will only accept an incoming Logon message to establish a connection.<br
 <pre><span id="VALrun_logon_sequence"><span class="keyword">val</span> run_logon_sequence</span> : <code class="type"><a href="Full_messages.html#TYPEfull_valid_fix_msg">Full_messages.full_valid_fix_msg</a> * <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -><br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 </div>
 
-<pre><span id="VALinitiate_Resend"><span class="keyword">val</span> initiate_Resend</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_fix_msg_resend_request_data">Full_admin_messages.full_fix_msg_resend_request_data</a> *<br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -> <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
+<pre><span id="VALinitiate_Resend"><span class="keyword">val</span> initiate_Resend</span> : <code class="type"><a href="Full_admin_messages.html#TYPEfull_msg_resend_request_data">Full_admin_messages.full_msg_resend_request_data</a> *<br>       <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a> -> <a href="Fix_engine.html#TYPEfix_engine_state">fix_engine_state</a></code></pre><div class="info ">
 Response to resent request.<br>
 </div>
 
