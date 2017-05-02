@@ -10,14 +10,14 @@ open Parse_app_records;;
 (* @meta[imandra_ignore] off @end *)
 
 let parse_msg_new_order_single_data msg =
-    parse_instrument msg >= fun full_newOrderSingle_Instrument ->
+    parse_instrument msg >>= fun full_newOrderSingle_Instrument ->
     from_parse_field_result (
-    opt msg "1"   parse_str          @@ fun full_newOrderSingle_Account      ->
-    opt msg "11"  parse_str          @@ fun full_newOrderSingle_ClOrdID      ->
-    opt msg "41"  parse_str          @@ fun full_newOrderSingle_OrigClOrdID  ->
+    opt msg "1"   parse_string       @@ fun full_newOrderSingle_Account      ->
+    opt msg "11"  parse_string       @@ fun full_newOrderSingle_ClOrdID      ->
+    opt msg "41"  parse_string       @@ fun full_newOrderSingle_OrigClOrdID  ->
     opt msg "18"  parse_execinst     @@ fun full_newOrderSingle_ExecInst     ->
     opt msg "21"  parse_handlinst    @@ fun full_newOrderSingle_HandlInst    ->
-    opt msg "60"  parse_utctimestamp @@ fun full_newOrderSingle_TransactTime ->
+    opt msg "60"  parse_UTCTimestamp @@ fun full_newOrderSingle_TransactTime ->
     opt msg "54"  parse_side         @@ fun full_newOrderSingle_Side         ->
     opt msg "38"  parse_float        @@ fun full_newOrderSingle_OrderQty     ->
     opt msg "40"  parse_ordertype    @@ fun full_newOrderSingle_OrdType      ->
@@ -25,7 +25,7 @@ let parse_msg_new_order_single_data msg =
     opt msg "110" parse_float        @@ fun full_newOrderSingle_MinQty       ->
     opt msg "59"  parse_timeinforce  @@ fun full_newOrderSingle_TimeInForce  ->
     opt msg "114" parse_bool         @@ fun full_newOrderSingle_LocateReqd   ->
-    opt msg "15"  parse_currency     @@ fun full_newOrderSingle_Currency     -> 
+    opt msg "15"  parse_Currency     @@ fun full_newOrderSingle_Currency     -> 
     ParseFieldSuccess
     { full_newOrderSingle_Account
     ; full_newOrderSingle_ClOrdID
@@ -47,14 +47,14 @@ let parse_msg_new_order_single_data msg =
 
 let parse_msg_order_cancel_replace_request_data msg = 
     from_parse_field_result (
-    opt msg "1"   parse_str           @@ fun full_orderCancelReplaceRequest_Account       -> 
-    opt msg "11"  parse_str           @@ fun full_orderCancelReplaceRequest_ClOrdID       -> 
+    opt msg "1"   parse_string        @@ fun full_orderCancelReplaceRequest_Account       -> 
+    opt msg "11"  parse_string        @@ fun full_orderCancelReplaceRequest_ClOrdID       -> 
     opt msg "21"  parse_handlinst     @@ fun full_orderCancelReplaceRequest_HandlInst     -> 
-    opt msg "41"  parse_str           @@ fun full_orderCancelReplaceRequest_OrigClOrdID   -> 
+    opt msg "41"  parse_string        @@ fun full_orderCancelReplaceRequest_OrigClOrdID   -> 
     opt msg "18"  parse_execinst      @@ fun full_orderCancelReplaceRequest_ExecInst      -> 
-    opt msg "60"  parse_utctimestamp  @@ fun full_orderCancelReplaceRequest_TransactTime  -> 
+    opt msg "60"  parse_UTCTimestamp  @@ fun full_orderCancelReplaceRequest_TransactTime  -> 
     opt msg "55"  parse_symbol        @@ fun full_orderCancelReplaceRequest_Symbol        -> 
-    opt msg "65"  parse_str           @@ fun full_orderCancelReplaceRequest_SymbolSfx     -> 
+    opt msg "65"  parse_string        @@ fun full_orderCancelReplaceRequest_SymbolSfx     -> 
     opt msg "54"  parse_side          @@ fun full_orderCancelReplaceRequest_Side          -> 
     opt msg "38"  parse_float         @@ fun full_orderCancelReplaceRequest_OrderQty      -> 
     opt msg "40"  parse_ordertype     @@ fun full_orderCancelReplaceRequest_OrdType       -> 
@@ -83,10 +83,10 @@ let parse_msg_order_cancel_replace_request_data msg =
 
 let parse_msg_order_cancel_request_data msg = 
     from_parse_field_result (
-    opt msg "11" parse_str           @@ fun full_orderCancelRequest_ClOrdID      -> 
-    opt msg "41" parse_str           @@ fun full_orderCancelRequest_OrigClOrdID  -> 
-    opt msg "37" parse_str           @@ fun full_orderCancelRequest_OrderID      -> 
-    opt msg "60" parse_utctimestamp  @@ fun full_orderCancelRequest_TransactTime -> 
+    opt msg "11" parse_string        @@ fun full_orderCancelRequest_ClOrdID      -> 
+    opt msg "41" parse_string        @@ fun full_orderCancelRequest_OrigClOrdID  -> 
+    opt msg "37" parse_string        @@ fun full_orderCancelRequest_OrderID      -> 
+    opt msg "60" parse_UTCTimestamp  @@ fun full_orderCancelRequest_TransactTime -> 
     opt msg "55" parse_symbol        @@ fun full_orderCancelRequest_Symbol       -> 
     opt msg "65" parse_symbol        @@ fun full_orderCancelRequest_SymbolSfx    -> 
     opt msg "54" parse_side          @@ fun full_orderCancelRequest_Side         ->
@@ -103,13 +103,13 @@ let parse_msg_order_cancel_request_data msg =
 
 let parse_msg_cancel_reject_data msg = 
     from_parse_field_result (
-    opt msg "1"   parse_str       @@ fun full_cancelReject_Account       ->
-    opt msg "11"  parse_str       @@ fun full_cancelReject_ClOrdID       ->
-    opt msg "41"  parse_str       @@ fun full_cancelReject_OrigClOrdID   ->
-    opt msg "37"  parse_str       @@ fun full_cancelReject_OrderID       ->
-    opt msg "39"  parse_ordstatus @@ fun full_cancelReject_OrdStatus     ->
-    opt msg "102" parse_str       @@ fun full_cancelReject_CxlRejReason  ->
-    opt msg "58"  parse_str       @@ fun full_cancelReject_Text          -> 
+    opt msg "1"   parse_string       @@ fun full_cancelReject_Account       ->
+    opt msg "11"  parse_string       @@ fun full_cancelReject_ClOrdID       ->
+    opt msg "41"  parse_string       @@ fun full_cancelReject_OrigClOrdID   ->
+    opt msg "37"  parse_string       @@ fun full_cancelReject_OrderID       ->
+    opt msg "39"  parse_ordstatus    @@ fun full_cancelReject_OrdStatus     ->
+    opt msg "102" parse_string       @@ fun full_cancelReject_CxlRejReason  ->
+    opt msg "58"  parse_string       @@ fun full_cancelReject_Text          -> 
     ParseFieldSuccess
     { full_cancelReject_Account     
     ; full_cancelReject_ClOrdID     
@@ -123,17 +123,17 @@ let parse_msg_cancel_reject_data msg =
 
 let parse_msg_execution_report_data msg = 
     from_parse_field_result (
-    opt msg "37"  parse_str        @@ fun full_executionReport_OrderID  -> 
-    opt msg "11"  parse_str        @@ fun full_executionReport_ClOrdID  -> 
-    opt msg "18"  parse_exectype   @@ fun full_executionReport_ExecType -> 
-    opt msg "17"  parse_str        @@ fun full_executionReport_ExecID   -> 
-    opt msg "1"   parse_str        @@ fun full_executionReport_Account  -> 
-    opt msg "54"  parse_side       @@ fun full_executionReport_Side     -> 
-    opt msg "40"  parse_ordertype  @@ fun full_executionReport_OrdType  -> 
-    opt msg "39"  parse_ordstatus  @@ fun full_executionReport_OrdStatus-> 
-    opt msg "6"   parse_float      @@ fun full_executionReport_AvgPx    -> 
-    opt msg "151" parse_float      @@ fun full_executionReport_LeavesQty-> 
-    opt msg "14"  parse_float      @@ fun full_executionReport_CumQty   -> 
+    opt msg "37"  parse_string        @@ fun full_executionReport_OrderID  -> 
+    opt msg "11"  parse_string        @@ fun full_executionReport_ClOrdID  -> 
+    opt msg "18"  parse_exectype      @@ fun full_executionReport_ExecType -> 
+    opt msg "17"  parse_string        @@ fun full_executionReport_ExecID   -> 
+    opt msg "1"   parse_string        @@ fun full_executionReport_Account  -> 
+    opt msg "54"  parse_side          @@ fun full_executionReport_Side     -> 
+    opt msg "40"  parse_ordertype     @@ fun full_executionReport_OrdType  -> 
+    opt msg "39"  parse_ordstatus     @@ fun full_executionReport_OrdStatus-> 
+    opt msg "6"   parse_float         @@ fun full_executionReport_AvgPx    -> 
+    opt msg "151" parse_float         @@ fun full_executionReport_LeavesQty-> 
+    opt msg "14"  parse_float         @@ fun full_executionReport_CumQty   -> 
     ParseFieldSuccess
     { full_executionReport_OrderID  
     ; full_executionReport_ClOrdID  

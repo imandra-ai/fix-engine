@@ -2,7 +2,7 @@
 open Yojson;;
 open Full_app_tags;;
 (* @meta[imandra_ignore] off @end *)
-(*
+
 let full_app_msg_tag_to_string = function
     | Full_Msg_ExecutionReport_Tag                         -> "ExecutionReport_Tag"  
     | Full_Msg_OrderCancelRequest_Tag                      -> "OrderCancelRequest_Tag"
@@ -48,4 +48,4 @@ let full_app_msg_tag_to_json x : json = `String ( full_app_msg_tag_to_string   x
 let full_app_msg_tag_opt_to_json = function None -> `Null  | Some x -> full_app_msg_tag_to_json   x ;;
 
 let full_app_field_tag_to_json x : json = `String ( full_app_field_tag_to_string x ) ;; 
-let full_app_field_tag_opt_to_json  = function None -> `Null | Some x -> full_app_field_tag_to_json x ;;*)
+let full_app_field_tag_opt_to_json  = function None -> `Null | Some x -> full_app_field_tag_to_json x ;;
