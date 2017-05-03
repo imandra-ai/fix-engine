@@ -24,6 +24,14 @@ let int_opt_to_json : int option -> json = function
     | Some x -> int_to_json x
 ;;
 
+
+(**
+  *  Char
+  *)
+
+let char_to_json = int_to_json ;;
+let char_opt_to_json = int_opt_to_json;;
+
 (**
   *  FIX_Float
   *)
