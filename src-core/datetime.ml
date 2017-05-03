@@ -6,7 +6,7 @@
 
     datetime.ml
 *)
-open Numeric;;
+
 (** UTC Timestamp *)
 type fix_utctimestamp = {
     utc_timestamp_year      : int;
