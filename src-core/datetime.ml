@@ -103,13 +103,15 @@ let default_localmktdate = {
     localmktdate_year       = 1970;
     localmktdate_month      = 1;
     localmktdate_day        = 1;
-};;
+}
+;;
 
 let make_localmktdate(year,month,day: int*int*int) = {
     localmktdate_year = year;
     localmktdate_month = month;
     localmktdate_day = day;
 }
+;;
 
 let is_valid_localmktdate ( lmd : fix_localmktdate ) =
     0 <= lmd.localmktdate_year && lmd.localmktdate_year <= 9999 && 
