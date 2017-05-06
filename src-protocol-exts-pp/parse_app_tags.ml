@@ -1,6 +1,15 @@
-(* @meta[imandra_ignore] on @end *)
+(** Parser for application tags. *)
+(***
+    
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+
+    parse_app_tags.ml
+
+*)
+
 open Full_app_tags;;
-(* @meta[imandra_ignore] off @end *)
+
 
 let parse_app_msg_tag = function
     | "8" -> Some Full_Msg_ExecutionReport_Tag
@@ -11,6 +20,7 @@ let parse_app_msg_tag = function
     |  _  -> None
 ;;
 
+(** *)
 let parse_app_field_tag = function
     | "1"   -> Some Full_Msg_Account_Tag
     | "102" -> Some Full_Msg_CxlRejReason_Tag

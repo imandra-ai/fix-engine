@@ -1,3 +1,13 @@
+(** *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    full_admin_enums.ml
+
+*)
+
 (** Session rejection reasons. *)
 type fix_session_reject_reason =
     | InvalidTagNumber

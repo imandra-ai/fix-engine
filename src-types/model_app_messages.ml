@@ -4,7 +4,6 @@
     Aesthetic Integration Limited
     Copyright 2014 - 2017
 
-    Implementation of the 
 
     model_messages.ml
 

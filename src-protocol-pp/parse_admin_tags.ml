@@ -10,6 +10,7 @@
 
 open Full_admin_tags;;
 
+(** *)
 let parse_admin_msg_tag = function
     |   "0" -> Some Full_Msg_Heartbeat_Tag       
     |   "1" -> Some Full_Msg_Test_Request_Tag    
@@ -22,7 +23,7 @@ let parse_admin_msg_tag = function
     |    _  -> None
 ;;
 
-
+(** *)
 let parse_admin_field_tag = function
     | "108" -> Some Full_Msg_HeartBtInt_Tag
     | "112" -> Some Full_Msg_TestReqID_Tag

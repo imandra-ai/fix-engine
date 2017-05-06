@@ -8,7 +8,6 @@
 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Full_admin_tags;;
 open Full_admin_messages;;
 open Parser_utils.Parse_field_result;;
@@ -17,14 +16,15 @@ open Parse_base_types;;
 open Parse_datetime;;
 open Parse_admin_enums;;
 open Parse_full_tags;;
-(* @meta[imandra_ignore] off @end *)
 
+(** *)
 let parse_msg_heartbeat_data msg =
     from_parse_field_result @@
     opt msg "112" parse_int @@ fun hb_test_req_id ->
     ParseFieldSuccess { hb_test_req_id }
 ;;
 
+(** *)
 let parse_msg_logon_data msg =
     from_parse_field_result @@
     req msg "98"  parse_encryption_method @@ fun ln_encrypt_method            ->
@@ -51,6 +51,7 @@ let parse_msg_logon_data msg =
     }
 ;;
 
+(** *)
 let parse_msg_logoff_data msg = 
     from_parse_field_result @@
     opt msg "355" parse_int @@ fun lo_encoded_text_len -> 
@@ -61,6 +62,7 @@ let parse_msg_logoff_data msg =
     }
 ;;
 
+(** *)
 let parse_msg_resend_request_data msg = 
     from_parse_field_result @@ 
     req msg "7"  parse_int @@ fun rr_begin_seq_num -> 
@@ -71,6 +73,7 @@ let parse_msg_resend_request_data msg =
     } 
 ;;
 
+(** *)
 let parse_msg_reject_data msg = 
     from_parse_field_result @@
     req msg "45"  parse_int                    @@ fun sr_ref_seq_num           -> 
@@ -91,6 +94,7 @@ let parse_msg_reject_data msg =
     }
 ;;
 
+(** *)
 let parse_msg_sequence_reset_data msg = 
     from_parse_field_result @@
     req msg "" parse_int         @@ fun seqr_new_seq_no    ->
@@ -101,6 +105,7 @@ let parse_msg_sequence_reset_data msg =
     } 
 ;;
 
+(** *)
 let parse_msg_test_request_data msg = 
     from_parse_field_result @@
     req msg "" parse_int @@ fun test_req_id -> 
@@ -108,6 +113,7 @@ let parse_msg_test_request_data msg =
     { test_req_id }
 ;;
 
+(** *)
 let parse_msg_business_reject_data msg = 
     from_parse_field_result @@
     req msg "" parse_int                    @@ fun br_ref_seq_num            ->
@@ -118,6 +124,7 @@ let parse_msg_business_reject_data msg =
     }
 ;;
 
+(** *)
 let parse_admin_msg_data msg_tag msg = 
     match msg_tag with
     | Full_Msg_Heartbeat_Tag        -> parse_msg_heartbeat_data       msg >>= fun x -> ParseSuccess ( Full_Msg_Heartbeat       x )    

@@ -8,7 +8,6 @@
 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open String;;
 open Yojson;;
 open Fix_engine;;
@@ -16,8 +15,8 @@ open Datetime_json;;
 open Base_types_json;;
 open Full_app_messages_json;;
 open Full_messages_json;;
-(* @meta[imandra_ignore] off @end *)
 
+(** *)
 let fix_engine_mode_to_string = function
     | NoActiveSession                                   -> "NoActiveSession"
     | LogonInitiated                                    -> "LogonInitiated"
@@ -31,7 +30,7 @@ let fix_engine_mode_to_string = function
     | WaitingForHeartbeat                               -> "WaitingForHeartbeat"
 ;;
 
-(* These are the messages going in/out of the engine to the owner. *)
+(** These are the messages going in/out of the engine to the owner. *)
 let int_msg_to_json x : json = match x with
     | TimeChange t                                      -> `Assoc [ ( "time_change",    `Assoc [ ( "new_time"       , utctimestamp_to_json t )]             )]
     | CreateSession cs                                  -> `Assoc [ ( "create_session", `Assoc [ ( "dest_comp_id"   , `Int cs.dest_comp_id )]               )]
@@ -39,18 +38,22 @@ let int_msg_to_json x : json = match x with
     | ManualIntervention m                              -> `Assoc [ ( "man_inter",      `Assoc [ ( "reset"          , `Bool m.session_reset )]              )]
 ;;
 
+(** *)
 let int_msg_to_str i = 
     Yojson.pretty_to_string (int_msg_to_json i)
 ;;
 
+(** *)
 let int_msg_list_to_string ml =
     `List (List.map int_msg_to_json ml)
 ;;
 
+(** *)
 let intmsg_opt_to_json : ( fix_engine_int_msg option -> Yojson.json) = 
     function None -> `Null | Some i -> int_msg_to_json (i)
 ;;
 
+(** *)
 let fix_engine_state_to_json s = 
     `Assoc [ 
         ( "curr_mode"                                   , `String (fix_engine_mode_to_string s.fe_curr_mode)    );
@@ -73,10 +76,12 @@ let fix_engine_state_to_json s =
     ]
 ;;
 
+(** *)
 let engine_state_to_str s =
     Yojson.pretty_to_string (fix_engine_state_to_json s)
 ;;
 
+(** *)
 let print_states states = 
     String.concat "\n" (List.map engine_state_to_str states)
 ;;

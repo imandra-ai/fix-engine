@@ -1,3 +1,13 @@
+(** *)
+(*** 
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    full_app_messages.ml
+
+*)
+
 (* @meta[imandra_ignore] on @end *)
 open Base_types;;
 open Numeric;;

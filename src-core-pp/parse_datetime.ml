@@ -8,9 +8,10 @@
     
 *)
 
-open Datetime;;
-open Parse_base_types;;
+open Datetime
+open Parse_base_types
 
+(** *)
 let parse_UTCDateOnly str =
     if String.length str != 8 then None else
     let year, month, day = Scanf.sscanf str "%04u%02u%02u" 
@@ -22,6 +23,7 @@ let parse_UTCDateOnly str =
     }
 ;;
 
+(** *)
 let parse_LocalMktDate str =
     if String.length str != 8 then None else
     let year, month, day = Scanf.sscanf str "%04u%02u%02u" 
@@ -33,6 +35,7 @@ let parse_LocalMktDate str =
     }
 ;;
 
+(** *)
 let parse_UTCTimeOnly str = 
     let length = String.length str in
     if (length != 8) && (length != 12) then None else
@@ -50,6 +53,7 @@ let parse_UTCTimeOnly str =
     }
 ;;
 
+(** *)
 let parse_UTCTimestamp str = 
     let length = String.length str in
     if (length != 17) && (length != 21) then None else
@@ -67,6 +71,7 @@ let parse_UTCTimestamp str =
         | _ -> None
 ;;
 
+(** *)
 let parse_MonthYear str =
     let length = String.length str in
     if (length < 6) then None else
@@ -88,6 +93,7 @@ let parse_MonthYear str =
     }
 ;;
 
+(** *)
 let parse_Duration str =
     let parse_int ( str : string ) : int option = 
         try  Some(int_of_string str) 

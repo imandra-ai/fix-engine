@@ -1,11 +1,18 @@
-(* @meta[imandra_ignore] on @end *)
+(** *)
+(*** 
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    full_app_messages_json.ml
+
+*)
 open Yojson;;
 open Full_app_messages;;
 open Base_types_json;;
 open Datetime_json;;
 open Full_app_enums_json;;
 open Full_app_records_json;;
-(* @meta[imandra_ignore] off @end *)
 
 let assoc_filter_nulls l : json =
     `Assoc ( List.filter (function ( _, `Null ) -> false | _ -> true ) l )

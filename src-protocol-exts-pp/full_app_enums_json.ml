@@ -1,8 +1,18 @@
-(* @meta[imandra_ignore] on @end *)
+(** *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    full_app_enums_json.ml
+    
+*)
+
 open Yojson;;
 open Full_app_enums;;
-(* @meta[imandra_ignore] off @end *)
 
+
+(** *)
 let pricetype_to_string = function 
     | FIX_Price_Percentage                    -> "Percentage"
     | FIX_Price_PerUnit                       -> "PerUnit"
@@ -15,6 +25,7 @@ let pricetype_to_string = function
     | FIX_Price_Yield                         -> "Yield"
 ;;
 
+(** *)
 let commtype_to_string = function 
     | FIX_CommType_PerUnit                    -> "PerUnit"
     | FIX_CommType_Percentage                 -> "Percentage"
@@ -23,6 +34,7 @@ let commtype_to_string = function
     | FIX_CommType_EnhancedUnits              -> "EnhancedUnits"
 ;;
 
+(** *)
 let ordstatus_to_string = function 
     | FIX_Ord_Status_New                      -> "New"
     | FIX_Ord_Status_PartiallyFilled          -> "PartiallyFilled"
@@ -41,6 +53,7 @@ let ordstatus_to_string = function
     | FIX_Ord_Status_PendingReplace           -> "PendingReplace"
 ;;
 
+(** *)
 let timeinforce_to_string =function 
     | FIX_TimeInForce_Day                     -> "Day"
     | FIX_TimeInForce_IOC                     -> "IOC"
@@ -50,6 +63,7 @@ let timeinforce_to_string =function
     | FIX_TimeInForce_GoodTillDate            -> "GoodTillDate"
 ;;
 
+(** *)
 let execinst_to_string = function 
     | FIX_ExecInst_NotHeld                    -> "NotHeld"
     | FIX_ExecInst_Work                       -> "Work"
@@ -61,12 +75,14 @@ let execinst_to_string = function
     | FIX_ExecInst_PrimaryPeg                 -> "PrimaryPeg"
 ;;
 
+(** *)
 let handlinst_to_string =function 
     | FIX_HandlInst_Automated_NoInt           -> "Automated_NoInt"
     | FIX_HandlInst_Automated_Int             -> "Automated_Int"  
     | FIX_HandlInst_Manual                    -> "Manual"         
 ;;
 
+(** *)
 let exectype_to_string = function 
     | FIX_ExecType_New                        -> "New"
     | FIX_ExecType_PartialFill                -> "PartialFill"
@@ -82,6 +98,7 @@ let exectype_to_string = function
     | FIX_ExecType_Calculated                 -> "Calculated"
 ;;
 
+(** *)
 let ordertype_to_string = function 
     | FIX_Ord_Type_Market                     -> "Market"
     | FIX_Ord_Type_Limit                      -> "Limit"
@@ -108,6 +125,7 @@ let ordertype_to_string = function
     | FIX_Ord_Type_Pegged                     -> "Pegged"
 ;;
 
+(** *)
 let side_to_string = function 
     | FIX_Side_Buy                            -> "Buy"
     | FIX_Side_Sell                           -> "Sell"
