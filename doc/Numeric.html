@@ -56,9 +56,36 @@
 <h1>Module <a href="type_Numeric.html">Numeric</a></h1>
 
 <pre><span class="keyword">module</span> Numeric: <code class="code"><span class="keyword">sig</span></code> <a href="Numeric.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
-Numeric types.<br>
+Numeric types and operations.<br>
 </div>
 <hr width="100%">
+
+<pre><span id="VALint_Add"><span class="keyword">val</span> int_Add</span> : <code class="type">int * int -> int</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALint_Sub"><span class="keyword">val</span> int_Sub</span> : <code class="type">int * int -> int</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALint_Neg"><span class="keyword">val</span> int_Neg</span> : <code class="type">int -> int</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALint_Mult"><span class="keyword">val</span> int_Mult</span> : <code class="type">int * int -> int</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALint_Div"><span class="keyword">val</span> int_Div</span> : <code class="type">int * int -> int</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALint_GreaterThan"><span class="keyword">val</span> int_GreaterThan</span> : <code class="type">int * int -> bool</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALint_GreaterThanEqual"><span class="keyword">val</span> int_GreaterThanEqual</span> : <code class="type">int * int -> bool</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALint_LessThan"><span class="keyword">val</span> int_LessThan</span> : <code class="type">int * int -> bool</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALint_LessThanEqual"><span class="keyword">val</span> int_LessThanEqual</span> : <code class="type">int * int -> bool</code></pre><div class="info ">
+</div>
 
 <pre><code><span id="TYPEfix_float_data"><span class="keyword">type</span> <code class="type"></code>fix_float_data</span> = {</code></pre><table class="typetable">
 <tr>
@@ -77,6 +104,8 @@ Numeric types.<br>
 </tr></table>
 }
 
+<div class="info ">
+</div>
 
 
 <pre><code><span id="TYPEfix_float"><span class="keyword">type</span> <code class="type"></code>fix_float</span> = </code></pre><table class="typetable">
@@ -116,22 +145,56 @@ Numeric types.<br>
 
 </tr></table>
 
+<div class="info ">
+</div>
 
 
-<pre><span id="VALfloat_Create"><span class="keyword">val</span> float_Create</span> : <code class="type"><a href="Numeric.html#TYPEfix_float_data">fix_float_data</a> * int -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre>
-<pre><span id="VALfloat_GetData"><span class="keyword">val</span> float_GetData</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float_data">fix_float_data</a></code></pre>
-<pre><span id="VALfloat_GetDecs"><span class="keyword">val</span> float_GetDecs</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> -> int</code></pre>
-<pre><span id="VALfloat_GetFloat"><span class="keyword">val</span> float_GetFloat</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> -> float</code></pre>
-<pre><span id="VALgetDecPow"><span class="keyword">val</span> getDecPow</span> : <code class="type">int -> float</code></pre>
-<pre><span id="VALmake_Float"><span class="keyword">val</span> make_Float</span> : <code class="type">float * int -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre>
-<pre><span id="VALfloat_Add"><span class="keyword">val</span> float_Add</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre>
-<pre><span id="VALfloat_Div"><span class="keyword">val</span> float_Div</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre>
-<pre><span id="VALfloat_Mult"><span class="keyword">val</span> float_Mult</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre>
-<pre><span id="VALfloat_GreaterThan"><span class="keyword">val</span> float_GreaterThan</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre>
-<pre><span id="VALfloat_LessThan"><span class="keyword">val</span> float_LessThan</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre>
-<pre><span id="VALfloat_GreaterThanEqual"><span class="keyword">val</span> float_GreaterThanEqual</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre>
+<pre><span id="VALfloat_Create"><span class="keyword">val</span> float_Create</span> : <code class="type"><a href="Numeric.html#TYPEfix_float_data">fix_float_data</a> * int -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre><div class="info ">
+</div>
+
+<pre><span id="VALfloat_GetData"><span class="keyword">val</span> float_GetData</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float_data">fix_float_data</a></code></pre><div class="info ">
+</div>
+
+<pre><span id="VALfloat_GetDecs"><span class="keyword">val</span> float_GetDecs</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> -> int</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALfloat_GetFloat"><span class="keyword">val</span> float_GetFloat</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> -> float</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALgetDecPow"><span class="keyword">val</span> getDecPow</span> : <code class="type">int -> float</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALmake_Float"><span class="keyword">val</span> make_Float</span> : <code class="type">float * int -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre><div class="info ">
+</div>
+
+<pre><span id="VALfloat_Add"><span class="keyword">val</span> float_Add</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre><div class="info ">
+</div>
+
+<pre><span id="VALfloat_Sub"><span class="keyword">val</span> float_Sub</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre><div class="info ">
+</div>
+
+<pre><span id="VALfloat_Neg"><span class="keyword">val</span> float_Neg</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre><div class="info ">
+</div>
+
+<pre><span id="VALfloat_Div"><span class="keyword">val</span> float_Div</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre><div class="info ">
+</div>
+
+<pre><span id="VALfloat_Mult"><span class="keyword">val</span> float_Mult</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> <a href="Numeric.html#TYPEfix_float">fix_float</a></code></pre><div class="info ">
+</div>
+
+<pre><span id="VALfloat_GreaterThan"><span class="keyword">val</span> float_GreaterThan</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALfloat_LessThan"><span class="keyword">val</span> float_LessThan</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre><div class="info ">
+</div>
+
+<pre><span id="VALfloat_GreaterThanEqual"><span class="keyword">val</span> float_GreaterThanEqual</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre><div class="info ">
+</div>
+
 <pre><span id="VALfloat_Equal"><span class="keyword">val</span> float_Equal</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre><div class="info ">
 TODO need to do something intelligent here.<br>
 </div>
 
-<pre><span id="VALfloat_LessThanEqual"><span class="keyword">val</span> float_LessThanEqual</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre></body></html>
+<pre><span id="VALfloat_LessThanEqual"><span class="keyword">val</span> float_LessThanEqual</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">fix_float</a> * <a href="Numeric.html#TYPEfix_float">fix_float</a> -> bool</code></pre><div class="info ">
+</div>
+</body></html>

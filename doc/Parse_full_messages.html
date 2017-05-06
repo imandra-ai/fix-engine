@@ -60,10 +60,18 @@ Parser for full administrative messages.<br>
 </div>
 <hr width="100%">
 
-<pre><span id="VALparse_msg_data"><span class="keyword">val</span> parse_msg_data</span> : <code class="type"><a href="Full_message_tags.html#TYPEfull_msg_tag">Full_message_tags.full_msg_tag</a> -><br>       (string * string) list -><br>       <a href="Full_messages.html#TYPEfull_msg_data">Full_messages.full_msg_data</a> <a href="Parser_utils.Parse_message_result.html#TYPEt">Parser_utils.Parse_message_result.t</a></code></pre>
-<pre><span id="VALparse_header"><span class="keyword">val</span> parse_header</span> : <code class="type">(string * string) list -><br>       <a href="Full_messages.html#TYPEfix_header">Full_messages.fix_header</a> <a href="Parser_utils.Parse_message_result.html#TYPEt">Parser_utils.Parse_message_result.t</a></code></pre>
-<pre><span id="VALparse_trailer"><span class="keyword">val</span> parse_trailer</span> : <code class="type">(string * string) list -><br>       <a href="Full_messages.html#TYPEfix_trailer">Full_messages.fix_trailer</a> <a href="Parser_utils.Parse_message_result.html#TYPEt">Parser_utils.Parse_message_result.t</a></code></pre>
-<pre><span id="VALcheck_first_three_tags"><span class="keyword">val</span> check_first_three_tags</span> : <code class="type">(string * string) list -> string option</code></pre>
+<pre><span id="VALparse_msg_data"><span class="keyword">val</span> parse_msg_data</span> : <code class="type"><a href="Full_message_tags.html#TYPEfull_msg_tag">Full_message_tags.full_msg_tag</a> -><br>       (string * string) list -><br>       <a href="Full_messages.html#TYPEfull_msg_data">Full_messages.full_msg_data</a> <a href="Parser_utils.Parse_message_result.html#TYPEt">Parser_utils.Parse_message_result.t</a></code></pre><div class="info ">
+</div>
+
+<pre><span id="VALparse_header"><span class="keyword">val</span> parse_header</span> : <code class="type">(string * string) list -><br>       <a href="Full_messages.html#TYPEfix_header">Full_messages.fix_header</a> <a href="Parser_utils.Parse_message_result.html#TYPEt">Parser_utils.Parse_message_result.t</a></code></pre><div class="info ">
+</div>
+
+<pre><span id="VALparse_trailer"><span class="keyword">val</span> parse_trailer</span> : <code class="type">(string * string) list -><br>       <a href="Full_messages.html#TYPEfix_trailer">Full_messages.fix_trailer</a> <a href="Parser_utils.Parse_message_result.html#TYPEt">Parser_utils.Parse_message_result.t</a></code></pre><div class="info ">
+</div>
+
+<pre><span id="VALcheck_first_three_tags"><span class="keyword">val</span> check_first_three_tags</span> : <code class="type">(string * string) list -> string option</code></pre><div class="info ">
+</div>
+
 <pre><span id="VALvalid_body_length"><span class="keyword">val</span> valid_body_length</span> : <code class="type">(string * string) list -> bool</code></pre><div class="info ">
 Checks that the message contains BodyLength&lt;9&gt; field as a second entry 
      in the message. And that the value equals to the number of bytes between 

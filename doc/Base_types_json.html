@@ -64,6 +64,10 @@ JSON printers/parsers for base FIX types.<br>
 
 <pre><span id="VALint_to_json"><span class="keyword">val</span> int_to_json</span> : <code class="type">int -> Yojson.json</code></pre>
 <pre><span id="VALint_opt_to_json"><span class="keyword">val</span> int_opt_to_json</span> : <code class="type">int option -> Yojson.json</code></pre><br>
+*  Char<br>
+
+<pre><span id="VALchar_to_json"><span class="keyword">val</span> char_to_json</span> : <code class="type">int -> Yojson.json</code></pre>
+<pre><span id="VALchar_opt_to_json"><span class="keyword">val</span> char_opt_to_json</span> : <code class="type">int option -> Yojson.json</code></pre><br>
 *  FIX_Float<br>
 
 <pre><span id="VALfloat_to_json"><span class="keyword">val</span> float_to_json</span> : <code class="type"><a href="Numeric.html#TYPEfix_float">Numeric.fix_float</a> -> Yojson.json</code></pre>
@@ -78,8 +82,8 @@ JSON printers/parsers for base FIX types.<br>
 <pre><span id="VALsymbol_opt_to_json"><span class="keyword">val</span> symbol_opt_to_json</span> : <code class="type">int option -> Yojson.json</code></pre><br>
 *  FIX_Bool<br>
 
-<pre><span id="VALbool_to_json"><span class="keyword">val</span> bool_to_json</span> : <code class="type"><a href="Base_types.html#TYPEfix_bool">Base_types.fix_bool</a> -> Yojson.json</code></pre>
-<pre><span id="VALbool_opt_to_json"><span class="keyword">val</span> bool_opt_to_json</span> : <code class="type"><a href="Base_types.html#TYPEfix_bool">Base_types.fix_bool</a> option -> Yojson.json</code></pre><br>
+<pre><span id="VALbool_to_json"><span class="keyword">val</span> bool_to_json</span> : <code class="type">bool -> Yojson.json</code></pre>
+<pre><span id="VALbool_opt_to_json"><span class="keyword">val</span> bool_opt_to_json</span> : <code class="type">bool option -> Yojson.json</code></pre><br>
 *  FIX_Currency<br>
 
 <pre><span id="VALcurrency_to_json"><span class="keyword">val</span> currency_to_json</span> : <code class="type"><a href="Base_types.html#TYPEfix_currency">Base_types.fix_currency</a> -> Yojson.json</code></pre>
