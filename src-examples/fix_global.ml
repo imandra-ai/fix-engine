@@ -1,9 +1,10 @@
-(**
-
-    Utilities for running examples.
+(** Utilities for running examples. *)
+(***
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
+
+    fix_global.ml
 
 *)
 
@@ -11,14 +12,14 @@ open Full_messages
 open Fix_engine
 open Fix_engine_json
 
-(* We're combining these to make it easier to run simulations and demonstrate
+(** We're combining these to make it easier to run simulations and demonstrate
     examples, etc. *)
 type msg_to_proc = [
     | `FIX_MSG of full_top_level_msg
     | `INT_MSG of fix_engine_int_msg
 ];;
 
-(* This is just the state where the input shows up. *)
+(** This is just the state where the input shows up. *)
 let get_input_state (x, last_state) =
     match x with
     | `FIX_MSG f -> { last_state with incoming_fix_msg = Some f }
@@ -30,7 +31,7 @@ let run_single (x, last_state) =
     one_step ( get_input_state (x, last_state ))
 ;;
 
-(* Run until there's nothing to do. Helpful in simulations, etc. *)
+(** Run until there's nothing to do. Helpful in simulations, etc. *)
 let rec run_global_step ( m, engine : msg_to_proc * fix_engine_state ) =
     let engine' = run_single (m, engine) in
     if engine' = engine then

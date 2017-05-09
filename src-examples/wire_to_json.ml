@@ -8,6 +8,7 @@
 
 *)
 
+(** *)
 let () = if Array.length Sys.argv < 2 then 
     print_string "Usage : wire_to_json input_file.fix\n"
 else

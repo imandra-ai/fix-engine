@@ -8,14 +8,15 @@
 
 *)
 
-open Full_message_tags;;
-open Full_messages;;
-open Parser_utils;;
-open Parser_utils.Parse_message_result;;
-open Parse_base_types;;
-open Parse_datetime;;
-open Parse_full_tags;;
+open Full_message_tags
+open Full_messages
+open Parser_utils
+open Parser_utils.Parse_message_result
+open Parse_base_types
+open Parse_datetime
+open Parse_full_tags
 
+(** *)
 let parse_msg_data msg_tag msg =
     match msg_tag with
     | Full_Admin_Msg_Tag msg_tag -> Parse_admin_messages.parse_admin_msg_data msg_tag msg
@@ -24,13 +25,14 @@ let parse_msg_data msg_tag msg =
                                  >>= fun x -> ParseSuccess ( Full_FIX_App_Msg x )
 ;;
 
+(** *)
 let parse_header msg = 
     Parse_message_result.from_parse_field_result @@
     let open Parse_field_result in 
-    req msg "8"   parse_string           @@ fun h_begin_string                ->
+    req msg "8"   parse_string        @@ fun h_begin_string                ->
     req msg "9"   parse_int           @@ fun h_body_length                 ->
-    req msg "49"  parse_string           @@ fun h_sender_comp_id              ->
-    req msg "56"  parse_string           @@ fun h_target_comp_id              ->
+    req msg "49"  parse_string        @@ fun h_sender_comp_id              ->
+    req msg "56"  parse_string        @@ fun h_target_comp_id              ->
     req msg "34"  parse_int           @@ fun h_msg_seq_num                 ->
     opt msg "115" parse_int           @@ fun h_on_behalf_of_comp_id        -> 
     opt msg "128" parse_int           @@ fun h_deliver_to_comp_id          ->  
@@ -83,7 +85,7 @@ let parse_header msg =
     }
 ;;
 
-
+(** *)
 let parse_trailer msg =  
     Parse_message_result.from_parse_field_result @@
     let open Parse_field_result in 
@@ -98,7 +100,7 @@ let parse_trailer msg =
 ;;
 
 
-
+(** *)
 let check_first_three_tags ( msg : (string * string) list ) : string option =
     if List.hd msg |> fst <> "8" then Some "8" else
     let msg = List.tl msg in

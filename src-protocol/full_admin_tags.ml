@@ -1,4 +1,14 @@
+(** *)
+(*** 
 
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    full_admin_tags.ml
+
+*)
+
+(** *)
 type full_admin_msg_tag = 
     | Full_Msg_Heartbeat_Tag
     | Full_Msg_Logon_Tag
@@ -10,7 +20,7 @@ type full_admin_msg_tag =
     | Full_Msg_Test_Request_Tag
 ;;
 
-
+(** *)
 type full_admin_field_tag =
     | Full_Msg_BeginSeqNo_Tag                               
     | Full_Msg_BusinessRejectReason_Tag
