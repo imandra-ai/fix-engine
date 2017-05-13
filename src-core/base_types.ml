@@ -8,7 +8,7 @@
 *)
 
 type fix_symbol = int;;
-type fix_string = int;;
+type fix_string = Model_string of int;;
 
 (** This should be built-in. *)
 type fix_currency =

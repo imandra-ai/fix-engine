@@ -66,7 +66,7 @@ let parse_msg_logoff_data msg =
 let parse_msg_resend_request_data msg = 
     from_parse_field_result @@ 
     req msg "7"  parse_int @@ fun rr_begin_seq_num -> 
-    req msg "16" parse_string @@ fun rr_end_seq_num   -> 
+    req msg "16" parse_int @@ fun rr_end_seq_num   -> 
     ParseFieldSuccess 
     { rr_begin_seq_num  
     ; rr_end_seq_num    

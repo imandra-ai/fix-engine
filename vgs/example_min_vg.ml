@@ -59,8 +59,8 @@ foo CX.state;;
 let minimize_state s i =
   match i with
     0 -> { s with fe_curr_time      = 1 }
-  | 1 -> { s with fe_comp_id        = 1 }
-  | 2 -> { s with fe_target_comp_id = 1 }
+  | 1 -> { s with fe_comp_id        = Model_string 1 }
+  | 2 -> { s with fe_target_comp_id = Model_string 1 }
   | 3 -> { s with incoming_seq_num  = 1 }
   | 4 -> { s with outgoing_seq_num  = 1 }
   | 5 -> { s with fe_last_hbeat_recived = 1 }

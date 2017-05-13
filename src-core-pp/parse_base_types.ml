@@ -11,7 +11,7 @@ open Numeric;;
 open Base_types;;
 
 let parse_string (str : string) : fix_string option = 
-    Some ( Hashtbl.hash str)
+    Some (Model_string ( Hashtbl.hash str))
 ;; 
 
 let parse_symbol (str : string) : fix_symbol option = 

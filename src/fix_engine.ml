@@ -25,7 +25,7 @@ type manual_int_data = {
 
 (** Request to initiate a new session. *)
 type session_data = {
-    dest_comp_id            : int; (** Destination company ID. *)
+    dest_comp_id            : fix_string; (** Destination company ID. *)
 }
 ;;
 
@@ -115,8 +115,8 @@ let init_fix_engine_state = {
     fe_curr_mode            = NoActiveSession;              
     fe_curr_time            = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
 
-    fe_comp_id              = 1;
-    fe_target_comp_id       = 2;
+    fe_comp_id              = Model_string 1;
+    fe_target_comp_id       = Model_string 2;
 
     incoming_int_msg        = None;                           
     outgoing_int_msg        = None;
@@ -267,24 +267,24 @@ let create_test_request_msg ( engine : fix_engine_state ) =
 ;;
 
 (** Create session-rejection message. *)
-let create_session_reject_msg ( reject_info, outbound_seq_num, target_comp_id, comp_id : session_rejected_msg_data * int * int * int ) = 
+let create_session_reject_msg ( reject_info, outbound_seq_num, target_comp_id, comp_id : session_rejected_msg_data * int * fix_string * fix_string ) = 
     let msg_data = 
         Full_FIX_Admin_Msg (
             Full_Msg_Reject {
                 sr_ref_seq_num              = reject_info.srej_msg_msg_seq_num;
-                sr_ref_tag_id               = Some 0;
+                sr_ref_tag_id               = Some (Model_string 0);
                 sr_ref_msg_type             = None;
                 sr_session_reject_reason    = reject_info.srej_msg_reject_reason;
                 sr_text                     = None;
                 sr_encoded_text_len         = None;
-                sr_encoded_text             = Some 0;
+                sr_encoded_text             = Some (Model_string 0);
             } ) in 
     ValidMsg ( create_outbound_fix_msg (outbound_seq_num, target_comp_id, comp_id, msg_data, false) )
 ;;
 
 (** Create business reject message. 
     Note: the reason we're separating the ApplicationDown reason is that the parser would not have access to this information. *)
-let create_business_reject_msg ( reject_info, outbound_seq_num, target_comp_id, comp_id  : biz_rejected_msg_data * int * int * int ) =
+let create_business_reject_msg ( reject_info, outbound_seq_num, target_comp_id, comp_id  : biz_rejected_msg_data * int * fix_string * fix_string ) =
     let msg_data = 
         Full_FIX_Admin_Msg (
             Full_Msg_Business_Reject {
