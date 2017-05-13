@@ -192,9 +192,9 @@ let msg_consistent ( engine, msg_header : fix_engine_state * fix_header ) =
     | Some dup -> dup || ((not dup) && seq_num_correct)
 ;;
 
-(** ********************************************************************************************************** *)
-(**  Message creation helper functions.                                                                        *)
-(** ********************************************************************************************************** *)
+(*** ********************************************************************************************************** *)
+(***  Message creation helper functions.                                                                        *)
+(*** ********************************************************************************************************** *)
 
 (** Create outbound FIX message with the appropriate header and trailer. *)
 let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, msg, is_duplicate ) = {
@@ -295,9 +295,9 @@ let create_business_reject_msg ( reject_info, outbound_seq_num, target_comp_id, 
     ValidMsg ( create_outbound_fix_msg (outbound_seq_num, target_comp_id, comp_id, msg_data, false) )
 ;;
 
-(** ********************************************************************************************************** *)
-(**  Mode transition functions.                                                                                *)
-(** ********************************************************************************************************** *)
+(*** ********************************************************************************************************** *)
+(***  Mode transition functions.                                                                                *)
+(*** ********************************************************************************************************** *)
 
 (** Here we will only accept an incoming Logon message to establish a connection. *)
 let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
@@ -511,7 +511,6 @@ let run_shutdown ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     )
 ;;
 
-
 (** Process incoming internal transition message. *)
 let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) = 
     match x with
@@ -631,20 +630,20 @@ let session_reject ( rejected_data, engine : session_rejected_msg_data * fix_eng
 (** Process incoming FIX message here. *)
 let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) = 
     match m with
-    | Garbled                   -> engine   (* Garbled messages are simply ignored. *)
+    | Garbled                   -> engine   (** Garbled messages are simply ignored. Note the timestamp is not updated. *)
     | SessionRejectedMsg data   -> (
         match engine.fe_curr_mode with 
-        | NoActiveSession       -> engine
-        | ActiveSession         -> session_reject ( data, engine )
+        | NoActiveSession       -> engine   (** Same as with Garbled messages. *)
+        | ActiveSession         -> let state' = session_reject ( data, engine ) in { state' with fe_last_data_received = engine.fe_curr_time }
         | _                     -> engine
         )
     | BusinessRejectedMsg data  -> (
         match engine.fe_curr_mode with 
-        | NoActiveSession       -> engine
-        | ActiveSession         -> business_reject ( data, engine )
-        | _                     -> engine
+        | NoActiveSession       -> engine   (** *)
+        | ActiveSession         -> let state' = business_reject ( data, engine ) in { state' with fe_last_data_received = engine.fe_curr_time }
+        | _                     -> engine   (** *)
         )
-    | ValidMsg msg              -> (
+    | ValidMsg msg              -> let state' = (
         match engine.fe_curr_mode with
         | NoActiveSession       -> run_no_active_session ( msg, engine )
         | LogonInitiated        -> run_logon_sequence ( msg, engine )
@@ -655,8 +654,8 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
         | Error                 -> noop ( msg, engine )
         | WaitingForHeartbeat   -> noop ( msg, engine) 
         | _                     -> { engine with incoming_fix_msg = Some ( ValidMsg msg ) }
-        )
-;; 
+        ) in { state' with fe_last_data_received = engine.fe_curr_time }
+;;
 
 (** This sets validity of the incoming internal messages.
     TODO: Use the generated validity checks. *)
@@ -712,15 +711,15 @@ let check_app_down ( m, app_up : full_top_level_msg * bool ) =
 
 (** The main transition function. *)
 let one_step ( engine : fix_engine_state ) =
-    (** First, check if we're in the middle of replaying our cache. *)
+    (** Check if we're in the middle of replaying our cache. *)
     if engine.fe_curr_mode = CacheReplay then
         run_cache_replay (engine)
     
     (** If we still need to retransmit our messages out to the receiving engine. *)
     else if engine.fe_curr_mode = Retransmit then 
         run_retransmit (engine)
-
-    else 
+    
+    else
         (** Now we look to process internal (coming from our application) and external (coming from
             another FIX engine) messages. *)
         match engine.incoming_int_msg with 
@@ -729,9 +728,7 @@ let one_step ( engine : fix_engine_state ) =
         match engine.incoming_fix_msg with 
         | Some m    -> 
             let m = check_app_down ( m, engine.fe_application_up ) in
-            proc_incoming_fix_msg (m, { engine with 
-                                            incoming_fix_msg = None;
-                                            fe_last_data_received = engine.fe_curr_time; } )
+            proc_incoming_fix_msg (m, { engine with incoming_fix_msg = None } )
         | None      -> engine
         )
 ;;
