@@ -125,7 +125,7 @@ let parse_admin_msg_data msg_tag msg =
     | Full_Msg_Resend_Request_Tag   -> parse_msg_resend_request_data  msg >>= fun x -> ParseSuccess ( Full_Msg_Resend_Request  x )
     | Full_Msg_Reject_Tag           -> parse_msg_reject_data          msg >>= fun x -> ParseSuccess ( Full_Msg_Reject          x )       
     | Full_Msg_Sequence_Reset_Tag   -> parse_msg_sequence_reset_data  msg >>= fun x -> ParseSuccess ( Full_Msg_Sequence_Reset  x )
-    | Full_Msg_Logoff_Tag           -> parse_msg_logon_data           msg >>= fun x -> ParseSuccess ( Full_Msg_Logon           x )        
-    | Full_Msg_Logon_Tag            -> parse_msg_logoff_data          msg >>= fun x -> ParseSuccess ( Full_Msg_Logoff          x )       
+    | Full_Msg_Logoff_Tag           -> parse_msg_logoff_data          msg >>= fun x -> ParseSuccess ( Full_Msg_Logoff          x )        
+    | Full_Msg_Logon_Tag            -> parse_msg_logon_data           msg >>= fun x -> ParseSuccess ( Full_Msg_Logon           x )       
     | Full_Msg_Business_Reject_Tag  -> parse_msg_business_reject_data msg >>= fun x -> ParseSuccess ( Full_Msg_Business_Reject x )
 ;;
