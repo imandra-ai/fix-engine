@@ -33,9 +33,9 @@ let split_into_messages (stream : (string * string) Stream.t) =
     let rec next i =
         try 
             let key,value = Stream.next stream in    
-            if (int_of_string key = 8) && (!current != []) then (
-                let message = List.rev !current in
-                current := [(key,value)];
+            if (int_of_string key = 10) then (
+                let message = List.rev ( (key,value)::!current ) in
+                current := [];
                 Some message
             ) else (
                 current := (key,value) :: !current;

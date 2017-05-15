@@ -20,13 +20,14 @@
 
 #use "server_utils.ml";;
 
-let create_msg_stream channel = 
+let create_msg_stream char_stream = 
     let stream_map f stream =
         let rec next i =
             try Some (f (Stream.next stream))
             with Stream.Failure -> None in
-        Stream.from next in
-    Stream.of_channel channel
+        Stream.from next 
+    in
+    char_stream
         |> Parser_utils.split_into_key_value '\001'
         |> Parser_utils.split_into_messages
         |> stream_map Parse_full_messages.parse_top_level_msg
@@ -47,9 +48,7 @@ let server, client =
      ( server, client )
 ;;
 
-let in_chan, out_chan = 
-    Unix.( in_channel_of_descr client, out_channel_of_descr client );;
-    
+let in_chan, out_chan = Unix.( in_channel_of_descr client , out_channel_of_descr client );;
 let send_logon seq_num =
     let l = logon_msg seq_num in
     let () = output out_chan l 0 (Bytes.length l) in
@@ -60,7 +59,7 @@ let treat_message msg =
     let () = 
         if is_logon_msg msg then begin
             print_endline "--== Logon received, sending reply ==--";
-            send_logon (get_seq_num msg + 1) 
+            send_logon (1) 
         end
         else () 
     in
@@ -69,9 +68,12 @@ let treat_message msg =
         |> Yojson.pretty_to_channel stdout 
 ;;
 
-let in_msg_stream = create_msg_stream in_chan;;
 
-Stream.iter treat_message in_msg_stream;;
+let in_msg_stream = in_chan |> Stream.of_channel
+                            |> create_msg_stream ;;
+                           
+
+Stream.iter treat_message in_msg_stream;; 
 
 Unix.close client;;
 Unix.close server;;
