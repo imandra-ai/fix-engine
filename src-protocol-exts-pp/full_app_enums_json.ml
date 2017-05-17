@@ -266,3 +266,61 @@ let exectype_opt_to_json     = function None -> `Null | Some x -> exectype_to_js
 let ordertype_opt_to_json    = function None -> `Null | Some x -> ordertype_to_json    x ;;
 let side_opt_to_json         = function None -> `Null | Some x -> side_to_json         x ;;
 let securitytype_opt_to_json = function None -> `Null | Some x -> securitytype_to_json x ;;
+
+
+let currency_to_string ( d ) =
+    match d with
+        | FIX_Currency_EUR -> "EUR"
+        | FIX_Currency_GBP -> "GBP"
+        | FIX_Currency_USD -> "USD"
+;;
+
+let country_to_string ( d ) =
+    match d with
+        | FIX_Country_DE -> "DE"
+        | FIX_Country_GB -> "GB"
+        | FIX_Country_US -> "US"
+;;
+
+let exchange_to_string ( d ) =
+    match d with
+        | FIX_Exchange_XLON -> "XLON"
+        | FIX_Exchange_XNYS -> "XNYS"
+        | FIX_Exchange_XNAS -> "XNAS"
+        | FIX_Exchange_XJAS -> "XJAS"
+        | FIX_Exchange_XSHG -> "XSHG"
+        | FIX_Exchange_SHSC -> "SHSC"
+;;
+
+
+
+let currency_to_json ( d ) : json =
+    `String (currency_to_string d)
+;;
+
+let country_to_json ( d ) : json =
+    `String (country_to_string d)
+;;
+
+let exchange_to_json ( d ) : json =
+    `String (exchange_to_string d)
+;;
+
+
+let currency_opt_to_json ( d ) : json =
+    match d with
+        | None -> (`Null)
+        | Some d -> (currency_to_json d)
+;;
+
+let country_opt_to_json ( d ) : json =
+    match d with
+        | None -> (`Null)
+        | Some d -> (country_to_json d)
+;;
+
+let exchange_opt_to_json ( d ) : json =
+    match d with
+        | None -> (`Null)
+        | Some d -> (exchange_to_json d)
+;;

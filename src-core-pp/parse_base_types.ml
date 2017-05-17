@@ -50,25 +50,4 @@ let parse_float ( str : string ) : fix_float option =
 ;;
 
 
-let parse_Currency = function
-    | "GBP" -> Some GBP
-    | "USD" -> Some USD
-    | _ -> None
-;;
-
-let parse_Country = function
-    | "UK"      -> Some UK
-    | "USA"     -> Some USA
-    | "France"  -> Some France
-    | "Germany" -> Some Germany
-    | _ -> None
-;;
-
-let parse_Exchange = function
-    | "BATS"     -> Some BATS
-    | "DBSuperX" -> Some DBSuperX
-    | _ -> None
-;;
-
-
 

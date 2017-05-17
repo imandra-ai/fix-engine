@@ -142,7 +142,7 @@ let example_4 () =
                     full_newOrderSingle_MinQty                      = Some ( make_Float ( 0.0, 0) );
                     full_newOrderSingle_TimeInForce                 = Some FIX_TimeInForce_Day;
                     full_newOrderSingle_LocateReqd                  = Some false;
-                    full_newOrderSingle_Currency                    = Some GBP;
+                    full_newOrderSingle_Currency                    = Some FIX_Currency_GBP;
                 }
         ));
     ] in
