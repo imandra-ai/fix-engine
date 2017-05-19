@@ -52,6 +52,7 @@ let full_app_field_tag_to_string = function
     | Full_Msg_TimeInForce_Tag    -> "TimeInForce_Tag"
     | Full_Msg_TransactTime_Tag   -> "TransactTime_Tag"
     | Full_Msg_TransactTimeon_Tag -> "TransactTimeon_Tag"
+    | Full_Msg_SymbolSfx_Tag      -> "SymbolSfx_Tag"
 ;;
 
 (** *)

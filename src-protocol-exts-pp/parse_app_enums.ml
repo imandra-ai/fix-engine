@@ -242,3 +242,30 @@ let parse_securitytype = function
     | "NONE"      -> Some FIX_SecurityType_NoSecurityType                            
     | _ -> (None)
 ;;
+
+let parse_Currency ( str ) =
+    match str with
+        | "EUR" -> (Some (FIX_Currency_EUR))
+        | "GBP" -> (Some (FIX_Currency_GBP))
+        | "USD" -> (Some (FIX_Currency_USD))
+        | _ -> (None)
+;;
+
+let parse_Country ( str ) =
+    match str with
+        | "DE" -> (Some (FIX_Country_DE))
+        | "GB" -> (Some (FIX_Country_GB))
+        | "US" -> (Some (FIX_Country_US))
+        | _ -> (None)
+;;
+
+let parse_Exchange ( str ) =
+    match str with
+        | "XLON" -> (Some (FIX_Exchange_XLON))
+        | "XNYS" -> (Some (FIX_Exchange_XNYS))
+        | "XNAS" -> (Some (FIX_Exchange_XNAS))
+        | "XJAS" -> (Some (FIX_Exchange_XJAS))
+        | "XSHG" -> (Some (FIX_Exchange_XSHG))
+        | "SHSC" -> (Some (FIX_Exchange_SHSC))
+        | _ -> (None)
+;;

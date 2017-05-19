@@ -242,3 +242,27 @@ type fix_securitytype =
     | FIX_SecurityType_NoSecurityType 
 ;;
 
+
+(** three letter code from ISO4217*)
+type fix_currency =
+    | FIX_Currency_EUR 
+    | FIX_Currency_GBP 
+    | FIX_Currency_USD 
+;;
+
+(** 2 letter country code - ISO 3166 *)
+type fix_country =
+    | FIX_Country_DE 
+    | FIX_Country_GB 
+    | FIX_Country_US 
+;;
+
+(** ISO 10383 Market Identifier Code*)
+type fix_exchange =
+    | FIX_Exchange_XLON 
+    | FIX_Exchange_XNYS 
+    | FIX_Exchange_XNAS 
+    | FIX_Exchange_XJAS 
+    | FIX_Exchange_XSHG 
+    | FIX_Exchange_SHSC 
+;;
