@@ -1,3 +1,15 @@
+(** *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    full_app_tags.ml
+    
+*)
+
+
+(** *)
 type full_app_msg_tag = 
     | Full_Msg_ExecutionReport_Tag
     | Full_Msg_OrderCancelRequest_Tag
@@ -6,6 +18,7 @@ type full_app_msg_tag =
     | Full_Msg_CancelReject_Tag               
 ;;
 
+(** *)
 type full_app_field_tag = 
     | Full_Msg_Account_Tag          
     | Full_Msg_AvgPx_Tag
