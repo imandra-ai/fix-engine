@@ -21,7 +21,7 @@ open Full_messages;;
 
 
 (** **************************************************************************************** *)
-(** 
+(**
     Base VG.1
 
     When in ActiveSession (normal mode) and receiving a non grabled and non session-level
@@ -55,12 +55,12 @@ verify app_down_get_biz_reject ( state : fix_engine_state ) =
 ;;
 
 (** **************************************************************************************** *)
-(** 
+(**
     Base VG.2
 
-    From Vol 2. Page 9. "In *ALL* cases except the Sequence Reset - message, the FIX session 
-    should be terminated if the incoming sequence number is less than expected and the 
-    PossDupFlag is not set. A Logout message with some descriptive text should be sent to the 
+    From Vol 2. Page 9. "In *ALL* cases except the Sequence Reset - message, the FIX session
+    should be terminated if the incoming sequence number is less than expected and the
+    PossDupFlag is not set. A Logout message with some descriptive text should be sent to the
     other side before closing the session." *)
 (** **************************************************************************************** *)
 
@@ -103,12 +103,11 @@ verify less_seq_num_logout ( state : fix_engine_state ) =
 ;;
 
 (** **************************************************************************************** *)
-(** 
+(**
     Base VG.3
 
     Messages that are garbled will be ignored (sequence counter will not be incremented).
 
-    * Note: Currently gives a counterexample! For speed, I've changed 'verify' to 'check.'
 *)
 (** **************************************************************************************** *)
 
@@ -117,9 +116,9 @@ let incoming_msg_garbled = function
   | _ -> false
 ;;
 
-check garbled_are_ignored ( state : fix_engine_state ) =
+verify garbled_are_ignored ( state : fix_engine_state ) =
   let state' = one_step (state) in
-  let msg_ignored = ( state' =  { state with incoming_fix_msg = None } ) in 
+  let msg_ignored = ( state' =  { state with incoming_fix_msg = None } ) in
   let no_internal_msgs = state.incoming_int_msg = None in
   let no_cache_replay_or_retransmit = not ( state.fe_curr_mode = CacheReplay || state.fe_curr_mode = Retransmit ) in
   ( incoming_msg_garbled (state.incoming_fix_msg)
@@ -149,8 +148,8 @@ let msg_is_reject = function
   | _ -> false
 ;;
 
-(** Note that it's important to remember that a message may only be rejected if we're in ActiveSession state. 
-    It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or 
+(** Note that it's important to remember that a message may only be rejected if we're in ActiveSession state.
+    It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or
     Retransmit modes. *)
 verify session_rejects_are_rejected ( state : fix_engine_state ) =
   let no_incoming_int_msgs = state.incoming_int_msg = None in
@@ -162,4 +161,3 @@ verify session_rejects_are_rejected ( state : fix_engine_state ) =
   ==>
   ( msg_rejected && seq_num_updated )
 ;;
-
