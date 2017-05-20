@@ -13,14 +13,14 @@
 :l src-core/base_types.ml
 
 :l src-protocol/full_admin_tags.ml
-:l src-protocol-exts/full_app_tags.ml
+:l src-protocol-exts-vg/full_app_tags.ml
 :l src-protocol/full_message_tags.ml
 
 :l src-protocol/full_admin_enums.ml
 :l src-protocol/full_admin_messages.ml
-:l src-protocol-exts/full_app_enums.ml
-:l src-protocol-exts/full_app_records.ml
-:l src-protocol-exts/full_app_messages.ml
+:l src-protocol-exts-vg/full_app_enums.ml
+:l src-protocol-exts-vg/full_app_records.ml
+:l src-protocol-exts-vg/full_app_messages.ml
 
 :l src-protocol/full_messages.ml
 :l src/fix_engine.ml
