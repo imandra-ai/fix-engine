@@ -1,6 +1,15 @@
-(* @meta[imandra_ignore] on @end *)
+(** *)
+(*** 
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    parse_app_enums.ml
+    
+*)
+
+
 open Full_app_enums;;
-(* @meta[imandra_ignore] off @end *)
 
 let parse_AccountType ( str ) =
     match str with

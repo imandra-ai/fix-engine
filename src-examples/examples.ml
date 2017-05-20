@@ -1,4 +1,5 @@
-(**
+(** *)
+(***
 
     Usage examples.
 
@@ -33,11 +34,11 @@ let record_example x =
 let example_1 () =
     let engine = {
         init_fix_engine_state with
-            fe_comp_id = 1;
+            fe_comp_id = Model_string 1;
     } in
     let msgs = [
         `INT_MSG ( TimeChange ( make_utctimestamp ( 2017, 1, 1, 0, 0, 0, None ) ));
-        `INT_MSG ( CreateSession { dest_comp_id = 123 } );
+        `INT_MSG ( CreateSession { dest_comp_id = Model_string 123 } );
     ] in
     run_through_msgs (engine, msgs)
 ;;
@@ -47,11 +48,11 @@ record_example ("// Example 1: Session Creation\n", example_1);;
 let example_2 () =
     let engine = {
         init_fix_engine_state with
-            fe_comp_id = 1;
+            fe_comp_id = Model_string 1;
     } in
     let msgs = [
         `INT_MSG ( TimeChange ( make_utctimestamp ( 2017, 1, 1, 0, 0, 0, None ) ) );
-        `INT_MSG ( CreateSession { dest_comp_id = 123 } );
+        `INT_MSG ( CreateSession { dest_comp_id = Model_string 123 } );
     ] in
     run_through_msgs (engine, msgs)
 ;;
@@ -75,16 +76,16 @@ let init_full_fix_msg_logon_data =
 let example_3 () =
     let engine = {
         init_fix_engine_state with
-            fe_comp_id = 1;
+            fe_comp_id = Model_string 1;
     } in
     let msgs = [
         `INT_MSG ( TimeChange ( make_utctimestamp ( 2017, 1, 1, 0, 0, 0, None ) ) );
-        `INT_MSG ( CreateSession { dest_comp_id = 123 } );
+        `INT_MSG ( CreateSession { dest_comp_id = Model_string 123 } );
         `FIX_MSG (
             ValidMsg {
                 full_msg_header = {
                     default_fix_header with
-                        h_target_comp_id = 1;
+                        h_target_comp_id = Model_string 1;
                 };
 
 
@@ -104,15 +105,15 @@ record_example ( "// Example 3: successfully created a session\n", example_3 );;
 let example_4 () =
     let engine = {
         init_fix_engine_state with
-            fe_comp_id              = 1;
+            fe_comp_id              = Model_string 1;
     } in
     let msgs = [
         `INT_MSG ( TimeChange ( make_utctimestamp ( 2017, 1, 1, 0, 0, 0, None ) ) );
-        `INT_MSG ( CreateSession { dest_comp_id = 123 });
+        `INT_MSG ( CreateSession { dest_comp_id = Model_string 123 });
         `FIX_MSG ( ValidMsg {
             full_msg_header = {
                 default_fix_header with
-                    h_target_comp_id = 1;
+                    h_target_comp_id = Model_string 1;
             };
             full_msg_data = Full_FIX_Admin_Msg (
                 Full_Msg_Logon init_full_fix_msg_logon_data);
@@ -121,9 +122,9 @@ let example_4 () =
 
          `INT_MSG ( ApplicationData (
                 Full_Msg_NewOrderSingle {
-                    full_newOrderSingle_Account                     = Some 0;
-                    full_newOrderSingle_ClOrdID                     = Some 0;
-                    full_newOrderSingle_OrigClOrdID                 = Some 0;
+                    full_newOrderSingle_Account                     = Some (Model_string 0);
+                    full_newOrderSingle_ClOrdID                     = Some (Model_string 0);
+                    full_newOrderSingle_OrigClOrdID                 = Some (Model_string 0);
                     full_newOrderSingle_ExecInst                    = Some FIX_ExecInst_MidpointPeg;
                     full_newOrderSingle_HandlInst                   = Some FIX_HandlInst_Automated_NoInt;
                     full_newOrderSingle_TransactTime                = Some ( make_utctimestamp (2017, 1, 1, 0, 1, 0, None) );
@@ -131,8 +132,8 @@ let example_4 () =
                         f_Instrument_IssueDate    = None; 
                         f_Instrument_Issuer       = None;
                         f_Instrument_SecurityType = None;
-                        f_Instrument_Symbol       = Some 0;
-                        f_Instrument_SymbolSfx    = Some 0;
+                        f_Instrument_Symbol       = Some (Model_string 0);
+                        f_Instrument_SymbolSfx    = Some (Model_string 0);
                     };
                     full_newOrderSingle_Side                        = Some FIX_Side_Buy;
                     full_newOrderSingle_OrderQty                    = Some ( make_Float ( 10.0, 2) );
@@ -141,7 +142,7 @@ let example_4 () =
                     full_newOrderSingle_MinQty                      = Some ( make_Float ( 0.0, 0) );
                     full_newOrderSingle_TimeInForce                 = Some FIX_TimeInForce_Day;
                     full_newOrderSingle_LocateReqd                  = Some false;
-                    full_newOrderSingle_Currency                    = Some GBP;
+                    full_newOrderSingle_Currency                    = Some FIX_Currency_GBP;
                 }
         ));
     ] in
@@ -154,7 +155,7 @@ record_example ( "// Example 4: successfully created a session + submit applicat
 let example_5 () =
     let engine = {
         init_fix_engine_state with
-            fe_comp_id              = 1;
+            fe_comp_id              = Model_string 1;
             fe_curr_mode            = ActiveSession;
             fe_initiator            = Some false;
             incoming_seq_num        = 1;
@@ -163,13 +164,13 @@ let example_5 () =
         `FIX_MSG ( ValidMsg {
             full_msg_header = {
                 default_fix_header with
-                    h_target_comp_id = 1;
+                    h_target_comp_id = Model_string 1;
                     h_msg_seq_num = 3;        (* Should be 2 *)
             };
             full_msg_data = Full_FIX_App_Msg (
                 Full_Msg_ExecutionReport {
                     init_msg_execution_report_data with
-                        full_executionReport_OrderID    = Some 1;
+                        full_executionReport_OrderID    = Some (Model_string 1);
                         full_executionReport_CumQty     = Some ( make_Float ( 20.0, 0 ));
             });
             full_msg_trailer = default_fix_trailer;
@@ -185,7 +186,7 @@ record_example ( "// Example 5: transition into Recovery when processing an out-
 let example_6 () =
     let engine = {
         init_fix_engine_state with
-            fe_comp_id              = 1;
+            fe_comp_id              = Model_string 1;
             fe_curr_mode            = Recovery;
             fe_initiator            = Some false;
             incoming_seq_num        = 1;
@@ -197,14 +198,14 @@ let example_6 () =
         `FIX_MSG ( ValidMsg {
             full_msg_header = {
                 default_fix_header with
-                    h_target_comp_id = 1;
+                    h_target_comp_id = Model_string 1;
                     h_msg_seq_num = 3;
             };
 
             full_msg_data = Full_FIX_App_Msg (
                 Full_Msg_ExecutionReport {
                     init_msg_execution_report_data with
-                        full_executionReport_OrderID    = Some 1;
+                        full_executionReport_OrderID    = Some (Model_string 1);
                         full_executionReport_CumQty     = Some ( make_Float ( 20.0, 0 ));
             });
 
@@ -219,7 +220,7 @@ record_example ( "// Example 6: In Recovery mode, receiving missing message and 
 let example_7 () =
     let engine = {
         init_fix_engine_state with
-            fe_comp_id              = 1;
+            fe_comp_id              = Model_string 1;
             fe_curr_mode            = ActiveSession;
             fe_initiator            = Some false;
             incoming_seq_num        = 1;
@@ -229,14 +230,14 @@ let example_7 () =
         `FIX_MSG ( ValidMsg {
             full_msg_header = {
                 default_fix_header with
-                    h_target_comp_id = 1;
+                    h_target_comp_id = Model_string 1;
                     h_msg_seq_num = 3;
             };
 
             full_msg_data = Full_FIX_App_Msg (
                 Full_Msg_ExecutionReport {
                     init_msg_execution_report_data with
-                        full_executionReport_OrderID    = Some 1;
+                        full_executionReport_OrderID    = Some (Model_string 1);
                         full_executionReport_CumQty     = Some ( make_Float ( 20.0, 0 ));
             });
 
@@ -251,7 +252,7 @@ record_example ( "// Example 7: In Recovery mode and adding further msgs into th
 let example_8 () =
     let engine = {
         init_fix_engine_state with
-            fe_comp_id              = 1;
+            fe_comp_id              = Model_string 1;
             fe_curr_time            = make_utctimestamp ( 2017, 1, 1, 0, 0, 0, None );
             fe_last_data_received   = make_utctimestamp ( 2017, 1, 1, 0, 0, 0, None );
             fe_heartbeat_interval   = make_duration ( None, None, None, None, None, Some 30 );
@@ -271,7 +272,7 @@ record_example ( "// Example 8: Internal time clock is updated, yet no heartbeat
 let example_9 () =
     let engine = {
         init_fix_engine_state with
-            fe_comp_id              = 1;
+            fe_comp_id              = Model_string 1;
             fe_curr_time            = make_utctimestamp ( 2017, 1, 1, 0, 0, 0, None );
     } in
     let msgs = [

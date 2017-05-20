@@ -11,7 +11,7 @@ open Numeric;;
 open Base_types;;
 
 let parse_string (str : string) : fix_string option = 
-    Some ( Hashtbl.hash str)
+    Some (Model_string ( Hashtbl.hash str))
 ;; 
 
 let parse_symbol (str : string) : fix_symbol option = 
@@ -47,27 +47,6 @@ let parse_float ( str : string ) : fix_float option =
         | 3 -> Some ( Float_3 ( mkfloat whole fraction ) )
         | 4 -> Some ( Float_4 ( mkfloat whole fraction ) )
         | _ -> None
-;;
-
-
-let parse_Currency = function
-    | "GBP" -> Some GBP
-    | "USD" -> Some USD
-    | _ -> None
-;;
-
-let parse_Country = function
-    | "UK"      -> Some UK
-    | "USA"     -> Some USA
-    | "France"  -> Some France
-    | "Germany" -> Some Germany
-    | _ -> None
-;;
-
-let parse_Exchange = function
-    | "BATS"     -> Some BATS
-    | "DBSuperX" -> Some DBSuperX
-    | _ -> None
 ;;
 
 

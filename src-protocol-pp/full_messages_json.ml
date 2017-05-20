@@ -4,11 +4,10 @@
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    full_messages.ml
+    full_messages_json.ml
 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Yojson;;
 open Base_types_json;;
 open Datetime_json;;
@@ -17,17 +16,19 @@ open Full_admin_enums_json;;
 open Full_admin_messages_json;;
 open Full_app_messages_json;;
 open Full_messages;;
-(* @meta[imandra_ignore] off @end *)
 
+(** *)
 let assoc_filter_nulls l : json =
     `Assoc ( List.filter (function ( _, `Null ) -> false | _ -> true ) l )
 ;;
 
+(** *)
 let full_msg_to_json = function
     | Full_FIX_Admin_Msg x -> full_admin_msg_to_json x
     | Full_FIX_App_Msg   x -> full_app_msg_to_json x
 ;;
 
+(** *)
 let session_rejected_msg_to_json x : json =  
     [ ( "RefSeqNum"             , int_to_json                        x.srej_msg_msg_seq_num   )
     ; ( "RefTagID"              , full_field_tag_opt_to_json         x.srej_msg_field_tag     )
@@ -39,6 +40,7 @@ let session_rejected_msg_to_json x : json =
     ] |> assoc_filter_nulls 
 ;;
 
+(** *)
 let biz_rejected_msg_to_json x : json = 
     [ ( "RefSeqNum"	            , int_to_json                     x.brej_msg_ref_seq_num   )
     ; ( "RefMsgTyp"	            , full_msg_tag_to_json            x.brej_msg_msg_tag       )
@@ -48,6 +50,7 @@ let biz_rejected_msg_to_json x : json =
     ] |> assoc_filter_nulls 
 ;;
 
+(** *) 
 let header_to_json x : json = 
     [ ( "BeginString" , string_to_json            x.h_begin_string                )
     ; ( "BodyLength"  , int_to_json               x.h_body_length                 )
@@ -78,6 +81,7 @@ let header_to_json x : json =
     ] |> assoc_filter_nulls 
 ;;
 
+(** *)
 let trailer_to_json x : json =  
     [ ( "SignatureLength" , int_opt_to_json x.signature_length )
     ; ( "Signature"       , int_opt_to_json x.signature        )
@@ -85,6 +89,7 @@ let trailer_to_json x : json =
     ] |> assoc_filter_nulls 
 ;;
 
+(** *)
 let full_valid_msg_to_json x : json =  
     [ ( "StandardHeader" , header_to_json    x.full_msg_header  ) 
     ; ( "MessageBody",     full_msg_to_json  x.full_msg_data    ) 
@@ -92,10 +97,12 @@ let full_valid_msg_to_json x : json =
     ] |> assoc_filter_nulls 
 ;;
 
+(** *)
 let full_msg_list_to_json l : json = 
     `List ( l |> List.map  full_valid_msg_to_json )
 ;;
 
+(** *)
 let full_top_level_msg_to_json x : json = match x with
     | ValidMsg             x -> `Assoc [ ( "ValidMsg"            , full_valid_msg_to_json       x ) ]
     | SessionRejectedMsg   x -> `Assoc [ ( "SessionRejectedMsg"  , session_rejected_msg_to_json x ) ]
@@ -103,6 +110,7 @@ let full_top_level_msg_to_json x : json = match x with
     | Garbled                -> `String "Garbled"
 ;;
 
+(** *)
 let full_top_level_msg_opt_to_json = function
     | None -> `Null
     | Some x -> full_top_level_msg_to_json x

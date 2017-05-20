@@ -1,4 +1,13 @@
-(* @meta[imandra_ignore] on @end *)
+(** *)
+(*** 
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    parse_app_records.ml
+
+*)
+
 open Parser_utils.Parse_message_result;;
 open Parser_utils.Parse_field_result;;
 open Full_app_tags;;
@@ -6,8 +15,8 @@ open Full_app_records;;
 open Parse_base_types;;
 open Parse_datetime;;
 open Parse_app_enums;;
-(* @meta[imandra_ignore] off @end *)
 
+(** *)
 let parse_instrument msg = 
     from_parse_field_result (
     opt msg "225" parse_LocalMktDate @@ fun f_Instrument_IssueDate    ->

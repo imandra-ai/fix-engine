@@ -1,11 +1,11 @@
-(** 
-    
+(**
+
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    Implementation of the FIX 4.4 protocol. Verification goals.
+    Implementation of the FIX 4.4 protocol.
 
-    fix_vgs.ml
+    Toplevel model load file for Imandra.
 *)
 
 :l src-core/datetime.ml

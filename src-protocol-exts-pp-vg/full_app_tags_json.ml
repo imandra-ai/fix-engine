@@ -1,8 +1,17 @@
-(* @meta[imandra_ignore] on @end *)
+(** *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    full_app_tags_json.ml
+    
+*)
+
 open Yojson;;
 open Full_app_tags;;
-(* @meta[imandra_ignore] off @end *)
 
+(** *)
 let full_app_msg_tag_to_string = function
     | Full_Msg_ExecutionReport_Tag                         -> "ExecutionReport_Tag"  
     | Full_Msg_OrderCancelRequest_Tag                      -> "OrderCancelRequest_Tag"
@@ -11,6 +20,7 @@ let full_app_msg_tag_to_string = function
     | Full_Msg_CancelReject_Tag                            -> "CancelReject_Tag" 
 ;;
 
+(** *)
 let full_app_field_tag_to_string = function
     | Full_Msg_Account_Tag        -> "Account_Tag"
     | Full_Msg_AvgPx_Tag          -> "AvgPx_Tag"
@@ -42,10 +52,15 @@ let full_app_field_tag_to_string = function
     | Full_Msg_TimeInForce_Tag    -> "TimeInForce_Tag"
     | Full_Msg_TransactTime_Tag   -> "TransactTime_Tag"
     | Full_Msg_TransactTimeon_Tag -> "TransactTimeon_Tag"
+    | Full_Msg_SymbolSfx_Tag      -> "SymbolSfx_Tag"
 ;;
 
+(** *)
 let full_app_msg_tag_to_json x : json = `String ( full_app_msg_tag_to_string   x ) ;; 
+(** *)
 let full_app_msg_tag_opt_to_json = function None -> `Null  | Some x -> full_app_msg_tag_to_json   x ;;
 
+(** *)
 let full_app_field_tag_to_json x : json = `String ( full_app_field_tag_to_string x ) ;; 
+(** *)
 let full_app_field_tag_opt_to_json  = function None -> `Null | Some x -> full_app_field_tag_to_json x ;;

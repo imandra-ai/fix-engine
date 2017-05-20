@@ -4,10 +4,11 @@
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
 
-    parser_utils.ml 
+    parser_utils.ml
+
 *)
 
-(**  Splits a stream of characters into a stream of key*value pairs *)
+(**  Splits a stream of characters into a stream of key*value pairs. *)
 let split_into_key_value (spliton : char) ( stream : char Stream.t ) : (string * string) Stream.t =
     let current = ref [] in
     let listref_to_string lst =
@@ -27,7 +28,7 @@ let split_into_key_value (spliton : char) ( stream : char Stream.t ) : (string *
     Stream.from next
 ;;
 
-(** Splits a stream of key-value paris into stream of  messages *)
+(** Splits a stream of key-value paris into stream of messages. *)
 let split_into_messages (stream : (string * string) Stream.t) =
     let current = ref [] in
     let rec next i =
@@ -51,6 +52,7 @@ let split_into_messages (stream : (string * string) Stream.t) =
     Stream.from next
 ;; 
 
+(** *)
 module Parse_field_result = struct 
     type 'a t =
         | ParseFieldSuccess of 'a
@@ -80,6 +82,7 @@ module Parse_field_result = struct
             
 end
 
+(** *)
 module Parse_message_result = struct 
     type 'a t =
         | ParseSuccess         of 'a

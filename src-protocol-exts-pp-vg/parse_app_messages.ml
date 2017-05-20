@@ -1,4 +1,14 @@
-(* @meta[imandra_ignore] on @end *)
+(** *)
+(*** 
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+    
+    parse_app_messages.ml
+
+*)
+
+
 open Parser_utils.Parse_message_result;;
 open Parser_utils.Parse_field_result;;
 open Full_app_tags;;
@@ -7,8 +17,9 @@ open Parse_base_types;;
 open Parse_datetime;;
 open Parse_app_enums;;
 open Parse_app_records;;
-(* @meta[imandra_ignore] off @end *)
 
+
+(** *)
 let parse_msg_new_order_single_data msg =
     parse_instrument msg >>= fun full_newOrderSingle_Instrument ->
     from_parse_field_result (
@@ -45,6 +56,7 @@ let parse_msg_new_order_single_data msg =
     } )
 ;;
 
+(** *)
 let parse_msg_order_cancel_replace_request_data msg = 
     from_parse_field_result (
     opt msg "1"   parse_string        @@ fun full_orderCancelReplaceRequest_Account       -> 
@@ -81,6 +93,7 @@ let parse_msg_order_cancel_replace_request_data msg =
     } )
 ;;
 
+(** *)
 let parse_msg_order_cancel_request_data msg = 
     from_parse_field_result (
     opt msg "11" parse_string        @@ fun full_orderCancelRequest_ClOrdID      -> 
@@ -101,6 +114,7 @@ let parse_msg_order_cancel_request_data msg =
     } )
 ;;
 
+(** *)
 let parse_msg_cancel_reject_data msg = 
     from_parse_field_result (
     opt msg "1"   parse_string       @@ fun full_cancelReject_Account       ->
@@ -121,6 +135,7 @@ let parse_msg_cancel_reject_data msg =
     } )
 ;;
 
+(** *)
 let parse_msg_execution_report_data msg = 
     from_parse_field_result (
     opt msg "37"  parse_string        @@ fun full_executionReport_OrderID  -> 
@@ -149,6 +164,7 @@ let parse_msg_execution_report_data msg =
     } )
 ;;
 
+(** *)
 let parse_app_msg_data msg_tag msg = 
     match msg_tag with
     | Full_Msg_ExecutionReport_Tag           -> parse_msg_execution_report_data             msg 

@@ -60,7 +60,7 @@ let float_opt_to_json = function
   *)
 
 let string_to_json x : json = 
-    `String ( "STR_HASH_" ^ string_of_int x ) 
+    `String ("STR_HASH_" ^ (match x with (Model_string y) -> string_of_int y | _ -> "" )) 
 ;;
 
 let string_opt_to_json = function 
@@ -98,50 +98,4 @@ let bool_opt_to_json : bool option -> json = function
     | Some x -> bool_to_json x 
 ;;
 
-
-
-(**
-  *  FIX_Currency
-  *)
-
-
-let currency_to_json x : json = match x with
-    | GBP -> `String "GBP"
-    | USD -> `String "USD"
-;;
-
-let currency_opt_to_json = function
-    | None   -> `Null
-    | Some x -> currency_to_json x 
-;;
-
-(**
-  *  FIX_Country
-  *)
-
-let country_to_json x : json = match x with
-    | UK      -> `String "UK"     
-    | USA     -> `String "USA"    
-    | France  -> `String "France" 
-    | Germany -> `String "Germany"
-;;
-
-let country_opt_to_json = function
-    | None   -> `Null
-    | Some x -> currency_to_json x 
-;;
-
-(**
-  *  FIX_Exchange
-  *)
-
-let exchange_to_json x : json = match x with
-    | BATS     -> `String "BATS"
-    | DBSuperX -> `String "DBSuperX"
-;;
-
-let exchange_opt_to_json = function
-    | None   -> `Null
-    | Some x -> exchange_to_json x 
-;;
 
