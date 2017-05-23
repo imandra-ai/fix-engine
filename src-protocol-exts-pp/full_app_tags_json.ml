@@ -4,7 +4,7 @@ open Full_app_tags;;
 (* @meta[imandra_ignore] off @end *)
 
 let full_app_msg_tag_to_string ( tag ) =
-    match tag with
+    (match tag with
         | Full_Msg_Advertisement_Tag -> "Advertisement"
         | Full_Msg_AllocationInstruction_Tag -> "AllocationInstruction"
         | Full_Msg_AllocationInstructionAck_Tag -> "AllocationInstructionAck"
@@ -29,15 +29,12 @@ let full_app_msg_tag_to_string ( tag ) =
         | Full_Msg_DontKnowTrade_Tag -> "DontKnowTrade"
         | Full_Msg_Email_Tag -> "Email"
         | Full_Msg_ExecutionReport_Tag -> "ExecutionReport"
-        | Full_Msg_Heartbeat_Tag -> "Heartbeat"
         | Full_Msg_IOI_Tag -> "IOI"
         | Full_Msg_ListCancelRequest_Tag -> "ListCancelRequest"
         | Full_Msg_ListExecute_Tag -> "ListExecute"
         | Full_Msg_ListStatus_Tag -> "ListStatus"
         | Full_Msg_ListStatusRequest_Tag -> "ListStatusRequest"
         | Full_Msg_ListStrikePrice_Tag -> "ListStrikePrice"
-        | Full_Msg_Logon_Tag -> "Logon"
-        | Full_Msg_Logout_Tag -> "Logout"
         | Full_Msg_MarketDataIncrementalRefresh_Tag -> "MarketDataIncrementalRefresh"
         | Full_Msg_MarketDataRequest_Tag -> "MarketDataRequest"
         | Full_Msg_MarketDataRequestReject_Tag -> "MarketDataRequestReject"
@@ -70,10 +67,8 @@ let full_app_msg_tag_to_string ( tag ) =
         | Full_Msg_RFQRequest_Tag -> "RFQRequest"
         | Full_Msg_RegistrationInstructions_Tag -> "RegistrationInstructions"
         | Full_Msg_RegistrationInstructionsResponse_Tag -> "RegistrationInstructionsResponse"
-        | Full_Msg_Reject_Tag -> "Reject"
         | Full_Msg_RequestForPositions_Tag -> "RequestForPositions"
         | Full_Msg_RequestForPositionsAck_Tag -> "RequestForPositionsAck"
-        | Full_Msg_ResendRequest_Tag -> "ResendRequest"
         | Full_Msg_SecurityDefinition_Tag -> "SecurityDefinition"
         | Full_Msg_SecurityDefinitionRequest_Tag -> "SecurityDefinitionRequest"
         | Full_Msg_SecurityList_Tag -> "SecurityList"
@@ -82,7 +77,6 @@ let full_app_msg_tag_to_string ( tag ) =
         | Full_Msg_SecurityStatusRequest_Tag -> "SecurityStatusRequest"
         | Full_Msg_SecurityTypeRequest_Tag -> "SecurityTypeRequest"
         | Full_Msg_SecurityTypes_Tag -> "SecurityTypes"
-        | Full_Msg_SequenceReset_Tag -> "SequenceReset"
         | Full_Msg_SettlementInstructions_Tag -> "SettlementInstructions"
         | Full_Msg_TestRequest_Tag -> "TestRequest"
         | Full_Msg_TradeCaptureReport_Tag -> "TradeCaptureReport"
@@ -91,10 +85,11 @@ let full_app_msg_tag_to_string ( tag ) =
         | Full_Msg_TradeCaptureReportRequestAck_Tag -> "TradeCaptureReportRequestAck"
         | Full_Msg_TradingSessionStatus_Tag -> "TradingSessionStatus"
         | Full_Msg_TradingSessionStatusRequest_Tag -> "TradingSessionStatusRequest"
+    )
 ;;
 
 let full_app_field_tag_to_string ( tag ) =
-    match tag with
+    (match tag with
         | Full_Field_AdvId_Tag -> "AdvId"
         | Full_Field_AdvTransType_Tag -> "AdvTransType"
         | Full_Field_AdvRefID_Tag -> "AdvRefID"
@@ -669,7 +664,6 @@ let full_app_field_tag_to_string ( tag ) =
         | Full_Field_LegStipulationType_Tag -> "LegStipulationType"
         | Full_Field_LegStipulationValue_Tag -> "LegStipulationValue"
         | Full_Field_NoLegStipulations_Tag -> "NoLegStipulations"
-        | Full_Field_TestReqID_Tag -> "TestReqID"
         | Full_Field_IOITransType_Tag -> "IOITransType"
         | Full_Field_IOIRefID_Tag -> "IOIRefID"
         | Full_Field_IOIQty_Tag -> "IOIQty"
@@ -690,17 +684,6 @@ let full_app_field_tag_to_string ( tag ) =
         | Full_Field_CxlQty_Tag -> "CxlQty"
         | Full_Field_TotNoStrikes_Tag -> "TotNoStrikes"
         | Full_Field_NoStrikes_Tag -> "NoStrikes"
-        | Full_Field_EncryptMethod_Tag -> "EncryptMethod"
-        | Full_Field_HeartBtInt_Tag -> "HeartBtInt"
-        | Full_Field_ResetSeqNumFlag_Tag -> "ResetSeqNumFlag"
-        | Full_Field_NextExpectedMsgSeqNum_Tag -> "NextExpectedMsgSeqNum"
-        | Full_Field_MaxMessageSize_Tag -> "MaxMessageSize"
-        | Full_Field_NoMsgTypes_Tag -> "NoMsgTypes"
-        | Full_Field_RefMsgType_Tag -> "RefMsgType"
-        | Full_Field_MsgDirection_Tag -> "MsgDirection"
-        | Full_Field_TestMessageIndicator_Tag -> "TestMessageIndicator"
-        | Full_Field_Username_Tag -> "Username"
-        | Full_Field_Password_Tag -> "Password"
         | Full_Field_MDReqID_Tag -> "MDReqID"
         | Full_Field_ApplQueueDepth_Tag -> "ApplQueueDepth"
         | Full_Field_ApplQueueResolution_Tag -> "ApplQueueResolution"
@@ -874,12 +857,7 @@ let full_app_field_tag_to_string ( tag ) =
         | Full_Field_NoDistribInsts_Tag -> "NoDistribInsts"
         | Full_Field_RegistRejReasonCode_Tag -> "RegistRejReasonCode"
         | Full_Field_RegistRejReasonText_Tag -> "RegistRejReasonText"
-        | Full_Field_RefSeqNum_Tag -> "RefSeqNum"
-        | Full_Field_RefTagID_Tag -> "RefTagID"
-        | Full_Field_SessionRejectReason_Tag -> "SessionRejectReason"
         | Full_Field_PosReqStatus_Tag -> "PosReqStatus"
-        | Full_Field_BeginSeqNo_Tag -> "BeginSeqNo"
-        | Full_Field_EndSeqNo_Tag -> "EndSeqNo"
         | Full_Field_SecurityResponseType_Tag -> "SecurityResponseType"
         | Full_Field_RoundLot_Tag -> "RoundLot"
         | Full_Field_MinTradeVol_Tag -> "MinTradeVol"
@@ -896,8 +874,6 @@ let full_app_field_tag_to_string ( tag ) =
         | Full_Field_Adjustment_Tag -> "Adjustment"
         | Full_Field_TotNoSecurityTypes_Tag -> "TotNoSecurityTypes"
         | Full_Field_NoSecurityTypes_Tag -> "NoSecurityTypes"
-        | Full_Field_GapFillFlag_Tag -> "GapFillFlag"
-        | Full_Field_NewSeqNo_Tag -> "NewSeqNo"
         | Full_Field_SettlInstMsgID_Tag -> "SettlInstMsgID"
         | Full_Field_SettlInstReqID_Tag -> "SettlInstReqID"
         | Full_Field_SettlInstReqRejCode_Tag -> "SettlInstReqRejCode"
@@ -915,6 +891,7 @@ let full_app_field_tag_to_string ( tag ) =
         | Full_Field_SettlInstID_Tag -> "SettlInstID"
         | Full_Field_SettlInstRefID_Tag -> "SettlInstRefID"
         | Full_Field_SettlInstTransType_Tag -> "SettlInstTransType"
+        | Full_Field_TestReqID_Tag -> "TestReqID"
         | Full_Field_TradeReportTransType_Tag -> "TradeReportTransType"
         | Full_Field_TradeReportType_Tag -> "TradeReportType"
         | Full_Field_TradeRequestID_Tag -> "TradeRequestID"
@@ -957,6 +934,7 @@ let full_app_field_tag_to_string ( tag ) =
         | Full_Field_TradSesCloseTime_Tag -> "TradSesCloseTime"
         | Full_Field_TradSesEndTime_Tag -> "TradSesEndTime"
         | Full_Field_TotalVolumeTraded_Tag -> "TotalVolumeTraded"
+    )
 ;;
 
 let full_app_msg_tag_to_json ( tag ) : json =
@@ -964,9 +942,10 @@ let full_app_msg_tag_to_json ( tag ) : json =
 ;;
 
 let full_app_msg_tag_opt_to_json ( tag ) : json =
-    match tag with
+    (match tag with
         | None -> (`Null)
         | Some tag -> (full_app_msg_tag_to_json tag)
+    )
 ;;
 
 let full_app_field_tag_to_json ( tag ) : json =
@@ -974,7 +953,8 @@ let full_app_field_tag_to_json ( tag ) : json =
 ;;
 
 let full_app_field_tag_opt_to_json ( tag ) : json =
-    match tag with
+    (match tag with
         | None -> (`Null)
         | Some tag -> (full_app_field_tag_to_json tag)
+    )
 ;;

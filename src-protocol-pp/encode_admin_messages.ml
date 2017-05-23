@@ -13,7 +13,7 @@ open Full_admin_messages;;
 open Encode_base_types;;
 open Encode_datetime;;
 open Encode_admin_enums;;
-(* open Encode_full_tags;; *)
+open Encode_full_tags;; 
 
 let req f x = Some (f x);;
 

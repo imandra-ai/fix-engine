@@ -23,15 +23,12 @@ type full_app_msg_tag =
     | Full_Msg_DontKnowTrade_Tag 
     | Full_Msg_Email_Tag 
     | Full_Msg_ExecutionReport_Tag 
-    | Full_Msg_Heartbeat_Tag 
     | Full_Msg_IOI_Tag 
     | Full_Msg_ListCancelRequest_Tag 
     | Full_Msg_ListExecute_Tag 
     | Full_Msg_ListStatus_Tag 
     | Full_Msg_ListStatusRequest_Tag 
     | Full_Msg_ListStrikePrice_Tag 
-    | Full_Msg_Logon_Tag 
-    | Full_Msg_Logout_Tag 
     | Full_Msg_MarketDataIncrementalRefresh_Tag 
     | Full_Msg_MarketDataRequest_Tag 
     | Full_Msg_MarketDataRequestReject_Tag 
@@ -64,10 +61,8 @@ type full_app_msg_tag =
     | Full_Msg_RFQRequest_Tag 
     | Full_Msg_RegistrationInstructions_Tag 
     | Full_Msg_RegistrationInstructionsResponse_Tag 
-    | Full_Msg_Reject_Tag 
     | Full_Msg_RequestForPositions_Tag 
     | Full_Msg_RequestForPositionsAck_Tag 
-    | Full_Msg_ResendRequest_Tag 
     | Full_Msg_SecurityDefinition_Tag 
     | Full_Msg_SecurityDefinitionRequest_Tag 
     | Full_Msg_SecurityList_Tag 
@@ -76,7 +71,6 @@ type full_app_msg_tag =
     | Full_Msg_SecurityStatusRequest_Tag 
     | Full_Msg_SecurityTypeRequest_Tag 
     | Full_Msg_SecurityTypes_Tag 
-    | Full_Msg_SequenceReset_Tag 
     | Full_Msg_SettlementInstructions_Tag 
     | Full_Msg_TestRequest_Tag 
     | Full_Msg_TradeCaptureReport_Tag 
@@ -662,7 +656,6 @@ type full_app_field_tag =
     | Full_Field_LegStipulationType_Tag 
     | Full_Field_LegStipulationValue_Tag 
     | Full_Field_NoLegStipulations_Tag 
-    | Full_Field_TestReqID_Tag 
     | Full_Field_IOITransType_Tag 
     | Full_Field_IOIRefID_Tag 
     | Full_Field_IOIQty_Tag 
@@ -683,17 +676,6 @@ type full_app_field_tag =
     | Full_Field_CxlQty_Tag 
     | Full_Field_TotNoStrikes_Tag 
     | Full_Field_NoStrikes_Tag 
-    | Full_Field_EncryptMethod_Tag 
-    | Full_Field_HeartBtInt_Tag 
-    | Full_Field_ResetSeqNumFlag_Tag 
-    | Full_Field_NextExpectedMsgSeqNum_Tag 
-    | Full_Field_MaxMessageSize_Tag 
-    | Full_Field_NoMsgTypes_Tag 
-    | Full_Field_RefMsgType_Tag 
-    | Full_Field_MsgDirection_Tag 
-    | Full_Field_TestMessageIndicator_Tag 
-    | Full_Field_Username_Tag 
-    | Full_Field_Password_Tag 
     | Full_Field_MDReqID_Tag 
     | Full_Field_ApplQueueDepth_Tag 
     | Full_Field_ApplQueueResolution_Tag 
@@ -867,12 +849,7 @@ type full_app_field_tag =
     | Full_Field_NoDistribInsts_Tag 
     | Full_Field_RegistRejReasonCode_Tag 
     | Full_Field_RegistRejReasonText_Tag 
-    | Full_Field_RefSeqNum_Tag 
-    | Full_Field_RefTagID_Tag 
-    | Full_Field_SessionRejectReason_Tag 
     | Full_Field_PosReqStatus_Tag 
-    | Full_Field_BeginSeqNo_Tag 
-    | Full_Field_EndSeqNo_Tag 
     | Full_Field_SecurityResponseType_Tag 
     | Full_Field_RoundLot_Tag 
     | Full_Field_MinTradeVol_Tag 
@@ -889,8 +866,6 @@ type full_app_field_tag =
     | Full_Field_Adjustment_Tag 
     | Full_Field_TotNoSecurityTypes_Tag 
     | Full_Field_NoSecurityTypes_Tag 
-    | Full_Field_GapFillFlag_Tag 
-    | Full_Field_NewSeqNo_Tag 
     | Full_Field_SettlInstMsgID_Tag 
     | Full_Field_SettlInstReqID_Tag 
     | Full_Field_SettlInstReqRejCode_Tag 
@@ -908,6 +883,7 @@ type full_app_field_tag =
     | Full_Field_SettlInstID_Tag 
     | Full_Field_SettlInstRefID_Tag 
     | Full_Field_SettlInstTransType_Tag 
+    | Full_Field_TestReqID_Tag 
     | Full_Field_TradeReportTransType_Tag 
     | Full_Field_TradeReportType_Tag 
     | Full_Field_TradeRequestID_Tag 

@@ -1777,13 +1777,6 @@ let parse_ExecutionReport msg =
     f_ExecutionReport_MiscFeesGrp;
     } );;
 
-let parse_Heartbeat msg =
-    from_parse_field_result (
-    opt msg "112" parse_string @@ fun f_Heartbeat_TestReqID ->
-    ParseFieldSuccess {
-    f_Heartbeat_TestReqID;
-    } );;
-
 let parse_IOI msg =
     parse_Instrument msg >>= fun f_IOI_Instrument ->
     parse_FinancingDetails msg >>= fun f_IOI_FinancingDetails ->
@@ -1936,48 +1929,6 @@ let parse_ListStrikePrice msg =
     f_ListStrikePrice_LastFragment;
     f_ListStrikePrice_InstrmtStrkPxGrp;
     f_ListStrikePrice_UndInstrmtStrkPxGrp;
-    } );;
-
-let parse_Logon msg =
-    from_parse_field_result (
-    req msg "98" parse_EncryptMethod @@ fun f_Logon_EncryptMethod ->
-    req msg "108" parse_int @@ fun f_Logon_HeartBtInt ->
-    opt msg "95" parse_int @@ fun f_Logon_RawDataLength ->
-    opt msg "96" parse_string @@ fun f_Logon_RawData ->
-    opt msg "141" parse_ResetSeqNumFlag @@ fun f_Logon_ResetSeqNumFlag ->
-    opt msg "789" parse_int @@ fun f_Logon_NextExpectedMsgSeqNum ->
-    opt msg "383" parse_int @@ fun f_Logon_MaxMessageSize ->
-    opt msg "384" parse_int @@ fun f_Logon_NoMsgTypes ->
-    opt msg "372" parse_string @@ fun f_Logon_RefMsgType ->
-    opt msg "385" parse_MsgDirection @@ fun f_Logon_MsgDirection ->
-    opt msg "464" parse_TestMessageIndicator @@ fun f_Logon_TestMessageIndicator ->
-    opt msg "553" parse_string @@ fun f_Logon_Username ->
-    opt msg "554" parse_string @@ fun f_Logon_Password ->
-    ParseFieldSuccess {
-    f_Logon_EncryptMethod;
-    f_Logon_HeartBtInt;
-    f_Logon_RawDataLength;
-    f_Logon_RawData;
-    f_Logon_ResetSeqNumFlag;
-    f_Logon_NextExpectedMsgSeqNum;
-    f_Logon_MaxMessageSize;
-    f_Logon_NoMsgTypes;
-    f_Logon_RefMsgType;
-    f_Logon_MsgDirection;
-    f_Logon_TestMessageIndicator;
-    f_Logon_Username;
-    f_Logon_Password;
-    } );;
-
-let parse_Logout msg =
-    from_parse_field_result (
-    opt msg "58" parse_string @@ fun f_Logout_Text ->
-    opt msg "354" parse_int @@ fun f_Logout_EncodedTextLen ->
-    opt msg "355" parse_string @@ fun f_Logout_EncodedText ->
-    ParseFieldSuccess {
-    f_Logout_Text;
-    f_Logout_EncodedTextLen;
-    f_Logout_EncodedText;
     } );;
 
 let parse_MarketDataIncrementalRefresh msg =
@@ -3842,25 +3793,6 @@ let parse_RegistrationInstructionsResponse msg =
     f_RegistrationInstructionsResponse_RegistRejReasonText;
     } );;
 
-let parse_Reject msg =
-    from_parse_field_result (
-    req msg "45" parse_int @@ fun f_Reject_RefSeqNum ->
-    opt msg "371" parse_int @@ fun f_Reject_RefTagID ->
-    opt msg "372" parse_string @@ fun f_Reject_RefMsgType ->
-    opt msg "373" parse_SessionRejectReason @@ fun f_Reject_SessionRejectReason ->
-    opt msg "58" parse_string @@ fun f_Reject_Text ->
-    opt msg "354" parse_int @@ fun f_Reject_EncodedTextLen ->
-    opt msg "355" parse_string @@ fun f_Reject_EncodedText ->
-    ParseFieldSuccess {
-    f_Reject_RefSeqNum;
-    f_Reject_RefTagID;
-    f_Reject_RefMsgType;
-    f_Reject_SessionRejectReason;
-    f_Reject_Text;
-    f_Reject_EncodedTextLen;
-    f_Reject_EncodedText;
-    } );;
-
 let parse_RequestForPositions msg =
     parse_Parties msg >>= fun f_RequestForPositions_Parties ->
     parse_Instrument msg >>= fun f_RequestForPositions_Instrument ->
@@ -3951,15 +3883,6 @@ let parse_RequestForPositionsAck msg =
     f_RequestForPositionsAck_Text;
     f_RequestForPositionsAck_EncodedTextLen;
     f_RequestForPositionsAck_EncodedText;
-    } );;
-
-let parse_ResendRequest msg =
-    from_parse_field_result (
-    req msg "7" parse_int @@ fun f_ResendRequest_BeginSeqNo ->
-    req msg "16" parse_int @@ fun f_ResendRequest_EndSeqNo ->
-    ParseFieldSuccess {
-    f_ResendRequest_BeginSeqNo;
-    f_ResendRequest_EndSeqNo;
     } );;
 
 let parse_SecurityDefinition msg =
@@ -4210,15 +4133,6 @@ let parse_SecurityTypes msg =
     f_SecurityTypes_TradingSessionID;
     f_SecurityTypes_TradingSessionSubID;
     f_SecurityTypes_SubscriptionRequestType;
-    } );;
-
-let parse_SequenceReset msg =
-    from_parse_field_result (
-    opt msg "123" parse_GapFillFlag @@ fun f_SequenceReset_GapFillFlag ->
-    req msg "36" parse_int @@ fun f_SequenceReset_NewSeqNo ->
-    ParseFieldSuccess {
-    f_SequenceReset_GapFillFlag;
-    f_SequenceReset_NewSeqNo;
     } );;
 
 let parse_SettlementInstructions msg =
@@ -4620,177 +4534,166 @@ let parse_TradingSessionStatusRequest msg =
     } );;
 
 let parse_app_msg_data msg_tag msg =
-    match msg_tag with
-        | Full_Msg_Advertisement_Tag -> ((>>=)  (parse_Advertisement msg) (fun f -> ParseSuccess (FIX_Full_Msg_Advertisement f)
-         ) )
-        | Full_Msg_AllocationInstruction_Tag -> ((>>=)  (parse_AllocationInstruction msg) (fun f -> ParseSuccess (FIX_Full_Msg_AllocationInstruction f)
-         ) )
-        | Full_Msg_AllocationInstructionAck_Tag -> ((>>=)  (parse_AllocationInstructionAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_AllocationInstructionAck f)
-         ) )
-        | Full_Msg_AllocationReport_Tag -> ((>>=)  (parse_AllocationReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_AllocationReport f)
-         ) )
-        | Full_Msg_AllocationReportAck_Tag -> ((>>=)  (parse_AllocationReportAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_AllocationReportAck f)
-         ) )
-        | Full_Msg_AssignmentReport_Tag -> ((>>=)  (parse_AssignmentReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_AssignmentReport f)
-         ) )
-        | Full_Msg_BidRequest_Tag -> ((>>=)  (parse_BidRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_BidRequest f)
-         ) )
-        | Full_Msg_BidResponse_Tag -> ((>>=)  (parse_BidResponse msg) (fun f -> ParseSuccess (FIX_Full_Msg_BidResponse f)
-         ) )
-        | Full_Msg_CollateralAssignment_Tag -> ((>>=)  (parse_CollateralAssignment msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralAssignment f)
-         ) )
-        | Full_Msg_CollateralInquiry_Tag -> ((>>=)  (parse_CollateralInquiry msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralInquiry f)
-         ) )
-        | Full_Msg_CollateralInquiryAck_Tag -> ((>>=)  (parse_CollateralInquiryAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralInquiryAck f)
-         ) )
-        | Full_Msg_CollateralReport_Tag -> ((>>=)  (parse_CollateralReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralReport f)
-         ) )
-        | Full_Msg_CollateralRequest_Tag -> ((>>=)  (parse_CollateralRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralRequest f)
-         ) )
-        | Full_Msg_CollateralResponse_Tag -> ((>>=)  (parse_CollateralResponse msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralResponse f)
-         ) )
-        | Full_Msg_Confirmation_Tag -> ((>>=)  (parse_Confirmation msg) (fun f -> ParseSuccess (FIX_Full_Msg_Confirmation f)
-         ) )
-        | Full_Msg_ConfirmationAck_Tag -> ((>>=)  (parse_ConfirmationAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_ConfirmationAck f)
-         ) )
-        | Full_Msg_ConfirmationRequest_Tag -> ((>>=)  (parse_ConfirmationRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_ConfirmationRequest f)
-         ) )
-        | Full_Msg_CrossOrderCancelReplaceRequest_Tag -> ((>>=)  (parse_CrossOrderCancelReplaceRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_CrossOrderCancelReplaceRequest f)
-         ) )
-        | Full_Msg_CrossOrderCancelRequest_Tag -> ((>>=)  (parse_CrossOrderCancelRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_CrossOrderCancelRequest f)
-         ) )
-        | Full_Msg_DerivativeSecurityList_Tag -> ((>>=)  (parse_DerivativeSecurityList msg) (fun f -> ParseSuccess (FIX_Full_Msg_DerivativeSecurityList f)
-         ) )
-        | Full_Msg_DerivativeSecurityListRequest_Tag -> ((>>=)  (parse_DerivativeSecurityListRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_DerivativeSecurityListRequest f)
-         ) )
-        | Full_Msg_DontKnowTrade_Tag -> ((>>=)  (parse_DontKnowTrade msg) (fun f -> ParseSuccess (FIX_Full_Msg_DontKnowTrade f)
-         ) )
-        | Full_Msg_Email_Tag -> ((>>=)  (parse_Email msg) (fun f -> ParseSuccess (FIX_Full_Msg_Email f)
-         ) )
-        | Full_Msg_ExecutionReport_Tag -> ((>>=)  (parse_ExecutionReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_ExecutionReport f)
-         ) )
-        | Full_Msg_Heartbeat_Tag -> ((>>=)  (parse_Heartbeat msg) (fun f -> ParseSuccess (FIX_Full_Msg_Heartbeat f)
-         ) )
-        | Full_Msg_IOI_Tag -> ((>>=)  (parse_IOI msg) (fun f -> ParseSuccess (FIX_Full_Msg_IOI f)
-         ) )
-        | Full_Msg_ListCancelRequest_Tag -> ((>>=)  (parse_ListCancelRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_ListCancelRequest f)
-         ) )
-        | Full_Msg_ListExecute_Tag -> ((>>=)  (parse_ListExecute msg) (fun f -> ParseSuccess (FIX_Full_Msg_ListExecute f)
-         ) )
-        | Full_Msg_ListStatus_Tag -> ((>>=)  (parse_ListStatus msg) (fun f -> ParseSuccess (FIX_Full_Msg_ListStatus f)
-         ) )
-        | Full_Msg_ListStatusRequest_Tag -> ((>>=)  (parse_ListStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_ListStatusRequest f)
-         ) )
-        | Full_Msg_ListStrikePrice_Tag -> ((>>=)  (parse_ListStrikePrice msg) (fun f -> ParseSuccess (FIX_Full_Msg_ListStrikePrice f)
-         ) )
-        | Full_Msg_Logon_Tag -> ((>>=)  (parse_Logon msg) (fun f -> ParseSuccess (FIX_Full_Msg_Logon f)
-         ) )
-        | Full_Msg_Logout_Tag -> ((>>=)  (parse_Logout msg) (fun f -> ParseSuccess (FIX_Full_Msg_Logout f)
-         ) )
-        | Full_Msg_MarketDataIncrementalRefresh_Tag -> ((>>=)  (parse_MarketDataIncrementalRefresh msg) (fun f -> ParseSuccess (FIX_Full_Msg_MarketDataIncrementalRefresh f)
-         ) )
-        | Full_Msg_MarketDataRequest_Tag -> ((>>=)  (parse_MarketDataRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_MarketDataRequest f)
-         ) )
-        | Full_Msg_MarketDataRequestReject_Tag -> ((>>=)  (parse_MarketDataRequestReject msg) (fun f -> ParseSuccess (FIX_Full_Msg_MarketDataRequestReject f)
-         ) )
-        | Full_Msg_MarketDataSnapshotFullRefresh_Tag -> ((>>=)  (parse_MarketDataSnapshotFullRefresh msg) (fun f -> ParseSuccess (FIX_Full_Msg_MarketDataSnapshotFullRefresh f)
-         ) )
-        | Full_Msg_MassQuote_Tag -> ((>>=)  (parse_MassQuote msg) (fun f -> ParseSuccess (FIX_Full_Msg_MassQuote f)
-         ) )
-        | Full_Msg_MassQuoteAcknowledgement_Tag -> ((>>=)  (parse_MassQuoteAcknowledgement msg) (fun f -> ParseSuccess (FIX_Full_Msg_MassQuoteAcknowledgement f)
-         ) )
-        | Full_Msg_MultilegOrderCancelReplace_Tag -> ((>>=)  (parse_MultilegOrderCancelReplace msg) (fun f -> ParseSuccess (FIX_Full_Msg_MultilegOrderCancelReplace f)
-         ) )
-        | Full_Msg_NewOrderCross_Tag -> ((>>=)  (parse_NewOrderCross msg) (fun f -> ParseSuccess (FIX_Full_Msg_NewOrderCross f)
-         ) )
-        | Full_Msg_NewOrderList_Tag -> ((>>=)  (parse_NewOrderList msg) (fun f -> ParseSuccess (FIX_Full_Msg_NewOrderList f)
-         ) )
-        | Full_Msg_NewOrderMultileg_Tag -> ((>>=)  (parse_NewOrderMultileg msg) (fun f -> ParseSuccess (FIX_Full_Msg_NewOrderMultileg f)
-         ) )
-        | Full_Msg_NewOrderSingle_Tag -> ((>>=)  (parse_NewOrderSingle msg) (fun f -> ParseSuccess (FIX_Full_Msg_NewOrderSingle f)
-         ) )
-        | Full_Msg_News_Tag -> ((>>=)  (parse_News msg) (fun f -> ParseSuccess (FIX_Full_Msg_News f)
-         ) )
-        | Full_Msg_OrderCancelReject_Tag -> ((>>=)  (parse_OrderCancelReject msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderCancelReject f)
-         ) )
-        | Full_Msg_OrderCancelReplaceRequest_Tag -> ((>>=)  (parse_OrderCancelReplaceRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderCancelReplaceRequest f)
-         ) )
-        | Full_Msg_OrderCancelRequest_Tag -> ((>>=)  (parse_OrderCancelRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderCancelRequest f)
-         ) )
-        | Full_Msg_OrderMassCancelReport_Tag -> ((>>=)  (parse_OrderMassCancelReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderMassCancelReport f)
-         ) )
-        | Full_Msg_OrderMassCancelRequest_Tag -> ((>>=)  (parse_OrderMassCancelRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderMassCancelRequest f)
-         ) )
-        | Full_Msg_OrderMassStatusRequest_Tag -> ((>>=)  (parse_OrderMassStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderMassStatusRequest f)
-         ) )
-        | Full_Msg_OrderStatusRequest_Tag -> ((>>=)  (parse_OrderStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderStatusRequest f)
-         ) )
-        | Full_Msg_PositionMaintenanceReport_Tag -> ((>>=)  (parse_PositionMaintenanceReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_PositionMaintenanceReport f)
-         ) )
-        | Full_Msg_PositionMaintenanceRequest_Tag -> ((>>=)  (parse_PositionMaintenanceRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_PositionMaintenanceRequest f)
-         ) )
-        | Full_Msg_PositionReport_Tag -> ((>>=)  (parse_PositionReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_PositionReport f)
-         ) )
-        | Full_Msg_Quote_Tag -> ((>>=)  (parse_Quote msg) (fun f -> ParseSuccess (FIX_Full_Msg_Quote f)
-         ) )
-        | Full_Msg_QuoteCancel_Tag -> ((>>=)  (parse_QuoteCancel msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteCancel f)
-         ) )
-        | Full_Msg_QuoteRequest_Tag -> ((>>=)  (parse_QuoteRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteRequest f)
-         ) )
-        | Full_Msg_QuoteRequestReject_Tag -> ((>>=)  (parse_QuoteRequestReject msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteRequestReject f)
-         ) )
-        | Full_Msg_QuoteResponse_Tag -> ((>>=)  (parse_QuoteResponse msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteResponse f)
-         ) )
-        | Full_Msg_QuoteStatusReport_Tag -> ((>>=)  (parse_QuoteStatusReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteStatusReport f)
-         ) )
-        | Full_Msg_QuoteStatusRequest_Tag -> ((>>=)  (parse_QuoteStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteStatusRequest f)
-         ) )
-        | Full_Msg_RFQRequest_Tag -> ((>>=)  (parse_RFQRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_RFQRequest f)
-         ) )
-        | Full_Msg_RegistrationInstructions_Tag -> ((>>=)  (parse_RegistrationInstructions msg) (fun f -> ParseSuccess (FIX_Full_Msg_RegistrationInstructions f)
-         ) )
-        | Full_Msg_RegistrationInstructionsResponse_Tag -> ((>>=)  (parse_RegistrationInstructionsResponse msg) (fun f -> ParseSuccess (FIX_Full_Msg_RegistrationInstructionsResponse f)
-         ) )
-        | Full_Msg_Reject_Tag -> ((>>=)  (parse_Reject msg) (fun f -> ParseSuccess (FIX_Full_Msg_Reject f)
-         ) )
-        | Full_Msg_RequestForPositions_Tag -> ((>>=)  (parse_RequestForPositions msg) (fun f -> ParseSuccess (FIX_Full_Msg_RequestForPositions f)
-         ) )
-        | Full_Msg_RequestForPositionsAck_Tag -> ((>>=)  (parse_RequestForPositionsAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_RequestForPositionsAck f)
-         ) )
-        | Full_Msg_ResendRequest_Tag -> ((>>=)  (parse_ResendRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_ResendRequest f)
-         ) )
-        | Full_Msg_SecurityDefinition_Tag -> ((>>=)  (parse_SecurityDefinition msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityDefinition f)
-         ) )
-        | Full_Msg_SecurityDefinitionRequest_Tag -> ((>>=)  (parse_SecurityDefinitionRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityDefinitionRequest f)
-         ) )
-        | Full_Msg_SecurityList_Tag -> ((>>=)  (parse_SecurityList msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityList f)
-         ) )
-        | Full_Msg_SecurityListRequest_Tag -> ((>>=)  (parse_SecurityListRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityListRequest f)
-         ) )
-        | Full_Msg_SecurityStatus_Tag -> ((>>=)  (parse_SecurityStatus msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityStatus f)
-         ) )
-        | Full_Msg_SecurityStatusRequest_Tag -> ((>>=)  (parse_SecurityStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityStatusRequest f)
-         ) )
-        | Full_Msg_SecurityTypeRequest_Tag -> ((>>=)  (parse_SecurityTypeRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityTypeRequest f)
-         ) )
-        | Full_Msg_SecurityTypes_Tag -> ((>>=)  (parse_SecurityTypes msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityTypes f)
-         ) )
-        | Full_Msg_SequenceReset_Tag -> ((>>=)  (parse_SequenceReset msg) (fun f -> ParseSuccess (FIX_Full_Msg_SequenceReset f)
-         ) )
-        | Full_Msg_SettlementInstructions_Tag -> ((>>=)  (parse_SettlementInstructions msg) (fun f -> ParseSuccess (FIX_Full_Msg_SettlementInstructions f)
-         ) )
-        | Full_Msg_TestRequest_Tag -> ((>>=)  (parse_TestRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_TestRequest f)
-         ) )
-        | Full_Msg_TradeCaptureReport_Tag -> ((>>=)  (parse_TradeCaptureReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradeCaptureReport f)
-         ) )
-        | Full_Msg_TradeCaptureReportAck_Tag -> ((>>=)  (parse_TradeCaptureReportAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradeCaptureReportAck f)
-         ) )
-        | Full_Msg_TradeCaptureReportRequest_Tag -> ((>>=)  (parse_TradeCaptureReportRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradeCaptureReportRequest f)
-         ) )
-        | Full_Msg_TradeCaptureReportRequestAck_Tag -> ((>>=)  (parse_TradeCaptureReportRequestAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradeCaptureReportRequestAck f)
-         ) )
-        | Full_Msg_TradingSessionStatus_Tag -> ((>>=)  (parse_TradingSessionStatus msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradingSessionStatus f)
-         ) )
-        | Full_Msg_TradingSessionStatusRequest_Tag -> ((>>=)  (parse_TradingSessionStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradingSessionStatusRequest f)
-         ) )
+    (match msg_tag with
+        | Full_Msg_Advertisement_Tag -> ((>>=) (parse_Advertisement msg) (fun f -> ParseSuccess (FIX_Full_Msg_Advertisement f)
+        ))
+        | Full_Msg_AllocationInstruction_Tag -> ((>>=) (parse_AllocationInstruction msg) (fun f -> ParseSuccess (FIX_Full_Msg_AllocationInstruction f)
+        ))
+        | Full_Msg_AllocationInstructionAck_Tag -> ((>>=) (parse_AllocationInstructionAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_AllocationInstructionAck f)
+        ))
+        | Full_Msg_AllocationReport_Tag -> ((>>=) (parse_AllocationReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_AllocationReport f)
+        ))
+        | Full_Msg_AllocationReportAck_Tag -> ((>>=) (parse_AllocationReportAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_AllocationReportAck f)
+        ))
+        | Full_Msg_AssignmentReport_Tag -> ((>>=) (parse_AssignmentReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_AssignmentReport f)
+        ))
+        | Full_Msg_BidRequest_Tag -> ((>>=) (parse_BidRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_BidRequest f)
+        ))
+        | Full_Msg_BidResponse_Tag -> ((>>=) (parse_BidResponse msg) (fun f -> ParseSuccess (FIX_Full_Msg_BidResponse f)
+        ))
+        | Full_Msg_CollateralAssignment_Tag -> ((>>=) (parse_CollateralAssignment msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralAssignment f)
+        ))
+        | Full_Msg_CollateralInquiry_Tag -> ((>>=) (parse_CollateralInquiry msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralInquiry f)
+        ))
+        | Full_Msg_CollateralInquiryAck_Tag -> ((>>=) (parse_CollateralInquiryAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralInquiryAck f)
+        ))
+        | Full_Msg_CollateralReport_Tag -> ((>>=) (parse_CollateralReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralReport f)
+        ))
+        | Full_Msg_CollateralRequest_Tag -> ((>>=) (parse_CollateralRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralRequest f)
+        ))
+        | Full_Msg_CollateralResponse_Tag -> ((>>=) (parse_CollateralResponse msg) (fun f -> ParseSuccess (FIX_Full_Msg_CollateralResponse f)
+        ))
+        | Full_Msg_Confirmation_Tag -> ((>>=) (parse_Confirmation msg) (fun f -> ParseSuccess (FIX_Full_Msg_Confirmation f)
+        ))
+        | Full_Msg_ConfirmationAck_Tag -> ((>>=) (parse_ConfirmationAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_ConfirmationAck f)
+        ))
+        | Full_Msg_ConfirmationRequest_Tag -> ((>>=) (parse_ConfirmationRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_ConfirmationRequest f)
+        ))
+        | Full_Msg_CrossOrderCancelReplaceRequest_Tag -> ((>>=) (parse_CrossOrderCancelReplaceRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_CrossOrderCancelReplaceRequest f)
+        ))
+        | Full_Msg_CrossOrderCancelRequest_Tag -> ((>>=) (parse_CrossOrderCancelRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_CrossOrderCancelRequest f)
+        ))
+        | Full_Msg_DerivativeSecurityList_Tag -> ((>>=) (parse_DerivativeSecurityList msg) (fun f -> ParseSuccess (FIX_Full_Msg_DerivativeSecurityList f)
+        ))
+        | Full_Msg_DerivativeSecurityListRequest_Tag -> ((>>=) (parse_DerivativeSecurityListRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_DerivativeSecurityListRequest f)
+        ))
+        | Full_Msg_DontKnowTrade_Tag -> ((>>=) (parse_DontKnowTrade msg) (fun f -> ParseSuccess (FIX_Full_Msg_DontKnowTrade f)
+        ))
+        | Full_Msg_Email_Tag -> ((>>=) (parse_Email msg) (fun f -> ParseSuccess (FIX_Full_Msg_Email f)
+        ))
+        | Full_Msg_ExecutionReport_Tag -> ((>>=) (parse_ExecutionReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_ExecutionReport f)
+        ))
+        | Full_Msg_IOI_Tag -> ((>>=) (parse_IOI msg) (fun f -> ParseSuccess (FIX_Full_Msg_IOI f)
+        ))
+        | Full_Msg_ListCancelRequest_Tag -> ((>>=) (parse_ListCancelRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_ListCancelRequest f)
+        ))
+        | Full_Msg_ListExecute_Tag -> ((>>=) (parse_ListExecute msg) (fun f -> ParseSuccess (FIX_Full_Msg_ListExecute f)
+        ))
+        | Full_Msg_ListStatus_Tag -> ((>>=) (parse_ListStatus msg) (fun f -> ParseSuccess (FIX_Full_Msg_ListStatus f)
+        ))
+        | Full_Msg_ListStatusRequest_Tag -> ((>>=) (parse_ListStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_ListStatusRequest f)
+        ))
+        | Full_Msg_ListStrikePrice_Tag -> ((>>=) (parse_ListStrikePrice msg) (fun f -> ParseSuccess (FIX_Full_Msg_ListStrikePrice f)
+        ))
+        | Full_Msg_MarketDataIncrementalRefresh_Tag -> ((>>=) (parse_MarketDataIncrementalRefresh msg) (fun f -> ParseSuccess (FIX_Full_Msg_MarketDataIncrementalRefresh f)
+        ))
+        | Full_Msg_MarketDataRequest_Tag -> ((>>=) (parse_MarketDataRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_MarketDataRequest f)
+        ))
+        | Full_Msg_MarketDataRequestReject_Tag -> ((>>=) (parse_MarketDataRequestReject msg) (fun f -> ParseSuccess (FIX_Full_Msg_MarketDataRequestReject f)
+        ))
+        | Full_Msg_MarketDataSnapshotFullRefresh_Tag -> ((>>=) (parse_MarketDataSnapshotFullRefresh msg) (fun f -> ParseSuccess (FIX_Full_Msg_MarketDataSnapshotFullRefresh f)
+        ))
+        | Full_Msg_MassQuote_Tag -> ((>>=) (parse_MassQuote msg) (fun f -> ParseSuccess (FIX_Full_Msg_MassQuote f)
+        ))
+        | Full_Msg_MassQuoteAcknowledgement_Tag -> ((>>=) (parse_MassQuoteAcknowledgement msg) (fun f -> ParseSuccess (FIX_Full_Msg_MassQuoteAcknowledgement f)
+        ))
+        | Full_Msg_MultilegOrderCancelReplace_Tag -> ((>>=) (parse_MultilegOrderCancelReplace msg) (fun f -> ParseSuccess (FIX_Full_Msg_MultilegOrderCancelReplace f)
+        ))
+        | Full_Msg_NewOrderCross_Tag -> ((>>=) (parse_NewOrderCross msg) (fun f -> ParseSuccess (FIX_Full_Msg_NewOrderCross f)
+        ))
+        | Full_Msg_NewOrderList_Tag -> ((>>=) (parse_NewOrderList msg) (fun f -> ParseSuccess (FIX_Full_Msg_NewOrderList f)
+        ))
+        | Full_Msg_NewOrderMultileg_Tag -> ((>>=) (parse_NewOrderMultileg msg) (fun f -> ParseSuccess (FIX_Full_Msg_NewOrderMultileg f)
+        ))
+        | Full_Msg_NewOrderSingle_Tag -> ((>>=) (parse_NewOrderSingle msg) (fun f -> ParseSuccess (FIX_Full_Msg_NewOrderSingle f)
+        ))
+        | Full_Msg_News_Tag -> ((>>=) (parse_News msg) (fun f -> ParseSuccess (FIX_Full_Msg_News f)
+        ))
+        | Full_Msg_OrderCancelReject_Tag -> ((>>=) (parse_OrderCancelReject msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderCancelReject f)
+        ))
+        | Full_Msg_OrderCancelReplaceRequest_Tag -> ((>>=) (parse_OrderCancelReplaceRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderCancelReplaceRequest f)
+        ))
+        | Full_Msg_OrderCancelRequest_Tag -> ((>>=) (parse_OrderCancelRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderCancelRequest f)
+        ))
+        | Full_Msg_OrderMassCancelReport_Tag -> ((>>=) (parse_OrderMassCancelReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderMassCancelReport f)
+        ))
+        | Full_Msg_OrderMassCancelRequest_Tag -> ((>>=) (parse_OrderMassCancelRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderMassCancelRequest f)
+        ))
+        | Full_Msg_OrderMassStatusRequest_Tag -> ((>>=) (parse_OrderMassStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderMassStatusRequest f)
+        ))
+        | Full_Msg_OrderStatusRequest_Tag -> ((>>=) (parse_OrderStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_OrderStatusRequest f)
+        ))
+        | Full_Msg_PositionMaintenanceReport_Tag -> ((>>=) (parse_PositionMaintenanceReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_PositionMaintenanceReport f)
+        ))
+        | Full_Msg_PositionMaintenanceRequest_Tag -> ((>>=) (parse_PositionMaintenanceRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_PositionMaintenanceRequest f)
+        ))
+        | Full_Msg_PositionReport_Tag -> ((>>=) (parse_PositionReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_PositionReport f)
+        ))
+        | Full_Msg_Quote_Tag -> ((>>=) (parse_Quote msg) (fun f -> ParseSuccess (FIX_Full_Msg_Quote f)
+        ))
+        | Full_Msg_QuoteCancel_Tag -> ((>>=) (parse_QuoteCancel msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteCancel f)
+        ))
+        | Full_Msg_QuoteRequest_Tag -> ((>>=) (parse_QuoteRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteRequest f)
+        ))
+        | Full_Msg_QuoteRequestReject_Tag -> ((>>=) (parse_QuoteRequestReject msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteRequestReject f)
+        ))
+        | Full_Msg_QuoteResponse_Tag -> ((>>=) (parse_QuoteResponse msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteResponse f)
+        ))
+        | Full_Msg_QuoteStatusReport_Tag -> ((>>=) (parse_QuoteStatusReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteStatusReport f)
+        ))
+        | Full_Msg_QuoteStatusRequest_Tag -> ((>>=) (parse_QuoteStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_QuoteStatusRequest f)
+        ))
+        | Full_Msg_RFQRequest_Tag -> ((>>=) (parse_RFQRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_RFQRequest f)
+        ))
+        | Full_Msg_RegistrationInstructions_Tag -> ((>>=) (parse_RegistrationInstructions msg) (fun f -> ParseSuccess (FIX_Full_Msg_RegistrationInstructions f)
+        ))
+        | Full_Msg_RegistrationInstructionsResponse_Tag -> ((>>=) (parse_RegistrationInstructionsResponse msg) (fun f -> ParseSuccess (FIX_Full_Msg_RegistrationInstructionsResponse f)
+        ))
+        | Full_Msg_RequestForPositions_Tag -> ((>>=) (parse_RequestForPositions msg) (fun f -> ParseSuccess (FIX_Full_Msg_RequestForPositions f)
+        ))
+        | Full_Msg_RequestForPositionsAck_Tag -> ((>>=) (parse_RequestForPositionsAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_RequestForPositionsAck f)
+        ))
+        | Full_Msg_SecurityDefinition_Tag -> ((>>=) (parse_SecurityDefinition msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityDefinition f)
+        ))
+        | Full_Msg_SecurityDefinitionRequest_Tag -> ((>>=) (parse_SecurityDefinitionRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityDefinitionRequest f)
+        ))
+        | Full_Msg_SecurityList_Tag -> ((>>=) (parse_SecurityList msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityList f)
+        ))
+        | Full_Msg_SecurityListRequest_Tag -> ((>>=) (parse_SecurityListRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityListRequest f)
+        ))
+        | Full_Msg_SecurityStatus_Tag -> ((>>=) (parse_SecurityStatus msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityStatus f)
+        ))
+        | Full_Msg_SecurityStatusRequest_Tag -> ((>>=) (parse_SecurityStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityStatusRequest f)
+        ))
+        | Full_Msg_SecurityTypeRequest_Tag -> ((>>=) (parse_SecurityTypeRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityTypeRequest f)
+        ))
+        | Full_Msg_SecurityTypes_Tag -> ((>>=) (parse_SecurityTypes msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityTypes f)
+        ))
+        | Full_Msg_SettlementInstructions_Tag -> ((>>=) (parse_SettlementInstructions msg) (fun f -> ParseSuccess (FIX_Full_Msg_SettlementInstructions f)
+        ))
+        | Full_Msg_TestRequest_Tag -> ((>>=) (parse_TestRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_TestRequest f)
+        ))
+        | Full_Msg_TradeCaptureReport_Tag -> ((>>=) (parse_TradeCaptureReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradeCaptureReport f)
+        ))
+        | Full_Msg_TradeCaptureReportAck_Tag -> ((>>=) (parse_TradeCaptureReportAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradeCaptureReportAck f)
+        ))
+        | Full_Msg_TradeCaptureReportRequest_Tag -> ((>>=) (parse_TradeCaptureReportRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradeCaptureReportRequest f)
+        ))
+        | Full_Msg_TradeCaptureReportRequestAck_Tag -> ((>>=) (parse_TradeCaptureReportRequestAck msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradeCaptureReportRequestAck f)
+        ))
+        | Full_Msg_TradingSessionStatus_Tag -> ((>>=) (parse_TradingSessionStatus msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradingSessionStatus f)
+        ))
+        | Full_Msg_TradingSessionStatusRequest_Tag -> ((>>=) (parse_TradingSessionStatusRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradingSessionStatusRequest f)
+        ))
+    )
 ;;
