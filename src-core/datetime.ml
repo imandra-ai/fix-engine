@@ -433,3 +433,12 @@ let seconds_to_duration ( seconds ) =
         dur_seconds  = ( match ts.utc_timestamp_second with 0 -> None | x -> Some x) ; 
     }
 ;;
+
+(** TODO This is unfinished -- check how months are accounted for *)
+let duration_to_seconds ( dur ) =
+    let sec =       match dur.dur_seconds with None -> 0 | Some x -> x in
+    let sec = sec + match dur.dur_minutes with None -> 0 | Some x -> 60 * x in
+    let sec = sec + match dur.dur_hours   with None -> 0 | Some x -> 60 * 60 * x in
+    let sec = sec + match dur.dur_days    with None -> 0 | Some x -> 24 * 60 * 60 * x in    
+    sec
+;;

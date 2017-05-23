@@ -30,6 +30,11 @@ let create_msg_stream char_stream =
     char_stream
         |> Parser_utils.split_into_key_value '\001'
         |> Parser_utils.split_into_messages
+        |> stream_map ( fun msg -> 
+                        let s = msg |> List.map (fun (k,v) -> k ^ "=" ^ v )  
+                                    |> List.fold_left ( fun a s -> a ^ s ^ "\001" ) "" in
+                        let () = print_endline (" Received raw: (" ^ s ^ ")") in
+                        msg ) 
         |> stream_map Parse_full_messages.parse_top_level_msg
 ;;
 

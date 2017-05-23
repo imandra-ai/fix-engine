@@ -9,3 +9,6 @@ Parse_admin_tags
 Parse_admin_messages
 Parse_full_tags
 Parse_full_messages
+Encode_admin_enums
+Encode_admin_tags
+Encode_admin_messages

@@ -97,8 +97,8 @@ let parse_msg_reject_data msg =
 (** *)
 let parse_msg_sequence_reset_data msg = 
     from_parse_field_result @@
-    req msg "" parse_int         @@ fun seqr_new_seq_no    ->
-    opt msg "" parse_GapFillFlag @@ fun seqr_gap_fill_flag -> 
+    req msg "36"  parse_int         @@ fun seqr_new_seq_no    ->
+    opt msg "123" parse_GapFillFlag @@ fun seqr_gap_fill_flag -> 
     ParseFieldSuccess
     { seqr_new_seq_no     
     ; seqr_gap_fill_flag  
@@ -108,7 +108,7 @@ let parse_msg_sequence_reset_data msg =
 (** *)
 let parse_msg_test_request_data msg = 
     from_parse_field_result @@
-    req msg "" parse_int @@ fun test_req_id -> 
+    req msg "112" parse_int @@ fun test_req_id -> 
     ParseFieldSuccess
     { test_req_id }
 ;;
@@ -116,8 +116,8 @@ let parse_msg_test_request_data msg =
 (** *)
 let parse_msg_business_reject_data msg = 
     from_parse_field_result @@
-    req msg "" parse_int                    @@ fun br_ref_seq_num            ->
-    req msg "" parse_business_reject_reason @@ fun br_business_reject_reason -> 
+    req msg "45"  parse_int                    @@ fun br_ref_seq_num            ->
+    req msg "380" parse_business_reject_reason @@ fun br_business_reject_reason -> 
     ParseFieldSuccess
     { br_ref_seq_num           
     ; br_business_reject_reason
