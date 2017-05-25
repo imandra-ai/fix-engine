@@ -1272,104 +1272,6 @@ let msgdirection_to_string ( d ) =
     )
 ;;
 
-let msgtype_to_string ( d ) =
-    (match d with
-        | FIX_MsgType_Heartbeat -> "Heartbeat"
-        | FIX_MsgType_TestRequest -> "TestRequest"
-        | FIX_MsgType_ResendRequest -> "ResendRequest"
-        | FIX_MsgType_Reject -> "Reject"
-        | FIX_MsgType_SequenceReset -> "SequenceReset"
-        | FIX_MsgType_Logout -> "Logout"
-        | FIX_MsgType_IOI -> "IOI"
-        | FIX_MsgType_Advertisement -> "Advertisement"
-        | FIX_MsgType_ExecutionReport -> "ExecutionReport"
-        | FIX_MsgType_OrderCancelReject -> "OrderCancelReject"
-        | FIX_MsgType_Logon -> "Logon"
-        | FIX_MsgType_News -> "News"
-        | FIX_MsgType_Email -> "Email"
-        | FIX_MsgType_NewOrderSingle -> "NewOrderSingle"
-        | FIX_MsgType_NewOrderList -> "NewOrderList"
-        | FIX_MsgType_OrderCancelRequest -> "OrderCancelRequest"
-        | FIX_MsgType_OrderCancelReplaceRequest -> "OrderCancelReplaceRequest"
-        | FIX_MsgType_OrderStatusRequest -> "OrderStatusRequest"
-        | FIX_MsgType_AllocationInstruction -> "AllocationInstruction"
-        | FIX_MsgType_ListCancelRequest -> "ListCancelRequest"
-        | FIX_MsgType_ListExecute -> "ListExecute"
-        | FIX_MsgType_ListStatusRequest -> "ListStatusRequest"
-        | FIX_MsgType_ListStatus -> "ListStatus"
-        | FIX_MsgType_AllocationInstructionAck -> "AllocationInstructionAck"
-        | FIX_MsgType_DontKnowTrade -> "DontKnowTrade"
-        | FIX_MsgType_QuoteRequest -> "QuoteRequest"
-        | FIX_MsgType_Quote -> "Quote"
-        | FIX_MsgType_SettlementInstructions -> "SettlementInstructions"
-        | FIX_MsgType_MarketDataRequest -> "MarketDataRequest"
-        | FIX_MsgType_MarketDataSnapshotFullRefresh -> "MarketDataSnapshotFullRefresh"
-        | FIX_MsgType_MarketDataIncrementalRefresh -> "MarketDataIncrementalRefresh"
-        | FIX_MsgType_MarketDataRequestReject -> "MarketDataRequestReject"
-        | FIX_MsgType_QuoteCancel -> "QuoteCancel"
-        | FIX_MsgType_QuoteStatusRequest -> "QuoteStatusRequest"
-        | FIX_MsgType_MassQuoteAcknowledgement -> "MassQuoteAcknowledgement"
-        | FIX_MsgType_SecurityDefinitionRequest -> "SecurityDefinitionRequest"
-        | FIX_MsgType_SecurityDefinition -> "SecurityDefinition"
-        | FIX_MsgType_SecurityStatusRequest -> "SecurityStatusRequest"
-        | FIX_MsgType_SecurityStatus -> "SecurityStatus"
-        | FIX_MsgType_TradingSessionStatusRequest -> "TradingSessionStatusRequest"
-        | FIX_MsgType_TradingSessionStatus -> "TradingSessionStatus"
-        | FIX_MsgType_MassQuote -> "MassQuote"
-        | FIX_MsgType_BusinessMessageReject -> "BusinessMessageReject"
-        | FIX_MsgType_BidRequest -> "BidRequest"
-        | FIX_MsgType_BidResponse -> "BidResponse"
-        | FIX_MsgType_ListStrikePrice -> "ListStrikePrice"
-        | FIX_MsgType_XMLNonFIX -> "XMLNonFIX"
-        | FIX_MsgType_RegistrationInstructions -> "RegistrationInstructions"
-        | FIX_MsgType_RegistrationInstructionsResponse -> "RegistrationInstructionsResponse"
-        | FIX_MsgType_OrderMassCancelRequest -> "OrderMassCancelRequest"
-        | FIX_MsgType_OrderMassCancelReport -> "OrderMassCancelReport"
-        | FIX_MsgType_NewOrderCross -> "NewOrderCross"
-        | FIX_MsgType_CrossOrderCancelReplaceRequest -> "CrossOrderCancelReplaceRequest"
-        | FIX_MsgType_CrossOrderCancelRequest -> "CrossOrderCancelRequest"
-        | FIX_MsgType_SecurityTypeRequest -> "SecurityTypeRequest"
-        | FIX_MsgType_SecurityTypes -> "SecurityTypes"
-        | FIX_MsgType_SecurityListRequest -> "SecurityListRequest"
-        | FIX_MsgType_SecurityList -> "SecurityList"
-        | FIX_MsgType_DerivativeSecurityListRequest -> "DerivativeSecurityListRequest"
-        | FIX_MsgType_DerivativeSecurityList -> "DerivativeSecurityList"
-        | FIX_MsgType_NewOrderMultileg -> "NewOrderMultileg"
-        | FIX_MsgType_MultilegOrderCancelReplace -> "MultilegOrderCancelReplace"
-        | FIX_MsgType_TradeCaptureReportRequest -> "TradeCaptureReportRequest"
-        | FIX_MsgType_TradeCaptureReport -> "TradeCaptureReport"
-        | FIX_MsgType_OrderMassStatusRequest -> "OrderMassStatusRequest"
-        | FIX_MsgType_QuoteRequestReject -> "QuoteRequestReject"
-        | FIX_MsgType_RFQRequest -> "RFQRequest"
-        | FIX_MsgType_QuoteStatusReport -> "QuoteStatusReport"
-        | FIX_MsgType_QuoteResponse -> "QuoteResponse"
-        | FIX_MsgType_Confirmation -> "Confirmation"
-        | FIX_MsgType_PositionMaintenanceRequest -> "PositionMaintenanceRequest"
-        | FIX_MsgType_PositionMaintenanceReport -> "PositionMaintenanceReport"
-        | FIX_MsgType_RequestForPositions -> "RequestForPositions"
-        | FIX_MsgType_RequestForPositionsAck -> "RequestForPositionsAck"
-        | FIX_MsgType_PositionReport -> "PositionReport"
-        | FIX_MsgType_TradeCaptureReportRequestAck -> "TradeCaptureReportRequestAck"
-        | FIX_MsgType_TradeCaptureReportAck -> "TradeCaptureReportAck"
-        | FIX_MsgType_AllocationReport -> "AllocationReport"
-        | FIX_MsgType_AllocationReportAck -> "AllocationReportAck"
-        | FIX_MsgType_ConfirmationAck -> "ConfirmationAck"
-        | FIX_MsgType_SettlementInstructionRequest -> "SettlementInstructionRequest"
-        | FIX_MsgType_AssignmentReport -> "AssignmentReport"
-        | FIX_MsgType_CollateralRequest -> "CollateralRequest"
-        | FIX_MsgType_CollateralAssignment -> "CollateralAssignment"
-        | FIX_MsgType_CollateralResponse -> "CollateralResponse"
-        | FIX_MsgType_CollateralReport -> "CollateralReport"
-        | FIX_MsgType_CollateralInquiry -> "CollateralInquiry"
-        | FIX_MsgType_NetworkCounterpartySystemStatusRequest -> "NetworkCounterpartySystemStatusRequest"
-        | FIX_MsgType_NetworkCounterpartySystemStatusResponse -> "NetworkCounterpartySystemStatusResponse"
-        | FIX_MsgType_UserRequest -> "UserRequest"
-        | FIX_MsgType_UserResponse -> "UserResponse"
-        | FIX_MsgType_CollateralInquiryAck -> "CollateralInquiryAck"
-        | FIX_MsgType_ConfirmationRequest -> "ConfirmationRequest"
-    )
-;;
-
 let multilegreportingtype_to_string ( d ) =
     (match d with
         | FIX_MultiLegReportingType_SingleSecurity -> "SingleSecurity"
@@ -3403,10 +3305,6 @@ let msgdirection_to_json ( d ) : json =
     `String (msgdirection_to_string d)
 ;;
 
-let msgtype_to_json ( d ) : json =
-    `String (msgtype_to_string d)
-;;
-
 let multilegreportingtype_to_json ( d ) : json =
     `String (multilegreportingtype_to_string d)
 ;;
@@ -4743,13 +4641,6 @@ let msgdirection_opt_to_json ( d ) : json =
     (match d with
         | None -> (`Null)
         | Some d -> (msgdirection_to_json d)
-    )
-;;
-
-let msgtype_opt_to_json ( d ) : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (msgtype_to_json d)
     )
 ;;
 

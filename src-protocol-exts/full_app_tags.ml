@@ -72,7 +72,6 @@ type full_app_msg_tag =
     | Full_Msg_SecurityTypeRequest_Tag 
     | Full_Msg_SecurityTypes_Tag 
     | Full_Msg_SettlementInstructions_Tag 
-    | Full_Msg_TestRequest_Tag 
     | Full_Msg_TradeCaptureReport_Tag 
     | Full_Msg_TradeCaptureReportAck_Tag 
     | Full_Msg_TradeCaptureReportRequest_Tag 
@@ -883,7 +882,6 @@ type full_app_field_tag =
     | Full_Field_SettlInstID_Tag 
     | Full_Field_SettlInstRefID_Tag 
     | Full_Field_SettlInstTransType_Tag 
-    | Full_Field_TestReqID_Tag 
     | Full_Field_TradeReportTransType_Tag 
     | Full_Field_TradeReportType_Tag 
     | Full_Field_TradeRequestID_Tag 

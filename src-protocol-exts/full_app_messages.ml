@@ -5708,13 +5708,6 @@ type full_fix_settlementinstructions_data = {
 }
 ;;
 
-(** The test request message forces a heartbeat from the opposing application.*)
-type full_fix_testrequest_data = {
-    (** Identifier included in Test Request message to be returned in resulting Heartbeat*)
-    f_TestRequest_TestReqID : fix_string
-}
-;;
-
 (** The Trade Capture Report message can be:
  • Used to report trades between counterparties.
  • Used to report trades to a trade matching system
@@ -6330,7 +6323,6 @@ type full_app_msg_data =
     | FIX_Full_Msg_SecurityTypeRequest of full_fix_securitytyperequest_data
     | FIX_Full_Msg_SecurityTypes of full_fix_securitytypes_data
     | FIX_Full_Msg_SettlementInstructions of full_fix_settlementinstructions_data
-    | FIX_Full_Msg_TestRequest of full_fix_testrequest_data
     | FIX_Full_Msg_TradeCaptureReport of full_fix_tradecapturereport_data
     | FIX_Full_Msg_TradeCaptureReportAck of full_fix_tradecapturereportack_data
     | FIX_Full_Msg_TradeCaptureReportRequest of full_fix_tradecapturereportrequest_data
@@ -6414,7 +6406,6 @@ let get_full_app_msg_tag ( msg : full_app_msg_data ) =
         | FIX_Full_Msg_SecurityTypeRequest _ -> Full_Msg_SecurityTypeRequest_Tag
         | FIX_Full_Msg_SecurityTypes _ -> Full_Msg_SecurityTypes_Tag
         | FIX_Full_Msg_SettlementInstructions _ -> Full_Msg_SettlementInstructions_Tag
-        | FIX_Full_Msg_TestRequest _ -> Full_Msg_TestRequest_Tag
         | FIX_Full_Msg_TradeCaptureReport _ -> Full_Msg_TradeCaptureReport_Tag
         | FIX_Full_Msg_TradeCaptureReportAck _ -> Full_Msg_TradeCaptureReportAck_Tag
         | FIX_Full_Msg_TradeCaptureReportRequest _ -> Full_Msg_TradeCaptureReportRequest_Tag

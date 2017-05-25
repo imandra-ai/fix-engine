@@ -77,7 +77,6 @@ let encode_app_msg_tag ( d ) =
         | Full_Msg_SecurityTypeRequest_Tag -> "v"
         | Full_Msg_SecurityTypes_Tag -> "w"
         | Full_Msg_SettlementInstructions_Tag -> "T"
-        | Full_Msg_TestRequest_Tag -> "1"
         | Full_Msg_TradeCaptureReport_Tag -> "AE"
         | Full_Msg_TradeCaptureReportAck_Tag -> "AR"
         | Full_Msg_TradeCaptureReportRequest_Tag -> "AD"
@@ -890,7 +889,6 @@ let encode_app_field_tag ( d ) =
         | Full_Field_SettlInstID_Tag -> ("162")
         | Full_Field_SettlInstRefID_Tag -> ("214")
         | Full_Field_SettlInstTransType_Tag -> ("163")
-        | Full_Field_TestReqID_Tag -> ("112")
         | Full_Field_TradeReportTransType_Tag -> ("487")
         | Full_Field_TradeReportType_Tag -> ("856")
         | Full_Field_TradeRequestID_Tag -> ("568")
