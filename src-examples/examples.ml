@@ -19,6 +19,7 @@ open Full_app_messages
 open Full_app_records
 open Full_messages
 open Fix_global
+open String_constant_factory
 
 let pe = print_endline;;
 
