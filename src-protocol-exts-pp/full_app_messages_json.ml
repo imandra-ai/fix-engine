@@ -1,20 +1,12 @@
-(** *)
-(*** 
-
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
-    
-    full_app_messages_json.ml
-
-*)
+(* @meta[imandra_ignore] on @end *)
 open Yojson;;
 open Full_app_records;;
 open Base_types_json;;
 open Datetime_json;;
-open Full_app_records;;
-open Full_app_messages;;
 open Full_app_enums_json;;
 open Full_app_records_json;;
+open Full_app_messages;;
+(* @meta[imandra_ignore] off @end *)
 
 let assoc_filter_nulls l : json =
     `Assoc ( List.filter (function ( _, `Null ) -> false | _ -> true ) l )
@@ -964,12 +956,6 @@ let executionreport_to_json x : json =
     ]
 ;;
 
-let heartbeat_to_json x : json =
-    assoc_filter_nulls [
-    ( "TestReqID" , string_opt_to_json x.f_Heartbeat_TestReqID )
-    ]
-;;
-
 let ioi_to_json x : json =
     assoc_filter_nulls [
     ( "IOIID" , string_to_json x.f_IOI_IOIID );
@@ -1059,32 +1045,6 @@ let liststrikeprice_to_json x : json =
     ( "LastFragment" , lastfragment_opt_to_json x.f_ListStrikePrice_LastFragment );
     ( "InstrmtStrkPxGrp" , instrmtstrkpxgrp_to_json x.f_ListStrikePrice_InstrmtStrkPxGrp );
     ( "UndInstrmtStrkPxGrp" , undinstrmtstrkpxgrp_to_json x.f_ListStrikePrice_UndInstrmtStrkPxGrp )
-    ]
-;;
-
-let logon_to_json x : json =
-    assoc_filter_nulls [
-    ( "EncryptMethod" , encryptmethod_to_json x.f_Logon_EncryptMethod );
-    ( "HeartBtInt" , int_to_json x.f_Logon_HeartBtInt );
-    ( "RawDataLength" , int_opt_to_json x.f_Logon_RawDataLength );
-    ( "RawData" , string_opt_to_json x.f_Logon_RawData );
-    ( "ResetSeqNumFlag" , resetseqnumflag_opt_to_json x.f_Logon_ResetSeqNumFlag );
-    ( "NextExpectedMsgSeqNum" , int_opt_to_json x.f_Logon_NextExpectedMsgSeqNum );
-    ( "MaxMessageSize" , int_opt_to_json x.f_Logon_MaxMessageSize );
-    ( "NoMsgTypes" , int_opt_to_json x.f_Logon_NoMsgTypes );
-    ( "RefMsgType" , string_opt_to_json x.f_Logon_RefMsgType );
-    ( "MsgDirection" , msgdirection_opt_to_json x.f_Logon_MsgDirection );
-    ( "TestMessageIndicator" , testmessageindicator_opt_to_json x.f_Logon_TestMessageIndicator );
-    ( "Username" , string_opt_to_json x.f_Logon_Username );
-    ( "Password" , string_opt_to_json x.f_Logon_Password )
-    ]
-;;
-
-let logout_to_json x : json =
-    assoc_filter_nulls [
-    ( "Text" , string_opt_to_json x.f_Logout_Text );
-    ( "EncodedTextLen" , int_opt_to_json x.f_Logout_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_Logout_EncodedText )
     ]
 ;;
 
@@ -2099,18 +2059,6 @@ let registrationinstructionsresponse_to_json x : json =
     ]
 ;;
 
-let reject_to_json x : json =
-    assoc_filter_nulls [
-    ( "RefSeqNum" , int_to_json x.f_Reject_RefSeqNum );
-    ( "RefTagID" , int_opt_to_json x.f_Reject_RefTagID );
-    ( "RefMsgType" , string_opt_to_json x.f_Reject_RefMsgType );
-    ( "SessionRejectReason" , sessionrejectreason_opt_to_json x.f_Reject_SessionRejectReason );
-    ( "Text" , string_opt_to_json x.f_Reject_Text );
-    ( "EncodedTextLen" , int_opt_to_json x.f_Reject_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_Reject_EncodedText )
-    ]
-;;
-
 let requestforpositions_to_json x : json =
     assoc_filter_nulls [
     ( "PosReqID" , string_to_json x.f_RequestForPositions_PosReqID );
@@ -2159,13 +2107,6 @@ let requestforpositionsack_to_json x : json =
     ( "Text" , string_opt_to_json x.f_RequestForPositionsAck_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_RequestForPositionsAck_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_RequestForPositionsAck_EncodedText )
-    ]
-;;
-
-let resendrequest_to_json x : json =
-    assoc_filter_nulls [
-    ( "BeginSeqNo" , int_to_json x.f_ResendRequest_BeginSeqNo );
-    ( "EndSeqNo" , int_to_json x.f_ResendRequest_EndSeqNo )
     ]
 ;;
 
@@ -2314,13 +2255,6 @@ let securitytypes_to_json x : json =
     ]
 ;;
 
-let sequencereset_to_json x : json =
-    assoc_filter_nulls [
-    ( "GapFillFlag" , gapfillflag_opt_to_json x.f_SequenceReset_GapFillFlag );
-    ( "NewSeqNo" , int_to_json x.f_SequenceReset_NewSeqNo )
-    ]
-;;
-
 let settlementinstructions_to_json x : json =
     assoc_filter_nulls [
     ( "SettlInstMsgID" , string_to_json x.f_SettlementInstructions_SettlInstMsgID );
@@ -2333,12 +2267,6 @@ let settlementinstructions_to_json x : json =
     ( "ClOrdID" , string_opt_to_json x.f_SettlementInstructions_ClOrdID );
     ( "TransactTime" , utctimestamp_to_json x.f_SettlementInstructions_TransactTime );
     ( "SettlInstGrp" , settlinstgrp_to_json x.f_SettlementInstructions_SettlInstGrp )
-    ]
-;;
-
-let testrequest_to_json x : json =
-    assoc_filter_nulls [
-    ( "TestReqID" , string_to_json x.f_TestRequest_TestReqID )
     ]
 ;;
 
@@ -2565,15 +2493,12 @@ let full_app_msg_to_json x : json = match x with
     | FIX_Full_Msg_DontKnowTrade x -> `Assoc [( "DontKnowTrade", dontknowtrade_to_json x)]
     | FIX_Full_Msg_Email x -> `Assoc [( "Email", email_to_json x)]
     | FIX_Full_Msg_ExecutionReport x -> `Assoc [( "ExecutionReport", executionreport_to_json x)]
-    | FIX_Full_Msg_Heartbeat x -> `Assoc [( "Heartbeat", heartbeat_to_json x)]
     | FIX_Full_Msg_IOI x -> `Assoc [( "IOI", ioi_to_json x)]
     | FIX_Full_Msg_ListCancelRequest x -> `Assoc [( "ListCancelRequest", listcancelrequest_to_json x)]
     | FIX_Full_Msg_ListExecute x -> `Assoc [( "ListExecute", listexecute_to_json x)]
     | FIX_Full_Msg_ListStatus x -> `Assoc [( "ListStatus", liststatus_to_json x)]
     | FIX_Full_Msg_ListStatusRequest x -> `Assoc [( "ListStatusRequest", liststatusrequest_to_json x)]
     | FIX_Full_Msg_ListStrikePrice x -> `Assoc [( "ListStrikePrice", liststrikeprice_to_json x)]
-    | FIX_Full_Msg_Logon x -> `Assoc [( "Logon", logon_to_json x)]
-    | FIX_Full_Msg_Logout x -> `Assoc [( "Logout", logout_to_json x)]
     | FIX_Full_Msg_MarketDataIncrementalRefresh x -> `Assoc [( "MarketDataIncrementalRefresh", marketdataincrementalrefresh_to_json x)]
     | FIX_Full_Msg_MarketDataRequest x -> `Assoc [( "MarketDataRequest", marketdatarequest_to_json x)]
     | FIX_Full_Msg_MarketDataRequestReject x -> `Assoc [( "MarketDataRequestReject", marketdatarequestreject_to_json x)]
@@ -2606,10 +2531,8 @@ let full_app_msg_to_json x : json = match x with
     | FIX_Full_Msg_RFQRequest x -> `Assoc [( "RFQRequest", rfqrequest_to_json x)]
     | FIX_Full_Msg_RegistrationInstructions x -> `Assoc [( "RegistrationInstructions", registrationinstructions_to_json x)]
     | FIX_Full_Msg_RegistrationInstructionsResponse x -> `Assoc [( "RegistrationInstructionsResponse", registrationinstructionsresponse_to_json x)]
-    | FIX_Full_Msg_Reject x -> `Assoc [( "Reject", reject_to_json x)]
     | FIX_Full_Msg_RequestForPositions x -> `Assoc [( "RequestForPositions", requestforpositions_to_json x)]
     | FIX_Full_Msg_RequestForPositionsAck x -> `Assoc [( "RequestForPositionsAck", requestforpositionsack_to_json x)]
-    | FIX_Full_Msg_ResendRequest x -> `Assoc [( "ResendRequest", resendrequest_to_json x)]
     | FIX_Full_Msg_SecurityDefinition x -> `Assoc [( "SecurityDefinition", securitydefinition_to_json x)]
     | FIX_Full_Msg_SecurityDefinitionRequest x -> `Assoc [( "SecurityDefinitionRequest", securitydefinitionrequest_to_json x)]
     | FIX_Full_Msg_SecurityList x -> `Assoc [( "SecurityList", securitylist_to_json x)]
@@ -2618,9 +2541,7 @@ let full_app_msg_to_json x : json = match x with
     | FIX_Full_Msg_SecurityStatusRequest x -> `Assoc [( "SecurityStatusRequest", securitystatusrequest_to_json x)]
     | FIX_Full_Msg_SecurityTypeRequest x -> `Assoc [( "SecurityTypeRequest", securitytyperequest_to_json x)]
     | FIX_Full_Msg_SecurityTypes x -> `Assoc [( "SecurityTypes", securitytypes_to_json x)]
-    | FIX_Full_Msg_SequenceReset x -> `Assoc [( "SequenceReset", sequencereset_to_json x)]
     | FIX_Full_Msg_SettlementInstructions x -> `Assoc [( "SettlementInstructions", settlementinstructions_to_json x)]
-    | FIX_Full_Msg_TestRequest x -> `Assoc [( "TestRequest", testrequest_to_json x)]
     | FIX_Full_Msg_TradeCaptureReport x -> `Assoc [( "TradeCaptureReport", tradecapturereport_to_json x)]
     | FIX_Full_Msg_TradeCaptureReportAck x -> `Assoc [( "TradeCaptureReportAck", tradecapturereportack_to_json x)]
     | FIX_Full_Msg_TradeCaptureReportRequest x -> `Assoc [( "TradeCaptureReportRequest", tradecapturereportrequest_to_json x)]

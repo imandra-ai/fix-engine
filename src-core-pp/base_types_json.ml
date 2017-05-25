@@ -60,7 +60,7 @@ let float_opt_to_json = function
   *)
 
 let string_to_json x : json = 
-    `String ("STR_HASH_" ^ (match x with (Model_string y) -> string_of_int y | _ -> "" )) 
+    `String ( String_utils.fix_string_to_string x ) 
 ;;
 
 let string_opt_to_json = function 
@@ -74,7 +74,7 @@ let string_opt_to_json = function
   *)
 
 let symbol_to_json x : json = 
-    `String ( "SYMBOL_HASH" ^ string_of_int x ) 
+    `String ( String_utils.fix_string_to_string x ) 
 ;;
 
 let symbol_opt_to_json = function 

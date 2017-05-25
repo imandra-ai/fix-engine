@@ -11,11 +11,11 @@ open Numeric;;
 open Base_types;;
 
 let parse_string (str : string) : fix_string option = 
-    Some (Model_string ( Hashtbl.hash str))
+    Some ( String_utils.string_to_fix_string str )
 ;; 
 
 let parse_symbol (str : string) : fix_symbol option = 
-    Some ( Hashtbl.hash str)
+    Some ( String_utils.string_to_fix_string str )
 ;;
 
 let parse_char (str: string) : int option =
@@ -26,7 +26,6 @@ let parse_int ( str : string ) : int option =
         Some(int_of_string str) 
     with _ -> None
 ;;
-
 
 let parse_bool ( str : string) : bool option = 
     match str with 
