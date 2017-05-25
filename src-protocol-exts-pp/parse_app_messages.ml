@@ -4160,13 +4160,6 @@ let parse_SettlementInstructions msg =
     f_SettlementInstructions_SettlInstGrp;
     } );;
 
-let parse_TestRequest msg =
-    from_parse_field_result (
-    req msg "112" parse_string @@ fun f_TestRequest_TestReqID ->
-    ParseFieldSuccess {
-    f_TestRequest_TestReqID;
-    } );;
-
 let parse_TradeCaptureReport msg =
     parse_Instrument msg >>= fun f_TradeCaptureReport_Instrument ->
     parse_FinancingDetails msg >>= fun f_TradeCaptureReport_FinancingDetails ->
@@ -4680,8 +4673,6 @@ let parse_app_msg_data msg_tag msg =
         | Full_Msg_SecurityTypes_Tag -> ((>>=) (parse_SecurityTypes msg) (fun f -> ParseSuccess (FIX_Full_Msg_SecurityTypes f)
         ))
         | Full_Msg_SettlementInstructions_Tag -> ((>>=) (parse_SettlementInstructions msg) (fun f -> ParseSuccess (FIX_Full_Msg_SettlementInstructions f)
-        ))
-        | Full_Msg_TestRequest_Tag -> ((>>=) (parse_TestRequest msg) (fun f -> ParseSuccess (FIX_Full_Msg_TestRequest f)
         ))
         | Full_Msg_TradeCaptureReport_Tag -> ((>>=) (parse_TradeCaptureReport msg) (fun f -> ParseSuccess (FIX_Full_Msg_TradeCaptureReport f)
         ))

@@ -2270,12 +2270,6 @@ let settlementinstructions_to_json x : json =
     ]
 ;;
 
-let testrequest_to_json x : json =
-    assoc_filter_nulls [
-    ( "TestReqID" , string_to_json x.f_TestRequest_TestReqID )
-    ]
-;;
-
 let tradecapturereport_to_json x : json =
     assoc_filter_nulls [
     ( "TradeReportID" , string_to_json x.f_TradeCaptureReport_TradeReportID );
@@ -2548,7 +2542,6 @@ let full_app_msg_to_json x : json = match x with
     | FIX_Full_Msg_SecurityTypeRequest x -> `Assoc [( "SecurityTypeRequest", securitytyperequest_to_json x)]
     | FIX_Full_Msg_SecurityTypes x -> `Assoc [( "SecurityTypes", securitytypes_to_json x)]
     | FIX_Full_Msg_SettlementInstructions x -> `Assoc [( "SettlementInstructions", settlementinstructions_to_json x)]
-    | FIX_Full_Msg_TestRequest x -> `Assoc [( "TestRequest", testrequest_to_json x)]
     | FIX_Full_Msg_TradeCaptureReport x -> `Assoc [( "TradeCaptureReport", tradecapturereport_to_json x)]
     | FIX_Full_Msg_TradeCaptureReportAck x -> `Assoc [( "TradeCaptureReportAck", tradecapturereportack_to_json x)]
     | FIX_Full_Msg_TradeCaptureReportRequest x -> `Assoc [( "TradeCaptureReportRequest", tradecapturereportrequest_to_json x)]

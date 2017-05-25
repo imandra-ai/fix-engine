@@ -2268,12 +2268,6 @@ let encode_SettlementInstructions msg =
     ]
 ;;
 
-let encode_TestRequest msg =
-    [
-    ( "112" , req encode_string msg.f_TestRequest_TestReqID );
-    ]
-;;
-
 let encode_TradeCaptureReport msg =
     encode_Instrument msg.f_TradeCaptureReport_Instrument @
     encode_FinancingDetails msg.f_TradeCaptureReport_FinancingDetails @
@@ -2547,7 +2541,6 @@ let encode_app_msg_data msg =
         | FIX_Full_Msg_SecurityTypeRequest msg -> (encode_SecurityTypeRequest msg)
         | FIX_Full_Msg_SecurityTypes msg -> (encode_SecurityTypes msg)
         | FIX_Full_Msg_SettlementInstructions msg -> (encode_SettlementInstructions msg)
-        | FIX_Full_Msg_TestRequest msg -> (encode_TestRequest msg)
         | FIX_Full_Msg_TradeCaptureReport msg -> (encode_TradeCaptureReport msg)
         | FIX_Full_Msg_TradeCaptureReportAck msg -> (encode_TradeCaptureReportAck msg)
         | FIX_Full_Msg_TradeCaptureReportRequest msg -> (encode_TradeCaptureReportRequest msg)
