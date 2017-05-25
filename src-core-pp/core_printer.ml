@@ -47,6 +47,6 @@ let fix_monthyear_to_string x =
   encode_MonthYear x
 ;;
 
-let fix_duration_to_string =
+let fix_duration_to_string x =
   encode_Duration x
 ;;
