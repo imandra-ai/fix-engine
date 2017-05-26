@@ -108,7 +108,7 @@ type fix_header = {
     h_poss_dup_flag                   : bool option;  (* Tag 43   *)
     
     h_poss_resend                     : bool option;  (* Tag 97   *)
-    h_sending_time                    : fix_utctimestamp option;   (* Tag 52   *)
+    h_sending_time                    : fix_utctimestamp;   (* Tag 52   *)
     h_orig_sending_time               : fix_utctimestamp option;   (* Tag 122  *)
     h_xml_data_len                    : int option;   (* Tag 212  *)
     h_xml_data                        : int option;   (* Tag 213  *)
@@ -138,7 +138,7 @@ let default_fix_header = {
     h_deliver_to_sub_id               = None;
     h_deliver_to_location_id          = None;
     h_poss_resend                     = None;
-    h_sending_time                    = None;
+    h_sending_time                    = default_utctimestamp;
     h_orig_sending_time               = None;
     h_xml_data_len                    = None;
     h_xml_data                        = None;

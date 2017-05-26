@@ -34,6 +34,7 @@ let parse_header msg =
     req msg "49"  parse_string        @@ fun h_sender_comp_id              ->
     req msg "56"  parse_string        @@ fun h_target_comp_id              ->
     req msg "34"  parse_int           @@ fun h_msg_seq_num                 ->
+    req msg "52"  parse_UTCTimestamp  @@ fun h_sending_time                ->   
     opt msg "115" parse_int           @@ fun h_on_behalf_of_comp_id        -> 
     opt msg "128" parse_int           @@ fun h_deliver_to_comp_id          ->  
     opt msg "90"  parse_int           @@ fun h_secure_data_len             ->   
@@ -48,7 +49,6 @@ let parse_header msg =
     opt msg "145" parse_int           @@ fun h_deliver_to_location_id      ->  
     opt msg "43"  parse_bool          @@ fun h_poss_dup_flag               ->    
     opt msg "97"  parse_bool          @@ fun h_poss_resend                 ->    
-    opt msg "52"  parse_UTCTimestamp  @@ fun h_sending_time                ->   
     opt msg "122" parse_UTCTimestamp  @@ fun h_orig_sending_time           ->  
     opt msg "212" parse_int           @@ fun h_xml_data_len                ->  
     opt msg "213" parse_int           @@ fun h_xml_data                    ->  

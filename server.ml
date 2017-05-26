@@ -18,7 +18,29 @@
 #directory "_build/src-protocol-pp/";;
 #directory "_build/src/";;
 
-#use "server_utils.ml";;
+(*  Prepeare internal state mutable variable *)
+
+let get_current_utctimstamp () =    
+    let tm = Unix.( gettimeofday () |> gmtime ) in
+    Datetime.{
+        utc_timestamp_year   = tm.Unix.tm_year + 1900;
+        utc_timestamp_month  = tm.Unix.tm_mon + 1;
+        utc_timestamp_day    = tm.Unix.tm_mday;
+        utc_timestamp_hour   = tm.Unix.tm_hour;
+        utc_timestamp_minute = tm.Unix.tm_min;
+        utc_timestamp_second = tm.Unix.tm_sec;
+        utc_timestamp_millisec = Some 0
+    }
+;;
+
+let state = ref Fix_engine.{ init_fix_engine_state with
+    fe_comp_id = String_utils.string_to_fix_string "EXEC";
+    fe_target_comp_id = String_utils.string_to_fix_string "BANZAI";
+    fe_curr_time = get_current_utctimstamp ();
+    fe_max_num_logons_sent = 10
+};;  
+
+(* Read msg stream from socket *)
 
 let create_msg_stream char_stream = 
     let stream_map f stream =
@@ -38,7 +60,6 @@ let create_msg_stream char_stream =
         |> stream_map Parse_full_messages.parse_top_level_msg
 ;;
 
-
 let server, client = 
      let server = Unix.( socket PF_INET SOCK_STREAM 0 ) in
      let () = Unix.(setsockopt server SO_REUSEADDR true) in
@@ -54,19 +75,20 @@ let server, client =
 ;;
 
 let in_chan, out_chan = Unix.( in_channel_of_descr client , out_channel_of_descr client );;
-let send_logon seq_num =
-    let l = logon_msg seq_num in
-    let () = output out_chan l 0 (Bytes.length l) in
+let send_msg msg =
+    let () = output out_chan msg 0 (Bytes.length msg) in
     flush out_chan
 ;;
 
 let treat_message msg = 
     let () = 
-        if is_logon_msg msg then begin
-            print_endline "--== Logon received, sending reply ==--";
-            send_logon (1) 
-        end
-        else () 
+        state := { !state with incoming_fix_msg = Some msg } ;
+        state := Fix_engine.one_step (!state) ;
+        match (!state).outgoing_fix_msg with 
+            | Some (ValidMsg msg) -> (
+                 msg |> Encode_full_messages.encode_full_valid_msg
+                     |> send_msg  )
+            | _ -> ()
     in
     let () = print_endline "--== Received ==--" in
     msg |> Full_messages_json.full_top_level_msg_to_json
