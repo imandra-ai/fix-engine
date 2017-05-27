@@ -1,4 +1,7 @@
 true : package(yojson)
+true : package(lwt)
+true : package(lwt.unix)
+
 <src>                        : include
 <src-core>                   : include
 <src-core-pp>                : include
