@@ -6,3 +6,7 @@ Parse_app_enums
 Parse_app_tags
 Parse_app_records
 Parse_app_messages
+Encode_app_enums
+Encode_app_tags
+Encode_app_records
+Encode_app_messages

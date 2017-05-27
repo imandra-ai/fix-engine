@@ -3,7 +3,6 @@ open Yojson;;
 open Full_app_records;;
 open Base_types_json;;
 open Datetime_json;;
-open Full_app_records;;
 open Full_app_enums_json;;
 (* @meta[imandra_ignore] off @end *)
 

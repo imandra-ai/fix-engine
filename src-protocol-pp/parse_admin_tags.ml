@@ -27,7 +27,6 @@ let parse_admin_msg_tag = function
 let parse_admin_field_tag = function
     | "108" -> Some Full_Msg_HeartBtInt_Tag
     | "112" -> Some Full_Msg_TestReqID_Tag
-    | "112" -> Some Full_Msg_TestReqID_Tag
     | "123" -> Some Full_Msg_GapFillFlag_Tag
     | "141" -> Some Full_Msg_ResetSeqNumFlag_Tag
     | "16"  -> Some Full_Msg_EndSeqNo_Tag
@@ -48,6 +47,7 @@ let parse_admin_field_tag = function
     | "95"  -> Some Full_Msg_RawDataLength_Tag
     | "96"  -> Some Full_Msg_RawData_Tag
     | "98"  -> Some Full_Msg_EncryptMethod_Tag
+    | "371" -> Some Full_Msg_RefTagID_Tag  
     |    _  -> None
 ;;
 

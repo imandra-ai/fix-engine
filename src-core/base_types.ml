@@ -7,7 +7,10 @@
     base_types.ml
 *)
 
-type fix_symbol = int;;
-type fix_string = Model_string of int;;
+type fix_string = 
+    | Model_string of int
+    | Admin_string of int    
+;;
 
+type fix_symbol = fix_string;;
 

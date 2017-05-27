@@ -71,7 +71,7 @@ let header_to_json x : json =
     ; ( "DeliverToLocationID"   , int_opt_to_json           x.h_deliver_to_location_id      )    
     ; ( "PossDupFlag"           , bool_opt_to_json          x.h_poss_dup_flag               )    
     ; ( "PossResend"            , bool_opt_to_json          x.h_poss_resend                 )    
-    ; ( "SendingTime"           , utctimestamp_opt_to_json  x.h_sending_time                )    
+    ; ( "SendingTime"           , utctimestamp_to_json      x.h_sending_time                )    
     ; ( "OrigSendingTime"       , utctimestamp_opt_to_json  x.h_orig_sending_time           )    
     ; ( "XmlDataLen"            , int_opt_to_json           x.h_xml_data_len                )    
     ; ( "XmlData"               , int_opt_to_json           x.h_xml_data                    )    
