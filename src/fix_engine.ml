@@ -446,10 +446,13 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         rr_begin_seq_num    -> 
         rr_end_seq_num      -> 
     }
-
 *)
-let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engine_state ) =
-    engine
+let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engine_state ) = {
+    engine with
+        fe_curr_mode = Retransmit;
+
+
+}
 ;;
 
 (** We're operating in a normal mode. *)
