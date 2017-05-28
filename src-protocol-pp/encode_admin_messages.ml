@@ -31,7 +31,7 @@ let encode_msg_logon_data msg =
     ; ( "108" , req encode_Duration          msg.ln_heartbeat_interval        )
     ; ( "95"  , opt encode_int               msg.ln_raw_data_length           )
     ; ( "96"  , opt encode_string            msg.ln_raw_data                  )
-    ; ( "141" , opt encode_int               msg.ln_reset_seq_num_flag        )
+    ; ( "141" , opt encode_bool              msg.ln_reset_seq_num_flag        )
     ; ( "789" , opt encode_int               msg.ln_next_expected_msg_seq_num )
     ; ( "383" , opt encode_int               msg.ln_max_message_size          )
     ; ( "464" , opt encode_bool              msg.ln_test_message_indicator    )

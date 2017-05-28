@@ -32,7 +32,7 @@ let full_msg_logon_to_json x =
     ; ( "HeartBtInt"           , utcduration_to_json       x.ln_heartbeat_interval        )
     ; ( "RawDataLength"        , int_opt_to_json           x.ln_raw_data_length           )
     ; ( "RawData"              , string_opt_to_json        x.ln_raw_data                  )
-    ; ( "ResetSeqNumFlag"      , int_opt_to_json           x.ln_reset_seq_num_flag        )
+    ; ( "ResetSeqNumFlag"      , bool_opt_to_json          x.ln_reset_seq_num_flag        )
     ; ( "NextExpectedMsgSeqNum", int_opt_to_json           x.ln_next_expected_msg_seq_num )
     ; ( "MaxMessageSize"       , int_opt_to_json           x.ln_max_message_size          )
     ; ( "TestMessageIndicator" , bool_opt_to_json          x.ln_test_message_indicator    )

@@ -121,8 +121,8 @@ let init_fix_engine_state = {
     incoming_int_msg        = None;                           
     outgoing_int_msg        = None;
 
-    incoming_seq_num        = 1;        
-    outgoing_seq_num        = 1; 
+    incoming_seq_num        = 0;        
+    outgoing_seq_num        = 0; 
 
     incoming_fix_msg        = None;
     outgoing_fix_msg        = None;
@@ -223,7 +223,7 @@ let create_logon_msg ( engine : fix_engine_state ) =
             ln_heartbeat_interval           = engine.fe_heartbeat_interval;
             ln_raw_data_length              = None; 
             ln_raw_data                     = None;
-            ln_reset_seq_num_flag           = None;
+            ln_reset_seq_num_flag           = Some true;
             ln_next_expected_msg_seq_num    = None;
             ln_max_message_size             = None;
 
@@ -565,6 +565,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
             if sent_cutoff_violated && not ( received_cutoff_violated ) then (
                 let heatbeat_msg = create_heartbeat_msg ( engine, None ) in
                     { engine' with 
+                        outgoing_seq_num        = engine'.outgoing_seq_num + 1;
                         outgoing_fix_msg        = Some heatbeat_msg;
                         fe_last_time_data_sent  = engine'.fe_curr_time; } 
 

@@ -1,7 +1,9 @@
 let (>>=) = Lwt.(>>=);;
 
 let get_current_utctimstamp () =    
-    let tm = Unix.( gettimeofday () |> gmtime ) in
+    let dtime = Unix.gettimeofday () in 
+    let tm = Unix.gmtime dtime in
+    let msec = int_of_float (1000. *. (dtime -. floor dtime)) in
     Datetime.{
         utc_timestamp_year   = tm.Unix.tm_year + 1900;
         utc_timestamp_month  = tm.Unix.tm_mon + 1;
@@ -9,12 +11,12 @@ let get_current_utctimstamp () =
         utc_timestamp_hour   = tm.Unix.tm_hour;
         utc_timestamp_minute = tm.Unix.tm_min;
         utc_timestamp_second = tm.Unix.tm_sec;
-        utc_timestamp_millisec = Some 0
+        utc_timestamp_millisec = Some (msec)
     }
 ;;
 
 let state = ref Fix_engine.{ init_fix_engine_state with
-    fe_comp_id = String_utils.string_to_fix_string "EXEC";
+    fe_comp_id = String_utils.string_to_fix_string "IMANDRA";
     fe_target_comp_id = String_utils.string_to_fix_string "BANZAI";
     fe_curr_time = get_current_utctimstamp ();
     fe_max_num_logons_sent = 10
@@ -51,6 +53,57 @@ let split_into_messages (stream : (string * string) Lwt_stream.t) =
     Lwt_stream.from f    
 ;;
 
+let send_msg outch msg =
+    let wire = Encode_full_messages.encode_full_valid_msg msg in
+    Lwt_io.print ("Sending (" ^ wire ^ ") " ) >>= fun () ->
+    Lwt_io.write outch wire                   >>= fun () ->
+    Lwt_io.flush outch                        >>= fun () ->
+    Lwt_io.printl " done."                   
+;;
+
+
+
+
+let treat_int_message outch msg =
+    let open Fix_engine in
+    let msgstr =  match msg with 
+        | TimeChange _ -> "TimeChange"
+        | msg -> Fix_engine_json.int_msg_to_str msg 
+        in
+    Lwt_io.printl ("Received internal message: " ^ msgstr) >>= fun () ->
+    state := { !state with incoming_int_msg = Some msg } ;
+    state := one_step (!state) ;
+    let outmsg = (!state).outgoing_fix_msg in
+    state := { !state with outgoing_fix_msg = None } ;    
+    match outmsg with
+        | Some (Full_messages.ValidMsg msg) -> send_msg outch msg
+        | _ -> Lwt.return () 
+;;
+
+
+let treat_fix_message outch msg =
+    let open Fix_engine in
+    let json = Full_messages_json.full_top_level_msg_to_json msg in
+    Lwt_io.printl "Received: "                     >>= fun () ->
+    Lwt_io.printl ( Yojson.pretty_to_string json ) >>= fun () -> 
+    state := { !state with incoming_fix_msg = Some msg } ;
+    state := one_step (!state) ;
+    let outmsg = (!state).outgoing_fix_msg in
+    state := { !state with outgoing_fix_msg = None } ;    
+    match outmsg with
+        | Some (Full_messages.ValidMsg msg) -> send_msg outch msg
+        | _ -> Lwt.return () 
+;;
+
+let rec heartbeat_thread outch =
+    let open Fix_engine in
+    Lwt.finalize ( fun () ->
+        Lwt_unix.sleep (1.0) >>= fun () -> 
+        let timechange = Fix_engine.TimeChange ( get_current_utctimstamp () ) in
+        treat_int_message outch timechange >>= fun () -> 
+        heartbeat_thread outch
+    ) ( fun () -> Lwt.return_unit )
+;;
 
 let f (inch, outch) =
     let msg_stream = Lwt_io.read_chars inch
@@ -58,20 +111,14 @@ let f (inch, outch) =
         |> split_into_messages 
         |> Lwt_stream.map Parse_full_messages.parse_top_level_msg
         in
-    let send_msg msg =
-        msg |> Encode_full_messages.encode_full_valid_msg 
-            |> Lwt_io.write outch >>= fun () ->
-        Lwt_io.flush outch 
-        in
-    msg_stream |> Lwt_stream.iter_s ( fun msg ->
-    Lwt_io.printl " -- == Received == -- " >>= fun () ->
-    begin
-        state := { !state with incoming_fix_msg = Some msg } ;
-        state := Fix_engine.one_step (!state) ;
-        match (!state).outgoing_fix_msg with 
-            | Some (ValidMsg msg) -> send_msg msg 
-            | _ -> Lwt.return ()
-    end)
+    Lwt_io.printl "Received a connection." >>= fun () ->
+    Lwt.join [
+        heartbeat_thread outch;
+        msg_stream |> Lwt_stream.iter_s ( fun msg ->
+            let timechange = Fix_engine.TimeChange ( get_current_utctimstamp () ) in
+            treat_int_message outch timechange >>= fun () ->
+            treat_fix_message outch msg
+    )]
 ;;
 
 let server_thread =
@@ -79,6 +126,7 @@ let server_thread =
     let server = Lwt_io.establish_server addr f in
     fst (Lwt.wait ())
 ;;
+
 
 Lwt_main.run server_thread
 ;;

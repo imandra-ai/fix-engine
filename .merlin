@@ -1,4 +1,4 @@
-PKG yojson topkg
+PKG yojson topkg lwt lwt.unix
 S src
 S src-core
 S src-core-pp
