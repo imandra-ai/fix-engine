@@ -83,13 +83,16 @@ type fix_engine_state = {
     incoming_fix_msg        : full_top_level_msg option;    (** Messages we will send out *)
     outgoing_fix_msg        : full_top_level_msg option;    (** Messages we receive *)
 
-    fe_cache                : full_valid_fix_msg list;      (** Maintain a cache of messages in case we detect out of sequence message. *)
+    fe_cache                : full_valid_fix_msg list;      (** Maintain a cache of messages in case we detect out-of-sequence message(s). *)
     fe_history              : full_valid_fix_msg list;      (** We maintain history of our outgoing messages in case we're asked to retransmit. *)
 
     fe_last_time_data_sent  : fix_utctimestamp;             (** Last time we sent out data to the corresponding engine *)
     fe_last_data_received   : fix_utctimestamp;             (** Last time we received a heartbeat or other message. *)
     fe_heartbeat_interval   : fix_duration;                 (** Negotiated heartbeat interval. *)
     fe_testreq_interval     : fix_duration;                 (** Interval used to 'pad' heartbeat interval before a TestRequest message is sent out. *)
+
+    fe_retransmit_start_idx : int;                          (** Starting index of the retransmitting history. *)
+    fe_retransmit_end_idx   : int;                          (** Ending index ... *)
 
     fe_history_to_send      : full_valid_fix_msg list;      (** Used in message retransmission. *)
     fe_after_resend_logout  : bool;                         (** Should engine go to LogoffTerminated after finishing GapRefill mode completes? *)
@@ -137,6 +140,8 @@ let init_fix_engine_state = {
     fe_testreq_interval     = make_duration ( None, None, None, None, None, Some 30 );
 
     fe_history_to_send      = [];
+    fe_retransmit_start_idx = 0;
+    fe_retransmit_end_idx   = 0;
     fe_after_resend_logout  = false;
 
     fe_application_up       = true;
@@ -149,23 +154,27 @@ let init_fix_engine_state = {
 }
 ;;
 
-(** TODO Are there any other checks? 
-    Answer: Yes - we need to add those checks to raw OCaml parser (these will result in invalid messages) *)
-(*
-let incoming_header_correct ( fh, comp_id : fix_header * int) =
-    fh.h_target_comp_id = comp_id
-;; *)
-
 (** We're in the middle of retransmitting historic messages. 
     Note: when we transition into Retransmit mode, we set up a 
     queue with messages that should be sent out. These messages are a function
     of the parameters that were sent to the engine. *)
 let run_retransmit ( engine : fix_engine_state ) = 
     match engine.fe_history_to_send with 
-    | [] -> { engine with fe_curr_mode = ActiveSession; } (* We're done - need to change mode. *)
+    | [] -> 
+        (* Since after initiating a Logoff, we can still process Resend request, 
+            then need to check whether we need to return there. *)
+        if engine.fe_after_resend_logout then 
+            { engine with fe_curr_mode = ShutdownInitiated; fe_after_resend_logout = false; }
+        else 
+            { engine with fe_curr_mode = ActiveSession; } (* We're done - need to change mode. *)
     | x::xs -> 
         let should_be_sent =
             begin
+                (* Let's check that we're still within the bounds here.  *)
+                if x.full_msg_header.h_msg_seq_num < engine.fe_retransmit_start_idx then false else 
+                if engine.fe_retransmit_end_idx = 0 && x.full_msg_header.h_msg_seq_num > engine.fe_retransmit_end_idx then false else
+
+                (* Now we need to check that we're sending out the right admin vs app message. *)
                 match x.full_msg_data with 
                 | Full_FIX_App_Msg _ -> true
                 | Full_FIX_Admin_Msg amsg ->
@@ -337,7 +346,7 @@ let create_business_reject_msg ( outbound_seq_num, target_comp_id, comp_id , cur
 (*** ********************************************************************************************************** *)
 
 (** A NO-OPeration *)
-let noop (m, engine : full_valid_fix_msg * fix_engine_state) = { 
+let noop ( m, engine : full_valid_fix_msg * fix_engine_state ) = { 
     engine
         with incoming_fix_msg = None
 }
@@ -439,19 +448,16 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         | Full_FIX_App_Msg msg -> engine'
 ;;
 
-(** Response to resend request. 
-
-    Here's the 
-    type full_msg_resend_request_data = {
-        rr_begin_seq_num    -> 
-        rr_end_seq_num      -> 
-    }
-*)
+(** Response to resend request. Note that we're copyng over the whole list of historic messages -
+    we will use the starting/ending indexes to ensure we're only sending out the right ones. 
+    Perhaps there's a better way to do this - it's important that we always maintain the spirit
+    of 'one_step' - all operations are are atomic. *)
 let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engine_state ) = {
     engine with
         fe_curr_mode = Retransmit;
-
-
+        fe_retransmit_start_idx = request.rr_begin_seq_num;
+        fe_retransmit_end_idx   = request.rr_end_seq_num;
+        fe_history_to_send = engine.fe_history;
 }
 ;;
 
