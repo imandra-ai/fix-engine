@@ -5,7 +5,7 @@
 
     VGs covering behaviour of Heartbeat message ( Vol 2, page 25 ).
 
-    fix_logout_vgs.ml
+    logout_vgs.ml
 
 *)
 
@@ -42,6 +42,7 @@
 (** **************************************************************************************** *)
 
 
+
 (** **************************************************************************************** *)
 (**
 
@@ -56,3 +57,23 @@
 *)
 (** **************************************************************************************** *)
 
+
+(** VG.3.1*)
+verify transitions_to_logoff_correctly ( engine : fix_engine ) = 
+    true
+;;
+
+(** VG.3.2 *)
+verify cannot_send_messages_when_logoff ( engine : fix_engine ) = 
+    true
+;;
+
+(** VG.3.3 *)
+verify gap ( engine : fix_engine ) =
+    true
+;;
+
+(** VG.3.4 *)
+verify after_gap_refill_logoff ( engine : fix_engine ) = 
+    true
+;;
