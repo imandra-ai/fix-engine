@@ -154,6 +154,81 @@ let init_fix_engine_state = {
 }
 ;;
 
+
+(** get_gap_fill_msg -> out of all of the administrative messages, only the 'Reject' can be retransmitted.
+    All application-level messages may be retransmitted - we should, in the future add logic to 
+    not retransmit stale orders, etc. *)
+let get_historic_msg ( valid_msg : full_valid_fix_msg ) =  
+    let gap_fill_msg_data = Full_FIX_Admin_Msg ( 
+        Full_Msg_Sequence_Reset {
+            seqr_new_seq_no = valid_msg.full_msg_header.h_msg_seq_num + 1;
+            seqr_gap_fill_flag = Some FIX_GapFillFlag_Y;
+        }
+    ) in
+
+    let gap_fill_msg = {
+        full_msg_header = valid_msg.full_msg_header;
+        full_msg_data = gap_fill_msg_data;
+        full_msg_trailer = valid_msg.full_msg_trailer;
+    } in 
+
+    match valid_msg.full_msg_data with 
+    | Full_FIX_Admin_Msg admin_msg ->
+        begin
+            match admin_msg with 
+            | Full_Msg_Reject m -> valid_msg
+            | _ -> gap_fill_msg
+        end
+    | Full_FIX_App_Msg app_msg -> valid_msg
+;; 
+
+(** Give us a single GapFill message with the correct NextSequenceNumber.
+
+   From the specification:
+    "If there are consecutive administrative messages to be resent, it is suggested that only one SeqReset-GapFill
+    message be sent in their place. The sequence number of the SeqReset-GapFill message is the next expected
+    outbound sequence number. The NewSeqNo field of the GapFill message contains the sequence number of
+    the highest administrative message in this group plus 1. For example, during a Resend operation there are 7
+    sequential administrative messages waiting to be resent. They start with sequence number 9 and end with
+    sequence number 15. Instead of transmitting 7 Gap Fill messages (which is perfectly legal, but not network
+    friendly), a SeqReset-GapFill message may be sent. The sequence number of the Gap Fill message is set to 9
+    because the remote side is expecting that as the next sequence number. The NewSeqNo field of the GapFill
+    message contains the number 16, because that will be the sequence number of the next message to be
+    transmitted."  *)
+let combine_gapfill_msgs ( msgOne, msgTwo : full_msg_sequence_reset_data * full_msg_sequence_reset_data ) =
+    let correct_next_seq = if msgOne.seqr_new_seq_no > msgTwo.seqr_new_seq_no then msgOne.seqr_new_seq_no else msgTwo.seqr_new_seq_no in {
+        seqr_gap_fill_flag = Some FIX_GapFillFlag_Y; (** We assume all of these SeqResetMessages are GapFill-type *)
+        seqr_new_seq_no = correct_next_seq;
+    }
+;;
+
+(** 
+    Adding a valid message to the list, while
+    - converting any message that needs to be converted into a SequenceRest-GapFill
+    - ensuring that any two sequential SequenceReset-GapFill messages are combined into one with an updated
+        expected NextSeqNum parameter *)
+let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix_msg ) = 
+    let hist_msg = get_historic_msg ( msg ) in 
+
+    match history with
+    | [] -> [ msg ]
+    | x::xs ->
+        begin
+            match x.full_msg_data, hist_msg.full_msg_data with 
+            | Full_FIX_Admin_Msg ( Full_Msg_Sequence_Reset seq_reset_one ), Full_FIX_Admin_Msg ( Full_Msg_Sequence_Reset seq_reset_two ) ->
+                begin
+                    let new_msg_data = combine_gapfill_msgs ( seq_reset_one, seq_reset_two ) in
+                    let new_full_msg = {
+                        full_msg_header = x.full_msg_header;
+                        full_msg_data = Full_FIX_Admin_Msg ( Full_Msg_Sequence_Reset (new_msg_data));
+                        full_msg_trailer = x.full_msg_trailer;
+                    } in 
+                    new_full_msg :: xs
+                end 
+            | _ -> hist_msg :: x :: xs
+        end
+;;
+
 (** We're in the middle of retransmitting historic messages. 
     Note: when we transition into Retransmit mode, we set up a 
     queue with messages that should be sent out. These messages are a function
@@ -168,28 +243,25 @@ let run_retransmit ( engine : fix_engine_state ) =
         else 
             { engine with fe_curr_mode = ActiveSession; } (* We're done - need to change mode. *)
     | x::xs -> 
-        let should_be_sent =
-            begin
-                (* Let's check that we're still within the bounds here.  *)
-                if x.full_msg_header.h_msg_seq_num < engine.fe_retransmit_start_idx then false else 
-                if engine.fe_retransmit_end_idx = 0 && x.full_msg_header.h_msg_seq_num > engine.fe_retransmit_end_idx then false else
-
-                (* Now we need to check that we're sending out the right admin vs app message. *)
-                match x.full_msg_data with 
-                | Full_FIX_App_Msg _ -> true
-                | Full_FIX_Admin_Msg amsg ->
-                match amsg with 
-                | Full_Msg_Reject _ -> true
-                | _ -> false
-            end in
-        if should_be_sent then {
-            engine with 
-                fe_history_to_send = xs;
-                outgoing_fix_msg = Some ( ValidMsg x );
-        } else {
+        (* First check: have we 'reached' the starting message to be sent out? If not, continue. *)
+        if x.full_msg_header.h_msg_seq_num < engine.fe_retransmit_start_idx then {
             engine with
                 fe_history_to_send = xs;
                 outgoing_fix_msg = None;
+        } else 
+
+        (* Second check: have we over-shot the last message. Note that fe_retransmit_end_idx = 0 means that all messages
+            starting from the fe_retransmit_start_idx should be retransmitted. *)
+        if engine.fe_retransmit_end_idx <> 0 && x.full_msg_header.h_msg_seq_num > engine.fe_retransmit_end_idx then {
+            engine with
+                fe_history_to_send = [];
+                outgoing_fix_msg = None;
+
+        (* Otherwise: we're in the zone and should send out the current message. *)
+        } else {
+            engine with 
+                fe_history_to_send = xs;
+                outgoing_fix_msg = Some ( ValidMsg x );
         }
 ;;
 
@@ -245,13 +317,11 @@ let create_logon_msg ( engine : fix_engine_state ) =
 
         } 
     ) in 
-    ValidMsg ( 
-        create_outbound_fix_msg ( 
-            engine.outgoing_seq_num, engine.fe_target_comp_id, 
-            engine.fe_comp_id, engine.fe_curr_time, 
-            msg_data, false 
-        ) 
-    )
+    create_outbound_fix_msg ( 
+        engine.outgoing_seq_num, engine.fe_target_comp_id, 
+        engine.fe_comp_id, engine.fe_curr_time, 
+        msg_data, false 
+    ) 
 ;;
 
 (** Create a Logoff message. *)
@@ -262,13 +332,11 @@ let create_logoff_msg ( engine : fix_engine_state ) =
             lo_encoded_text         = None;
         }
     ) in 
-    ValidMsg ( 
-        create_outbound_fix_msg ( 
-            engine.outgoing_seq_num, engine.fe_target_comp_id, 
-            engine.fe_comp_id, engine.fe_curr_time, 
-            msg_data, false 
-        ) 
-    )
+    create_outbound_fix_msg ( 
+        engine.outgoing_seq_num, engine.fe_target_comp_id, 
+        engine.fe_comp_id, engine.fe_curr_time, 
+        msg_data, false 
+    ) 
 ;;
 
 (** Create a heartbeat message *)
@@ -277,13 +345,11 @@ let create_heartbeat_msg ( engine, tr_id : fix_engine_state * int option) =
         Full_Msg_Heartbeat {
             hb_test_req_id = tr_id;
         }
-     ) in 
-    ValidMsg ( 
-        create_outbound_fix_msg ( 
-            engine.outgoing_seq_num, engine.fe_target_comp_id, 
-            engine.fe_comp_id, engine.fe_curr_time, 
-            msg_data, false 
-        ) 
+    ) in 
+    create_outbound_fix_msg ( 
+        engine.outgoing_seq_num, engine.fe_target_comp_id, 
+        engine.fe_comp_id, engine.fe_curr_time, 
+        msg_data, false 
     )
 ;;
 
@@ -294,13 +360,11 @@ let create_test_request_msg ( engine : fix_engine_state ) =
             test_req_id = engine.last_test_req_id;
         }
     ) in
-    ValidMsg ( 
-        create_outbound_fix_msg ( 
-            engine.outgoing_seq_num, engine.fe_target_comp_id, 
-            engine.fe_comp_id, engine.fe_curr_time, 
-            msg_data, false 
-        ) 
-    )
+    create_outbound_fix_msg ( 
+        engine.outgoing_seq_num, engine.fe_target_comp_id, 
+        engine.fe_comp_id, engine.fe_curr_time, 
+        msg_data, false 
+    ) 
 ;;
 
 (** Create session-rejection message. *)
@@ -316,12 +380,8 @@ let create_session_reject_msg ( outbound_seq_num, target_comp_id, comp_id, curr_
                 sr_text                     = None;
                 sr_encoded_text_len         = None;
                 sr_encoded_text             = Some (Model_string 0);
-            } ) in 
-    ValidMsg ( 
-        create_outbound_fix_msg ( 
-            outbound_seq_num, target_comp_id, comp_id, curr_time, msg_data, false 
-        ) 
-    )
+            } ) in
+    create_outbound_fix_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, msg_data, false )
 ;;
 
 (** Create business reject message.
@@ -334,7 +394,7 @@ let create_business_reject_msg ( outbound_seq_num, target_comp_id, comp_id , cur
                 br_business_reject_reason   = reject_info.brej_msg_reject_reason;
             }
     ) in 
-    ValidMsg ( create_outbound_fix_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, msg_data, false ) )
+    create_outbound_fix_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, msg_data, false )
 ;;
 
 (*** ********************************************************************************************************** *)
@@ -355,11 +415,12 @@ let business_reject ( rejected_data, engine : biz_rejected_msg_data * fix_engine
         engine.fe_comp_id, engine.fe_curr_time, rejected_data 
     ) in {
         engine with
-            incoming_fix_msg = None;
-            fe_last_time_data_sent = engine.fe_curr_time;
-            outgoing_fix_msg = Some reject_msg;
-            incoming_seq_num = rejected_data.brej_msg_ref_seq_num;
-            outgoing_seq_num = engine.outgoing_seq_num + 1;
+            incoming_fix_msg        = None;
+            fe_last_time_data_sent  = engine.fe_curr_time;
+            outgoing_fix_msg        = Some ( ValidMsg ( reject_msg ));
+            incoming_seq_num        = rejected_data.brej_msg_ref_seq_num;
+            outgoing_seq_num        = engine.outgoing_seq_num + 1;
+            fe_history              = add_msg_to_history ( engine.fe_history, reject_msg );
         }
 ;;
 
@@ -370,14 +431,14 @@ let session_reject ( rejected_data, engine : session_rejected_msg_data * fix_eng
         engine.fe_comp_id, engine.fe_curr_time, rejected_data 
     ) in {
         engine with 
-            incoming_fix_msg = None;
-            fe_last_time_data_sent = engine.fe_curr_time;
-            outgoing_fix_msg = Some reject_msg;
-            incoming_seq_num = rejected_data.srej_msg_msg_seq_num;
-            outgoing_seq_num = engine.outgoing_seq_num + 1;
+            incoming_fix_msg        = None;
+            fe_last_time_data_sent  = engine.fe_curr_time;
+            outgoing_fix_msg        = Some ( ValidMsg ( reject_msg ));
+            incoming_seq_num        = rejected_data.srej_msg_msg_seq_num;
+            outgoing_seq_num        = engine.outgoing_seq_num + 1;
+            fe_history              = add_msg_to_history ( engine.fe_history, reject_msg );
         }
 ;;
-
 
 (** Here we will only accept an incoming Logon message to establish a connection. *)
 let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
@@ -385,7 +446,6 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
     | Full_FIX_Admin_Msg msg -> (
         match msg with 
         | Full_Msg_Logon d ->
-
             if ( engine.fe_encrypt_method <> d.ln_encrypt_method && 
                 engine.fe_num_logons_sent >= engine.fe_max_num_logons_sent ) then { 
                     engine with 
@@ -397,12 +457,13 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                     let logon_msg = create_logon_msg ( engine' ) in { 
                         engine' with
                             fe_initiator            = Some false;
-                            outgoing_fix_msg        = Some logon_msg;
+                            outgoing_fix_msg        = Some (ValidMsg ( logon_msg ));
                             outgoing_seq_num        = engine.outgoing_seq_num + 1;
                             fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
                             fe_curr_mode            = ActiveSession;  
                             fe_last_time_data_sent  = engine.fe_curr_time;
                             fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
+                            fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
                     }
                 end
         | _ -> engine
@@ -427,11 +488,12 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                     let engine' = { engine with fe_encrypt_method = d.ln_encrypt_method } in 
                     let logon_msg = create_logon_msg ( engine' ) in {
                         engine' with
-                            outgoing_fix_msg        = Some logon_msg;
+                            outgoing_fix_msg        = Some ( ValidMsg (logon_msg ));
                             outgoing_seq_num        = engine.outgoing_seq_num + 1;
                             fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
                             fe_last_time_data_sent  = engine.fe_curr_time;
                             fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
+                            fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
                     }
                 end
             else {
@@ -453,7 +515,11 @@ let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engin
         fe_curr_mode = Retransmit;
         fe_retransmit_start_idx = request.rr_begin_seq_num;
         fe_retransmit_end_idx = request.rr_end_seq_num;
-        fe_history_to_send = engine.fe_history;
+        fe_history_to_send = List.rev engine.fe_history; 
+        (* Important note: We store messages in a reverse-chronological order b/c on each outbound
+        message we have to do pattern matching on the list to ensure consecutive GapFill messages
+        are 'compressed' into one. OCaml pattern matching doesn't work on last elements, hence 
+        we maintain it in a reverse order, but do List.rev when we need to send it out. *)
 }
 ;;
 
@@ -485,7 +551,9 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                     engine with
                         fe_last_time_data_sent  = engine.fe_curr_time;
                         fe_curr_mode            = ShutdownInitiated;
-                        outgoing_fix_msg        = Some logoff_msg;
+                        outgoing_fix_msg        = Some ( ValidMsg ( logoff_msg ));
+                        outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                        fe_history              = add_msg_to_history ( engine.fe_history, logoff_msg );
                 }
             | Full_Msg_Reject data          -> engine
             | Full_Msg_Business_Reject data -> engine
@@ -495,7 +563,9 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 let hearbeat_msg = create_heartbeat_msg ( engine, Some data.test_req_id ) in {
                     engine with 
                         fe_last_time_data_sent  = engine.fe_curr_time;
-                        outgoing_fix_msg        = Some hearbeat_msg;
+                        outgoing_fix_msg        = Some ( ValidMsg ( hearbeat_msg ));
+                        fe_history              = add_msg_to_history ( engine.fe_history, hearbeat_msg );
+                        outgoing_seq_num        = engine.outgoing_seq_num + 1;
                 }
         end
 
@@ -568,7 +638,7 @@ let rec no_seq_gaps ( msg_list, last_seq_num : full_valid_fix_msg list * int) =
     3. First sequence ID (of the cache) is next message from the last one correctly
         processed. *)
 let is_cache_complete ( cache, last_seq_processed : full_valid_fix_msg list * int ) = 
-    match cache with 
+    match cache with
     | [] -> false
     | x::xs ->
         begin 
@@ -643,10 +713,11 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
                         let test_request_msg = create_test_request_msg ( engine ) in {
                             engine' with 
                                 fe_curr_mode            = WaitingForHeartbeat; 
-                                outgoing_fix_msg        = Some test_request_msg;
+                                outgoing_fix_msg        = Some ( ValidMsg (test_request_msg));
                                 outgoing_seq_num        = engine'.outgoing_seq_num + 1;
                                 last_test_req_id        = engine'.last_test_req_id + 1;
                                 fe_last_time_data_sent  = engine'.fe_curr_time;
+                                fe_history              = add_msg_to_history ( engine'.fe_history, test_request_msg );
                         }
                     end 
                 else
@@ -657,11 +728,13 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
 
                 if sent_cutoff_violated && not ( hbeat_interval_null ( engine.fe_heartbeat_interval )) then
                     begin
-                        let heatbeat_msg = create_heartbeat_msg ( engine, None ) in
-                            { engine' with
+                        let heartbeat_msg = create_heartbeat_msg ( engine, None ) in {
+                            engine' with
                                 outgoing_seq_num        = engine'.outgoing_seq_num + 1;
-                                outgoing_fix_msg        = Some heatbeat_msg;
-                                fe_last_time_data_sent  = engine'.fe_curr_time; } 
+                                outgoing_fix_msg        = Some ( ValidMsg ( heartbeat_msg ));
+                                fe_last_time_data_sent  = engine'.fe_curr_time;
+                                fe_history              = add_msg_to_history ( engine'.fe_history, heartbeat_msg );
+                            } 
                     end
                 else
                     engine'
@@ -677,9 +750,10 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
                             engine' with
                                 fe_curr_mode            = NoActiveSession;
                                 fe_curr_status          = ConnTerminatedWithoutLogoff;
-                                outgoing_fix_msg        = Some logoff_msg;
+                                outgoing_fix_msg        = Some ( ValidMsg ( logoff_msg ));
                                 outgoing_seq_num        = engine'.outgoing_seq_num + 1;
                                 fe_last_time_data_sent  = engine'.fe_curr_time;
+                                fe_history              = add_msg_to_history ( engine.fe_history, logoff_msg );
                         }
                     end
                 else
@@ -696,11 +770,12 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
                 let logon_msg = create_logon_msg ( engine ) in { 
                     engine with 
                         fe_last_time_data_sent = engine.fe_curr_time;
-                        outgoing_fix_msg = Some logon_msg;
+                        outgoing_fix_msg = Some ( ValidMsg (logon_msg));
                         fe_curr_mode     = LogonInitiated;
                         fe_initiator     = Some true;
                         incoming_fix_msg = None;
                         outgoing_seq_num = engine.outgoing_seq_num + 1;
+                        fe_history       = add_msg_to_history ( engine.fe_history, logon_msg );
                     }
             end
         else 
@@ -718,11 +793,11 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
                     app_msg_data, false
                 ) in { 
                     engine with 
-                        fe_last_time_data_sent = engine.fe_curr_time;
-                        outgoing_fix_msg = Some (ValidMsg ( msg )); 
-                        incoming_int_msg = None;
-                        outgoing_seq_num = msg.full_msg_header.h_msg_seq_num;
-                        fe_history = [ msg ] @ engine.fe_history;
+                        fe_last_time_data_sent  = engine.fe_curr_time;
+                        outgoing_fix_msg        = Some (ValidMsg ( msg )); 
+                        incoming_int_msg        = None;
+                        outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                        fe_history              = add_msg_to_history ( engine.fe_history, msg );
                 }
             | _ -> engine
         end
