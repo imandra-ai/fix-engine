@@ -23,4 +23,8 @@
 :l src-protocol-exts-vg/full_app_messages.ml
 
 :l src-protocol/full_messages.ml
+:l src/fix_engine_state.ml
+:l src/fix_engine_utils.ml
+:l src/fix_engine_transitions.ml
 :l src/fix_engine.ml
+

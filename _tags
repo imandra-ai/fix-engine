@@ -1,0 +1,15 @@
+true : thread
+true : package(yojson)
+true : package(lwt)
+true : package(lwt.unix)
+
+<src>                        : include
+<src-core>                   : include
+<src-core-pp>                : include
+<src-protocol>               : include
+<src-protocol-pp>            : include
+<src-protocol-exts>          : include
+<src-protocol-exts-pp>       : include
+
+
+<src-examples>               : include
