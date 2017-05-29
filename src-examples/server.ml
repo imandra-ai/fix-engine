@@ -1,10 +1,24 @@
+(** FIX 4.4 engine server implementation. *)
+(***
+    
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+
+    server.ml
+    
+*)
+
 let (>>=) = Lwt.(>>=);;
 
-let get_current_utctimstamp () =    
+open Fix_engine_state;;
+open Fix_engine;;
+
+let get_current_utctimstamp () =
+    let open Datetime in 
     let dtime = Unix.gettimeofday () in 
     let tm = Unix.gmtime dtime in
     let msec = int_of_float (1000. *. (dtime -. floor dtime)) in
-    Datetime.{
+    {
         utc_timestamp_year   = tm.Unix.tm_year + 1900;
         utc_timestamp_month  = tm.Unix.tm_mon + 1;
         utc_timestamp_day    = tm.Unix.tm_mday;
@@ -15,7 +29,7 @@ let get_current_utctimstamp () =
     }
 ;;
 
-let state = ref Fix_engine.{ init_fix_engine_state with
+let state = ref { init_fix_engine_state with
     fe_comp_id = String_utils.string_to_fix_string "IMANDRA";
     fe_target_comp_id = String_utils.string_to_fix_string "BANZAI";
     fe_curr_time = get_current_utctimstamp ();
@@ -63,7 +77,6 @@ let send_msg outch msg =
 
 
 
-
 let treat_int_message outch msg =
     let open Fix_engine in
     let msgstr =  match msg with 
@@ -99,7 +112,7 @@ let rec heartbeat_thread outch =
     let open Fix_engine in
     Lwt.finalize ( fun () ->
         Lwt_unix.sleep (1.0) >>= fun () -> 
-        let timechange = Fix_engine.TimeChange ( get_current_utctimstamp () ) in
+        let timechange = TimeChange ( get_current_utctimstamp () ) in
         treat_int_message outch timechange >>= fun () -> 
         heartbeat_thread outch
     ) ( fun () -> Lwt.return_unit )
@@ -115,18 +128,20 @@ let f (inch, outch) =
     Lwt.join [
         heartbeat_thread outch;
         msg_stream |> Lwt_stream.iter_s ( fun msg ->
-            let timechange = Fix_engine.TimeChange ( get_current_utctimstamp () ) in
+            let timechange = TimeChange ( get_current_utctimstamp () ) in
             treat_int_message outch timechange >>= fun () ->
             treat_fix_message outch msg
     )]
 ;;
 
+(*
 let server_thread =
     let addr = Unix.( ADDR_INET( inet_addr_loopback , 9880 ) ) in
     let server = Lwt_io.establish_server addr f in
     fst (Lwt.wait ())
 ;;
 
-
 Lwt_main.run server_thread
 ;;
+
+*)
