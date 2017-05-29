@@ -26,7 +26,6 @@ let () =
 
     ; Pkg.mllib ~api: [ "full_messages"
                       ; "full_admin_messages"
-                      ; "full_session_core"
                       ] "src-protocol/protocol.mllib"
 
     ; Pkg.mllib ~api: [ "fix_engine_json"
@@ -75,6 +74,7 @@ let () =
     ; Pkg.bin "src-examples/wire_to_json"
 
     ; Pkg.bin ~cond:vgs "src-examples/example_runner"
+    ; Pkg.bin ~cond:(not vgs) "src-examples/server"
 
     ; Pkg.doc "doc/all_modules.docdir/all_modules.dot"
 

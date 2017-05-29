@@ -30,13 +30,13 @@ let parse_msg_logon_data msg =
     req msg "98"  parse_encryption_method @@ fun ln_encrypt_method            ->
     req msg "108" parse_Duration          @@ fun ln_heartbeat_interval        ->
     opt msg "95"  parse_int               @@ fun ln_raw_data_length           ->
-    opt msg "96"  parse_string               @@ fun ln_raw_data                  ->
-    opt msg "141" parse_int               @@ fun ln_reset_seq_num_flag        ->
+    opt msg "96"  parse_string            @@ fun ln_raw_data                  ->
+    opt msg "141" parse_bool              @@ fun ln_reset_seq_num_flag        ->
     opt msg "789" parse_int               @@ fun ln_next_expected_msg_seq_num ->
     opt msg "383" parse_int               @@ fun ln_max_message_size          ->
     opt msg "464" parse_bool              @@ fun ln_test_message_indicator    ->
-    opt msg "553" parse_string               @@ fun ln_username                  ->
-    opt msg "554" parse_string               @@ fun ln_password                  -> 
+    opt msg "553" parse_string            @@ fun ln_username                  ->
+    opt msg "554" parse_string            @@ fun ln_password                  -> 
     ParseFieldSuccess 
     { ln_encrypt_method             
     ; ln_heartbeat_interval         

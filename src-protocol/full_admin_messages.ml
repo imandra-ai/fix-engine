@@ -32,7 +32,7 @@ type full_msg_logon_data = {
     ln_heartbeat_interval                           : fix_duration;                     (** Tag 108 *)
     ln_raw_data_length                              : int option;                       (** Tag  95 *)
     ln_raw_data                                     : fix_string option;                (** Tag  96 *)
-    ln_reset_seq_num_flag                           : int option;                       (** Tag 141 *)
+    ln_reset_seq_num_flag                           : bool option;                      (** Tag 141 *)
     ln_next_expected_msg_seq_num                    : int option;                       (** Tag 789 *)
     ln_max_message_size                             : int option;                       (** Tag 383 *)
 
