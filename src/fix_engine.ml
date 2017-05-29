@@ -333,12 +333,8 @@ let create_business_reject_msg ( outbound_seq_num, target_comp_id, comp_id , cur
                 br_ref_seq_num              = reject_info.brej_msg_ref_seq_num;
                 br_business_reject_reason   = reject_info.brej_msg_reject_reason;
             }
-        ) in 
-    ValidMsg ( 
-        create_outbound_fix_msg ( 
-            outbound_seq_num, target_comp_id, comp_id, curr_time, msg_data, false 
-        ) 
-    )
+    ) in 
+    ValidMsg ( create_outbound_fix_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, msg_data, false ) )
 ;;
 
 (*** ********************************************************************************************************** *)
@@ -456,7 +452,7 @@ let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engin
     engine with
         fe_curr_mode = Retransmit;
         fe_retransmit_start_idx = request.rr_begin_seq_num;
-        fe_retransmit_end_idx   = request.rr_end_seq_num;
+        fe_retransmit_end_idx = request.rr_end_seq_num;
         fe_history_to_send = engine.fe_history;
 }
 ;;
@@ -528,12 +524,12 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 (** Here we can only handle a subset of the FIX messages. *)
 let replay_single_msg ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     match m.full_msg_data with 
-    | Full_FIX_App_Msg app_msg  -> {
-            engine with 
+    | Full_FIX_App_Msg app_msg -> {
+        engine with 
             incoming_seq_num = m.full_msg_header.h_msg_seq_num;
             outgoing_int_msg = Some ( ApplicationData app_msg );
         }
-    | Full_FIX_Admin_Msg msg    -> {
+    | Full_FIX_Admin_Msg msg -> {
         engine with 
             incoming_seq_num = m.full_msg_header.h_msg_seq_num;
         }
@@ -585,10 +581,10 @@ let is_cache_complete ( cache, last_seq_processed : full_valid_fix_msg list * in
 (** Add message to cache so that ordering is maintained. *)
 let rec add_to_cache ( m, cache : full_valid_fix_msg * full_valid_fix_msg list ) = 
     match cache with 
-    | []        -> [ m ]
-    | x::[]     -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then [ m; x ] else [ x; m ]
-    | x::xs     -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then 
-                    m::x::xs else ( x :: ( add_to_cache (m, xs) ) )
+    | []    -> [ m ]
+    | x::[] -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then [ m; x ] else [ x; m ]
+    | x::xs -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then 
+                m::x::xs else ( x :: ( add_to_cache (m, xs) ) )
 ;;
 
 (** We're in recovery mode. We should add any received messages to our cache.
@@ -632,7 +628,7 @@ let hbeat_interval_null ( interval : fix_duration ) =
 (** Process incoming internal transition message. *)
 let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) = 
     match x with
-    | TimeChange t          -> 
+    | TimeChange t -> 
         let engine' =  { engine with fe_curr_time = t } in
         if engine.fe_curr_mode = ActiveSession then
             begin
@@ -657,7 +653,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
 
                 (* If we have not sent out any data within the last heartbeat_int, need to send a Heatbeat message. *)
                 let sent_cutoff = utctimestamp_duration_Add ( engine.fe_last_time_data_sent, engine.fe_heartbeat_interval ) in
-                let sent_cutoff_violated =  utctimestamp_GreaterThan ( t, sent_cutoff ) in 
+                let sent_cutoff_violated = utctimestamp_GreaterThan ( t, sent_cutoff ) in 
 
                 if sent_cutoff_violated && not ( hbeat_interval_null ( engine.fe_heartbeat_interval )) then
                     begin
@@ -692,7 +688,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
         else
             engine'
 
-    | CreateSession sd      ->
+    | CreateSession sd ->
         if engine.fe_curr_mode = NoActiveSession then
             begin
                 (* Let's initiate a session here. *)
@@ -711,10 +707,10 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
         (* We just disregard it here - this may vary for different implementations. *)
             engine
 
-    | ApplicationData ad    ->
+    | ApplicationData ad ->
         begin
             match engine.fe_curr_mode with 
-            | ActiveSession     -> 
+            | ActiveSession -> 
                 let app_msg_data = Full_FIX_App_Msg ad in
                 let msg = create_outbound_fix_msg (
                     engine.outgoing_seq_num, engine.fe_target_comp_id, 
@@ -726,6 +722,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
                         outgoing_fix_msg = Some (ValidMsg ( msg )); 
                         incoming_int_msg = None;
                         outgoing_seq_num = msg.full_msg_header.h_msg_seq_num;
+                        fe_history = [ msg ] @ engine.fe_history;
                 }
             | _ -> engine
         end
@@ -771,7 +768,7 @@ let is_int_message_valid ( engine : fix_engine_state ) =
     | None                      -> true
     | Some int_msg              ->
     match int_msg with 
-    | TimeChange t              -> utctimestamp_LessThan ( engine.fe_curr_time, t) && 
+    | TimeChange t              -> utctimestamp_LessThan ( engine.fe_curr_time, t ) && 
                                     is_valid_utctimestamp ( t )
     | ApplicationData d         -> true
     | CreateSession d           -> 
