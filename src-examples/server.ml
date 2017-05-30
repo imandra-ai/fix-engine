@@ -21,7 +21,8 @@ let state =
     fe_comp_id = String_utils.string_to_fix_string "IMANDRA";
     fe_target_comp_id = String_utils.string_to_fix_string "BANZAI";
     fe_curr_time = get_current_utctimstamp ();
-    fe_max_num_logons_sent = 10 }
+    fe_max_num_logons_sent = 10;
+    fe_application_up = false }
 ;;  
 
 let split_into_key_value (spliton : char) ( stream : char Lwt_stream.t ) : (string * string) Lwt_stream.t =
@@ -125,7 +126,8 @@ let f (inch, outch) =
                 let timechange = Fix_engine_state.TimeChange ( get_current_utctimstamp () ) in
                 treat_int_message outch timechange >>= fun () ->
                 treat_fix_message outch msg
-        )]
+                )
+        ]
     ) ( fun _ -> close_channels () )
     )
 ;;
