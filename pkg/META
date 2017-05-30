@@ -1,6 +1,6 @@
 description = "FIX Engine"
 version = "%%VERSION_NUM%%"
-requires = "yojson"
+requires = "yojson,lwt"
 
 archive(byte) = "fix-engine.cma"
 archive(native) = "fix-engine.cmxa"

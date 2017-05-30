@@ -16,7 +16,7 @@ let get_current_utctimstamp () =
 ;;
 
 let state = 
-    let open Fix_engine in
+    let open Fix_engine_state in
     ref { init_fix_engine_state with
     fe_comp_id = String_utils.string_to_fix_string "IMANDRA";
     fe_target_comp_id = String_utils.string_to_fix_string "BANZAI";
@@ -64,17 +64,15 @@ let send_msg outch msg =
 ;;
 
 
-
-
 let treat_int_message outch msg =
-    let open Fix_engine in
+    let open Fix_engine_state in
     let msgstr = Fix_engine_json.int_msg_to_str msg in
     begin match msg with 
         | TimeChange _ -> Lwt.return_unit 
         | msg -> Lwt_io.printl ("Received internal message: " ^ msgstr) 
     end >>= fun () ->
     state := { !state with incoming_int_msg = Some msg } ;
-    state := one_step (!state) ;
+    state := Fix_engine.one_step (!state) ;
     let outmsg = (!state).outgoing_fix_msg in
     state := { !state with outgoing_fix_msg = None } ;    
     match outmsg with
@@ -84,12 +82,12 @@ let treat_int_message outch msg =
 
 
 let treat_fix_message outch msg =
-    let open Fix_engine in
+    let open Fix_engine_state in
     let json = Full_messages_json.full_top_level_msg_to_json msg in
     Lwt_io.printl "Received: "                     >>= fun () ->
     Lwt_io.printl ( Yojson.pretty_to_string json ) >>= fun () -> 
     state := { !state with incoming_fix_msg = Some msg } ;
-    state := one_step (!state) ;
+    state := Fix_engine.one_step (!state) ;
     let outmsg = (!state).outgoing_fix_msg in
     state := { !state with outgoing_fix_msg = None } ;    
     match outmsg with
@@ -98,10 +96,10 @@ let treat_fix_message outch msg =
 ;;
 
 let rec heartbeat_thread outch =
-    let open Fix_engine in
+    let open Fix_engine_state in
     Lwt.finalize ( fun () ->
         Lwt_unix.sleep (1.0) >>= fun () -> 
-        let timechange = Fix_engine.TimeChange ( get_current_utctimstamp () ) in
+        let timechange = TimeChange ( get_current_utctimstamp () ) in
         treat_int_message outch timechange >>= fun () -> 
         heartbeat_thread outch
     ) ( fun () -> Lwt.return_unit )
@@ -124,7 +122,7 @@ let f (inch, outch) =
         Lwt.join [
             heartbeat_thread outch;
             msg_stream |> Lwt_stream.iter_s ( fun msg ->
-                let timechange = Fix_engine.TimeChange ( get_current_utctimstamp () ) in
+                let timechange = Fix_engine_state.TimeChange ( get_current_utctimstamp () ) in
                 treat_int_message outch timechange >>= fun () ->
                 treat_fix_message outch msg
         )]
