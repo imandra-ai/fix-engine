@@ -279,8 +279,6 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         (** We're processing an application type of message. We just need 
         to append it to the list of outgoing application messages and 
         update the last seq number processed. *) 
-        let () = print_endline "in Full_FIX_App_Msg" in
-        let () = flush_all () in
         if engine.fe_application_up then {
             engine with
                 incoming_seq_num = m.full_msg_header.h_msg_seq_num;
