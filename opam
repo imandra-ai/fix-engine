@@ -1,6 +1,6 @@
-opam-version: "1.2.2"
+opam-version: "1.2"
 name: "fix-engine"
-version: "0.1"
+version: "1.0"
 maintainer: "Denis Ignatovich <denis@aestheticintegration.com>"
 authors: "Denis Ignatovich <denis@aestheticintegration.com>, Grant Passmore <grant@aestheticintegration.com>"
 homepage: "https://github.com/AestheticIntegration/fix-engine"
@@ -17,5 +17,4 @@ depends: [
   "topkg" {build}
   "yojson"
   "lwt"
-  "lwt.unix"
 ]
