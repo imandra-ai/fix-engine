@@ -70,7 +70,7 @@ let treat_int_message outch msg =
     let msgstr = Fix_engine_json.int_msg_to_str msg in
     begin match msg with 
         | TimeChange _ -> Lwt.return_unit 
-        | msg -> Lwt_io.printl ("Received internal message: " ^ msgstr) 
+        | msg -> Lwt_io.printl ("Received an internal message: " ^ msgstr) 
     end >>= fun () ->
     state := { !state with incoming_int_msg = Some msg } ;
     state := Fix_engine.one_step (!state) ;
@@ -98,12 +98,10 @@ let treat_fix_message outch msg =
 
 let rec heartbeat_thread outch =
     let open Fix_engine_state in
-    Lwt.finalize ( fun () ->
-        Lwt_unix.sleep (1.0) >>= fun () -> 
-        let timechange = TimeChange ( get_current_utctimstamp () ) in
-        treat_int_message outch timechange >>= fun () -> 
-        heartbeat_thread outch
-    ) ( fun () -> Lwt.return_unit )
+    Lwt_unix.sleep (1.0) >>= fun () -> 
+    let timechange = TimeChange ( get_current_utctimstamp () ) in
+    treat_int_message outch timechange >>= fun () -> 
+    heartbeat_thread outch
 ;;
 
 let f (inch, outch) =
@@ -135,6 +133,7 @@ let f (inch, outch) =
 let server_thread =
     let addr = Unix.( ADDR_INET( inet_addr_loopback , 9880 ) ) in
     let server = Lwt_io.establish_server addr f in
+    print_endline "Started server on localhost:9880 ...";
     fst (Lwt.wait ())
 ;;
 
