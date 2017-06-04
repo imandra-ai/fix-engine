@@ -20,80 +20,6 @@ open Fix_engine_utils;;
 (* @meta[imandra_ignore] off @end *)
 
 
-(** get_gap_fill_msg -> out of all of the administrative messages, only the 'Reject' can be retransmitted.
-    All application-level messages may be retransmitted - we should, in the future add logic to 
-    not retransmit stale orders, etc. *)
-let get_historic_msg ( valid_msg : full_valid_fix_msg ) =  
-    let gap_fill_msg_data = Full_FIX_Admin_Msg ( 
-        Full_Msg_Sequence_Reset {
-            seqr_new_seq_no = valid_msg.full_msg_header.h_msg_seq_num + 1;
-            seqr_gap_fill_flag = Some FIX_GapFillFlag_Y;
-        }
-    ) in
-
-    let gap_fill_msg = {
-        full_msg_header = valid_msg.full_msg_header;
-        full_msg_data = gap_fill_msg_data;
-        full_msg_trailer = valid_msg.full_msg_trailer;
-    } in 
-
-    match valid_msg.full_msg_data with 
-    | Full_FIX_Admin_Msg admin_msg ->
-        begin
-            match admin_msg with 
-            | Full_Msg_Reject m -> valid_msg
-            | _ -> gap_fill_msg
-        end
-    | Full_FIX_App_Msg app_msg -> valid_msg
-;; 
-
-(** Give us a single GapFill message with the correct NextSequenceNumber.
-
-   From the specification:
-    "If there are consecutive administrative messages to be resent, it is suggested that only one SeqReset-GapFill
-    message be sent in their place. The sequence number of the SeqReset-GapFill message is the next expected
-    outbound sequence number. The NewSeqNo field of the GapFill message contains the sequence number of
-    the highest administrative message in this group plus 1. For example, during a Resend operation there are 7
-    sequential administrative messages waiting to be resent. They start with sequence number 9 and end with
-    sequence number 15. Instead of transmitting 7 Gap Fill messages (which is perfectly legal, but not network
-    friendly), a SeqReset-GapFill message may be sent. The sequence number of the Gap Fill message is set to 9
-    because the remote side is expecting that as the next sequence number. The NewSeqNo field of the GapFill
-    message contains the number 16, because that will be the sequence number of the next message to be
-    transmitted."  *)
-let combine_gapfill_msgs ( msgOne, msgTwo : full_msg_sequence_reset_data * full_msg_sequence_reset_data ) =
-    let correct_next_seq = if msgOne.seqr_new_seq_no > msgTwo.seqr_new_seq_no then msgOne.seqr_new_seq_no else msgTwo.seqr_new_seq_no in {
-        seqr_gap_fill_flag = Some FIX_GapFillFlag_Y; (** We assume all of these SeqResetMessages are GapFill-type *)
-        seqr_new_seq_no = correct_next_seq;
-    }
-;;
-
-(** 
-    Adding a valid message to the list, while
-    - converting any message that needs to be converted into a SequenceRest-GapFill
-    - ensuring that any two sequential SequenceReset-GapFill messages are combined into one with an updated
-        expected NextSeqNum parameter *)
-let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix_msg ) = 
-    let hist_msg = get_historic_msg ( msg ) in 
-
-    match history with
-    | [] -> [ msg ]
-    | x::xs ->
-        begin
-            match x.full_msg_data, hist_msg.full_msg_data with 
-            | Full_FIX_Admin_Msg ( Full_Msg_Sequence_Reset seq_reset_one ), Full_FIX_Admin_Msg ( Full_Msg_Sequence_Reset seq_reset_two ) ->
-                begin
-                    let new_msg_data = combine_gapfill_msgs ( seq_reset_one, seq_reset_two ) in
-                    let new_full_msg = {
-                        full_msg_header = x.full_msg_header;
-                        full_msg_data = Full_FIX_Admin_Msg ( Full_Msg_Sequence_Reset (new_msg_data));
-                        full_msg_trailer = x.full_msg_trailer;
-                    } in 
-                    new_full_msg :: xs
-                end 
-            | _ -> hist_msg :: x :: xs
-        end
-;;
-
 (** We're in the middle of retransmitting historic messages. 
     Note: when we transition into Retransmit mode, we set up a 
     queue with messages that should be sent out. These messages are a function
@@ -129,21 +55,6 @@ let run_retransmit ( engine : fix_engine_state ) =
                 outgoing_fix_msg = Some ( ValidMsg x );
         }
 ;;
-
-(** Does the message have the right sequence number?
-
-    This is when we need to transfer into Recovery Mode and request the 
-    missing sequence to be retransmitted. *)
-let msg_consistent ( engine, msg_header : fix_engine_state * fix_header ) = 
-    let seq_num_correct = msg_header.h_msg_seq_num = (engine.incoming_seq_num + 1) in 
-    match msg_header.h_poss_dup_flag with 
-    | None -> seq_num_correct
-    | Some dup -> dup || ((not dup) && seq_num_correct)
-;;
-
-(*** ********************************************************************************************************** *)
-(***  Message creation helper functions.                                                                        *)
-(*** ********************************************************************************************************** *)
 
 
 (** Here we will only accept an incoming Logon message to establish a connection. *)
