@@ -60,9 +60,8 @@ let run_retransmit ( engine : fix_engine_state ) =
 (** Here we will only accept an incoming Logon message to establish a connection. *)
 let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     match m.full_msg_data with 
-    | Full_FIX_Admin_Msg msg -> (
-        match msg with 
-        | Full_Msg_Logon d ->
+    | Full_FIX_Admin_Msg ( Full_Msg_Logon d ) ->
+        begin
             if ( engine.fe_encrypt_method <> d.ln_encrypt_method && 
                 engine.fe_num_logons_sent >= engine.fe_max_num_logons_sent ) then { 
                     engine with 
@@ -83,9 +82,8 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                             fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
                     }
                 end
-        | _ -> engine
-        )
-    | Full_FIX_App_Msg _ -> engine
+        end
+    | _ -> engine
 ;;
 
 (**  *)
@@ -97,30 +95,28 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         engine'
     else
         match m.full_msg_data with
-        | Full_FIX_Admin_Msg msg -> (
-            match msg with
-            | Full_Msg_Logon d -> 
-            if engine.fe_encrypt_method <> d.ln_encrypt_method then
-                begin
-                    let engine' = { engine with fe_encrypt_method = d.ln_encrypt_method } in 
-                    let logon_msg = create_logon_msg ( engine' ) in {
-                        engine' with
-                            outgoing_fix_msg        = Some ( ValidMsg (logon_msg ));
-                            outgoing_seq_num        = engine.outgoing_seq_num + 1;
-                            fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
-                            fe_last_time_data_sent  = engine.fe_curr_time;
-                            fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
-                            fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
-                    }
-                end
-            else {
-                engine' with 
-                    fe_curr_mode = ActiveSession;
-                    incoming_seq_num = m.full_msg_header.h_msg_seq_num;
-            }
-            | _ -> engine'
-            )
-        | Full_FIX_App_Msg msg -> engine'
+        | Full_FIX_Admin_Msg ( Full_Msg_Logon d ) ->
+            begin
+                if engine.fe_encrypt_method <> d.ln_encrypt_method then
+                    begin
+                        let engine' = { engine with fe_encrypt_method = d.ln_encrypt_method } in 
+                        let logon_msg = create_logon_msg ( engine' ) in {
+                            engine' with
+                                outgoing_fix_msg        = Some ( ValidMsg (logon_msg ));
+                                outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                                fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
+                                fe_last_time_data_sent  = engine.fe_curr_time;
+                                fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
+                                fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
+                        }
+                    end
+                else {
+                    engine' with 
+                        fe_curr_mode = ActiveSession;
+                        incoming_seq_num = m.full_msg_header.h_msg_seq_num;
+                }
+            end
+        | _ -> engine'
 ;;
 
 (** Response to resend request. Note that we're copyng over the whole list of historic messages -
