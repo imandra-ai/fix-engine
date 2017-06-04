@@ -20,7 +20,6 @@ open Fix_engine_utils;;
 open Fix_engine_transitions;;
 (* @meta[imandra_ignore] off @end *)
 
-
 (** Process incoming internal transition message. *)
 let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_state) = 
     match x with
@@ -29,7 +28,6 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
         if engine.fe_curr_mode = ActiveSession then
             begin
                 (* First, check whether we need to send out a TestRequest message - if we haven't heard anything in a while *)
-
                 let received_cutoff = utctimestamp_duration_Add ( engine.fe_last_data_received, engine.fe_heartbeat_interval ) in
                 let received_cutoff_padded = utctimestamp_duration_Add ( received_cutoff, engine.fe_testreq_interval ) in
                 let received_cutoff_violated = utctimestamp_GreaterThan ( t, received_cutoff_padded ) in 
@@ -104,9 +102,11 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
                         fe_history       = add_msg_to_history ( engine.fe_history, logon_msg );
                     }
             end
-        else 
-        (* We just disregard it here - this may vary for different implementations. *)
-            engine
+        else {
+                engine with
+                    incoming_int_msg    = None;
+                    outgoing_int_msg    = Some OutIntMsg_Reject 
+        }
 
     | IncIntMsg_ApplicationData ad ->
         begin
@@ -127,9 +127,12 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
                 }
             | _ -> engine
         end
-    
-    | IncIntMsg_ManualIntervention mi -> engine
-        (* TODO implement this to have more detailed user data that would reset engine state. *)
+        
+    | IncIntMsg_ManualIntervention mi -> {
+        engine with
+            incoming_int_msg            = None;
+            outgoing_int_msg            = Some OutIntMsg_Reject 
+        }
 
     | IncIntMsg_EndSession ->
         begin
@@ -183,8 +186,7 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
         end in { state' with fe_last_data_received = engine.fe_curr_time }
 ;;
 
-(** This sets validity of the incoming internal messages.
-    TODO: Use the generated validity checks. *)
+(** This sets validity of the incoming internal messages.*)
 let is_int_message_valid ( engine : fix_engine_state ) =
     match engine.incoming_int_msg with 
     | None -> true

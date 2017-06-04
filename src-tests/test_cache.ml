@@ -1,36 +1,32 @@
-(** 
+(** Tests for caching logic. *)
+(***
 
     Aesthetic Integration Limited
     Copyright (c) 2014 - 2017
-
-    Implementation of the FIX 4.4 engine.
-
-    Scratch-pad for checking cache handling logic.
 
     test_cache.ml
     
 *)
 
-open Fix_data_dictionary
-open Fix_engine
-open Fix_engine_pp
-open Fix_pp
+open Yojson
+open Full_admin_messages
+open Full_messages
+open Fix_engine_transitions
+
 
 let pe = print_endline;;
 
 let def_fix_msg = {
-    header = default_fix_header;
-    msg_data = FIX_heartbeat {
-        hb_test_req_id = None;
-    };
-    trailer = default_fix_trailer;
+    full_msg_header = default_fix_header;
+    full_msg_data = Full_FIX_Admin_Msg ( Full_Msg_Heartbeat { hb_test_req_id = Some 123 });
+    full_msg_trailer = default_fix_trailer;
 };;
 
 let make_fix_msg i = {
     def_fix_msg with 
-        header = {
+        full_msg_header = {
             default_fix_header with 
-                msg_seq_num = i; }
+                h_msg_seq_num = i; }
     } 
 ;;
 
@@ -41,11 +37,11 @@ let cache = [
 ];;
 
 print_string "The old cache:\n";;
-print_string (msg_list_to_string (cache));;
+print_string ( Yojson.pretty_to_string ( Full_messages_json.full_msg_list_to_json (cache) ));;
 
 print_string "\n\nThe new cache\n";;
 let new_cache = add_to_cache (make_fix_msg (12), cache);;
-print_string (msg_list_to_string (new_cache));;
+print_string ( Yojson.pretty_to_string ( Full_messages_json.full_msg_list_to_json (new_cache) ));;
 
 (** Can we transition correctly? *)
 let check_cache (c, idx) = 
@@ -72,7 +68,7 @@ check_cache([
     make_fix_msg (10);
 ], 0);;
 
-pe "\Fails - missing 1st";; 
+pe "\nFails - missing 1st";; 
 check_cache([
     make_fix_msg (2);
     make_fix_msg (3);

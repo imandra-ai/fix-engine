@@ -153,7 +153,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         begin 
             match adm_msg with 
             | Full_Msg_Heartbeat hb          -> {
-                (* Update information about the last received message. *)    
+                (* Update information about the last received message. *)
                     engine with 
                         incoming_seq_num = m.full_msg_header.h_msg_seq_num;
                         incoming_fix_msg = None;
@@ -243,13 +243,13 @@ let rec no_seq_gaps ( msg_list, last_seq_num : full_valid_fix_msg list * int) =
             no_seq_gaps ( xs, x.full_msg_header.h_msg_seq_num )
 ;;
 
-(** Is cache valid so that we can transition from recovery?
+(** 
+    Is cache valid so that we can transition from recovery?
 
     Cache is considered valid when:
     1. It is non-empty
     2. The sequence IDs of the messages within cache are continuous (i.e. there're no gaps)
-    3. First sequence ID (of the cache) is next message from the last one correctly
-        processed. *)
+    3. First sequence ID (of the cache) is next message from the last one correctly processed. *)
 let is_cache_complete ( cache, last_seq_processed : full_valid_fix_msg list * int ) = 
     match cache with
     | [] -> false
@@ -265,7 +265,7 @@ let is_cache_complete ( cache, last_seq_processed : full_valid_fix_msg list * in
 let rec add_to_cache ( m, cache : full_valid_fix_msg * full_valid_fix_msg list ) = 
     match cache with 
     | []    -> [ m ]
-    | x::[] -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then [ m; x ] else [ x; m ]
+    | [x]   -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then [ m; x ] else [ x; m ]
     | x::xs -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then 
                 m::x::xs else ( x :: ( add_to_cache (m, xs) ) )
 ;;
