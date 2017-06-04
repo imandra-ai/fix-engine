@@ -31,26 +31,35 @@ let fix_engine_mode_to_string = function
 ;;
 
 (** These are the messages going in/out of the engine to the owner. *)
-let int_msg_to_json x : json = match x with
-    | TimeChange t                                      -> `Assoc [ ( "time_change",    `Assoc [ ( "new_time"       , utctimestamp_to_json t )]             )]
-    | CreateSession cs                                  -> `Assoc [ ( "create_session", `Assoc [ ( "dest_comp_id"   , `Assoc [ ("model_string", `Int (match cs.dest_comp_id with Model_string x -> x | _ -> 0))] )] )]
-    | ApplicationData d                                 -> `Assoc [ ( "app_data",       `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
-    | ManualIntervention m                              -> `Assoc [ ( "man_inter",      `Assoc [ ( "reset"          , `Bool m.session_reset )]              )]
+let int_inc_msg_to_json x : json = match x with
+    | IncIntMsg_TimeChange t                            -> `Assoc [ ( "TimeChange",         `Assoc [ ( "new_time"       , utctimestamp_to_json t )]             )]
+    | IncIntMsg_CreateSession cs                        -> `Assoc [ ( "CreateSession",      `Assoc [ ( "dest_comp_id"   , 
+                                                            `Assoc [ ("model_string", `Int (match cs.dest_comp_id with Model_string x -> x | _ -> 0))] )] )]
+    | IncIntMsg_EndSession                              -> `String "EndSession"
+    | IncIntMsg_ApplicationData d                       -> `Assoc [ ( "ApplicationData",    `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
+    | IncIntMsg_ManualIntervention m                    -> `Assoc [ ( "ManualIntervention", `Assoc [ ( "reset"          , `Bool m.session_reset )]              )]
+;;
+
+let int_out_msg_to_json x : json = match x with
+    | OutIntMsg_ApplicationData d                       -> `Assoc [ ( "ApplicationData",    `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
+    | OutIntMsg_Reject                                  -> `String "Reject"
+;;
+
+let int_inc_msg_to_str i = 
+    Yojson.pretty_to_string (int_inc_msg_to_json i)
+;;
+
+let int_out_msg_to_str i = 
+    Yojson.pretty_to_string (int_out_msg_to_json i)
 ;;
 
 (** *)
-let int_msg_to_str i = 
-    Yojson.pretty_to_string (int_msg_to_json i)
+let int_inc_msg_opt_to_json : ( fix_engine_int_inc_msg option -> Yojson.json) = 
+    function None -> `Null | Some i -> int_inc_msg_to_json (i)
 ;;
 
-(** *)
-let int_msg_list_to_string ml =
-    `List (List.map int_msg_to_json ml)
-;;
-
-(** *)
-let intmsg_opt_to_json : ( fix_engine_int_msg option -> Yojson.json) = 
-    function None -> `Null | Some i -> int_msg_to_json (i)
+let int_out_msg_opt_to_json : ( fix_engine_int_out_msg option -> Yojson.json) = 
+    function None -> `Null | Some i -> int_out_msg_to_json (i)
 ;;
 
 (** *)
@@ -63,8 +72,8 @@ let fix_engine_state_to_json s =
             (match s.fe_comp_id with Model_string x -> x | _ -> 0) )]                                           );
         ( "target_comp_id"                              , `Assoc [("model_string", `Int 
             (match s.fe_target_comp_id with Model_string x -> x | _ -> 0) )]                                    );
-        ( "incoming_int_msgs"                           , intmsg_opt_to_json s.incoming_int_msg                 );
-        ( "outgoing_int_msgs"                           , intmsg_opt_to_json s.outgoing_int_msg                 );
+        ( "incoming_int_msgs"                           , int_inc_msg_opt_to_json s.incoming_int_msg            );
+        ( "outgoing_int_msgs"                           , int_out_msg_opt_to_json s.outgoing_int_msg            );
         ( "incoming_seq_num"                            , `Int s.incoming_seq_num                               );
         ( "outgoing_seq_num"                            , `Int s.outgoing_seq_num                               );
         ( "incoming_fix_msgs"                           , full_top_level_msg_opt_to_json s.incoming_fix_msg     );

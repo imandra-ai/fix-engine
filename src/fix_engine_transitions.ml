@@ -193,7 +193,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         if engine.fe_application_up then {
             engine with
                 incoming_seq_num = m.full_msg_header.h_msg_seq_num;
-                outgoing_int_msg = Some (ApplicationData app_msg );
+                outgoing_int_msg = Some (OutIntMsg_ApplicationData app_msg );
                 incoming_fix_msg = None;
         } else
             begin
@@ -214,7 +214,7 @@ let replay_single_msg ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     | Full_FIX_App_Msg app_msg -> {
         engine with 
             incoming_seq_num = m.full_msg_header.h_msg_seq_num;
-            outgoing_int_msg = Some ( ApplicationData app_msg );
+            outgoing_int_msg = Some ( OutIntMsg_ApplicationData app_msg );
         }
     | Full_FIX_Admin_Msg msg -> {
         engine with 

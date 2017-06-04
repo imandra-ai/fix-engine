@@ -22,9 +22,9 @@ open Fix_engine_transitions;;
 
 
 (** Process incoming internal transition message. *)
-let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) = 
+let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_state) = 
     match x with
-    | TimeChange t -> 
+    | IncIntMsg_TimeChange t -> 
         let engine' =  { engine with fe_curr_time = t } in
         if engine.fe_curr_mode = ActiveSession then
             begin
@@ -88,7 +88,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
         else
             engine'
 
-    | CreateSession sd ->
+    | IncIntMsg_CreateSession sd ->
         if engine.fe_curr_mode = NoActiveSession then
             begin
                 (* Let's initiate a session here. *)
@@ -108,7 +108,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
         (* We just disregard it here - this may vary for different implementations. *)
             engine
 
-    | ApplicationData ad ->
+    | IncIntMsg_ApplicationData ad ->
         begin
             match engine.fe_curr_mode with 
             | ActiveSession -> 
@@ -127,8 +127,12 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_msg * fix_engine_state) =
                 }
             | _ -> engine
         end
-    | ManualIntervention mi -> engine
+
+    | IncIntMsg_ManualIntervention mi -> engine
         (* TODO implement this to have more detailed user data that would reset engine state. *)
+
+    | IncIntMsg_EndSession -> engine
+
 ;;
 
 (** Process incoming FIX message here. *)
@@ -166,19 +170,19 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
     TODO: Use the generated validity checks. *)
 let is_int_message_valid ( engine : fix_engine_state ) =
     match engine.incoming_int_msg with 
-    | None                      -> true
-    | Some int_msg              ->
+    | None -> true
+    | Some int_msg ->
     match int_msg with 
-    | TimeChange t              -> utctimestamp_LessThan ( engine.fe_curr_time, t ) && 
-                                    is_valid_utctimestamp ( t )
-    | ApplicationData d         -> true
-    | CreateSession d           -> 
+    | IncIntMsg_TimeChange t -> utctimestamp_LessThan ( engine.fe_curr_time, t ) && is_valid_utctimestamp ( t )
+    | IncIntMsg_ApplicationData d -> true
+    | IncIntMsg_CreateSession d -> 
         begin
             match engine.fe_curr_mode with
-            | NoActiveSession       -> true
-            | _                     -> false
+            | NoActiveSession -> true
+            | _ -> false
         end
-    | ManualIntervention _      -> true
+    | IncIntMsg_ManualIntervention _ -> true
+    | IncIntMsg_EndSession -> true
 ;;
 
 (** The main transition function. *)
@@ -195,11 +199,11 @@ let one_step ( engine : fix_engine_state ) =
         (** Now we look to process internal (coming from our application) and external (coming from
             another FIX engine) messages. *)
         match engine.incoming_int_msg with 
-        | Some i    -> proc_incoming_int_msg (i, { engine with incoming_int_msg = None } )
-        | None      -> 
+        | Some i -> proc_incoming_int_msg (i, { engine with incoming_int_msg = None } )
+        | None -> 
             begin
                 match engine.incoming_fix_msg with 
-                | Some m    -> proc_incoming_fix_msg (m, { engine with incoming_fix_msg = None } )
-                | None      -> engine
+                | Some m -> proc_incoming_fix_msg (m, { engine with incoming_fix_msg = None } )
+                | None -> engine
             end
 ;;

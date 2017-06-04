@@ -31,15 +31,23 @@ type session_data = {
 ;;
 
 (** These are internal messages into the Engine. *)
-type fix_engine_int_msg = 
-    | TimeChange            of fix_utctimestamp (** Updates internal time of the engine. *)
-    | CreateSession         of session_data (** Create sessions command. *)
-    | ApplicationData       of full_app_msg_data (** App messages to be transmitted over. *)
-    | ManualIntervention    of manual_int_data (** TODO: create 'richer' manual commands. *)
+type fix_engine_int_inc_msg = 
+    | IncIntMsg_TimeChange          of fix_utctimestamp     (** Updates internal time of the engine. *)
+    | IncIntMsg_CreateSession       of session_data         (** Create sessions command. *)
+    | IncIntMsg_EndSession                                  (** Terminate current active session. *)
+    | IncIntMsg_ApplicationData     of full_app_msg_data    (** App messages to be transmitted over. *)
+    | IncIntMsg_ManualIntervention  of manual_int_data      (** TODO: create 'richer' manual commands. *)
 ;;
 
+(** These are the outgoing internal messages - would be sent into the application model. *)
+type fix_engine_int_out_msg = 
+    | OutIntMsg_ApplicationData     of full_app_msg_data    (** Sending application message onto the  *)    
+    | OutIntMsg_Reject                                      (** Rejecting internal message - when we cannot transmit or create new sessions, etc. *)
+;;
+
+
 (** Represents 'status' of the engine. *)
-type fix_engine_status = 
+type fix_engine_status =
     | Normal
     | SessRejectReceived 
     | BusinessRejectReceived
@@ -75,8 +83,8 @@ type fix_engine_state = {
     fe_comp_id              : fix_string;                   (** Our company ID *)
     fe_target_comp_id       : fix_string;                   (** Target company ID *)
 
-    incoming_int_msg        : fix_engine_int_msg option;    (** Incoming internal messages (application). *)
-    outgoing_int_msg        : fix_engine_int_msg option;    (** These are messages we send back to our owner *)
+    incoming_int_msg        : fix_engine_int_inc_msg option;(** Incoming internal messages (application). *)
+    outgoing_int_msg        : fix_engine_int_out_msg option;(** These are messages we send back to our owner *)
 
     incoming_seq_num        : int;                          (** Sequence number of the last processed incoming message. *)
     outgoing_seq_num        : int;                          (** Sequence number of the last sent message. *)
