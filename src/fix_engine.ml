@@ -144,7 +144,11 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
                         outgoing_seq_num        = engine.outgoing_seq_num + 1;
                         fe_history              = add_msg_to_history ( engine.fe_history, msg );
                 } 
-            | _ -> engine
+            | _ ->  {
+                engine with
+                    incoming_int_msg            = None;
+                    outgoing_int_msg            = Some OutIntMsg_Reject 
+            }
         end 
 ;;
 
@@ -195,7 +199,7 @@ let is_int_message_valid ( engine : fix_engine_state ) =
             | _ -> false
         end
     | IncIntMsg_ManualIntervention _ -> true
-    | IncIntMsg_EndSession -> true
+    | IncIntMsg_EndSession -> engine.fe_curr_mode = ActiveSession
 ;;
 
 (** The main transition function. *)
