@@ -127,12 +127,25 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
                 }
             | _ -> engine
         end
-
+    
     | IncIntMsg_ManualIntervention mi -> engine
         (* TODO implement this to have more detailed user data that would reset engine state. *)
 
-    | IncIntMsg_EndSession -> engine
-
+    | IncIntMsg_EndSession ->
+        begin
+            match engine.fe_curr_mode with 
+            | ActiveSession -> 
+                let msg = create_logoff_msg ( engine ) in {
+                    engine with 
+                        fe_last_time_data_sent  = engine.fe_curr_time;
+                        fe_curr_mode            = ShutdownInitiated;
+                        outgoing_fix_msg        = Some (ValidMsg ( msg ));
+                        incoming_int_msg        = None;
+                        outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                        fe_history              = add_msg_to_history ( engine.fe_history, msg );
+                } 
+            | _ -> engine
+        end 
 ;;
 
 (** Process incoming FIX message here. *)
