@@ -128,8 +128,8 @@ let init_fix_engine_state = {
     fe_curr_mode            = NoActiveSession;              
     fe_curr_time            = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
 
-    fe_comp_id              = Model_string 1;
-    fe_target_comp_id       = Model_string 2;
+    fe_comp_id              = Admin_string 183924456; (* Hash of "IMANDRA" *)
+    fe_target_comp_id       = Admin_string 780720412; (* Hash of "TARGET"  *)
 
     incoming_int_msg        = None;                           
     outgoing_int_msg        = None;

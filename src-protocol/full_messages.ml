@@ -120,12 +120,12 @@ type fix_header = {
 ;;
 
 let default_fix_header = {
-    h_begin_string                    = Model_string 0;
+    h_begin_string                    = Admin_string 546607350; (* Hash of "FIX.4.4" *)
     h_body_length                     = 0;
     h_msg_seq_num                     = 0;
     h_poss_dup_flag                   = None;
-    h_target_comp_id                  = Model_string 1;
-    h_sender_comp_id                  = Model_string 2;
+    h_target_comp_id                  = Admin_string 183924456; (* Hash of "IMANDRA" *)
+    h_sender_comp_id                  = Admin_string 780720412; (* Hash of "TARGET"  *)
     h_on_behalf_of_comp_id            = None;
     h_deliver_to_comp_id              = None;
     h_secure_data_len                 = None;
