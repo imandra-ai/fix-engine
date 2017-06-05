@@ -57,7 +57,7 @@ let encode_msg_resend_request_data msg =
 (** *)
 let encode_msg_reject_data msg = 
     [ ( "45"  , req encode_int                    msg.sr_ref_seq_num           ) 
-    ; ( "371" , opt encode_string                 msg.sr_ref_tag_id            ) 
+    ; ( "371" , opt encode_full_field_tag         msg.sr_ref_tag_id            ) 
     ; ( "372" , opt encode_full_msg_tag           msg.sr_ref_msg_type          ) 
     ; ( "373" , opt encode_session_reject_reason  msg.sr_session_reject_reason )
     ; ( "58"  , opt encode_string                 msg.sr_text                  ) 
@@ -80,9 +80,14 @@ let encode_msg_test_request_data msg =
 
 (** *)
 let encode_msg_business_reject_data msg = 
-    [ ( "45"  , req encode_int                    msg.br_ref_seq_num            )
-    ; ( "380" , req encode_business_reject_reason msg.br_business_reject_reason )
-    ] 
+    [ ( "45"  , req encode_int                    msg.br_ref_seq_num            ) 
+    ; ( "372" , req encode_full_msg_tag           msg.br_ref_msg_type           ) 
+    ; ( "379" , opt encode_full_field_tag         msg.br_ref_field_id           ) 
+    ; ( "380" , req encode_business_reject_reason msg.br_business_reject_reason ) 
+    ; ( "58"  , opt encode_string                 msg.br_text                   ) 
+    ; ( "354" , opt encode_int                    msg.br_encoded_text_len       ) 
+    ; ( "354" , opt encode_string                 msg.br_encoded_text           ) 
+    ]
 ;;
 
 (** *)

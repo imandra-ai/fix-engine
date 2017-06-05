@@ -8,6 +8,7 @@ bug-reports: "https://github.com/AestheticIntegration/fix-engine/issues"
 license: "APACHE-2.0"
 dev-repo: "https://github.com/AestheticIntegration/fix-engine"
 doc: "https://AestheticIntegration.github.io/fix-engine/doc"
+available: [ ocaml-version >= "4.01" & < "4.02" ]
 build: [
   [ "ocaml" "pkg/pkg.ml" "build" "--pinned" "%{pinned}%" ]
 ]
@@ -16,5 +17,5 @@ depends: [
   "ocamlbuild" {build}
   "topkg" {build}
   "yojson"
-  "lwt"
+  "lwt" {>= "2.6.0" & < "2.7.0" }
 ]

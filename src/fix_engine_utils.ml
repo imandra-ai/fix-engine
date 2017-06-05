@@ -198,12 +198,12 @@ let create_session_reject_msg ( outbound_seq_num, target_comp_id, comp_id, curr_
         Full_FIX_Admin_Msg (
             Full_Msg_Reject {
                 sr_ref_seq_num              = reject_info.srej_msg_msg_seq_num;
-                sr_ref_tag_id               = Some (Model_string 0);
+                sr_ref_tag_id               = None;
                 sr_ref_msg_type             = None;
                 sr_session_reject_reason    = reject_info.srej_msg_reject_reason;
                 sr_text                     = None;
                 sr_encoded_text_len         = None;
-                sr_encoded_text             = Some (Model_string 0);
+                sr_encoded_text             = None
             } ) in
     create_outbound_fix_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, msg_data, false )
 ;;
@@ -214,8 +214,13 @@ let create_business_reject_msg ( outbound_seq_num, target_comp_id, comp_id , cur
     let msg_data = 
         Full_FIX_Admin_Msg (
             Full_Msg_Business_Reject {
-                br_ref_seq_num              = reject_info.brej_msg_ref_seq_num;
-                br_business_reject_reason   = reject_info.brej_msg_reject_reason;
+                br_ref_seq_num            = reject_info.brej_msg_ref_seq_num;       
+                br_business_reject_reason = reject_info.brej_msg_reject_reason;
+                br_ref_msg_type           = reject_info.brej_msg_msg_tag;
+                br_ref_field_id           = reject_info.brej_msg_field_tag;
+                br_text                   = reject_info.brej_msg_text;
+                br_encoded_text_len       = None; 
+                br_encoded_text           = None 
             }
     ) in 
     create_outbound_fix_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, msg_data, false )

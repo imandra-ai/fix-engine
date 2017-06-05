@@ -14,7 +14,11 @@ module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 run:
 	topkg run src-examples/example_runner
 
+run_server:
+	ocaml pkg/pkg.ml build 
+	topkg run src-examples/server
+
 clean:
 	ocaml pkg/pkg.ml clean
 
-.PHONY: build run clean
+.PHONY: build run run_server clean
