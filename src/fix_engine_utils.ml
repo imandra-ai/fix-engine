@@ -18,6 +18,14 @@ open Full_messages;;
 open Fix_engine_state;;
 (* @meta[imandra_ignore] off @end *)
 
+type session_details = {
+    constant_begin_string : fix_string
+};;
+
+let default_session_details = {
+    constant_begin_string = Admin_string 546607350 (* Hash of "FIX.4.4" *)
+};;
+
 (** Does the message have the right sequence number?
 
     This is when we need to transfer into Recovery Mode and request the 
@@ -107,19 +115,43 @@ let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix
 (** Create outbound FIX message with the appropriate header and trailer. *)
 let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, curr_time, msg, is_duplicate ) = {
     full_msg_header = {
-        default_fix_header with 
-            h_msg_seq_num = osn + 1;
-            h_poss_dup_flag = Some is_duplicate;
-            h_target_comp_id = target_comp_id;
-            h_sender_comp_id = our_comp_id;
-            h_sending_time   = curr_time
+        h_begin_string = default_session_details.constant_begin_string;
+        h_body_length = 0;
+        h_msg_seq_num = osn + 1;
+        h_poss_dup_flag = Some is_duplicate;
+        h_target_comp_id = target_comp_id;
+        h_sender_comp_id = our_comp_id;
+        h_sending_time   = curr_time;
+        h_on_behalf_of_comp_id            = None;
+        h_deliver_to_comp_id              = None;
+        h_secure_data_len                 = None;
+        h_secure_data                     = None;
+        h_sender_sub_id                   = None;
+        h_sender_location_id              = None;
+        h_target_sub_id                   = None;
+        h_target_location_id              = None;
+        h_on_behalf_of_sub_id             = None;
+        h_on_behalf_of_location_id        = None;
+        h_deliver_to_sub_id               = None;
+        h_deliver_to_location_id          = None;
+        h_poss_resend                     = None;
+        h_orig_sending_time               = None;
+        h_xml_data_len                    = None;
+        h_xml_data                        = None;
+        h_message_enconding               = None;
+        h_last_msg_seq_num_processed      = None;
+        h_no_hops                         = None;
     };
     
     (* We're simply attaching the message data here. *)
     full_msg_data = msg;
 
     (** Trailers would be augmented by raw OCaml printers/parsers. *)
-    full_msg_trailer = default_fix_trailer
+    full_msg_trailer = {
+        signature_length = None;
+        signature        = None;
+        check_sum        = 0;
+    }
 };;
 
 (** Create a logon message we would send out to initiate a connection 

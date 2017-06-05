@@ -13,7 +13,13 @@ open Base_types;;
 let fix_to_str_hashtbl : (fix_string, string) Hashtbl.t = Hashtbl.create 10;;
 let str_to_fix_hashtbl : (string, fix_string) Hashtbl.t = Hashtbl.create 10;;
 
-let fix_string_to_string fixstr = Hashtbl.find fix_to_str_hashtbl fixstr;;
+let fix_string_to_string fixstr = 
+    if not (Hashtbl.mem fix_to_str_hashtbl fixstr) then
+        ( match fixstr with
+            | Model_string hash -> failwith ( "Unrecognized model string \"" ^ string_of_int hash ^ "\".")
+            | Admin_string hash -> failwith ( "Unrecognized admin string \"" ^ string_of_int hash ^ "\".")
+        )
+    else Hashtbl.find fix_to_str_hashtbl fixstr;;
 
 let string_to_fix_string rawstr =
     if Hashtbl.mem str_to_fix_hashtbl rawstr then
