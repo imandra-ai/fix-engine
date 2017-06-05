@@ -1,3 +1,13 @@
+(** FIX 4.4 engine server implementation. *)
+(***
+    
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2017
+
+    server.ml
+    
+*)
+
 let (>>=) = Lwt.(>>=);;
 
 let get_current_utctimstamp () =    
@@ -67,9 +77,9 @@ let send_msg outch msg =
 
 let treat_int_message outch msg =
     let open Fix_engine_state in
-    let msgstr = Fix_engine_json.int_msg_to_str msg in
+    let msgstr = Fix_engine_json.int_inc_msg_to_str msg in
     begin match msg with 
-        | TimeChange _ -> Lwt.return_unit 
+        | IncIntMsg_TimeChange _ -> Lwt.return_unit 
         | msg -> Lwt_io.printl ("Received an internal message: " ^ msgstr) 
     end >>= fun () ->
     state := { !state with incoming_int_msg = Some msg } ;
@@ -99,7 +109,7 @@ let treat_fix_message outch msg =
 let rec heartbeat_thread outch =
     let open Fix_engine_state in
     Lwt_unix.sleep (1.0) >>= fun () -> 
-    let timechange = TimeChange ( get_current_utctimstamp () ) in
+    let timechange = IncIntMsg_TimeChange ( get_current_utctimstamp () ) in
     treat_int_message outch timechange >>= fun () -> 
     heartbeat_thread outch
 ;;
@@ -121,7 +131,7 @@ let f (inch, outch) =
         Lwt.join [
             heartbeat_thread outch;
             msg_stream |> Lwt_stream.iter_s ( fun msg ->
-                let timechange = Fix_engine_state.TimeChange ( get_current_utctimstamp () ) in
+                let timechange = Fix_engine_state.IncIntMsg_TimeChange ( get_current_utctimstamp () ) in
                 treat_int_message outch timechange >>= fun () ->
                 treat_fix_message outch msg
                 )
