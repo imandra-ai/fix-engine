@@ -77,12 +77,12 @@ let parse_msg_resend_request_data msg =
 let parse_msg_reject_data msg = 
     from_parse_field_result @@
     req msg "45"  parse_int                    @@ fun sr_ref_seq_num           -> 
-    opt msg "371" parse_string                    @@ fun sr_ref_tag_id            -> 
+    opt msg "371" parse_full_field_tag         @@ fun sr_ref_tag_id            -> 
     opt msg "372" parse_full_msg_tag           @@ fun sr_ref_msg_type          -> 
     opt msg "373" parse_session_reject_reason  @@ fun sr_session_reject_reason ->
-    opt msg "58"  parse_string                    @@ fun sr_text                  -> 
+    opt msg "58"  parse_string                 @@ fun sr_text                  -> 
     opt msg "354" parse_int                    @@ fun sr_encoded_text_len      -> 
-    opt msg "355" parse_string                    @@ fun sr_encoded_text          -> 
+    opt msg "355" parse_string                 @@ fun sr_encoded_text          -> 
     ParseFieldSuccess
     { sr_ref_seq_num           
     ; sr_ref_tag_id            
@@ -116,11 +116,21 @@ let parse_msg_test_request_data msg =
 (** *)
 let parse_msg_business_reject_data msg = 
     from_parse_field_result @@
-    req msg "45"  parse_int                    @@ fun br_ref_seq_num            ->
-    req msg "380" parse_business_reject_reason @@ fun br_business_reject_reason -> 
+    req msg "45"  parse_int                        @@ fun br_ref_seq_num            -> 
+    req msg "372" parse_full_msg_tag               @@ fun br_ref_msg_type           -> 
+    opt msg "379" parse_full_field_tag             @@ fun br_ref_field_id           -> 
+    req msg "380" parse_business_reject_reason     @@ fun br_business_reject_reason -> 
+    opt msg "58"  parse_string                     @@ fun br_text                   -> 
+    opt msg "354" parse_int                        @@ fun br_encoded_text_len       -> 
+    opt msg "354" parse_string                     @@ fun br_encoded_text           -> 
     ParseFieldSuccess
     { br_ref_seq_num           
-    ; br_business_reject_reason
+    ; br_ref_msg_type          
+    ; br_ref_field_id          
+    ; br_business_reject_reason 
+    ; br_text                  
+    ; br_encoded_text_len      
+    ; br_encoded_text          
     }
 ;;
 

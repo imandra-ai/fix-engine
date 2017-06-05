@@ -287,9 +287,10 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         } else
             begin
                 let biz_reject_data = {
-                    brej_msg_ref_seq_num =  m.full_msg_header.h_msg_seq_num;
+                    brej_msg_ref_seq_num    = m.full_msg_header.h_msg_seq_num;
                     brej_msg_msg_tag        = get_full_msg_tag ( m.full_msg_data );
                     brej_msg_reject_reason  = ApplicationDown;
+                    brej_msg_field_tag      = None;
                     brej_msg_text           = None;
                     brej_msg_encoded_text   = None;
                 } in

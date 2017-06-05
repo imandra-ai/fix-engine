@@ -44,17 +44,51 @@ let make_utctimestamp ( year, month, day, hour, minute, second, millisec : int *
 ;;
 
 (** *)
+let is_leapyear ( year : int ) =
+    match year with 
+    | 1972 | 1976 | 1980 | 1984 | 1988 | 1992 | 1996 | 2000 | 2004 | 2008 | 2012 | 2016 | 2020 | 2024 | 2028 | 2032 -> true
+    | _ -> false
+;;
+
+
+(** *)
+let how_many_days ( month, year : int * int ) = 
+    match month with
+    | 1     -> 31
+    | 2     -> if is_leapyear ( year ) then 29 else 28
+    | 3     -> 31
+    | 4     -> 30
+    | 5     -> 31
+    | 6     -> 30
+    | 7     -> 31
+    | 8     -> 31
+    | 9     -> 30
+    | 10    -> 31
+    | 11    -> 30
+    | _     -> 31
+;;
+
+
+(** *)
+let valid_day (day, month, year) =
+  let days = how_many_days (month, year) in
+  1 <= day && day <= days
+;;
+
+
+(** *)
 let is_valid_utctimestamp ( ts : fix_utctimestamp ) =
-    0 <= ts.utc_timestamp_year      && ts.utc_timestamp_year    <= 9999 && 
-    1 <= ts.utc_timestamp_month     && ts.utc_timestamp_month   <= 12   && 
-    1 <= ts.utc_timestamp_day       && ts.utc_timestamp_day     <= 31   && 
-    0 <= ts.utc_timestamp_hour      && ts.utc_timestamp_hour    <= 23   && 
-    0 <= ts.utc_timestamp_minute    && ts.utc_timestamp_minute  <= 59   && 
-    0 <= ts.utc_timestamp_second    && ts.utc_timestamp_second  <= 59   && (
+  0 <= ts.utc_timestamp_year      && ts.utc_timestamp_year    <= 9999 && 
+  1 <= ts.utc_timestamp_month     && ts.utc_timestamp_month   <= 12   && 
+  valid_day (ts.utc_timestamp_day, ts.utc_timestamp_month, ts.utc_timestamp_year)  && 
+  0 <= ts.utc_timestamp_hour      && ts.utc_timestamp_hour    <= 23   && 
+  0 <= ts.utc_timestamp_minute    && ts.utc_timestamp_minute  <= 59   && 
+  0 <= ts.utc_timestamp_second    && ts.utc_timestamp_second  <= 59   && (
         match ts.utc_timestamp_millisec with
         | None -> true
         | Some ms -> 0 <= ms && ms <= 999 )
 ;;
+
 
 (** *)
 let utctimestamp_GreaterThan ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
@@ -319,30 +353,6 @@ let is_valid_duration ( d : fix_duration ) =
 ;;
 
 (** *)
-let is_leapyear ( year : int ) =
-    match year with 
-    | 1972 | 1976 | 1980 | 1984 | 1988 | 1992 | 1996 | 2000 | 2004 | 2008 | 2012 | 2016 | 2020 | 2024 | 2028 | 2032 -> true
-    | _ -> false
-;;
-
-(** *)
-let how_many_days ( month, year : int * int ) = 
-    match month with
-    | 1     -> 31
-    | 2     -> if is_leapyear ( year ) then 29 else 28
-    | 3     -> 31
-    | 4     -> 30
-    | 5     -> 31
-    | 6     -> 30
-    | 7     -> 31
-    | 8     -> 31
-    | 9     -> 30
-    | 10    -> 31
-    | 11    -> 30
-    | _     -> 31
-;;
-
-(** *)
 type field_carryover = {
     carry_over  : bool;
     new_field   : int;
@@ -368,7 +378,7 @@ let normalise_timestamp ( ts : fix_utctimestamp ) =
     let new_hour    = if carry_mins.carry_over then ( ts.utc_timestamp_hour + 1 )   else ts.utc_timestamp_hour in 
     let carry_hours = calculate_carry ( new_hour,               24, 0 ) in 
     let new_days    = if carry_hours.carry_over then ( ts.utc_timestamp_day + 1 )   else ts.utc_timestamp_day in 
-    let carry_days  = calculate_carry ( new_days, how_many_days ( ts.utc_timestamp_month, ts.utc_timestamp_year ), 1) in
+    let carry_days  = calculate_carry ( new_days, 1 + how_many_days ( ts.utc_timestamp_month, ts.utc_timestamp_year ), 1) in
     let new_months  = if carry_days.carry_over then ( ts.utc_timestamp_month + 1 )  else ts.utc_timestamp_month in
     let carry_months = calculate_carry ( new_months,            13, 1 ) in 
     let new_years   = if carry_months.carry_over then ( ts.utc_timestamp_year + 1 ) else ts.utc_timestamp_year in {

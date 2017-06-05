@@ -58,9 +58,9 @@ let full_msg_resend_request_to_json x =
 (** *)
 let full_msg_reject_to_json x = 
     [ ( "RefSeqNum"           , int_to_json                         x.sr_ref_seq_num           ) 
-    ; ( "RefTagID"            , string_opt_to_json                  x.sr_ref_tag_id            ) 
+    ; ( "RefTagID"            , full_field_tag_opt_to_json          x.sr_ref_tag_id            ) 
     ; ( "RefMsgType"          , full_msg_tag_opt_to_json            x.sr_ref_msg_type          ) 
-    ; ( "SessionRejectReason" , session_reject_reason_opt_to_json  x.sr_session_reject_reason )
+    ; ( "SessionRejectReason" , session_reject_reason_opt_to_json   x.sr_session_reject_reason )
     ; ( "Text"                , string_opt_to_json                  x.sr_text                  ) 
     ; ( "EncodedTextLen"      , int_opt_to_json                     x.sr_encoded_text_len      ) 
     ; ( "EncodedText"         , string_opt_to_json                  x.sr_encoded_text          ) 
@@ -82,8 +82,13 @@ let full_msg_test_request_to_json x =
 
 (** *)
 let full_msg_business_reject_to_json x = 
-    [ ( "Business_Reject_RefSeqNum"            ,  int_to_json x.br_ref_seq_num                                )
-    ; ( "Business_Reject_BusinessRejectReason" ,  business_reject_reason_to_json x.br_business_reject_reason  ) 
+    [ ( "RefSeqNum"             , int_to_json                     x.br_ref_seq_num           ) 
+    ; ( "RefMsgType"            , full_msg_tag_to_json            x.br_ref_msg_type          ) 
+    ; ( "BusinessRejectRefID"   , full_field_tag_opt_to_json      x.br_ref_field_id          ) 
+    ; ( "BusinessRejectReason"  , business_reject_reason_to_json  x.br_business_reject_reason) 
+    ; ( "Text"                  , string_opt_to_json              x.br_text                  ) 
+    ; ( "EncodedTextLen"        , int_opt_to_json                 x.br_encoded_text_len      ) 
+    ; ( "EncodedText"           , string_opt_to_json              x.br_encoded_text          ) 
     ] |> assoc_filter_nulls 
 ;;
 

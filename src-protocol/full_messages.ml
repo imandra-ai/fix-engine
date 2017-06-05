@@ -77,6 +77,7 @@ type biz_rejected_msg_data = {
     brej_msg_ref_seq_num                            : int;
     brej_msg_msg_tag                                : full_msg_tag;
     brej_msg_reject_reason                          : fix_business_reject_reason;
+    brej_msg_field_tag                              : full_field_tag option;
     brej_msg_text                                   : fix_string option;
     brej_msg_encoded_text                           : fix_string option;
 }

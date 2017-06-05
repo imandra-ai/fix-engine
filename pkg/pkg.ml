@@ -42,7 +42,8 @@ let () =
     ; Pkg.mllib ~api: [ "fix_engine_state"
                       ; "fix_engine_utils"
                       ; "fix_engine_transitions"
-                      ; "fix_engine" ] "src/fix_engine.mllib"
+                      ; "fix_engine" 
+                      ] "src/fix_engine.mllib"
 
     ; Pkg.mllib ~cond: (not vgs)
                 ~api: [ "full_app_enums"
