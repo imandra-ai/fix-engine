@@ -119,48 +119,11 @@ type fix_header = {
 }
 ;;
 
-let default_fix_header = {
-    h_begin_string                    = Model_string 0;
-    h_body_length                     = 0;
-    h_msg_seq_num                     = 0;
-    h_poss_dup_flag                   = None;
-    h_target_comp_id                  = Model_string 1;
-    h_sender_comp_id                  = Model_string 2;
-    h_on_behalf_of_comp_id            = None;
-    h_deliver_to_comp_id              = None;
-    h_secure_data_len                 = None;
-    h_secure_data                     = None;
-    h_sender_sub_id                   = None;
-    h_sender_location_id              = None;
-    h_target_sub_id                   = None;
-    h_target_location_id              = None;
-    h_on_behalf_of_sub_id             = None;
-    h_on_behalf_of_location_id        = None;
-    h_deliver_to_sub_id               = None;
-    h_deliver_to_location_id          = None;
-    h_poss_resend                     = None;
-    h_sending_time                    = default_utctimestamp;
-    h_orig_sending_time               = None;
-    h_xml_data_len                    = None;
-    h_xml_data                        = None;
-    h_message_enconding               = None;
-    h_last_msg_seq_num_processed      = None;
-    h_no_hops                         = None;
-}
-;;
-
 (** Standard FIX trailer *)
 type fix_trailer = {
     signature_length                : int option;  (* Tag 93: Signature Length *)
     signature                       : int option;  (* Tag 89: Signature text *)
     check_sum                       : int;  (* Tag 10: *)
-}
-;;
-
-let default_fix_trailer = {
-    signature_length                = None;
-    signature                       = None;
-    check_sum                       = 0;
 }
 ;;
 
