@@ -17,6 +17,7 @@ open Full_app_messages;;
 open Full_messages;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
+open Type_converter;;
 (* @meta[imandra_ignore] off @end *)
 
 
@@ -186,13 +187,17 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         (** We're processing an application type of message. We just need 
         to append it to the list of outgoing application messages and 
         update the last seq number processed. *) 
-        if engine.fe_application_up then {
-            engine with
+        if engine.fe_application_up then begin
+            let mstate = { engine.fe_model_state with 
+                incoming_msg = Some ( convert_full_to_model_fix app_msg )
+            } in
+            let mstate = Venue.one_step mstate in
+            { engine with
                 incoming_seq_num = m.full_msg_header.h_msg_seq_num;
                 outgoing_int_msg = Some (OutIntMsg_ApplicationData app_msg );
                 incoming_fix_msg = None;
-        } else
-            begin
+                fe_model_state = mstate
+            } end else begin
                 let biz_reject_data = {
                     brej_msg_ref_seq_num    = m.full_msg_header.h_msg_seq_num;
                     brej_msg_msg_tag        = get_full_msg_tag ( m.full_msg_data );

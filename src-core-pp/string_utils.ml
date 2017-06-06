@@ -13,6 +13,11 @@ open Base_types;;
 let fix_to_str_hashtbl : (fix_string, string) Hashtbl.t = Hashtbl.create 10;;
 let str_to_fix_hashtbl : (string, fix_string) Hashtbl.t = Hashtbl.create 10;;
 
+let add_model_string ( fixstr, rawstr : fix_string * string ) : unit = 
+    Hashtbl.add str_to_fix_hashtbl rawstr fixstr;
+    Hashtbl.add fix_to_str_hashtbl fixstr rawstr
+;;
+
 let fix_string_to_string fixstr = 
     if not (Hashtbl.mem fix_to_str_hashtbl fixstr) then
         ( match fixstr with

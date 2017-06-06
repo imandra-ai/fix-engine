@@ -91,9 +91,22 @@ let treat_int_message outch msg =
         | _ -> Lwt.return () 
 ;;
 
+let process_strings msg : unit =
+    let open Full_messages in
+    match msg with
+    | ValidMsg msg -> begin
+        match msg.full_msg_data with 
+        | Full_FIX_App_Msg data ->
+            String_constant_factory.all_model_strings data
+                |> List.iter String_utils.add_model_string 
+        | _ -> ()
+        end
+    | _ -> ()
+;;
 
 let treat_fix_message outch msg =
     let open Fix_engine_state in
+    let () = process_strings msg in
     let json = Full_messages_json.full_top_level_msg_to_json msg in
     Lwt_io.printl "Received: "                     >>= fun () ->
     Lwt_io.printl ( Yojson.pretty_to_string json ) >>= fun () -> 
