@@ -192,10 +192,19 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 incoming_msg = Some ( convert_full_to_model_fix app_msg )
             } in
             let mstate = Venue.one_step mstate in
+            (* !!!! Taking only the List.hd of outbound messages !!!! *)
+            let outmsg = match mstate.outgoing_msgs with
+                | [] -> None
+                | msg::tl -> Some ( ValidMsg ( create_outbound_fix_msg ( 
+                    engine.outgoing_seq_num, engine.fe_target_comp_id, 
+                    engine.fe_comp_id, engine.fe_curr_time, 
+                    Full_FIX_App_Msg ( convert_model_to_full_fix msg) , false 
+                ) ) ) in
             { engine with
                 incoming_seq_num = m.full_msg_header.h_msg_seq_num;
                 outgoing_int_msg = Some (OutIntMsg_ApplicationData app_msg );
                 incoming_fix_msg = None;
+                outgoing_fix_msg = outmsg;
                 fe_model_state = mstate
             } end else begin
                 let biz_reject_data = {
