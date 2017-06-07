@@ -18,6 +18,7 @@ open Full_messages;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
 open Type_converter;;
+open State;;
 (* @meta[imandra_ignore] off @end *)
 
 
@@ -150,7 +151,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     
     } else
     match m.full_msg_data with 
-    | Full_FIX_Admin_Msg adm_msg        ->
+    | Full_FIX_Admin_Msg adm_msg ->
         begin 
             match adm_msg with 
             | Full_Msg_Heartbeat hb          -> {
@@ -191,20 +192,12 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
             let mstate = { engine.fe_model_state with 
                 incoming_msg = Some ( convert_full_to_model_fix app_msg )
             } in
-            let mstate = Venue.one_step mstate in
-            (* !!!! Taking only the List.hd of outbound messages !!!! *)
-            let outmsg = match mstate.outgoing_msgs with
-                | [] -> None
-                | msg::tl -> Some ( ValidMsg ( create_outbound_fix_msg ( 
-                    engine.outgoing_seq_num, engine.fe_target_comp_id, 
-                    engine.fe_comp_id, engine.fe_curr_time, 
-                    Full_FIX_App_Msg ( convert_model_to_full_fix msg) , false 
-                ) ) ) in
+            let mstate = Venue.one_step mstate in 
             { engine with
                 incoming_seq_num = m.full_msg_header.h_msg_seq_num;
                 outgoing_int_msg = Some (OutIntMsg_ApplicationData app_msg );
                 incoming_fix_msg = None;
-                outgoing_fix_msg = outmsg;
+                fe_curr_status   = Busy;
                 fe_model_state = mstate
             } end else begin
                 let biz_reject_data = {
@@ -246,6 +239,31 @@ let run_cache_replay ( engine : fix_engine_state ) =
         }
     | x::xs -> replay_single_msg (x, engine)
 ;;
+
+(**
+*)
+let run_play_model_messages ( engine : fix_engine_state ) =
+    let mstate = engine.fe_model_state in  
+    let outmsg = match mstate.outgoing_msgs with
+        | [] -> None
+        | msg::tl -> Some ( ValidMsg ( create_outbound_fix_msg ( 
+            engine.outgoing_seq_num, engine.fe_target_comp_id, 
+            engine.fe_comp_id, engine.fe_curr_time, 
+            Full_FIX_App_Msg ( convert_model_to_full_fix msg) , false 
+    ) ) ) in
+    let mstate = match mstate.outgoing_msgs with
+        | [] -> mstate
+        | msg::tl -> { mstate with outgoing_msgs = tl } 
+        in
+    if outmsg = None then 
+         { engine with fe_curr_status = Normal } 
+    else { engine with
+        outgoing_fix_msg = outmsg;
+        fe_curr_status   = Busy;
+        fe_model_state   = mstate
+    }
+;;
+
 
 (** Check to make sure there're no sequence gaps *)
 let rec no_seq_gaps ( msg_list, last_seq_num : full_valid_fix_msg list * int) = 

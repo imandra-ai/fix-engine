@@ -50,6 +50,7 @@ type fix_engine_int_out_msg =
 (** Represents 'status' of the engine. *)
 type fix_engine_status =
     | Normal
+    | Busy
     | SessRejectReceived 
     | BusinessRejectReceived
     | TargetAppIsDown
