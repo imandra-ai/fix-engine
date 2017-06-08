@@ -32,7 +32,7 @@ let state =
     fe_target_comp_id = String_utils.string_to_fix_string "BANZAI";
     fe_curr_time = get_current_utctimstamp ();
     fe_max_num_logons_sent = 10;
-    fe_application_up = false }
+    fe_application_up = true }
 ;;  
 
 let split_into_key_value (spliton : char) ( stream : char Lwt_stream.t ) : (string * string) Lwt_stream.t =
@@ -104,6 +104,22 @@ let process_strings msg : unit =
     | _ -> ()
 ;;
 
+
+let rec step_while_busy outch =
+    let open Fix_engine_state in
+    state := Fix_engine.one_step (!state) ;
+    let outmsg = (!state).outgoing_fix_msg in
+    state := { !state with outgoing_fix_msg = None } ;    
+    begin match outmsg with
+        | Some (Full_messages.ValidMsg msg) -> send_msg outch msg
+        | _ -> Lwt.return () 
+    end >>= fun () ->
+    if (!state).fe_curr_status != Busy 
+        then Lwt.return_unit 
+        else step_while_busy outch
+;;
+
+
 let treat_fix_message outch msg =
     let open Fix_engine_state in
     let () = process_strings msg in
@@ -111,12 +127,7 @@ let treat_fix_message outch msg =
     Lwt_io.printl "Received: "                     >>= fun () ->
     Lwt_io.printl ( Yojson.pretty_to_string json ) >>= fun () -> 
     state := { !state with incoming_fix_msg = Some msg } ;
-    state := Fix_engine.one_step (!state) ;
-    let outmsg = (!state).outgoing_fix_msg in
-    state := { !state with outgoing_fix_msg = None } ;    
-    match outmsg with
-        | Some (Full_messages.ValidMsg msg) -> send_msg outch msg
-        | _ -> Lwt.return () 
+    step_while_busy outch
 ;;
 
 let rec heartbeat_thread outch =
