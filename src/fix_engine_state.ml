@@ -120,7 +120,6 @@ type fix_engine_state = {
     fe_max_num_logons_sent  : int;                          (** Setting: maximum number of logons to be sent out. *)
     fe_encrypt_method       : fix_encryption_method;
 
-
     fe_model_state          : model_state
 }
 ;;
