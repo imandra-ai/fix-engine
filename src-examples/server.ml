@@ -67,8 +67,11 @@ let split_into_messages (stream : (string * string) Lwt_stream.t) =
 ;;
 
 let send_msg outch msg =
+    Lwt_io.print ("Encoding" ) >>= fun () ->
+    Lwt_io.flush_all ()                        >>= fun () ->
     let wire = Encode_full_messages.encode_full_valid_msg msg in
     Lwt_io.print ("Sending (" ^ wire ^ ") " ) >>= fun () ->
+    Lwt_io.flush_all ()                       >>= fun () ->
     Lwt_io.write outch wire                   >>= fun () ->
     Lwt_io.flush outch                        >>= fun () ->
     Lwt_io.printl " done."                   
@@ -107,16 +110,25 @@ let process_strings msg : unit =
 
 let rec step_while_busy outch =
     let open Fix_engine_state in
-    state := Fix_engine.one_step (!state) ;
-    let outmsg = (!state).outgoing_fix_msg in
-    state := { !state with outgoing_fix_msg = None } ;    
+    Lwt_io.printl "Running one_step "                            >>= fun () ->
+    Lwt.wrap ( fun () -> state := Fix_engine.one_step (!state) ) >>= fun () ->
+    Lwt_io.printl "Done one_step "                               >>= fun () ->
+    Lwt.wrap ( fun () -> (!state).outgoing_fix_msg             ) >>= fun outmsg ->
+    Lwt.wrap ( fun () -> state := { !state with outgoing_fix_msg = None } ) >>= fun () ->
+    Lwt_io.printl "Done one_step "                               >>= fun () ->
     begin match outmsg with
-        | Some (Full_messages.ValidMsg msg) -> send_msg outch msg
-        | _ -> Lwt.return () 
+        | Some (Full_messages.ValidMsg msg) -> ( Lwt_io.printl "Got valid message " >>= fun () -> send_msg outch msg)
+        | _ -> (Lwt_io.printl "Got garbage " >>= fun () -> Lwt.return () )
     end >>= fun () ->
+    Lwt_io.printl "Done processing " >>= fun () ->
     if (!state).fe_curr_status != Busy 
-        then Lwt.return_unit 
-        else step_while_busy outch
+    then begin 
+        Lwt_io.printl "Non-busy. Stopping." >>= fun () ->
+        Lwt.return_unit 
+    end else begin 
+        Lwt_io.printl "We're busy. Looping." >>= fun () ->
+        step_while_busy outch
+    end
 ;;
 
 

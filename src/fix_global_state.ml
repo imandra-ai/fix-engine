@@ -30,7 +30,8 @@ let rec send_messages_list messages engine_state fix_callback =
     match messages with 
     | [] -> Lwt.return engine_state 
     | hd::tl -> 
-        let msg = IncIntMsg_ApplicationData (Type_converter.convert_model_to_full_fix hd) in
+        let data = Type_converter.convert_model_to_full_fix hd in
+        let msg = IncIntMsg_ApplicationData data in
         let engine_state = { engine_state with incoming_int_msg = Some msg } in
         let engine_state = Fix_engine.one_step engine_state in
         send_all_outgoing_fix engine_state fix_callback >>= fun engine_state ->
@@ -64,13 +65,14 @@ let rec main_loop state =
 ;;
 
 
-
-
-let start init_engine init_model =
-    let state = ref {
+let start init_engine init_model fix_callback =
+    let state = {
         incoming     = Lwt_mvar.create_empty (); 
         engine_state = init_engine;
-        model_state  = init_model   
+        model_state  = init_model;
+        fix_callback = fix_callback   
     } in
+    ( state.incoming , main_loop state )
+;;
 
-
+ 
