@@ -188,18 +188,13 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         (** We're processing an application type of message. We just need 
         to append it to the list of outgoing application messages and 
         update the last seq number processed. *) 
-        if engine.fe_application_up then begin
-            let mstate = { engine.fe_model_state with 
-                incoming_msg = Some ( convert_full_to_model_fix app_msg )
-            } in
-            let mstate = Venue.one_step mstate in 
-            { engine with
+        if engine.fe_application_up then {
+            engine with
                 incoming_seq_num = m.full_msg_header.h_msg_seq_num;
                 outgoing_int_msg = Some (OutIntMsg_ApplicationData app_msg );
                 incoming_fix_msg = None;
-                fe_curr_status   = Busy;
-                fe_model_state = mstate
-            } end else begin
+        } else
+            begin
                 let biz_reject_data = {
                     brej_msg_ref_seq_num    = m.full_msg_header.h_msg_seq_num;
                     brej_msg_msg_tag        = get_full_msg_tag ( m.full_msg_data );
@@ -238,30 +233,6 @@ let run_cache_replay ( engine : fix_engine_state ) =
             fe_curr_mode = ActiveSession;
         }
     | x::xs -> replay_single_msg (x, engine)
-;;
-
-(**
-*)
-let run_play_model_messages ( engine : fix_engine_state ) =
-    let mstate = engine.fe_model_state in  
-    let outmsg = match mstate.outgoing_msgs with
-        | [] -> None
-        | msg::tl -> Some ( ValidMsg ( create_outbound_fix_msg ( 
-            engine.outgoing_seq_num, engine.fe_target_comp_id, 
-            engine.fe_comp_id, engine.fe_curr_time, 
-            Full_FIX_App_Msg ( convert_model_to_full_fix msg) , false 
-    ) ) ) in
-    let mstate = match mstate.outgoing_msgs with
-        | [] -> mstate
-        | msg::tl -> { mstate with outgoing_msgs = tl } 
-        in
-    if outmsg = None then 
-         { engine with fe_curr_status = Normal } 
-    else { engine with
-        outgoing_fix_msg = outmsg;
-        fe_curr_status   = Busy;
-        fe_model_state   = mstate
-    }
 ;;
 
 

@@ -50,7 +50,6 @@ type fix_engine_int_out_msg =
 (** Represents 'status' of the engine. *)
 type fix_engine_status =
     | Normal
-    | Busy
     | SessRejectReceived 
     | BusinessRejectReceived
     | TargetAppIsDown
@@ -119,8 +118,6 @@ type fix_engine_state = {
                                                                 ensure that the engine does not go into infinite loop. *)
     fe_max_num_logons_sent  : int;                          (** Setting: maximum number of logons to be sent out. *)
     fe_encrypt_method       : fix_encryption_method;
-
-    fe_model_state          : model_state
 }
 ;;
 
@@ -163,8 +160,6 @@ let init_fix_engine_state = {
     fe_num_logons_sent      = 0;
     fe_max_num_logons_sent  = 0;
     fe_encrypt_method       = NoEncryption;
-
-    fe_model_state          = init_model_state 
 }
 ;;
 

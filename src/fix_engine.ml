@@ -205,13 +205,9 @@ let is_int_message_valid ( engine : fix_engine_state ) =
 ;;
 
 (** The main transition function. *)
-let one_step ( engine : fix_engine_state ) =
-    (** If we're "busy" -- replay messages. *)
-    if engine.fe_curr_status = Busy then
-        run_play_model_messages (engine) 
-    
+let one_step ( engine : fix_engine_state ) =    
     (** Check if we're in the middle of replaying our cache. *)
-    else if engine.fe_curr_mode = CacheReplay then
+    if engine.fe_curr_mode = CacheReplay then
         run_cache_replay (engine)
 
     (** If we still need to retransmit our messages out to the receiving engine. *)
