@@ -10,30 +10,8 @@
 
 let (>>=) = Lwt.(>>=);;
 
-let get_current_utctimstamp () =    
-    let open Datetime in
-    let dtime = Unix.gettimeofday () in 
-    let tm = Unix.gmtime dtime in
-    let msec = int_of_float (1000. *. (dtime -. floor dtime)) in
-    {   utc_timestamp_year   = tm.Unix.tm_year + 1900
-    ;   utc_timestamp_month  = tm.Unix.tm_mon + 1
-    ;   utc_timestamp_day    = tm.Unix.tm_mday
-    ;   utc_timestamp_hour   = tm.Unix.tm_hour
-    ;   utc_timestamp_minute = tm.Unix.tm_min
-    ;   utc_timestamp_second = tm.Unix.tm_sec
-    ;   utc_timestamp_millisec = Some (msec)
-    }
-;;
 
-let state = 
-    let open Fix_engine_state in
-    ref { init_fix_engine_state with
-    fe_comp_id = String_utils.string_to_fix_string "IMANDRA";
-    fe_target_comp_id = String_utils.string_to_fix_string "BANZAI";
-    fe_curr_time = get_current_utctimstamp ();
-    fe_max_num_logons_sent = 10;
-    fe_application_up = true }
-;;  
+(************************ Stream functions ***************************)
 
 let split_into_key_value (spliton : char) ( stream : char Lwt_stream.t ) : (string * string) Lwt_stream.t =
     (** Converts [ '5'; '2'; '='; 'A' ] to ("52" , "A" ) *)
@@ -66,88 +44,59 @@ let split_into_messages (stream : (string * string) Lwt_stream.t) =
     Lwt_stream.from f    
 ;;
 
+(*************************************************************)
+
+let get_current_utctimstamp () =    
+    let open Datetime in
+    let dtime = Unix.gettimeofday () in 
+    let tm = Unix.gmtime dtime in
+    let msec = int_of_float (1000. *. (dtime -. floor dtime)) in
+    {   utc_timestamp_year   = tm.Unix.tm_year + 1900
+    ;   utc_timestamp_month  = tm.Unix.tm_mon + 1
+    ;   utc_timestamp_day    = tm.Unix.tm_mday
+    ;   utc_timestamp_hour   = tm.Unix.tm_hour
+    ;   utc_timestamp_minute = tm.Unix.tm_min
+    ;   utc_timestamp_second = tm.Unix.tm_sec
+    ;   utc_timestamp_millisec = Some (msec)
+    }
+;;
+
+let engine_state = 
+    let open Fix_engine_state in
+    { init_fix_engine_state with
+    fe_comp_id = String_utils.string_to_fix_string "IMANDRA";
+    fe_target_comp_id = String_utils.string_to_fix_string "BANZAI";
+    fe_curr_time = get_current_utctimstamp ();
+    fe_max_num_logons_sent = 10;
+    fe_application_up = true }
+;;  
+
+
 let send_msg outch msg =
-    Lwt_io.print ("Encoding" ) >>= fun () ->
-    Lwt_io.flush_all ()                        >>= fun () ->
-    let wire = Encode_full_messages.encode_full_valid_msg msg in
-    Lwt_io.print ("Sending (" ^ wire ^ ") " ) >>= fun () ->
-    Lwt_io.flush_all ()                       >>= fun () ->
-    Lwt_io.write outch wire                   >>= fun () ->
-    Lwt_io.flush outch                        >>= fun () ->
-    Lwt_io.printl " done."                   
-;;
-
-
-let treat_int_message outch msg =
-    let open Fix_engine_state in
-    let msgstr = Fix_engine_json.int_inc_msg_to_str msg in
-    begin match msg with 
-        | IncIntMsg_TimeChange _ -> Lwt.return_unit 
-        | msg -> Lwt_io.printl ("Received an internal message: " ^ msgstr) 
-    end >>= fun () ->
-    state := { !state with incoming_int_msg = Some msg } ;
-    state := Fix_engine.one_step (!state) ;
-    let outmsg = (!state).outgoing_fix_msg in
-    state := { !state with outgoing_fix_msg = None } ;    
-    match outmsg with
-        | Some (Full_messages.ValidMsg msg) -> send_msg outch msg
-        | _ -> Lwt.return () 
-;;
-
-let process_strings msg : unit =
-    let open Full_messages in
     match msg with
-    | ValidMsg msg -> begin
-        match msg.full_msg_data with 
-        | Full_FIX_App_Msg data ->
-            String_constant_factory.all_model_strings data
-                |> List.iter String_utils.add_model_string 
-        | _ -> ()
+        | Full_messages.ValidMsg msg -> begin
+            let wire = Encode_full_messages.encode_full_valid_msg msg in
+            Lwt_io.print ("Sending (" ^ wire ^ ") " ) >>= fun () ->
+            Lwt_io.flush_all ()                       >>= fun () ->
+            Lwt_io.write outch wire                   >>= fun () ->
+            Lwt_io.flush outch                        >>= fun () ->
+            Lwt_io.printl " done."                   
         end
-    | _ -> ()
+        | _ -> Lwt.return_unit 
 ;;
 
-
-let rec step_while_busy outch =
-    let open Fix_engine_state in
-    Lwt_io.printl "Running one_step "                            >>= fun () ->
-    Lwt.wrap ( fun () -> state := Fix_engine.one_step (!state) ) >>= fun () ->
-    Lwt_io.printl "Done one_step "                               >>= fun () ->
-    Lwt.wrap ( fun () -> (!state).outgoing_fix_msg             ) >>= fun outmsg ->
-    Lwt.wrap ( fun () -> state := { !state with outgoing_fix_msg = None } ) >>= fun () ->
-    Lwt_io.printl "Done one_step "                               >>= fun () ->
-    begin match outmsg with
-        | Some (Full_messages.ValidMsg msg) -> ( Lwt_io.printl "Got valid message " >>= fun () -> send_msg outch msg)
-        | _ -> (Lwt_io.printl "Got garbage " >>= fun () -> Lwt.return () )
-    end >>= fun () ->
-    Lwt_io.printl "Done processing " >>= fun () ->
-    if (!state).fe_curr_status != Busy 
-    then begin 
-        Lwt_io.printl "Non-busy. Stopping." >>= fun () ->
-        Lwt.return_unit 
-    end else begin 
-        Lwt_io.printl "We're busy. Looping." >>= fun () ->
-        step_while_busy outch
-    end
+let do_timechange mailbox =
+    let time = get_current_utctimstamp () in
+    let timechange = Fix_engine_state.IncIntMsg_TimeChange time in
+    let timechange = Fix_global_state.Internal_Message timechange in
+    Lwt_mvar.put mailbox timechange
 ;;
 
-
-let treat_fix_message outch msg =
-    let open Fix_engine_state in
-    let () = process_strings msg in
-    let json = Full_messages_json.full_top_level_msg_to_json msg in
-    Lwt_io.printl "Received: "                     >>= fun () ->
-    Lwt_io.printl ( Yojson.pretty_to_string json ) >>= fun () -> 
-    state := { !state with incoming_fix_msg = Some msg } ;
-    step_while_busy outch
-;;
-
-let rec heartbeat_thread outch =
+let rec heartbeat_thread mailbox =
     let open Fix_engine_state in
     Lwt_unix.sleep (1.0) >>= fun () -> 
-    let timechange = IncIntMsg_TimeChange ( get_current_utctimstamp () ) in
-    treat_int_message outch timechange >>= fun () -> 
-    heartbeat_thread outch
+    do_timechange mailbox >>= fun () -> 
+    heartbeat_thread mailbox
 ;;
 
 let f (inch, outch) =
@@ -161,16 +110,16 @@ let f (inch, outch) =
         Lwt_io.close inch >>= fun () ->
         Lwt_io.close outch
         in
+    let mailbox, global_state = Fix_global_state.start engine_state State.init_model_state (send_msg outch) in 
     Lwt.async ( fun () -> 
     Lwt.catch ( fun () ->
         Lwt_io.printl "Received a connection." >>= fun () ->
         Lwt.join [
-            heartbeat_thread outch;
+            heartbeat_thread mailbox;
             msg_stream |> Lwt_stream.iter_s ( fun msg ->
-                let timechange = Fix_engine_state.IncIntMsg_TimeChange ( get_current_utctimstamp () ) in
-                treat_int_message outch timechange >>= fun () ->
-                treat_fix_message outch msg
-                )
+                do_timechange mailbox >>= fun () ->
+                Lwt_mvar.put mailbox (Fix_global_state.FIX_Message msg)
+            )
         ]
     ) ( fun _ -> close_channels () )
     )
