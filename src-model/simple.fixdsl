@@ -1,0 +1,85 @@
+imandramarkets : 0.0.0
+
+import FIX_4_4
+
+outbound message ExecutionReport {
+    req OrderID
+    req ExecID
+    req ExecType    
+    req AvgPx
+    req Side
+    req LeavesQty
+    req CumQty
+    req OrdStatus
+    req Instrument.Symbol
+}
+
+message NewOrderSingle {
+    req ClOrdID unique      
+    req Side valid when it in [Side.Buy, Side.Sell, SellShort] 
+    req Price valid when it > 0.0
+    req TransactTime
+    req OrdType
+    req Instrument.Symbol
+} 
+
+action x {
+    x : int
+}
+
+receive( msg: NewOrderSingle) {
+    send ExecutionReport with {
+        OrderID = msg.ClOrdID
+        ExecID = "Test"
+        ExecType = ExecType.Calculated
+        AvgPx = 0.0
+        Side = msg.Side
+        LeavesQty = 0.0
+        CumQty = 0.0
+        OrdStatus = OrdStatus.New
+        Instrument.Symbol = msg.Instrument.Symbol       
+    }
+}
+
+reject (msg:NewOrderSingle,rejReason:string)
+{
+    missingfield:{
+        send ExecutionReport with {
+            OrderID = "None"
+            ExecID = "Test"
+            ExecType = ExecType.Calculated
+            AvgPx = 0.0
+            Side = Side.Buy
+            LeavesQty = 0.0
+            CumQty = 0.0
+            OrdStatus = OrdStatus.New
+            Instrument.Symbol = "None"
+        }
+    }
+    invalidfield:{
+        send ExecutionReport with {
+            OrderID = "None"
+            ExecID = "Test"
+            ExecType = ExecType.Calculated
+            AvgPx = 0.0
+            Side = Side.Buy
+            LeavesQty = 0.0
+            CumQty = 0.0
+            OrdStatus = OrdStatus.New
+            Instrument.Symbol = "None"
+        }
+    }
+    invalid:{
+        send ExecutionReport with {
+            OrderID = "None"
+            ExecID = "Test"
+            ExecType = ExecType.Calculated
+            AvgPx = 0.0
+            Side = Side.Buy
+            LeavesQty = 0.0
+            CumQty = 0.0
+            OrdStatus = OrdStatus.New
+            Instrument.Symbol = "None"
+        }
+    }
+}
