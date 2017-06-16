@@ -10,6 +10,10 @@ open Msg_check_types;;
 open Model_app_enums;;
 (* @meta[imandra_ignore] off @end *)
 
+let check_field_f_ExecutionReport_ClOrdID ( msg_data : mod_executionreport_data ) =
+    fields_are_good
+;;
+
 let check_field_f_ExecutionReport_OrderID ( msg_data : mod_executionreport_data ) =
     fields_are_good
 ;;
@@ -83,7 +87,11 @@ let check_fields_ExecutionReport ( msg_data , m_state : mod_executionreport_data
                                     if f_ExecutionReport_OrderID_result.is_invalid then
                                         f_ExecutionReport_OrderID_result
                                     else
-                                        fields_are_good
+                                        let f_ExecutionReport_ClOrdID_result = check_field_f_ExecutionReport_ClOrdID (msg_data) in
+                                        if f_ExecutionReport_ClOrdID_result.is_invalid then
+                                            f_ExecutionReport_ClOrdID_result
+                                        else
+                                            fields_are_good
 ;;
 
 let check_field_f_NewOrderSingle_ClOrdID ( msg_data : mod_newordersingle_data ) =
@@ -94,7 +102,7 @@ let check_field_f_NewOrderSingle_Side ( msg_data : mod_newordersingle_data ) =
     if ((&&) ((||) ((||) ((=) msg_data.f_NewOrderSingle_Side MOD_FIX_Side_Buy) ((=) msg_data.f_NewOrderSingle_Side MOD_FIX_Side_Sell)) ((=) msg_data.f_NewOrderSingle_Side MOD_FIX_Side_SellShort)) true) then
         fields_are_good
     else
-        (field_invalid (Model_string 18))
+        (field_invalid (Model_string 19))
 ;;
 
 let check_field_f_NewOrderSingle_Price ( msg_data : mod_newordersingle_data ) =
@@ -104,7 +112,7 @@ let check_field_f_NewOrderSingle_Price ( msg_data : mod_newordersingle_data ) =
     },1))) true) then
         fields_are_good
     else
-        (field_invalid (Model_string 19))
+        (field_invalid (Model_string 20))
 ;;
 
 let check_field_f_NewOrderSingle_TransactTime ( msg_data : mod_newordersingle_data ) =

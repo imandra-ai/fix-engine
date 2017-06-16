@@ -26,18 +26,26 @@ let convert_FIX_Full_Msg_ExecutionReport ( msg : full_fix_executionreport_data )
         let c_f_ExecutionReport_ExecType = msg.f_ExecutionReport_ExecType in
         let c_f_ExecutionReport_ExecID = msg.f_ExecutionReport_ExecID in
         let c_f_ExecutionReport_OrderID = msg.f_ExecutionReport_OrderID in
-        let fix_msg_data = {
-            f_ExecutionReport_OrderID = c_f_ExecutionReport_OrderID;
-            f_ExecutionReport_ExecID = c_f_ExecutionReport_ExecID;
-            f_ExecutionReport_ExecType = convert__full_to_model_ExecType c_f_ExecutionReport_ExecType;
-            f_ExecutionReport_AvgPx = c_f_ExecutionReport_AvgPx;
-            f_ExecutionReport_Side = convert__full_to_model_Side c_f_ExecutionReport_Side;
-            f_ExecutionReport_LeavesQty = c_f_ExecutionReport_LeavesQty;
-            f_ExecutionReport_CumQty = c_f_ExecutionReport_CumQty;
-            f_ExecutionReport_OrdStatus = convert__full_to_model_OrdStatus c_f_ExecutionReport_OrdStatus;
-            f_ExecutionReport_Instrument_Symbol = c_f_ExecutionReport_Instrument_Symbol
-        } in
-        FIX_TL_Normal (FIX_Msg_ExecutionReport fix_msg_data)
+        (match msg.f_ExecutionReport_ClOrdID with
+            | None -> (FIX_TL_Req_Field_Missing {
+                field_missing_data_msg = M_Msg_ExecutionReport_Tag;
+                field_missing_data_field = M_Field_ClOrdID_Tag
+            })
+            | Some m_f_ExecutionReport_ClOrdID -> let c_f_ExecutionReport_ClOrdID = m_f_ExecutionReport_ClOrdID in
+            let fix_msg_data = {
+                f_ExecutionReport_ClOrdID = c_f_ExecutionReport_ClOrdID;
+                f_ExecutionReport_OrderID = c_f_ExecutionReport_OrderID;
+                f_ExecutionReport_ExecID = c_f_ExecutionReport_ExecID;
+                f_ExecutionReport_ExecType = convert__full_to_model_ExecType c_f_ExecutionReport_ExecType;
+                f_ExecutionReport_AvgPx = c_f_ExecutionReport_AvgPx;
+                f_ExecutionReport_Side = convert__full_to_model_Side c_f_ExecutionReport_Side;
+                f_ExecutionReport_LeavesQty = c_f_ExecutionReport_LeavesQty;
+                f_ExecutionReport_CumQty = c_f_ExecutionReport_CumQty;
+                f_ExecutionReport_OrdStatus = convert__full_to_model_OrdStatus c_f_ExecutionReport_OrdStatus;
+                f_ExecutionReport_Instrument_Symbol = c_f_ExecutionReport_Instrument_Symbol
+            } in
+            FIX_TL_Normal (FIX_Msg_ExecutionReport fix_msg_data)
+        )
     )
 ;;
 
@@ -85,7 +93,7 @@ let convert_FIX_Msg_ExecutionReport ( msg : mod_executionreport_data ) =
         f_ExecutionReport_SecondaryOrderID = None;
         f_ExecutionReport_SecondaryClOrdID = None;
         f_ExecutionReport_SecondaryExecID = None;
-        f_ExecutionReport_ClOrdID = None;
+        f_ExecutionReport_ClOrdID = Some msg.f_ExecutionReport_ClOrdID;
         f_ExecutionReport_OrigClOrdID = None;
         f_ExecutionReport_ClOrdLinkID = None;
         f_ExecutionReport_QuoteRespID = None;

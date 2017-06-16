@@ -1,4 +1,5 @@
 type m_field_tag =
+    | M_Field_ClOrdID_Tag 
     | M_Field_OrderID_Tag 
     | M_Field_ExecID_Tag 
     | M_Field_ExecType_Tag 
@@ -8,7 +9,6 @@ type m_field_tag =
     | M_Field_CumQty_Tag 
     | M_Field_OrdStatus_Tag 
     | M_Field_Symbol_Tag 
-    | M_Field_ClOrdID_Tag 
     | M_Field_Price_Tag 
     | M_Field_TransactTime_Tag 
     | M_Field_OrdType_Tag 

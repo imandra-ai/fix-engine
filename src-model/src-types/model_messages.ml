@@ -7,6 +7,7 @@ open Model_tags;;
 (* @meta[imandra_ignore] off @end *)
 
 type mod_executionreport_data = {
+    f_ExecutionReport_ClOrdID : fix_string;
     f_ExecutionReport_OrderID : fix_string;
     f_ExecutionReport_ExecID : fix_string;
     f_ExecutionReport_ExecType : model_fix_exectype;

@@ -3,6 +3,7 @@ imandramarkets : 0.0.0
 import FIX_4_4
 
 outbound message ExecutionReport {
+    req ClOrdID
     req OrderID
     req ExecID
     req ExecType    
@@ -29,6 +30,7 @@ action x {
 
 receive( msg: NewOrderSingle) {
     send ExecutionReport with {
+        ClOrdID = msg.ClOrdID
         OrderID = msg.ClOrdID
         ExecID = "Test"
         ExecType = ExecType.Calculated
@@ -45,6 +47,7 @@ reject (msg:NewOrderSingle,rejReason:string)
 {
     missingfield:{
         send ExecutionReport with {
+            ClOrdID = "None"
             OrderID = "None"
             ExecID = "Test"
             ExecType = ExecType.Calculated
@@ -58,6 +61,7 @@ reject (msg:NewOrderSingle,rejReason:string)
     }
     invalidfield:{
         send ExecutionReport with {
+            ClOrdID = "None"
             OrderID = "None"
             ExecID = "Test"
             ExecType = ExecType.Calculated
@@ -71,6 +75,7 @@ reject (msg:NewOrderSingle,rejReason:string)
     }
     invalid:{
         send ExecutionReport with {
+            ClOrdID = "None"
             OrderID = "None"
             ExecID = "Test"
             ExecType = ExecType.Calculated

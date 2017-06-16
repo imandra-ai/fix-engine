@@ -812,21 +812,21 @@ let encode_Email msg =
 ;;
 
 let encode_ExecutionReport msg =
-    encode_Parties msg.f_ExecutionReport_Parties @
-    encode_ContraGrp msg.f_ExecutionReport_ContraGrp @
-    encode_Instrument msg.f_ExecutionReport_Instrument @
-    encode_FinancingDetails msg.f_ExecutionReport_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_ExecutionReport_UndInstrmtGrp @
-    encode_Stipulations msg.f_ExecutionReport_Stipulations @
-    encode_OrderQtyData msg.f_ExecutionReport_OrderQtyData @
-    encode_PegInstructions msg.f_ExecutionReport_PegInstructions @
-    encode_DiscretionInstructions msg.f_ExecutionReport_DiscretionInstructions @
-    encode_CommissionData msg.f_ExecutionReport_CommissionData @
-    encode_SpreadOrBenchmarkCurveData msg.f_ExecutionReport_SpreadOrBenchmarkCurveData @
-    encode_YieldData msg.f_ExecutionReport_YieldData @
-    encode_ContAmtGrp msg.f_ExecutionReport_ContAmtGrp @
-    encode_InstrmtLegExecGrp msg.f_ExecutionReport_InstrmtLegExecGrp @
-    encode_MiscFeesGrp msg.f_ExecutionReport_MiscFeesGrp @
+    ( encode_Parties msg.f_ExecutionReport_Parties) @
+    ( encode_ContraGrp msg.f_ExecutionReport_ContraGrp) @
+    ( encode_Instrument msg.f_ExecutionReport_Instrument) @
+    ( encode_FinancingDetails msg.f_ExecutionReport_FinancingDetails) @
+    ( encode_UndInstrmtGrp msg.f_ExecutionReport_UndInstrmtGrp) @
+    ( encode_Stipulations msg.f_ExecutionReport_Stipulations) @
+    ( encode_OrderQtyData msg.f_ExecutionReport_OrderQtyData) @
+    ( encode_PegInstructions msg.f_ExecutionReport_PegInstructions) @
+    ( encode_DiscretionInstructions msg.f_ExecutionReport_DiscretionInstructions) @
+    ( encode_CommissionData msg.f_ExecutionReport_CommissionData) @
+    ( encode_SpreadOrBenchmarkCurveData msg.f_ExecutionReport_SpreadOrBenchmarkCurveData) @
+    ( encode_YieldData msg.f_ExecutionReport_YieldData) @
+    ( encode_ContAmtGrp msg.f_ExecutionReport_ContAmtGrp) @
+    ( encode_InstrmtLegExecGrp msg.f_ExecutionReport_InstrmtLegExecGrp) @
+    ( encode_MiscFeesGrp msg.f_ExecutionReport_MiscFeesGrp) @
     [
     ( "37" , req encode_string msg.f_ExecutionReport_OrderID );
     ( "198" , opt encode_string msg.f_ExecutionReport_SecondaryOrderID );

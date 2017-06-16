@@ -21,10 +21,10 @@ let rec send_all_outgoing_fix engine_state fix_callback =
     match engine_state.outgoing_fix_msg with 
     | None -> Lwt.return engine_state 
     | Some msg -> begin 
-        fix_callback msg >>= fun () -> (
+        fix_callback msg >>= fun () -> 
         let engine_state = { engine_state with outgoing_fix_msg = None } in (* NOTE: I'm cleaning the out slot here *)
         let engine_state = Fix_engine.one_step engine_state in
-        send_all_outgoing_fix engine_state fix_callback )
+        send_all_outgoing_fix engine_state fix_callback 
     end
 ;;
 
@@ -32,16 +32,16 @@ let rec send_all_outgoing_fix engine_state fix_callback =
     send anything that fix_engine produces *)
 let rec send_messages_list messages engine_state fix_callback =
     let open Fix_engine_state in
-    Lwt_io.printl ("Sending list. Length = " ^ string_of_int (List.length messages) ) >>= fun () ->
     match messages with 
     | [] -> Lwt.return engine_state 
-    | hd::tl -> 
+    | hd::tl -> (
         let data = Type_converter.convert_model_to_full_fix hd in
         let msg = IncIntMsg_ApplicationData data in
         let engine_state = { engine_state with incoming_int_msg = Some msg } in
         let engine_state = Fix_engine.one_step engine_state in
         send_all_outgoing_fix engine_state fix_callback >>= fun engine_state ->
         send_messages_list tl engine_state fix_callback
+    )
 ;;
 
 (** Populates string hashes, associated with the given message *)
