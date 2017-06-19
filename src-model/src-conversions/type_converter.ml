@@ -12,6 +12,7 @@ open Enum_converter;;
 
 
 let convert_FIX_Full_Msg_ExecutionReport ( msg : full_fix_executionreport_data ) =
+    let c_f_ExecutionReport_Text = msg.f_ExecutionReport_Text in
     (match msg.f_ExecutionReport_Instrument.f_Instrument_Symbol with
         | None -> (FIX_TL_Req_Field_Missing {
             field_missing_data_msg = M_Msg_ExecutionReport_Tag;
@@ -42,7 +43,8 @@ let convert_FIX_Full_Msg_ExecutionReport ( msg : full_fix_executionreport_data )
                 f_ExecutionReport_LeavesQty = c_f_ExecutionReport_LeavesQty;
                 f_ExecutionReport_CumQty = c_f_ExecutionReport_CumQty;
                 f_ExecutionReport_OrdStatus = convert__full_to_model_OrdStatus c_f_ExecutionReport_OrdStatus;
-                f_ExecutionReport_Instrument_Symbol = c_f_ExecutionReport_Instrument_Symbol
+                f_ExecutionReport_Instrument_Symbol = c_f_ExecutionReport_Instrument_Symbol;
+                f_ExecutionReport_Text = c_f_ExecutionReport_Text
             } in
             FIX_TL_Normal (FIX_Msg_ExecutionReport fix_msg_data)
         )
@@ -58,24 +60,16 @@ let convert_FIX_Full_Msg_NewOrderSingle ( msg : full_fix_newordersingle_data ) =
         | Some m_f_Instrument_Symbol -> let c_f_NewOrderSingle_Instrument_Symbol = m_f_Instrument_Symbol in
         let c_f_NewOrderSingle_OrdType = msg.f_NewOrderSingle_OrdType in
         let c_f_NewOrderSingle_TransactTime = msg.f_NewOrderSingle_TransactTime in
-        (match msg.f_NewOrderSingle_Price with
-            | None -> (FIX_TL_Req_Field_Missing {
-                field_missing_data_msg = M_Msg_NewOrderSingle_Tag;
-                field_missing_data_field = M_Field_Price_Tag
-            })
-            | Some m_f_NewOrderSingle_Price -> let c_f_NewOrderSingle_Price = m_f_NewOrderSingle_Price in
-            let c_f_NewOrderSingle_Side = msg.f_NewOrderSingle_Side in
-            let c_f_NewOrderSingle_ClOrdID = msg.f_NewOrderSingle_ClOrdID in
-            let fix_msg_data = {
-                f_NewOrderSingle_ClOrdID = c_f_NewOrderSingle_ClOrdID;
-                f_NewOrderSingle_Side = convert__full_to_model_Side c_f_NewOrderSingle_Side;
-                f_NewOrderSingle_Price = c_f_NewOrderSingle_Price;
-                f_NewOrderSingle_TransactTime = c_f_NewOrderSingle_TransactTime;
-                f_NewOrderSingle_OrdType = convert__full_to_model_OrdType c_f_NewOrderSingle_OrdType;
-                f_NewOrderSingle_Instrument_Symbol = c_f_NewOrderSingle_Instrument_Symbol
-            } in
-            FIX_TL_Normal (FIX_Msg_NewOrderSingle fix_msg_data)
-        )
+        let c_f_NewOrderSingle_Side = msg.f_NewOrderSingle_Side in
+        let c_f_NewOrderSingle_ClOrdID = msg.f_NewOrderSingle_ClOrdID in
+        let fix_msg_data = {
+            f_NewOrderSingle_ClOrdID = c_f_NewOrderSingle_ClOrdID;
+            f_NewOrderSingle_Side = convert__full_to_model_Side c_f_NewOrderSingle_Side;
+            f_NewOrderSingle_TransactTime = c_f_NewOrderSingle_TransactTime;
+            f_NewOrderSingle_OrdType = convert__full_to_model_OrdType c_f_NewOrderSingle_OrdType;
+            f_NewOrderSingle_Instrument_Symbol = c_f_NewOrderSingle_Instrument_Symbol
+        } in
+        FIX_TL_Normal (FIX_Msg_NewOrderSingle fix_msg_data)
     )
 ;;
 
@@ -391,7 +385,7 @@ let convert_FIX_Msg_ExecutionReport ( msg : mod_executionreport_data ) =
         f_ExecutionReport_PositionEffect = None;
         f_ExecutionReport_MaxShow = None;
         f_ExecutionReport_BookingType = None;
-        f_ExecutionReport_Text = None;
+        f_ExecutionReport_Text = msg.f_ExecutionReport_Text;
         f_ExecutionReport_EncodedTextLen = None;
         f_ExecutionReport_EncodedText = None;
         f_ExecutionReport_SettlDate2 = None;
@@ -706,7 +700,7 @@ let convert_FIX_Msg_NewOrderSingle ( msg : mod_newordersingle_data ) =
         };
         f_NewOrderSingle_OrdType = convert__model_to_full_OrdType msg.f_NewOrderSingle_OrdType;
         f_NewOrderSingle_PriceType = None;
-        f_NewOrderSingle_Price = Some msg.f_NewOrderSingle_Price;
+        f_NewOrderSingle_Price = None;
         f_NewOrderSingle_StopPx = None;
         f_NewOrderSingle_SpreadOrBenchmarkCurveData = {
             f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency = None;

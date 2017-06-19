@@ -13,12 +13,12 @@ outbound message ExecutionReport {
     req CumQty
     req OrdStatus
     req Instrument.Symbol
+    opt Text
 }
 
 message NewOrderSingle {
     req ClOrdID unique      
     req Side valid when it in [Side.Buy, Side.Sell, SellShort] 
-    req Price valid when it > 0.0
     req TransactTime
     req OrdType
     req Instrument.Symbol
@@ -57,6 +57,7 @@ reject (msg:NewOrderSingle,rejReason:string)
             CumQty = 0.0
             OrdStatus = OrdStatus.New
             Instrument.Symbol = "None"
+            Text = Some rejReason
         }
     }
     invalidfield:{
@@ -71,6 +72,7 @@ reject (msg:NewOrderSingle,rejReason:string)
             CumQty = 0.0
             OrdStatus = OrdStatus.New
             Instrument.Symbol = "None"
+            Text = Some rejReason
         }
     }
     invalid:{
@@ -85,6 +87,7 @@ reject (msg:NewOrderSingle,rejReason:string)
             CumQty = 0.0
             OrdStatus = OrdStatus.New
             Instrument.Symbol = "None"
+            Text = Some rejReason
         }
     }
 }

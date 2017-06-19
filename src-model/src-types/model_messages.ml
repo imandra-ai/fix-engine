@@ -16,14 +16,14 @@ type mod_executionreport_data = {
     f_ExecutionReport_LeavesQty : fix_float;
     f_ExecutionReport_CumQty : fix_float;
     f_ExecutionReport_OrdStatus : model_fix_ordstatus;
-    f_ExecutionReport_Instrument_Symbol : fix_string
+    f_ExecutionReport_Instrument_Symbol : fix_string;
+    f_ExecutionReport_Text : fix_string option
 }
 ;;
 
 type mod_newordersingle_data = {
     f_NewOrderSingle_ClOrdID : fix_string;
     f_NewOrderSingle_Side : model_fix_side;
-    f_NewOrderSingle_Price : fix_float;
     f_NewOrderSingle_TransactTime : fix_utctimestamp;
     f_NewOrderSingle_OrdType : model_fix_ordtype;
     f_NewOrderSingle_Instrument_Symbol : fix_string
