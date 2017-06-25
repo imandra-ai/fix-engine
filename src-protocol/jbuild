@@ -4,6 +4,6 @@
   ( (name        protocol)
     (public_name protocol)
     (wrapped  false)
-    (libraries (core protocol_exts))
+    (libraries (protocol_exts))
   )
 )

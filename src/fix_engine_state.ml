@@ -16,7 +16,6 @@ open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_app_messages;;
 open Full_messages;;
-open State;;
 (* @meta[imandra_ignore] off @end *)
 
 (** Define set of actions + data for manual intervention by the user. *)
