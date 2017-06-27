@@ -8,13 +8,14 @@
 
 *)
 
-open String;;
-open Yojson;;
-open Fix_engine_state;;
-open Datetime_json;;
-open Base_types_json;;
-open Full_app_messages_json;;
-open Full_messages_json;;
+open String
+open Yojson
+open Fix_engine_state
+open Datetime_json
+open Base_types
+open Base_types_json
+open Full_app_messages_json
+open Full_messages_json
 
 (** *)
 let fix_engine_mode_to_string = function
