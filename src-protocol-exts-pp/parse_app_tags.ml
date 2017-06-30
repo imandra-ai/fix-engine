@@ -932,5 +932,6 @@ let parse_app_field_tag ( tag ) =
         | "344" -> (Some (Full_Field_TradSesCloseTime_Tag))
         | "345" -> (Some (Full_Field_TradSesEndTime_Tag))
         | "387" -> (Some (Full_Field_TotalVolumeTraded_Tag))
+        | _ -> (None)
     )
 ;;

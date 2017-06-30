@@ -99,6 +99,7 @@ module Parse_message_result = struct
         | Parse_field_result.ParseFieldSuccess    x -> ParseSuccess x   
         | Parse_field_result.WrongFieldFormat     x -> WrongValueFormat x 
         | Parse_field_result.RequiredFieldMissing x -> RequiredTagMissing x
+        | Parse_field_result.EmptyField           x -> EmptyValue x
 
 
     let ( >>= ) x f = match x with
