@@ -92,24 +92,26 @@ let is_valid_utctimestamp ( ts : fix_utctimestamp ) =
 
 (** *)
 let utctimestamp_GreaterThan ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
-    if tOne.utc_timestamp_year          > tTwo.utc_timestamp_year   then true
-    else if tOne.utc_timestamp_year     < tTwo.utc_timestamp_year   then false 
-    else if tOne.utc_timestamp_month    > tTwo.utc_timestamp_month  then true
-    else if tOne.utc_timestamp_month    < tTwo.utc_timestamp_month  then false
-    else if tOne.utc_timestamp_day      > tTwo.utc_timestamp_day    then true
-    else if tOne.utc_timestamp_day      < tTwo.utc_timestamp_day    then false
-    else if tOne.utc_timestamp_hour     > tTwo.utc_timestamp_hour   then true
-    else if tOne.utc_timestamp_hour     < tTwo.utc_timestamp_hour   then false
-    else if tOne.utc_timestamp_minute   > tTwo.utc_timestamp_minute then true
-    else if tOne.utc_timestamp_minute   < tTwo.utc_timestamp_minute then false
-    else if tOne.utc_timestamp_second   > tTwo.utc_timestamp_second then true
-    else if tOne.utc_timestamp_second   < tTwo.utc_timestamp_second then false
-    else 
-        match tOne.utc_timestamp_millisec, tTwo.utc_timestamp_millisec with 
-        | None      , None      -> true
-        | Some _    , None      -> true
-        | None      , Some _    -> false
-        | Some one  , Some two  -> one > two
+  if tOne = tTwo then false
+  else
+  if tOne.utc_timestamp_year          > tTwo.utc_timestamp_year   then true
+  else if tOne.utc_timestamp_year     < tTwo.utc_timestamp_year   then false 
+  else if tOne.utc_timestamp_month    > tTwo.utc_timestamp_month  then true
+  else if tOne.utc_timestamp_month    < tTwo.utc_timestamp_month  then false
+  else if tOne.utc_timestamp_day      > tTwo.utc_timestamp_day    then true
+  else if tOne.utc_timestamp_day      < tTwo.utc_timestamp_day    then false
+  else if tOne.utc_timestamp_hour     > tTwo.utc_timestamp_hour   then true
+  else if tOne.utc_timestamp_hour     < tTwo.utc_timestamp_hour   then false
+  else if tOne.utc_timestamp_minute   > tTwo.utc_timestamp_minute then true
+  else if tOne.utc_timestamp_minute   < tTwo.utc_timestamp_minute then false
+  else if tOne.utc_timestamp_second   > tTwo.utc_timestamp_second then true
+  else if tOne.utc_timestamp_second   < tTwo.utc_timestamp_second then false
+  else 
+    match tOne.utc_timestamp_millisec, tTwo.utc_timestamp_millisec with 
+    | None      , None      -> true
+    | Some _    , None      -> true
+    | None      , Some _    -> false
+    | Some one  , Some two  -> one > two
 ;;
 
 (** *)

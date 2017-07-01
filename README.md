@@ -22,7 +22,7 @@ regulatory compliance of) the numerous systems relying on this
 protocol.
 
 This README will give you a brief overview of the project. For further information please see:
-- Project homepage at http://fix.readme.io
+- Project homepage at https://fix.readme.io
 - Documentation at https://aestheticintegration.github.io/fix-engine/doc/
 
 ## Why
@@ -100,50 +100,54 @@ One way to formalise that statement is to create two VGs:
 
 (* VG.1.1 *)
 verify last_time_data_sent_gets_updated ( engine : fix_engine_state ) =
-  let engine' = one_step ( engine ) in
-  engine.outgoing_fix_msg = None && engine'.outgoing_fix_msg <> None
-   ==>
-  engine'.fe_last_time_data_sent = engine'.fe_curr_time
+    let engine' = one_step ( engine ) in
+    let cond = 
+        begin
+            engine.outgoing_fix_msg = None && engine'.outgoing_fix_msg <> None &&
+            engine.fe_curr_mode <> Retransmit
+        end in
+    cond ==> (engine'.fe_last_time_data_sent = engine'.fe_curr_time )
 ;;
 
 (** VG.1.2 *)
-let outbound_msg_heartbeat ( m : full_top_level_msg option ) =
-  match m with
-  | None      -> false
-  | Some msg  ->
-    match msg with
-    | ValidMsg vmsg -> (
-      match vmsg.full_msg_data with
-      | Full_FIX_Admin_Msg admin_msg -> (
-        match admin_msg with
-        | Full_Msg_Hearbeat _        -> true
-        | Full_Msg_Test_Request _    -> true
-        | _                          -> false
-      )
-      | _ -> false
-    )
+let outbound_msg_heartbeat ( m : full_top_level_msg option )=
+    match m with
+    | Some ( ValidMsg vmsg )  ->
+        begin 
+            match vmsg.full_msg_data with 
+            | Full_FIX_Admin_Msg admin_msg  ->
+                begin 
+                    match admin_msg with 
+                    | Full_Msg_Heartbeat _      -> true
+                    | _                         -> false
+                end 
+            | _ -> false
+        end
     | _ -> false
 ;;
 
-let time_update_received ( m, last_time_data_sent, hbeat_interval : fix_engine_int_msg option * fix_utctimestamp * fix_duration ) =
-  match m with
-  | None -> false
-  | Some mint ->
-    match mint with
-    | TimeChange tc_data ->
-       let valid_time = utctimestamp_add ( last_time_data_sent, hbeat_interval ) in
-       utctimestamp_greaterThan ( tc_data, valid_time )
+let time_update_received ( m, last_time_data_sent, last_time_data_received, hbeat_interval : fix_engine_int_msg option * fix_utctimestamp * fix_utctimestamp * fix_duration ) =
+    match m with
+    | Some ( TimeChange tc_data ) -> 
+        begin 
+            let valid_send_time = utctimestamp_duration_Add ( last_time_data_sent, hbeat_interval ) in
+            let valid_received_time = utctimestamp_duration_Add ( last_time_data_received, hbeat_interval ) in
+            utctimestamp_GreaterThan ( tc_data, valid_send_time ) && utctimestamp_GreaterThan ( valid_received_time, tc_data )
+        end
     | _ -> false
 ;;
 
-verify hbeat_sent_if_no_data_received ( engine : fix_engine_state ) =
-  let engine' = one_step ( engine ) in (
-    engine.fe_curr_mode = ActiveSession
-    && is_int_message_valid ( engine )
-    && is_state_valid ( engine )
-    && time_update_received ( engine.incoming_int_msg, engine.fe_last_time_data_sent, engine.fe_heartbeat_interval ) )
-     ==>
-    outbound_msg_heartbeat ( engine'.outgoing_fix_msg )
+verify hbeat_sent_if_no_data_sent ( engine : fix_engine_state ) =
+    let engine' = one_step ( engine ) in 
+    let cond =
+        begin 
+            not ( hbeat_interval_null ( engine.fe_heartbeat_interval )) &&
+            engine.fe_curr_mode = ActiveSession && 
+            is_int_message_valid ( engine ) && 
+            is_state_valid ( engine ) && 
+            time_update_received ( engine.incoming_int_msg, engine.fe_last_time_data_sent, engine.fe_last_data_received, engine.fe_heartbeat_interval )
+        end in
+    cond ==> outbound_msg_heartbeat ( engine'.outgoing_fix_msg )
 ;;
 ```
 
