@@ -21,7 +21,7 @@ let opt f v = match v with Some x -> Some ( f x ) | None -> None;;
 let encode_msg_data msg =
     match msg with
     | Full_FIX_Admin_Msg msg -> Encode_admin_messages.encode_admin_msg_data msg
-    | Full_FIX_App_Msg   msg -> Encode_app_messages.encode_app_msg_data      msg
+    | Full_FIX_App_Msg   msg -> Encode_app_messages.encode_app_msg_data     msg  
 ;;
 
 (** *)
@@ -97,11 +97,12 @@ let encode_full_valid_msg x =
         |> List.filter (fun (k,v) -> v <> None )
         |> List.map    (fun (k,v) -> (k, match v with Some v -> v | None -> ""))
         in
+    let encode_checksum = Printf.sprintf "%03u" in
     let msg = [ ( "8"   , "FIX.4.4" )
-              ; ( "9"   , get_body_length msg_body         |> encode_int    )
+              ; ( "9"   , get_body_length msg_body |> encode_int    )
               ] @ msg_body
               in             
-    let msg = msg @ [ ( "10" , get_checksum msg |> encode_int )] in
+    let msg = msg @ [ ( "10" , get_checksum msg |> encode_checksum )] in
     msg |> List.map ( fun(k,v) -> k^"="^v )
         |> List.fold_left ( fun a s -> a ^ s ^ "\001" ) ""
 ;;

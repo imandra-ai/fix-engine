@@ -117,7 +117,6 @@ type fix_engine_state = {
                                                                 ensure that the engine does not go into infinite loop. *)
     fe_max_num_logons_sent  : int;                          (** Setting: maximum number of logons to be sent out. *)
     fe_encrypt_method       : fix_encryption_method;
-
 }
 ;;
 

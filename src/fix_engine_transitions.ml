@@ -149,7 +149,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     
     } else
     match m.full_msg_data with 
-    | Full_FIX_Admin_Msg adm_msg        ->
+    | Full_FIX_Admin_Msg adm_msg ->
         begin 
             match adm_msg with 
             | Full_Msg_Heartbeat hb          -> {
@@ -232,6 +232,7 @@ let run_cache_replay ( engine : fix_engine_state ) =
         }
     | x::xs -> replay_single_msg (x, engine)
 ;;
+
 
 (** Check to make sure there're no sequence gaps *)
 let rec no_seq_gaps ( msg_list, last_seq_num : full_valid_fix_msg list * int) = 

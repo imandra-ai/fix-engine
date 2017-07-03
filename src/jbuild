@@ -1,0 +1,10 @@
+(jbuild_version 1)
+
+(library
+  ( (name        fix_engine)
+    (public_name fix_engine)
+    (wrapped  false)
+    (libraries ( protocol )
+    )
+  )
+)
