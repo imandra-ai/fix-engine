@@ -11,8 +11,6 @@ RUN mkdir -p /app
 WORKDIR /app
 RUN git clone https://github.com/AestheticIntegration/fix-engine.git -b feat-dockerfiles
 WORKDIR /app/fix-engine
-RUN pwd
-RUN ls -l
 RUN make install-upgrade-deps
 RUN make build
 RUN make server
