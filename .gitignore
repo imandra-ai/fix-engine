@@ -6,3 +6,4 @@ fix-engine.install
 module_graph.svg
 *.merlin
 *.install
+*jbuild-ignore
