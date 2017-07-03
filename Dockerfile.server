@@ -12,6 +12,7 @@ WORKDIR /app
 RUN git clone https://github.com/AestheticIntegration/fix-engine.git -b feat-dockerfiles
 WORKDIR /app/fix-engine
 RUN make install-upgrade-deps
-RUN make build
-RUN make server
+RUN /bin/bash -c 'eval `opam config env`; \
+make build; \
+make server'
 
