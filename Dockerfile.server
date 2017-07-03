@@ -1,0 +1,19 @@
+# imandra-analyser-builder
+
+FROM ocaml/opam:alpine-3.5_ocaml-4.02.3
+
+# Wercker requires that we use the root user.
+USER root
+ENV OPAMROOT /home/opam/.opam
+
+#Installing
+RUN mkdir -p /app
+WORKDIR /app
+RUN git clone https://github.com/AestheticIntegration/fix-engine.git -b feat-dockerfiles
+WORKDIR /app/fix-engine
+RUN pwd
+RUN ls -l
+RUN make install-upgrade-deps
+RUN make build
+RUN make server
+
