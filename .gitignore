@@ -4,3 +4,6 @@ _build/*
 fix-engine.install
 .vscode*
 module_graph.svg
+*.merlin
+*.install
+*jbuild-ignore

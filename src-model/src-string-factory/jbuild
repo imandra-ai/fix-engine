@@ -1,0 +1,9 @@
+(jbuild_version 1)
+
+(library
+  ( (name        string_constant_factory)
+    (public_name string_constant_factory)
+    (wrapped  false)
+    (libraries (venue_types protocol_pp conversions))
+  )
+)

@@ -1,0 +1,30 @@
+(jbuild_version 1)
+
+(library
+  ( (name        fix_simulation)
+    (public_name fix_simulation)
+    (wrapped  false)
+    (modules (:standard \ server))
+    (libraries 
+      ( lwt.unix
+        venue
+        fix_engine
+        string_constant_factory
+      )
+    )
+  )
+)
+
+(executable
+  ( (name server)
+    (modules (server))
+    (libraries 
+      ( lwt.unix
+        venue
+        fix_engine
+        fix_simulation
+        string_constant_factory
+      )
+    )
+  )
+)
