@@ -11,9 +11,7 @@ COPY ./Makefile /app/Makefile
 RUN make dev-setup
 
 # Compiling fix-engine
-RUN mkdir -p /app/fix-engine
-COPY . /app/fix-engine
-WORKDIR /app/fix-engine
+COPY . /app/
 RUN /bin/bash -c 'eval `opam config env`; \
 make build; \
 make server'
