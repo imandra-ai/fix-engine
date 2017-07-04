@@ -4,11 +4,16 @@ FROM ocaml/opam:alpine-3.5_ocaml-4.02.3
 USER root
 ENV OPAMROOT /home/opam/.opam
 
-#Installing
+# Install OCaml dependencies.
+RUN mkdir -p /app
+WORKDIR /app
+COPY ./Makefile /app/Makefile
+RUN make dev-setup
+
+# Compiling fix-engine
 RUN mkdir -p /app/fix-engine
 COPY . /app/fix-engine
 WORKDIR /app/fix-engine
-RUN make install-upgrade-deps
 RUN /bin/bash -c 'eval `opam config env`; \
 make build; \
 make server'
