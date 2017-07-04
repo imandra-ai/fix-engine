@@ -1,6 +1,4 @@
-# imandra-analyser-builder
-
-FROM ocaml/opam:alpine-3.5_ocaml-4.02.3
+FROM ocaml/opam:alpine-3.5_ocaml-4.02.3 as 
 
 # Wercker requires that we use the root user.
 USER root
