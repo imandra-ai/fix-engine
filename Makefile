@@ -1,12 +1,16 @@
 # Makefile
 #
 build:
-	@echo -e "src-protocol-exts-pp-vg\nsrc-protocol-exts-vg" > jbuild-ignore 
+	@echo "src-protocol-exts-pp-vg" > jbuild-ignore 
+	@echo "src-protocol-exts-vg" >> jbuild-ignore 
 	jbuilder build @install
 	rm jbuild-ignore
 
 build_vgs:
-	@echo -e "src-protocol-exts-pp\nsrc-protocol-exts\nsrc-model\nsrc-simulation/" > jbuild-ignore 
+	@echo "src-protocol-exts-pp" > jbuild-ignore
+	@echo "src-protocol-exts" >> jbuild-ignore 
+	@echo "src-model" >> jbuild-ignore 
+	@echo "src-simulation" >> jbuild-ignore 
 	jbuilder build @install
 	rm jbuild-ignore
 
@@ -14,7 +18,8 @@ module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 	sed -e 's/rotate=90;//g' "$<" | dot -Tsvg -o $@
 
 server:
-	@echo -e "src-protocol-exts-pp-vg\nsrc-protocol-exts-vg" > jbuild-ignore 
+	@echo "src-protocol-exts-pp-vg" > jbuild-ignore 
+	@echo "src-protocol-exts-vg" >> jbuild-ignore 
 	jbuilder build src-simulation/server.bc
 	rm jbuild-ignore
 
