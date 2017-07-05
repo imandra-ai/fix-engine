@@ -12,6 +12,6 @@
 (executable
   ( (name test_runner) 
     (libraries (cmdliner lwt.unix core_pp))  
-    (modules test_runner)    
+    (modules (test_runner config_parser))
   )
 )
