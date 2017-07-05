@@ -9,7 +9,8 @@
 
 type fix_string = 
     | Model_string of int
-    | Admin_string of int    
+    | Admin_string of int
+    | Empty_string
 ;;
 
 type fix_symbol = fix_string;;
