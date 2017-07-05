@@ -11,6 +11,7 @@
 open Yojson;;
 open Base_types;;
 open Numeric;;
+open String_utils;;
 (* @meta[imandra_ignore] off @end *)
 
 (**
@@ -60,7 +61,7 @@ let float_opt_to_json = function
   *)
 
 let string_to_json x : json = 
-    `String ( String_utils.fix_string_to_string x ) 
+    `String ( fix_string_to_string x ) 
 ;;
 
 let string_opt_to_json = function 

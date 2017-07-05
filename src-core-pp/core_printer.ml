@@ -8,8 +8,10 @@
     
 *)
 
-open Encode_base_types
-open Encode_datetime
+(* @meta[imandra_ignore] on @end *)
+open Encode_base_types;;
+open Encode_datetime;;
+(* @meta[imandra_ignore] off @end *)
 
 let fix_float_to_string x =
   encode_float x
