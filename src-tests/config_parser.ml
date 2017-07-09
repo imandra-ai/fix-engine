@@ -23,8 +23,8 @@ let parse_config_line cfgstr =
     if Bytes.length cfgstr <= 1 then None else
     let payload = Bytes.sub cfgstr 1 (Bytes.length cfgstr - 1) in
     let parse_action = function
-        | "CONNECT" -> Connect 
-        | "DISCONNECT" -> Disconnect 
+        | "CONNECT" | "CONNECT\r" -> Connect 
+        | "DISCONNECT" | "DISCONNECT\r" -> Disconnect 
         | _ -> payload 
             |> Printf.sprintf "Error parsing action \"%s\"" 
             |> failwith 
