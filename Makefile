@@ -16,10 +16,8 @@ build_vgs:
 
 
 build_tests:
-	echo "src-protocol-exts-pp" > jbuild-ignore 
-	echo "src-protocol-exts" >> jbuild-ignore 
-	echo "src-model" >> jbuild-ignore 
-	echo "src-simulation" >> jbuild-ignore 
+	echo "src-protocol-exts-pp-vg" > jbuild-ignore 
+	echo "src-protocol-exts-vg" >> jbuild-ignore 
 	jbuilder build src-tests/test_runner.bc 
 	rm jbuild-ignore
 

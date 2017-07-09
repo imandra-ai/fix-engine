@@ -11,41 +11,6 @@
 let (>>=) = Lwt.(>>=);;
 
 
-(************************ Stream functions ***************************)
-
-let split_into_key_value (spliton : char) ( stream : char Lwt_stream.t ) : (string * string) Lwt_stream.t =
-    (** Converts [ '5'; '2'; '='; 'A' ] to ("52" , "A" ) *)
-    let get_key_value (chlist : char list) : string * string =
-        List.fold_left (fun ((k,v),f) char -> match char with
-            | '=' -> ((k,v), true)
-            |  c  -> if f then (( k, v ^ String.make 1 c ), f)
-                          else (( k ^ String.make 1 c, v ), f)   
-            ) (("", ""), false) chlist
-        |> fst
-        in
-    let f () =
-        Lwt_stream.get_while (fun c -> c <> spliton) stream >>= fun chlist ->
-        Lwt_stream.junk stream >>= fun () ->
-        if chlist <> [] 
-        then Lwt.return_some @@ get_key_value chlist
-        else Lwt.return_none
-        in
-    Lwt_stream.from f
-;;
-
-let split_into_messages (stream : (string * string) Lwt_stream.t) =
-    let f () =
-        Lwt_stream.get_while (fun (k,v) -> k <> "10") stream >>= fun msg ->
-        Lwt_stream.get stream >>= function None -> Lwt.return_none | Some chsum ->
-        if msg <> [] 
-        then Lwt.return_some (msg @ [chsum])
-        else Lwt.return_none
-        in
-    Lwt_stream.from f    
-;;
-
-(*************************************************************)
-
 let get_current_utctimstamp () =    
     let open Datetime in
     let dtime = Unix.gettimeofday () in 
@@ -100,11 +65,6 @@ let rec heartbeat_thread mailbox =
 ;;
 
 let f (inch, outch) =
-    let msg_stream = Lwt_io.read_chars inch
-        |> split_into_key_value '\001'
-        |> split_into_messages 
-        |> Lwt_stream.map Parse_full_messages.parse_top_level_msg
-        in
     let close_channels () = 
         Lwt_io.printl "Connection closed, shutting down." >>= fun () ->
         Lwt_io.close inch >>= fun () ->
@@ -116,10 +76,12 @@ let f (inch, outch) =
         Lwt_io.printl "Received a connection." >>= fun () ->
         Lwt.join [
             heartbeat_thread mailbox;
-            msg_stream |> Lwt_stream.iter_s ( fun msg ->
-                do_timechange mailbox >>= fun () ->
-                Lwt_mvar.put mailbox (Fix_global_state.FIX_Message msg)
-            )
+            Message_stream.from_channel ~verbose:true inch
+                |> Lwt_stream.map Parse_full_messages.parse_top_level_msg
+                |> Lwt_stream.iter_s ( fun msg ->
+                    do_timechange mailbox >>= fun () ->
+                    Lwt_mvar.put mailbox (Fix_global_state.FIX_Message msg)
+                )
         ]
     ) ( fun _ -> close_channels () )
     )
