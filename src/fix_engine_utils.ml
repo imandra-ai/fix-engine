@@ -223,6 +223,23 @@ let create_test_request_msg ( engine : fix_engine_state ) =
     ) 
 ;;
 
+(** Create Resend Request message. *)
+let create_resend_request_msg ( engine : fix_engine_state ) =
+    let msg_data = Full_FIX_Admin_Msg (
+        Full_Msg_Resend_Request {
+             rr_begin_seq_num = engine.incoming_seq_num;
+             rr_end_seq_num   = 0  (*  (represents infinity)  *)            
+        }
+    ) in
+    create_outbound_fix_msg ( 
+        engine.outgoing_seq_num, engine.fe_target_comp_id, 
+        engine.fe_comp_id, engine.fe_curr_time, 
+        msg_data, false 
+    ) 
+;;
+
+
+
 (** Create session-rejection message. *)
 let create_session_reject_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, reject_info : 
                                 int * fix_string * fix_string * fix_utctimestamp * session_rejected_msg_data  ) = 
