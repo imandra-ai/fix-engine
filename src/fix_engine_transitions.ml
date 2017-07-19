@@ -150,12 +150,11 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 
     if not ( msg_consistent ( engine, m.full_msg_header ) ) then {
         (** We've detected an out-of sequence message. We therefore need to 
-            transition into Recovery mode and initialize engine state with 
-            the message. *)
+            transition into GapDetected mode. We place the message into the cahce. *)
         engine with 
-            fe_curr_mode = Recovery;
+            fe_curr_mode = GapDetected;
+            incoming_seq_num  = engine.incoming_seq_num + 1;
             fe_cache = [ m ];
-    
     } else
     match m.full_msg_data with 
     | Full_FIX_Admin_Msg adm_msg ->

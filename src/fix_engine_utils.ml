@@ -118,7 +118,7 @@ let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, curr_time, msg, 
         h_begin_string = default_session_details.constant_begin_string;
         h_body_length = 0;
         h_msg_seq_num = osn + 1;
-        h_poss_dup_flag = Some is_duplicate;
+        h_poss_dup_flag = if is_duplicate then Some is_duplicate else None;
         h_target_comp_id = target_comp_id;
         h_sender_comp_id = our_comp_id;
         h_sending_time   = curr_time;
@@ -163,7 +163,7 @@ let create_logon_msg ( engine : fix_engine_state ) =
             ln_heartbeat_interval           = engine.fe_heartbeat_interval;
             ln_raw_data_length              = None; 
             ln_raw_data                     = None;
-            ln_reset_seq_num_flag           = Some true;
+            ln_reset_seq_num_flag           = None; (* Some true; *)
             ln_next_expected_msg_seq_num    = None;
             ln_max_message_size             = None;
 
