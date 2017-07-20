@@ -454,33 +454,3 @@ let duration_to_seconds ( dur ) =
     let sec = sec + match dur.dur_days    with None -> 0 | Some x -> 24 * 60 * 60 * x in    
     sec
 ;;
-
-
-theorem[rw] float_LT_GT_elim (x,y) =
-  float_LessThan(x,y) ==> float_GreaterThan(x,y) = false
-;;
-
-theorem[rw] float_GT_LT_elim (x,y) =
-  float_GreaterThan(x,y) ==> float_LessThan(x,y) = false
-;;
-
-theorem[rw] utctimeonly_GT_EQ_elim (x,y) =
-  utctimeonly_GreaterThan(x,y) ==> utctimeonly_Equal(x,y) = false
-;;
-
-theorem[rw] utctimeonly_GT_arith_elim_hour (x,y) =
-  x.utc_timeonly_hour > y.utc_timeonly_hour ==> utctimeonly_GreaterThan(x,y)
-;;
-
-theorem[rw] utctimeonly_GT_arith_elim_min (x,y) =
-  x.utc_timeonly_hour = y.utc_timeonly_hour
-  && x.utc_timeonly_minute > y.utc_timeonly_minute
-   ==> utctimeonly_GreaterThan(x,y)
-;;
-
-theorem[rw] utctimeonly_GT_arith_elim_sec (x,y) =
-  x.utc_timeonly_hour = y.utc_timeonly_hour
-  && x.utc_timeonly_minute = y.utc_timeonly_minute
-  && x.utc_timeonly_second > y.utc_timeonly_second
-   ==> utctimeonly_GreaterThan(x,y)
-;;
