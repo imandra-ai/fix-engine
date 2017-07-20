@@ -69,17 +69,26 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                         fe_curr_status = MaxNumLogonMsgsViolated;
             } else 
                 begin
-                    let engine' = { engine with fe_encrypt_method = d.ln_encrypt_method } in 
-                    let logon_msg = create_logon_msg ( engine' ) in { 
-                        engine' with
-                            fe_initiator            = Some false;
-                            outgoing_fix_msg        = Some (ValidMsg ( logon_msg ));
-                            outgoing_seq_num        = engine.outgoing_seq_num + 1;
-                            fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
-                            fe_curr_mode            = ActiveSession;  
-                            fe_last_time_data_sent  = engine.fe_curr_time;
-                            fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
-                            fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
+                    let engine'  = { engine with fe_encrypt_method  = d.ln_encrypt_method } in
+                    let logon_msg = create_logon_msg ( engine' ) in
+                    let engine'' = { engine' with 
+                        fe_initiator            = Some false;
+                        (*  TODO -- check if we really have to accept all incoming senders *)
+                        outgoing_fix_msg        = Some (ValidMsg ( logon_msg ));
+                        outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                        fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
+                        fe_last_time_data_sent  = engine.fe_curr_time;
+                        fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
+                        fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
+                    } in 
+                    if msg_consistent ( engine, m.full_msg_header ) 
+                    then { engine'' with
+                        fe_curr_mode      = ActiveSession;
+                        incoming_seq_num  = m.full_msg_header.h_msg_seq_num;
+                        fe_history        = add_msg_to_history ( engine.fe_history, logon_msg );
+                    } else { engine'' with
+                        incoming_seq_num  = engine.incoming_seq_num + 1;
+                        fe_curr_mode      = GapDetected;
                     }
                 end
         end
@@ -141,12 +150,11 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 
     if not ( msg_consistent ( engine, m.full_msg_header ) ) then {
         (** We've detected an out-of sequence message. We therefore need to 
-            transition into Recovery mode and initialize engine state with 
-            the message. *)
+            transition into GapDetected mode. We place the message into the cahce. *)
         engine with 
-            fe_curr_mode = Recovery;
+            fe_curr_mode = GapDetected;
+            incoming_seq_num  = engine.incoming_seq_num + 1;
             fe_cache = [ m ];
-    
     } else
     match m.full_msg_data with 
     | Full_FIX_Admin_Msg adm_msg ->
@@ -204,6 +212,21 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 business_reject ( biz_reject_data, engine )
             end
 ;;
+
+
+let run_gap_detected ( engine : fix_engine_state ) = 
+    let resend_msg = create_resend_request_msg (engine) in
+    { engine with
+        fe_curr_mode     = Recovery;
+        fe_last_time_data_sent = engine.fe_curr_time;
+        outgoing_fix_msg = Some ( ValidMsg ( resend_msg ) );
+        fe_history       = add_msg_to_history ( engine.fe_history, resend_msg );
+        outgoing_seq_num = engine.outgoing_seq_num + 1;
+    }
+;; 
+
+
+
 
 (** Here we can only handle a subset of the FIX messages. *)
 let replay_single_msg ( m, engine : full_valid_fix_msg * fix_engine_state ) =
@@ -272,9 +295,20 @@ let rec add_to_cache ( m, cache : full_valid_fix_msg * full_valid_fix_msg list )
                 m::x::xs else ( x :: ( add_to_cache (m, xs) ) )
 ;;
 
-(** We're in recovery mode. We should add any received messages to our cache.
+(** We're in recovery mode. We should add any (except logoff) received messages to our cache.
     Check to see whether next message is complete. *)
 let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) = 
+    match m.full_msg_data with 
+    | Full_FIX_Admin_Msg (Full_Msg_Logoff data) ->
+        let logoff_msg = create_logoff_msg ( engine ) in {
+            engine with
+                fe_last_time_data_sent  = engine.fe_curr_time;
+                fe_curr_mode            = ShutdownInitiated;
+                outgoing_fix_msg        = Some ( ValidMsg ( logoff_msg ));
+                outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                fe_history              = add_msg_to_history ( engine.fe_history, logoff_msg );
+        }
+    | _ ->
     let new_cache = add_to_cache (m, engine.fe_cache) in 
     if is_cache_complete (new_cache, engine.incoming_seq_num) then {
         engine with 
