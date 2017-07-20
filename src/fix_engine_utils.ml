@@ -26,16 +26,22 @@ let default_session_details = {
     constant_begin_string = Admin_string 546607350 (* Hash of "FIX.4.4" *)
 };;
 
-(** Does the message have the right sequence number?
 
-    This is when we need to transfer into Recovery Mode and request the 
-    missing sequence to be retransmitted. *)
-let msg_consistent ( engine, msg_header : fix_engine_state * fix_header ) = 
-    let seq_num_correct = msg_header.h_msg_seq_num = (engine.incoming_seq_num + 1) in 
-    match msg_header.h_poss_dup_flag with 
-    | None -> seq_num_correct
-    | Some dup -> dup || ((not dup) && seq_num_correct)
+(** Does the message have the right sequence number? *)
+(** If sequence number is too high, then we need to transfer into Recovery Mode
+    and request the missing sequence to be retransmitted. *)
+let msg_is_sequence_gap ( engine, msg_header : fix_engine_state * fix_header ) = 
+    msg_header.h_msg_seq_num > engine.incoming_seq_num + 1
 ;;
+(** If sequence number is too low and the "possible duplicate" flag is not set,
+    then we'll need to teminate the connection. *)
+let msg_is_unexpected_duplicate ( engine, msg_header : fix_engine_state * fix_header ) = 
+    let seq_num_duplicate = msg_header.h_msg_seq_num < (engine.incoming_seq_num + 1) in 
+    match msg_header.h_poss_dup_flag with 
+    | Some true -> false
+    | Some false | None -> seq_num_duplicate
+;;
+
 
 (** get_gap_fill_msg -> out of all of the administrative messages, only the 'Reject' can be retransmitted.
     All application-level messages may be retransmitted - we should, in the future add logic to 

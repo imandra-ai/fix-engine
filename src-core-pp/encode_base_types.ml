@@ -11,6 +11,7 @@
 open Yojson;;
 open Base_types;;
 open Numeric;;
+open String_utils;;
 (* @meta[imandra_ignore] off @end *)
 
 
@@ -27,8 +28,8 @@ let encode_float x : string =
     in Printf.sprintf "%d.%d" data.fix_float_whole data.fix_float_fraction
 ;;
 
-let encode_string = String_utils.fix_string_to_string;;
-let encode_symbol = String_utils.fix_string_to_string;;
+let encode_string = fix_string_to_string;;
+let encode_symbol = fix_string_to_string;;
 
 let encode_bool : bool -> string = function
     | true  -> "Y" 

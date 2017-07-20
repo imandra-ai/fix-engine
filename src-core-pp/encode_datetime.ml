@@ -8,8 +8,10 @@
     
 *)
 
-open Datetime
-open Encode_base_types
+(* @meta[imandra_ignore] on @end *)
+open Datetime;;
+open Encode_base_types;;
+(* @meta[imandra_ignore] off @end *)
 
 (** *)
 let encode_UTCDateOnly x : string =

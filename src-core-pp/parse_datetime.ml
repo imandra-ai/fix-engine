@@ -8,8 +8,10 @@
     
 *)
 
-open Datetime
-open Parse_base_types
+(* @meta[imandra_ignore] on @end *)
+open Datetime;;
+open Parse_base_types;;
+(* @meta[imandra_ignore] off @end *)
 
 (** *)
 let parse_UTCDateOnly str =
