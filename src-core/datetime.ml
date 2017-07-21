@@ -164,7 +164,7 @@ let is_valid_localmktdate ( lmd : fix_localmktdate ) =
     1 <= lmd.localmktdate_day && lmd.localmktdate_day <= 31
 ;;
 
-let utc_localmktdateGreaterThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
+let localmktdateGreaterThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
     if lmdOne.localmktdate_year > lmdTwo.localmktdate_year then true else
     if lmdOne.localmktdate_year < lmdTwo.localmktdate_year then false else 
     if lmdOne.localmktdate_month > lmdTwo.localmktdate_month then true else
@@ -172,7 +172,7 @@ let utc_localmktdateGreaterThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localm
     lmdOne.localmktdate_day > lmdTwo.localmktdate_day
 ;;
 
-let utc_localmktdateLessThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
+let localmktdateLessThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
     if lmdOne.localmktdate_year < lmdTwo.localmktdate_year then true else
     if lmdOne.localmktdate_year > lmdTwo.localmktdate_year then false else 
     if lmdOne.localmktdate_month < lmdTwo.localmktdate_month then true else
@@ -180,18 +180,18 @@ let utc_localmktdateLessThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktd
     lmdOne.localmktdate_day < lmdTwo.localmktdate_day
 ;;
 
-let utc_localmktdateEqual ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
+let localmktdateEqual ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
     lmdOne.localmktdate_year = lmdTwo.localmktdate_year &&
     lmdOne.localmktdate_month = lmdTwo.localmktdate_month &&
     lmdOne.localmktdate_day = lmdTwo.localmktdate_day
 ;;
 
-let utc_localmktdateGreaterThanEqual ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
-    utc_localmktdateGreaterThan (lmdOne, lmdTwo) || utc_localmktdateEqual ( lmdOne, lmdTwo )
+let localmktdateGreaterThanEqual ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
+    localmktdateGreaterThan (lmdOne, lmdTwo) || localmktdateEqual ( lmdOne, lmdTwo )
 ;;
 
-let utc_localmktdateLessThanEqual ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
-    utc_localmktdateLessThan (lmdOne, lmdTwo) || utc_localmktdateEqual ( lmdOne, lmdTwo )
+let localmktdateLessThanEqual ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
+    localmktdateLessThan (lmdOne, lmdTwo) || localmktdateEqual ( lmdOne, lmdTwo )
 ;;
 
 (** Week *)
@@ -244,7 +244,7 @@ let is_valid_monthyear ( my : fix_monthyear ) =
 ;;
 
 (** TODO: Add support for weeks! *)
-let utc_monthyearGreaterThan ( myOne, myTwo : fix_monthyear * fix_monthyear ) =
+let monthyear_GreaterThan ( myOne, myTwo : fix_monthyear * fix_monthyear ) =
     if myOne.monthyear_year > myTwo.monthyear_year then true else
     if myOne.monthyear_year < myTwo.monthyear_year then false else
     if myOne.monthyear_month > myTwo.monthyear_month then true else
@@ -256,7 +256,7 @@ let utc_monthyearGreaterThan ( myOne, myTwo : fix_monthyear * fix_monthyear ) =
     | Some d_one, Some d_two -> d_one > d_two
 ;;
 
-let utc_monthyearLessThan ( myOne, myTwo : fix_monthyear * fix_monthyear ) =
+let monthyear_LessThan ( myOne, myTwo : fix_monthyear * fix_monthyear ) =
     if myOne.monthyear_year < myTwo.monthyear_year then true else
     if myOne.monthyear_year > myTwo.monthyear_year then false else
     if myOne.monthyear_month < myTwo.monthyear_month then true else
@@ -268,18 +268,18 @@ let utc_monthyearLessThan ( myOne, myTwo : fix_monthyear * fix_monthyear ) =
     | Some d_one, Some d_two -> d_one > d_two
 ;;
 
-let utc_monthyearEqual ( myOne, myTwo : fix_monthyear * fix_monthyear ) =
+let monthyear_Equal ( myOne, myTwo : fix_monthyear * fix_monthyear ) =
     myOne.monthyear_year = myTwo.monthyear_year &&
     myOne.monthyear_month = myTwo.monthyear_month &&
     myOne.monthyear_day = myTwo.monthyear_day
 ;;
 
-let utc_monthyearGreaterThanEqual ( myOne, myTwo : fix_monthyear * fix_monthyear ) = 
-    utc_monthyearGreaterThan (myOne, myTwo) || utc_monthyearEqual (myOne, myTwo)
+let monthyear_GreaterThanEqual ( myOne, myTwo : fix_monthyear * fix_monthyear ) = 
+    monthyear_GreaterThan (myOne, myTwo) || monthyear_Equal (myOne, myTwo)
 ;;
 
-let utc_monthyearLessThanEqual ( myOne, myTwo : fix_monthyear * fix_monthyear ) = 
-    utc_monthyearLessThan (myOne, myTwo) || utc_monthyearEqual (myOne, myTwo)
+let monthyear_LessThanEqual ( myOne, myTwo : fix_monthyear * fix_monthyear ) = 
+    monthyear_LessThan (myOne, myTwo) || monthyear_Equal (myOne, myTwo)
 ;;
 
 
@@ -396,18 +396,18 @@ let utcdateonly_LessThan ( dOne, dTwo : fix_utcdateonly * fix_utcdateonly ) =
     dOne.utc_dateonly_day < dTwo.utc_dateonly_day
 ;;
 
-let utddateonly_Equal ( dOne, dTwo : fix_utcdateonly * fix_utcdateonly ) =
+let utcdateonly_Equal ( dOne, dTwo : fix_utcdateonly * fix_utcdateonly ) =
     dOne.utc_dateonly_year = dTwo.utc_dateonly_year &&
     dOne.utc_dateonly_month = dTwo.utc_dateonly_year &&
     dOne.utc_dateonly_day = dTwo.utc_dateonly_month
 ;;
 
 let utddateonly_GreaterThanEqual ( dOne, dTwo : fix_utcdateonly * fix_utcdateonly ) =
-    utcdateonly_GreaterThan ( dOne, dTwo ) || utddateonly_Equal ( dOne, dTwo )
+    utcdateonly_GreaterThan ( dOne, dTwo ) || utcdateonly_Equal ( dOne, dTwo )
 ;;
 
 let utddateonly_LessThanEqual ( dOne, dTwo : fix_utcdateonly * fix_utcdateonly ) =
-    utcdateonly_LessThan ( dOne, dTwo ) || utddateonly_Equal ( dOne, dTwo )
+    utcdateonly_LessThan ( dOne, dTwo ) || utcdateonly_Equal ( dOne, dTwo )
 ;;
 
 
