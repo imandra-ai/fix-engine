@@ -164,7 +164,7 @@ let is_valid_localmktdate ( lmd : fix_localmktdate ) =
     1 <= lmd.localmktdate_day && lmd.localmktdate_day <= 31
 ;;
 
-let localmktdateGreaterThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
+let localmktdate_GreaterThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
     if lmdOne.localmktdate_year > lmdTwo.localmktdate_year then true else
     if lmdOne.localmktdate_year < lmdTwo.localmktdate_year then false else 
     if lmdOne.localmktdate_month > lmdTwo.localmktdate_month then true else
@@ -172,7 +172,7 @@ let localmktdateGreaterThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktda
     lmdOne.localmktdate_day > lmdTwo.localmktdate_day
 ;;
 
-let localmktdateLessThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
+let localmktdate_LessThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
     if lmdOne.localmktdate_year < lmdTwo.localmktdate_year then true else
     if lmdOne.localmktdate_year > lmdTwo.localmktdate_year then false else 
     if lmdOne.localmktdate_month < lmdTwo.localmktdate_month then true else
@@ -180,18 +180,18 @@ let localmktdateLessThan ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate 
     lmdOne.localmktdate_day < lmdTwo.localmktdate_day
 ;;
 
-let localmktdateEqual ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
+let localmktdate_Equal ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
     lmdOne.localmktdate_year = lmdTwo.localmktdate_year &&
     lmdOne.localmktdate_month = lmdTwo.localmktdate_month &&
     lmdOne.localmktdate_day = lmdTwo.localmktdate_day
 ;;
 
-let localmktdateGreaterThanEqual ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
-    localmktdateGreaterThan (lmdOne, lmdTwo) || localmktdateEqual ( lmdOne, lmdTwo )
+let localmktdate_GreaterThanEqual ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
+    localmktdate_GreaterThan (lmdOne, lmdTwo) || localmktdate_Equal ( lmdOne, lmdTwo )
 ;;
 
 let localmktdateLessThanEqual ( lmdOne, lmdTwo : fix_localmktdate * fix_localmktdate ) = 
-    localmktdateLessThan (lmdOne, lmdTwo) || localmktdateEqual ( lmdOne, lmdTwo )
+    localmktdate_LessThan (lmdOne, lmdTwo) || localmktdate_Equal ( lmdOne, lmdTwo )
 ;;
 
 (** Week *)
