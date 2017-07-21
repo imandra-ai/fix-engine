@@ -177,7 +177,6 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
             | NoActiveSession       -> run_no_active_session ( msg, engine )
             | LogonInitiated        -> run_logon_sequence ( msg, engine )
             | ActiveSession         -> run_active_session ( msg, engine )
-            | GapDetected           -> run_recovery ( msg, engine )
             | Recovery              -> run_recovery ( msg, engine )
             | ShutdownInitiated     -> run_shutdown ( msg, engine )
             | Error                 -> noop ( msg, engine )
@@ -205,18 +204,17 @@ let is_int_message_valid ( engine : fix_engine_state ) =
 ;;
 
 (** The main transition function. *)
-let one_step ( engine : fix_engine_state ) =    
+let one_step ( engine : fix_engine_state ) =
+    match engine.fe_curr_mode with     
     (** Check if we're in the middle of replaying our cache. *)
-    if engine.fe_curr_mode = CacheReplay then
-        run_cache_replay (engine)
-
+    |  CacheReplay -> run_cache_replay (engine)
+    (** If gap is detected -- we'll send resend request and move to recovery mode. *)
+    | GapDetected  -> run_gap_detected (engine)
     (** If we still need to retransmit our messages out to the receiving engine. *)
-    else if engine.fe_curr_mode = Retransmit then 
-        run_retransmit (engine)
-    
-    else
-        (** Now we look to process internal (coming from our application) and external (coming from
-            another FIX engine) messages. *)
+    | Retransmit   -> run_retransmit (engine)
+    (** Now we look to process internal (coming from our application) and external (coming from
+        another FIX engine) messages. *)
+    | _ -> begin
         match engine.incoming_int_msg with 
         | Some i -> proc_incoming_int_msg (i, { engine with incoming_int_msg = None } )
         | None -> 
@@ -225,4 +223,5 @@ let one_step ( engine : fix_engine_state ) =
                 | Some m -> proc_incoming_fix_msg (m, { engine with incoming_fix_msg = None } )
                 | None -> engine
             end
+    end
 ;;
