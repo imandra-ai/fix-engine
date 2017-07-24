@@ -66,6 +66,7 @@ let check_expected_compatible received expected =
     else
     expected |> Lwt_list.iter_s (fun (ek, ev) ->
         if (ek = "9") || (ek = "10") then Lwt.return_unit else
+        if (ek = "58") then Lwt.return_unit else (** NOTE: Ignoring Text<58> tag for now *)
         if not ( List.mem_assoc ek received ) then
             Lwt_io.printf "  Error: expected key \"%s\" not present in the received message.\n" ek
         else begin
