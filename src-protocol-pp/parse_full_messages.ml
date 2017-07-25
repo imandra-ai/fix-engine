@@ -110,6 +110,13 @@ let check_first_three_tags ( msg : (string * string) list ) : string option =
     None
 ;;
 
+let check_tags_are_integers ( msg : (string * string) list ) : bool =
+    List.for_all ( fun (k,v) ->
+        try int_of_string k > 0 with _ -> false
+    ) msg
+;;
+
+
 (**  Checks that the message contains BodyLength<9> field as a second entry 
      in the message. And that the value equals to the number of bytes between 
      BodyLength<9> and CheckSum<10> entries in the message.
@@ -167,8 +174,9 @@ let find_duplicate_tags ( msg : (string * string) list ) : string option =
 *)
 let message_basic_check msg = 
     match check_first_three_tags msg with Some tag -> RequiredTagMissing tag | None ->
-    if not (valid_checksum      msg ) then GarbledMessage else  
-    if not (valid_body_length   msg ) then GarbledMessage else  
+    if not (check_tags_are_integers msg ) then GarbledMessage else  
+    if not (valid_checksum          msg ) then GarbledMessage else  
+    if not (valid_body_length       msg ) then GarbledMessage else  
     match find_duplicate_tags msg with Some tag -> DuplicateTag tag | None ->
     ParseSuccess ()
 ;;
