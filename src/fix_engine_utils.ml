@@ -24,6 +24,7 @@ type session_details = {
 
 let default_session_details = {
     constant_begin_string = Admin_string 546607350 (* Hash of "FIX.4.4" *)
+
 };;
 
 
@@ -202,7 +203,7 @@ let create_logoff_msg ( engine : fix_engine_state ) =
 ;;
 
 (** Create a heartbeat message *)
-let create_heartbeat_msg ( engine, tr_id : fix_engine_state * int option) =
+let create_heartbeat_msg ( engine, tr_id : fix_engine_state * fix_string option) =
     let msg_data = Full_FIX_Admin_Msg (
         Full_Msg_Heartbeat {
             hb_test_req_id = tr_id;
@@ -219,7 +220,7 @@ let create_heartbeat_msg ( engine, tr_id : fix_engine_state * int option) =
 let create_test_request_msg ( engine : fix_engine_state ) =
     let msg_data = Full_FIX_Admin_Msg (
         Full_Msg_Test_Request {
-            test_req_id = engine.last_test_req_id;
+            test_req_id = Admin_string engine.last_test_req_id;
         }
     ) in
     create_outbound_fix_msg ( 

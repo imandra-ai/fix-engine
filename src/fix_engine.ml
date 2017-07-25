@@ -203,11 +203,28 @@ let is_int_message_valid ( engine : fix_engine_state ) =
     | IncIntMsg_EndSession -> engine.fe_curr_mode = ActiveSession
 ;;
 
+let print_mode engine =
+    let mode = match engine.fe_curr_mode with
+    | CacheReplay  -> "CacheReplay" 
+    | GapDetected  -> "GapDetected"
+    | Retransmit   -> "Retransmit"
+    | NoActiveSession     -> "NoActiveSession"   
+    | LogonInitiated      -> "LogonInitiated"   
+    | ActiveSession       -> "ActiveSession"   
+    | Recovery            -> "Recovery"   
+    | ShutdownInitiated   -> "ShutdownInitiated"   
+    | Error               -> "Error"   
+    | WaitingForHeartbeat -> "WaitingForHeartbeat"   
+    | _ -> ""
+    in print_endline ( "Current mode: " ^ mode )
+;; 
+
 (** The main transition function. *)
 let one_step ( engine : fix_engine_state ) =
+    print_mode engine;
     match engine.fe_curr_mode with     
     (** Check if we're in the middle of replaying our cache. *)
-    |  CacheReplay -> run_cache_replay (engine)
+    | CacheReplay -> run_cache_replay (engine)
     (** If gap is detected -- we'll send resend request and move to recovery mode. *)
     | GapDetected  -> run_gap_detected (engine)
     (** If we still need to retransmit our messages out to the receiving engine. *)

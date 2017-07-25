@@ -76,7 +76,10 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
     match m.full_msg_data with 
     | Full_FIX_Admin_Msg ( Full_Msg_Logon d ) ->
         begin
-            if ( engine.fe_encrypt_method <> d.ln_encrypt_method && 
+            (* TODO: better timestamp comparison *)
+            if (m.full_msg_header.h_sending_time.utc_timestamp_year <> engine.fe_curr_time.utc_timestamp_year ) then
+                logoff_and_shutdown engine
+            else if ( engine.fe_encrypt_method <> d.ln_encrypt_method && 
                 engine.fe_num_logons_sent >= engine.fe_max_num_logons_sent ) then { 
                     engine with 
                         fe_curr_mode = Error;

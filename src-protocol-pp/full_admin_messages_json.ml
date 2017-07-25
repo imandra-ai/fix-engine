@@ -22,7 +22,7 @@ let assoc_filter_nulls l : json =
 
 (** *)
 let full_msg_heartbeat_to_json x = 
-    [ ( "TestReqID" , int_opt_to_json x.hb_test_req_id ) 
+    [ ( "TestReqID" , string_opt_to_json x.hb_test_req_id ) 
     ] |> assoc_filter_nulls 
 ;;
 
@@ -76,7 +76,7 @@ let full_msg_sequence_reset_to_json x =
 
 (** *)
 let full_msg_test_request_to_json x = 
-    [ ( "Test_Request_TestReqID_Tag" , int_to_json x.test_req_id ) 
+    [ ( "Test_Request_TestReqID_Tag" , string_to_json x.test_req_id ) 
     ] |> assoc_filter_nulls 
 ;;
 
