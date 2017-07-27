@@ -111,7 +111,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
     | IncIntMsg_ApplicationData ad ->
         begin
             match engine.fe_curr_mode with 
-            | ActiveSession -> 
+            | ActiveSession | CacheReplay -> 
                 let app_msg_data = Full_FIX_App_Msg ad in
                 let msg = create_outbound_fix_msg (
                     engine.outgoing_seq_num, engine.fe_target_comp_id, 
@@ -203,25 +203,11 @@ let is_int_message_valid ( engine : fix_engine_state ) =
     | IncIntMsg_EndSession -> engine.fe_curr_mode = ActiveSession
 ;;
 
-let print_mode engine =
-    let mode = match engine.fe_curr_mode with
-    | CacheReplay  -> "CacheReplay" 
-    | GapDetected  -> "GapDetected"
-    | Retransmit   -> "Retransmit"
-    | NoActiveSession     -> "NoActiveSession"   
-    | LogonInitiated      -> "LogonInitiated"   
-    | ActiveSession       -> "ActiveSession"   
-    | Recovery            -> "Recovery"   
-    | ShutdownInitiated   -> "ShutdownInitiated"   
-    | Error               -> "Error"   
-    | WaitingForHeartbeat -> "WaitingForHeartbeat"   
-    | _ -> ""
-    in print_endline ( "Current mode: " ^ mode )
-;; 
-
 (** The main transition function. *)
 let one_step ( engine : fix_engine_state ) =
-    print_mode engine;
+    match engine.incoming_int_msg with 
+        | Some i -> proc_incoming_int_msg (i, { engine with incoming_int_msg = None } )
+        | None -> 
     match engine.fe_curr_mode with     
     (** Check if we're in the middle of replaying our cache. *)
     | CacheReplay -> run_cache_replay (engine)
@@ -231,14 +217,8 @@ let one_step ( engine : fix_engine_state ) =
     | Retransmit   -> run_retransmit (engine)
     (** Now we look to process internal (coming from our application) and external (coming from
         another FIX engine) messages. *)
-    | _ -> begin
-        match engine.incoming_int_msg with 
-        | Some i -> proc_incoming_int_msg (i, { engine with incoming_int_msg = None } )
-        | None -> 
-            begin
-                match engine.incoming_fix_msg with 
-                | Some m -> proc_incoming_fix_msg (m, { engine with incoming_fix_msg = None } )
-                | None -> engine
-            end
+    | _ -> begin match engine.incoming_fix_msg with 
+        | Some m -> proc_incoming_fix_msg (m, { engine with incoming_fix_msg = None } )
+        | None -> engine
     end
 ;;

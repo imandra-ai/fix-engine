@@ -162,10 +162,21 @@ let init_fix_engine_state = {
 }
 ;;
 
+(** THEOREM: one_step calls on busy state eventually terminate *)
+let engine_state_busy engine = 
+   ( engine.incoming_fix_msg != None ) ||
+   ( engine.incoming_int_msg != None ) ||
+   ( engine.outgoing_fix_msg != None ) ||
+   ( engine.outgoing_int_msg != None ) ||
+   ( match engine.fe_curr_mode with
+        | GapDetected | CacheReplay | Retransmit -> true
+        | _ -> false
+   )
+;;
 
 (** Properties of a valid state. 
 
-    TODO: augment these properties and verify that if we're in a good state, cannot
+    TODO: augment these properties and verify that if we're in  a good state, cannot
     transition out of it (i.e. new state would always be valid).
 
     TODO: once we have the full library of checks for incoming messages
@@ -180,3 +191,4 @@ let is_state_valid ( engine : fix_engine_state ) =
     is_valid_duration ( engine.fe_heartbeat_interval ) &&
     is_valid_duration ( engine.fe_testreq_interval )
 ;;
+

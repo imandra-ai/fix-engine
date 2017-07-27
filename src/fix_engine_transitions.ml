@@ -248,6 +248,7 @@ let replay_single_msg ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         engine with 
             incoming_seq_num = m.full_msg_header.h_msg_seq_num;
             outgoing_int_msg = Some ( OutIntMsg_ApplicationData app_msg );
+            incoming_fix_msg = None;
         }
     | Full_FIX_Admin_Msg msg -> {
         engine with 
@@ -266,7 +267,9 @@ let run_cache_replay ( engine : fix_engine_state ) =
         engine with
             fe_curr_mode = ActiveSession;
         }
-    | x::xs -> replay_single_msg (x, engine)
+    | x::xs -> 
+        let engine = replay_single_msg (x, engine) in
+        { engine with fe_cache = xs }
 ;;
 
 
@@ -293,7 +296,7 @@ let is_cache_complete ( cache, last_seq_processed : full_valid_fix_msg list * in
     | [] -> false
     | x::xs ->
         begin 
-            let correct_seq_num = x.full_msg_header.h_msg_seq_num = (last_seq_processed + 1) in 
+            let correct_seq_num = x.full_msg_header.h_msg_seq_num = last_seq_processed in 
             let no_gaps = no_seq_gaps ( xs, x.full_msg_header.h_msg_seq_num ) in 
             correct_seq_num && no_gaps
         end
@@ -317,6 +320,7 @@ let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     let new_cache = add_to_cache (m, engine.fe_cache) in 
     if is_cache_complete (new_cache, engine.incoming_seq_num) then {
         engine with 
+            fe_cache = new_cache;
             fe_curr_mode = CacheReplay;
             incoming_fix_msg = None;
     } else {

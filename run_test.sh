@@ -20,3 +20,4 @@ run_test ./defs/1e_NotLogonMessage.def
 run_test ./defs/2a_MsgSeqNumCorrect.def
 run_test ./defs/2b_MsgSeqNumTooHigh.def
 run_test ./defs/2c_MsgSeqNumTooLow.def
+run_test ./defs/2d_GarbledMessage.def
