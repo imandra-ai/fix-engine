@@ -8,26 +8,28 @@
     
 *)
 
+
 open Yojson
+open Datetime
 open Full_admin_messages
 open Full_messages
 open Fix_engine_transitions
+open Fix_engine_utils
+
 
 
 let pe = print_endline;;
 
-let def_fix_msg = {
-    full_msg_header = default_fix_header;
-    full_msg_data = Full_FIX_Admin_Msg ( Full_Msg_Heartbeat { hb_test_req_id = Some 123 });
-    full_msg_trailer = default_fix_trailer;
-};;
-
-let make_fix_msg i = {
-    def_fix_msg with 
-        full_msg_header = {
-            default_fix_header with 
-                h_msg_seq_num = i; }
-    } 
+let make_fix_msg i =
+    let msg = Full_FIX_Admin_Msg ( 
+        Full_Msg_Heartbeat { hb_test_req_id = Some(Admin_string 123) }
+    ) in
+    create_outbound_fix_msg (i - 1, 
+        Admin_string 780720412,     
+        Admin_string 183924456, 
+        make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None ),
+        msg, false
+    )
 ;;
 
 let cache = [

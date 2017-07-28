@@ -22,7 +22,7 @@ let opt f v =
 
 (** *)
 let encode_msg_heartbeat_data msg = 
-    [ ("112" , opt encode_int msg.hb_test_req_id ) ]  
+    [ ("112" , opt encode_string msg.hb_test_req_id ) ]  
 ;;
 
 (** *)
@@ -75,7 +75,7 @@ let encode_msg_sequence_reset_data msg =
 
 (** *)
 let encode_msg_test_request_data msg = 
-    [ ( "112" , req encode_int msg.test_req_id ) ]
+    [ ( "112" , req encode_string msg.test_req_id ) ]
 ;;
 
 (** *)
