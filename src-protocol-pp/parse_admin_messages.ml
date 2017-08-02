@@ -20,7 +20,7 @@ open Parse_full_tags;;
 (** *)
 let parse_msg_heartbeat_data msg =
     from_parse_field_result @@
-    opt msg "112" parse_int @@ fun hb_test_req_id ->
+    opt msg "112" parse_string @@ fun hb_test_req_id ->
     ParseFieldSuccess { hb_test_req_id }
 ;;
 
@@ -108,7 +108,7 @@ let parse_msg_sequence_reset_data msg =
 (** *)
 let parse_msg_test_request_data msg = 
     from_parse_field_result @@
-    req msg "112" parse_int @@ fun test_req_id -> 
+    req msg "112" parse_string @@ fun test_req_id -> 
     ParseFieldSuccess
     { test_req_id }
 ;;
