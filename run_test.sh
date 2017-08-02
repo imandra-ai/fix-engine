@@ -21,3 +21,5 @@ run_test ./defs/2a_MsgSeqNumCorrect.def
 run_test ./defs/2b_MsgSeqNumTooHigh.def
 run_test ./defs/2c_MsgSeqNumTooLow.def
 run_test ./defs/2d_GarbledMessage.def
+run_test ./defs/2e_PossDupAlreadyReceived.def
+run_test ./defs/2e_PossDupNotReceived.def

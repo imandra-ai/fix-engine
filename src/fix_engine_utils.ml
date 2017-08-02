@@ -15,6 +15,7 @@ open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_app_messages;;
 open Full_messages;;
+open Full_message_tags;;
 open Fix_engine_state;;
 (* @meta[imandra_ignore] off @end *)
 
@@ -34,13 +35,36 @@ let default_session_details = {
 let msg_is_sequence_gap ( engine, msg_header : fix_engine_state * fix_header ) = 
     msg_header.h_msg_seq_num > engine.incoming_seq_num + 1
 ;;
-(** If sequence number is too low and the "possible duplicate" flag is not set,
-    then we'll need to teminate the connection. *)
-let msg_is_unexpected_duplicate ( engine, msg_header : fix_engine_state * fix_header ) = 
-    let seq_num_duplicate = msg_header.h_msg_seq_num < (engine.incoming_seq_num + 1) in 
-    match msg_header.h_poss_dup_flag with 
-    | Some true -> false
-    | Some false | None -> seq_num_duplicate
+
+
+(** Check the message header ( presence and value of the OrigSendingTime ) 
+    returns None if no problems are found. *)
+let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * fix_header * full_msg_tag ) = 
+    let reject = { (** No orig_sending_time => create session reject *)
+            srej_msg_msg_seq_num   = msg_header.h_msg_seq_num;
+            srej_msg_field_tag     = None;
+            srej_msg_msg_type      = Some msg_tag;
+            srej_msg_reject_reason = None;
+            srej_text              = None; 
+            srej_encoded_text_len  = None;
+            srej_encoded_text      = None;
+        } in
+    match msg_header.h_poss_dup_flag with Some false | None -> None | Some true ->
+    (** Message header has a PossibleDuplicate flag => must have orig_sending_time *)
+    match msg_header.h_orig_sending_time with 
+    | None -> 
+        Some { reject with (** No orig_sending_time => create session reject *)
+            srej_msg_field_tag = Some (Full_Admin_Field_Tag Full_Msg_OrigSendingTime_Tag);
+            srej_msg_reject_reason = Some RequiredTagMissing; 
+            (** TODO: rejection fix_string here *)
+        }
+    | Some orig_sending_time ->
+    if utctimestamp_LessThan (msg_header.h_sending_time, orig_sending_time ) then
+        Some { reject with (** The sending_time is less than orig_sending_time -- reject  *)
+            srej_msg_field_tag = Some (Full_Admin_Field_Tag Full_Msg_OrigSendingTime_Tag);
+            srej_msg_reject_reason = Some SendingTimeAccuracyProblem;
+        }
+    else None
 ;;
 
 
@@ -254,12 +278,12 @@ let create_session_reject_msg ( outbound_seq_num, target_comp_id, comp_id, curr_
         Full_FIX_Admin_Msg (
             Full_Msg_Reject {
                 sr_ref_seq_num              = reject_info.srej_msg_msg_seq_num;
-                sr_ref_tag_id               = None;
-                sr_ref_msg_type             = None;
+                sr_ref_tag_id               = reject_info.srej_msg_field_tag;
+                sr_ref_msg_type             = reject_info.srej_msg_msg_type;
                 sr_session_reject_reason    = reject_info.srej_msg_reject_reason;
-                sr_text                     = None;
-                sr_encoded_text_len         = None;
-                sr_encoded_text             = None
+                sr_text                     = reject_info.srej_text;
+                sr_encoded_text_len         = reject_info.srej_encoded_text_len;
+                sr_encoded_text             = reject_info.srej_encoded_text
             } ) in
     create_outbound_fix_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, msg_data, false )
 ;;

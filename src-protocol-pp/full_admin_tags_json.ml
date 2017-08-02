@@ -48,6 +48,7 @@ let full_admin_field_tag_to_string = function
     | Full_Msg_TestReqID_Tag             -> "TestReqID_Tag"
     | Full_Msg_Text_Tag                  -> "Text_Tag"
     | Full_Msg_Username_Tag              -> "Username_Tag"
+    | Full_Msg_OrigSendingTime_Tag       -> "OrigSendingTime_Tag"
 ;;
 
 (** *)

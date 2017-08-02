@@ -98,7 +98,7 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                         fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
                         fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
                     } in 
-                    if msg_is_unexpected_duplicate ( engine, m.full_msg_header ) then
+                    if m.full_msg_header.h_msg_seq_num < (engine.incoming_seq_num + 1) then
                         logoff_and_shutdown engine
                     else if msg_is_sequence_gap ( engine, m.full_msg_header )
                     then { engine'' with
@@ -169,8 +169,23 @@ let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engin
 
 (** We're operating in a normal mode. *)
 let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
-    if msg_is_unexpected_duplicate ( engine, m.full_msg_header ) then
+    let header = m.full_msg_header in
+    let msgtag = get_full_msg_tag m.full_msg_data in
+    (** Check msg header. If something is wrong - send the reject and start shutdown. *)
+    match validate_message_header ( engine, header, msgtag ) with 
+    | Some reject_data -> 
+        let engine = session_reject ( reject_data , engine ) in 
+        { engine with fe_curr_mode = ShuttingDown }
+    | None ->
+    (** Performing squence number checks *)
+    let is_duplicate = header.h_msg_seq_num < (engine.incoming_seq_num + 1) in
+    let possdup = match header.h_poss_dup_flag with Some true -> true | _ -> false in
+    if is_duplicate && not possdup then 
+        (** Message is a duplicate, but no PossibleDuplicate flag -- we instantly logoff *)
         logoff_and_shutdown engine
+    else if is_duplicate then 
+        (** Message is a duplicate and passed all checks -- ignore it. *)
+        engine
     else if msg_is_sequence_gap ( engine, m.full_msg_header ) then {
         (** We've detected a gap in messages. We therefore need to 
             transition into GapDetected mode. We place the message into the cahce. *)
@@ -179,6 +194,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
             incoming_seq_num  = engine.incoming_seq_num + 1;
             fe_cache = [ m ];
     } else
+    (** Message sequence number is OK -- lets process its data *)
     match m.full_msg_data with 
     | Full_FIX_Admin_Msg adm_msg ->
         begin 
@@ -204,7 +220,6 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                         outgoing_seq_num        = engine.outgoing_seq_num + 1;
                 }
         end
-
     | Full_FIX_App_Msg app_msg          -> 
         (** We're processing an application type of message. We just need 
         to append it to the list of outgoing application messages and 

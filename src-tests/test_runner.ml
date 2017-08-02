@@ -116,7 +116,7 @@ let perform_action  (instream, outch) act =
             Lwt_io.close outch >>= fun () ->
             Lwt.return_unit    
         end
-    end >>= fun () -> Lwt_unix.sleep 1.0
+    end >>= fun () -> Lwt_unix.sleep 0.1
 
 let setup_client msgs =
     let addr = Unix.( ADDR_INET( inet_addr_loopback , 9880 ) ) in
