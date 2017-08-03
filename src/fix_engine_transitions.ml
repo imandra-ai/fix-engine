@@ -86,18 +86,21 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                         fe_curr_status = MaxNumLogonMsgsViolated;
             } else 
                 begin
-                    let engine'  = { engine with fe_encrypt_method  = d.ln_encrypt_method } in
+                    let engine'  = { engine with 
+                            fe_encrypt_method  = d.ln_encrypt_method;
+                            fe_heartbeat_interval   = d.ln_heartbeat_interval 
+                        } in
                     let logon_msg = create_logon_msg ( engine' ) in
                     let engine'' = { engine' with 
-                        fe_initiator            = Some false;
-                        (*  TODO -- check if we really have to accept all incoming senders *)
-                        outgoing_fix_msg        = Some (ValidMsg ( logon_msg ));
-                        outgoing_seq_num        = engine.outgoing_seq_num + 1;
-                        fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
-                        fe_last_time_data_sent  = engine.fe_curr_time;
-                        fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
-                        fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
-                    } in 
+                            fe_initiator            = Some false;
+                            (*  TODO -- check if we really have to accept all incoming senders *)
+                            outgoing_fix_msg        = Some (ValidMsg ( logon_msg ));
+                            outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                            fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
+                            fe_last_time_data_sent  = engine.fe_curr_time;
+                            fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
+                            fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
+                        } in 
                     if m.full_msg_header.h_msg_seq_num < (engine.incoming_seq_num + 1) then
                         logoff_and_shutdown engine
                     else if msg_is_sequence_gap ( engine, m.full_msg_header )
