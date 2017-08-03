@@ -4,9 +4,10 @@ open Datetime
 let (>>=) = Lwt.(>>=);;
 
 
-let get_current_utctimstamp () =    
+let get_current_utctimstamp ?offset:(offset=0) () =    
     let open Datetime in
     let dtime = Unix.gettimeofday () in 
+    let dtime = dtime +. (1000. *. float_of_int offset) in
     let tm = Unix.gmtime dtime in
     let msec = int_of_float (1000. *. (dtime -. floor dtime)) in
     {   utc_timestamp_year   = tm.Unix.tm_year + 1900
@@ -34,9 +35,8 @@ let prepare_message msg (src, tagret)=
         begin
             let adds = Scanf.sscanf v "<TIME%s@>" id in
             let adds = if adds = "" then 0 else Scanf.sscanf adds "%d" id in
-            let time = { time with 
-                utc_timestamp_second = time.utc_timestamp_second + adds 
-            } |> normalise_timestamp in
+            let time = get_current_utctimstamp ~offset:adds () 
+                       |> normalise_timestamp in
             ( k , Core_printer.fix_utctimestamp_to_string time ) 
         end in
     let fill_empty_ts (k,v) =

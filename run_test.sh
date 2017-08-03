@@ -24,6 +24,7 @@ run_test ./defs/2c_MsgSeqNumTooLow.def
 run_test ./defs/2d_GarbledMessage.def
 run_test ./defs/2e_PossDupAlreadyReceived.def
 run_test ./defs/2e_PossDupNotReceived.def
+run_test ./defs/2f_PossDupOrigSendingTimeTooHigh.def
 run_test ./defs/2g_PossDupNoOrigSendingTime.def
 run_test ./defs/7_ReceiveRejectMessage.def
 run_test ./defs/3c_GarbledMessage.def
