@@ -173,10 +173,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     let msgtag = get_full_msg_tag m.full_msg_data in
     (** Check msg header. If something is wrong - send the reject and start shutdown. *)
     match validate_message_header ( engine, header, msgtag ) with 
-    | Some reject_data -> 
-        let engine = session_reject ( reject_data , engine ) in 
-        { engine with fe_curr_mode = ShuttingDown }
-    | None ->
+    | Some engine -> engine | None ->
     (** Performing squence number checks *)
     let is_duplicate = header.h_msg_seq_num < (engine.incoming_seq_num + 1) in
     let possdup = match header.h_poss_dup_flag with Some true -> true | _ -> false in
@@ -207,7 +204,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 }
             | Full_Msg_Logon data           -> engine
             | Full_Msg_Logoff data          -> logoff_and_shutdown ( engine )
-            | Full_Msg_Reject data          -> engine
+            | Full_Msg_Reject data          -> { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
             | Full_Msg_Business_Reject data -> engine
             | Full_Msg_Resend_Request data  -> initiate_Resend ( data, { engine with fe_after_resend_logout = false } )
             | Full_Msg_Sequence_Reset data  -> engine
@@ -218,6 +215,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                         outgoing_fix_msg        = Some ( ValidMsg ( hearbeat_msg ));
                         fe_history              = add_msg_to_history ( engine.fe_history, hearbeat_msg );
                         outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                        incoming_seq_num        = m.full_msg_header.h_msg_seq_num;
                 }
         end
     | Full_FIX_App_Msg app_msg          -> 
