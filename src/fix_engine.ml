@@ -215,6 +215,8 @@ let one_step ( engine : fix_engine_state ) =
     | GapDetected  -> run_gap_detected (engine)
     (** If we still need to retransmit our messages out to the receiving engine. *)
     | Retransmit   -> run_retransmit (engine)
+    (** We need to send out Logoff and transition to ShutdownInitiated *)
+    | ShuttingDown -> logoff_and_shutdown (engine)
     (** Now we look to process internal (coming from our application) and external (coming from
         another FIX engine) messages. *)
     | _ -> begin match engine.incoming_fix_msg with 

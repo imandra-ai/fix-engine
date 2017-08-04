@@ -86,19 +86,22 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                         fe_curr_status = MaxNumLogonMsgsViolated;
             } else 
                 begin
-                    let engine'  = { engine with fe_encrypt_method  = d.ln_encrypt_method } in
+                    let engine'  = { engine with 
+                            fe_encrypt_method  = d.ln_encrypt_method;
+                            fe_heartbeat_interval   = d.ln_heartbeat_interval 
+                        } in
                     let logon_msg = create_logon_msg ( engine' ) in
                     let engine'' = { engine' with 
-                        fe_initiator            = Some false;
-                        (*  TODO -- check if we really have to accept all incoming senders *)
-                        outgoing_fix_msg        = Some (ValidMsg ( logon_msg ));
-                        outgoing_seq_num        = engine.outgoing_seq_num + 1;
-                        fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
-                        fe_last_time_data_sent  = engine.fe_curr_time;
-                        fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
-                        fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
-                    } in 
-                    if msg_is_unexpected_duplicate ( engine, m.full_msg_header ) then
+                            fe_initiator            = Some false;
+                            (*  TODO -- check if we really have to accept all incoming senders *)
+                            outgoing_fix_msg        = Some (ValidMsg ( logon_msg ));
+                            outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                            fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
+                            fe_last_time_data_sent  = engine.fe_curr_time;
+                            fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
+                            fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
+                        } in 
+                    if m.full_msg_header.h_msg_seq_num < (engine.incoming_seq_num + 1) then
                         logoff_and_shutdown engine
                     else if msg_is_sequence_gap ( engine, m.full_msg_header )
                     then { engine'' with
@@ -169,8 +172,20 @@ let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engin
 
 (** We're operating in a normal mode. *)
 let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
-    if msg_is_unexpected_duplicate ( engine, m.full_msg_header ) then
+    let header = m.full_msg_header in
+    let msgtag = get_full_msg_tag m.full_msg_data in
+    (** Check msg header. If something is wrong - send the reject and start shutdown. *)
+    match validate_message_header ( engine, header, msgtag ) with 
+    | Some engine -> engine | None ->
+    (** Performing squence number checks *)
+    let is_duplicate = header.h_msg_seq_num < (engine.incoming_seq_num + 1) in
+    let possdup = match header.h_poss_dup_flag with Some true -> true | _ -> false in
+    if is_duplicate && not possdup then 
+        (** Message is a duplicate, but no PossibleDuplicate flag -- we instantly logoff *)
         logoff_and_shutdown engine
+    else if is_duplicate then 
+        (** Message is a duplicate and passed all checks -- ignore it. *)
+        engine
     else if msg_is_sequence_gap ( engine, m.full_msg_header ) then {
         (** We've detected a gap in messages. We therefore need to 
             transition into GapDetected mode. We place the message into the cahce. *)
@@ -179,6 +194,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
             incoming_seq_num  = engine.incoming_seq_num + 1;
             fe_cache = [ m ];
     } else
+    (** Message sequence number is OK -- lets process its data *)
     match m.full_msg_data with 
     | Full_FIX_Admin_Msg adm_msg ->
         begin 
@@ -191,7 +207,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 }
             | Full_Msg_Logon data           -> engine
             | Full_Msg_Logoff data          -> logoff_and_shutdown ( engine )
-            | Full_Msg_Reject data          -> engine
+            | Full_Msg_Reject data          -> { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
             | Full_Msg_Business_Reject data -> engine
             | Full_Msg_Resend_Request data  -> initiate_Resend ( data, { engine with fe_after_resend_logout = false } )
             | Full_Msg_Sequence_Reset data  -> engine
@@ -202,9 +218,9 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                         outgoing_fix_msg        = Some ( ValidMsg ( hearbeat_msg ));
                         fe_history              = add_msg_to_history ( engine.fe_history, hearbeat_msg );
                         outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                        incoming_seq_num        = m.full_msg_header.h_msg_seq_num;
                 }
         end
-
     | Full_FIX_App_Msg app_msg          -> 
         (** We're processing an application type of message. We just need 
         to append it to the list of outgoing application messages and 

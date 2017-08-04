@@ -47,6 +47,7 @@ let encode_admin_field_tag = function
     | Full_Msg_RawData_Tag                 -> "96"  
     | Full_Msg_EncryptMethod_Tag           -> "98"  
     | Full_Msg_RefTagID_Tag                -> "371"  
+    | Full_Msg_OrigSendingTime_Tag         -> "122"
 ;;
 
 
