@@ -38,7 +38,8 @@ let logoff_and_shutdown ( engine : fix_engine_state ) =
     Note: when we transition into Retransmit mode, we set up a 
     queue with messages that should be sent out. These messages are a function
     of the parameters that were sent to the engine. *)
-let run_retransmit ( engine : fix_engine_state ) = 
+let run_retransmit ( engine : fix_engine_state ) =
+    let () = print_endline "Running retransmit" in 
     match engine.fe_history_to_send with 
     | [] -> 
         (* Since after initiating a Logoff, we can still process Resend request, 
@@ -46,6 +47,7 @@ let run_retransmit ( engine : fix_engine_state ) =
         if engine.fe_after_resend_logout then 
             { engine with fe_curr_mode = ShutdownInitiated; fe_after_resend_logout = false; }
         else 
+            let () = print_endline "Retransmission is done" in
             { engine with fe_curr_mode = ActiveSession; } (* We're done - need to change mode. *)
     | x::xs -> 
         (* First check: have we 'reached' the starting message to be sent out? If not, continue. *)
@@ -62,11 +64,20 @@ let run_retransmit ( engine : fix_engine_state ) =
                 fe_history_to_send = [];
                 outgoing_fix_msg = None;
 
-        (* Otherwise: we're in the zone and should send out the current message. *)
-        } else {
+        (** Otherwise - we're in the zone, we should:
+          - set PossibleDuplicate flag 
+          - move historic SendingTime to OrigSendingTime
+          - update SendingTime 
+          - send out the message. *)
+        } else 
+            let msg = { x with full_msg_header = { x.full_msg_header with 
+                h_poss_dup_flag = Some true;
+                h_orig_sending_time = Some x.full_msg_header.h_sending_time;
+                h_sending_time = engine.fe_curr_time
+            } } in {
             engine with 
                 fe_history_to_send = xs;
-                outgoing_fix_msg = Some ( ValidMsg x );
+                outgoing_fix_msg = Some ( ValidMsg msg );
         }
 ;;
 
@@ -157,8 +168,10 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     we will use the starting/ending indexes to ensure we're only sending out the right ones. 
     Perhaps there's a better way to do this - it's important that we always maintain the spirit
     of 'one_step' - all operations are are atomic. *)
-let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engine_state ) = {
+let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engine_state ) = 
+    let () = print_endline "Initiated resend" in {
     engine with
+
         fe_curr_mode = Retransmit;
         fe_retransmit_start_idx = request.rr_begin_seq_num;
         fe_retransmit_end_idx = request.rr_end_seq_num;
@@ -179,6 +192,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     | Some engine -> engine | None ->
     (** Performing squence number checks *)
     let is_duplicate = header.h_msg_seq_num < (engine.incoming_seq_num + 1) in
+    let () = print_endline (if is_duplicate then "Message is duplicate" else "Message is not a duplicate") in
     let possdup = match header.h_poss_dup_flag with Some true -> true | _ -> false in
     if is_duplicate && not possdup then 
         (** Message is a duplicate, but no PossibleDuplicate flag -- we instantly logoff *)
@@ -209,7 +223,11 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
             | Full_Msg_Logoff data          -> logoff_and_shutdown ( engine )
             | Full_Msg_Reject data          -> { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
             | Full_Msg_Business_Reject data -> engine
-            | Full_Msg_Resend_Request data  -> initiate_Resend ( data, { engine with fe_after_resend_logout = false } )
+            | Full_Msg_Resend_Request data  -> 
+                let engine = { engine with 
+                    fe_after_resend_logout = false;
+                    incoming_seq_num = m.full_msg_header.h_msg_seq_num
+                } in initiate_Resend ( data, engine )
             | Full_Msg_Sequence_Reset data  -> engine
             | Full_Msg_Test_Request data    ->
                 let hearbeat_msg = create_heartbeat_msg ( engine, Some data.test_req_id ) in {
