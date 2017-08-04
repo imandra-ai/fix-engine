@@ -103,7 +103,7 @@ let perform_action  (instream, outch) act =
             let msg = prepare_message msg ("BANZAI", "IMANDRA") in
             Lwt_io.write outch msg >>= fun () ->
             Lwt_io.flush outch >>= fun () ->
-            let logstring = ("Initiated #" ^ seqnum ^ " \"" ^ msgtype ^ "\"\n  (" ^ msg ^ ")" ) in
+            let logstring = ("Initiated #" ^ seqnum ^ " \"" ^ msgtype ^ "\"  (" ^ msg ^ ")" ) in
             Lwt_io.printl logstring
         end
     | ExpectMessage msg -> begin 

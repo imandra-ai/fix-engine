@@ -90,9 +90,8 @@ let combine_gapfill_msgs ( msgOne, msgTwo : full_msg_sequence_reset_data * full_
         expected NextSeqNum parameter *)
 let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix_msg ) = 
     let hist_msg = get_historic_msg ( msg ) in 
-
     match history with
-    | [] -> [ msg ]
+    | [] -> [ hist_msg ]
     | x::xs ->
         begin
             match x.full_msg_data, hist_msg.full_msg_data with 

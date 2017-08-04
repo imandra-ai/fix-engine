@@ -39,7 +39,6 @@ let logoff_and_shutdown ( engine : fix_engine_state ) =
     queue with messages that should be sent out. These messages are a function
     of the parameters that were sent to the engine. *)
 let run_retransmit ( engine : fix_engine_state ) =
-    let () = print_endline "Running retransmit" in 
     match engine.fe_history_to_send with 
     | [] -> 
         (* Since after initiating a Logoff, we can still process Resend request, 
@@ -47,7 +46,6 @@ let run_retransmit ( engine : fix_engine_state ) =
         if engine.fe_after_resend_logout then 
             { engine with fe_curr_mode = ShutdownInitiated; fe_after_resend_logout = false; }
         else 
-            let () = print_endline "Retransmission is done" in
             { engine with fe_curr_mode = ActiveSession; } (* We're done - need to change mode. *)
     | x::xs -> 
         (* First check: have we 'reached' the starting message to be sent out? If not, continue. *)
@@ -97,12 +95,12 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                         fe_curr_status = MaxNumLogonMsgsViolated;
             } else 
                 begin
-                    let engine'  = { engine with 
+                    let engine  = { engine with 
                             fe_encrypt_method  = d.ln_encrypt_method;
                             fe_heartbeat_interval   = d.ln_heartbeat_interval 
                         } in
-                    let logon_msg = create_logon_msg ( engine' ) in
-                    let engine'' = { engine' with 
+                    let logon_msg = create_logon_msg ( engine ) in
+                    let engine = { engine with 
                             fe_initiator            = Some false;
                             (*  TODO -- check if we really have to accept all incoming senders *)
                             outgoing_fix_msg        = Some (ValidMsg ( logon_msg ));
@@ -110,15 +108,15 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                             fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
                             fe_last_time_data_sent  = engine.fe_curr_time;
                             fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
-                            fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
                         } in 
                     if m.full_msg_header.h_msg_seq_num < (engine.incoming_seq_num + 1) then
                         logoff_and_shutdown engine
                     else if msg_is_sequence_gap ( engine, m.full_msg_header )
-                    then { engine'' with
+                    then { engine with
                         incoming_seq_num  = engine.incoming_seq_num + 1;
                         fe_curr_mode      = GapDetected;
-                    } else { engine'' with
+                    } else 
+                    { engine with
                         fe_curr_mode      = ActiveSession;
                         incoming_seq_num  = m.full_msg_header.h_msg_seq_num;
                         fe_history        = add_msg_to_history ( engine.fe_history, logon_msg );
@@ -168,10 +166,8 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     we will use the starting/ending indexes to ensure we're only sending out the right ones. 
     Perhaps there's a better way to do this - it's important that we always maintain the spirit
     of 'one_step' - all operations are are atomic. *)
-let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engine_state ) = 
-    let () = print_endline "Initiated resend" in {
+let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engine_state ) = { 
     engine with
-
         fe_curr_mode = Retransmit;
         fe_retransmit_start_idx = request.rr_begin_seq_num;
         fe_retransmit_end_idx = request.rr_end_seq_num;
@@ -180,8 +176,7 @@ let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engin
         message we have to do pattern matching on the list to ensure consecutive GapFill messages
         are 'compressed' into one. OCaml pattern matching doesn't work on last elements, hence 
         we maintain it in a reverse order, but do List.rev when we need to send it out. *)
-}
-;;
+};;
 
 (** We're operating in a normal mode. *)
 let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
@@ -192,7 +187,6 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     | Some engine -> engine | None ->
     (** Performing squence number checks *)
     let is_duplicate = header.h_msg_seq_num < (engine.incoming_seq_num + 1) in
-    let () = print_endline (if is_duplicate then "Message is duplicate" else "Message is not a duplicate") in
     let possdup = match header.h_poss_dup_flag with Some true -> true | _ -> false in
     if is_duplicate && not possdup then 
         (** Message is a duplicate, but no PossibleDuplicate flag -- we instantly logoff *)
