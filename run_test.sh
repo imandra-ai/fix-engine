@@ -30,3 +30,5 @@ run_test ./defs/7_ReceiveRejectMessage.def
 run_test ./defs/3c_GarbledMessage.def
 run_test ./defs/4a_NoDataSentDuringHeartBtInt.def
 run_test ./defs/4b_ReceivedTestRequest.def
+run_test ./defs/8_AdminAndApplicationMessages.def
+run_test ./defs/8_OnlyApplicationMessages.def

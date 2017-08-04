@@ -84,16 +84,27 @@ let check_expected_compatible received expected =
     )
 ;;
     
-
+let get_type_and_seqnum msg =
+    let msgtype = try 
+        let msgtype = List.assoc "35" msg in
+        match Parse_full_tags.parse_full_msg_tag msgtype with None -> "?"
+        | Some ( Full_message_tags.Full_Admin_Msg_Tag tag) -> Full_admin_tags_json.full_admin_msg_tag_to_string tag 
+        | Some ( Full_message_tags.Full_App_Msg_Tag   tag) -> Full_app_tags_json.full_app_msg_tag_to_string tag
+    with _ -> "?" in
+    let seqnum = try List.assoc "34" msg with _ -> "?" in 
+    msgtype , seqnum
+;;
     
 let perform_action  (instream, outch) act =
     begin
     match act with 
     | InitiateMessage msg -> begin
+            let msgtype, seqnum = get_type_and_seqnum msg in
             let msg = prepare_message msg ("BANZAI", "IMANDRA") in
             Lwt_io.write outch msg >>= fun () ->
             Lwt_io.flush outch >>= fun () ->
-            Lwt_io.printl ("Initiated: " ^ msg )
+            let logstring = ("Initiated #" ^ seqnum ^ " \"" ^ msgtype ^ "\"\n  (" ^ msg ^ ")" ) in
+            Lwt_io.printl logstring
         end
     | ExpectMessage msg -> begin 
             let msg = prepare_message msg ("IMANDRA", "BANZAI") in
