@@ -203,7 +203,7 @@ let process_sequence_reset (engine, data : fix_engine_state * full_msg_sequence_
     if not gapfill then {
     (** If the GapFillFlag field is false, the purpose of the SequenceReset is to recover 
         from an out-of-sequence condition. The MsgSeqNum in the header should be ignored. *)
-        engine with incoming_seq_num = data.seqr_new_seq_no - 1
+        engine with incoming_seq_num = data.seqr_new_seq_no 
     } else if data.seqr_new_seq_no < engine.incoming_seq_num then 
         (** The sequence reset can only increase the sequence number. If a sequence reset is attempting 
             to decrease the next expected sequence number the message should be rejected and 
@@ -216,6 +216,11 @@ let process_sequence_reset (engine, data : fix_engine_state * full_msg_sequence_
 
 (** We're operating in a normal mode. *)
 let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
+    (** SequenceResets that dont have a GapFill flag get special treatment -- their 
+        sequence numbers are ignored entirely. *)
+    match get_critical_reset_seq_num m.full_msg_data with 
+    | Some new_seq_num -> { engine with incoming_seq_num = new_seq_num - 1 } | None -> 
+    (** In all other cases we first check sequence numbers / duplicate flags*)
     let header = m.full_msg_header in
     let msgtag = get_full_msg_tag m.full_msg_data in
     (** Check msg header. If something is wrong - send the reject and start shutdown. *)
