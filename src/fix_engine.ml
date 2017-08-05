@@ -180,7 +180,7 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
             | Recovery              -> run_recovery ( msg, engine )
             | ShutdownInitiated     -> run_shutdown ( msg, engine )
             | Error                 -> noop ( msg, engine )
-            | WaitingForHeartbeat   -> noop ( msg, engine) 
+            | WaitingForHeartbeat   -> run_wait_heartbeat ( msg, engine) 
             | _                     -> { engine with incoming_fix_msg = Some ( ValidMsg msg ) }
         end in { state' with fe_last_data_received = engine.fe_curr_time }
 ;;

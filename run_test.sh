@@ -32,3 +32,5 @@ run_test ./defs/4a_NoDataSentDuringHeartBtInt.def
 run_test ./defs/4b_ReceivedTestRequest.def
 run_test ./defs/8_AdminAndApplicationMessages.def
 run_test ./defs/8_OnlyApplicationMessages.def
+run_test ./defs/8_OnlyAdminMessages.def
+run_test ./defs/20_SimultaneousResendRequest.def

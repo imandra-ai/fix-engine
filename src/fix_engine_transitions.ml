@@ -57,12 +57,8 @@ let make_resend_message (msg, curr_time, start_seq) = {
 let run_retransmit ( engine : fix_engine_state ) =
     match engine.fe_history_to_send with 
     | [] -> 
-        (* Since after initiating a Logoff, we can still process Resend request, 
-            then need to check whether we need to return there. *)
-        if engine.fe_after_resend_logout then 
-            { engine with fe_curr_mode = ShutdownInitiated; fe_after_resend_logout = false; }
-        else 
-            { engine with fe_curr_mode = ActiveSession; } (* We're done - need to change mode. *)
+        (* We're done sending out the messages and will get back to the stored state *)
+        { engine with fe_curr_mode = engine.fe_mode_after_resend }
     | msgx::msgy::tail ->  
         if msgy.full_msg_header.h_msg_seq_num <= engine.fe_retransmit_start_idx then { 
             (* We haven't 'reached' the starting message to be sent out. Continue. *)
@@ -184,17 +180,17 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 
 
 
-
 (** Response to resend request. Note that we're copyng over the whole list of historic messages -
     we will use the starting/ending indexes to ensure we're only sending out the right ones. 
     Perhaps there's a better way to do this - it's important that we always maintain the spirit
     of 'one_step' - all operations are are atomic. *)
-let initiate_Resend ( request, engine : full_msg_resend_request_data * fix_engine_state ) = { 
+let initiate_Resend ( return_mode, request, engine : fix_engine_mode * full_msg_resend_request_data * fix_engine_state ) = {
     engine with
         fe_curr_mode = Retransmit;
         fe_retransmit_start_idx = request.rr_begin_seq_num;
         fe_retransmit_end_idx = request.rr_end_seq_num;
         fe_history_to_send = List.rev engine.fe_history; 
+        fe_mode_after_resend = return_mode;
         (* Important note: We store messages in a reverse-chronological order b/c on each outbound
         message we have to do pattern matching on the list to ensure consecutive GapFill messages
         are 'compressed' into one. OCaml pattern matching doesn't work on last elements, hence 
@@ -242,9 +238,8 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
             | Full_Msg_Business_Reject data -> engine
             | Full_Msg_Resend_Request data  -> 
                 let engine = { engine with 
-                    fe_after_resend_logout = false;
                     incoming_seq_num = m.full_msg_header.h_msg_seq_num
-                } in initiate_Resend ( data, engine )
+                } in initiate_Resend ( ActiveSession, data, engine )
             | Full_Msg_Sequence_Reset data  -> engine
             | Full_Msg_Test_Request data    ->
                 let hearbeat_msg = create_heartbeat_msg ( engine, Some data.test_req_id ) in {
@@ -267,7 +262,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 incoming_fix_msg = None;
         } else
             begin
-                let biz_reject_data = {
+                let biz_reject_data = { 
                     brej_msg_ref_seq_num    = m.full_msg_header.h_msg_seq_num;
                     brej_msg_msg_tag        = get_full_msg_tag ( m.full_msg_data );
                     brej_msg_reject_reason  = ApplicationDown;
@@ -279,7 +274,17 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
             end
 ;;
 
+(** We've force-requested a heartbeat message from the other end and waiting for it to come. 
+    TODO: We're ignoring all other messages -- check the specs if that is a correct behavior *)
+let run_wait_heartbeat ( msg, engine ) =
+    match msg.full_msg_data with
+    | Full_FIX_Admin_Msg ( Full_Msg_Heartbeat d ) -> 
+        let engine = {engine with fe_curr_mode = ActiveSession } in
+        run_active_session  (msg , engine)
+    | _ -> engine
+;;   
 
+(** We're in a GapDetected state. Sending out resend request and transitioning into Recovery.*)
 let run_gap_detected ( engine : fix_engine_state ) = 
     let resend_msg = create_resend_request_msg (engine) in
     { engine with
@@ -362,11 +367,14 @@ let rec add_to_cache ( m, cache : full_valid_fix_msg * full_valid_fix_msg list )
                 m::x::xs else ( x :: ( add_to_cache (m, xs) ) )
 ;;
 
-(** We're in recovery mode. We should add any (except logoff) received messages to our cache.
-    Check to see whether next message is complete. *)
+(** We're in recovery mode. 
+    Logoff and ResendRequest messages must be processed.
+    We should add any other received messages are addted to the cache.
+    Transition to CacheReplay when the cahce is complete. *)
 let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) = 
     match m.full_msg_data with 
-    | Full_FIX_Admin_Msg (Full_Msg_Logoff data) -> logoff_and_shutdown ( engine )
+    | Full_FIX_Admin_Msg (Full_Msg_Logoff m) -> logoff_and_shutdown ( engine )
+    | Full_FIX_Admin_Msg (Full_Msg_Resend_Request m) -> initiate_Resend ( Recovery, m, engine)
     | _ ->
     let new_cache = add_to_cache (m, engine.fe_cache) in 
     if is_cache_complete (new_cache, engine.incoming_seq_num) then {
@@ -385,6 +393,8 @@ let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 let run_shutdown ( m, engine : full_valid_fix_msg * fix_engine_state ) = 
     match m.full_msg_data with 
     | Full_FIX_Admin_Msg ( Full_Msg_Logoff m )          -> { engine with fe_curr_mode = NoActiveSession; }
-    | Full_FIX_Admin_Msg ( Full_Msg_Resend_Request m )  -> initiate_Resend ( m, { engine with fe_after_resend_logout = true })
+    | Full_FIX_Admin_Msg ( Full_Msg_Resend_Request m )  -> 
+    (* Since after initiating a Logoff, we can still process Resend request. *)
+        initiate_Resend ( ShutdownInitiated, m, engine)
     | _ -> engine
 ;;
