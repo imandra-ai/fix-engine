@@ -32,7 +32,23 @@ let logoff_and_shutdown ( engine : fix_engine_state ) =
     }
 ;;
 
-
+(** Before sending out a historic message, we need to:
+    - move the sequence number if it is too low
+    - set PossibleDuplicate flag 
+    - move historic SendingTime to OrigSendingTime
+    - update SendingTime *)
+let make_resend_message (msg, curr_time, start_seq) = { 
+    msg with full_msg_header = { msg.full_msg_header with
+        h_msg_seq_num = 
+            if msg.full_msg_header.h_msg_seq_num < start_seq
+            then start_seq 
+            else msg.full_msg_header.h_msg_seq_num;
+        h_poss_dup_flag = Some true;
+        h_orig_sending_time = Some msg.full_msg_header.h_sending_time;
+        h_sending_time = curr_time
+        } 
+    }
+;;
 
 (** We're in the middle of retransmitting historic messages. 
     Note: when we transition into Retransmit mode, we set up a 
@@ -47,36 +63,43 @@ let run_retransmit ( engine : fix_engine_state ) =
             { engine with fe_curr_mode = ShutdownInitiated; fe_after_resend_logout = false; }
         else 
             { engine with fe_curr_mode = ActiveSession; } (* We're done - need to change mode. *)
-    | x::xs -> 
-        (* First check: have we 'reached' the starting message to be sent out? If not, continue. *)
-        if x.full_msg_header.h_msg_seq_num < engine.fe_retransmit_start_idx then {
+    | msgx::msgy::tail ->  
+        if msgy.full_msg_header.h_msg_seq_num <= engine.fe_retransmit_start_idx then { 
+            (* We haven't 'reached' the starting message to be sent out. Continue. *)
             engine with
-                fe_history_to_send = xs;
+                fe_history_to_send = msgy::tail;
                 outgoing_fix_msg = None;
-        } else 
-
-        (* Second check: have we over-shot the last message. Note that fe_retransmit_end_idx = 0 means that all messages
-            starting from the fe_retransmit_start_idx should be retransmitted. *)
-        if engine.fe_retransmit_end_idx <> 0 && x.full_msg_header.h_msg_seq_num > engine.fe_retransmit_end_idx then {
+        } else if engine.fe_retransmit_end_idx <> 0 && engine.fe_retransmit_end_idx < msgx.full_msg_header.h_msg_seq_num then {
+            (* We have over-shot the last message. Stopping. 
+               Note that fe_retransmit_end_idx = 0 means that all messages 
+               starting from the fe_retransmit_start_idx should be retransmitted. *)  
             engine with
                 fe_history_to_send = [];
                 outgoing_fix_msg = None;
-
-        (** Otherwise - we're in the zone, we should:
-          - set PossibleDuplicate flag 
-          - move historic SendingTime to OrigSendingTime
-          - update SendingTime 
-          - send out the message. *)
-        } else 
-            let msg = { x with full_msg_header = { x.full_msg_header with 
-                h_poss_dup_flag = Some true;
-                h_orig_sending_time = Some x.full_msg_header.h_sending_time;
-                h_sending_time = engine.fe_curr_time
-            } } in {
+        } else { 
+            (** We're in the zone: format and send out the message *)
             engine with 
-                fe_history_to_send = xs;
-                outgoing_fix_msg = Some ( ValidMsg msg );
+                fe_history_to_send = msgy::tail;
+                outgoing_fix_msg = Some ( ValidMsg (
+                    make_resend_message (msgx, engine.fe_curr_time, engine.fe_retransmit_start_idx) 
+                ) );
         }
+    (** treting a special case when there is only one message in history *)
+    | msg::[] ->
+        if msg.full_msg_header.h_msg_seq_num < engine.fe_retransmit_start_idx then {
+            (** TODO: If we are here, then  history doesn't contain the requested messages.
+                Investigate what is the correct behavior in htis case. ( Reject, probably? )*)
+            engine with fe_history_to_send = []; outgoing_fix_msg = None;
+        } else if engine.fe_retransmit_end_idx <> 0 && engine.fe_retransmit_end_idx < msg.full_msg_header.h_msg_seq_num then {
+            engine with fe_history_to_send = []; outgoing_fix_msg = None;
+        } else {
+            engine with
+                fe_history_to_send = [];
+                outgoing_fix_msg = Some ( ValidMsg (
+                    make_resend_message (msg, engine.fe_curr_time,engine.fe_retransmit_start_idx) 
+                ) );
+        }
+
 ;;
 
 
