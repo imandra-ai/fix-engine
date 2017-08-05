@@ -34,3 +34,7 @@ run_test ./defs/8_AdminAndApplicationMessages.def
 run_test ./defs/8_OnlyApplicationMessages.def
 run_test ./defs/8_OnlyAdminMessages.def
 run_test ./defs/20_SimultaneousResendRequest.def
+
+run_test ./defs/10_MsgSeqNumEqual.def
+run_test ./defs/10_MsgSeqNumGreater.def
+run_test ./defs/10_MsgSeqNumLess.def

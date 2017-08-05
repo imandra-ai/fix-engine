@@ -197,6 +197,23 @@ let initiate_Resend ( return_mode, request, engine : fix_engine_mode * full_msg_
         we maintain it in a reverse order, but do List.rev when we need to send it out. *)
 };;
 
+
+let process_sequence_reset (engine, data : fix_engine_state * full_msg_sequence_reset_data ) = 
+    let gapfill = match data.seqr_gap_fill_flag with Some FIX_GapFillFlag_Y -> true | _ -> false in
+    if not gapfill then {
+    (** If the GapFillFlag field is false, the purpose of the SequenceReset is to recover 
+        from an out-of-sequence condition. The MsgSeqNum in the header should be ignored. *)
+        engine with incoming_seq_num = data.seqr_new_seq_no - 1
+    } else if data.seqr_new_seq_no < engine.incoming_seq_num then 
+        (** The sequence reset can only increase the sequence number. If a sequence reset is attempting 
+            to decrease the next expected sequence number the message should be rejected and 
+            treated as a serious error. *)
+        engine 
+    else {
+        engine with incoming_seq_num = data.seqr_new_seq_no - 1
+    }
+;;
+
 (** We're operating in a normal mode. *)
 let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     let header = m.full_msg_header in
@@ -240,7 +257,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 let engine = { engine with 
                     incoming_seq_num = m.full_msg_header.h_msg_seq_num
                 } in initiate_Resend ( ActiveSession, data, engine )
-            | Full_Msg_Sequence_Reset data  -> engine
+            | Full_Msg_Sequence_Reset data  -> process_sequence_reset (engine, data)
             | Full_Msg_Test_Request data    ->
                 let hearbeat_msg = create_heartbeat_msg ( engine, Some data.test_req_id ) in {
                     engine with 
