@@ -61,12 +61,13 @@ type fix_engine_mode =
     | NoActiveSession       (** State of the engine before logon. *)
     | LogonInitiated        (** Middle of logon session. *)
     | ActiveSession         (** Application messages are now processed. *)
-    | GapDetected           (** Detected out-of-sequence message. Waiting to receive it. *)
-    | Recovery              (** RequestResend has been sent out. Waiting to recover the messages. *)
+    | GapDetected           (** Detected out-of-sequence message. Sending out ResendRequest. *)
+    | Recovery              (** RequestResend has been sent out. Waiting to recover the messages, filling int the cache.. *)
     | CacheReplay           (** Replaying the cache. *)
     | Retransmit            (** Retransmitting sequence of messages because we were asked to retransmit. *)
+    | ShuttingDown          (** We'll nees to send a logoff message adn transition to ShutdownInitiated. *)               
     | ShutdownInitiated     (** Shutting-down protocol. *)
-    | Error                 (** Received a non-dup message with earlier sequence number. *)
+    | Error                 (** *)
     | WaitingForHeartbeat   (** Sent out TestRequest message.  *)
 ;;
 
@@ -169,7 +170,7 @@ let engine_state_busy engine =
    ( engine.outgoing_fix_msg != None ) ||
    ( engine.outgoing_int_msg != None ) ||
    ( match engine.fe_curr_mode with
-        | GapDetected | CacheReplay | Retransmit -> true
+        | GapDetected | CacheReplay | Retransmit | ShuttingDown -> true
         | _ -> false
    )
 ;;

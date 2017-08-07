@@ -23,6 +23,7 @@ let fix_engine_mode_to_string = function
     | LogonInitiated                                    -> "LogonInitiated"
     | ActiveSession                                     -> "ActiveSession"
     | GapDetected                                       -> "GapDetected"
+    | ShuttingDown                                      -> "ShuttingDown"
     | Recovery                                          -> "Recovery"
     | Retransmit                                        -> "Retransmit"
     | ShutdownInitiated                                 -> "ShutdownInitiated"

@@ -45,5 +45,6 @@ type full_admin_field_tag =
     | Full_Msg_TestReqID_Tag 
     | Full_Msg_Text_Tag
     | Full_Msg_Username_Tag 
+    | Full_Msg_OrigSendingTime_Tag
 ;;
 
