@@ -63,6 +63,18 @@ let get_historic_msg ( valid_msg : full_valid_fix_msg ) =
     | Full_FIX_App_Msg app_msg -> valid_msg
 ;; 
 
+(** This function returns a new sequence number if we got a SequenceReset without GapFill flag.
+    Returns None in all other cases.  *)
+let get_critical_reset_seq_num (msg_data : full_msg_data ) =
+    match msg_data with
+    | Full_FIX_Admin_Msg (Full_Msg_Sequence_Reset data) -> begin
+        match data.seqr_gap_fill_flag with 
+        | Some FIX_GapFillFlag_Y -> None
+        | _ -> Some data.seqr_new_seq_no
+        end
+    | _ -> None
+;;
+
 (** Give us a single GapFill message with the correct NextSequenceNumber.
 
    From the specification:
@@ -90,9 +102,8 @@ let combine_gapfill_msgs ( msgOne, msgTwo : full_msg_sequence_reset_data * full_
         expected NextSeqNum parameter *)
 let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix_msg ) = 
     let hist_msg = get_historic_msg ( msg ) in 
-
     match history with
-    | [] -> [ msg ]
+    | [] -> [ hist_msg ]
     | x::xs ->
         begin
             match x.full_msg_data, hist_msg.full_msg_data with 
