@@ -198,30 +198,37 @@ let initiate_Resend ( return_mode, request, engine : fix_engine_mode * full_msg_
 };;
 
 
-let process_sequence_reset (engine, data : fix_engine_state * full_msg_sequence_reset_data ) = 
-    let gapfill = match data.seqr_gap_fill_flag with Some FIX_GapFillFlag_Y -> true | _ -> false in
-    if not gapfill then {
-    (** If the GapFillFlag field is false, the purpose of the SequenceReset is to recover 
-        from an out-of-sequence condition. The MsgSeqNum in the header should be ignored. *)
-        engine with incoming_seq_num = data.seqr_new_seq_no 
-    } else if data.seqr_new_seq_no < engine.incoming_seq_num then 
-        (** The sequence reset can only increase the sequence number. If a sequence reset is attempting 
-            to decrease the next expected sequence number the message should be rejected and 
-            treated as a serious error. *)
-        engine 
+let attempt_sequence_reset (engine, msg_seq_num, new_seq_num : fix_engine_state * int * int ) = 
+    if new_seq_num - 1 < engine.incoming_seq_num then 
+    (** The sequence reset can only increase the sequence number. If a sequence reset is attempting 
+        to decrease the next expected sequence number the message should be rejected and 
+        treated as a serious error. *)
+        let reject = {
+            srej_msg_msg_seq_num   = msg_seq_num;
+            srej_msg_field_tag     = Some (Full_Admin_Field_Tag Full_Msg_NewSeqNo_Tag);
+            srej_msg_msg_type      = Some (Full_Admin_Msg_Tag Full_Msg_Sequence_Reset_Tag);
+            srej_msg_reject_reason = Some ValueIsIncorrect;
+            srej_text              = None; 
+            srej_encoded_text_len  = None;
+            srej_encoded_text      = None;
+        } in 
+        let engine' = session_reject ( reject , engine ) in
+        (** In this case I'm not sure what one has to do with the incoming_seq_num.
+            Most logical thing seems to just not change it at all*)
+        { engine' with incoming_seq_num = engine.incoming_seq_num }
     else {
-        engine with incoming_seq_num = data.seqr_new_seq_no - 1
+        engine with incoming_seq_num = new_seq_num - 1
     }
 ;;
 
 (** We're operating in a normal mode. *)
 let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
+    let header = m.full_msg_header in
     (** SequenceResets that dont have a GapFill flag get special treatment -- their 
         sequence numbers are ignored entirely. *)
     match get_critical_reset_seq_num m.full_msg_data with 
-    | Some new_seq_num -> { engine with incoming_seq_num = new_seq_num - 1 } | None -> 
+    | Some new_seq_num ->  attempt_sequence_reset (engine, header.h_msg_seq_num, new_seq_num) | None -> 
     (** In all other cases we first check sequence numbers / duplicate flags*)
-    let header = m.full_msg_header in
     let msgtag = get_full_msg_tag m.full_msg_data in
     (** Check msg header. If something is wrong - send the reject and start shutdown. *)
     match validate_message_header ( engine, header, msgtag ) with 
@@ -262,7 +269,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 let engine = { engine with 
                     incoming_seq_num = m.full_msg_header.h_msg_seq_num
                 } in initiate_Resend ( ActiveSession, data, engine )
-            | Full_Msg_Sequence_Reset data  -> process_sequence_reset (engine, data)
+            | Full_Msg_Sequence_Reset data  -> attempt_sequence_reset (engine, header.h_msg_seq_num, data.seqr_new_seq_no)
             | Full_Msg_Test_Request data    ->
                 let hearbeat_msg = create_heartbeat_msg ( engine, Some data.test_req_id ) in {
                     engine with 

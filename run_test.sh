@@ -38,3 +38,7 @@ run_test ./defs/20_SimultaneousResendRequest.def
 run_test ./defs/10_MsgSeqNumEqual.def
 run_test ./defs/10_MsgSeqNumGreater.def
 run_test ./defs/10_MsgSeqNumLess.def
+
+run_test ./defs/11a_NewSeqNoGreater.def
+run_test ./defs/11b_NewSeqNoEqual.def
+run_test ./defs/11c_NewSeqNoLess.def

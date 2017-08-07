@@ -66,13 +66,13 @@ let get_historic_msg ( valid_msg : full_valid_fix_msg ) =
 (** This function returns a new sequence number if we got a SequenceReset without GapFill flag.
     Returns None in all other cases.  *)
 let get_critical_reset_seq_num (msg_data : full_msg_data ) =
-     match msg_data with
-        | Full_FIX_Admin_Msg (Full_Msg_Sequence_Reset data) -> begin
-            match data.seqr_gap_fill_flag with 
-                | Some FIX_GapFillFlag_Y -> None
-                | _ -> Some data.seqr_new_seq_no
-            end
-        | _ -> None
+    match msg_data with
+    | Full_FIX_Admin_Msg (Full_Msg_Sequence_Reset data) -> begin
+        match data.seqr_gap_fill_flag with 
+        | Some FIX_GapFillFlag_Y -> None
+        | _ -> Some data.seqr_new_seq_no
+        end
+    | _ -> None
 ;;
 
 (** Give us a single GapFill message with the correct NextSequenceNumber.
