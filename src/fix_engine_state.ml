@@ -105,7 +105,8 @@ type fix_engine_state = {
     fe_retransmit_end_idx   : int;                          (** Ending index ... *)
 
     fe_history_to_send      : full_valid_fix_msg list;      (** Used in message retransmission. *)
-    fe_after_resend_logout  : bool;                         (** Should engine go to LogoffTerminated after finishing GapRefill mode completes? *)
+    fe_mode_after_resend    : fix_engine_mode;              (** Which mode should we go to after resend is completed? *)
+
 
     fe_application_up       : bool;                         (** Is the application that's receiving messages up and running?
                                                                 TODO: we might need to constitute a heartbeat to enforce this. *)
@@ -151,7 +152,7 @@ let init_fix_engine_state = {
     fe_history_to_send      = [];
     fe_retransmit_start_idx = 0;
     fe_retransmit_end_idx   = 0;
-    fe_after_resend_logout  = false;
+    fe_mode_after_resend   = NoActiveSession;
 
     fe_application_up       = true;
 
