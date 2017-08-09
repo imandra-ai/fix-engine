@@ -12,7 +12,7 @@ Community.
 
 There's an explicit interface between administrative and application
 models to make it easier to generate the application-level logic from
-a higher-level language (e.g., AI's FIX DSL or FIX Orchestra).
+a higher-level language (e.g., AI's Imandra Protocol Language or FIX Orchestra).
 
 We hope this project will be the beginning of an industry-wide effort to
 mathematically formalise the rules and algorithms that run the
