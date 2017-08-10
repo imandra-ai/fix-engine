@@ -284,11 +284,15 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     | Full_FIX_App_Msg app_msg          -> 
         (** We're processing an application type of message. We just need 
         to append it to the list of outgoing application messages and 
-        update the last seq number processed. *) 
-        if engine.fe_application_up then {
+        update the last seq number processed. *)
+         
+        if engine.fe_application_up then
+            let out_int = match m.full_msg_header.h_poss_resend with 
+            | Some true -> OutIntMsg_ResendApplicationData app_msg 
+            |         _ -> OutIntMsg_ApplicationData app_msg  in {
             engine with
                 incoming_seq_num = m.full_msg_header.h_msg_seq_num;
-                outgoing_int_msg = Some (OutIntMsg_ApplicationData app_msg );
+                outgoing_int_msg = Some out_int;
                 incoming_fix_msg = None;
         } else
             begin
