@@ -322,7 +322,7 @@ let session_reject ( rejected_data, engine : session_rejected_msg_data * fix_eng
             incoming_fix_msg        = None;
             fe_last_time_data_sent  = engine.fe_curr_time;
             outgoing_fix_msg        = Some ( ValidMsg ( reject_msg ));
-            incoming_seq_num        = rejected_data.srej_msg_msg_seq_num + 1;
+            incoming_seq_num        = rejected_data.srej_msg_msg_seq_num;
             outgoing_seq_num        = engine.outgoing_seq_num + 1;
             fe_history              = add_msg_to_history ( engine.fe_history, reject_msg );
         }

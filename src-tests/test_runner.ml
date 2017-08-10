@@ -26,6 +26,34 @@ let msg_to_string msg =
 ;;
 
 
+let prepare_packet msg =
+    let msg_body = msg 
+        |> List.filter ( function "8",_ |"9",_ |"10",_ -> false| _ -> true) in
+    (* Getting current values from the mesage *)
+    let begin_string = try List.assoc "8" msg with _ -> "FIX.4.4" in
+    let body_length  = try List.assoc "9" msg with _ -> "0" in
+    let checksum     = try List.assoc "10"msg with _ -> "0" in
+    (* Computing body length if zero *)
+    let body_length = match body_length with
+        | "0" -> Encode_full_messages.get_body_length msg_body
+              |> Encode_base_types.encode_int 
+        |  _  -> body_length 
+        in
+    let msg = [ ( "8"   , begin_string )
+              ; ( "9"   , body_length  )
+              ] @ msg_body
+              in             
+    (* Computing checksum if zero *)
+    let checksum = match checksum with
+        | "0" -> Encode_full_messages.get_checksum msg
+              |> Printf.sprintf "%03u"
+        |  _  -> checksum
+        in
+    msg @ [ ( "10" ,  checksum )] 
+;;
+
+
+
 let prepare_message msg (src, tagret)=
     let id x = x in
     let time = get_current_utctimstamp () in
@@ -48,11 +76,10 @@ let prepare_message msg (src, tagret)=
         | "56", _ -> "56", tagret
         | (k,v) -> (k,v)
         in
-    msg |> List.filter ( function "8",_ |"9",_ |"10",_ -> false| _ -> true)
-        |> List.map fill_placeholder
+    msg |> List.map fill_placeholder
         |> List.map fill_empty_ts
         |> List.map set_comp_ids        
-        |> Encode_full_messages.prepare_packet 
+        |> prepare_packet 
         |> msg_to_string
 ;;
 

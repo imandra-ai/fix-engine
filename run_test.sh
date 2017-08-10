@@ -42,3 +42,7 @@ run_test ./defs/10_MsgSeqNumLess.def
 run_test ./defs/11a_NewSeqNoGreater.def
 run_test ./defs/11b_NewSeqNoEqual.def
 run_test ./defs/11c_NewSeqNoLess.def
+
+run_test ./defs/14h_RepeatedTag.def
+run_test ./defs/14f_IncorrectDataFormat.def
+
