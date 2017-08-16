@@ -52,38 +52,18 @@ let split_into_messages (stream : (string * string) Stream.t) =
     Stream.from next
 ;; 
 
-(** *)
-module Parse_field_result = struct 
-    type 'a t =
-        | ParseFieldSuccess of 'a
-        | WrongFieldFormat of string
-        | RequiredFieldMissing of string 
-        | EmptyField of string 
 
-    let opt msg tag parser f =
-        if not (List.mem_assoc tag msg) then f None else
-        let value = List.assoc tag msg in
-        if value = "" then EmptyField tag else
-        try 
-            match parser value with 
-            | None   -> WrongFieldFormat tag 
-            | Some t -> f (Some t)
-        with _ -> WrongFieldFormat tag
-
-    let req msg tag parser f =
-        if not (List.mem_assoc tag msg) then RequiredFieldMissing tag else
-        let value = List.assoc tag msg in
-        if value = "" then EmptyField tag else
-        try 
-            match parser value with 
-            | None   -> WrongFieldFormat tag 
-            | Some t -> f t
-        with _ -> WrongFieldFormat tag
-            
-end
+let take (key : string) (lst : (string * string) list ) =
+    let rec take accu = function
+    | (k,v) :: tl -> 
+        if k = key then (Some v , List.rev accu @ tl)
+        else take ((k,v)::accu) tl
+    | [] -> (None, List.rev accu) in
+    take [] lst
+;;
 
 (** *)
-module Parse_message_result = struct 
+module Parser = struct 
     type 'a t =
         | ParseSuccess         of 'a
         | UnknownMessageTag    of string 
@@ -94,12 +74,28 @@ module Parse_message_result = struct
         | EmptyValue           of string
         | GarbledMessage
 
+    let opt msg tag parser f =
+        let value, msg = take tag msg in
+        match value with
+        | None -> f msg None
+        | Some "" -> EmptyValue tag
+        | Some value -> try 
+            match parser value with 
+            | None   -> WrongValueFormat tag 
+            | Some t -> f msg (Some t)
+        with _ -> WrongValueFormat tag
 
-    let from_parse_field_result = function
-        | Parse_field_result.ParseFieldSuccess    x -> ParseSuccess x   
-        | Parse_field_result.WrongFieldFormat     x -> WrongValueFormat x 
-        | Parse_field_result.RequiredFieldMissing x -> RequiredTagMissing x
-        | Parse_field_result.EmptyField           x -> EmptyValue x
+    let req msg tag parser f =
+        let value, msg = take tag msg in
+        match value with
+        | None ->  RequiredTagMissing tag
+        | Some "" -> EmptyValue tag
+        | Some value -> try 
+            match parser value with 
+            | None   -> WrongValueFormat tag 
+            | Some t -> f msg (Some t)
+        with _ -> WrongValueFormat tag
+
 
 
     let ( >>= ) x f = match x with
@@ -111,4 +107,6 @@ module Parse_message_result = struct
         | UndefinedTag       x -> UndefinedTag       x
         | EmptyValue         x -> EmptyValue         x
         | GarbledMessage       -> GarbledMessage
+
 end
+
