@@ -62,17 +62,49 @@ let take (key : string) (lst : (string * string) list ) =
     take [] lst
 ;;
 
+let split_on_tag ( key : string ) ( msg : (string * string) list ) =
+    let rec split accu = function
+    | (k,v) :: tl -> if k = key then (List.rev accu, (k,v)::tl ) 
+                                else split ((k,v)::accu) tl
+    | [] -> (List.rev accu, []) in
+    split [] msg
+;;
+
+let cut_on_separator ( msg : (string * string) list) =
+    let rec cut accu = function
+    | [] -> List.rev accu 
+    | (separator,v)::tl -> 
+        let current, rest = split_on_tag separator tl in
+        let current = (separator,v)::current in
+        cut (current::accu) rest
+    in
+    cut [] msg
+;;
+
 (** *)
 module Parser = struct 
     type 'a t =
-        | ParseSuccess         of 'a
-        | UnknownMessageTag    of string 
-        | RequiredTagMissing   of string 
-        | DuplicateTag         of string 
-        | WrongValueFormat     of string
-        | UndefinedTag         of string
-        | EmptyValue           of string
+        | ParseSuccess             of 'a
+        | UnknownMessageTag        of string 
+        | RequiredTagMissing       of string 
+        | DuplicateTag             of string 
+        | WrongValueFormat         of string
+        | UndefinedTag             of string
+        | EmptyValue               of string
+        | IncorrectNumInGroupCount of string
         | GarbledMessage
+
+    let ( >>= ) x f = match x with
+        | ParseSuccess             x -> f x   
+        | UnknownMessageTag        x -> UnknownMessageTag  x
+        | RequiredTagMissing       x -> RequiredTagMissing x
+        | DuplicateTag             x -> DuplicateTag       x
+        | WrongValueFormat         x -> WrongValueFormat   x
+        | UndefinedTag             x -> UndefinedTag       x
+        | EmptyValue               x -> EmptyValue         x
+        | IncorrectNumInGroupCount x -> IncorrectNumInGroupCount x
+        | GarbledMessage             -> GarbledMessage
+
 
     let opt msg tag parser f =
         let value, msg = take tag msg in
@@ -96,17 +128,29 @@ module Parser = struct
             | Some t -> f msg (Some t)
         with _ -> WrongValueFormat tag
 
+    let block ( msg : (string * string ) list ) 
+              ( block_parser : (string * string ) list -> 'a t * (string * string ) list )
+              ( f : (string * string) list -> 'a -> 'b t) =
+        let value, msg = block_parser msg in
+        value >>= fun x -> f msg x
 
-
-    let ( >>= ) x f = match x with
-        | ParseSuccess       x -> f x   
-        | UnknownMessageTag  x -> UnknownMessageTag  x
-        | RequiredTagMissing x -> RequiredTagMissing x
-        | DuplicateTag       x -> DuplicateTag       x
-        | WrongValueFormat   x -> WrongValueFormat   x
-        | UndefinedTag       x -> UndefinedTag       x
-        | EmptyValue         x -> EmptyValue         x
-        | GarbledMessage       -> GarbledMessage
+    let repeating ( msg : (string * string ) list ) 
+                  ( tag : string )
+                  ( block_parser : (string * string ) list -> 'a t * (string * string ) list )
+                  ( f : (string * string) list -> 'a -> 'b t) =
+        (** Finding where the repeating group starts *)
+        let leading_msg, groups_msg = split_on_tag tag msg in
+        (** groups_msg starts with the NumInGroup tag, we parse it *)
+        opt groups_msg tag Parse_base_types.parse_int @@ fun groups_msg numInGroup ->
+        match numInGroup with None -> ParseSuccess [] | Some numInGroup ->
+        (** Break the list into a list of lists using the separator *)
+        let groups = cut_on_separator groups_msg in
+        (** Check that the length is correct *)
+        if List.length groups != numInGroup then IncorrectNumInGroupCount tag else
+        (** Pass each list into the block parser and check that results are consistent *)
+        groups |> List.map block_parser
+               |> List.map fst
+               |> fun x -> ParseSuccess x
 
 end
 
