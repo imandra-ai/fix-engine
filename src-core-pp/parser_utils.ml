@@ -92,6 +92,7 @@ module Parser = struct
         | UndefinedTag             of string
         | EmptyValue               of string
         | IncorrectNumInGroupCount of string
+        | RepeatingGroupOutOfOrder of string
         | GarbledMessage
 
     let ( >>= ) x f = match x with
@@ -103,7 +104,23 @@ module Parser = struct
         | UndefinedTag             x -> UndefinedTag       x
         | EmptyValue               x -> EmptyValue         x
         | IncorrectNumInGroupCount x -> IncorrectNumInGroupCount x
+        | RepeatingGroupOutOfOrder x -> RepeatingGroupOutOfOrder x
         | GarbledMessage             -> GarbledMessage
+
+    let flatten (lst: 'a t list) : 'a list t =
+        let rec flatten acc = function
+        | ParseSuccess x :: tl -> flatten (x::acc) tl
+        | UnknownMessageTag        x :: tl -> UnknownMessageTag  x
+        | RequiredTagMissing       x :: tl -> RequiredTagMissing x
+        | DuplicateTag             x :: tl -> DuplicateTag       x
+        | WrongValueFormat         x :: tl -> WrongValueFormat   x
+        | UndefinedTag             x :: tl -> UndefinedTag       x
+        | EmptyValue               x :: tl -> EmptyValue         x
+        | IncorrectNumInGroupCount x :: tl -> IncorrectNumInGroupCount x
+        | RepeatingGroupOutOfOrder x :: tl -> RepeatingGroupOutOfOrder x
+        | GarbledMessage             :: tl -> GarbledMessage
+        | [] -> ParseSuccess (List.rev acc) in
+        flatten [] lst
 
 
     let opt msg tag parser f =
@@ -132,25 +149,32 @@ module Parser = struct
               ( block_parser : (string * string ) list -> 'a t * (string * string ) list )
               ( f : (string * string) list -> 'a -> 'b t) =
         let value, msg = block_parser msg in
-        value >>= fun x -> f msg x
+        value >>= f msg 
 
     let repeating ( msg : (string * string ) list ) 
                   ( tag : string )
-                  ( block_parser : (string * string ) list -> 'a t * (string * string ) list )
-                  ( f : (string * string) list -> 'a -> 'b t) =
-        (** Finding where the repeating group starts *)
+                  ( block_parser : (string * string ) list ->  'a t * (string * string ) list  )
+                  ( f : (string * string) list -> 'a list -> 'b t) =
+        (* Finding where the repeating group starts *)
         let leading_msg, groups_msg = split_on_tag tag msg in
-        (** groups_msg starts with the NumInGroup tag, we parse it *)
+        (* groups_msg starts with the NumInGroup tag, we parse it *)
         opt groups_msg tag Parse_base_types.parse_int @@ fun groups_msg numInGroup ->
-        match numInGroup with None -> ParseSuccess [] | Some numInGroup ->
-        (** Break the list into a list of lists using the separator *)
+        match numInGroup with 
+        | None -> ( ParseSuccess [] >>= f msg )
+        | Some numInGroup ->
+        (* Break the list into a list of lists using the separator *)
         let groups = cut_on_separator groups_msg in
-        (** Check that the length is correct *)
-        if List.length groups != numInGroup then IncorrectNumInGroupCount tag else
-        (** Pass each list into the block parser and check that results are consistent *)
-        groups |> List.map block_parser
-               |> List.map fst
-               |> fun x -> ParseSuccess x
-
+        (* Check that the length is correct *)
+        if List.length groups != numInGroup then IncorrectNumInGroupCount tag >>= f [] else
+        (* Pass each list into the block parser ( reverses the list ) *)
+        let groups : ('a t * (string * string) list) list = groups |> List.rev_map block_parser in
+        (* Get the rest of the message from the last group entry *)
+        let groups, msg = match groups with 
+            | [] -> [], [] | (v, following_msg)::tl -> ( (v,[])::tl, leading_msg @ following_msg ) in
+        (* Check that every group have parsed cleanly *)
+        let groups = groups |> List.map 
+            ( function (v, []) -> v | _ -> RepeatingGroupOutOfOrder tag ) in
+        (* Flatten the list and pass into the continuation with the rest of the message *)
+        flatten groups >>= f msg 
 end
 
