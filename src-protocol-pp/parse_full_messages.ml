@@ -192,7 +192,8 @@ let parse_top_level_msg msg =
         ParseSuccess (full_msg_header, full_msg_trailer), msg 
         in
     header_and_trailer >>= fun (full_msg_header , full_msg_trailer) ->
-    let msg_tag_str = List.assoc "35" msg in
+    let msg_tag_str, msg = Parser_utils.take "35" msg in
+    match msg_tag_str with None -> GarbledMessage | Some msg_tag_str -> 
     match ( msg_tag_str |> parse_full_msg_tag ) with None -> UnknownMessageTag msg_tag_str | Some msg_tag ->
     parse_msg_data  msg_tag msg >>= fun full_msg_data -> ParseSuccess 
     { full_msg_header
