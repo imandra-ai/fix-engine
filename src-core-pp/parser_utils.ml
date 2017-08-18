@@ -178,4 +178,3 @@ module Parser = struct
         (* "Monadic flatten" the list and pass into the continuation with the rest of the message *)
         rev_collect groups >>= f msg 
 end
-
