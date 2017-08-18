@@ -153,18 +153,6 @@ let valid_checksum ( msg : (string * string) list ) : bool  =
     try checksum = int_of_string msg_checksum with _ -> false
 ;;
 
-(** Checks that the message doesnt contain duplicate tags *)
-let find_duplicate_tags ( msg : (string * string) list ) : string option =
-    let rec get_duplicates lst = match lst with
-        | a::b::tl when a = b -> Some a
-        | a::tl -> get_duplicates tl
-        | [] -> None
-        in
-    List.map fst msg 
-        |> List.sort String.compare
-        |> get_duplicates
-;;
-
 (**
     Runs basic message intergrity checks. Returns ParseSuccess ()  on success.
 *)
@@ -173,7 +161,6 @@ let message_basic_check msg =
     if not (check_tags_are_integers msg ) then GarbledMessage else  
     if not (valid_checksum          msg ) then GarbledMessage else  
     if not (valid_body_length       msg ) then GarbledMessage else  
-    match find_duplicate_tags msg with Some tag -> DuplicateTag tag | None ->
     ParseSuccess ()
 ;;
 
@@ -195,7 +182,6 @@ let make_session_reject reason tagstr msg =
         srej_encoded_text      = None ;      
     }
 ;;
-
 
 let parse_top_level_msg msg =
     let parse_result = begin 
