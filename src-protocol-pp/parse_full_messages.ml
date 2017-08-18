@@ -11,7 +11,7 @@
 open Full_message_tags
 open Full_messages
 open Parser_utils
-open Parser_utils.Parse_message_result
+open Parser_utils.Parser
 open Parse_base_types
 open Parse_datetime
 open Parse_full_tags
@@ -27,35 +27,33 @@ let parse_msg_data msg_tag msg =
 
 (** *)
 let parse_header msg = 
-    Parse_message_result.from_parse_field_result @@
-    let open Parse_field_result in 
-    req msg "8"   parse_string        @@ fun h_begin_string                ->
-    req msg "9"   parse_int           @@ fun h_body_length                 ->
-    req msg "49"  parse_string        @@ fun h_sender_comp_id              ->
-    req msg "56"  parse_string        @@ fun h_target_comp_id              ->
-    req msg "34"  parse_int           @@ fun h_msg_seq_num                 ->
-    req msg "52"  parse_UTCTimestamp  @@ fun h_sending_time                ->   
-    opt msg "115" parse_int           @@ fun h_on_behalf_of_comp_id        -> 
-    opt msg "128" parse_int           @@ fun h_deliver_to_comp_id          ->  
-    opt msg "90"  parse_int           @@ fun h_secure_data_len             ->   
-    opt msg "91"  parse_int           @@ fun h_secure_data                 ->   
-    opt msg "50"  parse_int           @@ fun h_sender_sub_id               ->   
-    opt msg "142" parse_int           @@ fun h_sender_location_id          ->  
-    opt msg "57"  parse_int           @@ fun h_target_sub_id               ->   
-    opt msg "143" parse_int           @@ fun h_target_location_id          ->  
-    opt msg "116" parse_int           @@ fun h_on_behalf_of_sub_id         ->  
-    opt msg "114" parse_int           @@ fun h_on_behalf_of_location_id    ->  
-    opt msg "129" parse_int           @@ fun h_deliver_to_sub_id           ->  
-    opt msg "145" parse_int           @@ fun h_deliver_to_location_id      ->  
-    opt msg "43"  parse_bool          @@ fun h_poss_dup_flag               ->    
-    opt msg "97"  parse_bool          @@ fun h_poss_resend                 ->    
-    opt msg "122" parse_UTCTimestamp  @@ fun h_orig_sending_time           ->  
-    opt msg "212" parse_int           @@ fun h_xml_data_len                ->  
-    opt msg "213" parse_int           @@ fun h_xml_data                    ->  
-    opt msg "347" parse_int           @@ fun h_message_enconding           ->  
-    opt msg "369" parse_int           @@ fun h_last_msg_seq_num_processed  ->  
-    opt msg "627" parse_int           @@ fun h_no_hops                     -> 
-    ParseFieldSuccess    
+    req msg "8"   parse_string        @@ fun msg h_begin_string                ->
+    req msg "9"   parse_int           @@ fun msg h_body_length                 ->
+    req msg "49"  parse_string        @@ fun msg h_sender_comp_id              ->
+    req msg "56"  parse_string        @@ fun msg h_target_comp_id              ->
+    req msg "34"  parse_int           @@ fun msg h_msg_seq_num                 ->
+    req msg "52"  parse_UTCTimestamp  @@ fun msg h_sending_time                ->   
+    opt msg "115" parse_int           @@ fun msg h_on_behalf_of_comp_id        -> 
+    opt msg "128" parse_int           @@ fun msg h_deliver_to_comp_id          ->  
+    opt msg "90"  parse_int           @@ fun msg h_secure_data_len             ->   
+    opt msg "91"  parse_int           @@ fun msg h_secure_data                 ->   
+    opt msg "50"  parse_int           @@ fun msg h_sender_sub_id               ->   
+    opt msg "142" parse_int           @@ fun msg h_sender_location_id          ->  
+    opt msg "57"  parse_int           @@ fun msg h_target_sub_id               ->   
+    opt msg "143" parse_int           @@ fun msg h_target_location_id          ->  
+    opt msg "116" parse_int           @@ fun msg h_on_behalf_of_sub_id         ->  
+    opt msg "114" parse_int           @@ fun msg h_on_behalf_of_location_id    ->  
+    opt msg "129" parse_int           @@ fun msg h_deliver_to_sub_id           ->  
+    opt msg "145" parse_int           @@ fun msg h_deliver_to_location_id      ->  
+    opt msg "43"  parse_bool          @@ fun msg h_poss_dup_flag               ->    
+    opt msg "97"  parse_bool          @@ fun msg h_poss_resend                 ->    
+    opt msg "122" parse_UTCTimestamp  @@ fun msg h_orig_sending_time           ->  
+    opt msg "212" parse_int           @@ fun msg h_xml_data_len                ->  
+    opt msg "213" parse_int           @@ fun msg h_xml_data                    ->  
+    opt msg "347" parse_int           @@ fun msg h_message_enconding           ->  
+    opt msg "369" parse_int           @@ fun msg h_last_msg_seq_num_processed  ->  
+    opt msg "627" parse_int           @@ fun msg h_no_hops                     -> 
+    ParseSuccess    
     { h_begin_string                   
     ; h_body_length                    
     ; h_sender_comp_id                
@@ -82,21 +80,19 @@ let parse_header msg =
     ; h_message_enconding            
     ; h_last_msg_seq_num_processed   
     ; h_no_hops                         
-    }
+    } , msg
 ;;
 
 (** *)
 let parse_trailer msg =  
-    Parse_message_result.from_parse_field_result @@
-    let open Parse_field_result in 
-    opt msg "93" parse_int  @@ fun signature_length ->
-    opt msg "89" parse_int  @@ fun signature        ->
-    req msg "10" parse_int  @@ fun check_sum        -> 
-    ParseFieldSuccess 
+    opt msg "93" parse_int  @@ fun msg signature_length ->
+    opt msg "89" parse_int  @@ fun msg signature        ->
+    req msg "10" parse_int  @@ fun msg check_sum        -> 
+    ParseSuccess 
     { signature_length
     ; signature       
     ; check_sum       
-    }
+    } , msg
 ;;
 
 
@@ -200,27 +196,31 @@ let make_session_reject reason tagstr msg =
     }
 ;;
 
-    
 
-let parse_top_level_msg msg = 
-    let parse_result = begin
-        message_basic_check msg >>= fun () ->
-        parse_header        msg >>= fun full_msg_header   ->
-        parse_trailer       msg >>= fun full_msg_trailer  ->
-        let msg_tag_str = List.assoc "35" msg in
-        match ( msg_tag_str |> parse_full_msg_tag ) with None -> UnknownMessageTag msg_tag_str | Some msg_tag ->
-        parse_msg_data  msg_tag msg >>= fun full_msg_data -> ParseSuccess 
-        { full_msg_header
-        ; full_msg_data
-        ; full_msg_trailer
-        }
-    end in match parse_result with
+let parse_top_level_msg msg =
+    let parse_result = begin 
+    message_basic_check msg >>= fun () ->
+    let header_and_trailer, msg = 
+        block msg parse_header  @@ fun msg full_msg_header   ->
+        block msg parse_trailer @@ fun msg full_msg_trailer  ->
+        ParseSuccess (full_msg_header, full_msg_trailer), msg 
+        in
+    header_and_trailer >>= fun (full_msg_header , full_msg_trailer) ->
+    let msg_tag_str = List.assoc "35" msg in
+    match ( msg_tag_str |> parse_full_msg_tag ) with None -> UnknownMessageTag msg_tag_str | Some msg_tag ->
+    parse_msg_data  msg_tag msg >>= fun full_msg_data -> ParseSuccess 
+    { full_msg_header
+    ; full_msg_data
+    ; full_msg_trailer
+    } end in match parse_result with
         | ParseSuccess msg       -> ValidMsg msg
         | GarbledMessage         -> Garbled 
-        | UnknownMessageTag  tagstr -> make_session_reject Full_admin_enums.InvalidMsgType tagstr msg
-        | RequiredTagMissing tagstr -> make_session_reject Full_admin_enums.RequiredTagMissing tagstr msg
-        | DuplicateTag       tagstr -> make_session_reject Full_admin_enums.TagAppearsMoreThanOnce tagstr msg
-        | WrongValueFormat   tagstr -> make_session_reject Full_admin_enums.IncorrectDataFormatForValue tagstr msg
-        | UndefinedTag       tagstr -> make_session_reject Full_admin_enums.UndefinedTag tagstr msg
+        | UnknownMessageTag        tagstr -> make_session_reject Full_admin_enums.InvalidMsgType tagstr msg
+        | RequiredTagMissing       tagstr -> make_session_reject Full_admin_enums.RequiredTagMissing tagstr msg
+        | DuplicateTag             tagstr -> make_session_reject Full_admin_enums.TagAppearsMoreThanOnce tagstr msg
+        | WrongValueFormat         tagstr -> make_session_reject Full_admin_enums.IncorrectDataFormatForValue tagstr msg
+        | UndefinedTag             tagstr -> make_session_reject Full_admin_enums.UndefinedTag tagstr msg
+        | IncorrectNumInGroupCount tagstr -> make_session_reject Full_admin_enums.IncorrectNumInGroupCountForRepeatingGroup tagstr msg
+        | RepeatingGroupOutOfOrder tagstr -> make_session_reject Full_admin_enums.RepeatingGroupFieldsOutOfOrder tagstr msg
         | EmptyValue         tag -> make_session_reject Full_admin_enums.TagSecifiedWithoutAValue tag msg
 ;;

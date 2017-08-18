@@ -98,6 +98,18 @@ module Parser = struct
 
     let ( >>= ) x f = match x with
         | ParseSuccess             x -> f x   
+        | UnknownMessageTag        x -> UnknownMessageTag        x
+        | RequiredTagMissing       x -> RequiredTagMissing       x
+        | DuplicateTag             x -> DuplicateTag             x
+        | WrongValueFormat         x -> WrongValueFormat         x
+        | UndefinedTag             x -> UndefinedTag             x
+        | EmptyValue               x -> EmptyValue               x
+        | IncorrectNumInGroupCount x -> IncorrectNumInGroupCount x
+        | RepeatingGroupOutOfOrder x -> RepeatingGroupOutOfOrder x
+        | GarbledMessage             -> GarbledMessage
+
+    let ( >|>= ) x f = match x with
+        | ParseSuccess             x -> f x   
         | UnknownMessageTag        x -> UnknownMessageTag        x , []
         | RequiredTagMissing       x -> RequiredTagMissing       x , []
         | DuplicateTag             x -> DuplicateTag             x , []
@@ -107,6 +119,7 @@ module Parser = struct
         | IncorrectNumInGroupCount x -> IncorrectNumInGroupCount x , []
         | RepeatingGroupOutOfOrder x -> RepeatingGroupOutOfOrder x , []
         | GarbledMessage             -> GarbledMessage , []
+
 
     let rev_collect (lst: 'a t list) : 'a list t =
         let rec flatten acc = function
@@ -122,7 +135,6 @@ module Parser = struct
         | GarbledMessage             :: tl -> GarbledMessage
         | [] -> ParseSuccess acc in
         flatten [] lst
-
 
     let opt msg tag parser f =
         let value, msg = take tag msg in
@@ -150,7 +162,7 @@ module Parser = struct
               ( block_parser : msg -> 'a t * msg )
               ( f : msg -> 'a -> 'b t * msg) =
         let value, msg = block_parser msg in
-        value >>= f msg 
+        value >|>= f msg 
 
     let repeating ( msg : msg ) 
                   ( tag : string )
@@ -161,12 +173,12 @@ module Parser = struct
         (* groups_msg starts with the NumInGroup tag, we parse it *)
         opt groups_msg tag Parse_base_types.parse_int @@ fun groups_msg numInGroup ->
         match numInGroup with 
-        | None -> ( ParseSuccess [] >>= f msg )
+        | None -> ( ParseSuccess [] >|>= f msg )
         | Some numInGroup ->
         (* Break the list into a list of lists using the separator *)
         let groups = cut_on_separator groups_msg in
         (* Check that the length is correct *)
-        if List.length groups != numInGroup then IncorrectNumInGroupCount tag >>= f [] else
+        if List.length groups != numInGroup then IncorrectNumInGroupCount tag >|>= f [] else
         (* Pass each list into the block parser ( reverses the list ) *)
         let groups : ('a t * (string * string) list) list = groups |> List.rev_map block_parser in
         (* Get the rest of the message from the last group entry *)
@@ -176,5 +188,26 @@ module Parser = struct
         let groups = groups |> List.map 
             ( function (v, []) -> v | _ -> RepeatingGroupOutOfOrder tag ) in
         (* "Monadic flatten" the list and pass into the continuation with the rest of the message *)
-        rev_collect groups >>= f msg 
+        rev_collect groups >|>= f msg 
+
+    (** Checks for duplicate tags in messages -- should be called after all the repeating groups are porcessed *)
+    let check_duplicate_tags ( msg : msg )  
+                             ( f : unit -> 'a t * msg ) =
+        let rec scan = function 
+        | h::tl -> 
+            if List.mem h tl 
+            then DuplicateTag h , [] 
+            else scan tl
+        | [] -> f () in
+        msg |> List.map fst |> scan
+
+    (** This finalizes the message -- if there are any unplrocessed tag=value pairs left -- we return an error *)
+    let check_unknown_tags (result , msg) =
+        match result with 
+        | ParseSuccess _ -> 
+            ( match msg with 
+            | [] -> result 
+            | (tag,v)::tl -> UndefinedTag tag )
+        | _ -> result
 end
+
