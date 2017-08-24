@@ -1,4 +1,4 @@
-@charset "UTF-8";
+      @charset "UTF-8";
 /* Copyright (c) 2016 Daniel C. Bünzli. All rights reserved.
    Distributed under the ISC license, see terms at the end of the file.
    odoc v1.1.1 */
@@ -216,6 +216,13 @@ h1 + .modules, h1 + .sel { margin-top: 0.625rem }
 @media print
 { body { color: black; background: white; }
   body nav:first-child { visibility: hidden; }}
+
+
+/* AI Customs */
+.logo_main {
+  width: 4rem;
+  height: 4rem;
+}
 
 /*---------------------------------------------------------------------------
    Copyright (c) 2016 Daniel C. Bünzli
