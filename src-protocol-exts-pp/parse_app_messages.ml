@@ -9,6 +9,7 @@ open Parse_app_records;;
 (* @meta[imandra_ignore] off @end *)
 
 let parse_Advertisement msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_Advertisement_Instrument ->
     block msg parse_InstrmtLegGrp @@ fun msg f_Advertisement_InstrmtLegGrp ->
     block msg parse_UndInstrmtGrp @@ fun msg f_Advertisement_UndInstrmtGrp ->
@@ -53,6 +54,7 @@ let parse_Advertisement msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_AllocationInstruction msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_OrdAllocGrp @@ fun msg f_AllocationInstruction_OrdAllocGrp ->
     block msg parse_ExecAllocGrp @@ fun msg f_AllocationInstruction_ExecAllocGrp ->
     block msg parse_Instrument @@ fun msg f_AllocationInstruction_Instrument ->
@@ -183,6 +185,7 @@ let parse_AllocationInstruction msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_AllocationInstructionAck msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_AllocationInstructionAck_Parties ->
     block msg parse_AllocAckGrp @@ fun msg f_AllocationInstructionAck_AllocAckGrp ->
     req msg "70" parse_string @@ fun msg f_AllocationInstructionAck_AllocID ->
@@ -219,6 +222,7 @@ let parse_AllocationInstructionAck msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_AllocationReport msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_OrdAllocGrp @@ fun msg f_AllocationReport_OrdAllocGrp ->
     block msg parse_ExecAllocGrp @@ fun msg f_AllocationReport_ExecAllocGrp ->
     block msg parse_Instrument @@ fun msg f_AllocationReport_Instrument ->
@@ -357,6 +361,7 @@ let parse_AllocationReport msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_AllocationReportAck msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_AllocationReportAck_Parties ->
     block msg parse_AllocAckGrp @@ fun msg f_AllocationReportAck_AllocAckGrp ->
     req msg "755" parse_string @@ fun msg f_AllocationReportAck_AllocReportID ->
@@ -395,6 +400,7 @@ let parse_AllocationReportAck msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_AssignmentReport msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_AssignmentReport_Parties ->
     block msg parse_Instrument @@ fun msg f_AssignmentReport_Instrument ->
     block msg parse_InstrmtLegGrp @@ fun msg f_AssignmentReport_InstrmtLegGrp ->
@@ -453,6 +459,7 @@ let parse_AssignmentReport msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_BidRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_BidDescReqGrp @@ fun msg f_BidRequest_BidDescReqGrp ->
     block msg parse_BidCompReqGrp @@ fun msg f_BidRequest_BidCompReqGrp ->
     opt msg "390" parse_string @@ fun msg f_BidRequest_BidID ->
@@ -515,6 +522,7 @@ let parse_BidRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_BidResponse msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_BidCompRspGrp @@ fun msg f_BidResponse_BidCompRspGrp ->
     opt msg "390" parse_string @@ fun msg f_BidResponse_BidID ->
     opt msg "391" parse_string @@ fun msg f_BidResponse_ClientBidID ->
@@ -525,6 +533,7 @@ let parse_BidResponse msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_CollateralAssignment msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_CollateralAssignment_Parties ->
     block msg parse_ExecCollGrp @@ fun msg f_CollateralAssignment_ExecCollGrp ->
     block msg parse_TrdCollGrp @@ fun msg f_CollateralAssignment_TrdCollGrp ->
@@ -623,6 +632,7 @@ let parse_CollateralAssignment msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_CollateralInquiry msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_CollInqQualGrp @@ fun msg f_CollateralInquiry_CollInqQualGrp ->
     block msg parse_Parties @@ fun msg f_CollateralInquiry_Parties ->
     block msg parse_ExecCollGrp @@ fun msg f_CollateralInquiry_ExecCollGrp ->
@@ -715,6 +725,7 @@ let parse_CollateralInquiry msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_CollateralInquiryAck msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_CollInqQualGrp @@ fun msg f_CollateralInquiryAck_CollInqQualGrp ->
     block msg parse_Parties @@ fun msg f_CollateralInquiryAck_Parties ->
     block msg parse_ExecCollGrp @@ fun msg f_CollateralInquiryAck_ExecCollGrp ->
@@ -783,6 +794,7 @@ let parse_CollateralInquiryAck msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_CollateralReport msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_CollateralReport_Parties ->
     block msg parse_ExecCollGrp @@ fun msg f_CollateralReport_ExecCollGrp ->
     block msg parse_TrdCollGrp @@ fun msg f_CollateralReport_TrdCollGrp ->
@@ -877,6 +889,7 @@ let parse_CollateralReport msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_CollateralRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_CollateralRequest_Parties ->
     block msg parse_ExecCollGrp @@ fun msg f_CollateralRequest_ExecCollGrp ->
     block msg parse_TrdCollGrp @@ fun msg f_CollateralRequest_TrdCollGrp ->
@@ -967,6 +980,7 @@ let parse_CollateralRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_CollateralResponse msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_CollateralResponse_Parties ->
     block msg parse_ExecCollGrp @@ fun msg f_CollateralResponse_ExecCollGrp ->
     block msg parse_TrdCollGrp @@ fun msg f_CollateralResponse_TrdCollGrp ->
@@ -1055,6 +1069,7 @@ let parse_CollateralResponse msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_Confirmation msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_Confirmation_Parties ->
     block msg parse_OrdAllocGrp @@ fun msg f_Confirmation_OrdAllocGrp ->
     block msg parse_TrdRegTimestamps @@ fun msg f_Confirmation_TrdRegTimestamps ->
@@ -1189,6 +1204,7 @@ let parse_Confirmation msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_ConfirmationAck msg = (
+    check_duplicate_tags msg @@ fun () -> 
     req msg "664" parse_string @@ fun msg f_ConfirmationAck_ConfirmID ->
     req msg "75" parse_LocalMktDate @@ fun msg f_ConfirmationAck_TradeDate ->
     req msg "60" parse_UTCTimestamp @@ fun msg f_ConfirmationAck_TransactTime ->
@@ -1211,6 +1227,7 @@ let parse_ConfirmationAck msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_ConfirmationRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_OrdAllocGrp @@ fun msg f_ConfirmationRequest_OrdAllocGrp ->
     req msg "859" parse_string @@ fun msg f_ConfirmationRequest_ConfirmReqID ->
     req msg "773" parse_ConfirmType @@ fun msg f_ConfirmationRequest_ConfirmType ->
@@ -1241,6 +1258,7 @@ let parse_ConfirmationRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_CrossOrderCancelReplaceRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_SideCrossOrdModGrp @@ fun msg f_CrossOrderCancelReplaceRequest_SideCrossOrdModGrp ->
     block msg parse_Instrument @@ fun msg f_CrossOrderCancelReplaceRequest_Instrument ->
     block msg parse_UndInstrmtGrp @@ fun msg f_CrossOrderCancelReplaceRequest_UndInstrmtGrp ->
@@ -1339,6 +1357,7 @@ let parse_CrossOrderCancelReplaceRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_CrossOrderCancelRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_SideCrossOrdCxlGrp @@ fun msg f_CrossOrderCancelRequest_SideCrossOrdCxlGrp ->
     block msg parse_Instrument @@ fun msg f_CrossOrderCancelRequest_Instrument ->
     block msg parse_UndInstrmtGrp @@ fun msg f_CrossOrderCancelRequest_UndInstrmtGrp ->
@@ -1363,6 +1382,7 @@ let parse_CrossOrderCancelRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_DerivativeSecurityList msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_UnderlyingInstrument @@ fun msg f_DerivativeSecurityList_UnderlyingInstrument ->
     block msg parse_RelSymDerivSecGrp @@ fun msg f_DerivativeSecurityList_RelSymDerivSecGrp ->
     req msg "320" parse_string @@ fun msg f_DerivativeSecurityList_SecurityReqID ->
@@ -1381,6 +1401,7 @@ let parse_DerivativeSecurityList msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_DerivativeSecurityListRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_UnderlyingInstrument @@ fun msg f_DerivativeSecurityListRequest_UnderlyingInstrument ->
     req msg "320" parse_string @@ fun msg f_DerivativeSecurityListRequest_SecurityReqID ->
     req msg "559" parse_SecurityListRequestType @@ fun msg f_DerivativeSecurityListRequest_SecurityListRequestType ->
@@ -1407,6 +1428,7 @@ let parse_DerivativeSecurityListRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_DontKnowTrade msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_DontKnowTrade_Instrument ->
     block msg parse_UndInstrmtGrp @@ fun msg f_DontKnowTrade_UndInstrmtGrp ->
     block msg parse_InstrmtLegGrp @@ fun msg f_DontKnowTrade_InstrmtLegGrp ->
@@ -1439,6 +1461,7 @@ let parse_DontKnowTrade msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_Email msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_RoutingGrp @@ fun msg f_Email_RoutingGrp ->
     block msg parse_InstrmtGrp @@ fun msg f_Email_InstrmtGrp ->
     block msg parse_UndInstrmtGrp @@ fun msg f_Email_UndInstrmtGrp ->
@@ -1473,6 +1496,7 @@ let parse_Email msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_ExecutionReport msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_ExecutionReport_Parties ->
     block msg parse_ContraGrp @@ fun msg f_ExecutionReport_ContraGrp ->
     block msg parse_Instrument @@ fun msg f_ExecutionReport_Instrument ->
@@ -1753,6 +1777,7 @@ let parse_ExecutionReport msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_IOI msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_IOI_Instrument ->
     block msg parse_FinancingDetails @@ fun msg f_IOI_FinancingDetails ->
     block msg parse_UndInstrmtGrp @@ fun msg f_IOI_UndInstrmtGrp ->
@@ -1811,6 +1836,7 @@ let parse_IOI msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_ListCancelRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     req msg "66" parse_string @@ fun msg f_ListCancelRequest_ListID ->
     req msg "60" parse_UTCTimestamp @@ fun msg f_ListCancelRequest_TransactTime ->
     opt msg "229" parse_LocalMktDate @@ fun msg f_ListCancelRequest_TradeOriginationDate ->
@@ -1829,6 +1855,7 @@ let parse_ListCancelRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_ListExecute msg = (
+    check_duplicate_tags msg @@ fun () -> 
     req msg "66" parse_string @@ fun msg f_ListExecute_ListID ->
     opt msg "391" parse_string @@ fun msg f_ListExecute_ClientBidID ->
     opt msg "390" parse_string @@ fun msg f_ListExecute_BidID ->
@@ -1847,6 +1874,7 @@ let parse_ListExecute msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_ListStatus msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_OrdListStatGrp @@ fun msg f_ListStatus_OrdListStatGrp ->
     req msg "66" parse_string @@ fun msg f_ListStatus_ListID ->
     req msg "429" parse_ListStatusType @@ fun msg f_ListStatus_ListStatusType ->
@@ -1875,6 +1903,7 @@ let parse_ListStatus msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_ListStatusRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     req msg "66" parse_string @@ fun msg f_ListStatusRequest_ListID ->
     opt msg "58" parse_string @@ fun msg f_ListStatusRequest_Text ->
     opt msg "354" parse_int @@ fun msg f_ListStatusRequest_EncodedTextLen ->
@@ -1887,6 +1916,7 @@ let parse_ListStatusRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_ListStrikePrice msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_InstrmtStrkPxGrp @@ fun msg f_ListStrikePrice_InstrmtStrkPxGrp ->
     block msg parse_UndInstrmtStrkPxGrp @@ fun msg f_ListStrikePrice_UndInstrmtStrkPxGrp ->
     req msg "66" parse_string @@ fun msg f_ListStrikePrice_ListID ->
@@ -1901,6 +1931,7 @@ let parse_ListStrikePrice msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_MarketDataIncrementalRefresh msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_MDIncGrp @@ fun msg f_MarketDataIncrementalRefresh_MDIncGrp ->
     opt msg "262" parse_string @@ fun msg f_MarketDataIncrementalRefresh_MDReqID ->
     opt msg "813" parse_int @@ fun msg f_MarketDataIncrementalRefresh_ApplQueueDepth ->
@@ -1913,6 +1944,7 @@ let parse_MarketDataIncrementalRefresh msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_MarketDataRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_MDReqGrp @@ fun msg f_MarketDataRequest_MDReqGrp ->
     block msg parse_InstrmtMDReqGrp @@ fun msg f_MarketDataRequest_InstrmtMDReqGrp ->
     block msg parse_TrdgSesGrp @@ fun msg f_MarketDataRequest_TrdgSesGrp ->
@@ -1943,6 +1975,7 @@ let parse_MarketDataRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_MarketDataRequestReject msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_MDRjctGrp @@ fun msg f_MarketDataRequestReject_MDRjctGrp ->
     req msg "262" parse_string @@ fun msg f_MarketDataRequestReject_MDReqID ->
     opt msg "281" parse_MDReqRejReason @@ fun msg f_MarketDataRequestReject_MDReqRejReason ->
@@ -1959,6 +1992,7 @@ let parse_MarketDataRequestReject msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_MarketDataSnapshotFullRefresh msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_MarketDataSnapshotFullRefresh_Instrument ->
     block msg parse_UndInstrmtGrp @@ fun msg f_MarketDataSnapshotFullRefresh_UndInstrmtGrp ->
     block msg parse_InstrmtLegGrp @@ fun msg f_MarketDataSnapshotFullRefresh_InstrmtLegGrp ->
@@ -1983,6 +2017,7 @@ let parse_MarketDataSnapshotFullRefresh msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_MassQuote msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_MassQuote_Parties ->
     block msg parse_QuotSetGrp @@ fun msg f_MassQuote_QuotSetGrp ->
     opt msg "131" parse_string @@ fun msg f_MassQuote_QuoteReqID ->
@@ -2009,6 +2044,7 @@ let parse_MassQuote msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_MassQuoteAcknowledgement msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_MassQuoteAcknowledgement_Parties ->
     block msg parse_QuotSetAckGrp @@ fun msg f_MassQuoteAcknowledgement_QuotSetAckGrp ->
     opt msg "131" parse_string @@ fun msg f_MassQuoteAcknowledgement_QuoteReqID ->
@@ -2041,6 +2077,7 @@ let parse_MassQuoteAcknowledgement msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_MultilegOrderCancelReplace msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_MultilegOrderCancelReplace_Parties ->
     block msg parse_PreAllocMlegGrp @@ fun msg f_MultilegOrderCancelReplace_PreAllocMlegGrp ->
     block msg parse_TrdgSesGrp @@ fun msg f_MultilegOrderCancelReplace_TrdgSesGrp ->
@@ -2193,6 +2230,7 @@ let parse_MultilegOrderCancelReplace msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_NewOrderCross msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_SideCrossOrdModGrp @@ fun msg f_NewOrderCross_SideCrossOrdModGrp ->
     block msg parse_Instrument @@ fun msg f_NewOrderCross_Instrument ->
     block msg parse_UndInstrmtGrp @@ fun msg f_NewOrderCross_UndInstrmtGrp ->
@@ -2287,6 +2325,7 @@ let parse_NewOrderCross msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_NewOrderList msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_ListOrdGrp @@ fun msg f_NewOrderList_ListOrdGrp ->
     req msg "66" parse_string @@ fun msg f_NewOrderList_ListID ->
     opt msg "390" parse_string @@ fun msg f_NewOrderList_BidID ->
@@ -2329,6 +2368,7 @@ let parse_NewOrderList msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_NewOrderMultileg msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_NewOrderMultileg_Parties ->
     block msg parse_PreAllocMlegGrp @@ fun msg f_NewOrderMultileg_PreAllocMlegGrp ->
     block msg parse_TrdgSesGrp @@ fun msg f_NewOrderMultileg_TrdgSesGrp ->
@@ -2475,6 +2515,7 @@ let parse_NewOrderMultileg msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_NewOrderSingle msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_NewOrderSingle_Parties ->
     block msg parse_PreAllocGrp @@ fun msg f_NewOrderSingle_PreAllocGrp ->
     block msg parse_TrdgSesGrp @@ fun msg f_NewOrderSingle_TrdgSesGrp ->
@@ -2631,6 +2672,7 @@ let parse_NewOrderSingle msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_News msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_RoutingGrp @@ fun msg f_News_RoutingGrp ->
     block msg parse_InstrmtGrp @@ fun msg f_News_InstrmtGrp ->
     block msg parse_InstrmtLegGrp @@ fun msg f_News_InstrmtLegGrp ->
@@ -2661,6 +2703,7 @@ let parse_News msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_OrderCancelReject msg = (
+    check_duplicate_tags msg @@ fun () -> 
     req msg "37" parse_string @@ fun msg f_OrderCancelReject_OrderID ->
     opt msg "198" parse_string @@ fun msg f_OrderCancelReject_SecondaryOrderID ->
     opt msg "526" parse_string @@ fun msg f_OrderCancelReject_SecondaryClOrdID ->
@@ -2707,6 +2750,7 @@ let parse_OrderCancelReject msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_OrderCancelReplaceRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_OrderCancelReplaceRequest_Parties ->
     block msg parse_PreAllocGrp @@ fun msg f_OrderCancelReplaceRequest_PreAllocGrp ->
     block msg parse_TrdgSesGrp @@ fun msg f_OrderCancelReplaceRequest_TrdgSesGrp ->
@@ -2861,6 +2905,7 @@ let parse_OrderCancelReplaceRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_OrderCancelRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_OrderCancelRequest_Parties ->
     block msg parse_Instrument @@ fun msg f_OrderCancelRequest_Instrument ->
     block msg parse_FinancingDetails @@ fun msg f_OrderCancelRequest_FinancingDetails ->
@@ -2907,6 +2952,7 @@ let parse_OrderCancelRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_OrderMassCancelReport msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_AffectedOrdGrp @@ fun msg f_OrderMassCancelReport_AffectedOrdGrp ->
     block msg parse_Instrument @@ fun msg f_OrderMassCancelReport_Instrument ->
     block msg parse_UnderlyingInstrument @@ fun msg f_OrderMassCancelReport_UnderlyingInstrument ->
@@ -2947,6 +2993,7 @@ let parse_OrderMassCancelReport msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_OrderMassCancelRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_OrderMassCancelRequest_Instrument ->
     block msg parse_UnderlyingInstrument @@ fun msg f_OrderMassCancelRequest_UnderlyingInstrument ->
     req msg "11" parse_string @@ fun msg f_OrderMassCancelRequest_ClOrdID ->
@@ -2975,6 +3022,7 @@ let parse_OrderMassCancelRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_OrderMassStatusRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_OrderMassStatusRequest_Parties ->
     block msg parse_Instrument @@ fun msg f_OrderMassStatusRequest_Instrument ->
     block msg parse_UnderlyingInstrument @@ fun msg f_OrderMassStatusRequest_UnderlyingInstrument ->
@@ -2999,6 +3047,7 @@ let parse_OrderMassStatusRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_OrderStatusRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_OrderStatusRequest_Parties ->
     block msg parse_Instrument @@ fun msg f_OrderStatusRequest_Instrument ->
     block msg parse_FinancingDetails @@ fun msg f_OrderStatusRequest_FinancingDetails ->
@@ -3027,6 +3076,7 @@ let parse_OrderStatusRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_PositionMaintenanceReport msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_PositionMaintenanceReport_Parties ->
     block msg parse_Instrument @@ fun msg f_PositionMaintenanceReport_Instrument ->
     block msg parse_InstrmtLegGrp @@ fun msg f_PositionMaintenanceReport_InstrmtLegGrp ->
@@ -3085,6 +3135,7 @@ let parse_PositionMaintenanceReport msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_PositionMaintenanceRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_PositionMaintenanceRequest_Parties ->
     block msg parse_Instrument @@ fun msg f_PositionMaintenanceRequest_Instrument ->
     block msg parse_InstrmtLegGrp @@ fun msg f_PositionMaintenanceRequest_InstrmtLegGrp ->
@@ -3141,6 +3192,7 @@ let parse_PositionMaintenanceRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_PositionReport msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_PositionReport_Parties ->
     block msg parse_Instrument @@ fun msg f_PositionReport_Instrument ->
     block msg parse_InstrmtLegGrp @@ fun msg f_PositionReport_InstrmtLegGrp ->
@@ -3201,6 +3253,7 @@ let parse_PositionReport msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_Quote msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_QuotQualGrp @@ fun msg f_Quote_QuotQualGrp ->
     block msg parse_Parties @@ fun msg f_Quote_Parties ->
     block msg parse_Instrument @@ fun msg f_Quote_Instrument ->
@@ -3323,6 +3376,7 @@ let parse_Quote msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_QuoteCancel msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_QuoteCancel_Parties ->
     block msg parse_QuotCxlEntriesGrp @@ fun msg f_QuoteCancel_QuotCxlEntriesGrp ->
     opt msg "131" parse_string @@ fun msg f_QuoteCancel_QuoteReqID ->
@@ -3349,6 +3403,7 @@ let parse_QuoteCancel msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_QuoteRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_QuotReqGrp @@ fun msg f_QuoteRequest_QuotReqGrp ->
     req msg "131" parse_string @@ fun msg f_QuoteRequest_QuoteReqID ->
     opt msg "644" parse_string @@ fun msg f_QuoteRequest_RFQReqID ->
@@ -3369,6 +3424,7 @@ let parse_QuoteRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_QuoteRequestReject msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_QuotReqRjctGrp @@ fun msg f_QuoteRequestReject_QuotReqRjctGrp ->
     req msg "131" parse_string @@ fun msg f_QuoteRequestReject_QuoteReqID ->
     opt msg "644" parse_string @@ fun msg f_QuoteRequestReject_RFQReqID ->
@@ -3387,6 +3443,7 @@ let parse_QuoteRequestReject msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_QuoteResponse msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_QuotQualGrp @@ fun msg f_QuoteResponse_QuotQualGrp ->
     block msg parse_Parties @@ fun msg f_QuoteResponse_Parties ->
     block msg parse_Instrument @@ fun msg f_QuoteResponse_Instrument ->
@@ -3513,6 +3570,7 @@ let parse_QuoteResponse msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_QuoteStatusReport msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_QuoteStatusReport_Parties ->
     block msg parse_Instrument @@ fun msg f_QuoteStatusReport_Instrument ->
     block msg parse_FinancingDetails @@ fun msg f_QuoteStatusReport_FinancingDetails ->
@@ -3639,6 +3697,7 @@ let parse_QuoteStatusReport msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_QuoteStatusRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_QuoteStatusRequest_Instrument ->
     block msg parse_FinancingDetails @@ fun msg f_QuoteStatusRequest_FinancingDetails ->
     block msg parse_UndInstrmtGrp @@ fun msg f_QuoteStatusRequest_UndInstrmtGrp ->
@@ -3669,6 +3728,7 @@ let parse_QuoteStatusRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_RFQRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_RFQReqGrp @@ fun msg f_RFQRequest_RFQReqGrp ->
     req msg "644" parse_string @@ fun msg f_RFQRequest_RFQReqID ->
     opt msg "263" parse_SubscriptionRequestType @@ fun msg f_RFQRequest_SubscriptionRequestType ->
@@ -3679,6 +3739,7 @@ let parse_RFQRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_RegistrationInstructions msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_RegistrationInstructions_Parties ->
     block msg parse_RgstDtlsGrp @@ fun msg f_RegistrationInstructions_RgstDtlsGrp ->
     block msg parse_RgstDistInstGrp @@ fun msg f_RegistrationInstructions_RgstDistInstGrp ->
@@ -3707,6 +3768,7 @@ let parse_RegistrationInstructions msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_RegistrationInstructionsResponse msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_RegistrationInstructionsResponse_Parties ->
     req msg "513" parse_string @@ fun msg f_RegistrationInstructionsResponse_RegistID ->
     req msg "514" parse_RegistTransType @@ fun msg f_RegistrationInstructionsResponse_RegistTransType ->
@@ -3731,6 +3793,7 @@ let parse_RegistrationInstructionsResponse msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_RequestForPositions msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_RequestForPositions_Parties ->
     block msg parse_Instrument @@ fun msg f_RequestForPositions_Instrument ->
     block msg parse_InstrmtLegGrp @@ fun msg f_RequestForPositions_InstrmtLegGrp ->
@@ -3779,6 +3842,7 @@ let parse_RequestForPositions msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_RequestForPositionsAck msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_RequestForPositionsAck_Parties ->
     block msg parse_Instrument @@ fun msg f_RequestForPositionsAck_Instrument ->
     block msg parse_InstrmtLegGrp @@ fun msg f_RequestForPositionsAck_InstrmtLegGrp ->
@@ -3821,6 +3885,7 @@ let parse_RequestForPositionsAck msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_SecurityDefinition msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_SecurityDefinition_Instrument ->
     block msg parse_InstrumentExtension @@ fun msg f_SecurityDefinition_InstrumentExtension ->
     block msg parse_UndInstrmtGrp @@ fun msg f_SecurityDefinition_UndInstrmtGrp ->
@@ -3857,6 +3922,7 @@ let parse_SecurityDefinition msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_SecurityDefinitionRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_SecurityDefinitionRequest_Instrument ->
     block msg parse_InstrumentExtension @@ fun msg f_SecurityDefinitionRequest_InstrumentExtension ->
     block msg parse_UndInstrmtGrp @@ fun msg f_SecurityDefinitionRequest_UndInstrmtGrp ->
@@ -3889,6 +3955,7 @@ let parse_SecurityDefinitionRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_SecurityList msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_SecListGrp @@ fun msg f_SecurityList_SecListGrp ->
     req msg "320" parse_string @@ fun msg f_SecurityList_SecurityReqID ->
     req msg "322" parse_string @@ fun msg f_SecurityList_SecurityResponseID ->
@@ -3905,6 +3972,7 @@ let parse_SecurityList msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_SecurityListRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_SecurityListRequest_Instrument ->
     block msg parse_InstrumentExtension @@ fun msg f_SecurityListRequest_InstrumentExtension ->
     block msg parse_FinancingDetails @@ fun msg f_SecurityListRequest_FinancingDetails ->
@@ -3937,6 +4005,7 @@ let parse_SecurityListRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_SecurityStatus msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_SecurityStatus_Instrument ->
     block msg parse_InstrumentExtension @@ fun msg f_SecurityStatus_InstrumentExtension ->
     block msg parse_UndInstrmtGrp @@ fun msg f_SecurityStatus_UndInstrmtGrp ->
@@ -3991,6 +4060,7 @@ let parse_SecurityStatus msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_SecurityStatusRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_SecurityStatusRequest_Instrument ->
     block msg parse_InstrumentExtension @@ fun msg f_SecurityStatusRequest_InstrumentExtension ->
     block msg parse_UndInstrmtGrp @@ fun msg f_SecurityStatusRequest_UndInstrmtGrp ->
@@ -4013,6 +4083,7 @@ let parse_SecurityStatusRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_SecurityTypeRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     req msg "320" parse_string @@ fun msg f_SecurityTypeRequest_SecurityReqID ->
     opt msg "58" parse_string @@ fun msg f_SecurityTypeRequest_Text ->
     opt msg "354" parse_int @@ fun msg f_SecurityTypeRequest_EncodedTextLen ->
@@ -4035,6 +4106,7 @@ let parse_SecurityTypeRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_SecurityTypes msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_SecTypesGrp @@ fun msg f_SecurityTypes_SecTypesGrp ->
     req msg "320" parse_string @@ fun msg f_SecurityTypes_SecurityReqID ->
     req msg "322" parse_string @@ fun msg f_SecurityTypes_SecurityResponseID ->
@@ -4063,6 +4135,7 @@ let parse_SecurityTypes msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_SettlementInstructions msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_SettlInstGrp @@ fun msg f_SettlementInstructions_SettlInstGrp ->
     req msg "777" parse_string @@ fun msg f_SettlementInstructions_SettlInstMsgID ->
     opt msg "791" parse_string @@ fun msg f_SettlementInstructions_SettlInstReqID ->
@@ -4087,6 +4160,7 @@ let parse_SettlementInstructions msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_TradeCaptureReport msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_TradeCaptureReport_Instrument ->
     block msg parse_FinancingDetails @@ fun msg f_TradeCaptureReport_FinancingDetails ->
     block msg parse_OrderQtyData @@ fun msg f_TradeCaptureReport_OrderQtyData ->
@@ -4205,6 +4279,7 @@ let parse_TradeCaptureReport msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_TradeCaptureReportAck msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_TradeCaptureReportAck_Instrument ->
     block msg parse_TrdRegTimestamps @@ fun msg f_TradeCaptureReportAck_TrdRegTimestamps ->
     block msg parse_TrdInstrmtLegGrp @@ fun msg f_TradeCaptureReportAck_TrdInstrmtLegGrp ->
@@ -4283,6 +4358,7 @@ let parse_TradeCaptureReportAck msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_TradeCaptureReportRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Parties @@ fun msg f_TradeCaptureReportRequest_Parties ->
     block msg parse_Instrument @@ fun msg f_TradeCaptureReportRequest_Instrument ->
     block msg parse_InstrumentExtension @@ fun msg f_TradeCaptureReportRequest_InstrumentExtension ->
@@ -4359,6 +4435,7 @@ let parse_TradeCaptureReportRequest msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_TradeCaptureReportRequestAck msg = (
+    check_duplicate_tags msg @@ fun () -> 
     block msg parse_Instrument @@ fun msg f_TradeCaptureReportRequestAck_Instrument ->
     block msg parse_UndInstrmtGrp @@ fun msg f_TradeCaptureReportRequestAck_UndInstrmtGrp ->
     block msg parse_InstrmtLegGrp @@ fun msg f_TradeCaptureReportRequestAck_InstrmtLegGrp ->
@@ -4393,6 +4470,7 @@ let parse_TradeCaptureReportRequestAck msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_TradingSessionStatus msg = (
+    check_duplicate_tags msg @@ fun () -> 
     opt msg "335" parse_string @@ fun msg f_TradingSessionStatus_TradSesReqID ->
     req msg "336" parse_string @@ fun msg f_TradingSessionStatus_TradingSessionID ->
     opt msg "625" parse_string @@ fun msg f_TradingSessionStatus_TradingSessionSubID ->
@@ -4431,6 +4509,7 @@ let parse_TradingSessionStatus msg = (
     } , msg ) |> check_unknown_tags ;;
 
 let parse_TradingSessionStatusRequest msg = (
+    check_duplicate_tags msg @@ fun () -> 
     req msg "335" parse_string @@ fun msg f_TradingSessionStatusRequest_TradSesReqID ->
     opt msg "336" parse_string @@ fun msg f_TradingSessionStatusRequest_TradingSessionID ->
     opt msg "625" parse_string @@ fun msg f_TradingSessionStatusRequest_TradingSessionSubID ->
