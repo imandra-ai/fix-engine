@@ -226,7 +226,6 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     let header = m.full_msg_header in
     (** SequenceResets that dont have a GapFill flag get special treatment -- their 
         sequence numbers are ignored entirely. *)
-    print_endline ("ActiveSession " ^ string_of_int header.h_msg_seq_num ^ " - " ^ string_of_int engine.incoming_seq_num) ;
     match get_critical_reset_seq_num m.full_msg_data with 
     | Some new_seq_num ->  attempt_sequence_reset (engine, header.h_msg_seq_num, new_seq_num) | None -> 
     (** In all other cases we first check sequence numbers / duplicate flags*)
