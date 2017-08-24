@@ -43,7 +43,8 @@ let int_inc_msg_to_json x : json = match x with
 ;;
 
 let int_out_msg_to_json x : json = match x with
-    | OutIntMsg_ApplicationData d                       -> `Assoc [ ( "ApplicationData",    `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
+    | OutIntMsg_ResendApplicationData d                 -> `Assoc [ ( "ResendApplicationData", `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
+    | OutIntMsg_ApplicationData d                       -> `Assoc [ ( "ApplicationData",       `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
     | OutIntMsg_Reject                                  -> `String "Reject"
 ;;
 
