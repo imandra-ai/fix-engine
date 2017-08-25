@@ -15,7 +15,11 @@ menu,nav,output,ruby,section,summary,time,mark,audio,video
   font-size:100%; font: inherit; line-height:inherit; vertical-align:baseline;
   text-align: inherit; color: inherit; background: transparent; }
 
-table { border-collapse: collapse; border-spacing: 0; }
+table { 
+  border-collapse: collapse; 
+  border-spacing: 0;
+  margin-bottom: 2rem;
+}
 *,  *:before,  *:after { box-sizing: border-box; }
 
 body
@@ -24,11 +28,16 @@ body
   font-size: 0.875rem;
   line-height:1.25rem;
   text-align: left;
-  min-width: 40ex;
-  max-width: 78ex;
-  padding: 1.25rem;
-  margin-left: 3.75rem;
-  color: #222; background: #FAFAFA; }
+  width: 100%;
+  padding-top: 1rem;
+  padding-left: 3.75rem;
+  color: #222; 
+  background-color: #afafaf;
+  padding-bottom: 20em;
+  background: url("img/transition_docs_bottom.svg") 100% 100% / 1440px 220px repeat-x;
+  min-height: 100vh;
+
+}
 
 /* Basic markup elements */
 
@@ -57,24 +66,37 @@ li > *:first-child { margin-top: 0 }
 
 /* Links and anchors */
 
-a { text-decoration:none; color:#2C5CBD; }
-a:hover { box-shadow:0 1px 0 0 #2C5CBD; }
+a { 
+  text-decoration: none; color:#2C5CBD; 
+  background: #f7f7f7;
+}
+
+a:hover {
+  text-decoration: none;
+  background: #ffffff;
+}
+
 *:target /* Linked highlight */
-{ background-color: #FFF8E5;
-  box-shadow: 0 0 0 2px #FFF8E5, 0 0 0 3px #DDD; }
+{ background-color: #EAEAE2;
+  box-shadow: 0 0 0 2px #EAEAE2, 0 0 0 3px #DDD; }
 
 .spec:hover > a.anchor, /* FIXME remove */
 .anchored:hover a.anchor { visibility: visible; }
 
-a.anchor:before { content: "#" }
-a.anchor:hover {  box-shadow: none; text-decoration: underline }
-a.anchor
-{ visibility: hidden; position: absolute; /* top: 0px; */
+a.anchor:before {
+  content: "#";
+}
+
+a.anchor:hover {}
+
+a.anchor { 
+  visibility: hidden; position: absolute; /* top: 0px; */
   margin-left: -3ex;
   font-weight: normal;
   font-style: normal;
   padding-right: 1ex; padding-left: 1ex; /* To remain selectable */
-  color: #AAA; }
+  color: #2C5CBD;
+}
 
 .xref-unresolved { box-shadow:0 1px 0 0 red }
 
@@ -98,10 +120,15 @@ h3, .h8 { font-size: 1.125rem; }
 h2 + h3, .h7 + .h8 { margin-top: 0.625rem; }
 
 /* Preformatted and code */
-
+code {;
+  padding: 5px;
+  background: #f7f7f7;
+}
+code a {
+  background: #f7f7f7;
+}
 tt, code, pre
-{ font-family: Menlo, "DejaVu Sans Mono", "Bitstream Vera Sans Mono",
-  monospace;
+{ font-family: Menlo, "DejaVu Sans Mono", "Bitstream Vera Sans Mono", monospace;
   font-weight: normal;
   font-size: 0.75rem; }
 
@@ -223,11 +250,16 @@ h1 + .modules, h1 + .sel { margin-top: 0.625rem }
   width: auto;
   height: 8rem;
 }
-
 .space_after {
   margin-bottom: 2rem;
 }
-
+nav {
+  background: url("img/imandra_fix_engine_documentation.svg") 0 1.26rem / auto 8.01rem;
+  padding-top: 11rem;
+  height: 12rem;
+  padding-left: 0;
+  background-repeat: no-repeat;
+}
 /*---------------------------------------------------------------------------
    Copyright (c) 2016 Daniel C. Bünzli
 
