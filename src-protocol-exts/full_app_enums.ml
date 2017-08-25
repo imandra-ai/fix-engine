@@ -1020,11 +1020,6 @@ type fix_moneylaunderingstatus =
     | FIX_MoneyLaunderingStatus_ExemptAuthorised 
 ;;
 
-type fix_msgdirection =
-    | FIX_MsgDirection_Send 
-    | FIX_MsgDirection_Receive 
-;;
-
 type fix_multilegreportingtype =
     | FIX_MultiLegReportingType_SingleSecurity 
     | FIX_MultiLegReportingType_IndividualLegOfAMultiLegSecurity 

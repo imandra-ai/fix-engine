@@ -1264,13 +1264,6 @@ let encode_MoneyLaunderingStatus ( d ) =
     )
 ;;
 
-let encode_MsgDirection ( d ) =
-    (match d with
-        | FIX_MsgDirection_Send -> "S"
-        | FIX_MsgDirection_Receive -> "R"
-    )
-;;
-
 let encode_MultiLegReportingType ( d ) =
     (match d with
         | FIX_MultiLegReportingType_SingleSecurity -> "1"

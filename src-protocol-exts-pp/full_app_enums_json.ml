@@ -1265,13 +1265,6 @@ let moneylaunderingstatus_to_string ( d ) =
     )
 ;;
 
-let msgdirection_to_string ( d ) =
-    (match d with
-        | FIX_MsgDirection_Send -> "Send"
-        | FIX_MsgDirection_Receive -> "Receive"
-    )
-;;
-
 let multilegreportingtype_to_string ( d ) =
     (match d with
         | FIX_MultiLegReportingType_SingleSecurity -> "SingleSecurity"
@@ -3301,10 +3294,6 @@ let moneylaunderingstatus_to_json ( d ) : json =
     `String (moneylaunderingstatus_to_string d)
 ;;
 
-let msgdirection_to_json ( d ) : json =
-    `String (msgdirection_to_string d)
-;;
-
 let multilegreportingtype_to_json ( d ) : json =
     `String (multilegreportingtype_to_string d)
 ;;
@@ -4634,13 +4623,6 @@ let moneylaunderingstatus_opt_to_json ( d ) : json =
     (match d with
         | None -> (`Null)
         | Some d -> (moneylaunderingstatus_to_json d)
-    )
-;;
-
-let msgdirection_opt_to_json ( d ) : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (msgdirection_to_json d)
     )
 ;;
 

@@ -1384,14 +1384,6 @@ let parse_MoneyLaunderingStatus ( str ) =
     )
 ;;
 
-let parse_MsgDirection ( str ) =
-    (match str with
-        | "S" -> (Some (FIX_MsgDirection_Send))
-        | "R" -> (Some (FIX_MsgDirection_Receive))
-        | _ -> (None)
-    )
-;;
-
 let parse_MultiLegReportingType ( str ) =
     (match str with
         | "1" -> (Some (FIX_MultiLegReportingType_SingleSecurity))
