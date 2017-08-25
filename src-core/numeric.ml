@@ -39,14 +39,15 @@ let int_LessThan ( x, y : int * int ) : bool =  x < y;;
 (** *)
 let int_LessThanEqual ( x, y : int * int ) : bool = x <= y;;
 
-(** *)
+(** For the floating point numbers we store the whole and decimal parts as integers. *)
 type fix_float_data = {
     fix_float_whole       : int;
     fix_float_fraction    : int;
 }
 ;;
 
-(** *)
+(** To keep track of the floating point precision, the floating point data
+    type encodes a number of decimal places used.*)
 type fix_float = 
     | Float_0 of fix_float_data
     | Float_1 of fix_float_data

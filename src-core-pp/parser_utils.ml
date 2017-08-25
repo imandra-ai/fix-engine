@@ -8,6 +8,10 @@
 
 *)
 
+(** OCaml Stream processing helper functions that break a raw byte stream into 
+    a stream of key=value pairs and then into a stream of messages.  
+*)
+
 (**  Splits a stream of characters into a stream of key*value pairs. *)
 let split_into_key_value (spliton : char) ( stream : char Stream.t ) : (string * string) Stream.t =
     let current = ref [] in

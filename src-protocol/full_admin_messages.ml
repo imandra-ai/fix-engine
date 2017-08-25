@@ -105,7 +105,7 @@ type full_admin_msg_data =
     | Full_Msg_Test_Request               of full_msg_test_request_data
 ;;
 
-(** *)
+(** Get the message tag code, given the admin message data*)
 let get_full_admin_msg_tag ( msg : full_admin_msg_data ) =
     match msg with 
     | Full_Msg_Heartbeat                  _ -> Full_Msg_Heartbeat_Tag
