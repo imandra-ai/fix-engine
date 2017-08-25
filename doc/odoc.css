@@ -22,8 +22,8 @@ table {
 }
 *,  *:before,  *:after { box-sizing: border-box; }
 
-body
-{ font-family: Helvetica, "DejaVu Sans", Arial, sans-serif;
+body {
+  font-family: Helvetica, "DejaVu Sans", Arial, sans-serif;
   font-weight: normal;
   font-size: 0.875rem;
   line-height:1.25rem;
@@ -36,7 +36,6 @@ body
   padding-bottom: 20em;
   background: url("img/transition_docs_bottom.svg") 100% 100% / 1440px 220px repeat-x;
   min-height: 100vh;
-
 }
 
 /* Basic markup elements */
