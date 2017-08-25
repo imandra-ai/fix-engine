@@ -24,11 +24,12 @@ body
   font-size: 0.875rem;
   line-height:1.25rem;
   text-align: left;
-  min-width: 40ex;
-  max-width: 78ex;
+  width: 100%;
   padding: 1.25rem;
   margin-left: 3.75rem;
-  color: #222; background: #FAFAFA; }
+  color: #222; 
+  background: #eeeee7; 
+}
 
 /* Basic markup elements */
 
@@ -57,24 +58,36 @@ li > *:first-child { margin-top: 0 }
 
 /* Links and anchors */
 
-a { text-decoration:none; color:#2C5CBD; }
-a:hover { box-shadow:0 1px 0 0 #2C5CBD; }
+a { 
+  text-decoration: none; color:#2C5CBD; 
+}
+
+a:hover {
+  text-decoration: none;
+  background: #eeeeee;
+}
+
 *:target /* Linked highlight */
-{ background-color: #FFF8E5;
-  box-shadow: 0 0 0 2px #FFF8E5, 0 0 0 3px #DDD; }
+{ background-color: #9DEEDC;
+  box-shadow: 0 0 0 2px #9DEEDC, 0 0 0 3px #DDD; }
 
 .spec:hover > a.anchor, /* FIXME remove */
 .anchored:hover a.anchor { visibility: visible; }
 
-a.anchor:before { content: "#" }
-a.anchor:hover {  box-shadow: none; text-decoration: underline }
-a.anchor
-{ visibility: hidden; position: absolute; /* top: 0px; */
+a.anchor:before {
+  content: "#";
+}
+
+a.anchor:hover {}
+
+a.anchor { 
+  visibility: hidden; position: absolute; /* top: 0px; */
   margin-left: -3ex;
   font-weight: normal;
   font-style: normal;
   padding-right: 1ex; padding-left: 1ex; /* To remain selectable */
-  color: #AAA; }
+  color: #2C5CBD;
+}
 
 .xref-unresolved { box-shadow:0 1px 0 0 red }
 
@@ -98,7 +111,12 @@ h3, .h8 { font-size: 1.125rem; }
 h2 + h3, .h7 + .h8 { margin-top: 0.625rem; }
 
 /* Preformatted and code */
-
+code {
+  background: #eeeeee;
+}
+code a {
+  background: #fff;
+}
 tt, code, pre
 { font-family: Menlo, "DejaVu Sans Mono", "Bitstream Vera Sans Mono",
   monospace;
@@ -223,10 +241,10 @@ h1 + .modules, h1 + .sel { margin-top: 0.625rem }
   width: auto;
   height: 8rem;
 }
-
 .space_after {
   margin-bottom: 2rem;
 }
+
 
 /*---------------------------------------------------------------------------
    Copyright (c) 2016 Daniel C. Bünzli
