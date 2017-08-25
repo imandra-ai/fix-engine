@@ -58,9 +58,51 @@ let process_strings msg : unit =
     | _ -> ()
 ;;
 
+let rec while_busy_loop state =
+    let engine_state = state.engine_state in
+    let engine_state = Fix_engine.one_step engine_state in
+    (** THEOREM : after one_step we can get either ontgoing internal
+        or outgoing FIX message *)
+    begin match ( engine_state.outgoing_fix_msg , engine_state.outgoing_int_msg) with
+        (** On outgoing FIX message we send it and clean outgoing slot.*)
+        | Some msg, None -> begin  
+            state.fix_callback msg >>= fun () -> 
+            let engine_state = { engine_state with outgoing_fix_msg = None } in
+            Lwt.return { state with engine_state = engine_state } 
+        end
+        | None, Some msg -> begin
+            let model_state = state.model_state in
+            let model_state = match engine_state.outgoing_int_msg with
+                | Some ( OutIntMsg_ApplicationData data ) ->
+                    let model_message = Type_converter.convert_full_to_model_fix data in
+                    let model_state = { model_state with State.incoming_msg = Some model_message } in
+                    Venue.one_step model_state
+                | Some ( OutIntMsg_ResendApplicationData data ) ->
+                    let model_message = Type_converter.convert_full_to_model_fix data in
+                    let model_message = match model_message with
+                    | Model_messages.FIX_TL_Normal m -> Model_messages.FIX_TL_PossibleResend m | m -> m in
+                    let model_state = { model_state with State.incoming_msg = Some model_message } in
+                    Venue.one_step model_state
+                | _ -> model_state (** TODO -- see what to do with other messages *)
+                in
+            let engine_state = { engine_state with outgoing_int_msg = None } in
+            send_messages_list model_state.State.outgoing_msgs engine_state state.fix_callback >>= fun engine_state ->
+            Lwt.return { state with 
+                engine_state = engine_state ;
+                model_state  = { model_state  with State.outgoing_msgs = [] } } 
+        end
+        | None, None -> Lwt.return { state with engine_state = engine_state }
+        |  _ -> Lwt.fail_with "Critical internal error in fix_engine model" 
+    end >>= fun state ->
+    if Fix_engine_state.engine_state_busy state.engine_state then
+        while_busy_loop state
+    else Lwt.return state
+;;
+
 let rec main_loop state =
     let open Fix_engine_state in
     Lwt_mvar.take state.incoming >>= fun incoming ->
+    Lwt_io.flush_all () >>= fun () ->
     if incoming = Terminate then Lwt.return_unit else
     let engine_state = state.engine_state in
     let engine_state = match incoming with 
@@ -70,20 +112,8 @@ let rec main_loop state =
             { engine_state with incoming_fix_msg = Some msg }  
         | _ -> engine_state
         in
-    let engine_state = Fix_engine.one_step engine_state in
-    send_all_outgoing_fix engine_state state.fix_callback >>= fun engine_state ->
-    let model_state = state.model_state in
-    let model_state = match engine_state.outgoing_int_msg with
-        | Some ( OutIntMsg_ApplicationData data ) ->
-            let model_message = Type_converter.convert_full_to_model_fix data in
-            let model_state = { model_state with State.incoming_msg = Some model_message } in
-            Venue.one_step model_state
-        | _ -> model_state (** TODO -- see what to do with other messages *)
-        in
-    send_messages_list model_state.State.outgoing_msgs engine_state state.fix_callback >>= fun engine_state ->
-    let model_state = { model_state with State.outgoing_msgs = [] } in (* NOTE: cleaning the model out messages here *)
-    let engine_state = { engine_state with outgoing_int_msg = None } in (* NOTE: cleaning the exchange outgoing internal msg here *)
-    let state = { state with engine_state = engine_state; model_state = model_state } in
+    let state = {state with engine_state = engine_state } in
+    while_busy_loop state >>= fun state ->
     main_loop state
 ;;
 
