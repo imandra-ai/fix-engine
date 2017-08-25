@@ -15,20 +15,27 @@ menu,nav,output,ruby,section,summary,time,mark,audio,video
   font-size:100%; font: inherit; line-height:inherit; vertical-align:baseline;
   text-align: inherit; color: inherit; background: transparent; }
 
-table { border-collapse: collapse; border-spacing: 0; }
+table { 
+  border-collapse: collapse; 
+  border-spacing: 0;
+  margin-bottom: 2rem;
+}
 *,  *:before,  *:after { box-sizing: border-box; }
 
-body
-{ font-family: Helvetica, "DejaVu Sans", Arial, sans-serif;
+body {
+  font-family: Helvetica, "DejaVu Sans", Arial, sans-serif;
   font-weight: normal;
   font-size: 0.875rem;
   line-height:1.25rem;
   text-align: left;
   width: 100%;
-  padding: 1.25rem;
-  margin-left: 3.75rem;
+  padding-top: 1rem;
+  padding-left: 3.75rem;
   color: #222; 
-  background: #eeeee7; 
+  background-color: #afafaf;
+  padding-bottom: 20em;
+  background: url("img/transition_docs_bottom.svg") 100% 100% / 1440px 220px repeat-x;
+  min-height: 100vh;
 }
 
 /* Basic markup elements */
@@ -60,6 +67,7 @@ li > *:first-child { margin-top: 0 }
 
 a { 
   text-decoration: none; color:#2C5CBD; 
+  background: #f7f7f7;
 }
 
 a:hover {
@@ -111,15 +119,15 @@ h3, .h8 { font-size: 1.125rem; }
 h2 + h3, .h7 + .h8 { margin-top: 0.625rem; }
 
 /* Preformatted and code */
-code {
-  background: #eaeae2;
+code {;
+  padding: 5px;
+  background: #f7f7f7;
 }
 code a {
-  background: #fff;
+  background: #f7f7f7;
 }
 tt, code, pre
-{ font-family: Menlo, "DejaVu Sans Mono", "Bitstream Vera Sans Mono",
-  monospace;
+{ font-family: Menlo, "DejaVu Sans Mono", "Bitstream Vera Sans Mono", monospace;
   font-weight: normal;
   font-size: 0.75rem; }
 
@@ -244,8 +252,13 @@ h1 + .modules, h1 + .sel { margin-top: 0.625rem }
 .space_after {
   margin-bottom: 2rem;
 }
-
-
+nav {
+  background: url("img/imandra_fix_engine_documentation.svg") 0 1.26rem / auto 8.01rem;
+  padding-top: 11rem;
+  height: 12rem;
+  padding-left: 0;
+  background-repeat: no-repeat;
+}
 /*---------------------------------------------------------------------------
    Copyright (c) 2016 Daniel C. Bünzli
 
