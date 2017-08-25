@@ -68,8 +68,8 @@ a:hover {
 }
 
 *:target /* Linked highlight */
-{ background-color: #9DEEDC;
-  box-shadow: 0 0 0 2px #9DEEDC, 0 0 0 3px #DDD; }
+{ background-color: #EAEAE2;
+  box-shadow: 0 0 0 2px #EAEAE2, 0 0 0 3px #DDD; }
 
 .spec:hover > a.anchor, /* FIXME remove */
 .anchored:hover a.anchor { visibility: visible; }
@@ -112,7 +112,7 @@ h2 + h3, .h7 + .h8 { margin-top: 0.625rem; }
 
 /* Preformatted and code */
 code {
-  background: #eeeeee;
+  background: #eaeae2;
 }
 code a {
   background: #fff;
