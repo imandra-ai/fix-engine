@@ -64,7 +64,7 @@ a {
 
 a:hover {
   text-decoration: none;
-  background: #eeeeee;
+  background: #ffffff;
 }
 
 *:target /* Linked highlight */
