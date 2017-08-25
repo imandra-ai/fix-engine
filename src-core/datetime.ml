@@ -7,7 +7,7 @@
     datetime.ml
 *)
 
-(** UTC Timestamp timestamp. *)
+(** UTC Timestamp type. *)
 type fix_utctimestamp = {
     utc_timestamp_year      : int;
     utc_timestamp_month     : int;
@@ -19,7 +19,7 @@ type fix_utctimestamp = {
 }
 ;;
 
-(** *)
+(** Default timestamp is 0 unix epoch timestamp *)
 let default_utctimestamp = {
     utc_timestamp_year      = 1970;
     utc_timestamp_month     = 1;
@@ -31,7 +31,7 @@ let default_utctimestamp = {
 }
 ;;
 
-(** *)
+(** Constructor for the UTC timestamp  *)
 let make_utctimestamp ( year, month, day, hour, minute, second, millisec : int * int * int * int * int * int * int option ) = {
     utc_timestamp_year      = year;
     utc_timestamp_month     = month;
@@ -43,7 +43,7 @@ let make_utctimestamp ( year, month, day, hour, minute, second, millisec : int *
 }
 ;;
 
-(** *)
+(** Helper function that determines wether the year is a leap year *)
 let is_leapyear ( year : int ) =
     match year with 
     | 1972 | 1976 | 1980 | 1984 | 1988 | 1992 | 1996 | 2000 | 2004 | 2008 | 2012 | 2016 | 2020 | 2024 | 2028 | 2032 -> true
@@ -51,7 +51,7 @@ let is_leapyear ( year : int ) =
 ;;
 
 
-(** *)
+(** Days in month helper function *)
 let how_many_days ( month, year : int * int ) = 
     match month with
     | 1     -> 31
@@ -76,7 +76,7 @@ let valid_day (day, month, year) =
 ;;
 
 
-(** *)
+(** Checking validity of the values in the UTC timestamp*)
 let is_valid_utctimestamp ( ts : fix_utctimestamp ) =
   0 <= ts.utc_timestamp_year      && ts.utc_timestamp_year    <= 9999 && 
   1 <= ts.utc_timestamp_month     && ts.utc_timestamp_month   <= 12   && 
@@ -90,7 +90,7 @@ let is_valid_utctimestamp ( ts : fix_utctimestamp ) =
 ;;
 
 
-(** *)
+(** UTC Timestamp base comparison operator *)
 let utctimestamp_GreaterThan ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
   if tOne = tTwo then false
   else
@@ -114,7 +114,7 @@ let utctimestamp_GreaterThan ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp 
     | Some one  , Some two  -> one > two
 ;;
 
-(** *)
+(** Two UTC timestamps are equal if they have equal field values *)
 let utctimestamp_Equal ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
    (tOne = tTwo)
 ;;
@@ -134,14 +134,14 @@ let utctimestamp_LessThanEqual ( tOne, tTwo : fix_utctimestamp * fix_utctimestam
     not ( utctimestamp_GreaterThan (tOne, tTwo) )
 ;;
 
-(** LocalMktDate *)
+(** LocalMktDate type denotes a particular date*)
 type fix_localmktdate = {
     localmktdate_year       : int;
     localmktdate_month      : int;
     localmktdate_day        : int;
 };;
 
-(** *)
+(** Default LocalMktDate corresponds to 0 unix epoch timestamp *)
 let default_localmktdate = {
     localmktdate_year       = 1970;
     localmktdate_month      = 1;
@@ -149,7 +149,7 @@ let default_localmktdate = {
 }
 ;;
 
-(** *)
+(** LocalMktDate constructor *)
 let make_localmktdate ( year, month, day : int * int * int ) = {
     localmktdate_year = year;
     localmktdate_month = month;
