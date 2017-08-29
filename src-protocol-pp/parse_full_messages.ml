@@ -16,7 +16,7 @@ open Parse_base_types
 open Parse_datetime
 open Parse_full_tags
 
-(** *)
+
 let parse_msg_data msg_tag msg =
     match msg_tag with
     | Full_Admin_Msg_Tag msg_tag -> Parse_admin_messages.parse_admin_msg_data msg_tag msg
@@ -25,7 +25,7 @@ let parse_msg_data msg_tag msg =
                                  >>= fun x -> ParseSuccess ( Full_FIX_App_Msg x )
 ;;
 
-(** *)
+
 let parse_header msg = 
     req msg "8"   parse_string        @@ fun msg h_begin_string                ->
     req msg "9"   parse_int           @@ fun msg h_body_length                 ->
@@ -83,7 +83,7 @@ let parse_header msg =
     } , msg
 ;;
 
-(** *)
+
 let parse_trailer msg =  
     opt msg "93" parse_int  @@ fun msg signature_length ->
     opt msg "89" parse_int  @@ fun msg signature        ->
@@ -96,7 +96,7 @@ let parse_trailer msg =
 ;;
 
 
-(** *)
+
 let check_first_three_tags ( msg : (string * string) list ) : string option =
     if List.hd msg |> fst <> "8" then Some "8" else
     let msg = List.tl msg in

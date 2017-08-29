@@ -10,7 +10,7 @@
 
 open Full_admin_tags;;
 
-(** *)
+
 let encode_admin_msg_tag = function
     |   Full_Msg_Heartbeat_Tag       -> "0"  
     |   Full_Msg_Test_Request_Tag    -> "1"  
@@ -22,7 +22,7 @@ let encode_admin_msg_tag = function
     |   Full_Msg_Business_Reject_Tag -> "j"  
 ;;
 
-(** *)
+
 let encode_admin_field_tag = function
     | Full_Msg_HeartBtInt_Tag              -> "108" 
     | Full_Msg_TestReqID_Tag               -> "112" 

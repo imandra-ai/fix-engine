@@ -1,4 +1,4 @@
-(** *)
+
 (*** 
 
     Aesthetic Integration Limited
@@ -11,7 +11,7 @@
 open Yojson;;
 open Full_admin_tags;;
 
-(** *)
+
 let full_admin_msg_tag_to_string = function
     | Full_Msg_Heartbeat_Tag       -> "Heartbeat_Tag"      
     | Full_Msg_Logon_Tag           -> "Logon_Tag"          
@@ -23,7 +23,7 @@ let full_admin_msg_tag_to_string = function
     | Full_Msg_Test_Request_Tag    -> "Test_Request_Tag"   
 ;;
 
-(** *)
+
 let full_admin_field_tag_to_string = function
     | Full_Msg_BeginSeqNo_Tag            -> "BeginSeqNo_Tag"
     | Full_Msg_BusinessRejectReason_Tag  -> "BusinessRejectReason_Tag"
@@ -51,12 +51,12 @@ let full_admin_field_tag_to_string = function
     | Full_Msg_OrigSendingTime_Tag       -> "OrigSendingTime_Tag"
 ;;
 
-(** *)
+
 let full_admin_msg_tag_to_json x : json = `String (full_admin_msg_tag_to_string x);;
-(** *)
+
 let full_admin_msg_tag_opt_to_json = function None -> `Null | Some x -> full_admin_msg_tag_to_json x;;
 
-(** *)
+
 let full_admin_field_tag_to_json x : json = `String (full_admin_field_tag_to_string x );;
-(** *)
+
 let full_admin_field_tag_opt_to_json = function None -> `Null | Some x -> full_admin_field_tag_to_json x ;;

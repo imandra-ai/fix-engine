@@ -20,7 +20,7 @@ let parse_app_msg_tag = function
     |  _  -> None
 ;;
 
-(** *)
+
 let parse_app_field_tag = function
     | "1"   -> Some Full_Msg_Account_Tag
     | "102" -> Some Full_Msg_CxlRejReason_Tag

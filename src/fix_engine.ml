@@ -172,7 +172,7 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
             match engine.fe_curr_mode with 
             | ActiveSession         -> let state' = business_reject ( data, engine ) in 
                                        { state' with fe_last_data_received = engine.fe_curr_time }
-            | _                     -> engine   (** *)
+            | _                     -> engine   
         end
     | ValidMsg msg              -> let state' =
         begin

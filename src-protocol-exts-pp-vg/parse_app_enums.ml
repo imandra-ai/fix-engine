@@ -1,4 +1,4 @@
-(** *)
+
 (*** 
 
     Aesthetic Integration Limited

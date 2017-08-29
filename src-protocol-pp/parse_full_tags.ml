@@ -12,7 +12,7 @@ open Full_message_tags;;
 open Parse_app_tags;; 
 open Parse_admin_tags;;
 
-(** *)
+
 let parse_full_msg_tag str = 
     match parse_admin_msg_tag str with
     | Some x -> Some (Full_Admin_Msg_Tag x)
@@ -23,7 +23,7 @@ let parse_full_msg_tag str =
     end
 ;;
 
-(** *)
+
 let parse_full_field_tag str = 
     match parse_admin_field_tag str with 
         | Some x -> Some (Full_Admin_Field_Tag x)  
