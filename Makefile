@@ -20,6 +20,15 @@ build_tests:
 	jbuilder build src-tests/test_runner.bc 
 	rm jbuild-ignore
 
+_build/default/_doc:
+	@echo "src-protocol-exts-pp-vg" > jbuild-ignore 
+	@echo "src-protocol-exts-vg" >> jbuild-ignore 
+	jbuilder build @doc
+	rm jbuild-ignore
+
+doc: _build/default/_doc
+	mv _build/default/_doc doc
+
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 	sed -e 's/rotate=90;//g' "$<" | dot -Tsvg -o $@
 
@@ -37,6 +46,7 @@ install-upgrade-deps:
 	opam pin -y add lwt 2.6.0
 	opam install -y jbuilder
 	opam install -y yojson
+	opam install -y odoc
 
 # dev-setup is used by (human) developers
 dev-setup: install-upgrade-deps
@@ -45,5 +55,5 @@ dev-setup: install-upgrade-deps
 clean:
 	jbuilder clean
 
-.PHONY: build build_vgs run run_server clean
+.PHONY: build build_vgs run run_server clean doc
 
