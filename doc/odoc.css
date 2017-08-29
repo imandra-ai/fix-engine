@@ -245,6 +245,10 @@ h1 + .modules, h1 + .sel { margin-top: 0.625rem }
 
 
 /* AI Customs */
+.logo_fix_engine {
+  width: auto;
+  height: 6.44rem;
+}
 .logo_main {
   width: auto;
   height: 8rem;
