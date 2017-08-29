@@ -56,7 +56,7 @@ let split_into_messages (stream : (string * string) Stream.t) =
     Stream.from next
 ;; 
 
-(** *)
+
 
 (** Extract a value given a tag, returns a pair with the value and the rest of the list.*)
 let take (key : string) (lst : (string * string) list ) =

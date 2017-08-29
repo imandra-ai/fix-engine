@@ -16,7 +16,7 @@ open Parse_datetime;;
 open Parse_admin_enums;;
 open Parse_full_tags;;
 
-(** *)
+
 let parse_msg_heartbeat_data msg = (
     check_duplicate_tags msg    @@ fun () ->
     opt msg "112" parse_string  @@ fun msg hb_test_req_id ->
@@ -25,7 +25,7 @@ let parse_msg_heartbeat_data msg = (
     ) |> check_unknown_tags 
 ;;
 
-(** *)
+
 let parse_msg_logon_data msg = (
     check_duplicate_tags msg              @@ fun () ->
     req msg "98"  parse_encryption_method @@ fun msg ln_encrypt_method            ->
@@ -53,7 +53,7 @@ let parse_msg_logon_data msg = (
     ) |> check_unknown_tags 
 ;;
 
-(** *)
+
 let parse_msg_logoff_data msg = ( 
     check_duplicate_tags msg   @@ fun () ->
     opt msg "355" parse_int    @@ fun msg lo_encoded_text_len -> 
@@ -65,7 +65,7 @@ let parse_msg_logoff_data msg = (
     ) |> check_unknown_tags
 ;;
 
-(** *)
+
 let parse_msg_resend_request_data msg = (
     check_duplicate_tags msg  @@ fun () ->
     req msg "7"  parse_int    @@ fun msg rr_begin_seq_num -> 
@@ -77,7 +77,7 @@ let parse_msg_resend_request_data msg = (
     ) |> check_unknown_tags
 ;;
 
-(** *)
+
 let parse_msg_reject_data msg = ( 
     check_duplicate_tags msg                   @@ fun () ->
     req msg "45"  parse_int                    @@ fun msg sr_ref_seq_num           -> 
@@ -99,7 +99,7 @@ let parse_msg_reject_data msg = (
     ) |> check_unknown_tags    
 ;;
 
-(** *)
+
 let parse_msg_sequence_reset_data msg = (
     check_duplicate_tags msg        @@ fun () ->
     req msg "36"  parse_int         @@ fun msg seqr_new_seq_no    ->
@@ -111,7 +111,7 @@ let parse_msg_sequence_reset_data msg = (
     ) |> check_unknown_tags    
 ;;
 
-(** *)
+
 let parse_msg_test_request_data msg = (
     check_duplicate_tags msg   @@ fun () ->
     req msg "112" parse_string @@ fun msg test_req_id -> 
@@ -121,7 +121,7 @@ let parse_msg_test_request_data msg = (
     ) |> check_unknown_tags    
 ;;
 
-(** *)
+
 let parse_msg_business_reject_data msg = (
     check_duplicate_tags msg                       @@ fun () ->
     req msg "45"  parse_int                        @@ fun msg br_ref_seq_num            -> 
@@ -143,7 +143,7 @@ let parse_msg_business_reject_data msg = (
     ) |> check_unknown_tags    
 ;;
 
-(** *)
+
 let parse_admin_msg_data msg_tag msg = 
     match msg_tag with
     | Full_Msg_Heartbeat_Tag        -> parse_msg_heartbeat_data       msg >>= fun x -> ParseSuccess ( Full_Msg_Heartbeat       x )    

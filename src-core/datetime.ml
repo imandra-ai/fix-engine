@@ -69,7 +69,6 @@ let how_many_days ( month, year : int * int ) =
 ;;
 
 
-(** *)
 let valid_day (day, month, year) =
   let days = how_many_days (month, year) in
   1 <= day && day <= days
@@ -119,17 +118,17 @@ let utctimestamp_Equal ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
    (tOne = tTwo)
 ;;
 
-(** *)
+
 let utctimestamp_GreaterThanEqual ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
     utctimestamp_GreaterThan (tOne, tTwo) || utctimestamp_Equal (tOne, tTwo)
 ;;
 
-(** *)
+
 let utctimestamp_LessThan ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
     not ( utctimestamp_GreaterThan (tOne, tTwo) || utctimestamp_Equal (tOne, tTwo))
 ;;
 
-(** *)
+
 let utctimestamp_LessThanEqual ( tOne, tTwo : fix_utctimestamp * fix_utctimestamp ) =
     not ( utctimestamp_GreaterThan (tOne, tTwo) )
 ;;
@@ -157,7 +156,7 @@ let make_localmktdate ( year, month, day : int * int * int ) = {
 }
 ;;
 
-(** *)
+
 let is_valid_localmktdate ( lmd : fix_localmktdate ) =
     0 <= lmd.localmktdate_year && lmd.localmktdate_year <= 9999 && 
     1 <= lmd.localmktdate_month && lmd.localmktdate_month <= 12 && 
@@ -211,7 +210,7 @@ type fix_monthyear = {
     monthyear_week          : fix_week option;
 };;
 
-(** *)
+
 let default_monthyear = {
     monthyear_year   = 1970;
     monthyear_month  = 1;
@@ -220,7 +219,7 @@ let default_monthyear = {
 }
 ;;
 
-(** *)
+
 let make_monthyear ( year, month, week : int * int * fix_week option ) = {
     monthyear_year = year;
     monthyear_month = month;
@@ -228,7 +227,7 @@ let make_monthyear ( year, month, week : int * int * fix_week option ) = {
     monthyear_week = week;
 };;
 
-(** *)
+
 let is_valid_monthyear ( my : fix_monthyear ) =
     0 <= my.monthyear_year && my.monthyear_year <= 9999 && 
     0 <= my.monthyear_month && my.monthyear_month <= 12 && (
@@ -291,7 +290,7 @@ type fix_utctimeonly = {
     utc_timeonly_millisec   : int option;
 };;
 
-(** *)
+
 let default_utctimeonly = {
     utc_timeonly_hour       = 0;
     utc_timeonly_minute     = 0;
@@ -299,7 +298,7 @@ let default_utctimeonly = {
     utc_timeonly_millisec   = Some 0;
 };;
 
-(** *)
+
 let make_utctimeonly (hour,minute,second,millisec: int * int * int * int option) = {
     utc_timeonly_hour       = hour;
     utc_timeonly_minute     = minute;
@@ -307,7 +306,7 @@ let make_utctimeonly (hour,minute,second,millisec: int * int * int * int option)
     utc_timeonly_millisec   = millisec;
 };;
 
-(** *)
+
 let is_valid_utctimeonly ( t : fix_utctimeonly ) =
     0 <= t.utc_timeonly_hour && 
     t.utc_timeonly_hour <= 23 &&
@@ -337,17 +336,17 @@ let utctimeonly_Equal ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) =
   (tOne = tTwo)
 ;;
 
-(** *)
+
 let utctimeonly_LessThan ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) =
     not ( utctimeonly_GreaterThan (tOne, tTwo) || utctimeonly_Equal (tOne, tTwo))
 ;;
 
-(** *)
+
 let utctimeonly_LessThanEqual ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) =
     not ( utctimeonly_GreaterThan (tOne, tTwo) )
 ;;
 
-(** *)
+
 let utctimeonly_GreaterThanEqual ( tOne, tTwo : fix_utctimeonly * fix_utctimeonly ) = 
     utctimeonly_GreaterThan (tOne, tTwo) || utctimeonly_Equal (tOne, tTwo)
 ;;
@@ -366,14 +365,14 @@ let default_utcdateonly = {
     utc_dateonly_day        = 1;
 };;
 
-(** *)
+
 let make_utcdateonly ( year, month, day : int * int *int) = {
     utc_dateonly_year = year;
     utc_dateonly_month = month;
     utc_dateonly_day = day;
 };;
 
-(** *)
+
 let is_valid_utcdateonly ( d : fix_utcdateonly ) =
     0 <= d.utc_dateonly_year && d.utc_dateonly_year <= 9999 && 
     1 <= d.utc_dateonly_month && d.utc_dateonly_month <= 12 && 
@@ -422,7 +421,7 @@ type fix_duration = {
 }
 ;;
 
-(** *)
+
 let make_duration ( years, months, days, hours, minutes, seconds ) = {
     dur_years               = years;
     dur_months              = months;
@@ -433,7 +432,7 @@ let make_duration ( years, months, days, hours, minutes, seconds ) = {
 }
 ;;
 
-(** *)
+
 let is_valid_duration ( d : fix_duration ) =
     match d.dur_years with 
     | Some y    -> 0 <= y && y <= 100
@@ -455,14 +454,14 @@ let is_valid_duration ( d : fix_duration ) =
     | None      -> true
 ;;
 
-(** *)
+
 type field_carryover = {
     carry_over  : bool;
     new_field   : int;
 }
 ;;
 
-(** *)
+
 let calculate_carry ( field, max_value, min_value : int * int * int ) =
     if field >= max_value then {
         new_field = field - max_value + min_value;
@@ -473,7 +472,7 @@ let calculate_carry ( field, max_value, min_value : int * int * int ) =
     }
 ;;
 
-(** *)
+
 let normalise_timestamp ( ts : fix_utctimestamp ) =
     let carry_secs  = calculate_carry ( ts.utc_timestamp_second, 60, 0) in
     let new_minute  = if carry_secs.carry_over then ( ts.utc_timestamp_minute + 1)  else ts.utc_timestamp_minute in 
@@ -495,7 +494,7 @@ let normalise_timestamp ( ts : fix_utctimestamp ) =
     }
 ;;
 
-(** *)
+
 let utctimestamp_duration_Add ( t, dur : fix_utctimestamp * fix_duration ) = 
     let new_seconds = match dur.dur_seconds with
         | None -> t.utc_timestamp_second
@@ -527,7 +526,7 @@ let utctimestamp_duration_Add ( t, dur : fix_utctimestamp * fix_duration ) =
     normalise_timestamp ( new_ts )
 ;;
 
-(** *)
+
 let seconds_to_duration ( seconds ) = 
     let ts = normalise_timestamp {
         utc_timestamp_year      = 0;

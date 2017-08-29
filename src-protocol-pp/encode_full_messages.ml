@@ -17,14 +17,14 @@ open Encode_full_tags
 let req f x = Some (f x);;
 let opt f v = match v with Some x -> Some ( f x ) | None -> None;;
 
-(** *)
+
 let encode_msg_data msg =
     match msg with
     | Full_FIX_Admin_Msg msg -> Encode_admin_messages.encode_admin_msg_data msg
     | Full_FIX_App_Msg   msg -> Encode_app_messages.encode_app_msg_data     msg  
 ;;
 
-(** *)
+
 let encode_header msg_tag msg = 
     [ (* Tags 8 and 9 will be added in encode_full_valid_msg *)
       ( "35"  , req encode_full_msg_tag  msg_tag                          )
@@ -55,7 +55,7 @@ let encode_header msg_tag msg =
     ]
 ;;
 
-(** *)
+
 let encode_trailer msg =  
     [ ( "93" , opt encode_int msg.signature_length )
     ; ( "89" , opt encode_int msg.signature        )

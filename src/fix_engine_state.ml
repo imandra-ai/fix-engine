@@ -68,7 +68,7 @@ type fix_engine_mode =
     | Retransmit            (** Retransmitting sequence of messages because we were asked to retransmit. *)
     | ShuttingDown          (** We'll nees to send a logoff message adn transition to ShutdownInitiated. *)               
     | ShutdownInitiated     (** Shutting-down protocol. *)
-    | Error                 (** *)
+    | Error                 
     | WaitingForHeartbeat   (** Sent out TestRequest message.  *)
 ;;
 
