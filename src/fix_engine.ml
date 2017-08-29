@@ -157,18 +157,21 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
 
 (** Process incoming FIX message here. *)
 let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) = 
+    print_endline ("Incoming " ^ string_of_int engine.incoming_seq_num) ;
     match m with
     | Garbled                   -> engine   (** Garbled messages are simply ignored. Note the timestamp is not updated. *)
     | SessionRejectedMsg data   -> 
         begin
             match engine.fe_curr_mode with
-            | ActiveSession         -> let state' = session_reject ( data, engine ) in { state' with fe_last_data_received = engine.fe_curr_time }
+            | ActiveSession         -> let state' = session_reject ( data, engine ) in 
+                                       { state' with fe_last_data_received = engine.fe_curr_time }
             | _                     -> engine
         end
     | BusinessRejectedMsg data  ->
         begin
             match engine.fe_curr_mode with 
-            | ActiveSession         -> let state' = business_reject ( data, engine ) in { state' with fe_last_data_received = engine.fe_curr_time }
+            | ActiveSession         -> let state' = business_reject ( data, engine ) in 
+                                       { state' with fe_last_data_received = engine.fe_curr_time }
             | _                     -> engine   (** *)
         end
     | ValidMsg msg              -> let state' =
@@ -180,7 +183,7 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
             | Recovery              -> run_recovery ( msg, engine )
             | ShutdownInitiated     -> run_shutdown ( msg, engine )
             | Error                 -> noop ( msg, engine )
-            | WaitingForHeartbeat   -> noop ( msg, engine) 
+            | WaitingForHeartbeat   -> run_wait_heartbeat ( msg, engine) 
             | _                     -> { engine with incoming_fix_msg = Some ( ValidMsg msg ) }
         end in { state' with fe_last_data_received = engine.fe_curr_time }
 ;;
