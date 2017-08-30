@@ -83,7 +83,7 @@ let fix_engine_state_to_json s =
         ( "cache"                                       , full_msg_list_to_json s.fe_cache                      );
         ( "history"                                     , full_msg_list_to_json s.fe_history                    );
         ( "last_hearbeat_received"                      , utctimestamp_to_json s.fe_last_data_received          );
-        ( "heartbeat_interval"                          , utcduration_to_json s.fe_heartbeat_interval           );
+        ( "heartbeat_interval"                          , duration_to_json s.fe_heartbeat_interval              );
         ( "history_to_send"                             , full_msg_list_to_json s.fe_history_to_send            );
         ( "application_up"                              , `Bool s.fe_application_up                             );
     ]
