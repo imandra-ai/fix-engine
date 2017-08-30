@@ -18,7 +18,6 @@ menu,nav,output,ruby,section,summary,time,mark,audio,video
 table { 
   border-collapse: collapse; 
   border-spacing: 0;
-  margin-bottom: 2rem;
 }
 *,  *:before,  *:after { box-sizing: border-box; }
 
@@ -46,8 +45,6 @@ em { font-style: italic; }
 sup { vertical-align: super; }
 sub { vertical-align: sub; }
 sup, sub { font-size : 0.75rem; line-height: 0; margin-left: 0.2ex; }
-
-p, div, img { margin-top: 1.25rem; }
 
 ul, ol
 { margin-top: 0.625rem; margin-bottom: 0.625rem; list-style-position: outside }
