@@ -181,6 +181,7 @@ let create_logon_msg ( engine : fix_engine_state ) =
             ln_username                     = None;
             ln_password                     = None;
 
+            ln_msg_types                    = []
         } 
     ) in 
     create_outbound_fix_msg ( 

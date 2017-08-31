@@ -62,3 +62,10 @@ type fix_encryption_method =
     | PEM_DES_MD5   
     | NoEncryption
 ;;
+
+(** Enum for the MsgDirection <385> field *)
+type fix_msgdirection =
+    | FIX_MsgDirection_Send 
+    | FIX_MsgDirection_Receive 
+;;
+
