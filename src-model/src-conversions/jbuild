@@ -1,9 +1,9 @@
 (jbuild_version 1)
 
 (library
-  ( (name        conversions)
+  ( (name conversions)
     (public_name conversions)
-    (wrapped  false)
-    (libraries (protocol_exts venue_types))
+    (wrapped false)
+    (libraries (core venue_types protocol_exts))
   )
 )

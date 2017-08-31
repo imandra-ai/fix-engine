@@ -1,3 +1,4 @@
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
 open Full_app_enums;;
 (* @meta[imandra_ignore] off @end *)
@@ -1261,6 +1262,13 @@ let encode_MoneyLaunderingStatus ( d ) =
         | FIX_MoneyLaunderingStatus_ExemptBelowLimit -> "1"
         | FIX_MoneyLaunderingStatus_ExemptMoneyType -> "2"
         | FIX_MoneyLaunderingStatus_ExemptAuthorised -> "3"
+    )
+;;
+
+let encode_MsgDirection ( d ) =
+    (match d with
+        | FIX_MsgDirection_Send -> "S"
+        | FIX_MsgDirection_Receive -> "R"
     )
 ;;
 

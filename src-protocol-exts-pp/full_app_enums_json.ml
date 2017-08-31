@@ -1,6 +1,7 @@
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Yojson;;
 open Full_app_enums;;
+open Yojson;;
 (* @meta[imandra_ignore] off @end *)
 
 let accounttype_to_string ( d ) =
@@ -1262,6 +1263,13 @@ let moneylaunderingstatus_to_string ( d ) =
         | FIX_MoneyLaunderingStatus_ExemptBelowLimit -> "ExemptBelowLimit"
         | FIX_MoneyLaunderingStatus_ExemptMoneyType -> "ExemptMoneyType"
         | FIX_MoneyLaunderingStatus_ExemptAuthorised -> "ExemptAuthorised"
+    )
+;;
+
+let msgdirection_to_string ( d ) =
+    (match d with
+        | FIX_MsgDirection_Send -> "Send"
+        | FIX_MsgDirection_Receive -> "Receive"
     )
 ;;
 
@@ -3294,6 +3302,10 @@ let moneylaunderingstatus_to_json ( d ) : json =
     `String (moneylaunderingstatus_to_string d)
 ;;
 
+let msgdirection_to_json ( d ) : json =
+    `String (msgdirection_to_string d)
+;;
+
 let multilegreportingtype_to_json ( d ) : json =
     `String (multilegreportingtype_to_string d)
 ;;
@@ -4623,6 +4635,13 @@ let moneylaunderingstatus_opt_to_json ( d ) : json =
     (match d with
         | None -> (`Null)
         | Some d -> (moneylaunderingstatus_to_json d)
+    )
+;;
+
+let msgdirection_opt_to_json ( d ) : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (msgdirection_to_json d)
     )
 ;;
 

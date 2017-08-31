@@ -1,25 +1,26 @@
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
 open Yojson;;
-open Full_app_records;;
-open Base_types_json;;
-open Datetime_json;;
-open Full_app_enums_json;;
-open Full_app_records_json;;
 open Full_app_messages;;
+open Full_app_records_json;;
+open Base_types_json;;
+open Full_app_enums_json;;
+open Datetime_json;;
 (* @meta[imandra_ignore] off @end *)
 
 let assoc_filter_nulls l : json =
     `Assoc ( List.filter (function ( _, `Null ) -> false | _ -> true ) l )
 ;;
+let rg f lst : json =
+    match lst with [] -> `Null | lst -> `List ( List.map f lst)
+;;
 
 let advertisement_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_Advertisement_Instrument );
     ( "AdvId" , string_to_json x.f_Advertisement_AdvId );
     ( "AdvTransType" , advtranstype_to_json x.f_Advertisement_AdvTransType );
     ( "AdvRefID" , string_opt_to_json x.f_Advertisement_AdvRefID );
-    ( "Instrument" , instrument_to_json x.f_Advertisement_Instrument );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_Advertisement_InstrmtLegGrp );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_Advertisement_UndInstrmtGrp );
     ( "AdvSide" , advside_to_json x.f_Advertisement_AdvSide );
     ( "Quantity" , float_to_json x.f_Advertisement_Quantity );
     ( "QtyType" , qtytype_opt_to_json x.f_Advertisement_QtyType );
@@ -33,12 +34,19 @@ let advertisement_to_json x : json =
     ( "URLLink" , string_opt_to_json x.f_Advertisement_URLLink );
     ( "LastMkt" , exchange_opt_to_json x.f_Advertisement_LastMkt );
     ( "TradingSessionID" , string_opt_to_json x.f_Advertisement_TradingSessionID );
-    ( "TradingSessionSubID" , string_opt_to_json x.f_Advertisement_TradingSessionSubID )
+    ( "TradingSessionSubID" , string_opt_to_json x.f_Advertisement_TradingSessionSubID );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_Advertisement_InstrmtLegGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_Advertisement_UndInstrmtGrp )
     ]
 ;;
 
 let allocationinstruction_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_AllocationInstruction_Instrument );
+    ( "InstrumentExtension" , instrumentextension_to_json x.f_AllocationInstruction_InstrumentExtension );
+    ( "FinancingDetails" , financingdetails_to_json x.f_AllocationInstruction_FinancingDetails );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_AllocationInstruction_SpreadOrBenchmarkCurveData );
+    ( "YieldData" , yielddata_to_json x.f_AllocationInstruction_YieldData );
     ( "AllocID" , string_to_json x.f_AllocationInstruction_AllocID );
     ( "AllocTransType" , alloctranstype_to_json x.f_AllocationInstruction_AllocTransType );
     ( "AllocType" , alloctype_to_json x.f_AllocationInstruction_AllocType );
@@ -50,17 +58,10 @@ let allocationinstruction_to_json x : json =
     ( "AllocLinkType" , alloclinktype_opt_to_json x.f_AllocationInstruction_AllocLinkType );
     ( "BookingRefID" , string_opt_to_json x.f_AllocationInstruction_BookingRefID );
     ( "AllocNoOrdersType" , allocnoorderstype_to_json x.f_AllocationInstruction_AllocNoOrdersType );
-    ( "OrdAllocGrp" , ordallocgrp_to_json x.f_AllocationInstruction_OrdAllocGrp );
-    ( "ExecAllocGrp" , execallocgrp_to_json x.f_AllocationInstruction_ExecAllocGrp );
     ( "PreviouslyReported" , previouslyreported_opt_to_json x.f_AllocationInstruction_PreviouslyReported );
     ( "ReversalIndicator" , bool_opt_to_json x.f_AllocationInstruction_ReversalIndicator );
     ( "MatchType" , matchtype_opt_to_json x.f_AllocationInstruction_MatchType );
     ( "Side" , side_to_json x.f_AllocationInstruction_Side );
-    ( "Instrument" , instrument_to_json x.f_AllocationInstruction_Instrument );
-    ( "InstrumentExtension" , instrumentextension_to_json x.f_AllocationInstruction_InstrumentExtension );
-    ( "FinancingDetails" , financingdetails_to_json x.f_AllocationInstruction_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_AllocationInstruction_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_AllocationInstruction_InstrmtLegGrp );
     ( "Quantity" , float_to_json x.f_AllocationInstruction_Quantity );
     ( "QtyType" , qtytype_opt_to_json x.f_AllocationInstruction_QtyType );
     ( "LastMkt" , exchange_opt_to_json x.f_AllocationInstruction_LastMkt );
@@ -70,10 +71,8 @@ let allocationinstruction_to_json x : json =
     ( "PriceType" , pricetype_opt_to_json x.f_AllocationInstruction_PriceType );
     ( "AvgPx" , float_to_json x.f_AllocationInstruction_AvgPx );
     ( "AvgParPx" , float_opt_to_json x.f_AllocationInstruction_AvgParPx );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_AllocationInstruction_SpreadOrBenchmarkCurveData );
     ( "Currency" , currency_opt_to_json x.f_AllocationInstruction_Currency );
     ( "AvgPxPrecision" , int_opt_to_json x.f_AllocationInstruction_AvgPxPrecision );
-    ( "Parties" , parties_to_json x.f_AllocationInstruction_Parties );
     ( "TradeDate" , localmktdate_to_json x.f_AllocationInstruction_TradeDate );
     ( "TransactTime" , utctimestamp_opt_to_json x.f_AllocationInstruction_TransactTime );
     ( "SettlType" , settltype_opt_to_json x.f_AllocationInstruction_SettlType );
@@ -97,18 +96,21 @@ let allocationinstruction_to_json x : json =
     ( "StartCash" , float_opt_to_json x.f_AllocationInstruction_StartCash );
     ( "EndCash" , float_opt_to_json x.f_AllocationInstruction_EndCash );
     ( "LegalConfirm" , legalconfirm_opt_to_json x.f_AllocationInstruction_LegalConfirm );
-    ( "Stipulations" , stipulations_to_json x.f_AllocationInstruction_Stipulations );
-    ( "YieldData" , yielddata_to_json x.f_AllocationInstruction_YieldData );
     ( "TotNoAllocs" , int_opt_to_json x.f_AllocationInstruction_TotNoAllocs );
     ( "LastFragment" , lastfragment_opt_to_json x.f_AllocationInstruction_LastFragment );
-    ( "AllocGrp" , allocgrp_to_json x.f_AllocationInstruction_AllocGrp )
+    ( "OrdAllocGrp" , rg ordallocgrp_to_json x.f_AllocationInstruction_OrdAllocGrp );
+    ( "ExecAllocGrp" , rg execallocgrp_to_json x.f_AllocationInstruction_ExecAllocGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_AllocationInstruction_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_AllocationInstruction_InstrmtLegGrp );
+    ( "Parties" , rg parties_to_json x.f_AllocationInstruction_Parties );
+    ( "Stipulations" , rg stipulations_to_json x.f_AllocationInstruction_Stipulations );
+    ( "AllocGrp" , rg allocgrp_to_json x.f_AllocationInstruction_AllocGrp )
     ]
 ;;
 
 let allocationinstructionack_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "AllocID" , string_to_json x.f_AllocationInstructionAck_AllocID );
-    ( "Parties" , parties_to_json x.f_AllocationInstructionAck_Parties );
     ( "SecondaryAllocID" , string_opt_to_json x.f_AllocationInstructionAck_SecondaryAllocID );
     ( "TradeDate" , localmktdate_opt_to_json x.f_AllocationInstructionAck_TradeDate );
     ( "TransactTime" , utctimestamp_to_json x.f_AllocationInstructionAck_TransactTime );
@@ -122,12 +124,18 @@ let allocationinstructionack_to_json x : json =
     ( "Text" , string_opt_to_json x.f_AllocationInstructionAck_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_AllocationInstructionAck_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_AllocationInstructionAck_EncodedText );
-    ( "AllocAckGrp" , allocackgrp_to_json x.f_AllocationInstructionAck_AllocAckGrp )
+    ( "Parties" , rg parties_to_json x.f_AllocationInstructionAck_Parties );
+    ( "AllocAckGrp" , rg allocackgrp_to_json x.f_AllocationInstructionAck_AllocAckGrp )
     ]
 ;;
 
 let allocationreport_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_AllocationReport_Instrument );
+    ( "InstrumentExtension" , instrumentextension_to_json x.f_AllocationReport_InstrumentExtension );
+    ( "FinancingDetails" , financingdetails_to_json x.f_AllocationReport_FinancingDetails );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_AllocationReport_SpreadOrBenchmarkCurveData );
+    ( "YieldData" , yielddata_to_json x.f_AllocationReport_YieldData );
     ( "AllocReportID" , string_to_json x.f_AllocationReport_AllocReportID );
     ( "AllocID" , string_opt_to_json x.f_AllocationReport_AllocID );
     ( "AllocTransType" , alloctranstype_to_json x.f_AllocationReport_AllocTransType );
@@ -143,17 +151,10 @@ let allocationreport_to_json x : json =
     ( "AllocLinkType" , alloclinktype_opt_to_json x.f_AllocationReport_AllocLinkType );
     ( "BookingRefID" , string_opt_to_json x.f_AllocationReport_BookingRefID );
     ( "AllocNoOrdersType" , allocnoorderstype_to_json x.f_AllocationReport_AllocNoOrdersType );
-    ( "OrdAllocGrp" , ordallocgrp_to_json x.f_AllocationReport_OrdAllocGrp );
-    ( "ExecAllocGrp" , execallocgrp_to_json x.f_AllocationReport_ExecAllocGrp );
     ( "PreviouslyReported" , previouslyreported_opt_to_json x.f_AllocationReport_PreviouslyReported );
     ( "ReversalIndicator" , bool_opt_to_json x.f_AllocationReport_ReversalIndicator );
     ( "MatchType" , matchtype_opt_to_json x.f_AllocationReport_MatchType );
     ( "Side" , side_to_json x.f_AllocationReport_Side );
-    ( "Instrument" , instrument_to_json x.f_AllocationReport_Instrument );
-    ( "InstrumentExtension" , instrumentextension_to_json x.f_AllocationReport_InstrumentExtension );
-    ( "FinancingDetails" , financingdetails_to_json x.f_AllocationReport_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_AllocationReport_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_AllocationReport_InstrmtLegGrp );
     ( "Quantity" , float_to_json x.f_AllocationReport_Quantity );
     ( "QtyType" , qtytype_opt_to_json x.f_AllocationReport_QtyType );
     ( "LastMkt" , exchange_opt_to_json x.f_AllocationReport_LastMkt );
@@ -163,10 +164,8 @@ let allocationreport_to_json x : json =
     ( "PriceType" , pricetype_opt_to_json x.f_AllocationReport_PriceType );
     ( "AvgPx" , float_to_json x.f_AllocationReport_AvgPx );
     ( "AvgParPx" , float_opt_to_json x.f_AllocationReport_AvgParPx );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_AllocationReport_SpreadOrBenchmarkCurveData );
     ( "Currency" , currency_opt_to_json x.f_AllocationReport_Currency );
     ( "AvgPxPrecision" , int_opt_to_json x.f_AllocationReport_AvgPxPrecision );
-    ( "Parties" , parties_to_json x.f_AllocationReport_Parties );
     ( "TradeDate" , localmktdate_to_json x.f_AllocationReport_TradeDate );
     ( "TransactTime" , utctimestamp_opt_to_json x.f_AllocationReport_TransactTime );
     ( "SettlType" , settltype_opt_to_json x.f_AllocationReport_SettlType );
@@ -190,19 +189,22 @@ let allocationreport_to_json x : json =
     ( "StartCash" , float_opt_to_json x.f_AllocationReport_StartCash );
     ( "EndCash" , float_opt_to_json x.f_AllocationReport_EndCash );
     ( "LegalConfirm" , legalconfirm_opt_to_json x.f_AllocationReport_LegalConfirm );
-    ( "Stipulations" , stipulations_to_json x.f_AllocationReport_Stipulations );
-    ( "YieldData" , yielddata_to_json x.f_AllocationReport_YieldData );
     ( "TotNoAllocs" , int_opt_to_json x.f_AllocationReport_TotNoAllocs );
     ( "LastFragment" , lastfragment_opt_to_json x.f_AllocationReport_LastFragment );
-    ( "AllocGrp" , allocgrp_to_json x.f_AllocationReport_AllocGrp )
+    ( "OrdAllocGrp" , rg ordallocgrp_to_json x.f_AllocationReport_OrdAllocGrp );
+    ( "ExecAllocGrp" , rg execallocgrp_to_json x.f_AllocationReport_ExecAllocGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_AllocationReport_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_AllocationReport_InstrmtLegGrp );
+    ( "Parties" , rg parties_to_json x.f_AllocationReport_Parties );
+    ( "Stipulations" , rg stipulations_to_json x.f_AllocationReport_Stipulations );
+    ( "AllocGrp" , rg allocgrp_to_json x.f_AllocationReport_AllocGrp )
     ]
 ;;
 
 let allocationreportack_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "AllocReportID" , string_to_json x.f_AllocationReportAck_AllocReportID );
     ( "AllocID" , string_to_json x.f_AllocationReportAck_AllocID );
-    ( "Parties" , parties_to_json x.f_AllocationReportAck_Parties );
     ( "SecondaryAllocID" , string_opt_to_json x.f_AllocationReportAck_SecondaryAllocID );
     ( "TradeDate" , localmktdate_opt_to_json x.f_AllocationReportAck_TradeDate );
     ( "TransactTime" , utctimestamp_to_json x.f_AllocationReportAck_TransactTime );
@@ -216,24 +218,20 @@ let allocationreportack_to_json x : json =
     ( "Text" , string_opt_to_json x.f_AllocationReportAck_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_AllocationReportAck_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_AllocationReportAck_EncodedText );
-    ( "AllocAckGrp" , allocackgrp_to_json x.f_AllocationReportAck_AllocAckGrp )
+    ( "Parties" , rg parties_to_json x.f_AllocationReportAck_Parties );
+    ( "AllocAckGrp" , rg allocackgrp_to_json x.f_AllocationReportAck_AllocAckGrp )
     ]
 ;;
 
 let assignmentreport_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_AssignmentReport_Instrument );
     ( "AsgnRptID" , string_to_json x.f_AssignmentReport_AsgnRptID );
     ( "TotNumAssignmentReports" , int_opt_to_json x.f_AssignmentReport_TotNumAssignmentReports );
     ( "LastRptRequested" , bool_opt_to_json x.f_AssignmentReport_LastRptRequested );
-    ( "Parties" , parties_to_json x.f_AssignmentReport_Parties );
     ( "Account" , string_opt_to_json x.f_AssignmentReport_Account );
     ( "AccountType" , accounttype_to_json x.f_AssignmentReport_AccountType );
-    ( "Instrument" , instrument_to_json x.f_AssignmentReport_Instrument );
     ( "Currency" , currency_opt_to_json x.f_AssignmentReport_Currency );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_AssignmentReport_InstrmtLegGrp );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_AssignmentReport_UndInstrmtGrp );
-    ( "PositionQty" , positionqty_to_json x.f_AssignmentReport_PositionQty );
-    ( "PositionAmountData" , positionamountdata_to_json x.f_AssignmentReport_PositionAmountData );
     ( "ThresholdAmount" , float_opt_to_json x.f_AssignmentReport_ThresholdAmount );
     ( "SettlPrice" , float_to_json x.f_AssignmentReport_SettlPrice );
     ( "SettlPriceType" , settlpricetype_to_json x.f_AssignmentReport_SettlPriceType );
@@ -248,12 +246,17 @@ let assignmentreport_to_json x : json =
     ( "ClearingBusinessDate" , localmktdate_to_json x.f_AssignmentReport_ClearingBusinessDate );
     ( "Text" , string_opt_to_json x.f_AssignmentReport_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_AssignmentReport_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_AssignmentReport_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_AssignmentReport_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_AssignmentReport_Parties );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_AssignmentReport_InstrmtLegGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_AssignmentReport_UndInstrmtGrp );
+    ( "PositionQty" , rg positionqty_to_json x.f_AssignmentReport_PositionQty );
+    ( "PositionAmountData" , rg positionamountdata_to_json x.f_AssignmentReport_PositionAmountData )
     ]
 ;;
 
 let bidrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "BidID" , string_opt_to_json x.f_BidRequest_BidID );
     ( "ClientBidID" , string_to_json x.f_BidRequest_ClientBidID );
     ( "BidRequestTransType" , bidrequesttranstype_to_json x.f_BidRequest_BidRequestTransType );
@@ -264,8 +267,6 @@ let bidrequest_to_json x : json =
     ( "Currency" , currency_opt_to_json x.f_BidRequest_Currency );
     ( "SideValue1" , float_opt_to_json x.f_BidRequest_SideValue1 );
     ( "SideValue2" , float_opt_to_json x.f_BidRequest_SideValue2 );
-    ( "BidDescReqGrp" , biddescreqgrp_to_json x.f_BidRequest_BidDescReqGrp );
-    ( "BidCompReqGrp" , bidcompreqgrp_to_json x.f_BidRequest_BidCompReqGrp );
     ( "LiquidityIndType" , liquidityindtype_opt_to_json x.f_BidRequest_LiquidityIndType );
     ( "WtAverageLiquidity" , float_opt_to_json x.f_BidRequest_WtAverageLiquidity );
     ( "ExchangeForPhysical" , exchangeforphysical_opt_to_json x.f_BidRequest_ExchangeForPhysical );
@@ -282,20 +283,26 @@ let bidrequest_to_json x : json =
     ( "StrikeTime" , utctimestamp_opt_to_json x.f_BidRequest_StrikeTime );
     ( "Text" , string_opt_to_json x.f_BidRequest_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_BidRequest_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_BidRequest_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_BidRequest_EncodedText );
+    ( "BidDescReqGrp" , rg biddescreqgrp_to_json x.f_BidRequest_BidDescReqGrp );
+    ( "BidCompReqGrp" , rg bidcompreqgrp_to_json x.f_BidRequest_BidCompReqGrp )
     ]
 ;;
 
 let bidresponse_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "BidID" , string_opt_to_json x.f_BidResponse_BidID );
     ( "ClientBidID" , string_opt_to_json x.f_BidResponse_ClientBidID );
-    ( "BidCompRspGrp" , bidcomprspgrp_to_json x.f_BidResponse_BidCompRspGrp )
+    ( "BidCompRspGrp" , rg bidcomprspgrp_to_json x.f_BidResponse_BidCompRspGrp )
     ]
 ;;
 
 let collateralassignment_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_CollateralAssignment_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralAssignment_FinancingDetails );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CollateralAssignment_SpreadOrBenchmarkCurveData );
+    ( "SettlInstructionsData" , settlinstructionsdata_to_json x.f_CollateralAssignment_SettlInstructionsData );
     ( "CollAsgnID" , string_to_json x.f_CollateralAssignment_CollAsgnID );
     ( "CollReqID" , string_opt_to_json x.f_CollateralAssignment_CollReqID );
     ( "CollAsgnReason" , collasgnreason_to_json x.f_CollateralAssignment_CollAsgnReason );
@@ -303,38 +310,26 @@ let collateralassignment_to_json x : json =
     ( "CollAsgnRefID" , string_opt_to_json x.f_CollateralAssignment_CollAsgnRefID );
     ( "TransactTime" , utctimestamp_to_json x.f_CollateralAssignment_TransactTime );
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_CollateralAssignment_ExpireTime );
-    ( "Parties" , parties_to_json x.f_CollateralAssignment_Parties );
     ( "Account" , string_opt_to_json x.f_CollateralAssignment_Account );
     ( "AccountType" , accounttype_opt_to_json x.f_CollateralAssignment_AccountType );
     ( "ClOrdID" , string_opt_to_json x.f_CollateralAssignment_ClOrdID );
     ( "OrderID" , string_opt_to_json x.f_CollateralAssignment_OrderID );
     ( "SecondaryOrderID" , string_opt_to_json x.f_CollateralAssignment_SecondaryOrderID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_CollateralAssignment_SecondaryClOrdID );
-    ( "ExecCollGrp" , execcollgrp_to_json x.f_CollateralAssignment_ExecCollGrp );
-    ( "TrdCollGrp" , trdcollgrp_to_json x.f_CollateralAssignment_TrdCollGrp );
-    ( "Instrument" , instrument_to_json x.f_CollateralAssignment_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralAssignment_FinancingDetails );
     ( "SettlDate" , localmktdate_opt_to_json x.f_CollateralAssignment_SettlDate );
     ( "Quantity" , float_opt_to_json x.f_CollateralAssignment_Quantity );
     ( "QtyType" , qtytype_opt_to_json x.f_CollateralAssignment_QtyType );
     ( "Currency" , currency_opt_to_json x.f_CollateralAssignment_Currency );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_CollateralAssignment_InstrmtLegGrp );
-    ( "UndInstrmtCollGrp" , undinstrmtcollgrp_to_json x.f_CollateralAssignment_UndInstrmtCollGrp );
     ( "MarginExcess" , float_opt_to_json x.f_CollateralAssignment_MarginExcess );
     ( "TotalNetValue" , float_opt_to_json x.f_CollateralAssignment_TotalNetValue );
     ( "CashOutstanding" , float_opt_to_json x.f_CollateralAssignment_CashOutstanding );
-    ( "TrdRegTimestamps" , trdregtimestamps_to_json x.f_CollateralAssignment_TrdRegTimestamps );
     ( "Side" , side_opt_to_json x.f_CollateralAssignment_Side );
-    ( "MiscFeesGrp" , miscfeesgrp_to_json x.f_CollateralAssignment_MiscFeesGrp );
     ( "Price" , float_opt_to_json x.f_CollateralAssignment_Price );
     ( "PriceType" , pricetype_opt_to_json x.f_CollateralAssignment_PriceType );
     ( "AccruedInterestAmt" , float_opt_to_json x.f_CollateralAssignment_AccruedInterestAmt );
     ( "EndAccruedInterestAmt" , float_opt_to_json x.f_CollateralAssignment_EndAccruedInterestAmt );
     ( "StartCash" , float_opt_to_json x.f_CollateralAssignment_StartCash );
     ( "EndCash" , float_opt_to_json x.f_CollateralAssignment_EndCash );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CollateralAssignment_SpreadOrBenchmarkCurveData );
-    ( "Stipulations" , stipulations_to_json x.f_CollateralAssignment_Stipulations );
-    ( "SettlInstructionsData" , settlinstructionsdata_to_json x.f_CollateralAssignment_SettlInstructionsData );
     ( "TradingSessionID" , string_opt_to_json x.f_CollateralAssignment_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_CollateralAssignment_TradingSessionSubID );
     ( "SettlSessID" , settlsessid_opt_to_json x.f_CollateralAssignment_SettlSessID );
@@ -342,38 +337,41 @@ let collateralassignment_to_json x : json =
     ( "ClearingBusinessDate" , localmktdate_opt_to_json x.f_CollateralAssignment_ClearingBusinessDate );
     ( "Text" , string_opt_to_json x.f_CollateralAssignment_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_CollateralAssignment_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_CollateralAssignment_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_CollateralAssignment_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_CollateralAssignment_Parties );
+    ( "ExecCollGrp" , rg execcollgrp_to_json x.f_CollateralAssignment_ExecCollGrp );
+    ( "TrdCollGrp" , rg trdcollgrp_to_json x.f_CollateralAssignment_TrdCollGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_CollateralAssignment_InstrmtLegGrp );
+    ( "UndInstrmtCollGrp" , rg undinstrmtcollgrp_to_json x.f_CollateralAssignment_UndInstrmtCollGrp );
+    ( "TrdRegTimestamps" , rg trdregtimestamps_to_json x.f_CollateralAssignment_TrdRegTimestamps );
+    ( "MiscFeesGrp" , rg miscfeesgrp_to_json x.f_CollateralAssignment_MiscFeesGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_CollateralAssignment_Stipulations )
     ]
 ;;
 
 let collateralinquiry_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_CollateralInquiry_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralInquiry_FinancingDetails );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CollateralInquiry_SpreadOrBenchmarkCurveData );
+    ( "SettlInstructionsData" , settlinstructionsdata_to_json x.f_CollateralInquiry_SettlInstructionsData );
     ( "CollInquiryID" , string_opt_to_json x.f_CollateralInquiry_CollInquiryID );
-    ( "CollInqQualGrp" , collinqqualgrp_to_json x.f_CollateralInquiry_CollInqQualGrp );
     ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_CollateralInquiry_SubscriptionRequestType );
     ( "ResponseTransportType" , responsetransporttype_opt_to_json x.f_CollateralInquiry_ResponseTransportType );
     ( "ResponseDestination" , string_opt_to_json x.f_CollateralInquiry_ResponseDestination );
-    ( "Parties" , parties_to_json x.f_CollateralInquiry_Parties );
     ( "Account" , string_opt_to_json x.f_CollateralInquiry_Account );
     ( "AccountType" , accounttype_opt_to_json x.f_CollateralInquiry_AccountType );
     ( "ClOrdID" , string_opt_to_json x.f_CollateralInquiry_ClOrdID );
     ( "OrderID" , string_opt_to_json x.f_CollateralInquiry_OrderID );
     ( "SecondaryOrderID" , string_opt_to_json x.f_CollateralInquiry_SecondaryOrderID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_CollateralInquiry_SecondaryClOrdID );
-    ( "ExecCollGrp" , execcollgrp_to_json x.f_CollateralInquiry_ExecCollGrp );
-    ( "TrdCollGrp" , trdcollgrp_to_json x.f_CollateralInquiry_TrdCollGrp );
-    ( "Instrument" , instrument_to_json x.f_CollateralInquiry_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralInquiry_FinancingDetails );
     ( "SettlDate" , localmktdate_opt_to_json x.f_CollateralInquiry_SettlDate );
     ( "Quantity" , float_opt_to_json x.f_CollateralInquiry_Quantity );
     ( "QtyType" , qtytype_opt_to_json x.f_CollateralInquiry_QtyType );
     ( "Currency" , currency_opt_to_json x.f_CollateralInquiry_Currency );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_CollateralInquiry_InstrmtLegGrp );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_CollateralInquiry_UndInstrmtGrp );
     ( "MarginExcess" , float_opt_to_json x.f_CollateralInquiry_MarginExcess );
     ( "TotalNetValue" , float_opt_to_json x.f_CollateralInquiry_TotalNetValue );
     ( "CashOutstanding" , float_opt_to_json x.f_CollateralInquiry_CashOutstanding );
-    ( "TrdRegTimestamps" , trdregtimestamps_to_json x.f_CollateralInquiry_TrdRegTimestamps );
     ( "Side" , side_opt_to_json x.f_CollateralInquiry_Side );
     ( "Price" , float_opt_to_json x.f_CollateralInquiry_Price );
     ( "PriceType" , pricetype_opt_to_json x.f_CollateralInquiry_PriceType );
@@ -381,9 +379,6 @@ let collateralinquiry_to_json x : json =
     ( "EndAccruedInterestAmt" , float_opt_to_json x.f_CollateralInquiry_EndAccruedInterestAmt );
     ( "StartCash" , float_opt_to_json x.f_CollateralInquiry_StartCash );
     ( "EndCash" , float_opt_to_json x.f_CollateralInquiry_EndCash );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CollateralInquiry_SpreadOrBenchmarkCurveData );
-    ( "Stipulations" , stipulations_to_json x.f_CollateralInquiry_Stipulations );
-    ( "SettlInstructionsData" , settlinstructionsdata_to_json x.f_CollateralInquiry_SettlInstructionsData );
     ( "TradingSessionID" , string_opt_to_json x.f_CollateralInquiry_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_CollateralInquiry_TradingSessionSubID );
     ( "SettlSessID" , settlsessid_opt_to_json x.f_CollateralInquiry_SettlSessID );
@@ -391,34 +386,36 @@ let collateralinquiry_to_json x : json =
     ( "ClearingBusinessDate" , localmktdate_opt_to_json x.f_CollateralInquiry_ClearingBusinessDate );
     ( "Text" , string_opt_to_json x.f_CollateralInquiry_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_CollateralInquiry_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_CollateralInquiry_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_CollateralInquiry_EncodedText );
+    ( "CollInqQualGrp" , rg collinqqualgrp_to_json x.f_CollateralInquiry_CollInqQualGrp );
+    ( "Parties" , rg parties_to_json x.f_CollateralInquiry_Parties );
+    ( "ExecCollGrp" , rg execcollgrp_to_json x.f_CollateralInquiry_ExecCollGrp );
+    ( "TrdCollGrp" , rg trdcollgrp_to_json x.f_CollateralInquiry_TrdCollGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_CollateralInquiry_InstrmtLegGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_CollateralInquiry_UndInstrmtGrp );
+    ( "TrdRegTimestamps" , rg trdregtimestamps_to_json x.f_CollateralInquiry_TrdRegTimestamps );
+    ( "Stipulations" , rg stipulations_to_json x.f_CollateralInquiry_Stipulations )
     ]
 ;;
 
 let collateralinquiryack_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_CollateralInquiryAck_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralInquiryAck_FinancingDetails );
     ( "CollInquiryID" , string_to_json x.f_CollateralInquiryAck_CollInquiryID );
     ( "CollInquiryStatus" , collinquirystatus_to_json x.f_CollateralInquiryAck_CollInquiryStatus );
     ( "CollInquiryResult" , collinquiryresult_opt_to_json x.f_CollateralInquiryAck_CollInquiryResult );
-    ( "CollInqQualGrp" , collinqqualgrp_to_json x.f_CollateralInquiryAck_CollInqQualGrp );
     ( "TotNumReports" , int_opt_to_json x.f_CollateralInquiryAck_TotNumReports );
-    ( "Parties" , parties_to_json x.f_CollateralInquiryAck_Parties );
     ( "Account" , string_opt_to_json x.f_CollateralInquiryAck_Account );
     ( "AccountType" , accounttype_opt_to_json x.f_CollateralInquiryAck_AccountType );
     ( "ClOrdID" , string_opt_to_json x.f_CollateralInquiryAck_ClOrdID );
     ( "OrderID" , string_opt_to_json x.f_CollateralInquiryAck_OrderID );
     ( "SecondaryOrderID" , string_opt_to_json x.f_CollateralInquiryAck_SecondaryOrderID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_CollateralInquiryAck_SecondaryClOrdID );
-    ( "ExecCollGrp" , execcollgrp_to_json x.f_CollateralInquiryAck_ExecCollGrp );
-    ( "TrdCollGrp" , trdcollgrp_to_json x.f_CollateralInquiryAck_TrdCollGrp );
-    ( "Instrument" , instrument_to_json x.f_CollateralInquiryAck_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralInquiryAck_FinancingDetails );
     ( "SettlDate" , localmktdate_opt_to_json x.f_CollateralInquiryAck_SettlDate );
     ( "Quantity" , float_opt_to_json x.f_CollateralInquiryAck_Quantity );
     ( "QtyType" , qtytype_opt_to_json x.f_CollateralInquiryAck_QtyType );
     ( "Currency" , currency_opt_to_json x.f_CollateralInquiryAck_Currency );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_CollateralInquiryAck_InstrmtLegGrp );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_CollateralInquiryAck_UndInstrmtGrp );
     ( "TradingSessionID" , string_opt_to_json x.f_CollateralInquiryAck_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_CollateralInquiryAck_TradingSessionSubID );
     ( "SettlSessID" , settlsessid_opt_to_json x.f_CollateralInquiryAck_SettlSessID );
@@ -428,49 +425,47 @@ let collateralinquiryack_to_json x : json =
     ( "ResponseDestination" , string_opt_to_json x.f_CollateralInquiryAck_ResponseDestination );
     ( "Text" , string_opt_to_json x.f_CollateralInquiryAck_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_CollateralInquiryAck_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_CollateralInquiryAck_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_CollateralInquiryAck_EncodedText );
+    ( "CollInqQualGrp" , rg collinqqualgrp_to_json x.f_CollateralInquiryAck_CollInqQualGrp );
+    ( "Parties" , rg parties_to_json x.f_CollateralInquiryAck_Parties );
+    ( "ExecCollGrp" , rg execcollgrp_to_json x.f_CollateralInquiryAck_ExecCollGrp );
+    ( "TrdCollGrp" , rg trdcollgrp_to_json x.f_CollateralInquiryAck_TrdCollGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_CollateralInquiryAck_InstrmtLegGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_CollateralInquiryAck_UndInstrmtGrp )
     ]
 ;;
 
 let collateralreport_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_CollateralReport_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralReport_FinancingDetails );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CollateralReport_SpreadOrBenchmarkCurveData );
+    ( "SettlInstructionsData" , settlinstructionsdata_to_json x.f_CollateralReport_SettlInstructionsData );
     ( "CollRptID" , string_to_json x.f_CollateralReport_CollRptID );
     ( "CollInquiryID" , string_opt_to_json x.f_CollateralReport_CollInquiryID );
     ( "CollStatus" , collstatus_to_json x.f_CollateralReport_CollStatus );
     ( "TotNumReports" , int_opt_to_json x.f_CollateralReport_TotNumReports );
     ( "LastRptRequested" , bool_opt_to_json x.f_CollateralReport_LastRptRequested );
-    ( "Parties" , parties_to_json x.f_CollateralReport_Parties );
     ( "Account" , string_opt_to_json x.f_CollateralReport_Account );
     ( "AccountType" , accounttype_opt_to_json x.f_CollateralReport_AccountType );
     ( "ClOrdID" , string_opt_to_json x.f_CollateralReport_ClOrdID );
     ( "OrderID" , string_opt_to_json x.f_CollateralReport_OrderID );
     ( "SecondaryOrderID" , string_opt_to_json x.f_CollateralReport_SecondaryOrderID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_CollateralReport_SecondaryClOrdID );
-    ( "ExecCollGrp" , execcollgrp_to_json x.f_CollateralReport_ExecCollGrp );
-    ( "TrdCollGrp" , trdcollgrp_to_json x.f_CollateralReport_TrdCollGrp );
-    ( "Instrument" , instrument_to_json x.f_CollateralReport_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralReport_FinancingDetails );
     ( "SettlDate" , localmktdate_opt_to_json x.f_CollateralReport_SettlDate );
     ( "Quantity" , float_opt_to_json x.f_CollateralReport_Quantity );
     ( "QtyType" , qtytype_opt_to_json x.f_CollateralReport_QtyType );
     ( "Currency" , currency_opt_to_json x.f_CollateralReport_Currency );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_CollateralReport_InstrmtLegGrp );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_CollateralReport_UndInstrmtGrp );
     ( "MarginExcess" , float_opt_to_json x.f_CollateralReport_MarginExcess );
     ( "TotalNetValue" , float_opt_to_json x.f_CollateralReport_TotalNetValue );
     ( "CashOutstanding" , float_opt_to_json x.f_CollateralReport_CashOutstanding );
-    ( "TrdRegTimestamps" , trdregtimestamps_to_json x.f_CollateralReport_TrdRegTimestamps );
     ( "Side" , side_opt_to_json x.f_CollateralReport_Side );
-    ( "MiscFeesGrp" , miscfeesgrp_to_json x.f_CollateralReport_MiscFeesGrp );
     ( "Price" , float_opt_to_json x.f_CollateralReport_Price );
     ( "PriceType" , pricetype_opt_to_json x.f_CollateralReport_PriceType );
     ( "AccruedInterestAmt" , float_opt_to_json x.f_CollateralReport_AccruedInterestAmt );
     ( "EndAccruedInterestAmt" , float_opt_to_json x.f_CollateralReport_EndAccruedInterestAmt );
     ( "StartCash" , float_opt_to_json x.f_CollateralReport_StartCash );
     ( "EndCash" , float_opt_to_json x.f_CollateralReport_EndCash );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CollateralReport_SpreadOrBenchmarkCurveData );
-    ( "Stipulations" , stipulations_to_json x.f_CollateralReport_Stipulations );
-    ( "SettlInstructionsData" , settlinstructionsdata_to_json x.f_CollateralReport_SettlInstructionsData );
     ( "TradingSessionID" , string_opt_to_json x.f_CollateralReport_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_CollateralReport_TradingSessionSubID );
     ( "SettlSessID" , settlsessid_opt_to_json x.f_CollateralReport_SettlSessID );
@@ -478,47 +473,47 @@ let collateralreport_to_json x : json =
     ( "ClearingBusinessDate" , localmktdate_opt_to_json x.f_CollateralReport_ClearingBusinessDate );
     ( "Text" , string_opt_to_json x.f_CollateralReport_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_CollateralReport_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_CollateralReport_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_CollateralReport_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_CollateralReport_Parties );
+    ( "ExecCollGrp" , rg execcollgrp_to_json x.f_CollateralReport_ExecCollGrp );
+    ( "TrdCollGrp" , rg trdcollgrp_to_json x.f_CollateralReport_TrdCollGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_CollateralReport_InstrmtLegGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_CollateralReport_UndInstrmtGrp );
+    ( "TrdRegTimestamps" , rg trdregtimestamps_to_json x.f_CollateralReport_TrdRegTimestamps );
+    ( "MiscFeesGrp" , rg miscfeesgrp_to_json x.f_CollateralReport_MiscFeesGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_CollateralReport_Stipulations )
     ]
 ;;
 
 let collateralrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_CollateralRequest_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralRequest_FinancingDetails );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CollateralRequest_SpreadOrBenchmarkCurveData );
     ( "CollReqID" , string_to_json x.f_CollateralRequest_CollReqID );
     ( "CollAsgnReason" , collasgnreason_to_json x.f_CollateralRequest_CollAsgnReason );
     ( "TransactTime" , utctimestamp_to_json x.f_CollateralRequest_TransactTime );
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_CollateralRequest_ExpireTime );
-    ( "Parties" , parties_to_json x.f_CollateralRequest_Parties );
     ( "Account" , string_opt_to_json x.f_CollateralRequest_Account );
     ( "AccountType" , accounttype_opt_to_json x.f_CollateralRequest_AccountType );
     ( "ClOrdID" , string_opt_to_json x.f_CollateralRequest_ClOrdID );
     ( "OrderID" , string_opt_to_json x.f_CollateralRequest_OrderID );
     ( "SecondaryOrderID" , string_opt_to_json x.f_CollateralRequest_SecondaryOrderID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_CollateralRequest_SecondaryClOrdID );
-    ( "ExecCollGrp" , execcollgrp_to_json x.f_CollateralRequest_ExecCollGrp );
-    ( "TrdCollGrp" , trdcollgrp_to_json x.f_CollateralRequest_TrdCollGrp );
-    ( "Instrument" , instrument_to_json x.f_CollateralRequest_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralRequest_FinancingDetails );
     ( "SettlDate" , localmktdate_opt_to_json x.f_CollateralRequest_SettlDate );
     ( "Quantity" , float_opt_to_json x.f_CollateralRequest_Quantity );
     ( "QtyType" , qtytype_opt_to_json x.f_CollateralRequest_QtyType );
     ( "Currency" , currency_opt_to_json x.f_CollateralRequest_Currency );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_CollateralRequest_InstrmtLegGrp );
-    ( "UndInstrmtCollGrp" , undinstrmtcollgrp_to_json x.f_CollateralRequest_UndInstrmtCollGrp );
     ( "MarginExcess" , float_opt_to_json x.f_CollateralRequest_MarginExcess );
     ( "TotalNetValue" , float_opt_to_json x.f_CollateralRequest_TotalNetValue );
     ( "CashOutstanding" , float_opt_to_json x.f_CollateralRequest_CashOutstanding );
-    ( "TrdRegTimestamps" , trdregtimestamps_to_json x.f_CollateralRequest_TrdRegTimestamps );
     ( "Side" , side_opt_to_json x.f_CollateralRequest_Side );
-    ( "MiscFeesGrp" , miscfeesgrp_to_json x.f_CollateralRequest_MiscFeesGrp );
     ( "Price" , float_opt_to_json x.f_CollateralRequest_Price );
     ( "PriceType" , pricetype_opt_to_json x.f_CollateralRequest_PriceType );
     ( "AccruedInterestAmt" , float_opt_to_json x.f_CollateralRequest_AccruedInterestAmt );
     ( "EndAccruedInterestAmt" , float_opt_to_json x.f_CollateralRequest_EndAccruedInterestAmt );
     ( "StartCash" , float_opt_to_json x.f_CollateralRequest_StartCash );
     ( "EndCash" , float_opt_to_json x.f_CollateralRequest_EndCash );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CollateralRequest_SpreadOrBenchmarkCurveData );
-    ( "Stipulations" , stipulations_to_json x.f_CollateralRequest_Stipulations );
     ( "TradingSessionID" , string_opt_to_json x.f_CollateralRequest_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_CollateralRequest_TradingSessionSubID );
     ( "SettlSessID" , settlsessid_opt_to_json x.f_CollateralRequest_SettlSessID );
@@ -526,12 +521,23 @@ let collateralrequest_to_json x : json =
     ( "ClearingBusinessDate" , localmktdate_opt_to_json x.f_CollateralRequest_ClearingBusinessDate );
     ( "Text" , string_opt_to_json x.f_CollateralRequest_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_CollateralRequest_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_CollateralRequest_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_CollateralRequest_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_CollateralRequest_Parties );
+    ( "ExecCollGrp" , rg execcollgrp_to_json x.f_CollateralRequest_ExecCollGrp );
+    ( "TrdCollGrp" , rg trdcollgrp_to_json x.f_CollateralRequest_TrdCollGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_CollateralRequest_InstrmtLegGrp );
+    ( "UndInstrmtCollGrp" , rg undinstrmtcollgrp_to_json x.f_CollateralRequest_UndInstrmtCollGrp );
+    ( "TrdRegTimestamps" , rg trdregtimestamps_to_json x.f_CollateralRequest_TrdRegTimestamps );
+    ( "MiscFeesGrp" , rg miscfeesgrp_to_json x.f_CollateralRequest_MiscFeesGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_CollateralRequest_Stipulations )
     ]
 ;;
 
 let collateralresponse_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_CollateralResponse_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralResponse_FinancingDetails );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CollateralResponse_SpreadOrBenchmarkCurveData );
     ( "CollRespID" , string_to_json x.f_CollateralResponse_CollRespID );
     ( "CollAsgnID" , string_to_json x.f_CollateralResponse_CollAsgnID );
     ( "CollReqID" , string_opt_to_json x.f_CollateralResponse_CollReqID );
@@ -540,45 +546,49 @@ let collateralresponse_to_json x : json =
     ( "CollAsgnRespType" , collasgnresptype_to_json x.f_CollateralResponse_CollAsgnRespType );
     ( "CollAsgnRejectReason" , collasgnrejectreason_opt_to_json x.f_CollateralResponse_CollAsgnRejectReason );
     ( "TransactTime" , utctimestamp_to_json x.f_CollateralResponse_TransactTime );
-    ( "Parties" , parties_to_json x.f_CollateralResponse_Parties );
     ( "Account" , string_opt_to_json x.f_CollateralResponse_Account );
     ( "AccountType" , accounttype_opt_to_json x.f_CollateralResponse_AccountType );
     ( "ClOrdID" , string_opt_to_json x.f_CollateralResponse_ClOrdID );
     ( "OrderID" , string_opt_to_json x.f_CollateralResponse_OrderID );
     ( "SecondaryOrderID" , string_opt_to_json x.f_CollateralResponse_SecondaryOrderID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_CollateralResponse_SecondaryClOrdID );
-    ( "ExecCollGrp" , execcollgrp_to_json x.f_CollateralResponse_ExecCollGrp );
-    ( "TrdCollGrp" , trdcollgrp_to_json x.f_CollateralResponse_TrdCollGrp );
-    ( "Instrument" , instrument_to_json x.f_CollateralResponse_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_CollateralResponse_FinancingDetails );
     ( "SettlDate" , localmktdate_opt_to_json x.f_CollateralResponse_SettlDate );
     ( "Quantity" , float_opt_to_json x.f_CollateralResponse_Quantity );
     ( "QtyType" , qtytype_opt_to_json x.f_CollateralResponse_QtyType );
     ( "Currency" , currency_opt_to_json x.f_CollateralResponse_Currency );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_CollateralResponse_InstrmtLegGrp );
-    ( "UndInstrmtCollGrp" , undinstrmtcollgrp_to_json x.f_CollateralResponse_UndInstrmtCollGrp );
     ( "MarginExcess" , float_opt_to_json x.f_CollateralResponse_MarginExcess );
     ( "TotalNetValue" , float_opt_to_json x.f_CollateralResponse_TotalNetValue );
     ( "CashOutstanding" , float_opt_to_json x.f_CollateralResponse_CashOutstanding );
-    ( "TrdRegTimestamps" , trdregtimestamps_to_json x.f_CollateralResponse_TrdRegTimestamps );
     ( "Side" , side_opt_to_json x.f_CollateralResponse_Side );
-    ( "MiscFeesGrp" , miscfeesgrp_to_json x.f_CollateralResponse_MiscFeesGrp );
     ( "Price" , float_opt_to_json x.f_CollateralResponse_Price );
     ( "PriceType" , pricetype_opt_to_json x.f_CollateralResponse_PriceType );
     ( "AccruedInterestAmt" , float_opt_to_json x.f_CollateralResponse_AccruedInterestAmt );
     ( "EndAccruedInterestAmt" , float_opt_to_json x.f_CollateralResponse_EndAccruedInterestAmt );
     ( "StartCash" , float_opt_to_json x.f_CollateralResponse_StartCash );
     ( "EndCash" , float_opt_to_json x.f_CollateralResponse_EndCash );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CollateralResponse_SpreadOrBenchmarkCurveData );
-    ( "Stipulations" , stipulations_to_json x.f_CollateralResponse_Stipulations );
     ( "Text" , string_opt_to_json x.f_CollateralResponse_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_CollateralResponse_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_CollateralResponse_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_CollateralResponse_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_CollateralResponse_Parties );
+    ( "ExecCollGrp" , rg execcollgrp_to_json x.f_CollateralResponse_ExecCollGrp );
+    ( "TrdCollGrp" , rg trdcollgrp_to_json x.f_CollateralResponse_TrdCollGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_CollateralResponse_InstrmtLegGrp );
+    ( "UndInstrmtCollGrp" , rg undinstrmtcollgrp_to_json x.f_CollateralResponse_UndInstrmtCollGrp );
+    ( "TrdRegTimestamps" , rg trdregtimestamps_to_json x.f_CollateralResponse_TrdRegTimestamps );
+    ( "MiscFeesGrp" , rg miscfeesgrp_to_json x.f_CollateralResponse_MiscFeesGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_CollateralResponse_Stipulations )
     ]
 ;;
 
 let confirmation_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_Confirmation_Instrument );
+    ( "InstrumentExtension" , instrumentextension_to_json x.f_Confirmation_InstrumentExtension );
+    ( "FinancingDetails" , financingdetails_to_json x.f_Confirmation_FinancingDetails );
+    ( "YieldData" , yielddata_to_json x.f_Confirmation_YieldData );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_Confirmation_SpreadOrBenchmarkCurveData );
+    ( "SettlInstructionsData" , settlinstructionsdata_to_json x.f_Confirmation_SettlInstructionsData );
+    ( "CommissionData" , commissiondata_to_json x.f_Confirmation_CommissionData );
     ( "ConfirmID" , string_to_json x.f_Confirmation_ConfirmID );
     ( "ConfirmRefID" , string_opt_to_json x.f_Confirmation_ConfirmRefID );
     ( "ConfirmReqID" , string_opt_to_json x.f_Confirmation_ConfirmReqID );
@@ -587,26 +597,16 @@ let confirmation_to_json x : json =
     ( "CopyMsgIndicator" , bool_opt_to_json x.f_Confirmation_CopyMsgIndicator );
     ( "LegalConfirm" , legalconfirm_opt_to_json x.f_Confirmation_LegalConfirm );
     ( "ConfirmStatus" , confirmstatus_to_json x.f_Confirmation_ConfirmStatus );
-    ( "Parties" , parties_to_json x.f_Confirmation_Parties );
-    ( "OrdAllocGrp" , ordallocgrp_to_json x.f_Confirmation_OrdAllocGrp );
     ( "AllocID" , string_opt_to_json x.f_Confirmation_AllocID );
     ( "SecondaryAllocID" , string_opt_to_json x.f_Confirmation_SecondaryAllocID );
     ( "IndividualAllocID" , string_opt_to_json x.f_Confirmation_IndividualAllocID );
     ( "TransactTime" , utctimestamp_to_json x.f_Confirmation_TransactTime );
     ( "TradeDate" , localmktdate_to_json x.f_Confirmation_TradeDate );
-    ( "TrdRegTimestamps" , trdregtimestamps_to_json x.f_Confirmation_TrdRegTimestamps );
-    ( "Instrument" , instrument_to_json x.f_Confirmation_Instrument );
-    ( "InstrumentExtension" , instrumentextension_to_json x.f_Confirmation_InstrumentExtension );
-    ( "FinancingDetails" , financingdetails_to_json x.f_Confirmation_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_Confirmation_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_Confirmation_InstrmtLegGrp );
-    ( "YieldData" , yielddata_to_json x.f_Confirmation_YieldData );
     ( "AllocQty" , float_to_json x.f_Confirmation_AllocQty );
     ( "QtyType" , qtytype_opt_to_json x.f_Confirmation_QtyType );
     ( "Side" , side_to_json x.f_Confirmation_Side );
     ( "Currency" , currency_opt_to_json x.f_Confirmation_Currency );
     ( "LastMkt" , exchange_opt_to_json x.f_Confirmation_LastMkt );
-    ( "CpctyConfGrp" , cpctyconfgrp_to_json x.f_Confirmation_CpctyConfGrp );
     ( "AllocAccount" , string_to_json x.f_Confirmation_AllocAccount );
     ( "AllocAcctIDSource" , int_opt_to_json x.f_Confirmation_AllocAcctIDSource );
     ( "AllocAccountType" , allocaccounttype_opt_to_json x.f_Confirmation_AllocAccountType );
@@ -614,7 +614,6 @@ let confirmation_to_json x : json =
     ( "AvgPxPrecision" , int_opt_to_json x.f_Confirmation_AvgPxPrecision );
     ( "PriceType" , pricetype_opt_to_json x.f_Confirmation_PriceType );
     ( "AvgParPx" , float_opt_to_json x.f_Confirmation_AvgParPx );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_Confirmation_SpreadOrBenchmarkCurveData );
     ( "ReportedPx" , float_opt_to_json x.f_Confirmation_ReportedPx );
     ( "Text" , string_opt_to_json x.f_Confirmation_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_Confirmation_EncodedTextLen );
@@ -639,16 +638,20 @@ let confirmation_to_json x : json =
     ( "SettlCurrFxRateCalc" , settlcurrfxratecalc_opt_to_json x.f_Confirmation_SettlCurrFxRateCalc );
     ( "SettlType" , settltype_opt_to_json x.f_Confirmation_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_Confirmation_SettlDate );
-    ( "SettlInstructionsData" , settlinstructionsdata_to_json x.f_Confirmation_SettlInstructionsData );
-    ( "CommissionData" , commissiondata_to_json x.f_Confirmation_CommissionData );
     ( "SharedCommission" , float_opt_to_json x.f_Confirmation_SharedCommission );
-    ( "Stipulations" , stipulations_to_json x.f_Confirmation_Stipulations );
-    ( "MiscFeesGrp" , miscfeesgrp_to_json x.f_Confirmation_MiscFeesGrp )
+    ( "Parties" , rg parties_to_json x.f_Confirmation_Parties );
+    ( "OrdAllocGrp" , rg ordallocgrp_to_json x.f_Confirmation_OrdAllocGrp );
+    ( "TrdRegTimestamps" , rg trdregtimestamps_to_json x.f_Confirmation_TrdRegTimestamps );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_Confirmation_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_Confirmation_InstrmtLegGrp );
+    ( "CpctyConfGrp" , rg cpctyconfgrp_to_json x.f_Confirmation_CpctyConfGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_Confirmation_Stipulations );
+    ( "MiscFeesGrp" , rg miscfeesgrp_to_json x.f_Confirmation_MiscFeesGrp )
     ]
 ;;
 
 let confirmationack_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "ConfirmID" , string_to_json x.f_ConfirmationAck_ConfirmID );
     ( "TradeDate" , localmktdate_to_json x.f_ConfirmationAck_TradeDate );
     ( "TransactTime" , utctimestamp_to_json x.f_ConfirmationAck_TransactTime );
@@ -662,10 +665,9 @@ let confirmationack_to_json x : json =
 ;;
 
 let confirmationrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "ConfirmReqID" , string_to_json x.f_ConfirmationRequest_ConfirmReqID );
     ( "ConfirmType" , confirmtype_to_json x.f_ConfirmationRequest_ConfirmType );
-    ( "OrdAllocGrp" , ordallocgrp_to_json x.f_ConfirmationRequest_OrdAllocGrp );
     ( "AllocID" , string_opt_to_json x.f_ConfirmationRequest_AllocID );
     ( "SecondaryAllocID" , string_opt_to_json x.f_ConfirmationRequest_SecondaryAllocID );
     ( "IndividualAllocID" , string_opt_to_json x.f_ConfirmationRequest_IndividualAllocID );
@@ -675,21 +677,23 @@ let confirmationrequest_to_json x : json =
     ( "AllocAccountType" , allocaccounttype_opt_to_json x.f_ConfirmationRequest_AllocAccountType );
     ( "Text" , string_opt_to_json x.f_ConfirmationRequest_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_ConfirmationRequest_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_ConfirmationRequest_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_ConfirmationRequest_EncodedText );
+    ( "OrdAllocGrp" , rg ordallocgrp_to_json x.f_ConfirmationRequest_OrdAllocGrp )
     ]
 ;;
 
 let crossordercancelreplacerequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_CrossOrderCancelReplaceRequest_Instrument );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CrossOrderCancelReplaceRequest_SpreadOrBenchmarkCurveData );
+    ( "YieldData" , yielddata_to_json x.f_CrossOrderCancelReplaceRequest_YieldData );
+    ( "PegInstructions" , peginstructions_to_json x.f_CrossOrderCancelReplaceRequest_PegInstructions );
+    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_CrossOrderCancelReplaceRequest_DiscretionInstructions );
     ( "OrderID" , string_opt_to_json x.f_CrossOrderCancelReplaceRequest_OrderID );
     ( "CrossID" , string_to_json x.f_CrossOrderCancelReplaceRequest_CrossID );
     ( "OrigCrossID" , string_to_json x.f_CrossOrderCancelReplaceRequest_OrigCrossID );
     ( "CrossType" , crosstype_to_json x.f_CrossOrderCancelReplaceRequest_CrossType );
     ( "CrossPrioritization" , crossprioritization_to_json x.f_CrossOrderCancelReplaceRequest_CrossPrioritization );
-    ( "SideCrossOrdModGrp" , sidecrossordmodgrp_to_json x.f_CrossOrderCancelReplaceRequest_SideCrossOrdModGrp );
-    ( "Instrument" , instrument_to_json x.f_CrossOrderCancelReplaceRequest_Instrument );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_CrossOrderCancelReplaceRequest_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_CrossOrderCancelReplaceRequest_InstrmtLegGrp );
     ( "SettlType" , settltype_opt_to_json x.f_CrossOrderCancelReplaceRequest_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_CrossOrderCancelReplaceRequest_SettlDate );
     ( "HandlInst" , handlinst_opt_to_json x.f_CrossOrderCancelReplaceRequest_HandlInst );
@@ -697,18 +701,14 @@ let crossordercancelreplacerequest_to_json x : json =
     ( "MinQty" , float_opt_to_json x.f_CrossOrderCancelReplaceRequest_MinQty );
     ( "MaxFloor" , float_opt_to_json x.f_CrossOrderCancelReplaceRequest_MaxFloor );
     ( "ExDestination" , exchange_opt_to_json x.f_CrossOrderCancelReplaceRequest_ExDestination );
-    ( "TrdgSesGrp" , trdgsesgrp_to_json x.f_CrossOrderCancelReplaceRequest_TrdgSesGrp );
     ( "ProcessCode" , processcode_opt_to_json x.f_CrossOrderCancelReplaceRequest_ProcessCode );
     ( "PrevClosePx" , float_opt_to_json x.f_CrossOrderCancelReplaceRequest_PrevClosePx );
     ( "LocateReqd" , locatereqd_opt_to_json x.f_CrossOrderCancelReplaceRequest_LocateReqd );
     ( "TransactTime" , utctimestamp_to_json x.f_CrossOrderCancelReplaceRequest_TransactTime );
-    ( "Stipulations" , stipulations_to_json x.f_CrossOrderCancelReplaceRequest_Stipulations );
     ( "OrdType" , ordtype_to_json x.f_CrossOrderCancelReplaceRequest_OrdType );
     ( "PriceType" , pricetype_opt_to_json x.f_CrossOrderCancelReplaceRequest_PriceType );
     ( "Price" , float_opt_to_json x.f_CrossOrderCancelReplaceRequest_Price );
     ( "StopPx" , float_opt_to_json x.f_CrossOrderCancelReplaceRequest_StopPx );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_CrossOrderCancelReplaceRequest_SpreadOrBenchmarkCurveData );
-    ( "YieldData" , yielddata_to_json x.f_CrossOrderCancelReplaceRequest_YieldData );
     ( "Currency" , currency_opt_to_json x.f_CrossOrderCancelReplaceRequest_Currency );
     ( "ComplianceID" , string_opt_to_json x.f_CrossOrderCancelReplaceRequest_ComplianceID );
     ( "IOIID" , string_opt_to_json x.f_CrossOrderCancelReplaceRequest_IOIID );
@@ -719,50 +719,53 @@ let crossordercancelreplacerequest_to_json x : json =
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_CrossOrderCancelReplaceRequest_ExpireTime );
     ( "GTBookingInst" , gtbookinginst_opt_to_json x.f_CrossOrderCancelReplaceRequest_GTBookingInst );
     ( "MaxShow" , float_opt_to_json x.f_CrossOrderCancelReplaceRequest_MaxShow );
-    ( "PegInstructions" , peginstructions_to_json x.f_CrossOrderCancelReplaceRequest_PegInstructions );
-    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_CrossOrderCancelReplaceRequest_DiscretionInstructions );
     ( "TargetStrategy" , targetstrategy_opt_to_json x.f_CrossOrderCancelReplaceRequest_TargetStrategy );
     ( "TargetStrategyParameters" , string_opt_to_json x.f_CrossOrderCancelReplaceRequest_TargetStrategyParameters );
     ( "ParticipationRate" , float_opt_to_json x.f_CrossOrderCancelReplaceRequest_ParticipationRate );
     ( "CancellationRights" , cancellationrights_opt_to_json x.f_CrossOrderCancelReplaceRequest_CancellationRights );
     ( "MoneyLaunderingStatus" , moneylaunderingstatus_opt_to_json x.f_CrossOrderCancelReplaceRequest_MoneyLaunderingStatus );
     ( "RegistID" , string_opt_to_json x.f_CrossOrderCancelReplaceRequest_RegistID );
-    ( "Designation" , string_opt_to_json x.f_CrossOrderCancelReplaceRequest_Designation )
+    ( "Designation" , string_opt_to_json x.f_CrossOrderCancelReplaceRequest_Designation );
+    ( "SideCrossOrdModGrp" , rg sidecrossordmodgrp_to_json x.f_CrossOrderCancelReplaceRequest_SideCrossOrdModGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_CrossOrderCancelReplaceRequest_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_CrossOrderCancelReplaceRequest_InstrmtLegGrp );
+    ( "TrdgSesGrp" , rg trdgsesgrp_to_json x.f_CrossOrderCancelReplaceRequest_TrdgSesGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_CrossOrderCancelReplaceRequest_Stipulations )
     ]
 ;;
 
 let crossordercancelrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_CrossOrderCancelRequest_Instrument );
     ( "OrderID" , string_opt_to_json x.f_CrossOrderCancelRequest_OrderID );
     ( "CrossID" , string_to_json x.f_CrossOrderCancelRequest_CrossID );
     ( "OrigCrossID" , string_to_json x.f_CrossOrderCancelRequest_OrigCrossID );
     ( "CrossType" , crosstype_to_json x.f_CrossOrderCancelRequest_CrossType );
     ( "CrossPrioritization" , crossprioritization_to_json x.f_CrossOrderCancelRequest_CrossPrioritization );
-    ( "SideCrossOrdCxlGrp" , sidecrossordcxlgrp_to_json x.f_CrossOrderCancelRequest_SideCrossOrdCxlGrp );
-    ( "Instrument" , instrument_to_json x.f_CrossOrderCancelRequest_Instrument );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_CrossOrderCancelRequest_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_CrossOrderCancelRequest_InstrmtLegGrp );
-    ( "TransactTime" , utctimestamp_to_json x.f_CrossOrderCancelRequest_TransactTime )
+    ( "TransactTime" , utctimestamp_to_json x.f_CrossOrderCancelRequest_TransactTime );
+    ( "SideCrossOrdCxlGrp" , rg sidecrossordcxlgrp_to_json x.f_CrossOrderCancelRequest_SideCrossOrdCxlGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_CrossOrderCancelRequest_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_CrossOrderCancelRequest_InstrmtLegGrp )
     ]
 ;;
 
 let derivativesecuritylist_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_DerivativeSecurityList_UnderlyingInstrument );
     ( "SecurityReqID" , string_to_json x.f_DerivativeSecurityList_SecurityReqID );
     ( "SecurityResponseID" , string_to_json x.f_DerivativeSecurityList_SecurityResponseID );
     ( "SecurityRequestResult" , securityrequestresult_to_json x.f_DerivativeSecurityList_SecurityRequestResult );
-    ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_DerivativeSecurityList_UnderlyingInstrument );
     ( "TotNoRelatedSym" , int_opt_to_json x.f_DerivativeSecurityList_TotNoRelatedSym );
     ( "LastFragment" , lastfragment_opt_to_json x.f_DerivativeSecurityList_LastFragment );
-    ( "RelSymDerivSecGrp" , relsymderivsecgrp_to_json x.f_DerivativeSecurityList_RelSymDerivSecGrp )
+    ( "RelSymDerivSecGrp" , rg relsymderivsecgrp_to_json x.f_DerivativeSecurityList_RelSymDerivSecGrp )
     ]
 ;;
 
 let derivativesecuritylistrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_DerivativeSecurityListRequest_UnderlyingInstrument );
     ( "SecurityReqID" , string_to_json x.f_DerivativeSecurityListRequest_SecurityReqID );
     ( "SecurityListRequestType" , securitylistrequesttype_to_json x.f_DerivativeSecurityListRequest_SecurityListRequestType );
-    ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_DerivativeSecurityListRequest_UnderlyingInstrument );
     ( "SecuritySubType" , string_opt_to_json x.f_DerivativeSecurityListRequest_SecuritySubType );
     ( "Currency" , currency_opt_to_json x.f_DerivativeSecurityListRequest_Currency );
     ( "Text" , string_opt_to_json x.f_DerivativeSecurityListRequest_Text );
@@ -775,46 +778,54 @@ let derivativesecuritylistrequest_to_json x : json =
 ;;
 
 let dontknowtrade_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_DontKnowTrade_Instrument );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_DontKnowTrade_OrderQtyData );
     ( "OrderID" , string_to_json x.f_DontKnowTrade_OrderID );
     ( "SecondaryOrderID" , string_opt_to_json x.f_DontKnowTrade_SecondaryOrderID );
     ( "ExecID" , string_to_json x.f_DontKnowTrade_ExecID );
     ( "DKReason" , dkreason_to_json x.f_DontKnowTrade_DKReason );
-    ( "Instrument" , instrument_to_json x.f_DontKnowTrade_Instrument );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_DontKnowTrade_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_DontKnowTrade_InstrmtLegGrp );
     ( "Side" , side_to_json x.f_DontKnowTrade_Side );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_DontKnowTrade_OrderQtyData );
     ( "LastQty" , float_opt_to_json x.f_DontKnowTrade_LastQty );
     ( "LastPx" , float_opt_to_json x.f_DontKnowTrade_LastPx );
     ( "Text" , string_opt_to_json x.f_DontKnowTrade_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_DontKnowTrade_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_DontKnowTrade_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_DontKnowTrade_EncodedText );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_DontKnowTrade_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_DontKnowTrade_InstrmtLegGrp )
     ]
 ;;
 
 let email_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "EmailThreadID" , string_to_json x.f_Email_EmailThreadID );
     ( "EmailType" , emailtype_to_json x.f_Email_EmailType );
     ( "OrigTime" , utctimestamp_opt_to_json x.f_Email_OrigTime );
     ( "Subject" , string_to_json x.f_Email_Subject );
     ( "EncodedSubjectLen" , int_opt_to_json x.f_Email_EncodedSubjectLen );
     ( "EncodedSubject" , string_opt_to_json x.f_Email_EncodedSubject );
-    ( "RoutingGrp" , routinggrp_to_json x.f_Email_RoutingGrp );
-    ( "InstrmtGrp" , instrmtgrp_to_json x.f_Email_InstrmtGrp );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_Email_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_Email_InstrmtLegGrp );
     ( "OrderID" , string_opt_to_json x.f_Email_OrderID );
     ( "ClOrdID" , string_opt_to_json x.f_Email_ClOrdID );
-    ( "LinesOfTextGrp" , linesoftextgrp_to_json x.f_Email_LinesOfTextGrp );
     ( "RawDataLength" , int_opt_to_json x.f_Email_RawDataLength );
-    ( "RawData" , string_opt_to_json x.f_Email_RawData )
+    ( "RawData" , string_opt_to_json x.f_Email_RawData );
+    ( "RoutingGrp" , rg routinggrp_to_json x.f_Email_RoutingGrp );
+    ( "InstrmtGrp" , rg instrmtgrp_to_json x.f_Email_InstrmtGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_Email_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_Email_InstrmtLegGrp );
+    ( "LinesOfTextGrp" , rg linesoftextgrp_to_json x.f_Email_LinesOfTextGrp )
     ]
 ;;
 
 let executionreport_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_ExecutionReport_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_ExecutionReport_FinancingDetails );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_ExecutionReport_OrderQtyData );
+    ( "PegInstructions" , peginstructions_to_json x.f_ExecutionReport_PegInstructions );
+    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_ExecutionReport_DiscretionInstructions );
+    ( "CommissionData" , commissiondata_to_json x.f_ExecutionReport_CommissionData );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_ExecutionReport_SpreadOrBenchmarkCurveData );
+    ( "YieldData" , yielddata_to_json x.f_ExecutionReport_YieldData );
     ( "OrderID" , string_to_json x.f_ExecutionReport_OrderID );
     ( "SecondaryOrderID" , string_opt_to_json x.f_ExecutionReport_SecondaryOrderID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_ExecutionReport_SecondaryClOrdID );
@@ -827,9 +838,7 @@ let executionreport_to_json x : json =
     ( "MassStatusReqID" , string_opt_to_json x.f_ExecutionReport_MassStatusReqID );
     ( "TotNumReports" , int_opt_to_json x.f_ExecutionReport_TotNumReports );
     ( "LastRptRequested" , bool_opt_to_json x.f_ExecutionReport_LastRptRequested );
-    ( "Parties" , parties_to_json x.f_ExecutionReport_Parties );
     ( "TradeOriginationDate" , localmktdate_opt_to_json x.f_ExecutionReport_TradeOriginationDate );
-    ( "ContraGrp" , contragrp_to_json x.f_ExecutionReport_ContraGrp );
     ( "ListID" , string_opt_to_json x.f_ExecutionReport_ListID );
     ( "CrossID" , string_opt_to_json x.f_ExecutionReport_CrossID );
     ( "OrigCrossID" , string_opt_to_json x.f_ExecutionReport_OrigCrossID );
@@ -851,19 +860,12 @@ let executionreport_to_json x : json =
     ( "SettlDate" , localmktdate_opt_to_json x.f_ExecutionReport_SettlDate );
     ( "CashMargin" , cashmargin_opt_to_json x.f_ExecutionReport_CashMargin );
     ( "ClearingFeeIndicator" , clearingfeeindicator_opt_to_json x.f_ExecutionReport_ClearingFeeIndicator );
-    ( "Instrument" , instrument_to_json x.f_ExecutionReport_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_ExecutionReport_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_ExecutionReport_UndInstrmtGrp );
     ( "Side" , side_to_json x.f_ExecutionReport_Side );
-    ( "Stipulations" , stipulations_to_json x.f_ExecutionReport_Stipulations );
     ( "QtyType" , qtytype_opt_to_json x.f_ExecutionReport_QtyType );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_ExecutionReport_OrderQtyData );
     ( "OrdType" , ordtype_opt_to_json x.f_ExecutionReport_OrdType );
     ( "PriceType" , pricetype_opt_to_json x.f_ExecutionReport_PriceType );
     ( "Price" , float_opt_to_json x.f_ExecutionReport_Price );
     ( "StopPx" , float_opt_to_json x.f_ExecutionReport_StopPx );
-    ( "PegInstructions" , peginstructions_to_json x.f_ExecutionReport_PegInstructions );
-    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_ExecutionReport_DiscretionInstructions );
     ( "PeggedPrice" , float_opt_to_json x.f_ExecutionReport_PeggedPrice );
     ( "DiscretionPrice" , float_opt_to_json x.f_ExecutionReport_DiscretionPrice );
     ( "TargetStrategy" , targetstrategy_opt_to_json x.f_ExecutionReport_TargetStrategy );
@@ -903,9 +905,6 @@ let executionreport_to_json x : json =
     ( "TradeDate" , localmktdate_opt_to_json x.f_ExecutionReport_TradeDate );
     ( "TransactTime" , utctimestamp_opt_to_json x.f_ExecutionReport_TransactTime );
     ( "ReportToExch" , reporttoexch_opt_to_json x.f_ExecutionReport_ReportToExch );
-    ( "CommissionData" , commissiondata_to_json x.f_ExecutionReport_CommissionData );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_ExecutionReport_SpreadOrBenchmarkCurveData );
-    ( "YieldData" , yielddata_to_json x.f_ExecutionReport_YieldData );
     ( "GrossTradeAmt" , float_opt_to_json x.f_ExecutionReport_GrossTradeAmt );
     ( "NumDaysInterest" , int_opt_to_json x.f_ExecutionReport_NumDaysInterest );
     ( "ExDate" , localmktdate_opt_to_json x.f_ExecutionReport_ExDate );
@@ -949,47 +948,51 @@ let executionreport_to_json x : json =
     ( "PriorityIndicator" , priorityindicator_opt_to_json x.f_ExecutionReport_PriorityIndicator );
     ( "PriceImprovement" , float_opt_to_json x.f_ExecutionReport_PriceImprovement );
     ( "LastLiquidityInd" , lastliquidityind_opt_to_json x.f_ExecutionReport_LastLiquidityInd );
-    ( "ContAmtGrp" , contamtgrp_to_json x.f_ExecutionReport_ContAmtGrp );
-    ( "InstrmtLegExecGrp" , instrmtlegexecgrp_to_json x.f_ExecutionReport_InstrmtLegExecGrp );
     ( "CopyMsgIndicator" , bool_opt_to_json x.f_ExecutionReport_CopyMsgIndicator );
-    ( "MiscFeesGrp" , miscfeesgrp_to_json x.f_ExecutionReport_MiscFeesGrp )
+    ( "Parties" , rg parties_to_json x.f_ExecutionReport_Parties );
+    ( "ContraGrp" , rg contragrp_to_json x.f_ExecutionReport_ContraGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_ExecutionReport_UndInstrmtGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_ExecutionReport_Stipulations );
+    ( "ContAmtGrp" , rg contamtgrp_to_json x.f_ExecutionReport_ContAmtGrp );
+    ( "InstrmtLegExecGrp" , rg instrmtlegexecgrp_to_json x.f_ExecutionReport_InstrmtLegExecGrp );
+    ( "MiscFeesGrp" , rg miscfeesgrp_to_json x.f_ExecutionReport_MiscFeesGrp )
     ]
 ;;
 
 let ioi_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_IOI_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_IOI_FinancingDetails );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_IOI_OrderQtyData );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_IOI_SpreadOrBenchmarkCurveData );
+    ( "YieldData" , yielddata_to_json x.f_IOI_YieldData );
     ( "IOIID" , string_to_json x.f_IOI_IOIID );
     ( "IOITransType" , ioitranstype_to_json x.f_IOI_IOITransType );
     ( "IOIRefID" , string_opt_to_json x.f_IOI_IOIRefID );
-    ( "Instrument" , instrument_to_json x.f_IOI_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_IOI_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_IOI_UndInstrmtGrp );
     ( "Side" , side_to_json x.f_IOI_Side );
     ( "QtyType" , qtytype_opt_to_json x.f_IOI_QtyType );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_IOI_OrderQtyData );
     ( "IOIQty" , ioiqty_to_json x.f_IOI_IOIQty );
     ( "Currency" , currency_opt_to_json x.f_IOI_Currency );
-    ( "Stipulations" , stipulations_to_json x.f_IOI_Stipulations );
-    ( "InstrmtLegIOIGrp" , instrmtlegioigrp_to_json x.f_IOI_InstrmtLegIOIGrp );
     ( "PriceType" , pricetype_opt_to_json x.f_IOI_PriceType );
     ( "Price" , float_opt_to_json x.f_IOI_Price );
     ( "ValidUntilTime" , utctimestamp_opt_to_json x.f_IOI_ValidUntilTime );
     ( "IOIQltyInd" , ioiqltyind_opt_to_json x.f_IOI_IOIQltyInd );
     ( "IOINaturalFlag" , ioinaturalflag_opt_to_json x.f_IOI_IOINaturalFlag );
-    ( "IOIQualGrp" , ioiqualgrp_to_json x.f_IOI_IOIQualGrp );
     ( "Text" , string_opt_to_json x.f_IOI_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_IOI_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_IOI_EncodedText );
     ( "TransactTime" , utctimestamp_opt_to_json x.f_IOI_TransactTime );
     ( "URLLink" , string_opt_to_json x.f_IOI_URLLink );
-    ( "RoutingGrp" , routinggrp_to_json x.f_IOI_RoutingGrp );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_IOI_SpreadOrBenchmarkCurveData );
-    ( "YieldData" , yielddata_to_json x.f_IOI_YieldData )
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_IOI_UndInstrmtGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_IOI_Stipulations );
+    ( "InstrmtLegIOIGrp" , rg instrmtlegioigrp_to_json x.f_IOI_InstrmtLegIOIGrp );
+    ( "IOIQualGrp" , rg ioiqualgrp_to_json x.f_IOI_IOIQualGrp );
+    ( "RoutingGrp" , rg routinggrp_to_json x.f_IOI_RoutingGrp )
     ]
 ;;
 
 let listcancelrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "ListID" , string_to_json x.f_ListCancelRequest_ListID );
     ( "TransactTime" , utctimestamp_to_json x.f_ListCancelRequest_TransactTime );
     ( "TradeOriginationDate" , localmktdate_opt_to_json x.f_ListCancelRequest_TradeOriginationDate );
@@ -1001,7 +1004,7 @@ let listcancelrequest_to_json x : json =
 ;;
 
 let listexecute_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "ListID" , string_to_json x.f_ListExecute_ListID );
     ( "ClientBidID" , string_opt_to_json x.f_ListExecute_ClientBidID );
     ( "BidID" , string_opt_to_json x.f_ListExecute_BidID );
@@ -1013,7 +1016,7 @@ let listexecute_to_json x : json =
 ;;
 
 let liststatus_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "ListID" , string_to_json x.f_ListStatus_ListID );
     ( "ListStatusType" , liststatustype_to_json x.f_ListStatus_ListStatusType );
     ( "NoRpts" , int_to_json x.f_ListStatus_NoRpts );
@@ -1025,12 +1028,12 @@ let liststatus_to_json x : json =
     ( "TransactTime" , utctimestamp_opt_to_json x.f_ListStatus_TransactTime );
     ( "TotNoOrders" , int_to_json x.f_ListStatus_TotNoOrders );
     ( "LastFragment" , lastfragment_opt_to_json x.f_ListStatus_LastFragment );
-    ( "OrdListStatGrp" , ordliststatgrp_to_json x.f_ListStatus_OrdListStatGrp )
+    ( "OrdListStatGrp" , rg ordliststatgrp_to_json x.f_ListStatus_OrdListStatGrp )
     ]
 ;;
 
 let liststatusrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "ListID" , string_to_json x.f_ListStatusRequest_ListID );
     ( "Text" , string_opt_to_json x.f_ListStatusRequest_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_ListStatusRequest_EncodedTextLen );
@@ -1039,26 +1042,26 @@ let liststatusrequest_to_json x : json =
 ;;
 
 let liststrikeprice_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "ListID" , string_to_json x.f_ListStrikePrice_ListID );
     ( "TotNoStrikes" , int_to_json x.f_ListStrikePrice_TotNoStrikes );
     ( "LastFragment" , lastfragment_opt_to_json x.f_ListStrikePrice_LastFragment );
-    ( "InstrmtStrkPxGrp" , instrmtstrkpxgrp_to_json x.f_ListStrikePrice_InstrmtStrkPxGrp );
-    ( "UndInstrmtStrkPxGrp" , undinstrmtstrkpxgrp_to_json x.f_ListStrikePrice_UndInstrmtStrkPxGrp )
+    ( "InstrmtStrkPxGrp" , rg instrmtstrkpxgrp_to_json x.f_ListStrikePrice_InstrmtStrkPxGrp );
+    ( "UndInstrmtStrkPxGrp" , rg undinstrmtstrkpxgrp_to_json x.f_ListStrikePrice_UndInstrmtStrkPxGrp )
     ]
 ;;
 
 let marketdataincrementalrefresh_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "MDReqID" , string_opt_to_json x.f_MarketDataIncrementalRefresh_MDReqID );
-    ( "MDIncGrp" , mdincgrp_to_json x.f_MarketDataIncrementalRefresh_MDIncGrp );
     ( "ApplQueueDepth" , int_opt_to_json x.f_MarketDataIncrementalRefresh_ApplQueueDepth );
-    ( "ApplQueueResolution" , applqueueresolution_opt_to_json x.f_MarketDataIncrementalRefresh_ApplQueueResolution )
+    ( "ApplQueueResolution" , applqueueresolution_opt_to_json x.f_MarketDataIncrementalRefresh_ApplQueueResolution );
+    ( "MDIncGrp" , rg mdincgrp_to_json x.f_MarketDataIncrementalRefresh_MDIncGrp )
     ]
 ;;
 
 let marketdatarequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "MDReqID" , string_to_json x.f_MarketDataRequest_MDReqID );
     ( "SubscriptionRequestType" , subscriptionrequesttype_to_json x.f_MarketDataRequest_SubscriptionRequestType );
     ( "MarketDepth" , int_to_json x.f_MarketDataRequest_MarketDepth );
@@ -1067,84 +1070,88 @@ let marketdatarequest_to_json x : json =
     ( "OpenCloseSettlFlag" , openclosesettlflag_opt_to_json x.f_MarketDataRequest_OpenCloseSettlFlag );
     ( "Scope" , scope_opt_to_json x.f_MarketDataRequest_Scope );
     ( "MDImplicitDelete" , mdimplicitdelete_opt_to_json x.f_MarketDataRequest_MDImplicitDelete );
-    ( "MDReqGrp" , mdreqgrp_to_json x.f_MarketDataRequest_MDReqGrp );
-    ( "InstrmtMDReqGrp" , instrmtmdreqgrp_to_json x.f_MarketDataRequest_InstrmtMDReqGrp );
-    ( "TrdgSesGrp" , trdgsesgrp_to_json x.f_MarketDataRequest_TrdgSesGrp );
     ( "ApplQueueAction" , applqueueaction_opt_to_json x.f_MarketDataRequest_ApplQueueAction );
-    ( "ApplQueueMax" , int_opt_to_json x.f_MarketDataRequest_ApplQueueMax )
+    ( "ApplQueueMax" , int_opt_to_json x.f_MarketDataRequest_ApplQueueMax );
+    ( "MDReqGrp" , rg mdreqgrp_to_json x.f_MarketDataRequest_MDReqGrp );
+    ( "InstrmtMDReqGrp" , rg instrmtmdreqgrp_to_json x.f_MarketDataRequest_InstrmtMDReqGrp );
+    ( "TrdgSesGrp" , rg trdgsesgrp_to_json x.f_MarketDataRequest_TrdgSesGrp )
     ]
 ;;
 
 let marketdatarequestreject_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "MDReqID" , string_to_json x.f_MarketDataRequestReject_MDReqID );
     ( "MDReqRejReason" , mdreqrejreason_opt_to_json x.f_MarketDataRequestReject_MDReqRejReason );
-    ( "MDRjctGrp" , mdrjctgrp_to_json x.f_MarketDataRequestReject_MDRjctGrp );
     ( "Text" , string_opt_to_json x.f_MarketDataRequestReject_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_MarketDataRequestReject_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_MarketDataRequestReject_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_MarketDataRequestReject_EncodedText );
+    ( "MDRjctGrp" , rg mdrjctgrp_to_json x.f_MarketDataRequestReject_MDRjctGrp )
     ]
 ;;
 
 let marketdatasnapshotfullrefresh_to_json x : json =
-    assoc_filter_nulls [
-    ( "MDReqID" , string_opt_to_json x.f_MarketDataSnapshotFullRefresh_MDReqID );
+     assoc_filter_nulls [
     ( "Instrument" , instrument_to_json x.f_MarketDataSnapshotFullRefresh_Instrument );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_MarketDataSnapshotFullRefresh_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_MarketDataSnapshotFullRefresh_InstrmtLegGrp );
+    ( "MDReqID" , string_opt_to_json x.f_MarketDataSnapshotFullRefresh_MDReqID );
     ( "FinancialStatus" , financialstatus_opt_to_json x.f_MarketDataSnapshotFullRefresh_FinancialStatus );
     ( "CorporateAction" , corporateaction_opt_to_json x.f_MarketDataSnapshotFullRefresh_CorporateAction );
     ( "NetChgPrevDay" , float_opt_to_json x.f_MarketDataSnapshotFullRefresh_NetChgPrevDay );
-    ( "MDFullGrp" , mdfullgrp_to_json x.f_MarketDataSnapshotFullRefresh_MDFullGrp );
     ( "ApplQueueDepth" , int_opt_to_json x.f_MarketDataSnapshotFullRefresh_ApplQueueDepth );
-    ( "ApplQueueResolution" , applqueueresolution_opt_to_json x.f_MarketDataSnapshotFullRefresh_ApplQueueResolution )
+    ( "ApplQueueResolution" , applqueueresolution_opt_to_json x.f_MarketDataSnapshotFullRefresh_ApplQueueResolution );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_MarketDataSnapshotFullRefresh_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_MarketDataSnapshotFullRefresh_InstrmtLegGrp );
+    ( "MDFullGrp" , rg mdfullgrp_to_json x.f_MarketDataSnapshotFullRefresh_MDFullGrp )
     ]
 ;;
 
 let massquote_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "QuoteReqID" , string_opt_to_json x.f_MassQuote_QuoteReqID );
     ( "QuoteID" , string_to_json x.f_MassQuote_QuoteID );
     ( "QuoteType" , quotetype_opt_to_json x.f_MassQuote_QuoteType );
     ( "QuoteResponseLevel" , quoteresponselevel_opt_to_json x.f_MassQuote_QuoteResponseLevel );
-    ( "Parties" , parties_to_json x.f_MassQuote_Parties );
     ( "Account" , string_opt_to_json x.f_MassQuote_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_MassQuote_AcctIDSource );
     ( "AccountType" , accounttype_opt_to_json x.f_MassQuote_AccountType );
     ( "DefBidSize" , float_opt_to_json x.f_MassQuote_DefBidSize );
     ( "DefOfferSize" , float_opt_to_json x.f_MassQuote_DefOfferSize );
-    ( "QuotSetGrp" , quotsetgrp_to_json x.f_MassQuote_QuotSetGrp )
+    ( "Parties" , rg parties_to_json x.f_MassQuote_Parties );
+    ( "QuotSetGrp" , rg quotsetgrp_to_json x.f_MassQuote_QuotSetGrp )
     ]
 ;;
 
 let massquoteacknowledgement_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "QuoteReqID" , string_opt_to_json x.f_MassQuoteAcknowledgement_QuoteReqID );
     ( "QuoteID" , string_opt_to_json x.f_MassQuoteAcknowledgement_QuoteID );
     ( "QuoteStatus" , quotestatus_to_json x.f_MassQuoteAcknowledgement_QuoteStatus );
     ( "QuoteRejectReason" , quoterejectreason_opt_to_json x.f_MassQuoteAcknowledgement_QuoteRejectReason );
     ( "QuoteResponseLevel" , quoteresponselevel_opt_to_json x.f_MassQuoteAcknowledgement_QuoteResponseLevel );
     ( "QuoteType" , quotetype_opt_to_json x.f_MassQuoteAcknowledgement_QuoteType );
-    ( "Parties" , parties_to_json x.f_MassQuoteAcknowledgement_Parties );
     ( "Account" , string_opt_to_json x.f_MassQuoteAcknowledgement_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_MassQuoteAcknowledgement_AcctIDSource );
     ( "AccountType" , accounttype_opt_to_json x.f_MassQuoteAcknowledgement_AccountType );
     ( "Text" , string_opt_to_json x.f_MassQuoteAcknowledgement_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_MassQuoteAcknowledgement_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_MassQuoteAcknowledgement_EncodedText );
-    ( "QuotSetAckGrp" , quotsetackgrp_to_json x.f_MassQuoteAcknowledgement_QuotSetAckGrp )
+    ( "Parties" , rg parties_to_json x.f_MassQuoteAcknowledgement_Parties );
+    ( "QuotSetAckGrp" , rg quotsetackgrp_to_json x.f_MassQuoteAcknowledgement_QuotSetAckGrp )
     ]
 ;;
 
 let multilegordercancelreplace_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_MultilegOrderCancelReplace_Instrument );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_MultilegOrderCancelReplace_OrderQtyData );
+    ( "CommissionData" , commissiondata_to_json x.f_MultilegOrderCancelReplace_CommissionData );
+    ( "PegInstructions" , peginstructions_to_json x.f_MultilegOrderCancelReplace_PegInstructions );
+    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_MultilegOrderCancelReplace_DiscretionInstructions );
     ( "OrderID" , string_opt_to_json x.f_MultilegOrderCancelReplace_OrderID );
     ( "OrigClOrdID" , string_to_json x.f_MultilegOrderCancelReplace_OrigClOrdID );
     ( "ClOrdID" , string_to_json x.f_MultilegOrderCancelReplace_ClOrdID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_MultilegOrderCancelReplace_SecondaryClOrdID );
     ( "ClOrdLinkID" , string_opt_to_json x.f_MultilegOrderCancelReplace_ClOrdLinkID );
     ( "OrigOrdModTime" , utctimestamp_opt_to_json x.f_MultilegOrderCancelReplace_OrigOrdModTime );
-    ( "Parties" , parties_to_json x.f_MultilegOrderCancelReplace_Parties );
     ( "TradeOriginationDate" , localmktdate_opt_to_json x.f_MultilegOrderCancelReplace_TradeOriginationDate );
     ( "TradeDate" , localmktdate_opt_to_json x.f_MultilegOrderCancelReplace_TradeDate );
     ( "Account" , string_opt_to_json x.f_MultilegOrderCancelReplace_Account );
@@ -1154,7 +1161,6 @@ let multilegordercancelreplace_to_json x : json =
     ( "BookingUnit" , bookingunit_opt_to_json x.f_MultilegOrderCancelReplace_BookingUnit );
     ( "PreallocMethod" , preallocmethod_opt_to_json x.f_MultilegOrderCancelReplace_PreallocMethod );
     ( "AllocID" , string_opt_to_json x.f_MultilegOrderCancelReplace_AllocID );
-    ( "PreAllocMlegGrp" , preallocmleggrp_to_json x.f_MultilegOrderCancelReplace_PreAllocMlegGrp );
     ( "SettlType" , settltype_opt_to_json x.f_MultilegOrderCancelReplace_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_MultilegOrderCancelReplace_SettlDate );
     ( "CashMargin" , cashmargin_opt_to_json x.f_MultilegOrderCancelReplace_CashMargin );
@@ -1164,17 +1170,12 @@ let multilegordercancelreplace_to_json x : json =
     ( "MinQty" , float_opt_to_json x.f_MultilegOrderCancelReplace_MinQty );
     ( "MaxFloor" , float_opt_to_json x.f_MultilegOrderCancelReplace_MaxFloor );
     ( "ExDestination" , exchange_opt_to_json x.f_MultilegOrderCancelReplace_ExDestination );
-    ( "TrdgSesGrp" , trdgsesgrp_to_json x.f_MultilegOrderCancelReplace_TrdgSesGrp );
     ( "ProcessCode" , processcode_opt_to_json x.f_MultilegOrderCancelReplace_ProcessCode );
     ( "Side" , side_to_json x.f_MultilegOrderCancelReplace_Side );
-    ( "Instrument" , instrument_to_json x.f_MultilegOrderCancelReplace_Instrument );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_MultilegOrderCancelReplace_UndInstrmtGrp );
     ( "PrevClosePx" , float_opt_to_json x.f_MultilegOrderCancelReplace_PrevClosePx );
-    ( "LegOrdGrp" , legordgrp_to_json x.f_MultilegOrderCancelReplace_LegOrdGrp );
     ( "LocateReqd" , locatereqd_opt_to_json x.f_MultilegOrderCancelReplace_LocateReqd );
     ( "TransactTime" , utctimestamp_to_json x.f_MultilegOrderCancelReplace_TransactTime );
     ( "QtyType" , qtytype_opt_to_json x.f_MultilegOrderCancelReplace_QtyType );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_MultilegOrderCancelReplace_OrderQtyData );
     ( "OrdType" , ordtype_to_json x.f_MultilegOrderCancelReplace_OrdType );
     ( "PriceType" , pricetype_opt_to_json x.f_MultilegOrderCancelReplace_PriceType );
     ( "Price" , float_opt_to_json x.f_MultilegOrderCancelReplace_Price );
@@ -1189,7 +1190,6 @@ let multilegordercancelreplace_to_json x : json =
     ( "ExpireDate" , localmktdate_opt_to_json x.f_MultilegOrderCancelReplace_ExpireDate );
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_MultilegOrderCancelReplace_ExpireTime );
     ( "GTBookingInst" , gtbookinginst_opt_to_json x.f_MultilegOrderCancelReplace_GTBookingInst );
-    ( "CommissionData" , commissiondata_to_json x.f_MultilegOrderCancelReplace_CommissionData );
     ( "OrderCapacity" , ordercapacity_opt_to_json x.f_MultilegOrderCancelReplace_OrderCapacity );
     ( "OrderRestrictions" , orderrestrictions_opt_to_json x.f_MultilegOrderCancelReplace_OrderRestrictions );
     ( "CustOrderCapacity" , custordercapacity_opt_to_json x.f_MultilegOrderCancelReplace_CustOrderCapacity );
@@ -1202,8 +1202,6 @@ let multilegordercancelreplace_to_json x : json =
     ( "PositionEffect" , positioneffect_opt_to_json x.f_MultilegOrderCancelReplace_PositionEffect );
     ( "CoveredOrUncovered" , coveredoruncovered_opt_to_json x.f_MultilegOrderCancelReplace_CoveredOrUncovered );
     ( "MaxShow" , float_opt_to_json x.f_MultilegOrderCancelReplace_MaxShow );
-    ( "PegInstructions" , peginstructions_to_json x.f_MultilegOrderCancelReplace_PegInstructions );
-    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_MultilegOrderCancelReplace_DiscretionInstructions );
     ( "TargetStrategy" , targetstrategy_opt_to_json x.f_MultilegOrderCancelReplace_TargetStrategy );
     ( "TargetStrategyParameters" , string_opt_to_json x.f_MultilegOrderCancelReplace_TargetStrategyParameters );
     ( "ParticipationRate" , float_opt_to_json x.f_MultilegOrderCancelReplace_ParticipationRate );
@@ -1211,19 +1209,43 @@ let multilegordercancelreplace_to_json x : json =
     ( "MoneyLaunderingStatus" , moneylaunderingstatus_opt_to_json x.f_MultilegOrderCancelReplace_MoneyLaunderingStatus );
     ( "RegistID" , string_opt_to_json x.f_MultilegOrderCancelReplace_RegistID );
     ( "Designation" , string_opt_to_json x.f_MultilegOrderCancelReplace_Designation );
-    ( "MultiLegRptTypeReq" , multilegrpttypereq_opt_to_json x.f_MultilegOrderCancelReplace_MultiLegRptTypeReq )
+    ( "MultiLegRptTypeReq" , multilegrpttypereq_opt_to_json x.f_MultilegOrderCancelReplace_MultiLegRptTypeReq );
+    ( "Parties" , rg parties_to_json x.f_MultilegOrderCancelReplace_Parties );
+    ( "PreAllocMlegGrp" , rg preallocmleggrp_to_json x.f_MultilegOrderCancelReplace_PreAllocMlegGrp );
+    ( "TrdgSesGrp" , rg trdgsesgrp_to_json x.f_MultilegOrderCancelReplace_TrdgSesGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_MultilegOrderCancelReplace_UndInstrmtGrp );
+    ( "LegOrdGrp" , rg legordgrp_to_json x.f_MultilegOrderCancelReplace_LegOrdGrp )
+    ]
+;;
+
+let networkcounterpartysystemstatusrequest_to_json x : json =
+     assoc_filter_nulls [
+    ( "NetworkRequestType" , networkrequesttype_to_json x.f_NetworkCounterpartySystemStatusRequest_NetworkRequestType );
+    ( "NetworkRequestID" , string_to_json x.f_NetworkCounterpartySystemStatusRequest_NetworkRequestID );
+    ( "CompIDReqGrp" , rg compidreqgrp_to_json x.f_NetworkCounterpartySystemStatusRequest_CompIDReqGrp )
+    ]
+;;
+
+let networkcounterpartysystemstatusresponse_to_json x : json =
+     assoc_filter_nulls [
+    ( "NetworkStatusResponseType" , networkstatusresponsetype_to_json x.f_NetworkCounterpartySystemStatusResponse_NetworkStatusResponseType );
+    ( "NetworkRequestID" , string_opt_to_json x.f_NetworkCounterpartySystemStatusResponse_NetworkRequestID );
+    ( "NetworkResponseID" , string_to_json x.f_NetworkCounterpartySystemStatusResponse_NetworkResponseID );
+    ( "LastNetworkResponseID" , string_opt_to_json x.f_NetworkCounterpartySystemStatusResponse_LastNetworkResponseID );
+    ( "CompIDStatGrp" , rg compidstatgrp_to_json x.f_NetworkCounterpartySystemStatusResponse_CompIDStatGrp )
     ]
 ;;
 
 let newordercross_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_NewOrderCross_Instrument );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_NewOrderCross_SpreadOrBenchmarkCurveData );
+    ( "YieldData" , yielddata_to_json x.f_NewOrderCross_YieldData );
+    ( "PegInstructions" , peginstructions_to_json x.f_NewOrderCross_PegInstructions );
+    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_NewOrderCross_DiscretionInstructions );
     ( "CrossID" , string_to_json x.f_NewOrderCross_CrossID );
     ( "CrossType" , crosstype_to_json x.f_NewOrderCross_CrossType );
     ( "CrossPrioritization" , crossprioritization_to_json x.f_NewOrderCross_CrossPrioritization );
-    ( "SideCrossOrdModGrp" , sidecrossordmodgrp_to_json x.f_NewOrderCross_SideCrossOrdModGrp );
-    ( "Instrument" , instrument_to_json x.f_NewOrderCross_Instrument );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_NewOrderCross_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_NewOrderCross_InstrmtLegGrp );
     ( "SettlType" , settltype_opt_to_json x.f_NewOrderCross_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_NewOrderCross_SettlDate );
     ( "HandlInst" , handlinst_opt_to_json x.f_NewOrderCross_HandlInst );
@@ -1231,18 +1253,14 @@ let newordercross_to_json x : json =
     ( "MinQty" , float_opt_to_json x.f_NewOrderCross_MinQty );
     ( "MaxFloor" , float_opt_to_json x.f_NewOrderCross_MaxFloor );
     ( "ExDestination" , exchange_opt_to_json x.f_NewOrderCross_ExDestination );
-    ( "TrdgSesGrp" , trdgsesgrp_to_json x.f_NewOrderCross_TrdgSesGrp );
     ( "ProcessCode" , processcode_opt_to_json x.f_NewOrderCross_ProcessCode );
     ( "PrevClosePx" , float_opt_to_json x.f_NewOrderCross_PrevClosePx );
     ( "LocateReqd" , locatereqd_opt_to_json x.f_NewOrderCross_LocateReqd );
     ( "TransactTime" , utctimestamp_to_json x.f_NewOrderCross_TransactTime );
-    ( "Stipulations" , stipulations_to_json x.f_NewOrderCross_Stipulations );
     ( "OrdType" , ordtype_to_json x.f_NewOrderCross_OrdType );
     ( "PriceType" , pricetype_opt_to_json x.f_NewOrderCross_PriceType );
     ( "Price" , float_opt_to_json x.f_NewOrderCross_Price );
     ( "StopPx" , float_opt_to_json x.f_NewOrderCross_StopPx );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_NewOrderCross_SpreadOrBenchmarkCurveData );
-    ( "YieldData" , yielddata_to_json x.f_NewOrderCross_YieldData );
     ( "Currency" , currency_opt_to_json x.f_NewOrderCross_Currency );
     ( "ComplianceID" , string_opt_to_json x.f_NewOrderCross_ComplianceID );
     ( "IOIID" , string_opt_to_json x.f_NewOrderCross_IOIID );
@@ -1253,20 +1271,23 @@ let newordercross_to_json x : json =
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_NewOrderCross_ExpireTime );
     ( "GTBookingInst" , gtbookinginst_opt_to_json x.f_NewOrderCross_GTBookingInst );
     ( "MaxShow" , float_opt_to_json x.f_NewOrderCross_MaxShow );
-    ( "PegInstructions" , peginstructions_to_json x.f_NewOrderCross_PegInstructions );
-    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_NewOrderCross_DiscretionInstructions );
     ( "TargetStrategy" , targetstrategy_opt_to_json x.f_NewOrderCross_TargetStrategy );
     ( "TargetStrategyParameters" , string_opt_to_json x.f_NewOrderCross_TargetStrategyParameters );
     ( "ParticipationRate" , float_opt_to_json x.f_NewOrderCross_ParticipationRate );
     ( "CancellationRights" , cancellationrights_opt_to_json x.f_NewOrderCross_CancellationRights );
     ( "MoneyLaunderingStatus" , moneylaunderingstatus_opt_to_json x.f_NewOrderCross_MoneyLaunderingStatus );
     ( "RegistID" , string_opt_to_json x.f_NewOrderCross_RegistID );
-    ( "Designation" , string_opt_to_json x.f_NewOrderCross_Designation )
+    ( "Designation" , string_opt_to_json x.f_NewOrderCross_Designation );
+    ( "SideCrossOrdModGrp" , rg sidecrossordmodgrp_to_json x.f_NewOrderCross_SideCrossOrdModGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_NewOrderCross_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_NewOrderCross_InstrmtLegGrp );
+    ( "TrdgSesGrp" , rg trdgsesgrp_to_json x.f_NewOrderCross_TrdgSesGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_NewOrderCross_Stipulations )
     ]
 ;;
 
 let neworderlist_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "ListID" , string_to_json x.f_NewOrderList_ListID );
     ( "BidID" , string_opt_to_json x.f_NewOrderList_BidID );
     ( "ClientBidID" , string_opt_to_json x.f_NewOrderList_ClientBidID );
@@ -1285,16 +1306,20 @@ let neworderlist_to_json x : json =
     ( "AllowableOneSidednessCurr" , currency_opt_to_json x.f_NewOrderList_AllowableOneSidednessCurr );
     ( "TotNoOrders" , int_to_json x.f_NewOrderList_TotNoOrders );
     ( "LastFragment" , lastfragment_opt_to_json x.f_NewOrderList_LastFragment );
-    ( "ListOrdGrp" , listordgrp_to_json x.f_NewOrderList_ListOrdGrp )
+    ( "ListOrdGrp" , rg listordgrp_to_json x.f_NewOrderList_ListOrdGrp )
     ]
 ;;
 
 let newordermultileg_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_NewOrderMultileg_Instrument );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_NewOrderMultileg_OrderQtyData );
+    ( "CommissionData" , commissiondata_to_json x.f_NewOrderMultileg_CommissionData );
+    ( "PegInstructions" , peginstructions_to_json x.f_NewOrderMultileg_PegInstructions );
+    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_NewOrderMultileg_DiscretionInstructions );
     ( "ClOrdID" , string_to_json x.f_NewOrderMultileg_ClOrdID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_NewOrderMultileg_SecondaryClOrdID );
     ( "ClOrdLinkID" , string_opt_to_json x.f_NewOrderMultileg_ClOrdLinkID );
-    ( "Parties" , parties_to_json x.f_NewOrderMultileg_Parties );
     ( "TradeOriginationDate" , localmktdate_opt_to_json x.f_NewOrderMultileg_TradeOriginationDate );
     ( "TradeDate" , localmktdate_opt_to_json x.f_NewOrderMultileg_TradeDate );
     ( "Account" , string_opt_to_json x.f_NewOrderMultileg_Account );
@@ -1304,7 +1329,6 @@ let newordermultileg_to_json x : json =
     ( "BookingUnit" , bookingunit_opt_to_json x.f_NewOrderMultileg_BookingUnit );
     ( "PreallocMethod" , preallocmethod_opt_to_json x.f_NewOrderMultileg_PreallocMethod );
     ( "AllocID" , string_opt_to_json x.f_NewOrderMultileg_AllocID );
-    ( "PreAllocMlegGrp" , preallocmleggrp_to_json x.f_NewOrderMultileg_PreAllocMlegGrp );
     ( "SettlType" , settltype_opt_to_json x.f_NewOrderMultileg_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_NewOrderMultileg_SettlDate );
     ( "CashMargin" , cashmargin_opt_to_json x.f_NewOrderMultileg_CashMargin );
@@ -1314,17 +1338,12 @@ let newordermultileg_to_json x : json =
     ( "MinQty" , float_opt_to_json x.f_NewOrderMultileg_MinQty );
     ( "MaxFloor" , float_opt_to_json x.f_NewOrderMultileg_MaxFloor );
     ( "ExDestination" , exchange_opt_to_json x.f_NewOrderMultileg_ExDestination );
-    ( "TrdgSesGrp" , trdgsesgrp_to_json x.f_NewOrderMultileg_TrdgSesGrp );
     ( "ProcessCode" , processcode_opt_to_json x.f_NewOrderMultileg_ProcessCode );
     ( "Side" , side_to_json x.f_NewOrderMultileg_Side );
-    ( "Instrument" , instrument_to_json x.f_NewOrderMultileg_Instrument );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_NewOrderMultileg_UndInstrmtGrp );
     ( "PrevClosePx" , float_opt_to_json x.f_NewOrderMultileg_PrevClosePx );
-    ( "LegOrdGrp" , legordgrp_to_json x.f_NewOrderMultileg_LegOrdGrp );
     ( "LocateReqd" , locatereqd_opt_to_json x.f_NewOrderMultileg_LocateReqd );
     ( "TransactTime" , utctimestamp_to_json x.f_NewOrderMultileg_TransactTime );
     ( "QtyType" , qtytype_opt_to_json x.f_NewOrderMultileg_QtyType );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_NewOrderMultileg_OrderQtyData );
     ( "OrdType" , ordtype_to_json x.f_NewOrderMultileg_OrdType );
     ( "PriceType" , pricetype_opt_to_json x.f_NewOrderMultileg_PriceType );
     ( "Price" , float_opt_to_json x.f_NewOrderMultileg_Price );
@@ -1339,7 +1358,6 @@ let newordermultileg_to_json x : json =
     ( "ExpireDate" , localmktdate_opt_to_json x.f_NewOrderMultileg_ExpireDate );
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_NewOrderMultileg_ExpireTime );
     ( "GTBookingInst" , gtbookinginst_opt_to_json x.f_NewOrderMultileg_GTBookingInst );
-    ( "CommissionData" , commissiondata_to_json x.f_NewOrderMultileg_CommissionData );
     ( "OrderCapacity" , ordercapacity_opt_to_json x.f_NewOrderMultileg_OrderCapacity );
     ( "OrderRestrictions" , orderrestrictions_opt_to_json x.f_NewOrderMultileg_OrderRestrictions );
     ( "CustOrderCapacity" , custordercapacity_opt_to_json x.f_NewOrderMultileg_CustOrderCapacity );
@@ -1352,8 +1370,6 @@ let newordermultileg_to_json x : json =
     ( "PositionEffect" , positioneffect_opt_to_json x.f_NewOrderMultileg_PositionEffect );
     ( "CoveredOrUncovered" , coveredoruncovered_opt_to_json x.f_NewOrderMultileg_CoveredOrUncovered );
     ( "MaxShow" , float_opt_to_json x.f_NewOrderMultileg_MaxShow );
-    ( "PegInstructions" , peginstructions_to_json x.f_NewOrderMultileg_PegInstructions );
-    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_NewOrderMultileg_DiscretionInstructions );
     ( "TargetStrategy" , targetstrategy_opt_to_json x.f_NewOrderMultileg_TargetStrategy );
     ( "TargetStrategyParameters" , string_opt_to_json x.f_NewOrderMultileg_TargetStrategyParameters );
     ( "ParticipationRate" , float_opt_to_json x.f_NewOrderMultileg_ParticipationRate );
@@ -1361,16 +1377,28 @@ let newordermultileg_to_json x : json =
     ( "MoneyLaunderingStatus" , moneylaunderingstatus_opt_to_json x.f_NewOrderMultileg_MoneyLaunderingStatus );
     ( "RegistID" , string_opt_to_json x.f_NewOrderMultileg_RegistID );
     ( "Designation" , string_opt_to_json x.f_NewOrderMultileg_Designation );
-    ( "MultiLegRptTypeReq" , multilegrpttypereq_opt_to_json x.f_NewOrderMultileg_MultiLegRptTypeReq )
+    ( "MultiLegRptTypeReq" , multilegrpttypereq_opt_to_json x.f_NewOrderMultileg_MultiLegRptTypeReq );
+    ( "Parties" , rg parties_to_json x.f_NewOrderMultileg_Parties );
+    ( "PreAllocMlegGrp" , rg preallocmleggrp_to_json x.f_NewOrderMultileg_PreAllocMlegGrp );
+    ( "TrdgSesGrp" , rg trdgsesgrp_to_json x.f_NewOrderMultileg_TrdgSesGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_NewOrderMultileg_UndInstrmtGrp );
+    ( "LegOrdGrp" , rg legordgrp_to_json x.f_NewOrderMultileg_LegOrdGrp )
     ]
 ;;
 
 let newordersingle_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_NewOrderSingle_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_NewOrderSingle_FinancingDetails );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_NewOrderSingle_OrderQtyData );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_NewOrderSingle_SpreadOrBenchmarkCurveData );
+    ( "YieldData" , yielddata_to_json x.f_NewOrderSingle_YieldData );
+    ( "CommissionData" , commissiondata_to_json x.f_NewOrderSingle_CommissionData );
+    ( "PegInstructions" , peginstructions_to_json x.f_NewOrderSingle_PegInstructions );
+    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_NewOrderSingle_DiscretionInstructions );
     ( "ClOrdID" , string_to_json x.f_NewOrderSingle_ClOrdID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_NewOrderSingle_SecondaryClOrdID );
     ( "ClOrdLinkID" , string_opt_to_json x.f_NewOrderSingle_ClOrdLinkID );
-    ( "Parties" , parties_to_json x.f_NewOrderSingle_Parties );
     ( "TradeOriginationDate" , localmktdate_opt_to_json x.f_NewOrderSingle_TradeOriginationDate );
     ( "TradeDate" , localmktdate_opt_to_json x.f_NewOrderSingle_TradeDate );
     ( "Account" , string_opt_to_json x.f_NewOrderSingle_Account );
@@ -1380,7 +1408,6 @@ let newordersingle_to_json x : json =
     ( "BookingUnit" , bookingunit_opt_to_json x.f_NewOrderSingle_BookingUnit );
     ( "PreallocMethod" , preallocmethod_opt_to_json x.f_NewOrderSingle_PreallocMethod );
     ( "AllocID" , string_opt_to_json x.f_NewOrderSingle_AllocID );
-    ( "PreAllocGrp" , preallocgrp_to_json x.f_NewOrderSingle_PreAllocGrp );
     ( "SettlType" , settltype_opt_to_json x.f_NewOrderSingle_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_NewOrderSingle_SettlDate );
     ( "CashMargin" , cashmargin_opt_to_json x.f_NewOrderSingle_CashMargin );
@@ -1390,24 +1417,16 @@ let newordersingle_to_json x : json =
     ( "MinQty" , float_opt_to_json x.f_NewOrderSingle_MinQty );
     ( "MaxFloor" , float_opt_to_json x.f_NewOrderSingle_MaxFloor );
     ( "ExDestination" , exchange_opt_to_json x.f_NewOrderSingle_ExDestination );
-    ( "TrdgSesGrp" , trdgsesgrp_to_json x.f_NewOrderSingle_TrdgSesGrp );
     ( "ProcessCode" , processcode_opt_to_json x.f_NewOrderSingle_ProcessCode );
-    ( "Instrument" , instrument_to_json x.f_NewOrderSingle_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_NewOrderSingle_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_NewOrderSingle_UndInstrmtGrp );
     ( "PrevClosePx" , float_opt_to_json x.f_NewOrderSingle_PrevClosePx );
     ( "Side" , side_to_json x.f_NewOrderSingle_Side );
     ( "LocateReqd" , locatereqd_opt_to_json x.f_NewOrderSingle_LocateReqd );
     ( "TransactTime" , utctimestamp_to_json x.f_NewOrderSingle_TransactTime );
-    ( "Stipulations" , stipulations_to_json x.f_NewOrderSingle_Stipulations );
     ( "QtyType" , qtytype_opt_to_json x.f_NewOrderSingle_QtyType );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_NewOrderSingle_OrderQtyData );
     ( "OrdType" , ordtype_to_json x.f_NewOrderSingle_OrdType );
     ( "PriceType" , pricetype_opt_to_json x.f_NewOrderSingle_PriceType );
     ( "Price" , float_opt_to_json x.f_NewOrderSingle_Price );
     ( "StopPx" , float_opt_to_json x.f_NewOrderSingle_StopPx );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_NewOrderSingle_SpreadOrBenchmarkCurveData );
-    ( "YieldData" , yielddata_to_json x.f_NewOrderSingle_YieldData );
     ( "Currency" , currency_opt_to_json x.f_NewOrderSingle_Currency );
     ( "ComplianceID" , string_opt_to_json x.f_NewOrderSingle_ComplianceID );
     ( "SolicitedFlag" , solicitedflag_opt_to_json x.f_NewOrderSingle_SolicitedFlag );
@@ -1418,7 +1437,6 @@ let newordersingle_to_json x : json =
     ( "ExpireDate" , localmktdate_opt_to_json x.f_NewOrderSingle_ExpireDate );
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_NewOrderSingle_ExpireTime );
     ( "GTBookingInst" , gtbookinginst_opt_to_json x.f_NewOrderSingle_GTBookingInst );
-    ( "CommissionData" , commissiondata_to_json x.f_NewOrderSingle_CommissionData );
     ( "OrderCapacity" , ordercapacity_opt_to_json x.f_NewOrderSingle_OrderCapacity );
     ( "OrderRestrictions" , orderrestrictions_opt_to_json x.f_NewOrderSingle_OrderRestrictions );
     ( "CustOrderCapacity" , custordercapacity_opt_to_json x.f_NewOrderSingle_CustOrderCapacity );
@@ -1434,38 +1452,41 @@ let newordersingle_to_json x : json =
     ( "PositionEffect" , positioneffect_opt_to_json x.f_NewOrderSingle_PositionEffect );
     ( "CoveredOrUncovered" , coveredoruncovered_opt_to_json x.f_NewOrderSingle_CoveredOrUncovered );
     ( "MaxShow" , float_opt_to_json x.f_NewOrderSingle_MaxShow );
-    ( "PegInstructions" , peginstructions_to_json x.f_NewOrderSingle_PegInstructions );
-    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_NewOrderSingle_DiscretionInstructions );
     ( "TargetStrategy" , targetstrategy_opt_to_json x.f_NewOrderSingle_TargetStrategy );
     ( "TargetStrategyParameters" , string_opt_to_json x.f_NewOrderSingle_TargetStrategyParameters );
     ( "ParticipationRate" , float_opt_to_json x.f_NewOrderSingle_ParticipationRate );
     ( "CancellationRights" , cancellationrights_opt_to_json x.f_NewOrderSingle_CancellationRights );
     ( "MoneyLaunderingStatus" , moneylaunderingstatus_opt_to_json x.f_NewOrderSingle_MoneyLaunderingStatus );
     ( "RegistID" , string_opt_to_json x.f_NewOrderSingle_RegistID );
-    ( "Designation" , string_opt_to_json x.f_NewOrderSingle_Designation )
+    ( "Designation" , string_opt_to_json x.f_NewOrderSingle_Designation );
+    ( "Parties" , rg parties_to_json x.f_NewOrderSingle_Parties );
+    ( "PreAllocGrp" , rg preallocgrp_to_json x.f_NewOrderSingle_PreAllocGrp );
+    ( "TrdgSesGrp" , rg trdgsesgrp_to_json x.f_NewOrderSingle_TrdgSesGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_NewOrderSingle_UndInstrmtGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_NewOrderSingle_Stipulations )
     ]
 ;;
 
 let news_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "OrigTime" , utctimestamp_opt_to_json x.f_News_OrigTime );
     ( "Urgency" , urgency_opt_to_json x.f_News_Urgency );
     ( "Headline" , string_to_json x.f_News_Headline );
     ( "EncodedHeadlineLen" , int_opt_to_json x.f_News_EncodedHeadlineLen );
     ( "EncodedHeadline" , string_opt_to_json x.f_News_EncodedHeadline );
-    ( "RoutingGrp" , routinggrp_to_json x.f_News_RoutingGrp );
-    ( "InstrmtGrp" , instrmtgrp_to_json x.f_News_InstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_News_InstrmtLegGrp );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_News_UndInstrmtGrp );
-    ( "LinesOfTextGrp" , linesoftextgrp_to_json x.f_News_LinesOfTextGrp );
     ( "URLLink" , string_opt_to_json x.f_News_URLLink );
     ( "RawDataLength" , int_opt_to_json x.f_News_RawDataLength );
-    ( "RawData" , string_opt_to_json x.f_News_RawData )
+    ( "RawData" , string_opt_to_json x.f_News_RawData );
+    ( "RoutingGrp" , rg routinggrp_to_json x.f_News_RoutingGrp );
+    ( "InstrmtGrp" , rg instrmtgrp_to_json x.f_News_InstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_News_InstrmtLegGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_News_UndInstrmtGrp );
+    ( "LinesOfTextGrp" , rg linesoftextgrp_to_json x.f_News_LinesOfTextGrp )
     ]
 ;;
 
 let ordercancelreject_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "OrderID" , string_to_json x.f_OrderCancelReject_OrderID );
     ( "SecondaryOrderID" , string_opt_to_json x.f_OrderCancelReject_SecondaryOrderID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_OrderCancelReject_SecondaryClOrdID );
@@ -1491,9 +1512,16 @@ let ordercancelreject_to_json x : json =
 ;;
 
 let ordercancelreplacerequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_OrderCancelReplaceRequest_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_OrderCancelReplaceRequest_FinancingDetails );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_OrderCancelReplaceRequest_OrderQtyData );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_OrderCancelReplaceRequest_SpreadOrBenchmarkCurveData );
+    ( "YieldData" , yielddata_to_json x.f_OrderCancelReplaceRequest_YieldData );
+    ( "PegInstructions" , peginstructions_to_json x.f_OrderCancelReplaceRequest_PegInstructions );
+    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_OrderCancelReplaceRequest_DiscretionInstructions );
+    ( "CommissionData" , commissiondata_to_json x.f_OrderCancelReplaceRequest_CommissionData );
     ( "OrderID" , string_opt_to_json x.f_OrderCancelReplaceRequest_OrderID );
-    ( "Parties" , parties_to_json x.f_OrderCancelReplaceRequest_Parties );
     ( "TradeOriginationDate" , localmktdate_opt_to_json x.f_OrderCancelReplaceRequest_TradeOriginationDate );
     ( "TradeDate" , localmktdate_opt_to_json x.f_OrderCancelReplaceRequest_TradeDate );
     ( "OrigClOrdID" , string_to_json x.f_OrderCancelReplaceRequest_OrigClOrdID );
@@ -1509,7 +1537,6 @@ let ordercancelreplacerequest_to_json x : json =
     ( "BookingUnit" , bookingunit_opt_to_json x.f_OrderCancelReplaceRequest_BookingUnit );
     ( "PreallocMethod" , preallocmethod_opt_to_json x.f_OrderCancelReplaceRequest_PreallocMethod );
     ( "AllocID" , string_opt_to_json x.f_OrderCancelReplaceRequest_AllocID );
-    ( "PreAllocGrp" , preallocgrp_to_json x.f_OrderCancelReplaceRequest_PreAllocGrp );
     ( "SettlType" , settltype_opt_to_json x.f_OrderCancelReplaceRequest_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_OrderCancelReplaceRequest_SettlDate );
     ( "CashMargin" , cashmargin_opt_to_json x.f_OrderCancelReplaceRequest_CashMargin );
@@ -1519,22 +1546,13 @@ let ordercancelreplacerequest_to_json x : json =
     ( "MinQty" , float_opt_to_json x.f_OrderCancelReplaceRequest_MinQty );
     ( "MaxFloor" , float_opt_to_json x.f_OrderCancelReplaceRequest_MaxFloor );
     ( "ExDestination" , exchange_opt_to_json x.f_OrderCancelReplaceRequest_ExDestination );
-    ( "TrdgSesGrp" , trdgsesgrp_to_json x.f_OrderCancelReplaceRequest_TrdgSesGrp );
-    ( "Instrument" , instrument_to_json x.f_OrderCancelReplaceRequest_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_OrderCancelReplaceRequest_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_OrderCancelReplaceRequest_UndInstrmtGrp );
     ( "Side" , side_to_json x.f_OrderCancelReplaceRequest_Side );
     ( "TransactTime" , utctimestamp_to_json x.f_OrderCancelReplaceRequest_TransactTime );
     ( "QtyType" , qtytype_opt_to_json x.f_OrderCancelReplaceRequest_QtyType );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_OrderCancelReplaceRequest_OrderQtyData );
     ( "OrdType" , ordtype_to_json x.f_OrderCancelReplaceRequest_OrdType );
     ( "PriceType" , pricetype_opt_to_json x.f_OrderCancelReplaceRequest_PriceType );
     ( "Price" , float_opt_to_json x.f_OrderCancelReplaceRequest_Price );
     ( "StopPx" , float_opt_to_json x.f_OrderCancelReplaceRequest_StopPx );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_OrderCancelReplaceRequest_SpreadOrBenchmarkCurveData );
-    ( "YieldData" , yielddata_to_json x.f_OrderCancelReplaceRequest_YieldData );
-    ( "PegInstructions" , peginstructions_to_json x.f_OrderCancelReplaceRequest_PegInstructions );
-    ( "DiscretionInstructions" , discretioninstructions_to_json x.f_OrderCancelReplaceRequest_DiscretionInstructions );
     ( "TargetStrategy" , targetstrategy_opt_to_json x.f_OrderCancelReplaceRequest_TargetStrategy );
     ( "TargetStrategyParameters" , string_opt_to_json x.f_OrderCancelReplaceRequest_TargetStrategyParameters );
     ( "ParticipationRate" , float_opt_to_json x.f_OrderCancelReplaceRequest_ParticipationRate );
@@ -1546,7 +1564,6 @@ let ordercancelreplacerequest_to_json x : json =
     ( "ExpireDate" , localmktdate_opt_to_json x.f_OrderCancelReplaceRequest_ExpireDate );
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_OrderCancelReplaceRequest_ExpireTime );
     ( "GTBookingInst" , gtbookinginst_opt_to_json x.f_OrderCancelReplaceRequest_GTBookingInst );
-    ( "CommissionData" , commissiondata_to_json x.f_OrderCancelReplaceRequest_CommissionData );
     ( "OrderCapacity" , ordercapacity_opt_to_json x.f_OrderCancelReplaceRequest_OrderCapacity );
     ( "OrderRestrictions" , orderrestrictions_opt_to_json x.f_OrderCancelReplaceRequest_OrderRestrictions );
     ( "CustOrderCapacity" , custordercapacity_opt_to_json x.f_OrderCancelReplaceRequest_CustOrderCapacity );
@@ -1566,12 +1583,19 @@ let ordercancelreplacerequest_to_json x : json =
     ( "CancellationRights" , cancellationrights_opt_to_json x.f_OrderCancelReplaceRequest_CancellationRights );
     ( "MoneyLaunderingStatus" , moneylaunderingstatus_opt_to_json x.f_OrderCancelReplaceRequest_MoneyLaunderingStatus );
     ( "RegistID" , string_opt_to_json x.f_OrderCancelReplaceRequest_RegistID );
-    ( "Designation" , string_opt_to_json x.f_OrderCancelReplaceRequest_Designation )
+    ( "Designation" , string_opt_to_json x.f_OrderCancelReplaceRequest_Designation );
+    ( "Parties" , rg parties_to_json x.f_OrderCancelReplaceRequest_Parties );
+    ( "PreAllocGrp" , rg preallocgrp_to_json x.f_OrderCancelReplaceRequest_PreAllocGrp );
+    ( "TrdgSesGrp" , rg trdgsesgrp_to_json x.f_OrderCancelReplaceRequest_TrdgSesGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_OrderCancelReplaceRequest_UndInstrmtGrp )
     ]
 ;;
 
 let ordercancelrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_OrderCancelRequest_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_OrderCancelRequest_FinancingDetails );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_OrderCancelRequest_OrderQtyData );
     ( "OrigClOrdID" , string_to_json x.f_OrderCancelRequest_OrigClOrdID );
     ( "OrderID" , string_opt_to_json x.f_OrderCancelRequest_OrderID );
     ( "ClOrdID" , string_to_json x.f_OrderCancelRequest_ClOrdID );
@@ -1582,22 +1606,21 @@ let ordercancelrequest_to_json x : json =
     ( "Account" , string_opt_to_json x.f_OrderCancelRequest_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_OrderCancelRequest_AcctIDSource );
     ( "AccountType" , accounttype_opt_to_json x.f_OrderCancelRequest_AccountType );
-    ( "Parties" , parties_to_json x.f_OrderCancelRequest_Parties );
-    ( "Instrument" , instrument_to_json x.f_OrderCancelRequest_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_OrderCancelRequest_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_OrderCancelRequest_UndInstrmtGrp );
     ( "Side" , side_to_json x.f_OrderCancelRequest_Side );
     ( "TransactTime" , utctimestamp_to_json x.f_OrderCancelRequest_TransactTime );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_OrderCancelRequest_OrderQtyData );
     ( "ComplianceID" , string_opt_to_json x.f_OrderCancelRequest_ComplianceID );
     ( "Text" , string_opt_to_json x.f_OrderCancelRequest_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_OrderCancelRequest_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_OrderCancelRequest_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_OrderCancelRequest_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_OrderCancelRequest_Parties );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_OrderCancelRequest_UndInstrmtGrp )
     ]
 ;;
 
 let ordermasscancelreport_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_OrderMassCancelReport_Instrument );
+    ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_OrderMassCancelReport_UnderlyingInstrument );
     ( "ClOrdID" , string_opt_to_json x.f_OrderMassCancelReport_ClOrdID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_OrderMassCancelReport_SecondaryClOrdID );
     ( "OrderID" , string_to_json x.f_OrderMassCancelReport_OrderID );
@@ -1606,28 +1629,26 @@ let ordermasscancelreport_to_json x : json =
     ( "MassCancelResponse" , masscancelresponse_to_json x.f_OrderMassCancelReport_MassCancelResponse );
     ( "MassCancelRejectReason" , masscancelrejectreason_opt_to_json x.f_OrderMassCancelReport_MassCancelRejectReason );
     ( "TotalAffectedOrders" , int_opt_to_json x.f_OrderMassCancelReport_TotalAffectedOrders );
-    ( "AffectedOrdGrp" , affectedordgrp_to_json x.f_OrderMassCancelReport_AffectedOrdGrp );
     ( "TradingSessionID" , string_opt_to_json x.f_OrderMassCancelReport_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_OrderMassCancelReport_TradingSessionSubID );
-    ( "Instrument" , instrument_to_json x.f_OrderMassCancelReport_Instrument );
-    ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_OrderMassCancelReport_UnderlyingInstrument );
     ( "Side" , side_opt_to_json x.f_OrderMassCancelReport_Side );
     ( "TransactTime" , utctimestamp_opt_to_json x.f_OrderMassCancelReport_TransactTime );
     ( "Text" , string_opt_to_json x.f_OrderMassCancelReport_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_OrderMassCancelReport_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_OrderMassCancelReport_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_OrderMassCancelReport_EncodedText );
+    ( "AffectedOrdGrp" , rg affectedordgrp_to_json x.f_OrderMassCancelReport_AffectedOrdGrp )
     ]
 ;;
 
 let ordermasscancelrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_OrderMassCancelRequest_Instrument );
+    ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_OrderMassCancelRequest_UnderlyingInstrument );
     ( "ClOrdID" , string_to_json x.f_OrderMassCancelRequest_ClOrdID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_OrderMassCancelRequest_SecondaryClOrdID );
     ( "MassCancelRequestType" , masscancelrequesttype_to_json x.f_OrderMassCancelRequest_MassCancelRequestType );
     ( "TradingSessionID" , string_opt_to_json x.f_OrderMassCancelRequest_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_OrderMassCancelRequest_TradingSessionSubID );
-    ( "Instrument" , instrument_to_json x.f_OrderMassCancelRequest_Instrument );
-    ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_OrderMassCancelRequest_UnderlyingInstrument );
     ( "Side" , side_opt_to_json x.f_OrderMassCancelRequest_Side );
     ( "TransactTime" , utctimestamp_to_json x.f_OrderMassCancelRequest_TransactTime );
     ( "Text" , string_opt_to_json x.f_OrderMassCancelRequest_Text );
@@ -1637,39 +1658,40 @@ let ordermasscancelrequest_to_json x : json =
 ;;
 
 let ordermassstatusrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_OrderMassStatusRequest_Instrument );
+    ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_OrderMassStatusRequest_UnderlyingInstrument );
     ( "MassStatusReqID" , string_to_json x.f_OrderMassStatusRequest_MassStatusReqID );
     ( "MassStatusReqType" , massstatusreqtype_to_json x.f_OrderMassStatusRequest_MassStatusReqType );
-    ( "Parties" , parties_to_json x.f_OrderMassStatusRequest_Parties );
     ( "Account" , string_opt_to_json x.f_OrderMassStatusRequest_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_OrderMassStatusRequest_AcctIDSource );
     ( "TradingSessionID" , string_opt_to_json x.f_OrderMassStatusRequest_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_OrderMassStatusRequest_TradingSessionSubID );
-    ( "Instrument" , instrument_to_json x.f_OrderMassStatusRequest_Instrument );
-    ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_OrderMassStatusRequest_UnderlyingInstrument );
-    ( "Side" , side_opt_to_json x.f_OrderMassStatusRequest_Side )
+    ( "Side" , side_opt_to_json x.f_OrderMassStatusRequest_Side );
+    ( "Parties" , rg parties_to_json x.f_OrderMassStatusRequest_Parties )
     ]
 ;;
 
 let orderstatusrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_OrderStatusRequest_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_OrderStatusRequest_FinancingDetails );
     ( "OrderID" , string_opt_to_json x.f_OrderStatusRequest_OrderID );
     ( "ClOrdID" , string_to_json x.f_OrderStatusRequest_ClOrdID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_OrderStatusRequest_SecondaryClOrdID );
     ( "ClOrdLinkID" , string_opt_to_json x.f_OrderStatusRequest_ClOrdLinkID );
-    ( "Parties" , parties_to_json x.f_OrderStatusRequest_Parties );
     ( "OrdStatusReqID" , string_opt_to_json x.f_OrderStatusRequest_OrdStatusReqID );
     ( "Account" , string_opt_to_json x.f_OrderStatusRequest_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_OrderStatusRequest_AcctIDSource );
-    ( "Instrument" , instrument_to_json x.f_OrderStatusRequest_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_OrderStatusRequest_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_OrderStatusRequest_UndInstrmtGrp );
-    ( "Side" , side_to_json x.f_OrderStatusRequest_Side )
+    ( "Side" , side_to_json x.f_OrderStatusRequest_Side );
+    ( "Parties" , rg parties_to_json x.f_OrderStatusRequest_Parties );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_OrderStatusRequest_UndInstrmtGrp )
     ]
 ;;
 
 let positionmaintenancereport_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_PositionMaintenanceReport_Instrument );
     ( "PosMaintRptID" , string_to_json x.f_PositionMaintenanceReport_PosMaintRptID );
     ( "PosTransType" , postranstype_to_json x.f_PositionMaintenanceReport_PosTransType );
     ( "PosReqID" , string_opt_to_json x.f_PositionMaintenanceReport_PosReqID );
@@ -1680,28 +1702,28 @@ let positionmaintenancereport_to_json x : json =
     ( "ClearingBusinessDate" , localmktdate_to_json x.f_PositionMaintenanceReport_ClearingBusinessDate );
     ( "SettlSessID" , settlsessid_opt_to_json x.f_PositionMaintenanceReport_SettlSessID );
     ( "SettlSessSubID" , string_opt_to_json x.f_PositionMaintenanceReport_SettlSessSubID );
-    ( "Parties" , parties_to_json x.f_PositionMaintenanceReport_Parties );
     ( "Account" , string_to_json x.f_PositionMaintenanceReport_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_PositionMaintenanceReport_AcctIDSource );
     ( "AccountType" , accounttype_to_json x.f_PositionMaintenanceReport_AccountType );
-    ( "Instrument" , instrument_to_json x.f_PositionMaintenanceReport_Instrument );
     ( "Currency" , currency_opt_to_json x.f_PositionMaintenanceReport_Currency );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_PositionMaintenanceReport_InstrmtLegGrp );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_PositionMaintenanceReport_UndInstrmtGrp );
-    ( "TrdgSesGrp" , trdgsesgrp_to_json x.f_PositionMaintenanceReport_TrdgSesGrp );
     ( "TransactTime" , utctimestamp_to_json x.f_PositionMaintenanceReport_TransactTime );
-    ( "PositionQty" , positionqty_to_json x.f_PositionMaintenanceReport_PositionQty );
-    ( "PositionAmountData" , positionamountdata_to_json x.f_PositionMaintenanceReport_PositionAmountData );
     ( "AdjustmentType" , adjustmenttype_opt_to_json x.f_PositionMaintenanceReport_AdjustmentType );
     ( "ThresholdAmount" , float_opt_to_json x.f_PositionMaintenanceReport_ThresholdAmount );
     ( "Text" , string_opt_to_json x.f_PositionMaintenanceReport_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_PositionMaintenanceReport_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_PositionMaintenanceReport_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_PositionMaintenanceReport_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_PositionMaintenanceReport_Parties );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_PositionMaintenanceReport_InstrmtLegGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_PositionMaintenanceReport_UndInstrmtGrp );
+    ( "TrdgSesGrp" , rg trdgsesgrp_to_json x.f_PositionMaintenanceReport_TrdgSesGrp );
+    ( "PositionQty" , rg positionqty_to_json x.f_PositionMaintenanceReport_PositionQty );
+    ( "PositionAmountData" , rg positionamountdata_to_json x.f_PositionMaintenanceReport_PositionAmountData )
     ]
 ;;
 
 let positionmaintenancerequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_PositionMaintenanceRequest_Instrument );
     ( "PosReqID" , string_to_json x.f_PositionMaintenanceRequest_PosReqID );
     ( "PosTransType" , postranstype_to_json x.f_PositionMaintenanceRequest_PosTransType );
     ( "PosMaintAction" , posmaintaction_to_json x.f_PositionMaintenanceRequest_PosMaintAction );
@@ -1710,29 +1732,29 @@ let positionmaintenancerequest_to_json x : json =
     ( "ClearingBusinessDate" , localmktdate_to_json x.f_PositionMaintenanceRequest_ClearingBusinessDate );
     ( "SettlSessID" , settlsessid_opt_to_json x.f_PositionMaintenanceRequest_SettlSessID );
     ( "SettlSessSubID" , string_opt_to_json x.f_PositionMaintenanceRequest_SettlSessSubID );
-    ( "Parties" , parties_to_json x.f_PositionMaintenanceRequest_Parties );
     ( "Account" , string_to_json x.f_PositionMaintenanceRequest_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_PositionMaintenanceRequest_AcctIDSource );
     ( "AccountType" , accounttype_to_json x.f_PositionMaintenanceRequest_AccountType );
-    ( "Instrument" , instrument_to_json x.f_PositionMaintenanceRequest_Instrument );
     ( "Currency" , currency_opt_to_json x.f_PositionMaintenanceRequest_Currency );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_PositionMaintenanceRequest_InstrmtLegGrp );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_PositionMaintenanceRequest_UndInstrmtGrp );
-    ( "TrdgSesGrp" , trdgsesgrp_to_json x.f_PositionMaintenanceRequest_TrdgSesGrp );
     ( "TransactTime" , utctimestamp_to_json x.f_PositionMaintenanceRequest_TransactTime );
-    ( "PositionQty" , positionqty_to_json x.f_PositionMaintenanceRequest_PositionQty );
     ( "AdjustmentType" , adjustmenttype_opt_to_json x.f_PositionMaintenanceRequest_AdjustmentType );
     ( "ContraryInstructionIndicator" , bool_opt_to_json x.f_PositionMaintenanceRequest_ContraryInstructionIndicator );
     ( "PriorSpreadIndicator" , bool_opt_to_json x.f_PositionMaintenanceRequest_PriorSpreadIndicator );
     ( "ThresholdAmount" , float_opt_to_json x.f_PositionMaintenanceRequest_ThresholdAmount );
     ( "Text" , string_opt_to_json x.f_PositionMaintenanceRequest_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_PositionMaintenanceRequest_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_PositionMaintenanceRequest_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_PositionMaintenanceRequest_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_PositionMaintenanceRequest_Parties );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_PositionMaintenanceRequest_InstrmtLegGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_PositionMaintenanceRequest_UndInstrmtGrp );
+    ( "TrdgSesGrp" , rg trdgsesgrp_to_json x.f_PositionMaintenanceRequest_TrdgSesGrp );
+    ( "PositionQty" , rg positionqty_to_json x.f_PositionMaintenanceRequest_PositionQty )
     ]
 ;;
 
 let positionreport_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_PositionReport_Instrument );
     ( "PosMaintRptID" , string_to_json x.f_PositionReport_PosMaintRptID );
     ( "PosReqID" , string_opt_to_json x.f_PositionReport_PosReqID );
     ( "PosReqType" , posreqtype_opt_to_json x.f_PositionReport_PosReqType );
@@ -1743,53 +1765,49 @@ let positionreport_to_json x : json =
     ( "ClearingBusinessDate" , localmktdate_to_json x.f_PositionReport_ClearingBusinessDate );
     ( "SettlSessID" , settlsessid_opt_to_json x.f_PositionReport_SettlSessID );
     ( "SettlSessSubID" , string_opt_to_json x.f_PositionReport_SettlSessSubID );
-    ( "Parties" , parties_to_json x.f_PositionReport_Parties );
     ( "Account" , string_to_json x.f_PositionReport_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_PositionReport_AcctIDSource );
     ( "AccountType" , accounttype_to_json x.f_PositionReport_AccountType );
-    ( "Instrument" , instrument_to_json x.f_PositionReport_Instrument );
     ( "Currency" , currency_opt_to_json x.f_PositionReport_Currency );
     ( "SettlPrice" , float_to_json x.f_PositionReport_SettlPrice );
     ( "SettlPriceType" , settlpricetype_to_json x.f_PositionReport_SettlPriceType );
     ( "PriorSettlPrice" , float_to_json x.f_PositionReport_PriorSettlPrice );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_PositionReport_InstrmtLegGrp );
-    ( "PosUndInstrmtGrp" , posundinstrmtgrp_to_json x.f_PositionReport_PosUndInstrmtGrp );
-    ( "PositionQty" , positionqty_to_json x.f_PositionReport_PositionQty );
-    ( "PositionAmountData" , positionamountdata_to_json x.f_PositionReport_PositionAmountData );
     ( "RegistStatus" , registstatus_opt_to_json x.f_PositionReport_RegistStatus );
     ( "DeliveryDate" , localmktdate_opt_to_json x.f_PositionReport_DeliveryDate );
     ( "Text" , string_opt_to_json x.f_PositionReport_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_PositionReport_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_PositionReport_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_PositionReport_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_PositionReport_Parties );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_PositionReport_InstrmtLegGrp );
+    ( "PosUndInstrmtGrp" , rg posundinstrmtgrp_to_json x.f_PositionReport_PosUndInstrmtGrp );
+    ( "PositionQty" , rg positionqty_to_json x.f_PositionReport_PositionQty );
+    ( "PositionAmountData" , rg positionamountdata_to_json x.f_PositionReport_PositionAmountData )
     ]
 ;;
 
 let quote_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_Quote_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_Quote_FinancingDetails );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_Quote_OrderQtyData );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_Quote_SpreadOrBenchmarkCurveData );
+    ( "YieldData" , yielddata_to_json x.f_Quote_YieldData );
     ( "QuoteReqID" , string_opt_to_json x.f_Quote_QuoteReqID );
     ( "QuoteID" , string_to_json x.f_Quote_QuoteID );
     ( "QuoteRespID" , string_opt_to_json x.f_Quote_QuoteRespID );
     ( "QuoteType" , quotetype_opt_to_json x.f_Quote_QuoteType );
-    ( "QuotQualGrp" , quotqualgrp_to_json x.f_Quote_QuotQualGrp );
     ( "QuoteResponseLevel" , quoteresponselevel_opt_to_json x.f_Quote_QuoteResponseLevel );
-    ( "Parties" , parties_to_json x.f_Quote_Parties );
     ( "TradingSessionID" , string_opt_to_json x.f_Quote_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_Quote_TradingSessionSubID );
-    ( "Instrument" , instrument_to_json x.f_Quote_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_Quote_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_Quote_UndInstrmtGrp );
     ( "Side" , side_opt_to_json x.f_Quote_Side );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_Quote_OrderQtyData );
     ( "SettlType" , settltype_opt_to_json x.f_Quote_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_Quote_SettlDate );
     ( "SettlDate2" , localmktdate_opt_to_json x.f_Quote_SettlDate2 );
     ( "OrderQty2" , float_opt_to_json x.f_Quote_OrderQty2 );
     ( "Currency" , currency_opt_to_json x.f_Quote_Currency );
-    ( "Stipulations" , stipulations_to_json x.f_Quote_Stipulations );
     ( "Account" , string_opt_to_json x.f_Quote_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_Quote_AcctIDSource );
     ( "AccountType" , accounttype_opt_to_json x.f_Quote_AccountType );
-    ( "LegQuotGrp" , legquotgrp_to_json x.f_Quote_LegQuotGrp );
     ( "BidPx" , float_opt_to_json x.f_Quote_BidPx );
     ( "OfferPx" , float_opt_to_json x.f_Quote_OfferPx );
     ( "MktBidPx" , float_opt_to_json x.f_Quote_MktBidPx );
@@ -1820,57 +1838,65 @@ let quote_to_json x : json =
     ( "ExDestination" , exchange_opt_to_json x.f_Quote_ExDestination );
     ( "OrderCapacity" , ordercapacity_opt_to_json x.f_Quote_OrderCapacity );
     ( "PriceType" , pricetype_opt_to_json x.f_Quote_PriceType );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_Quote_SpreadOrBenchmarkCurveData );
-    ( "YieldData" , yielddata_to_json x.f_Quote_YieldData );
     ( "Text" , string_opt_to_json x.f_Quote_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_Quote_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_Quote_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_Quote_EncodedText );
+    ( "QuotQualGrp" , rg quotqualgrp_to_json x.f_Quote_QuotQualGrp );
+    ( "Parties" , rg parties_to_json x.f_Quote_Parties );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_Quote_UndInstrmtGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_Quote_Stipulations );
+    ( "LegQuotGrp" , rg legquotgrp_to_json x.f_Quote_LegQuotGrp )
     ]
 ;;
 
 let quotecancel_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "QuoteReqID" , string_opt_to_json x.f_QuoteCancel_QuoteReqID );
     ( "QuoteID" , string_to_json x.f_QuoteCancel_QuoteID );
     ( "QuoteCancelType" , quotecanceltype_to_json x.f_QuoteCancel_QuoteCancelType );
     ( "QuoteResponseLevel" , quoteresponselevel_opt_to_json x.f_QuoteCancel_QuoteResponseLevel );
-    ( "Parties" , parties_to_json x.f_QuoteCancel_Parties );
     ( "Account" , string_opt_to_json x.f_QuoteCancel_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_QuoteCancel_AcctIDSource );
     ( "AccountType" , accounttype_opt_to_json x.f_QuoteCancel_AccountType );
     ( "TradingSessionID" , string_opt_to_json x.f_QuoteCancel_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_QuoteCancel_TradingSessionSubID );
-    ( "QuotCxlEntriesGrp" , quotcxlentriesgrp_to_json x.f_QuoteCancel_QuotCxlEntriesGrp )
+    ( "Parties" , rg parties_to_json x.f_QuoteCancel_Parties );
+    ( "QuotCxlEntriesGrp" , rg quotcxlentriesgrp_to_json x.f_QuoteCancel_QuotCxlEntriesGrp )
     ]
 ;;
 
 let quoterequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "QuoteReqID" , string_to_json x.f_QuoteRequest_QuoteReqID );
     ( "RFQReqID" , string_opt_to_json x.f_QuoteRequest_RFQReqID );
     ( "ClOrdID" , string_opt_to_json x.f_QuoteRequest_ClOrdID );
     ( "OrderCapacity" , ordercapacity_opt_to_json x.f_QuoteRequest_OrderCapacity );
-    ( "QuotReqGrp" , quotreqgrp_to_json x.f_QuoteRequest_QuotReqGrp );
     ( "Text" , string_opt_to_json x.f_QuoteRequest_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_QuoteRequest_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_QuoteRequest_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_QuoteRequest_EncodedText );
+    ( "QuotReqGrp" , rg quotreqgrp_to_json x.f_QuoteRequest_QuotReqGrp )
     ]
 ;;
 
 let quoterequestreject_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "QuoteReqID" , string_to_json x.f_QuoteRequestReject_QuoteReqID );
     ( "RFQReqID" , string_opt_to_json x.f_QuoteRequestReject_RFQReqID );
     ( "QuoteRequestRejectReason" , quoterequestrejectreason_to_json x.f_QuoteRequestReject_QuoteRequestRejectReason );
-    ( "QuotReqRjctGrp" , quotreqrjctgrp_to_json x.f_QuoteRequestReject_QuotReqRjctGrp );
     ( "Text" , string_opt_to_json x.f_QuoteRequestReject_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_QuoteRequestReject_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_QuoteRequestReject_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_QuoteRequestReject_EncodedText );
+    ( "QuotReqRjctGrp" , rg quotreqrjctgrp_to_json x.f_QuoteRequestReject_QuotReqRjctGrp )
     ]
 ;;
 
 let quoteresponse_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_QuoteResponse_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_QuoteResponse_FinancingDetails );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_QuoteResponse_OrderQtyData );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_QuoteResponse_SpreadOrBenchmarkCurveData );
+    ( "YieldData" , yielddata_to_json x.f_QuoteResponse_YieldData );
     ( "QuoteRespID" , string_to_json x.f_QuoteResponse_QuoteRespID );
     ( "QuoteID" , string_opt_to_json x.f_QuoteResponse_QuoteID );
     ( "QuoteRespType" , quoteresptype_to_json x.f_QuoteResponse_QuoteRespType );
@@ -1878,25 +1904,17 @@ let quoteresponse_to_json x : json =
     ( "OrderCapacity" , ordercapacity_opt_to_json x.f_QuoteResponse_OrderCapacity );
     ( "IOIID" , string_opt_to_json x.f_QuoteResponse_IOIID );
     ( "QuoteType" , quotetype_opt_to_json x.f_QuoteResponse_QuoteType );
-    ( "QuotQualGrp" , quotqualgrp_to_json x.f_QuoteResponse_QuotQualGrp );
-    ( "Parties" , parties_to_json x.f_QuoteResponse_Parties );
     ( "TradingSessionID" , string_opt_to_json x.f_QuoteResponse_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_QuoteResponse_TradingSessionSubID );
-    ( "Instrument" , instrument_to_json x.f_QuoteResponse_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_QuoteResponse_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_QuoteResponse_UndInstrmtGrp );
     ( "Side" , side_opt_to_json x.f_QuoteResponse_Side );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_QuoteResponse_OrderQtyData );
     ( "SettlType" , settltype_opt_to_json x.f_QuoteResponse_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_QuoteResponse_SettlDate );
     ( "SettlDate2" , localmktdate_opt_to_json x.f_QuoteResponse_SettlDate2 );
     ( "OrderQty2" , float_opt_to_json x.f_QuoteResponse_OrderQty2 );
     ( "Currency" , currency_opt_to_json x.f_QuoteResponse_Currency );
-    ( "Stipulations" , stipulations_to_json x.f_QuoteResponse_Stipulations );
     ( "Account" , string_opt_to_json x.f_QuoteResponse_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_QuoteResponse_AcctIDSource );
     ( "AccountType" , accounttype_opt_to_json x.f_QuoteResponse_AccountType );
-    ( "LegQuotGrp" , legquotgrp_to_json x.f_QuoteResponse_LegQuotGrp );
     ( "BidPx" , float_opt_to_json x.f_QuoteResponse_BidPx );
     ( "OfferPx" , float_opt_to_json x.f_QuoteResponse_OfferPx );
     ( "MktBidPx" , float_opt_to_json x.f_QuoteResponse_MktBidPx );
@@ -1930,42 +1948,40 @@ let quoteresponse_to_json x : json =
     ( "EncodedText" , string_opt_to_json x.f_QuoteResponse_EncodedText );
     ( "Price" , float_opt_to_json x.f_QuoteResponse_Price );
     ( "PriceType" , pricetype_opt_to_json x.f_QuoteResponse_PriceType );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_QuoteResponse_SpreadOrBenchmarkCurveData );
-    ( "YieldData" , yielddata_to_json x.f_QuoteResponse_YieldData )
+    ( "QuotQualGrp" , rg quotqualgrp_to_json x.f_QuoteResponse_QuotQualGrp );
+    ( "Parties" , rg parties_to_json x.f_QuoteResponse_Parties );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_QuoteResponse_UndInstrmtGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_QuoteResponse_Stipulations );
+    ( "LegQuotGrp" , rg legquotgrp_to_json x.f_QuoteResponse_LegQuotGrp )
     ]
 ;;
 
 let quotestatusreport_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_QuoteStatusReport_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_QuoteStatusReport_FinancingDetails );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_QuoteStatusReport_OrderQtyData );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_QuoteStatusReport_SpreadOrBenchmarkCurveData );
+    ( "YieldData" , yielddata_to_json x.f_QuoteStatusReport_YieldData );
     ( "QuoteStatusReqID" , string_opt_to_json x.f_QuoteStatusReport_QuoteStatusReqID );
     ( "QuoteReqID" , string_opt_to_json x.f_QuoteStatusReport_QuoteReqID );
     ( "QuoteID" , string_to_json x.f_QuoteStatusReport_QuoteID );
     ( "QuoteRespID" , string_opt_to_json x.f_QuoteStatusReport_QuoteRespID );
     ( "QuoteType" , quotetype_opt_to_json x.f_QuoteStatusReport_QuoteType );
-    ( "Parties" , parties_to_json x.f_QuoteStatusReport_Parties );
     ( "TradingSessionID" , string_opt_to_json x.f_QuoteStatusReport_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_QuoteStatusReport_TradingSessionSubID );
-    ( "Instrument" , instrument_to_json x.f_QuoteStatusReport_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_QuoteStatusReport_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_QuoteStatusReport_UndInstrmtGrp );
     ( "Side" , side_opt_to_json x.f_QuoteStatusReport_Side );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_QuoteStatusReport_OrderQtyData );
     ( "SettlType" , settltype_opt_to_json x.f_QuoteStatusReport_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_QuoteStatusReport_SettlDate );
     ( "SettlDate2" , localmktdate_opt_to_json x.f_QuoteStatusReport_SettlDate2 );
     ( "OrderQty2" , float_opt_to_json x.f_QuoteStatusReport_OrderQty2 );
     ( "Currency" , currency_opt_to_json x.f_QuoteStatusReport_Currency );
-    ( "Stipulations" , stipulations_to_json x.f_QuoteStatusReport_Stipulations );
     ( "Account" , string_opt_to_json x.f_QuoteStatusReport_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_QuoteStatusReport_AcctIDSource );
     ( "AccountType" , accounttype_opt_to_json x.f_QuoteStatusReport_AccountType );
-    ( "LegQuotStatGrp" , legquotstatgrp_to_json x.f_QuoteStatusReport_LegQuotStatGrp );
-    ( "QuotQualGrp" , quotqualgrp_to_json x.f_QuoteStatusReport_QuotQualGrp );
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_QuoteStatusReport_ExpireTime );
     ( "Price" , float_opt_to_json x.f_QuoteStatusReport_Price );
     ( "PriceType" , pricetype_opt_to_json x.f_QuoteStatusReport_PriceType );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_QuoteStatusReport_SpreadOrBenchmarkCurveData );
-    ( "YieldData" , yielddata_to_json x.f_QuoteStatusReport_YieldData );
     ( "BidPx" , float_opt_to_json x.f_QuoteStatusReport_BidPx );
     ( "OfferPx" , float_opt_to_json x.f_QuoteStatusReport_OfferPx );
     ( "MktBidPx" , float_opt_to_json x.f_QuoteStatusReport_MktBidPx );
@@ -1997,196 +2013,199 @@ let quotestatusreport_to_json x : json =
     ( "QuoteStatus" , quotestatus_opt_to_json x.f_QuoteStatusReport_QuoteStatus );
     ( "Text" , string_opt_to_json x.f_QuoteStatusReport_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_QuoteStatusReport_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_QuoteStatusReport_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_QuoteStatusReport_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_QuoteStatusReport_Parties );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_QuoteStatusReport_UndInstrmtGrp );
+    ( "Stipulations" , rg stipulations_to_json x.f_QuoteStatusReport_Stipulations );
+    ( "LegQuotStatGrp" , rg legquotstatgrp_to_json x.f_QuoteStatusReport_LegQuotStatGrp );
+    ( "QuotQualGrp" , rg quotqualgrp_to_json x.f_QuoteStatusReport_QuotQualGrp )
     ]
 ;;
 
 let quotestatusrequest_to_json x : json =
-    assoc_filter_nulls [
-    ( "QuoteStatusReqID" , string_opt_to_json x.f_QuoteStatusRequest_QuoteStatusReqID );
-    ( "QuoteID" , string_opt_to_json x.f_QuoteStatusRequest_QuoteID );
+     assoc_filter_nulls [
     ( "Instrument" , instrument_to_json x.f_QuoteStatusRequest_Instrument );
     ( "FinancingDetails" , financingdetails_to_json x.f_QuoteStatusRequest_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_QuoteStatusRequest_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_QuoteStatusRequest_InstrmtLegGrp );
-    ( "Parties" , parties_to_json x.f_QuoteStatusRequest_Parties );
+    ( "QuoteStatusReqID" , string_opt_to_json x.f_QuoteStatusRequest_QuoteStatusReqID );
+    ( "QuoteID" , string_opt_to_json x.f_QuoteStatusRequest_QuoteID );
     ( "Account" , string_opt_to_json x.f_QuoteStatusRequest_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_QuoteStatusRequest_AcctIDSource );
     ( "AccountType" , accounttype_opt_to_json x.f_QuoteStatusRequest_AccountType );
     ( "TradingSessionID" , string_opt_to_json x.f_QuoteStatusRequest_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_QuoteStatusRequest_TradingSessionSubID );
-    ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_QuoteStatusRequest_SubscriptionRequestType )
+    ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_QuoteStatusRequest_SubscriptionRequestType );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_QuoteStatusRequest_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_QuoteStatusRequest_InstrmtLegGrp );
+    ( "Parties" , rg parties_to_json x.f_QuoteStatusRequest_Parties )
     ]
 ;;
 
 let rfqrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "RFQReqID" , string_to_json x.f_RFQRequest_RFQReqID );
-    ( "RFQReqGrp" , rfqreqgrp_to_json x.f_RFQRequest_RFQReqGrp );
-    ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_RFQRequest_SubscriptionRequestType )
+    ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_RFQRequest_SubscriptionRequestType );
+    ( "RFQReqGrp" , rg rfqreqgrp_to_json x.f_RFQRequest_RFQReqGrp )
     ]
 ;;
 
 let registrationinstructions_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "RegistID" , string_to_json x.f_RegistrationInstructions_RegistID );
     ( "RegistTransType" , registtranstype_to_json x.f_RegistrationInstructions_RegistTransType );
     ( "RegistRefID" , string_to_json x.f_RegistrationInstructions_RegistRefID );
     ( "ClOrdID" , string_opt_to_json x.f_RegistrationInstructions_ClOrdID );
-    ( "Parties" , parties_to_json x.f_RegistrationInstructions_Parties );
     ( "Account" , string_opt_to_json x.f_RegistrationInstructions_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_RegistrationInstructions_AcctIDSource );
     ( "RegistAcctType" , string_opt_to_json x.f_RegistrationInstructions_RegistAcctType );
     ( "TaxAdvantageType" , taxadvantagetype_opt_to_json x.f_RegistrationInstructions_TaxAdvantageType );
     ( "OwnershipType" , ownershiptype_opt_to_json x.f_RegistrationInstructions_OwnershipType );
-    ( "RgstDtlsGrp" , rgstdtlsgrp_to_json x.f_RegistrationInstructions_RgstDtlsGrp );
-    ( "RgstDistInstGrp" , rgstdistinstgrp_to_json x.f_RegistrationInstructions_RgstDistInstGrp )
+    ( "Parties" , rg parties_to_json x.f_RegistrationInstructions_Parties );
+    ( "RgstDtlsGrp" , rg rgstdtlsgrp_to_json x.f_RegistrationInstructions_RgstDtlsGrp );
+    ( "RgstDistInstGrp" , rg rgstdistinstgrp_to_json x.f_RegistrationInstructions_RgstDistInstGrp )
     ]
 ;;
 
 let registrationinstructionsresponse_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "RegistID" , string_to_json x.f_RegistrationInstructionsResponse_RegistID );
     ( "RegistTransType" , registtranstype_to_json x.f_RegistrationInstructionsResponse_RegistTransType );
     ( "RegistRefID" , string_to_json x.f_RegistrationInstructionsResponse_RegistRefID );
     ( "ClOrdID" , string_opt_to_json x.f_RegistrationInstructionsResponse_ClOrdID );
-    ( "Parties" , parties_to_json x.f_RegistrationInstructionsResponse_Parties );
     ( "Account" , string_opt_to_json x.f_RegistrationInstructionsResponse_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_RegistrationInstructionsResponse_AcctIDSource );
     ( "RegistStatus" , registstatus_to_json x.f_RegistrationInstructionsResponse_RegistStatus );
     ( "RegistRejReasonCode" , registrejreasoncode_opt_to_json x.f_RegistrationInstructionsResponse_RegistRejReasonCode );
-    ( "RegistRejReasonText" , string_opt_to_json x.f_RegistrationInstructionsResponse_RegistRejReasonText )
+    ( "RegistRejReasonText" , string_opt_to_json x.f_RegistrationInstructionsResponse_RegistRejReasonText );
+    ( "Parties" , rg parties_to_json x.f_RegistrationInstructionsResponse_Parties )
     ]
 ;;
 
 let requestforpositions_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_RequestForPositions_Instrument );
     ( "PosReqID" , string_to_json x.f_RequestForPositions_PosReqID );
     ( "PosReqType" , posreqtype_to_json x.f_RequestForPositions_PosReqType );
     ( "MatchStatus" , matchstatus_opt_to_json x.f_RequestForPositions_MatchStatus );
     ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_RequestForPositions_SubscriptionRequestType );
-    ( "Parties" , parties_to_json x.f_RequestForPositions_Parties );
     ( "Account" , string_to_json x.f_RequestForPositions_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_RequestForPositions_AcctIDSource );
     ( "AccountType" , accounttype_to_json x.f_RequestForPositions_AccountType );
-    ( "Instrument" , instrument_to_json x.f_RequestForPositions_Instrument );
     ( "Currency" , currency_opt_to_json x.f_RequestForPositions_Currency );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_RequestForPositions_InstrmtLegGrp );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_RequestForPositions_UndInstrmtGrp );
     ( "ClearingBusinessDate" , localmktdate_to_json x.f_RequestForPositions_ClearingBusinessDate );
     ( "SettlSessID" , settlsessid_opt_to_json x.f_RequestForPositions_SettlSessID );
     ( "SettlSessSubID" , string_opt_to_json x.f_RequestForPositions_SettlSessSubID );
-    ( "TrdgSesGrp" , trdgsesgrp_to_json x.f_RequestForPositions_TrdgSesGrp );
     ( "TransactTime" , utctimestamp_to_json x.f_RequestForPositions_TransactTime );
     ( "ResponseTransportType" , responsetransporttype_opt_to_json x.f_RequestForPositions_ResponseTransportType );
     ( "ResponseDestination" , string_opt_to_json x.f_RequestForPositions_ResponseDestination );
     ( "Text" , string_opt_to_json x.f_RequestForPositions_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_RequestForPositions_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_RequestForPositions_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_RequestForPositions_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_RequestForPositions_Parties );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_RequestForPositions_InstrmtLegGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_RequestForPositions_UndInstrmtGrp );
+    ( "TrdgSesGrp" , rg trdgsesgrp_to_json x.f_RequestForPositions_TrdgSesGrp )
     ]
 ;;
 
 let requestforpositionsack_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_RequestForPositionsAck_Instrument );
     ( "PosMaintRptID" , string_to_json x.f_RequestForPositionsAck_PosMaintRptID );
     ( "PosReqID" , string_opt_to_json x.f_RequestForPositionsAck_PosReqID );
     ( "TotalNumPosReports" , int_opt_to_json x.f_RequestForPositionsAck_TotalNumPosReports );
     ( "UnsolicitedIndicator" , unsolicitedindicator_opt_to_json x.f_RequestForPositionsAck_UnsolicitedIndicator );
     ( "PosReqResult" , posreqresult_to_json x.f_RequestForPositionsAck_PosReqResult );
     ( "PosReqStatus" , posreqstatus_to_json x.f_RequestForPositionsAck_PosReqStatus );
-    ( "Parties" , parties_to_json x.f_RequestForPositionsAck_Parties );
     ( "Account" , string_to_json x.f_RequestForPositionsAck_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_RequestForPositionsAck_AcctIDSource );
     ( "AccountType" , accounttype_to_json x.f_RequestForPositionsAck_AccountType );
-    ( "Instrument" , instrument_to_json x.f_RequestForPositionsAck_Instrument );
     ( "Currency" , currency_opt_to_json x.f_RequestForPositionsAck_Currency );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_RequestForPositionsAck_InstrmtLegGrp );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_RequestForPositionsAck_UndInstrmtGrp );
     ( "ResponseTransportType" , responsetransporttype_opt_to_json x.f_RequestForPositionsAck_ResponseTransportType );
     ( "ResponseDestination" , string_opt_to_json x.f_RequestForPositionsAck_ResponseDestination );
     ( "Text" , string_opt_to_json x.f_RequestForPositionsAck_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_RequestForPositionsAck_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_RequestForPositionsAck_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_RequestForPositionsAck_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_RequestForPositionsAck_Parties );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_RequestForPositionsAck_InstrmtLegGrp );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_RequestForPositionsAck_UndInstrmtGrp )
     ]
 ;;
 
 let securitydefinition_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_SecurityDefinition_Instrument );
+    ( "InstrumentExtension" , instrumentextension_to_json x.f_SecurityDefinition_InstrumentExtension );
     ( "SecurityReqID" , string_to_json x.f_SecurityDefinition_SecurityReqID );
     ( "SecurityResponseID" , string_to_json x.f_SecurityDefinition_SecurityResponseID );
     ( "SecurityResponseType" , securityresponsetype_to_json x.f_SecurityDefinition_SecurityResponseType );
-    ( "Instrument" , instrument_to_json x.f_SecurityDefinition_Instrument );
-    ( "InstrumentExtension" , instrumentextension_to_json x.f_SecurityDefinition_InstrumentExtension );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_SecurityDefinition_UndInstrmtGrp );
     ( "Currency" , currency_opt_to_json x.f_SecurityDefinition_Currency );
     ( "TradingSessionID" , string_opt_to_json x.f_SecurityDefinition_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_SecurityDefinition_TradingSessionSubID );
     ( "Text" , string_opt_to_json x.f_SecurityDefinition_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_SecurityDefinition_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_SecurityDefinition_EncodedText );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_SecurityDefinition_InstrmtLegGrp );
     ( "ExpirationCycle" , expirationcycle_opt_to_json x.f_SecurityDefinition_ExpirationCycle );
     ( "RoundLot" , float_opt_to_json x.f_SecurityDefinition_RoundLot );
-    ( "MinTradeVol" , float_opt_to_json x.f_SecurityDefinition_MinTradeVol )
+    ( "MinTradeVol" , float_opt_to_json x.f_SecurityDefinition_MinTradeVol );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_SecurityDefinition_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_SecurityDefinition_InstrmtLegGrp )
     ]
 ;;
 
 let securitydefinitionrequest_to_json x : json =
-    assoc_filter_nulls [
-    ( "SecurityReqID" , string_to_json x.f_SecurityDefinitionRequest_SecurityReqID );
-    ( "SecurityRequestType" , securityrequesttype_to_json x.f_SecurityDefinitionRequest_SecurityRequestType );
+     assoc_filter_nulls [
     ( "Instrument" , instrument_to_json x.f_SecurityDefinitionRequest_Instrument );
     ( "InstrumentExtension" , instrumentextension_to_json x.f_SecurityDefinitionRequest_InstrumentExtension );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_SecurityDefinitionRequest_UndInstrmtGrp );
+    ( "SecurityReqID" , string_to_json x.f_SecurityDefinitionRequest_SecurityReqID );
+    ( "SecurityRequestType" , securityrequesttype_to_json x.f_SecurityDefinitionRequest_SecurityRequestType );
     ( "Currency" , currency_opt_to_json x.f_SecurityDefinitionRequest_Currency );
     ( "Text" , string_opt_to_json x.f_SecurityDefinitionRequest_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_SecurityDefinitionRequest_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_SecurityDefinitionRequest_EncodedText );
     ( "TradingSessionID" , string_opt_to_json x.f_SecurityDefinitionRequest_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_SecurityDefinitionRequest_TradingSessionSubID );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_SecurityDefinitionRequest_InstrmtLegGrp );
     ( "ExpirationCycle" , expirationcycle_opt_to_json x.f_SecurityDefinitionRequest_ExpirationCycle );
-    ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_SecurityDefinitionRequest_SubscriptionRequestType )
+    ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_SecurityDefinitionRequest_SubscriptionRequestType );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_SecurityDefinitionRequest_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_SecurityDefinitionRequest_InstrmtLegGrp )
     ]
 ;;
 
 let securitylist_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "SecurityReqID" , string_to_json x.f_SecurityList_SecurityReqID );
     ( "SecurityResponseID" , string_to_json x.f_SecurityList_SecurityResponseID );
     ( "SecurityRequestResult" , securityrequestresult_to_json x.f_SecurityList_SecurityRequestResult );
     ( "TotNoRelatedSym" , int_opt_to_json x.f_SecurityList_TotNoRelatedSym );
     ( "LastFragment" , lastfragment_opt_to_json x.f_SecurityList_LastFragment );
-    ( "SecListGrp" , seclistgrp_to_json x.f_SecurityList_SecListGrp )
+    ( "SecListGrp" , rg seclistgrp_to_json x.f_SecurityList_SecListGrp )
     ]
 ;;
 
 let securitylistrequest_to_json x : json =
-    assoc_filter_nulls [
-    ( "SecurityReqID" , string_to_json x.f_SecurityListRequest_SecurityReqID );
-    ( "SecurityListRequestType" , securitylistrequesttype_to_json x.f_SecurityListRequest_SecurityListRequestType );
+     assoc_filter_nulls [
     ( "Instrument" , instrument_to_json x.f_SecurityListRequest_Instrument );
     ( "InstrumentExtension" , instrumentextension_to_json x.f_SecurityListRequest_InstrumentExtension );
     ( "FinancingDetails" , financingdetails_to_json x.f_SecurityListRequest_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_SecurityListRequest_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_SecurityListRequest_InstrmtLegGrp );
+    ( "SecurityReqID" , string_to_json x.f_SecurityListRequest_SecurityReqID );
+    ( "SecurityListRequestType" , securitylistrequesttype_to_json x.f_SecurityListRequest_SecurityListRequestType );
     ( "Currency" , currency_opt_to_json x.f_SecurityListRequest_Currency );
     ( "Text" , string_opt_to_json x.f_SecurityListRequest_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_SecurityListRequest_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_SecurityListRequest_EncodedText );
     ( "TradingSessionID" , string_opt_to_json x.f_SecurityListRequest_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_SecurityListRequest_TradingSessionSubID );
-    ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_SecurityListRequest_SubscriptionRequestType )
+    ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_SecurityListRequest_SubscriptionRequestType );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_SecurityListRequest_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_SecurityListRequest_InstrmtLegGrp )
     ]
 ;;
 
 let securitystatus_to_json x : json =
-    assoc_filter_nulls [
-    ( "SecurityStatusReqID" , string_opt_to_json x.f_SecurityStatus_SecurityStatusReqID );
+     assoc_filter_nulls [
     ( "Instrument" , instrument_to_json x.f_SecurityStatus_Instrument );
     ( "InstrumentExtension" , instrumentextension_to_json x.f_SecurityStatus_InstrumentExtension );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_SecurityStatus_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_SecurityStatus_InstrmtLegGrp );
+    ( "SecurityStatusReqID" , string_opt_to_json x.f_SecurityStatus_SecurityStatusReqID );
     ( "Currency" , currency_opt_to_json x.f_SecurityStatus_Currency );
     ( "TradingSessionID" , string_opt_to_json x.f_SecurityStatus_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_SecurityStatus_TradingSessionSubID );
@@ -2206,26 +2225,28 @@ let securitystatus_to_json x : json =
     ( "Adjustment" , adjustment_opt_to_json x.f_SecurityStatus_Adjustment );
     ( "Text" , string_opt_to_json x.f_SecurityStatus_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_SecurityStatus_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_SecurityStatus_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_SecurityStatus_EncodedText );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_SecurityStatus_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_SecurityStatus_InstrmtLegGrp )
     ]
 ;;
 
 let securitystatusrequest_to_json x : json =
-    assoc_filter_nulls [
-    ( "SecurityStatusReqID" , string_to_json x.f_SecurityStatusRequest_SecurityStatusReqID );
+     assoc_filter_nulls [
     ( "Instrument" , instrument_to_json x.f_SecurityStatusRequest_Instrument );
     ( "InstrumentExtension" , instrumentextension_to_json x.f_SecurityStatusRequest_InstrumentExtension );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_SecurityStatusRequest_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_SecurityStatusRequest_InstrmtLegGrp );
+    ( "SecurityStatusReqID" , string_to_json x.f_SecurityStatusRequest_SecurityStatusReqID );
     ( "Currency" , currency_opt_to_json x.f_SecurityStatusRequest_Currency );
     ( "SubscriptionRequestType" , subscriptionrequesttype_to_json x.f_SecurityStatusRequest_SubscriptionRequestType );
     ( "TradingSessionID" , string_opt_to_json x.f_SecurityStatusRequest_TradingSessionID );
-    ( "TradingSessionSubID" , string_opt_to_json x.f_SecurityStatusRequest_TradingSessionSubID )
+    ( "TradingSessionSubID" , string_opt_to_json x.f_SecurityStatusRequest_TradingSessionSubID );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_SecurityStatusRequest_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_SecurityStatusRequest_InstrmtLegGrp )
     ]
 ;;
 
 let securitytyperequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "SecurityReqID" , string_to_json x.f_SecurityTypeRequest_SecurityReqID );
     ( "Text" , string_opt_to_json x.f_SecurityTypeRequest_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_SecurityTypeRequest_EncodedTextLen );
@@ -2239,24 +2260,44 @@ let securitytyperequest_to_json x : json =
 ;;
 
 let securitytypes_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "SecurityReqID" , string_to_json x.f_SecurityTypes_SecurityReqID );
     ( "SecurityResponseID" , string_to_json x.f_SecurityTypes_SecurityResponseID );
     ( "SecurityResponseType" , securityresponsetype_to_json x.f_SecurityTypes_SecurityResponseType );
     ( "TotNoSecurityTypes" , int_opt_to_json x.f_SecurityTypes_TotNoSecurityTypes );
     ( "LastFragment" , lastfragment_opt_to_json x.f_SecurityTypes_LastFragment );
-    ( "SecTypesGrp" , sectypesgrp_to_json x.f_SecurityTypes_SecTypesGrp );
     ( "Text" , string_opt_to_json x.f_SecurityTypes_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_SecurityTypes_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_SecurityTypes_EncodedText );
     ( "TradingSessionID" , string_opt_to_json x.f_SecurityTypes_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_SecurityTypes_TradingSessionSubID );
-    ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_SecurityTypes_SubscriptionRequestType )
+    ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_SecurityTypes_SubscriptionRequestType );
+    ( "SecTypesGrp" , rg sectypesgrp_to_json x.f_SecurityTypes_SecTypesGrp )
+    ]
+;;
+
+let settlementinstructionrequest_to_json x : json =
+     assoc_filter_nulls [
+    ( "SettlInstReqID" , string_to_json x.f_SettlementInstructionRequest_SettlInstReqID );
+    ( "TransactTime" , utctimestamp_to_json x.f_SettlementInstructionRequest_TransactTime );
+    ( "AllocAccount" , string_opt_to_json x.f_SettlementInstructionRequest_AllocAccount );
+    ( "AllocAcctIDSource" , int_opt_to_json x.f_SettlementInstructionRequest_AllocAcctIDSource );
+    ( "Side" , side_opt_to_json x.f_SettlementInstructionRequest_Side );
+    ( "Product" , product_opt_to_json x.f_SettlementInstructionRequest_Product );
+    ( "SecurityType" , securitytype_opt_to_json x.f_SettlementInstructionRequest_SecurityType );
+    ( "CFICode" , string_opt_to_json x.f_SettlementInstructionRequest_CFICode );
+    ( "EffectiveTime" , utctimestamp_opt_to_json x.f_SettlementInstructionRequest_EffectiveTime );
+    ( "ExpireTime" , utctimestamp_opt_to_json x.f_SettlementInstructionRequest_ExpireTime );
+    ( "LastUpdateTime" , utctimestamp_opt_to_json x.f_SettlementInstructionRequest_LastUpdateTime );
+    ( "StandInstDbType" , standinstdbtype_opt_to_json x.f_SettlementInstructionRequest_StandInstDbType );
+    ( "StandInstDbName" , string_opt_to_json x.f_SettlementInstructionRequest_StandInstDbName );
+    ( "StandInstDbID" , string_opt_to_json x.f_SettlementInstructionRequest_StandInstDbID );
+    ( "Parties" , rg parties_to_json x.f_SettlementInstructionRequest_Parties )
     ]
 ;;
 
 let settlementinstructions_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "SettlInstMsgID" , string_to_json x.f_SettlementInstructions_SettlInstMsgID );
     ( "SettlInstReqID" , string_opt_to_json x.f_SettlementInstructions_SettlInstReqID );
     ( "SettlInstMode" , settlinstmode_to_json x.f_SettlementInstructions_SettlInstMode );
@@ -2266,12 +2307,17 @@ let settlementinstructions_to_json x : json =
     ( "EncodedText" , string_opt_to_json x.f_SettlementInstructions_EncodedText );
     ( "ClOrdID" , string_opt_to_json x.f_SettlementInstructions_ClOrdID );
     ( "TransactTime" , utctimestamp_to_json x.f_SettlementInstructions_TransactTime );
-    ( "SettlInstGrp" , settlinstgrp_to_json x.f_SettlementInstructions_SettlInstGrp )
+    ( "SettlInstGrp" , rg settlinstgrp_to_json x.f_SettlementInstructions_SettlInstGrp )
     ]
 ;;
 
 let tradecapturereport_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_TradeCaptureReport_Instrument );
+    ( "FinancingDetails" , financingdetails_to_json x.f_TradeCaptureReport_FinancingDetails );
+    ( "OrderQtyData" , orderqtydata_to_json x.f_TradeCaptureReport_OrderQtyData );
+    ( "YieldData" , yielddata_to_json x.f_TradeCaptureReport_YieldData );
+    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_TradeCaptureReport_SpreadOrBenchmarkCurveData );
     ( "TradeReportID" , string_to_json x.f_TradeCaptureReport_TradeReportID );
     ( "TradeReportTransType" , int_opt_to_json x.f_TradeCaptureReport_TradeReportTransType );
     ( "TradeReportType" , tradereporttype_opt_to_json x.f_TradeCaptureReport_TradeReportType );
@@ -2296,12 +2342,7 @@ let tradecapturereport_to_json x : json =
     ( "ExecRestatementReason" , execrestatementreason_opt_to_json x.f_TradeCaptureReport_ExecRestatementReason );
     ( "PreviouslyReported" , previouslyreported_to_json x.f_TradeCaptureReport_PreviouslyReported );
     ( "PriceType" , pricetype_opt_to_json x.f_TradeCaptureReport_PriceType );
-    ( "Instrument" , instrument_to_json x.f_TradeCaptureReport_Instrument );
-    ( "FinancingDetails" , financingdetails_to_json x.f_TradeCaptureReport_FinancingDetails );
-    ( "OrderQtyData" , orderqtydata_to_json x.f_TradeCaptureReport_OrderQtyData );
     ( "QtyType" , qtytype_opt_to_json x.f_TradeCaptureReport_QtyType );
-    ( "YieldData" , yielddata_to_json x.f_TradeCaptureReport_YieldData );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_TradeCaptureReport_UndInstrmtGrp );
     ( "UnderlyingTradingSessionID" , string_opt_to_json x.f_TradeCaptureReport_UnderlyingTradingSessionID );
     ( "UnderlyingTradingSessionSubID" , string_opt_to_json x.f_TradeCaptureReport_UnderlyingTradingSessionSubID );
     ( "LastQty" , float_to_json x.f_TradeCaptureReport_LastQty );
@@ -2313,27 +2354,28 @@ let tradecapturereport_to_json x : json =
     ( "TradeDate" , localmktdate_to_json x.f_TradeCaptureReport_TradeDate );
     ( "ClearingBusinessDate" , localmktdate_opt_to_json x.f_TradeCaptureReport_ClearingBusinessDate );
     ( "AvgPx" , float_opt_to_json x.f_TradeCaptureReport_AvgPx );
-    ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_TradeCaptureReport_SpreadOrBenchmarkCurveData );
     ( "AvgPxIndicator" , avgpxindicator_opt_to_json x.f_TradeCaptureReport_AvgPxIndicator );
-    ( "PositionAmountData" , positionamountdata_to_json x.f_TradeCaptureReport_PositionAmountData );
     ( "MultiLegReportingType" , multilegreportingtype_opt_to_json x.f_TradeCaptureReport_MultiLegReportingType );
     ( "TradeLegRefID" , string_opt_to_json x.f_TradeCaptureReport_TradeLegRefID );
-    ( "TrdInstrmtLegGrp" , trdinstrmtleggrp_to_json x.f_TradeCaptureReport_TrdInstrmtLegGrp );
     ( "TransactTime" , utctimestamp_to_json x.f_TradeCaptureReport_TransactTime );
-    ( "TrdRegTimestamps" , trdregtimestamps_to_json x.f_TradeCaptureReport_TrdRegTimestamps );
     ( "SettlType" , settltype_opt_to_json x.f_TradeCaptureReport_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_TradeCaptureReport_SettlDate );
     ( "MatchStatus" , matchstatus_opt_to_json x.f_TradeCaptureReport_MatchStatus );
     ( "MatchType" , matchtype_opt_to_json x.f_TradeCaptureReport_MatchType );
-    ( "TrdCapRptSideGrp" , trdcaprptsidegrp_to_json x.f_TradeCaptureReport_TrdCapRptSideGrp );
     ( "CopyMsgIndicator" , bool_opt_to_json x.f_TradeCaptureReport_CopyMsgIndicator );
     ( "PublishTrdIndicator" , publishtrdindicator_opt_to_json x.f_TradeCaptureReport_PublishTrdIndicator );
-    ( "ShortSaleReason" , shortsalereason_opt_to_json x.f_TradeCaptureReport_ShortSaleReason )
+    ( "ShortSaleReason" , shortsalereason_opt_to_json x.f_TradeCaptureReport_ShortSaleReason );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_TradeCaptureReport_UndInstrmtGrp );
+    ( "PositionAmountData" , rg positionamountdata_to_json x.f_TradeCaptureReport_PositionAmountData );
+    ( "TrdInstrmtLegGrp" , rg trdinstrmtleggrp_to_json x.f_TradeCaptureReport_TrdInstrmtLegGrp );
+    ( "TrdRegTimestamps" , rg trdregtimestamps_to_json x.f_TradeCaptureReport_TrdRegTimestamps );
+    ( "TrdCapRptSideGrp" , rg trdcaprptsidegrp_to_json x.f_TradeCaptureReport_TrdCapRptSideGrp )
     ]
 ;;
 
 let tradecapturereportack_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_TradeCaptureReportAck_Instrument );
     ( "TradeReportID" , string_to_json x.f_TradeCaptureReportAck_TradeReportID );
     ( "TradeReportTransType" , int_opt_to_json x.f_TradeCaptureReportAck_TradeReportTransType );
     ( "TradeReportType" , tradereporttype_opt_to_json x.f_TradeCaptureReportAck_TradeReportType );
@@ -2352,15 +2394,12 @@ let tradecapturereportack_to_json x : json =
     ( "TrdMatchID" , string_opt_to_json x.f_TradeCaptureReportAck_TrdMatchID );
     ( "ExecID" , string_opt_to_json x.f_TradeCaptureReportAck_ExecID );
     ( "SecondaryExecID" , string_opt_to_json x.f_TradeCaptureReportAck_SecondaryExecID );
-    ( "Instrument" , instrument_to_json x.f_TradeCaptureReportAck_Instrument );
     ( "TransactTime" , utctimestamp_opt_to_json x.f_TradeCaptureReportAck_TransactTime );
-    ( "TrdRegTimestamps" , trdregtimestamps_to_json x.f_TradeCaptureReportAck_TrdRegTimestamps );
     ( "ResponseTransportType" , responsetransporttype_opt_to_json x.f_TradeCaptureReportAck_ResponseTransportType );
     ( "ResponseDestination" , string_opt_to_json x.f_TradeCaptureReportAck_ResponseDestination );
     ( "Text" , string_opt_to_json x.f_TradeCaptureReportAck_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_TradeCaptureReportAck_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_TradeCaptureReportAck_EncodedText );
-    ( "TrdInstrmtLegGrp" , trdinstrmtleggrp_to_json x.f_TradeCaptureReportAck_TrdInstrmtLegGrp );
     ( "ClearingFeeIndicator" , clearingfeeindicator_opt_to_json x.f_TradeCaptureReportAck_ClearingFeeIndicator );
     ( "OrderCapacity" , ordercapacity_opt_to_json x.f_TradeCaptureReportAck_OrderCapacity );
     ( "OrderRestrictions" , orderrestrictions_opt_to_json x.f_TradeCaptureReportAck_OrderRestrictions );
@@ -2370,12 +2409,17 @@ let tradecapturereportack_to_json x : json =
     ( "AccountType" , accounttype_opt_to_json x.f_TradeCaptureReportAck_AccountType );
     ( "PositionEffect" , positioneffect_opt_to_json x.f_TradeCaptureReportAck_PositionEffect );
     ( "PreallocMethod" , preallocmethod_opt_to_json x.f_TradeCaptureReportAck_PreallocMethod );
-    ( "TrdAllocGrp" , trdallocgrp_to_json x.f_TradeCaptureReportAck_TrdAllocGrp )
+    ( "TrdRegTimestamps" , rg trdregtimestamps_to_json x.f_TradeCaptureReportAck_TrdRegTimestamps );
+    ( "TrdInstrmtLegGrp" , rg trdinstrmtleggrp_to_json x.f_TradeCaptureReportAck_TrdInstrmtLegGrp );
+    ( "TrdAllocGrp" , rg trdallocgrp_to_json x.f_TradeCaptureReportAck_TrdAllocGrp )
     ]
 ;;
 
 let tradecapturereportrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_TradeCaptureReportRequest_Instrument );
+    ( "InstrumentExtension" , instrumentextension_to_json x.f_TradeCaptureReportRequest_InstrumentExtension );
+    ( "FinancingDetails" , financingdetails_to_json x.f_TradeCaptureReportRequest_FinancingDetails );
     ( "TradeRequestID" , string_to_json x.f_TradeCaptureReportRequest_TradeRequestID );
     ( "TradeRequestType" , traderequesttype_to_json x.f_TradeCaptureReportRequest_TradeRequestType );
     ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_TradeCaptureReportRequest_SubscriptionRequestType );
@@ -2392,13 +2436,6 @@ let tradecapturereportrequest_to_json x : json =
     ( "SecondaryTrdType" , int_opt_to_json x.f_TradeCaptureReportRequest_SecondaryTrdType );
     ( "TradeLinkID" , string_opt_to_json x.f_TradeCaptureReportRequest_TradeLinkID );
     ( "TrdMatchID" , string_opt_to_json x.f_TradeCaptureReportRequest_TrdMatchID );
-    ( "Parties" , parties_to_json x.f_TradeCaptureReportRequest_Parties );
-    ( "Instrument" , instrument_to_json x.f_TradeCaptureReportRequest_Instrument );
-    ( "InstrumentExtension" , instrumentextension_to_json x.f_TradeCaptureReportRequest_InstrumentExtension );
-    ( "FinancingDetails" , financingdetails_to_json x.f_TradeCaptureReportRequest_FinancingDetails );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_TradeCaptureReportRequest_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_TradeCaptureReportRequest_InstrmtLegGrp );
-    ( "TrdCapDtGrp" , trdcapdtgrp_to_json x.f_TradeCaptureReportRequest_TrdCapDtGrp );
     ( "ClearingBusinessDate" , localmktdate_opt_to_json x.f_TradeCaptureReportRequest_ClearingBusinessDate );
     ( "TradingSessionID" , string_opt_to_json x.f_TradeCaptureReportRequest_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_TradeCaptureReportRequest_TradingSessionSubID );
@@ -2411,32 +2448,36 @@ let tradecapturereportrequest_to_json x : json =
     ( "ResponseDestination" , string_opt_to_json x.f_TradeCaptureReportRequest_ResponseDestination );
     ( "Text" , string_opt_to_json x.f_TradeCaptureReportRequest_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_TradeCaptureReportRequest_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_TradeCaptureReportRequest_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_TradeCaptureReportRequest_EncodedText );
+    ( "Parties" , rg parties_to_json x.f_TradeCaptureReportRequest_Parties );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_TradeCaptureReportRequest_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_TradeCaptureReportRequest_InstrmtLegGrp );
+    ( "TrdCapDtGrp" , rg trdcapdtgrp_to_json x.f_TradeCaptureReportRequest_TrdCapDtGrp )
     ]
 ;;
 
 let tradecapturereportrequestack_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
+    ( "Instrument" , instrument_to_json x.f_TradeCaptureReportRequestAck_Instrument );
     ( "TradeRequestID" , string_to_json x.f_TradeCaptureReportRequestAck_TradeRequestID );
     ( "TradeRequestType" , traderequesttype_to_json x.f_TradeCaptureReportRequestAck_TradeRequestType );
     ( "SubscriptionRequestType" , subscriptionrequesttype_opt_to_json x.f_TradeCaptureReportRequestAck_SubscriptionRequestType );
     ( "TotNumTradeReports" , int_opt_to_json x.f_TradeCaptureReportRequestAck_TotNumTradeReports );
     ( "TradeRequestResult" , traderequestresult_to_json x.f_TradeCaptureReportRequestAck_TradeRequestResult );
     ( "TradeRequestStatus" , traderequeststatus_to_json x.f_TradeCaptureReportRequestAck_TradeRequestStatus );
-    ( "Instrument" , instrument_to_json x.f_TradeCaptureReportRequestAck_Instrument );
-    ( "UndInstrmtGrp" , undinstrmtgrp_to_json x.f_TradeCaptureReportRequestAck_UndInstrmtGrp );
-    ( "InstrmtLegGrp" , instrmtleggrp_to_json x.f_TradeCaptureReportRequestAck_InstrmtLegGrp );
     ( "MultiLegReportingType" , multilegreportingtype_opt_to_json x.f_TradeCaptureReportRequestAck_MultiLegReportingType );
     ( "ResponseTransportType" , responsetransporttype_opt_to_json x.f_TradeCaptureReportRequestAck_ResponseTransportType );
     ( "ResponseDestination" , string_opt_to_json x.f_TradeCaptureReportRequestAck_ResponseDestination );
     ( "Text" , string_opt_to_json x.f_TradeCaptureReportRequestAck_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_TradeCaptureReportRequestAck_EncodedTextLen );
-    ( "EncodedText" , string_opt_to_json x.f_TradeCaptureReportRequestAck_EncodedText )
+    ( "EncodedText" , string_opt_to_json x.f_TradeCaptureReportRequestAck_EncodedText );
+    ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_TradeCaptureReportRequestAck_UndInstrmtGrp );
+    ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_TradeCaptureReportRequestAck_InstrmtLegGrp )
     ]
 ;;
 
 let tradingsessionstatus_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "TradSesReqID" , string_opt_to_json x.f_TradingSessionStatus_TradSesReqID );
     ( "TradingSessionID" , string_to_json x.f_TradingSessionStatus_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_TradingSessionStatus_TradingSessionSubID );
@@ -2458,13 +2499,34 @@ let tradingsessionstatus_to_json x : json =
 ;;
 
 let tradingsessionstatusrequest_to_json x : json =
-    assoc_filter_nulls [
+     assoc_filter_nulls [
     ( "TradSesReqID" , string_to_json x.f_TradingSessionStatusRequest_TradSesReqID );
     ( "TradingSessionID" , string_opt_to_json x.f_TradingSessionStatusRequest_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_TradingSessionStatusRequest_TradingSessionSubID );
     ( "TradSesMethod" , tradsesmethod_opt_to_json x.f_TradingSessionStatusRequest_TradSesMethod );
     ( "TradSesMode" , tradsesmode_opt_to_json x.f_TradingSessionStatusRequest_TradSesMode );
     ( "SubscriptionRequestType" , subscriptionrequesttype_to_json x.f_TradingSessionStatusRequest_SubscriptionRequestType )
+    ]
+;;
+
+let userrequest_to_json x : json =
+     assoc_filter_nulls [
+    ( "UserRequestID" , string_to_json x.f_UserRequest_UserRequestID );
+    ( "UserRequestType" , userrequesttype_to_json x.f_UserRequest_UserRequestType );
+    ( "Username" , string_to_json x.f_UserRequest_Username );
+    ( "Password" , string_opt_to_json x.f_UserRequest_Password );
+    ( "NewPassword" , string_opt_to_json x.f_UserRequest_NewPassword );
+    ( "RawDataLength" , int_opt_to_json x.f_UserRequest_RawDataLength );
+    ( "RawData" , string_opt_to_json x.f_UserRequest_RawData )
+    ]
+;;
+
+let userresponse_to_json x : json =
+     assoc_filter_nulls [
+    ( "UserRequestID" , string_to_json x.f_UserResponse_UserRequestID );
+    ( "Username" , string_to_json x.f_UserResponse_Username );
+    ( "UserStatus" , userstatus_opt_to_json x.f_UserResponse_UserStatus );
+    ( "UserStatusText" , string_opt_to_json x.f_UserResponse_UserStatusText )
     ]
 ;;
 
@@ -2506,6 +2568,8 @@ let full_app_msg_to_json x : json = match x with
     | FIX_Full_Msg_MassQuote x -> `Assoc [( "MassQuote", massquote_to_json x)]
     | FIX_Full_Msg_MassQuoteAcknowledgement x -> `Assoc [( "MassQuoteAcknowledgement", massquoteacknowledgement_to_json x)]
     | FIX_Full_Msg_MultilegOrderCancelReplace x -> `Assoc [( "MultilegOrderCancelReplace", multilegordercancelreplace_to_json x)]
+    | FIX_Full_Msg_NetworkCounterpartySystemStatusRequest x -> `Assoc [( "NetworkCounterpartySystemStatusRequest", networkcounterpartysystemstatusrequest_to_json x)]
+    | FIX_Full_Msg_NetworkCounterpartySystemStatusResponse x -> `Assoc [( "NetworkCounterpartySystemStatusResponse", networkcounterpartysystemstatusresponse_to_json x)]
     | FIX_Full_Msg_NewOrderCross x -> `Assoc [( "NewOrderCross", newordercross_to_json x)]
     | FIX_Full_Msg_NewOrderList x -> `Assoc [( "NewOrderList", neworderlist_to_json x)]
     | FIX_Full_Msg_NewOrderMultileg x -> `Assoc [( "NewOrderMultileg", newordermultileg_to_json x)]
@@ -2541,6 +2605,7 @@ let full_app_msg_to_json x : json = match x with
     | FIX_Full_Msg_SecurityStatusRequest x -> `Assoc [( "SecurityStatusRequest", securitystatusrequest_to_json x)]
     | FIX_Full_Msg_SecurityTypeRequest x -> `Assoc [( "SecurityTypeRequest", securitytyperequest_to_json x)]
     | FIX_Full_Msg_SecurityTypes x -> `Assoc [( "SecurityTypes", securitytypes_to_json x)]
+    | FIX_Full_Msg_SettlementInstructionRequest x -> `Assoc [( "SettlementInstructionRequest", settlementinstructionrequest_to_json x)]
     | FIX_Full_Msg_SettlementInstructions x -> `Assoc [( "SettlementInstructions", settlementinstructions_to_json x)]
     | FIX_Full_Msg_TradeCaptureReport x -> `Assoc [( "TradeCaptureReport", tradecapturereport_to_json x)]
     | FIX_Full_Msg_TradeCaptureReportAck x -> `Assoc [( "TradeCaptureReportAck", tradecapturereportack_to_json x)]
@@ -2548,4 +2613,6 @@ let full_app_msg_to_json x : json = match x with
     | FIX_Full_Msg_TradeCaptureReportRequestAck x -> `Assoc [( "TradeCaptureReportRequestAck", tradecapturereportrequestack_to_json x)]
     | FIX_Full_Msg_TradingSessionStatus x -> `Assoc [( "TradingSessionStatus", tradingsessionstatus_to_json x)]
     | FIX_Full_Msg_TradingSessionStatusRequest x -> `Assoc [( "TradingSessionStatusRequest", tradingsessionstatusrequest_to_json x)]
+    | FIX_Full_Msg_UserRequest x -> `Assoc [( "UserRequest", userrequest_to_json x)]
+    | FIX_Full_Msg_UserResponse x -> `Assoc [( "UserResponse", userresponse_to_json x)]
 ;;

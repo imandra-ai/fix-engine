@@ -1,9 +1,8 @@
-
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
 open Full_app_enums;;
 open Model_app_enums;;
 (* @meta[imandra_ignore] off @end *)
-
 
 let convert__full_to_model_ExecType ( f : fix_exectype ) =
     (match f with

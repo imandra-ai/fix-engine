@@ -1,9 +1,10 @@
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
 open Base_types;;
 open Datetime;;
-open Numeric;;
 open Model_app_enums;;
 open Model_tags;;
+open Numeric;;
 (* @meta[imandra_ignore] off @end *)
 
 type mod_executionreport_data = {
@@ -35,6 +36,13 @@ type model_msg =
     | FIX_Msg_NewOrderSingle of mod_newordersingle_data
 ;;
 
+let is_msg_inbound ( msg : model_msg ) =
+    (match msg with
+        | FIX_Msg_ExecutionReport _ -> false
+        | FIX_Msg_NewOrderSingle _ -> true
+    )
+;;
+
 type field_missing_data = {
     field_missing_data_field : m_field_tag;
     field_missing_data_msg : m_msg_tag
@@ -44,5 +52,6 @@ type field_missing_data = {
 type model_top_level_msg =
     | FIX_TL_Normal of model_msg
     | FIX_TL_Req_Field_Missing of field_missing_data
+    | FIX_TL_PossibleResend of model_msg
     | FIX_TL_None 
 ;;

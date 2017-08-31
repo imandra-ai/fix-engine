@@ -1,19 +1,19 @@
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Full_app_tags;;
-open Full_app_messages;;
-open Encode_base_types;;
 open Encode_datetime;;
-open Encode_app_enums;;
+open Encode_base_types;;
+open Full_app_messages;;
 open Encode_app_records;;
+open Encode_app_enums;;
 (* @meta[imandra_ignore] off @end *)
 
 let req f x = Some (f x);;
 let opt f v = match v with Some x -> Some ( f x ) | None -> None;;
+let repeat f tag lst = match lst with [] -> [] | lst ->
+    ( tag , lst |> List.length |> req encode_int ) :: (lst |> List.map f |> List.concat );;
 
 let encode_Advertisement msg =
     encode_Instrument msg.f_Advertisement_Instrument @
-    encode_InstrmtLegGrp msg.f_Advertisement_InstrmtLegGrp @
-    encode_UndInstrmtGrp msg.f_Advertisement_UndInstrmtGrp @
     [
     ( "2" , req encode_string msg.f_Advertisement_AdvId );
     ( "5" , req encode_AdvTransType msg.f_Advertisement_AdvTransType );
@@ -33,21 +33,16 @@ let encode_Advertisement msg =
     ( "336" , opt encode_string msg.f_Advertisement_TradingSessionID );
     ( "625" , opt encode_string msg.f_Advertisement_TradingSessionSubID );
     ]
+    @ repeat encode_InstrmtLegGrp "555" msg.f_Advertisement_InstrmtLegGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_Advertisement_UndInstrmtGrp
 ;;
 
 let encode_AllocationInstruction msg =
-    encode_OrdAllocGrp msg.f_AllocationInstruction_OrdAllocGrp @
-    encode_ExecAllocGrp msg.f_AllocationInstruction_ExecAllocGrp @
     encode_Instrument msg.f_AllocationInstruction_Instrument @
     encode_InstrumentExtension msg.f_AllocationInstruction_InstrumentExtension @
     encode_FinancingDetails msg.f_AllocationInstruction_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_AllocationInstruction_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_AllocationInstruction_InstrmtLegGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_AllocationInstruction_SpreadOrBenchmarkCurveData @
-    encode_Parties msg.f_AllocationInstruction_Parties @
-    encode_Stipulations msg.f_AllocationInstruction_Stipulations @
     encode_YieldData msg.f_AllocationInstruction_YieldData @
-    encode_AllocGrp msg.f_AllocationInstruction_AllocGrp @
     [
     ( "70" , req encode_string msg.f_AllocationInstruction_AllocID );
     ( "71" , req encode_AllocTransType msg.f_AllocationInstruction_AllocTransType );
@@ -101,11 +96,16 @@ let encode_AllocationInstruction msg =
     ( "892" , opt encode_int msg.f_AllocationInstruction_TotNoAllocs );
     ( "893" , opt encode_LastFragment msg.f_AllocationInstruction_LastFragment );
     ]
+    @ repeat encode_OrdAllocGrp "73" msg.f_AllocationInstruction_OrdAllocGrp
+    @ repeat encode_ExecAllocGrp "124" msg.f_AllocationInstruction_ExecAllocGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_AllocationInstruction_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_AllocationInstruction_InstrmtLegGrp
+    @ repeat encode_Parties "453" msg.f_AllocationInstruction_Parties
+    @ repeat encode_Stipulations "232" msg.f_AllocationInstruction_Stipulations
+    @ repeat encode_AllocGrp "78" msg.f_AllocationInstruction_AllocGrp
 ;;
 
 let encode_AllocationInstructionAck msg =
-    encode_Parties msg.f_AllocationInstructionAck_Parties @
-    encode_AllocAckGrp msg.f_AllocationInstructionAck_AllocAckGrp @
     [
     ( "70" , req encode_string msg.f_AllocationInstructionAck_AllocID );
     ( "793" , opt encode_string msg.f_AllocationInstructionAck_SecondaryAllocID );
@@ -122,21 +122,16 @@ let encode_AllocationInstructionAck msg =
     ( "354" , opt encode_int msg.f_AllocationInstructionAck_EncodedTextLen );
     ( "355" , opt encode_string msg.f_AllocationInstructionAck_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_AllocationInstructionAck_Parties
+    @ repeat encode_AllocAckGrp "78" msg.f_AllocationInstructionAck_AllocAckGrp
 ;;
 
 let encode_AllocationReport msg =
-    encode_OrdAllocGrp msg.f_AllocationReport_OrdAllocGrp @
-    encode_ExecAllocGrp msg.f_AllocationReport_ExecAllocGrp @
     encode_Instrument msg.f_AllocationReport_Instrument @
     encode_InstrumentExtension msg.f_AllocationReport_InstrumentExtension @
     encode_FinancingDetails msg.f_AllocationReport_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_AllocationReport_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_AllocationReport_InstrmtLegGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_AllocationReport_SpreadOrBenchmarkCurveData @
-    encode_Parties msg.f_AllocationReport_Parties @
-    encode_Stipulations msg.f_AllocationReport_Stipulations @
     encode_YieldData msg.f_AllocationReport_YieldData @
-    encode_AllocGrp msg.f_AllocationReport_AllocGrp @
     [
     ( "755" , req encode_string msg.f_AllocationReport_AllocReportID );
     ( "70" , opt encode_string msg.f_AllocationReport_AllocID );
@@ -194,11 +189,16 @@ let encode_AllocationReport msg =
     ( "892" , opt encode_int msg.f_AllocationReport_TotNoAllocs );
     ( "893" , opt encode_LastFragment msg.f_AllocationReport_LastFragment );
     ]
+    @ repeat encode_OrdAllocGrp "73" msg.f_AllocationReport_OrdAllocGrp
+    @ repeat encode_ExecAllocGrp "124" msg.f_AllocationReport_ExecAllocGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_AllocationReport_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_AllocationReport_InstrmtLegGrp
+    @ repeat encode_Parties "453" msg.f_AllocationReport_Parties
+    @ repeat encode_Stipulations "232" msg.f_AllocationReport_Stipulations
+    @ repeat encode_AllocGrp "78" msg.f_AllocationReport_AllocGrp
 ;;
 
 let encode_AllocationReportAck msg =
-    encode_Parties msg.f_AllocationReportAck_Parties @
-    encode_AllocAckGrp msg.f_AllocationReportAck_AllocAckGrp @
     [
     ( "755" , req encode_string msg.f_AllocationReportAck_AllocReportID );
     ( "70" , req encode_string msg.f_AllocationReportAck_AllocID );
@@ -216,15 +216,12 @@ let encode_AllocationReportAck msg =
     ( "354" , opt encode_int msg.f_AllocationReportAck_EncodedTextLen );
     ( "355" , opt encode_string msg.f_AllocationReportAck_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_AllocationReportAck_Parties
+    @ repeat encode_AllocAckGrp "78" msg.f_AllocationReportAck_AllocAckGrp
 ;;
 
 let encode_AssignmentReport msg =
-    encode_Parties msg.f_AssignmentReport_Parties @
     encode_Instrument msg.f_AssignmentReport_Instrument @
-    encode_InstrmtLegGrp msg.f_AssignmentReport_InstrmtLegGrp @
-    encode_UndInstrmtGrp msg.f_AssignmentReport_UndInstrmtGrp @
-    encode_PositionQty msg.f_AssignmentReport_PositionQty @
-    encode_PositionAmountData msg.f_AssignmentReport_PositionAmountData @
     [
     ( "833" , req encode_string msg.f_AssignmentReport_AsgnRptID );
     ( "832" , opt encode_int msg.f_AssignmentReport_TotNumAssignmentReports );
@@ -248,11 +245,14 @@ let encode_AssignmentReport msg =
     ( "354" , opt encode_int msg.f_AssignmentReport_EncodedTextLen );
     ( "355" , opt encode_string msg.f_AssignmentReport_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_AssignmentReport_Parties
+    @ repeat encode_InstrmtLegGrp "555" msg.f_AssignmentReport_InstrmtLegGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_AssignmentReport_UndInstrmtGrp
+    @ repeat encode_PositionQty "702" msg.f_AssignmentReport_PositionQty
+    @ repeat encode_PositionAmountData "753" msg.f_AssignmentReport_PositionAmountData
 ;;
 
 let encode_BidRequest msg =
-    encode_BidDescReqGrp msg.f_BidRequest_BidDescReqGrp @
-    encode_BidCompReqGrp msg.f_BidRequest_BidCompReqGrp @
     [
     ( "390" , opt encode_string msg.f_BidRequest_BidID );
     ( "391" , req encode_string msg.f_BidRequest_ClientBidID );
@@ -282,28 +282,22 @@ let encode_BidRequest msg =
     ( "354" , opt encode_int msg.f_BidRequest_EncodedTextLen );
     ( "355" , opt encode_string msg.f_BidRequest_EncodedText );
     ]
+    @ repeat encode_BidDescReqGrp "398" msg.f_BidRequest_BidDescReqGrp
+    @ repeat encode_BidCompReqGrp "420" msg.f_BidRequest_BidCompReqGrp
 ;;
 
 let encode_BidResponse msg =
-    encode_BidCompRspGrp msg.f_BidResponse_BidCompRspGrp @
     [
     ( "390" , opt encode_string msg.f_BidResponse_BidID );
     ( "391" , opt encode_string msg.f_BidResponse_ClientBidID );
     ]
+    @ repeat encode_BidCompRspGrp "420" msg.f_BidResponse_BidCompRspGrp
 ;;
 
 let encode_CollateralAssignment msg =
-    encode_Parties msg.f_CollateralAssignment_Parties @
-    encode_ExecCollGrp msg.f_CollateralAssignment_ExecCollGrp @
-    encode_TrdCollGrp msg.f_CollateralAssignment_TrdCollGrp @
     encode_Instrument msg.f_CollateralAssignment_Instrument @
     encode_FinancingDetails msg.f_CollateralAssignment_FinancingDetails @
-    encode_InstrmtLegGrp msg.f_CollateralAssignment_InstrmtLegGrp @
-    encode_UndInstrmtCollGrp msg.f_CollateralAssignment_UndInstrmtCollGrp @
-    encode_TrdRegTimestamps msg.f_CollateralAssignment_TrdRegTimestamps @
-    encode_MiscFeesGrp msg.f_CollateralAssignment_MiscFeesGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_CollateralAssignment_SpreadOrBenchmarkCurveData @
-    encode_Stipulations msg.f_CollateralAssignment_Stipulations @
     encode_SettlInstructionsData msg.f_CollateralAssignment_SettlInstructionsData @
     [
     ( "902" , req encode_string msg.f_CollateralAssignment_CollAsgnID );
@@ -342,20 +336,20 @@ let encode_CollateralAssignment msg =
     ( "354" , opt encode_int msg.f_CollateralAssignment_EncodedTextLen );
     ( "355" , opt encode_string msg.f_CollateralAssignment_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_CollateralAssignment_Parties
+    @ repeat encode_ExecCollGrp "124" msg.f_CollateralAssignment_ExecCollGrp
+    @ repeat encode_TrdCollGrp "897" msg.f_CollateralAssignment_TrdCollGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_CollateralAssignment_InstrmtLegGrp
+    @ repeat encode_UndInstrmtCollGrp "711" msg.f_CollateralAssignment_UndInstrmtCollGrp
+    @ repeat encode_TrdRegTimestamps "768" msg.f_CollateralAssignment_TrdRegTimestamps
+    @ repeat encode_MiscFeesGrp "136" msg.f_CollateralAssignment_MiscFeesGrp
+    @ repeat encode_Stipulations "232" msg.f_CollateralAssignment_Stipulations
 ;;
 
 let encode_CollateralInquiry msg =
-    encode_CollInqQualGrp msg.f_CollateralInquiry_CollInqQualGrp @
-    encode_Parties msg.f_CollateralInquiry_Parties @
-    encode_ExecCollGrp msg.f_CollateralInquiry_ExecCollGrp @
-    encode_TrdCollGrp msg.f_CollateralInquiry_TrdCollGrp @
     encode_Instrument msg.f_CollateralInquiry_Instrument @
     encode_FinancingDetails msg.f_CollateralInquiry_FinancingDetails @
-    encode_InstrmtLegGrp msg.f_CollateralInquiry_InstrmtLegGrp @
-    encode_UndInstrmtGrp msg.f_CollateralInquiry_UndInstrmtGrp @
-    encode_TrdRegTimestamps msg.f_CollateralInquiry_TrdRegTimestamps @
     encode_SpreadOrBenchmarkCurveData msg.f_CollateralInquiry_SpreadOrBenchmarkCurveData @
-    encode_Stipulations msg.f_CollateralInquiry_Stipulations @
     encode_SettlInstructionsData msg.f_CollateralInquiry_SettlInstructionsData @
     [
     ( "909" , opt encode_string msg.f_CollateralInquiry_CollInquiryID );
@@ -391,17 +385,19 @@ let encode_CollateralInquiry msg =
     ( "354" , opt encode_int msg.f_CollateralInquiry_EncodedTextLen );
     ( "355" , opt encode_string msg.f_CollateralInquiry_EncodedText );
     ]
+    @ repeat encode_CollInqQualGrp "938" msg.f_CollateralInquiry_CollInqQualGrp
+    @ repeat encode_Parties "453" msg.f_CollateralInquiry_Parties
+    @ repeat encode_ExecCollGrp "124" msg.f_CollateralInquiry_ExecCollGrp
+    @ repeat encode_TrdCollGrp "897" msg.f_CollateralInquiry_TrdCollGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_CollateralInquiry_InstrmtLegGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_CollateralInquiry_UndInstrmtGrp
+    @ repeat encode_TrdRegTimestamps "768" msg.f_CollateralInquiry_TrdRegTimestamps
+    @ repeat encode_Stipulations "232" msg.f_CollateralInquiry_Stipulations
 ;;
 
 let encode_CollateralInquiryAck msg =
-    encode_CollInqQualGrp msg.f_CollateralInquiryAck_CollInqQualGrp @
-    encode_Parties msg.f_CollateralInquiryAck_Parties @
-    encode_ExecCollGrp msg.f_CollateralInquiryAck_ExecCollGrp @
-    encode_TrdCollGrp msg.f_CollateralInquiryAck_TrdCollGrp @
     encode_Instrument msg.f_CollateralInquiryAck_Instrument @
     encode_FinancingDetails msg.f_CollateralInquiryAck_FinancingDetails @
-    encode_InstrmtLegGrp msg.f_CollateralInquiryAck_InstrmtLegGrp @
-    encode_UndInstrmtGrp msg.f_CollateralInquiryAck_UndInstrmtGrp @
     [
     ( "909" , req encode_string msg.f_CollateralInquiryAck_CollInquiryID );
     ( "945" , req encode_CollInquiryStatus msg.f_CollateralInquiryAck_CollInquiryStatus );
@@ -428,20 +424,18 @@ let encode_CollateralInquiryAck msg =
     ( "354" , opt encode_int msg.f_CollateralInquiryAck_EncodedTextLen );
     ( "355" , opt encode_string msg.f_CollateralInquiryAck_EncodedText );
     ]
+    @ repeat encode_CollInqQualGrp "938" msg.f_CollateralInquiryAck_CollInqQualGrp
+    @ repeat encode_Parties "453" msg.f_CollateralInquiryAck_Parties
+    @ repeat encode_ExecCollGrp "124" msg.f_CollateralInquiryAck_ExecCollGrp
+    @ repeat encode_TrdCollGrp "897" msg.f_CollateralInquiryAck_TrdCollGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_CollateralInquiryAck_InstrmtLegGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_CollateralInquiryAck_UndInstrmtGrp
 ;;
 
 let encode_CollateralReport msg =
-    encode_Parties msg.f_CollateralReport_Parties @
-    encode_ExecCollGrp msg.f_CollateralReport_ExecCollGrp @
-    encode_TrdCollGrp msg.f_CollateralReport_TrdCollGrp @
     encode_Instrument msg.f_CollateralReport_Instrument @
     encode_FinancingDetails msg.f_CollateralReport_FinancingDetails @
-    encode_InstrmtLegGrp msg.f_CollateralReport_InstrmtLegGrp @
-    encode_UndInstrmtGrp msg.f_CollateralReport_UndInstrmtGrp @
-    encode_TrdRegTimestamps msg.f_CollateralReport_TrdRegTimestamps @
-    encode_MiscFeesGrp msg.f_CollateralReport_MiscFeesGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_CollateralReport_SpreadOrBenchmarkCurveData @
-    encode_Stipulations msg.f_CollateralReport_Stipulations @
     encode_SettlInstructionsData msg.f_CollateralReport_SettlInstructionsData @
     [
     ( "908" , req encode_string msg.f_CollateralReport_CollRptID );
@@ -478,20 +472,20 @@ let encode_CollateralReport msg =
     ( "354" , opt encode_int msg.f_CollateralReport_EncodedTextLen );
     ( "355" , opt encode_string msg.f_CollateralReport_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_CollateralReport_Parties
+    @ repeat encode_ExecCollGrp "124" msg.f_CollateralReport_ExecCollGrp
+    @ repeat encode_TrdCollGrp "897" msg.f_CollateralReport_TrdCollGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_CollateralReport_InstrmtLegGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_CollateralReport_UndInstrmtGrp
+    @ repeat encode_TrdRegTimestamps "768" msg.f_CollateralReport_TrdRegTimestamps
+    @ repeat encode_MiscFeesGrp "136" msg.f_CollateralReport_MiscFeesGrp
+    @ repeat encode_Stipulations "232" msg.f_CollateralReport_Stipulations
 ;;
 
 let encode_CollateralRequest msg =
-    encode_Parties msg.f_CollateralRequest_Parties @
-    encode_ExecCollGrp msg.f_CollateralRequest_ExecCollGrp @
-    encode_TrdCollGrp msg.f_CollateralRequest_TrdCollGrp @
     encode_Instrument msg.f_CollateralRequest_Instrument @
     encode_FinancingDetails msg.f_CollateralRequest_FinancingDetails @
-    encode_InstrmtLegGrp msg.f_CollateralRequest_InstrmtLegGrp @
-    encode_UndInstrmtCollGrp msg.f_CollateralRequest_UndInstrmtCollGrp @
-    encode_TrdRegTimestamps msg.f_CollateralRequest_TrdRegTimestamps @
-    encode_MiscFeesGrp msg.f_CollateralRequest_MiscFeesGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_CollateralRequest_SpreadOrBenchmarkCurveData @
-    encode_Stipulations msg.f_CollateralRequest_Stipulations @
     [
     ( "894" , req encode_string msg.f_CollateralRequest_CollReqID );
     ( "895" , req encode_CollAsgnReason msg.f_CollateralRequest_CollAsgnReason );
@@ -526,20 +520,20 @@ let encode_CollateralRequest msg =
     ( "354" , opt encode_int msg.f_CollateralRequest_EncodedTextLen );
     ( "355" , opt encode_string msg.f_CollateralRequest_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_CollateralRequest_Parties
+    @ repeat encode_ExecCollGrp "124" msg.f_CollateralRequest_ExecCollGrp
+    @ repeat encode_TrdCollGrp "897" msg.f_CollateralRequest_TrdCollGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_CollateralRequest_InstrmtLegGrp
+    @ repeat encode_UndInstrmtCollGrp "711" msg.f_CollateralRequest_UndInstrmtCollGrp
+    @ repeat encode_TrdRegTimestamps "768" msg.f_CollateralRequest_TrdRegTimestamps
+    @ repeat encode_MiscFeesGrp "136" msg.f_CollateralRequest_MiscFeesGrp
+    @ repeat encode_Stipulations "232" msg.f_CollateralRequest_Stipulations
 ;;
 
 let encode_CollateralResponse msg =
-    encode_Parties msg.f_CollateralResponse_Parties @
-    encode_ExecCollGrp msg.f_CollateralResponse_ExecCollGrp @
-    encode_TrdCollGrp msg.f_CollateralResponse_TrdCollGrp @
     encode_Instrument msg.f_CollateralResponse_Instrument @
     encode_FinancingDetails msg.f_CollateralResponse_FinancingDetails @
-    encode_InstrmtLegGrp msg.f_CollateralResponse_InstrmtLegGrp @
-    encode_UndInstrmtCollGrp msg.f_CollateralResponse_UndInstrmtCollGrp @
-    encode_TrdRegTimestamps msg.f_CollateralResponse_TrdRegTimestamps @
-    encode_MiscFeesGrp msg.f_CollateralResponse_MiscFeesGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_CollateralResponse_SpreadOrBenchmarkCurveData @
-    encode_Stipulations msg.f_CollateralResponse_Stipulations @
     [
     ( "904" , req encode_string msg.f_CollateralResponse_CollRespID );
     ( "902" , req encode_string msg.f_CollateralResponse_CollAsgnID );
@@ -573,24 +567,24 @@ let encode_CollateralResponse msg =
     ( "354" , opt encode_int msg.f_CollateralResponse_EncodedTextLen );
     ( "355" , opt encode_string msg.f_CollateralResponse_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_CollateralResponse_Parties
+    @ repeat encode_ExecCollGrp "124" msg.f_CollateralResponse_ExecCollGrp
+    @ repeat encode_TrdCollGrp "897" msg.f_CollateralResponse_TrdCollGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_CollateralResponse_InstrmtLegGrp
+    @ repeat encode_UndInstrmtCollGrp "711" msg.f_CollateralResponse_UndInstrmtCollGrp
+    @ repeat encode_TrdRegTimestamps "768" msg.f_CollateralResponse_TrdRegTimestamps
+    @ repeat encode_MiscFeesGrp "136" msg.f_CollateralResponse_MiscFeesGrp
+    @ repeat encode_Stipulations "232" msg.f_CollateralResponse_Stipulations
 ;;
 
 let encode_Confirmation msg =
-    encode_Parties msg.f_Confirmation_Parties @
-    encode_OrdAllocGrp msg.f_Confirmation_OrdAllocGrp @
-    encode_TrdRegTimestamps msg.f_Confirmation_TrdRegTimestamps @
     encode_Instrument msg.f_Confirmation_Instrument @
     encode_InstrumentExtension msg.f_Confirmation_InstrumentExtension @
     encode_FinancingDetails msg.f_Confirmation_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_Confirmation_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_Confirmation_InstrmtLegGrp @
     encode_YieldData msg.f_Confirmation_YieldData @
-    encode_CpctyConfGrp msg.f_Confirmation_CpctyConfGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_Confirmation_SpreadOrBenchmarkCurveData @
     encode_SettlInstructionsData msg.f_Confirmation_SettlInstructionsData @
     encode_CommissionData msg.f_Confirmation_CommissionData @
-    encode_Stipulations msg.f_Confirmation_Stipulations @
-    encode_MiscFeesGrp msg.f_Confirmation_MiscFeesGrp @
     [
     ( "664" , req encode_string msg.f_Confirmation_ConfirmID );
     ( "772" , opt encode_string msg.f_Confirmation_ConfirmRefID );
@@ -643,6 +637,14 @@ let encode_Confirmation msg =
     ( "64" , opt encode_LocalMktDate msg.f_Confirmation_SettlDate );
     ( "858" , opt encode_float msg.f_Confirmation_SharedCommission );
     ]
+    @ repeat encode_Parties "453" msg.f_Confirmation_Parties
+    @ repeat encode_OrdAllocGrp "73" msg.f_Confirmation_OrdAllocGrp
+    @ repeat encode_TrdRegTimestamps "768" msg.f_Confirmation_TrdRegTimestamps
+    @ repeat encode_UndInstrmtGrp "711" msg.f_Confirmation_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_Confirmation_InstrmtLegGrp
+    @ repeat encode_CpctyConfGrp "862" msg.f_Confirmation_CpctyConfGrp
+    @ repeat encode_Stipulations "232" msg.f_Confirmation_Stipulations
+    @ repeat encode_MiscFeesGrp "136" msg.f_Confirmation_MiscFeesGrp
 ;;
 
 let encode_ConfirmationAck msg =
@@ -660,7 +662,6 @@ let encode_ConfirmationAck msg =
 ;;
 
 let encode_ConfirmationRequest msg =
-    encode_OrdAllocGrp msg.f_ConfirmationRequest_OrdAllocGrp @
     [
     ( "859" , req encode_string msg.f_ConfirmationRequest_ConfirmReqID );
     ( "773" , req encode_ConfirmType msg.f_ConfirmationRequest_ConfirmType );
@@ -675,15 +676,11 @@ let encode_ConfirmationRequest msg =
     ( "354" , opt encode_int msg.f_ConfirmationRequest_EncodedTextLen );
     ( "355" , opt encode_string msg.f_ConfirmationRequest_EncodedText );
     ]
+    @ repeat encode_OrdAllocGrp "73" msg.f_ConfirmationRequest_OrdAllocGrp
 ;;
 
 let encode_CrossOrderCancelReplaceRequest msg =
-    encode_SideCrossOrdModGrp msg.f_CrossOrderCancelReplaceRequest_SideCrossOrdModGrp @
     encode_Instrument msg.f_CrossOrderCancelReplaceRequest_Instrument @
-    encode_UndInstrmtGrp msg.f_CrossOrderCancelReplaceRequest_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_CrossOrderCancelReplaceRequest_InstrmtLegGrp @
-    encode_TrdgSesGrp msg.f_CrossOrderCancelReplaceRequest_TrdgSesGrp @
-    encode_Stipulations msg.f_CrossOrderCancelReplaceRequest_Stipulations @
     encode_SpreadOrBenchmarkCurveData msg.f_CrossOrderCancelReplaceRequest_SpreadOrBenchmarkCurveData @
     encode_YieldData msg.f_CrossOrderCancelReplaceRequest_YieldData @
     encode_PegInstructions msg.f_CrossOrderCancelReplaceRequest_PegInstructions @
@@ -727,13 +724,15 @@ let encode_CrossOrderCancelReplaceRequest msg =
     ( "513" , opt encode_string msg.f_CrossOrderCancelReplaceRequest_RegistID );
     ( "494" , opt encode_string msg.f_CrossOrderCancelReplaceRequest_Designation );
     ]
+    @ repeat encode_SideCrossOrdModGrp "552" msg.f_CrossOrderCancelReplaceRequest_SideCrossOrdModGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_CrossOrderCancelReplaceRequest_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_CrossOrderCancelReplaceRequest_InstrmtLegGrp
+    @ repeat encode_TrdgSesGrp "386" msg.f_CrossOrderCancelReplaceRequest_TrdgSesGrp
+    @ repeat encode_Stipulations "232" msg.f_CrossOrderCancelReplaceRequest_Stipulations
 ;;
 
 let encode_CrossOrderCancelRequest msg =
-    encode_SideCrossOrdCxlGrp msg.f_CrossOrderCancelRequest_SideCrossOrdCxlGrp @
     encode_Instrument msg.f_CrossOrderCancelRequest_Instrument @
-    encode_UndInstrmtGrp msg.f_CrossOrderCancelRequest_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_CrossOrderCancelRequest_InstrmtLegGrp @
     [
     ( "37" , opt encode_string msg.f_CrossOrderCancelRequest_OrderID );
     ( "548" , req encode_string msg.f_CrossOrderCancelRequest_CrossID );
@@ -742,11 +741,13 @@ let encode_CrossOrderCancelRequest msg =
     ( "550" , req encode_CrossPrioritization msg.f_CrossOrderCancelRequest_CrossPrioritization );
     ( "60" , req encode_UTCTimestamp msg.f_CrossOrderCancelRequest_TransactTime );
     ]
+    @ repeat encode_SideCrossOrdCxlGrp "552" msg.f_CrossOrderCancelRequest_SideCrossOrdCxlGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_CrossOrderCancelRequest_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_CrossOrderCancelRequest_InstrmtLegGrp
 ;;
 
 let encode_DerivativeSecurityList msg =
     encode_UnderlyingInstrument msg.f_DerivativeSecurityList_UnderlyingInstrument @
-    encode_RelSymDerivSecGrp msg.f_DerivativeSecurityList_RelSymDerivSecGrp @
     [
     ( "320" , req encode_string msg.f_DerivativeSecurityList_SecurityReqID );
     ( "322" , req encode_string msg.f_DerivativeSecurityList_SecurityResponseID );
@@ -754,6 +755,7 @@ let encode_DerivativeSecurityList msg =
     ( "393" , opt encode_int msg.f_DerivativeSecurityList_TotNoRelatedSym );
     ( "893" , opt encode_LastFragment msg.f_DerivativeSecurityList_LastFragment );
     ]
+    @ repeat encode_RelSymDerivSecGrp "146" msg.f_DerivativeSecurityList_RelSymDerivSecGrp
 ;;
 
 let encode_DerivativeSecurityListRequest msg =
@@ -774,8 +776,6 @@ let encode_DerivativeSecurityListRequest msg =
 
 let encode_DontKnowTrade msg =
     encode_Instrument msg.f_DontKnowTrade_Instrument @
-    encode_UndInstrmtGrp msg.f_DontKnowTrade_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_DontKnowTrade_InstrmtLegGrp @
     encode_OrderQtyData msg.f_DontKnowTrade_OrderQtyData @
     [
     ( "37" , req encode_string msg.f_DontKnowTrade_OrderID );
@@ -789,14 +789,11 @@ let encode_DontKnowTrade msg =
     ( "354" , opt encode_int msg.f_DontKnowTrade_EncodedTextLen );
     ( "355" , opt encode_string msg.f_DontKnowTrade_EncodedText );
     ]
+    @ repeat encode_UndInstrmtGrp "711" msg.f_DontKnowTrade_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_DontKnowTrade_InstrmtLegGrp
 ;;
 
 let encode_Email msg =
-    encode_RoutingGrp msg.f_Email_RoutingGrp @
-    encode_InstrmtGrp msg.f_Email_InstrmtGrp @
-    encode_UndInstrmtGrp msg.f_Email_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_Email_InstrmtLegGrp @
-    encode_LinesOfTextGrp msg.f_Email_LinesOfTextGrp @
     [
     ( "164" , req encode_string msg.f_Email_EmailThreadID );
     ( "94" , req encode_EmailType msg.f_Email_EmailType );
@@ -809,24 +806,22 @@ let encode_Email msg =
     ( "95" , opt encode_int msg.f_Email_RawDataLength );
     ( "96" , opt encode_string msg.f_Email_RawData );
     ]
+    @ repeat encode_RoutingGrp "215" msg.f_Email_RoutingGrp
+    @ repeat encode_InstrmtGrp "146" msg.f_Email_InstrmtGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_Email_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_Email_InstrmtLegGrp
+    @ repeat encode_LinesOfTextGrp "33" msg.f_Email_LinesOfTextGrp
 ;;
 
 let encode_ExecutionReport msg =
-    ( encode_Parties msg.f_ExecutionReport_Parties) @
-    ( encode_ContraGrp msg.f_ExecutionReport_ContraGrp) @
-    ( encode_Instrument msg.f_ExecutionReport_Instrument) @
-    ( encode_FinancingDetails msg.f_ExecutionReport_FinancingDetails) @
-    ( encode_UndInstrmtGrp msg.f_ExecutionReport_UndInstrmtGrp) @
-    ( encode_Stipulations msg.f_ExecutionReport_Stipulations) @
-    ( encode_OrderQtyData msg.f_ExecutionReport_OrderQtyData) @
-    ( encode_PegInstructions msg.f_ExecutionReport_PegInstructions) @
-    ( encode_DiscretionInstructions msg.f_ExecutionReport_DiscretionInstructions) @
-    ( encode_CommissionData msg.f_ExecutionReport_CommissionData) @
-    ( encode_SpreadOrBenchmarkCurveData msg.f_ExecutionReport_SpreadOrBenchmarkCurveData) @
-    ( encode_YieldData msg.f_ExecutionReport_YieldData) @
-    ( encode_ContAmtGrp msg.f_ExecutionReport_ContAmtGrp) @
-    ( encode_InstrmtLegExecGrp msg.f_ExecutionReport_InstrmtLegExecGrp) @
-    ( encode_MiscFeesGrp msg.f_ExecutionReport_MiscFeesGrp) @
+    encode_Instrument msg.f_ExecutionReport_Instrument @
+    encode_FinancingDetails msg.f_ExecutionReport_FinancingDetails @
+    encode_OrderQtyData msg.f_ExecutionReport_OrderQtyData @
+    encode_PegInstructions msg.f_ExecutionReport_PegInstructions @
+    encode_DiscretionInstructions msg.f_ExecutionReport_DiscretionInstructions @
+    encode_CommissionData msg.f_ExecutionReport_CommissionData @
+    encode_SpreadOrBenchmarkCurveData msg.f_ExecutionReport_SpreadOrBenchmarkCurveData @
+    encode_YieldData msg.f_ExecutionReport_YieldData @
     [
     ( "37" , req encode_string msg.f_ExecutionReport_OrderID );
     ( "198" , opt encode_string msg.f_ExecutionReport_SecondaryOrderID );
@@ -952,17 +947,19 @@ let encode_ExecutionReport msg =
     ( "851" , opt encode_LastLiquidityInd msg.f_ExecutionReport_LastLiquidityInd );
     ( "797" , opt encode_bool msg.f_ExecutionReport_CopyMsgIndicator );
     ]
+    @ repeat encode_Parties "453" msg.f_ExecutionReport_Parties
+    @ repeat encode_ContraGrp "382" msg.f_ExecutionReport_ContraGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_ExecutionReport_UndInstrmtGrp
+    @ repeat encode_Stipulations "232" msg.f_ExecutionReport_Stipulations
+    @ repeat encode_ContAmtGrp "518" msg.f_ExecutionReport_ContAmtGrp
+    @ repeat encode_InstrmtLegExecGrp "555" msg.f_ExecutionReport_InstrmtLegExecGrp
+    @ repeat encode_MiscFeesGrp "136" msg.f_ExecutionReport_MiscFeesGrp
 ;;
 
 let encode_IOI msg =
     encode_Instrument msg.f_IOI_Instrument @
     encode_FinancingDetails msg.f_IOI_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_IOI_UndInstrmtGrp @
     encode_OrderQtyData msg.f_IOI_OrderQtyData @
-    encode_Stipulations msg.f_IOI_Stipulations @
-    encode_InstrmtLegIOIGrp msg.f_IOI_InstrmtLegIOIGrp @
-    encode_IOIQualGrp msg.f_IOI_IOIQualGrp @
-    encode_RoutingGrp msg.f_IOI_RoutingGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_IOI_SpreadOrBenchmarkCurveData @
     encode_YieldData msg.f_IOI_YieldData @
     [
@@ -984,6 +981,11 @@ let encode_IOI msg =
     ( "60" , opt encode_UTCTimestamp msg.f_IOI_TransactTime );
     ( "149" , opt encode_string msg.f_IOI_URLLink );
     ]
+    @ repeat encode_UndInstrmtGrp "711" msg.f_IOI_UndInstrmtGrp
+    @ repeat encode_Stipulations "232" msg.f_IOI_Stipulations
+    @ repeat encode_InstrmtLegIOIGrp "555" msg.f_IOI_InstrmtLegIOIGrp
+    @ repeat encode_IOIQualGrp "199" msg.f_IOI_IOIQualGrp
+    @ repeat encode_RoutingGrp "215" msg.f_IOI_RoutingGrp
 ;;
 
 let encode_ListCancelRequest msg =
@@ -1011,7 +1013,6 @@ let encode_ListExecute msg =
 ;;
 
 let encode_ListStatus msg =
-    encode_OrdListStatGrp msg.f_ListStatus_OrdListStatGrp @
     [
     ( "66" , req encode_string msg.f_ListStatus_ListID );
     ( "429" , req encode_ListStatusType msg.f_ListStatus_ListStatusType );
@@ -1025,6 +1026,7 @@ let encode_ListStatus msg =
     ( "68" , req encode_int msg.f_ListStatus_TotNoOrders );
     ( "893" , opt encode_LastFragment msg.f_ListStatus_LastFragment );
     ]
+    @ repeat encode_OrdListStatGrp "73" msg.f_ListStatus_OrdListStatGrp
 ;;
 
 let encode_ListStatusRequest msg =
@@ -1037,28 +1039,25 @@ let encode_ListStatusRequest msg =
 ;;
 
 let encode_ListStrikePrice msg =
-    encode_InstrmtStrkPxGrp msg.f_ListStrikePrice_InstrmtStrkPxGrp @
-    encode_UndInstrmtStrkPxGrp msg.f_ListStrikePrice_UndInstrmtStrkPxGrp @
     [
     ( "66" , req encode_string msg.f_ListStrikePrice_ListID );
     ( "422" , req encode_int msg.f_ListStrikePrice_TotNoStrikes );
     ( "893" , opt encode_LastFragment msg.f_ListStrikePrice_LastFragment );
     ]
+    @ repeat encode_InstrmtStrkPxGrp "428" msg.f_ListStrikePrice_InstrmtStrkPxGrp
+    @ repeat encode_UndInstrmtStrkPxGrp "711" msg.f_ListStrikePrice_UndInstrmtStrkPxGrp
 ;;
 
 let encode_MarketDataIncrementalRefresh msg =
-    encode_MDIncGrp msg.f_MarketDataIncrementalRefresh_MDIncGrp @
     [
     ( "262" , opt encode_string msg.f_MarketDataIncrementalRefresh_MDReqID );
     ( "813" , opt encode_int msg.f_MarketDataIncrementalRefresh_ApplQueueDepth );
     ( "814" , opt encode_ApplQueueResolution msg.f_MarketDataIncrementalRefresh_ApplQueueResolution );
     ]
+    @ repeat encode_MDIncGrp "268" msg.f_MarketDataIncrementalRefresh_MDIncGrp
 ;;
 
 let encode_MarketDataRequest msg =
-    encode_MDReqGrp msg.f_MarketDataRequest_MDReqGrp @
-    encode_InstrmtMDReqGrp msg.f_MarketDataRequest_InstrmtMDReqGrp @
-    encode_TrdgSesGrp msg.f_MarketDataRequest_TrdgSesGrp @
     [
     ( "262" , req encode_string msg.f_MarketDataRequest_MDReqID );
     ( "263" , req encode_SubscriptionRequestType msg.f_MarketDataRequest_SubscriptionRequestType );
@@ -1071,10 +1070,12 @@ let encode_MarketDataRequest msg =
     ( "815" , opt encode_ApplQueueAction msg.f_MarketDataRequest_ApplQueueAction );
     ( "812" , opt encode_int msg.f_MarketDataRequest_ApplQueueMax );
     ]
+    @ repeat encode_MDReqGrp "267" msg.f_MarketDataRequest_MDReqGrp
+    @ repeat encode_InstrmtMDReqGrp "146" msg.f_MarketDataRequest_InstrmtMDReqGrp
+    @ repeat encode_TrdgSesGrp "386" msg.f_MarketDataRequest_TrdgSesGrp
 ;;
 
 let encode_MarketDataRequestReject msg =
-    encode_MDRjctGrp msg.f_MarketDataRequestReject_MDRjctGrp @
     [
     ( "262" , req encode_string msg.f_MarketDataRequestReject_MDReqID );
     ( "281" , opt encode_MDReqRejReason msg.f_MarketDataRequestReject_MDReqRejReason );
@@ -1082,13 +1083,11 @@ let encode_MarketDataRequestReject msg =
     ( "354" , opt encode_int msg.f_MarketDataRequestReject_EncodedTextLen );
     ( "355" , opt encode_string msg.f_MarketDataRequestReject_EncodedText );
     ]
+    @ repeat encode_MDRjctGrp "816" msg.f_MarketDataRequestReject_MDRjctGrp
 ;;
 
 let encode_MarketDataSnapshotFullRefresh msg =
     encode_Instrument msg.f_MarketDataSnapshotFullRefresh_Instrument @
-    encode_UndInstrmtGrp msg.f_MarketDataSnapshotFullRefresh_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_MarketDataSnapshotFullRefresh_InstrmtLegGrp @
-    encode_MDFullGrp msg.f_MarketDataSnapshotFullRefresh_MDFullGrp @
     [
     ( "262" , opt encode_string msg.f_MarketDataSnapshotFullRefresh_MDReqID );
     ( "291" , opt encode_FinancialStatus msg.f_MarketDataSnapshotFullRefresh_FinancialStatus );
@@ -1097,11 +1096,12 @@ let encode_MarketDataSnapshotFullRefresh msg =
     ( "813" , opt encode_int msg.f_MarketDataSnapshotFullRefresh_ApplQueueDepth );
     ( "814" , opt encode_ApplQueueResolution msg.f_MarketDataSnapshotFullRefresh_ApplQueueResolution );
     ]
+    @ repeat encode_UndInstrmtGrp "711" msg.f_MarketDataSnapshotFullRefresh_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_MarketDataSnapshotFullRefresh_InstrmtLegGrp
+    @ repeat encode_MDFullGrp "268" msg.f_MarketDataSnapshotFullRefresh_MDFullGrp
 ;;
 
 let encode_MassQuote msg =
-    encode_Parties msg.f_MassQuote_Parties @
-    encode_QuotSetGrp msg.f_MassQuote_QuotSetGrp @
     [
     ( "131" , opt encode_string msg.f_MassQuote_QuoteReqID );
     ( "117" , req encode_string msg.f_MassQuote_QuoteID );
@@ -1113,11 +1113,11 @@ let encode_MassQuote msg =
     ( "293" , opt encode_float msg.f_MassQuote_DefBidSize );
     ( "294" , opt encode_float msg.f_MassQuote_DefOfferSize );
     ]
+    @ repeat encode_Parties "453" msg.f_MassQuote_Parties
+    @ repeat encode_QuotSetGrp "296" msg.f_MassQuote_QuotSetGrp
 ;;
 
 let encode_MassQuoteAcknowledgement msg =
-    encode_Parties msg.f_MassQuoteAcknowledgement_Parties @
-    encode_QuotSetAckGrp msg.f_MassQuoteAcknowledgement_QuotSetAckGrp @
     [
     ( "131" , opt encode_string msg.f_MassQuoteAcknowledgement_QuoteReqID );
     ( "117" , opt encode_string msg.f_MassQuoteAcknowledgement_QuoteID );
@@ -1132,15 +1132,12 @@ let encode_MassQuoteAcknowledgement msg =
     ( "354" , opt encode_int msg.f_MassQuoteAcknowledgement_EncodedTextLen );
     ( "355" , opt encode_string msg.f_MassQuoteAcknowledgement_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_MassQuoteAcknowledgement_Parties
+    @ repeat encode_QuotSetAckGrp "296" msg.f_MassQuoteAcknowledgement_QuotSetAckGrp
 ;;
 
 let encode_MultilegOrderCancelReplace msg =
-    encode_Parties msg.f_MultilegOrderCancelReplace_Parties @
-    encode_PreAllocMlegGrp msg.f_MultilegOrderCancelReplace_PreAllocMlegGrp @
-    encode_TrdgSesGrp msg.f_MultilegOrderCancelReplace_TrdgSesGrp @
     encode_Instrument msg.f_MultilegOrderCancelReplace_Instrument @
-    encode_UndInstrmtGrp msg.f_MultilegOrderCancelReplace_UndInstrmtGrp @
-    encode_LegOrdGrp msg.f_MultilegOrderCancelReplace_LegOrdGrp @
     encode_OrderQtyData msg.f_MultilegOrderCancelReplace_OrderQtyData @
     encode_CommissionData msg.f_MultilegOrderCancelReplace_CommissionData @
     encode_PegInstructions msg.f_MultilegOrderCancelReplace_PegInstructions @
@@ -1211,15 +1208,33 @@ let encode_MultilegOrderCancelReplace msg =
     ( "494" , opt encode_string msg.f_MultilegOrderCancelReplace_Designation );
     ( "563" , opt encode_MultiLegRptTypeReq msg.f_MultilegOrderCancelReplace_MultiLegRptTypeReq );
     ]
+    @ repeat encode_Parties "453" msg.f_MultilegOrderCancelReplace_Parties
+    @ repeat encode_PreAllocMlegGrp "78" msg.f_MultilegOrderCancelReplace_PreAllocMlegGrp
+    @ repeat encode_TrdgSesGrp "386" msg.f_MultilegOrderCancelReplace_TrdgSesGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_MultilegOrderCancelReplace_UndInstrmtGrp
+    @ repeat encode_LegOrdGrp "555" msg.f_MultilegOrderCancelReplace_LegOrdGrp
+;;
+
+let encode_NetworkCounterpartySystemStatusRequest msg =
+    [
+    ( "935" , req encode_NetworkRequestType msg.f_NetworkCounterpartySystemStatusRequest_NetworkRequestType );
+    ( "933" , req encode_string msg.f_NetworkCounterpartySystemStatusRequest_NetworkRequestID );
+    ]
+    @ repeat encode_CompIDReqGrp "936" msg.f_NetworkCounterpartySystemStatusRequest_CompIDReqGrp
+;;
+
+let encode_NetworkCounterpartySystemStatusResponse msg =
+    [
+    ( "937" , req encode_NetworkStatusResponseType msg.f_NetworkCounterpartySystemStatusResponse_NetworkStatusResponseType );
+    ( "933" , opt encode_string msg.f_NetworkCounterpartySystemStatusResponse_NetworkRequestID );
+    ( "932" , req encode_string msg.f_NetworkCounterpartySystemStatusResponse_NetworkResponseID );
+    ( "934" , opt encode_string msg.f_NetworkCounterpartySystemStatusResponse_LastNetworkResponseID );
+    ]
+    @ repeat encode_CompIDStatGrp "936" msg.f_NetworkCounterpartySystemStatusResponse_CompIDStatGrp
 ;;
 
 let encode_NewOrderCross msg =
-    encode_SideCrossOrdModGrp msg.f_NewOrderCross_SideCrossOrdModGrp @
     encode_Instrument msg.f_NewOrderCross_Instrument @
-    encode_UndInstrmtGrp msg.f_NewOrderCross_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_NewOrderCross_InstrmtLegGrp @
-    encode_TrdgSesGrp msg.f_NewOrderCross_TrdgSesGrp @
-    encode_Stipulations msg.f_NewOrderCross_Stipulations @
     encode_SpreadOrBenchmarkCurveData msg.f_NewOrderCross_SpreadOrBenchmarkCurveData @
     encode_YieldData msg.f_NewOrderCross_YieldData @
     encode_PegInstructions msg.f_NewOrderCross_PegInstructions @
@@ -1261,10 +1276,14 @@ let encode_NewOrderCross msg =
     ( "513" , opt encode_string msg.f_NewOrderCross_RegistID );
     ( "494" , opt encode_string msg.f_NewOrderCross_Designation );
     ]
+    @ repeat encode_SideCrossOrdModGrp "552" msg.f_NewOrderCross_SideCrossOrdModGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_NewOrderCross_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_NewOrderCross_InstrmtLegGrp
+    @ repeat encode_TrdgSesGrp "386" msg.f_NewOrderCross_TrdgSesGrp
+    @ repeat encode_Stipulations "232" msg.f_NewOrderCross_Stipulations
 ;;
 
 let encode_NewOrderList msg =
-    encode_ListOrdGrp msg.f_NewOrderList_ListOrdGrp @
     [
     ( "66" , req encode_string msg.f_NewOrderList_ListID );
     ( "390" , opt encode_string msg.f_NewOrderList_BidID );
@@ -1285,15 +1304,11 @@ let encode_NewOrderList msg =
     ( "68" , req encode_int msg.f_NewOrderList_TotNoOrders );
     ( "893" , opt encode_LastFragment msg.f_NewOrderList_LastFragment );
     ]
+    @ repeat encode_ListOrdGrp "73" msg.f_NewOrderList_ListOrdGrp
 ;;
 
 let encode_NewOrderMultileg msg =
-    encode_Parties msg.f_NewOrderMultileg_Parties @
-    encode_PreAllocMlegGrp msg.f_NewOrderMultileg_PreAllocMlegGrp @
-    encode_TrdgSesGrp msg.f_NewOrderMultileg_TrdgSesGrp @
     encode_Instrument msg.f_NewOrderMultileg_Instrument @
-    encode_UndInstrmtGrp msg.f_NewOrderMultileg_UndInstrmtGrp @
-    encode_LegOrdGrp msg.f_NewOrderMultileg_LegOrdGrp @
     encode_OrderQtyData msg.f_NewOrderMultileg_OrderQtyData @
     encode_CommissionData msg.f_NewOrderMultileg_CommissionData @
     encode_PegInstructions msg.f_NewOrderMultileg_PegInstructions @
@@ -1361,16 +1376,16 @@ let encode_NewOrderMultileg msg =
     ( "494" , opt encode_string msg.f_NewOrderMultileg_Designation );
     ( "563" , opt encode_MultiLegRptTypeReq msg.f_NewOrderMultileg_MultiLegRptTypeReq );
     ]
+    @ repeat encode_Parties "453" msg.f_NewOrderMultileg_Parties
+    @ repeat encode_PreAllocMlegGrp "78" msg.f_NewOrderMultileg_PreAllocMlegGrp
+    @ repeat encode_TrdgSesGrp "386" msg.f_NewOrderMultileg_TrdgSesGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_NewOrderMultileg_UndInstrmtGrp
+    @ repeat encode_LegOrdGrp "555" msg.f_NewOrderMultileg_LegOrdGrp
 ;;
 
 let encode_NewOrderSingle msg =
-    encode_Parties msg.f_NewOrderSingle_Parties @
-    encode_PreAllocGrp msg.f_NewOrderSingle_PreAllocGrp @
-    encode_TrdgSesGrp msg.f_NewOrderSingle_TrdgSesGrp @
     encode_Instrument msg.f_NewOrderSingle_Instrument @
     encode_FinancingDetails msg.f_NewOrderSingle_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_NewOrderSingle_UndInstrmtGrp @
-    encode_Stipulations msg.f_NewOrderSingle_Stipulations @
     encode_OrderQtyData msg.f_NewOrderSingle_OrderQtyData @
     encode_SpreadOrBenchmarkCurveData msg.f_NewOrderSingle_SpreadOrBenchmarkCurveData @
     encode_YieldData msg.f_NewOrderSingle_YieldData @
@@ -1442,14 +1457,14 @@ let encode_NewOrderSingle msg =
     ( "513" , opt encode_string msg.f_NewOrderSingle_RegistID );
     ( "494" , opt encode_string msg.f_NewOrderSingle_Designation );
     ]
+    @ repeat encode_Parties "453" msg.f_NewOrderSingle_Parties
+    @ repeat encode_PreAllocGrp "78" msg.f_NewOrderSingle_PreAllocGrp
+    @ repeat encode_TrdgSesGrp "386" msg.f_NewOrderSingle_TrdgSesGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_NewOrderSingle_UndInstrmtGrp
+    @ repeat encode_Stipulations "232" msg.f_NewOrderSingle_Stipulations
 ;;
 
 let encode_News msg =
-    encode_RoutingGrp msg.f_News_RoutingGrp @
-    encode_InstrmtGrp msg.f_News_InstrmtGrp @
-    encode_InstrmtLegGrp msg.f_News_InstrmtLegGrp @
-    encode_UndInstrmtGrp msg.f_News_UndInstrmtGrp @
-    encode_LinesOfTextGrp msg.f_News_LinesOfTextGrp @
     [
     ( "42" , opt encode_UTCTimestamp msg.f_News_OrigTime );
     ( "61" , opt encode_Urgency msg.f_News_Urgency );
@@ -1460,6 +1475,11 @@ let encode_News msg =
     ( "95" , opt encode_int msg.f_News_RawDataLength );
     ( "96" , opt encode_string msg.f_News_RawData );
     ]
+    @ repeat encode_RoutingGrp "215" msg.f_News_RoutingGrp
+    @ repeat encode_InstrmtGrp "146" msg.f_News_InstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_News_InstrmtLegGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_News_UndInstrmtGrp
+    @ repeat encode_LinesOfTextGrp "33" msg.f_News_LinesOfTextGrp
 ;;
 
 let encode_OrderCancelReject msg =
@@ -1489,12 +1509,8 @@ let encode_OrderCancelReject msg =
 ;;
 
 let encode_OrderCancelReplaceRequest msg =
-    encode_Parties msg.f_OrderCancelReplaceRequest_Parties @
-    encode_PreAllocGrp msg.f_OrderCancelReplaceRequest_PreAllocGrp @
-    encode_TrdgSesGrp msg.f_OrderCancelReplaceRequest_TrdgSesGrp @
     encode_Instrument msg.f_OrderCancelReplaceRequest_Instrument @
     encode_FinancingDetails msg.f_OrderCancelReplaceRequest_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_OrderCancelReplaceRequest_UndInstrmtGrp @
     encode_OrderQtyData msg.f_OrderCancelReplaceRequest_OrderQtyData @
     encode_SpreadOrBenchmarkCurveData msg.f_OrderCancelReplaceRequest_SpreadOrBenchmarkCurveData @
     encode_YieldData msg.f_OrderCancelReplaceRequest_YieldData @
@@ -1566,13 +1582,15 @@ let encode_OrderCancelReplaceRequest msg =
     ( "513" , opt encode_string msg.f_OrderCancelReplaceRequest_RegistID );
     ( "494" , opt encode_string msg.f_OrderCancelReplaceRequest_Designation );
     ]
+    @ repeat encode_Parties "453" msg.f_OrderCancelReplaceRequest_Parties
+    @ repeat encode_PreAllocGrp "78" msg.f_OrderCancelReplaceRequest_PreAllocGrp
+    @ repeat encode_TrdgSesGrp "386" msg.f_OrderCancelReplaceRequest_TrdgSesGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_OrderCancelReplaceRequest_UndInstrmtGrp
 ;;
 
 let encode_OrderCancelRequest msg =
-    encode_Parties msg.f_OrderCancelRequest_Parties @
     encode_Instrument msg.f_OrderCancelRequest_Instrument @
     encode_FinancingDetails msg.f_OrderCancelRequest_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_OrderCancelRequest_UndInstrmtGrp @
     encode_OrderQtyData msg.f_OrderCancelRequest_OrderQtyData @
     [
     ( "41" , req encode_string msg.f_OrderCancelRequest_OrigClOrdID );
@@ -1592,10 +1610,11 @@ let encode_OrderCancelRequest msg =
     ( "354" , opt encode_int msg.f_OrderCancelRequest_EncodedTextLen );
     ( "355" , opt encode_string msg.f_OrderCancelRequest_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_OrderCancelRequest_Parties
+    @ repeat encode_UndInstrmtGrp "711" msg.f_OrderCancelRequest_UndInstrmtGrp
 ;;
 
 let encode_OrderMassCancelReport msg =
-    encode_AffectedOrdGrp msg.f_OrderMassCancelReport_AffectedOrdGrp @
     encode_Instrument msg.f_OrderMassCancelReport_Instrument @
     encode_UnderlyingInstrument msg.f_OrderMassCancelReport_UnderlyingInstrument @
     [
@@ -1615,6 +1634,7 @@ let encode_OrderMassCancelReport msg =
     ( "354" , opt encode_int msg.f_OrderMassCancelReport_EncodedTextLen );
     ( "355" , opt encode_string msg.f_OrderMassCancelReport_EncodedText );
     ]
+    @ repeat encode_AffectedOrdGrp "534" msg.f_OrderMassCancelReport_AffectedOrdGrp
 ;;
 
 let encode_OrderMassCancelRequest msg =
@@ -1635,7 +1655,6 @@ let encode_OrderMassCancelRequest msg =
 ;;
 
 let encode_OrderMassStatusRequest msg =
-    encode_Parties msg.f_OrderMassStatusRequest_Parties @
     encode_Instrument msg.f_OrderMassStatusRequest_Instrument @
     encode_UnderlyingInstrument msg.f_OrderMassStatusRequest_UnderlyingInstrument @
     [
@@ -1647,13 +1666,12 @@ let encode_OrderMassStatusRequest msg =
     ( "625" , opt encode_string msg.f_OrderMassStatusRequest_TradingSessionSubID );
     ( "54" , opt encode_Side msg.f_OrderMassStatusRequest_Side );
     ]
+    @ repeat encode_Parties "453" msg.f_OrderMassStatusRequest_Parties
 ;;
 
 let encode_OrderStatusRequest msg =
-    encode_Parties msg.f_OrderStatusRequest_Parties @
     encode_Instrument msg.f_OrderStatusRequest_Instrument @
     encode_FinancingDetails msg.f_OrderStatusRequest_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_OrderStatusRequest_UndInstrmtGrp @
     [
     ( "37" , opt encode_string msg.f_OrderStatusRequest_OrderID );
     ( "11" , req encode_string msg.f_OrderStatusRequest_ClOrdID );
@@ -1664,16 +1682,12 @@ let encode_OrderStatusRequest msg =
     ( "660" , opt encode_AcctIDSource msg.f_OrderStatusRequest_AcctIDSource );
     ( "54" , req encode_Side msg.f_OrderStatusRequest_Side );
     ]
+    @ repeat encode_Parties "453" msg.f_OrderStatusRequest_Parties
+    @ repeat encode_UndInstrmtGrp "711" msg.f_OrderStatusRequest_UndInstrmtGrp
 ;;
 
 let encode_PositionMaintenanceReport msg =
-    encode_Parties msg.f_PositionMaintenanceReport_Parties @
     encode_Instrument msg.f_PositionMaintenanceReport_Instrument @
-    encode_InstrmtLegGrp msg.f_PositionMaintenanceReport_InstrmtLegGrp @
-    encode_UndInstrmtGrp msg.f_PositionMaintenanceReport_UndInstrmtGrp @
-    encode_TrdgSesGrp msg.f_PositionMaintenanceReport_TrdgSesGrp @
-    encode_PositionQty msg.f_PositionMaintenanceReport_PositionQty @
-    encode_PositionAmountData msg.f_PositionMaintenanceReport_PositionAmountData @
     [
     ( "721" , req encode_string msg.f_PositionMaintenanceReport_PosMaintRptID );
     ( "709" , req encode_PosTransType msg.f_PositionMaintenanceReport_PosTransType );
@@ -1696,15 +1710,16 @@ let encode_PositionMaintenanceReport msg =
     ( "354" , opt encode_int msg.f_PositionMaintenanceReport_EncodedTextLen );
     ( "355" , opt encode_string msg.f_PositionMaintenanceReport_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_PositionMaintenanceReport_Parties
+    @ repeat encode_InstrmtLegGrp "555" msg.f_PositionMaintenanceReport_InstrmtLegGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_PositionMaintenanceReport_UndInstrmtGrp
+    @ repeat encode_TrdgSesGrp "386" msg.f_PositionMaintenanceReport_TrdgSesGrp
+    @ repeat encode_PositionQty "702" msg.f_PositionMaintenanceReport_PositionQty
+    @ repeat encode_PositionAmountData "753" msg.f_PositionMaintenanceReport_PositionAmountData
 ;;
 
 let encode_PositionMaintenanceRequest msg =
-    encode_Parties msg.f_PositionMaintenanceRequest_Parties @
     encode_Instrument msg.f_PositionMaintenanceRequest_Instrument @
-    encode_InstrmtLegGrp msg.f_PositionMaintenanceRequest_InstrmtLegGrp @
-    encode_UndInstrmtGrp msg.f_PositionMaintenanceRequest_UndInstrmtGrp @
-    encode_TrdgSesGrp msg.f_PositionMaintenanceRequest_TrdgSesGrp @
-    encode_PositionQty msg.f_PositionMaintenanceRequest_PositionQty @
     [
     ( "710" , req encode_string msg.f_PositionMaintenanceRequest_PosReqID );
     ( "709" , req encode_PosTransType msg.f_PositionMaintenanceRequest_PosTransType );
@@ -1727,15 +1742,15 @@ let encode_PositionMaintenanceRequest msg =
     ( "354" , opt encode_int msg.f_PositionMaintenanceRequest_EncodedTextLen );
     ( "355" , opt encode_string msg.f_PositionMaintenanceRequest_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_PositionMaintenanceRequest_Parties
+    @ repeat encode_InstrmtLegGrp "555" msg.f_PositionMaintenanceRequest_InstrmtLegGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_PositionMaintenanceRequest_UndInstrmtGrp
+    @ repeat encode_TrdgSesGrp "386" msg.f_PositionMaintenanceRequest_TrdgSesGrp
+    @ repeat encode_PositionQty "702" msg.f_PositionMaintenanceRequest_PositionQty
 ;;
 
 let encode_PositionReport msg =
-    encode_Parties msg.f_PositionReport_Parties @
     encode_Instrument msg.f_PositionReport_Instrument @
-    encode_InstrmtLegGrp msg.f_PositionReport_InstrmtLegGrp @
-    encode_PosUndInstrmtGrp msg.f_PositionReport_PosUndInstrmtGrp @
-    encode_PositionQty msg.f_PositionReport_PositionQty @
-    encode_PositionAmountData msg.f_PositionReport_PositionAmountData @
     [
     ( "721" , req encode_string msg.f_PositionReport_PosMaintRptID );
     ( "710" , opt encode_string msg.f_PositionReport_PosReqID );
@@ -1760,17 +1775,17 @@ let encode_PositionReport msg =
     ( "354" , opt encode_int msg.f_PositionReport_EncodedTextLen );
     ( "355" , opt encode_string msg.f_PositionReport_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_PositionReport_Parties
+    @ repeat encode_InstrmtLegGrp "555" msg.f_PositionReport_InstrmtLegGrp
+    @ repeat encode_PosUndInstrmtGrp "711" msg.f_PositionReport_PosUndInstrmtGrp
+    @ repeat encode_PositionQty "702" msg.f_PositionReport_PositionQty
+    @ repeat encode_PositionAmountData "753" msg.f_PositionReport_PositionAmountData
 ;;
 
 let encode_Quote msg =
-    encode_QuotQualGrp msg.f_Quote_QuotQualGrp @
-    encode_Parties msg.f_Quote_Parties @
     encode_Instrument msg.f_Quote_Instrument @
     encode_FinancingDetails msg.f_Quote_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_Quote_UndInstrmtGrp @
     encode_OrderQtyData msg.f_Quote_OrderQtyData @
-    encode_Stipulations msg.f_Quote_Stipulations @
-    encode_LegQuotGrp msg.f_Quote_LegQuotGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_Quote_SpreadOrBenchmarkCurveData @
     encode_YieldData msg.f_Quote_YieldData @
     [
@@ -1824,11 +1839,14 @@ let encode_Quote msg =
     ( "354" , opt encode_int msg.f_Quote_EncodedTextLen );
     ( "355" , opt encode_string msg.f_Quote_EncodedText );
     ]
+    @ repeat encode_QuotQualGrp "735" msg.f_Quote_QuotQualGrp
+    @ repeat encode_Parties "453" msg.f_Quote_Parties
+    @ repeat encode_UndInstrmtGrp "711" msg.f_Quote_UndInstrmtGrp
+    @ repeat encode_Stipulations "232" msg.f_Quote_Stipulations
+    @ repeat encode_LegQuotGrp "555" msg.f_Quote_LegQuotGrp
 ;;
 
 let encode_QuoteCancel msg =
-    encode_Parties msg.f_QuoteCancel_Parties @
-    encode_QuotCxlEntriesGrp msg.f_QuoteCancel_QuotCxlEntriesGrp @
     [
     ( "131" , opt encode_string msg.f_QuoteCancel_QuoteReqID );
     ( "117" , req encode_string msg.f_QuoteCancel_QuoteID );
@@ -1840,10 +1858,11 @@ let encode_QuoteCancel msg =
     ( "336" , opt encode_string msg.f_QuoteCancel_TradingSessionID );
     ( "625" , opt encode_string msg.f_QuoteCancel_TradingSessionSubID );
     ]
+    @ repeat encode_Parties "453" msg.f_QuoteCancel_Parties
+    @ repeat encode_QuotCxlEntriesGrp "295" msg.f_QuoteCancel_QuotCxlEntriesGrp
 ;;
 
 let encode_QuoteRequest msg =
-    encode_QuotReqGrp msg.f_QuoteRequest_QuotReqGrp @
     [
     ( "131" , req encode_string msg.f_QuoteRequest_QuoteReqID );
     ( "644" , opt encode_string msg.f_QuoteRequest_RFQReqID );
@@ -1853,10 +1872,10 @@ let encode_QuoteRequest msg =
     ( "354" , opt encode_int msg.f_QuoteRequest_EncodedTextLen );
     ( "355" , opt encode_string msg.f_QuoteRequest_EncodedText );
     ]
+    @ repeat encode_QuotReqGrp "146" msg.f_QuoteRequest_QuotReqGrp
 ;;
 
 let encode_QuoteRequestReject msg =
-    encode_QuotReqRjctGrp msg.f_QuoteRequestReject_QuotReqRjctGrp @
     [
     ( "131" , req encode_string msg.f_QuoteRequestReject_QuoteReqID );
     ( "644" , opt encode_string msg.f_QuoteRequestReject_RFQReqID );
@@ -1865,17 +1884,13 @@ let encode_QuoteRequestReject msg =
     ( "354" , opt encode_int msg.f_QuoteRequestReject_EncodedTextLen );
     ( "355" , opt encode_string msg.f_QuoteRequestReject_EncodedText );
     ]
+    @ repeat encode_QuotReqRjctGrp "146" msg.f_QuoteRequestReject_QuotReqRjctGrp
 ;;
 
 let encode_QuoteResponse msg =
-    encode_QuotQualGrp msg.f_QuoteResponse_QuotQualGrp @
-    encode_Parties msg.f_QuoteResponse_Parties @
     encode_Instrument msg.f_QuoteResponse_Instrument @
     encode_FinancingDetails msg.f_QuoteResponse_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_QuoteResponse_UndInstrmtGrp @
     encode_OrderQtyData msg.f_QuoteResponse_OrderQtyData @
-    encode_Stipulations msg.f_QuoteResponse_Stipulations @
-    encode_LegQuotGrp msg.f_QuoteResponse_LegQuotGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_QuoteResponse_SpreadOrBenchmarkCurveData @
     encode_YieldData msg.f_QuoteResponse_YieldData @
     [
@@ -1931,17 +1946,17 @@ let encode_QuoteResponse msg =
     ( "44" , opt encode_float msg.f_QuoteResponse_Price );
     ( "423" , opt encode_PriceType msg.f_QuoteResponse_PriceType );
     ]
+    @ repeat encode_QuotQualGrp "735" msg.f_QuoteResponse_QuotQualGrp
+    @ repeat encode_Parties "453" msg.f_QuoteResponse_Parties
+    @ repeat encode_UndInstrmtGrp "711" msg.f_QuoteResponse_UndInstrmtGrp
+    @ repeat encode_Stipulations "232" msg.f_QuoteResponse_Stipulations
+    @ repeat encode_LegQuotGrp "555" msg.f_QuoteResponse_LegQuotGrp
 ;;
 
 let encode_QuoteStatusReport msg =
-    encode_Parties msg.f_QuoteStatusReport_Parties @
     encode_Instrument msg.f_QuoteStatusReport_Instrument @
     encode_FinancingDetails msg.f_QuoteStatusReport_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_QuoteStatusReport_UndInstrmtGrp @
     encode_OrderQtyData msg.f_QuoteStatusReport_OrderQtyData @
-    encode_Stipulations msg.f_QuoteStatusReport_Stipulations @
-    encode_LegQuotStatGrp msg.f_QuoteStatusReport_LegQuotStatGrp @
-    encode_QuotQualGrp msg.f_QuoteStatusReport_QuotQualGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_QuoteStatusReport_SpreadOrBenchmarkCurveData @
     encode_YieldData msg.f_QuoteStatusReport_YieldData @
     [
@@ -1997,14 +2012,16 @@ let encode_QuoteStatusReport msg =
     ( "354" , opt encode_int msg.f_QuoteStatusReport_EncodedTextLen );
     ( "355" , opt encode_string msg.f_QuoteStatusReport_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_QuoteStatusReport_Parties
+    @ repeat encode_UndInstrmtGrp "711" msg.f_QuoteStatusReport_UndInstrmtGrp
+    @ repeat encode_Stipulations "232" msg.f_QuoteStatusReport_Stipulations
+    @ repeat encode_LegQuotStatGrp "555" msg.f_QuoteStatusReport_LegQuotStatGrp
+    @ repeat encode_QuotQualGrp "735" msg.f_QuoteStatusReport_QuotQualGrp
 ;;
 
 let encode_QuoteStatusRequest msg =
     encode_Instrument msg.f_QuoteStatusRequest_Instrument @
     encode_FinancingDetails msg.f_QuoteStatusRequest_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_QuoteStatusRequest_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_QuoteStatusRequest_InstrmtLegGrp @
-    encode_Parties msg.f_QuoteStatusRequest_Parties @
     [
     ( "649" , opt encode_string msg.f_QuoteStatusRequest_QuoteStatusReqID );
     ( "117" , opt encode_string msg.f_QuoteStatusRequest_QuoteID );
@@ -2015,20 +2032,20 @@ let encode_QuoteStatusRequest msg =
     ( "625" , opt encode_string msg.f_QuoteStatusRequest_TradingSessionSubID );
     ( "263" , opt encode_SubscriptionRequestType msg.f_QuoteStatusRequest_SubscriptionRequestType );
     ]
+    @ repeat encode_UndInstrmtGrp "711" msg.f_QuoteStatusRequest_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_QuoteStatusRequest_InstrmtLegGrp
+    @ repeat encode_Parties "453" msg.f_QuoteStatusRequest_Parties
 ;;
 
 let encode_RFQRequest msg =
-    encode_RFQReqGrp msg.f_RFQRequest_RFQReqGrp @
     [
     ( "644" , req encode_string msg.f_RFQRequest_RFQReqID );
     ( "263" , opt encode_SubscriptionRequestType msg.f_RFQRequest_SubscriptionRequestType );
     ]
+    @ repeat encode_RFQReqGrp "146" msg.f_RFQRequest_RFQReqGrp
 ;;
 
 let encode_RegistrationInstructions msg =
-    encode_Parties msg.f_RegistrationInstructions_Parties @
-    encode_RgstDtlsGrp msg.f_RegistrationInstructions_RgstDtlsGrp @
-    encode_RgstDistInstGrp msg.f_RegistrationInstructions_RgstDistInstGrp @
     [
     ( "513" , req encode_string msg.f_RegistrationInstructions_RegistID );
     ( "514" , req encode_RegistTransType msg.f_RegistrationInstructions_RegistTransType );
@@ -2040,10 +2057,12 @@ let encode_RegistrationInstructions msg =
     ( "495" , opt encode_TaxAdvantageType msg.f_RegistrationInstructions_TaxAdvantageType );
     ( "517" , opt encode_OwnershipType msg.f_RegistrationInstructions_OwnershipType );
     ]
+    @ repeat encode_Parties "453" msg.f_RegistrationInstructions_Parties
+    @ repeat encode_RgstDtlsGrp "473" msg.f_RegistrationInstructions_RgstDtlsGrp
+    @ repeat encode_RgstDistInstGrp "510" msg.f_RegistrationInstructions_RgstDistInstGrp
 ;;
 
 let encode_RegistrationInstructionsResponse msg =
-    encode_Parties msg.f_RegistrationInstructionsResponse_Parties @
     [
     ( "513" , req encode_string msg.f_RegistrationInstructionsResponse_RegistID );
     ( "514" , req encode_RegistTransType msg.f_RegistrationInstructionsResponse_RegistTransType );
@@ -2055,14 +2074,11 @@ let encode_RegistrationInstructionsResponse msg =
     ( "507" , opt encode_RegistRejReasonCode msg.f_RegistrationInstructionsResponse_RegistRejReasonCode );
     ( "496" , opt encode_string msg.f_RegistrationInstructionsResponse_RegistRejReasonText );
     ]
+    @ repeat encode_Parties "453" msg.f_RegistrationInstructionsResponse_Parties
 ;;
 
 let encode_RequestForPositions msg =
-    encode_Parties msg.f_RequestForPositions_Parties @
     encode_Instrument msg.f_RequestForPositions_Instrument @
-    encode_InstrmtLegGrp msg.f_RequestForPositions_InstrmtLegGrp @
-    encode_UndInstrmtGrp msg.f_RequestForPositions_UndInstrmtGrp @
-    encode_TrdgSesGrp msg.f_RequestForPositions_TrdgSesGrp @
     [
     ( "710" , req encode_string msg.f_RequestForPositions_PosReqID );
     ( "724" , req encode_PosReqType msg.f_RequestForPositions_PosReqType );
@@ -2082,13 +2098,14 @@ let encode_RequestForPositions msg =
     ( "354" , opt encode_int msg.f_RequestForPositions_EncodedTextLen );
     ( "355" , opt encode_string msg.f_RequestForPositions_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_RequestForPositions_Parties
+    @ repeat encode_InstrmtLegGrp "555" msg.f_RequestForPositions_InstrmtLegGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_RequestForPositions_UndInstrmtGrp
+    @ repeat encode_TrdgSesGrp "386" msg.f_RequestForPositions_TrdgSesGrp
 ;;
 
 let encode_RequestForPositionsAck msg =
-    encode_Parties msg.f_RequestForPositionsAck_Parties @
     encode_Instrument msg.f_RequestForPositionsAck_Instrument @
-    encode_InstrmtLegGrp msg.f_RequestForPositionsAck_InstrmtLegGrp @
-    encode_UndInstrmtGrp msg.f_RequestForPositionsAck_UndInstrmtGrp @
     [
     ( "721" , req encode_string msg.f_RequestForPositionsAck_PosMaintRptID );
     ( "710" , opt encode_string msg.f_RequestForPositionsAck_PosReqID );
@@ -2106,13 +2123,14 @@ let encode_RequestForPositionsAck msg =
     ( "354" , opt encode_int msg.f_RequestForPositionsAck_EncodedTextLen );
     ( "355" , opt encode_string msg.f_RequestForPositionsAck_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_RequestForPositionsAck_Parties
+    @ repeat encode_InstrmtLegGrp "555" msg.f_RequestForPositionsAck_InstrmtLegGrp
+    @ repeat encode_UndInstrmtGrp "711" msg.f_RequestForPositionsAck_UndInstrmtGrp
 ;;
 
 let encode_SecurityDefinition msg =
     encode_Instrument msg.f_SecurityDefinition_Instrument @
     encode_InstrumentExtension msg.f_SecurityDefinition_InstrumentExtension @
-    encode_UndInstrmtGrp msg.f_SecurityDefinition_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_SecurityDefinition_InstrmtLegGrp @
     [
     ( "320" , req encode_string msg.f_SecurityDefinition_SecurityReqID );
     ( "322" , req encode_string msg.f_SecurityDefinition_SecurityResponseID );
@@ -2127,13 +2145,13 @@ let encode_SecurityDefinition msg =
     ( "561" , opt encode_float msg.f_SecurityDefinition_RoundLot );
     ( "562" , opt encode_float msg.f_SecurityDefinition_MinTradeVol );
     ]
+    @ repeat encode_UndInstrmtGrp "711" msg.f_SecurityDefinition_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_SecurityDefinition_InstrmtLegGrp
 ;;
 
 let encode_SecurityDefinitionRequest msg =
     encode_Instrument msg.f_SecurityDefinitionRequest_Instrument @
     encode_InstrumentExtension msg.f_SecurityDefinitionRequest_InstrumentExtension @
-    encode_UndInstrmtGrp msg.f_SecurityDefinitionRequest_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_SecurityDefinitionRequest_InstrmtLegGrp @
     [
     ( "320" , req encode_string msg.f_SecurityDefinitionRequest_SecurityReqID );
     ( "321" , req encode_SecurityRequestType msg.f_SecurityDefinitionRequest_SecurityRequestType );
@@ -2146,10 +2164,11 @@ let encode_SecurityDefinitionRequest msg =
     ( "827" , opt encode_ExpirationCycle msg.f_SecurityDefinitionRequest_ExpirationCycle );
     ( "263" , opt encode_SubscriptionRequestType msg.f_SecurityDefinitionRequest_SubscriptionRequestType );
     ]
+    @ repeat encode_UndInstrmtGrp "711" msg.f_SecurityDefinitionRequest_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_SecurityDefinitionRequest_InstrmtLegGrp
 ;;
 
 let encode_SecurityList msg =
-    encode_SecListGrp msg.f_SecurityList_SecListGrp @
     [
     ( "320" , req encode_string msg.f_SecurityList_SecurityReqID );
     ( "322" , req encode_string msg.f_SecurityList_SecurityResponseID );
@@ -2157,14 +2176,13 @@ let encode_SecurityList msg =
     ( "393" , opt encode_int msg.f_SecurityList_TotNoRelatedSym );
     ( "893" , opt encode_LastFragment msg.f_SecurityList_LastFragment );
     ]
+    @ repeat encode_SecListGrp "146" msg.f_SecurityList_SecListGrp
 ;;
 
 let encode_SecurityListRequest msg =
     encode_Instrument msg.f_SecurityListRequest_Instrument @
     encode_InstrumentExtension msg.f_SecurityListRequest_InstrumentExtension @
     encode_FinancingDetails msg.f_SecurityListRequest_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_SecurityListRequest_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_SecurityListRequest_InstrmtLegGrp @
     [
     ( "320" , req encode_string msg.f_SecurityListRequest_SecurityReqID );
     ( "559" , req encode_SecurityListRequestType msg.f_SecurityListRequest_SecurityListRequestType );
@@ -2176,13 +2194,13 @@ let encode_SecurityListRequest msg =
     ( "625" , opt encode_string msg.f_SecurityListRequest_TradingSessionSubID );
     ( "263" , opt encode_SubscriptionRequestType msg.f_SecurityListRequest_SubscriptionRequestType );
     ]
+    @ repeat encode_UndInstrmtGrp "711" msg.f_SecurityListRequest_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_SecurityListRequest_InstrmtLegGrp
 ;;
 
 let encode_SecurityStatus msg =
     encode_Instrument msg.f_SecurityStatus_Instrument @
     encode_InstrumentExtension msg.f_SecurityStatus_InstrumentExtension @
-    encode_UndInstrmtGrp msg.f_SecurityStatus_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_SecurityStatus_InstrmtLegGrp @
     [
     ( "324" , opt encode_string msg.f_SecurityStatus_SecurityStatusReqID );
     ( "15" , opt encode_Currency msg.f_SecurityStatus_Currency );
@@ -2206,13 +2224,13 @@ let encode_SecurityStatus msg =
     ( "354" , opt encode_int msg.f_SecurityStatus_EncodedTextLen );
     ( "355" , opt encode_string msg.f_SecurityStatus_EncodedText );
     ]
+    @ repeat encode_UndInstrmtGrp "711" msg.f_SecurityStatus_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_SecurityStatus_InstrmtLegGrp
 ;;
 
 let encode_SecurityStatusRequest msg =
     encode_Instrument msg.f_SecurityStatusRequest_Instrument @
     encode_InstrumentExtension msg.f_SecurityStatusRequest_InstrumentExtension @
-    encode_UndInstrmtGrp msg.f_SecurityStatusRequest_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_SecurityStatusRequest_InstrmtLegGrp @
     [
     ( "324" , req encode_string msg.f_SecurityStatusRequest_SecurityStatusReqID );
     ( "15" , opt encode_Currency msg.f_SecurityStatusRequest_Currency );
@@ -2220,6 +2238,8 @@ let encode_SecurityStatusRequest msg =
     ( "336" , opt encode_string msg.f_SecurityStatusRequest_TradingSessionID );
     ( "625" , opt encode_string msg.f_SecurityStatusRequest_TradingSessionSubID );
     ]
+    @ repeat encode_UndInstrmtGrp "711" msg.f_SecurityStatusRequest_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_SecurityStatusRequest_InstrmtLegGrp
 ;;
 
 let encode_SecurityTypeRequest msg =
@@ -2237,7 +2257,6 @@ let encode_SecurityTypeRequest msg =
 ;;
 
 let encode_SecurityTypes msg =
-    encode_SecTypesGrp msg.f_SecurityTypes_SecTypesGrp @
     [
     ( "320" , req encode_string msg.f_SecurityTypes_SecurityReqID );
     ( "322" , req encode_string msg.f_SecurityTypes_SecurityResponseID );
@@ -2251,10 +2270,30 @@ let encode_SecurityTypes msg =
     ( "625" , opt encode_string msg.f_SecurityTypes_TradingSessionSubID );
     ( "263" , opt encode_SubscriptionRequestType msg.f_SecurityTypes_SubscriptionRequestType );
     ]
+    @ repeat encode_SecTypesGrp "558" msg.f_SecurityTypes_SecTypesGrp
+;;
+
+let encode_SettlementInstructionRequest msg =
+    [
+    ( "791" , req encode_string msg.f_SettlementInstructionRequest_SettlInstReqID );
+    ( "60" , req encode_UTCTimestamp msg.f_SettlementInstructionRequest_TransactTime );
+    ( "79" , opt encode_string msg.f_SettlementInstructionRequest_AllocAccount );
+    ( "661" , opt encode_int msg.f_SettlementInstructionRequest_AllocAcctIDSource );
+    ( "54" , opt encode_Side msg.f_SettlementInstructionRequest_Side );
+    ( "460" , opt encode_Product msg.f_SettlementInstructionRequest_Product );
+    ( "167" , opt encode_SecurityType msg.f_SettlementInstructionRequest_SecurityType );
+    ( "461" , opt encode_string msg.f_SettlementInstructionRequest_CFICode );
+    ( "168" , opt encode_UTCTimestamp msg.f_SettlementInstructionRequest_EffectiveTime );
+    ( "126" , opt encode_UTCTimestamp msg.f_SettlementInstructionRequest_ExpireTime );
+    ( "779" , opt encode_UTCTimestamp msg.f_SettlementInstructionRequest_LastUpdateTime );
+    ( "169" , opt encode_StandInstDbType msg.f_SettlementInstructionRequest_StandInstDbType );
+    ( "170" , opt encode_string msg.f_SettlementInstructionRequest_StandInstDbName );
+    ( "171" , opt encode_string msg.f_SettlementInstructionRequest_StandInstDbID );
+    ]
+    @ repeat encode_Parties "453" msg.f_SettlementInstructionRequest_Parties
 ;;
 
 let encode_SettlementInstructions msg =
-    encode_SettlInstGrp msg.f_SettlementInstructions_SettlInstGrp @
     [
     ( "777" , req encode_string msg.f_SettlementInstructions_SettlInstMsgID );
     ( "791" , opt encode_string msg.f_SettlementInstructions_SettlInstReqID );
@@ -2266,6 +2305,7 @@ let encode_SettlementInstructions msg =
     ( "11" , opt encode_string msg.f_SettlementInstructions_ClOrdID );
     ( "60" , req encode_UTCTimestamp msg.f_SettlementInstructions_TransactTime );
     ]
+    @ repeat encode_SettlInstGrp "778" msg.f_SettlementInstructions_SettlInstGrp
 ;;
 
 let encode_TradeCaptureReport msg =
@@ -2273,12 +2313,7 @@ let encode_TradeCaptureReport msg =
     encode_FinancingDetails msg.f_TradeCaptureReport_FinancingDetails @
     encode_OrderQtyData msg.f_TradeCaptureReport_OrderQtyData @
     encode_YieldData msg.f_TradeCaptureReport_YieldData @
-    encode_UndInstrmtGrp msg.f_TradeCaptureReport_UndInstrmtGrp @
     encode_SpreadOrBenchmarkCurveData msg.f_TradeCaptureReport_SpreadOrBenchmarkCurveData @
-    encode_PositionAmountData msg.f_TradeCaptureReport_PositionAmountData @
-    encode_TrdInstrmtLegGrp msg.f_TradeCaptureReport_TrdInstrmtLegGrp @
-    encode_TrdRegTimestamps msg.f_TradeCaptureReport_TrdRegTimestamps @
-    encode_TrdCapRptSideGrp msg.f_TradeCaptureReport_TrdCapRptSideGrp @
     [
     ( "571" , req encode_string msg.f_TradeCaptureReport_TradeReportID );
     ( "487" , opt encode_int msg.f_TradeCaptureReport_TradeReportTransType );
@@ -2328,13 +2363,15 @@ let encode_TradeCaptureReport msg =
     ( "852" , opt encode_PublishTrdIndicator msg.f_TradeCaptureReport_PublishTrdIndicator );
     ( "853" , opt encode_ShortSaleReason msg.f_TradeCaptureReport_ShortSaleReason );
     ]
+    @ repeat encode_UndInstrmtGrp "711" msg.f_TradeCaptureReport_UndInstrmtGrp
+    @ repeat encode_PositionAmountData "753" msg.f_TradeCaptureReport_PositionAmountData
+    @ repeat encode_TrdInstrmtLegGrp "555" msg.f_TradeCaptureReport_TrdInstrmtLegGrp
+    @ repeat encode_TrdRegTimestamps "768" msg.f_TradeCaptureReport_TrdRegTimestamps
+    @ repeat encode_TrdCapRptSideGrp "552" msg.f_TradeCaptureReport_TrdCapRptSideGrp
 ;;
 
 let encode_TradeCaptureReportAck msg =
     encode_Instrument msg.f_TradeCaptureReportAck_Instrument @
-    encode_TrdRegTimestamps msg.f_TradeCaptureReportAck_TrdRegTimestamps @
-    encode_TrdInstrmtLegGrp msg.f_TradeCaptureReportAck_TrdInstrmtLegGrp @
-    encode_TrdAllocGrp msg.f_TradeCaptureReportAck_TrdAllocGrp @
     [
     ( "571" , req encode_string msg.f_TradeCaptureReportAck_TradeReportID );
     ( "487" , opt encode_int msg.f_TradeCaptureReportAck_TradeReportTransType );
@@ -2370,16 +2407,15 @@ let encode_TradeCaptureReportAck msg =
     ( "77" , opt encode_PositionEffect msg.f_TradeCaptureReportAck_PositionEffect );
     ( "591" , opt encode_PreallocMethod msg.f_TradeCaptureReportAck_PreallocMethod );
     ]
+    @ repeat encode_TrdRegTimestamps "768" msg.f_TradeCaptureReportAck_TrdRegTimestamps
+    @ repeat encode_TrdInstrmtLegGrp "555" msg.f_TradeCaptureReportAck_TrdInstrmtLegGrp
+    @ repeat encode_TrdAllocGrp "78" msg.f_TradeCaptureReportAck_TrdAllocGrp
 ;;
 
 let encode_TradeCaptureReportRequest msg =
-    encode_Parties msg.f_TradeCaptureReportRequest_Parties @
     encode_Instrument msg.f_TradeCaptureReportRequest_Instrument @
     encode_InstrumentExtension msg.f_TradeCaptureReportRequest_InstrumentExtension @
     encode_FinancingDetails msg.f_TradeCaptureReportRequest_FinancingDetails @
-    encode_UndInstrmtGrp msg.f_TradeCaptureReportRequest_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_TradeCaptureReportRequest_InstrmtLegGrp @
-    encode_TrdCapDtGrp msg.f_TradeCaptureReportRequest_TrdCapDtGrp @
     [
     ( "568" , req encode_string msg.f_TradeCaptureReportRequest_TradeRequestID );
     ( "569" , req encode_TradeRequestType msg.f_TradeCaptureReportRequest_TradeRequestType );
@@ -2411,12 +2447,14 @@ let encode_TradeCaptureReportRequest msg =
     ( "354" , opt encode_int msg.f_TradeCaptureReportRequest_EncodedTextLen );
     ( "355" , opt encode_string msg.f_TradeCaptureReportRequest_EncodedText );
     ]
+    @ repeat encode_Parties "453" msg.f_TradeCaptureReportRequest_Parties
+    @ repeat encode_UndInstrmtGrp "711" msg.f_TradeCaptureReportRequest_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_TradeCaptureReportRequest_InstrmtLegGrp
+    @ repeat encode_TrdCapDtGrp "580" msg.f_TradeCaptureReportRequest_TrdCapDtGrp
 ;;
 
 let encode_TradeCaptureReportRequestAck msg =
     encode_Instrument msg.f_TradeCaptureReportRequestAck_Instrument @
-    encode_UndInstrmtGrp msg.f_TradeCaptureReportRequestAck_UndInstrmtGrp @
-    encode_InstrmtLegGrp msg.f_TradeCaptureReportRequestAck_InstrmtLegGrp @
     [
     ( "568" , req encode_string msg.f_TradeCaptureReportRequestAck_TradeRequestID );
     ( "569" , req encode_TradeRequestType msg.f_TradeCaptureReportRequestAck_TradeRequestType );
@@ -2431,6 +2469,8 @@ let encode_TradeCaptureReportRequestAck msg =
     ( "354" , opt encode_int msg.f_TradeCaptureReportRequestAck_EncodedTextLen );
     ( "355" , opt encode_string msg.f_TradeCaptureReportRequestAck_EncodedText );
     ]
+    @ repeat encode_UndInstrmtGrp "711" msg.f_TradeCaptureReportRequestAck_UndInstrmtGrp
+    @ repeat encode_InstrmtLegGrp "555" msg.f_TradeCaptureReportRequestAck_InstrmtLegGrp
 ;;
 
 let encode_TradingSessionStatus msg =
@@ -2463,6 +2503,27 @@ let encode_TradingSessionStatusRequest msg =
     ( "338" , opt encode_TradSesMethod msg.f_TradingSessionStatusRequest_TradSesMethod );
     ( "339" , opt encode_TradSesMode msg.f_TradingSessionStatusRequest_TradSesMode );
     ( "263" , req encode_SubscriptionRequestType msg.f_TradingSessionStatusRequest_SubscriptionRequestType );
+    ]
+;;
+
+let encode_UserRequest msg =
+    [
+    ( "923" , req encode_string msg.f_UserRequest_UserRequestID );
+    ( "924" , req encode_UserRequestType msg.f_UserRequest_UserRequestType );
+    ( "553" , req encode_string msg.f_UserRequest_Username );
+    ( "554" , opt encode_string msg.f_UserRequest_Password );
+    ( "925" , opt encode_string msg.f_UserRequest_NewPassword );
+    ( "95" , opt encode_int msg.f_UserRequest_RawDataLength );
+    ( "96" , opt encode_string msg.f_UserRequest_RawData );
+    ]
+;;
+
+let encode_UserResponse msg =
+    [
+    ( "923" , req encode_string msg.f_UserResponse_UserRequestID );
+    ( "553" , req encode_string msg.f_UserResponse_Username );
+    ( "926" , opt encode_UserStatus msg.f_UserResponse_UserStatus );
+    ( "927" , opt encode_string msg.f_UserResponse_UserStatusText );
     ]
 ;;
 
@@ -2505,6 +2566,8 @@ let encode_app_msg_data msg =
         | FIX_Full_Msg_MassQuote msg -> (encode_MassQuote msg)
         | FIX_Full_Msg_MassQuoteAcknowledgement msg -> (encode_MassQuoteAcknowledgement msg)
         | FIX_Full_Msg_MultilegOrderCancelReplace msg -> (encode_MultilegOrderCancelReplace msg)
+        | FIX_Full_Msg_NetworkCounterpartySystemStatusRequest msg -> (encode_NetworkCounterpartySystemStatusRequest msg)
+        | FIX_Full_Msg_NetworkCounterpartySystemStatusResponse msg -> (encode_NetworkCounterpartySystemStatusResponse msg)
         | FIX_Full_Msg_NewOrderCross msg -> (encode_NewOrderCross msg)
         | FIX_Full_Msg_NewOrderList msg -> (encode_NewOrderList msg)
         | FIX_Full_Msg_NewOrderMultileg msg -> (encode_NewOrderMultileg msg)
@@ -2540,6 +2603,7 @@ let encode_app_msg_data msg =
         | FIX_Full_Msg_SecurityStatusRequest msg -> (encode_SecurityStatusRequest msg)
         | FIX_Full_Msg_SecurityTypeRequest msg -> (encode_SecurityTypeRequest msg)
         | FIX_Full_Msg_SecurityTypes msg -> (encode_SecurityTypes msg)
+        | FIX_Full_Msg_SettlementInstructionRequest msg -> (encode_SettlementInstructionRequest msg)
         | FIX_Full_Msg_SettlementInstructions msg -> (encode_SettlementInstructions msg)
         | FIX_Full_Msg_TradeCaptureReport msg -> (encode_TradeCaptureReport msg)
         | FIX_Full_Msg_TradeCaptureReportAck msg -> (encode_TradeCaptureReportAck msg)
@@ -2547,5 +2611,7 @@ let encode_app_msg_data msg =
         | FIX_Full_Msg_TradeCaptureReportRequestAck msg -> (encode_TradeCaptureReportRequestAck msg)
         | FIX_Full_Msg_TradingSessionStatus msg -> (encode_TradingSessionStatus msg)
         | FIX_Full_Msg_TradingSessionStatusRequest msg -> (encode_TradingSessionStatusRequest msg)
+        | FIX_Full_Msg_UserRequest msg -> (encode_UserRequest msg)
+        | FIX_Full_Msg_UserResponse msg -> (encode_UserResponse msg)
     )
 ;;
