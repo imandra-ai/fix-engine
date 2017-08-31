@@ -1,0 +1,99 @@
+imandramarkets : 0.0.0
+
+import FIX_4_2
+
+outbound message ExecutionReport {
+    req ClOrdID
+    req Symbol
+    req OrderID
+    req ExecID
+    req ExecType
+    req AvgPx
+    req Side
+    req LeavesQty
+    req CumQty
+    req OrdStatus
+    req ExecTransType
+    opt Text
+}
+
+message OrderSingle {
+    req ClOrdID unique      
+    req Symbol
+    req Side valid when it in [Side.Buy, Side.Sell, SellShort] 
+    req TransactTime
+    req OrdType
+    req HandlInst
+} 
+
+action x {
+    x : int
+}
+
+receive( msg: OrderSingle) {
+    send ExecutionReport with {
+        ClOrdID = msg.ClOrdID;
+        OrderID = msg.ClOrdID;
+        ExecID = "Test";
+        ExecType = ExecType.Calculated;
+        AvgPx = 0.0;
+        Side = msg.Side;
+        LeavesQty = 0.0;
+        CumQty = 0.0;
+        OrdStatus = OrdStatus.New;
+        ExecTransType = ExecTransType.New; 
+        Symbol = "None";
+    }
+}
+
+reject (msg:OrderSingle,rejReason:string)
+{
+    missingfield:{
+        send ExecutionReport with {
+            ClOrdID = "None";
+            OrderID = "None";
+            ExecID = "Test";
+            ExecType = ExecType.Calculated;
+            AvgPx = 0.0;
+            Side = Side.Buy;
+            LeavesQty = 0.0;
+            CumQty = 0.0;
+            OrdStatus = OrdStatus.New;
+            ExecTransType = ExecTransType.New;
+            Text = Some rejReason;
+            Symbol = "None";
+        }
+    }
+    invalidfield:{
+        send ExecutionReport with {
+            ClOrdID = "None";
+            OrderID = "None";
+            ExecID = "Test";
+            ExecType = ExecType.Calculated;
+            ExecTransType = ExecTransType.New;
+            AvgPx = 0.0;
+            Side = Side.Buy;
+            LeavesQty = 0.0;
+            CumQty = 0.0;
+            OrdStatus = OrdStatus.New;
+            Text = Some rejReason;
+            Symbol = "None";
+        }
+    }
+    invalid:{
+        send ExecutionReport with {
+            ClOrdID = "None";
+            OrderID = "None";
+            ExecID = "Test";
+            ExecType = ExecType.Calculated;
+            ExecTransType = ExecTransType.New;
+            AvgPx = 0.0;
+            Side = Side.Buy;
+            LeavesQty = 0.0;
+            CumQty = 0.0;
+            OrdStatus = OrdStatus.New;
+            Text = Some rejReason;
+            Symbol = "None";
+        }
+    }
+}

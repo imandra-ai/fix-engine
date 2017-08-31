@@ -1,9 +1,9 @@
 (jbuild_version 1)
 
 (library
-  ( (name        venue_types)
+  ( (name venue_types)
     (public_name venue_types)
-    (wrapped  false)
+    (wrapped false)
     (libraries (core))
   )
 )

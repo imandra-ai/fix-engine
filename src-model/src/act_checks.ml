@@ -1,10 +1,7 @@
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Base_types;;
-open Datetime;;
-open Numeric;;
-open Actions;;
 open State;;
-open Model_app_enums;;
+open Actions;;
 (* @meta[imandra_ignore] off @end *)
 
 let is_valid_action_x ( action_data : m_action_fix_x ) =

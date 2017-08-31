@@ -1,13 +1,14 @@
-
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
 open Full_app_enums;;
 open Model_app_enums;;
 (* @meta[imandra_ignore] off @end *)
 
-
 let convert__full_to_model_ExecType ( f : fix_exectype ) =
     (match f with
         | FIX_ExecType_New -> MOD_FIX_ExecType_New
+        | FIX_ExecType_PartialFill -> MOD_FIX_ExecType_PartialFill
+        | FIX_ExecType_Fill -> MOD_FIX_ExecType_Fill
         | FIX_ExecType_DoneForDay -> MOD_FIX_ExecType_DoneForDay
         | FIX_ExecType_Canceled -> MOD_FIX_ExecType_Canceled
         | FIX_ExecType_Replaced -> MOD_FIX_ExecType_Replaced
@@ -20,10 +21,6 @@ let convert__full_to_model_ExecType ( f : fix_exectype ) =
         | FIX_ExecType_Expired -> MOD_FIX_ExecType_Expired
         | FIX_ExecType_Restated -> MOD_FIX_ExecType_Restated
         | FIX_ExecType_PendingReplace -> MOD_FIX_ExecType_PendingReplace
-        | FIX_ExecType_Trade -> MOD_FIX_ExecType_Trade
-        | FIX_ExecType_TradeCorrect -> MOD_FIX_ExecType_TradeCorrect
-        | FIX_ExecType_TradeCancel -> MOD_FIX_ExecType_TradeCancel
-        | FIX_ExecType_OrderStatus -> MOD_FIX_ExecType_OrderStatus
     )
 ;;
 
@@ -38,13 +35,6 @@ let convert__full_to_model_Side ( f : fix_side ) =
         | FIX_Side_Undisclosed -> MOD_FIX_Side_Undisclosed
         | FIX_Side_Cross -> MOD_FIX_Side_Cross
         | FIX_Side_CrossShort -> MOD_FIX_Side_CrossShort
-        | FIX_Side_CrossShortExempt -> MOD_FIX_Side_CrossShortExempt
-        | FIX_Side_AsDefined -> MOD_FIX_Side_AsDefined
-        | FIX_Side_Opposite -> MOD_FIX_Side_Opposite
-        | FIX_Side_Subscribe -> MOD_FIX_Side_Subscribe
-        | FIX_Side_Redeem -> MOD_FIX_Side_Redeem
-        | FIX_Side_Lend -> MOD_FIX_Side_Lend
-        | FIX_Side_Borrow -> MOD_FIX_Side_Borrow
     )
 ;;
 
@@ -55,6 +45,7 @@ let convert__full_to_model_OrdStatus ( f : fix_ordstatus ) =
         | FIX_OrdStatus_Filled -> MOD_FIX_OrdStatus_Filled
         | FIX_OrdStatus_DoneForDay -> MOD_FIX_OrdStatus_DoneForDay
         | FIX_OrdStatus_Canceled -> MOD_FIX_OrdStatus_Canceled
+        | FIX_OrdStatus_Replaced -> MOD_FIX_OrdStatus_Replaced
         | FIX_OrdStatus_PendingCancel -> MOD_FIX_OrdStatus_PendingCancel
         | FIX_OrdStatus_Stopped -> MOD_FIX_OrdStatus_Stopped
         | FIX_OrdStatus_Rejected -> MOD_FIX_OrdStatus_Rejected
@@ -64,7 +55,15 @@ let convert__full_to_model_OrdStatus ( f : fix_ordstatus ) =
         | FIX_OrdStatus_Expired -> MOD_FIX_OrdStatus_Expired
         | FIX_OrdStatus_AcceptedForBidding -> MOD_FIX_OrdStatus_AcceptedForBidding
         | FIX_OrdStatus_PendingReplace -> MOD_FIX_OrdStatus_PendingReplace
-        | FIX_OrdStatus_Replaced -> MOD_FIX_OrdStatus_Replaced
+    )
+;;
+
+let convert__full_to_model_ExecTransType ( f : fix_exectranstype ) =
+    (match f with
+        | FIX_ExecTransType_New -> MOD_FIX_ExecTransType_New
+        | FIX_ExecTransType_Cancel -> MOD_FIX_ExecTransType_Cancel
+        | FIX_ExecTransType_Correct -> MOD_FIX_ExecTransType_Correct
+        | FIX_ExecTransType_Status -> MOD_FIX_ExecTransType_Status
     )
 ;;
 
@@ -74,25 +73,37 @@ let convert__full_to_model_OrdType ( f : fix_ordtype ) =
         | FIX_OrdType_Limit -> MOD_FIX_OrdType_Limit
         | FIX_OrdType_Stop -> MOD_FIX_OrdType_Stop
         | FIX_OrdType_StopLimit -> MOD_FIX_OrdType_StopLimit
+        | FIX_OrdType_MarketOnClose -> MOD_FIX_OrdType_MarketOnClose
         | FIX_OrdType_WithOrWithout -> MOD_FIX_OrdType_WithOrWithout
         | FIX_OrdType_LimitOrBetter -> MOD_FIX_OrdType_LimitOrBetter
         | FIX_OrdType_LimitWithOrWithout -> MOD_FIX_OrdType_LimitWithOrWithout
         | FIX_OrdType_OnBasis -> MOD_FIX_OrdType_OnBasis
+        | FIX_OrdType_OnClose -> MOD_FIX_OrdType_OnClose
+        | FIX_OrdType_LimitOnClose -> MOD_FIX_OrdType_LimitOnClose
+        | FIX_OrdType_ForexMarket -> MOD_FIX_OrdType_ForexMarket
         | FIX_OrdType_PreviouslyQuoted -> MOD_FIX_OrdType_PreviouslyQuoted
         | FIX_OrdType_PreviouslyIndicated -> MOD_FIX_OrdType_PreviouslyIndicated
+        | FIX_OrdType_ForexLimit -> MOD_FIX_OrdType_ForexLimit
         | FIX_OrdType_ForexSwap -> MOD_FIX_OrdType_ForexSwap
+        | FIX_OrdType_ForexPreviouslyQuoted -> MOD_FIX_OrdType_ForexPreviouslyQuoted
         | FIX_OrdType_Funari -> MOD_FIX_OrdType_Funari
-        | FIX_OrdType_MarketIfTouched -> MOD_FIX_OrdType_MarketIfTouched
-        | FIX_OrdType_MarketWithLeftOverAsLimit -> MOD_FIX_OrdType_MarketWithLeftOverAsLimit
-        | FIX_OrdType_PreviousFundValuationPoint -> MOD_FIX_OrdType_PreviousFundValuationPoint
-        | FIX_OrdType_NextFundValuationPoint -> MOD_FIX_OrdType_NextFundValuationPoint
         | FIX_OrdType_Pegged -> MOD_FIX_OrdType_Pegged
+    )
+;;
+
+let convert__full_to_model_HandlInst ( f : fix_handlinst ) =
+    (match f with
+        | FIX_HandlInst_AutomatedExecutionNoIntervention -> MOD_FIX_HandlInst_AutomatedExecutionNoIntervention
+        | FIX_HandlInst_AutomatedExecutionInterventionOK -> MOD_FIX_HandlInst_AutomatedExecutionInterventionOK
+        | FIX_HandlInst_ManualOrder -> MOD_FIX_HandlInst_ManualOrder
     )
 ;;
 
 let convert__model_to_full_ExecType ( f : model_fix_exectype ) =
     (match f with
         | MOD_FIX_ExecType_New -> FIX_ExecType_New
+        | MOD_FIX_ExecType_PartialFill -> FIX_ExecType_PartialFill
+        | MOD_FIX_ExecType_Fill -> FIX_ExecType_Fill
         | MOD_FIX_ExecType_DoneForDay -> FIX_ExecType_DoneForDay
         | MOD_FIX_ExecType_Canceled -> FIX_ExecType_Canceled
         | MOD_FIX_ExecType_Replaced -> FIX_ExecType_Replaced
@@ -105,10 +116,6 @@ let convert__model_to_full_ExecType ( f : model_fix_exectype ) =
         | MOD_FIX_ExecType_Expired -> FIX_ExecType_Expired
         | MOD_FIX_ExecType_Restated -> FIX_ExecType_Restated
         | MOD_FIX_ExecType_PendingReplace -> FIX_ExecType_PendingReplace
-        | MOD_FIX_ExecType_Trade -> FIX_ExecType_Trade
-        | MOD_FIX_ExecType_TradeCorrect -> FIX_ExecType_TradeCorrect
-        | MOD_FIX_ExecType_TradeCancel -> FIX_ExecType_TradeCancel
-        | MOD_FIX_ExecType_OrderStatus -> FIX_ExecType_OrderStatus
     )
 ;;
 
@@ -123,13 +130,6 @@ let convert__model_to_full_Side ( f : model_fix_side ) =
         | MOD_FIX_Side_Undisclosed -> FIX_Side_Undisclosed
         | MOD_FIX_Side_Cross -> FIX_Side_Cross
         | MOD_FIX_Side_CrossShort -> FIX_Side_CrossShort
-        | MOD_FIX_Side_CrossShortExempt -> FIX_Side_CrossShortExempt
-        | MOD_FIX_Side_AsDefined -> FIX_Side_AsDefined
-        | MOD_FIX_Side_Opposite -> FIX_Side_Opposite
-        | MOD_FIX_Side_Subscribe -> FIX_Side_Subscribe
-        | MOD_FIX_Side_Redeem -> FIX_Side_Redeem
-        | MOD_FIX_Side_Lend -> FIX_Side_Lend
-        | MOD_FIX_Side_Borrow -> FIX_Side_Borrow
     )
 ;;
 
@@ -140,6 +140,7 @@ let convert__model_to_full_OrdStatus ( f : model_fix_ordstatus ) =
         | MOD_FIX_OrdStatus_Filled -> FIX_OrdStatus_Filled
         | MOD_FIX_OrdStatus_DoneForDay -> FIX_OrdStatus_DoneForDay
         | MOD_FIX_OrdStatus_Canceled -> FIX_OrdStatus_Canceled
+        | MOD_FIX_OrdStatus_Replaced -> FIX_OrdStatus_Replaced
         | MOD_FIX_OrdStatus_PendingCancel -> FIX_OrdStatus_PendingCancel
         | MOD_FIX_OrdStatus_Stopped -> FIX_OrdStatus_Stopped
         | MOD_FIX_OrdStatus_Rejected -> FIX_OrdStatus_Rejected
@@ -149,7 +150,15 @@ let convert__model_to_full_OrdStatus ( f : model_fix_ordstatus ) =
         | MOD_FIX_OrdStatus_Expired -> FIX_OrdStatus_Expired
         | MOD_FIX_OrdStatus_AcceptedForBidding -> FIX_OrdStatus_AcceptedForBidding
         | MOD_FIX_OrdStatus_PendingReplace -> FIX_OrdStatus_PendingReplace
-        | MOD_FIX_OrdStatus_Replaced -> FIX_OrdStatus_Replaced
+    )
+;;
+
+let convert__model_to_full_ExecTransType ( f : model_fix_exectranstype ) =
+    (match f with
+        | MOD_FIX_ExecTransType_New -> FIX_ExecTransType_New
+        | MOD_FIX_ExecTransType_Cancel -> FIX_ExecTransType_Cancel
+        | MOD_FIX_ExecTransType_Correct -> FIX_ExecTransType_Correct
+        | MOD_FIX_ExecTransType_Status -> FIX_ExecTransType_Status
     )
 ;;
 
@@ -159,18 +168,28 @@ let convert__model_to_full_OrdType ( f : model_fix_ordtype ) =
         | MOD_FIX_OrdType_Limit -> FIX_OrdType_Limit
         | MOD_FIX_OrdType_Stop -> FIX_OrdType_Stop
         | MOD_FIX_OrdType_StopLimit -> FIX_OrdType_StopLimit
+        | MOD_FIX_OrdType_MarketOnClose -> FIX_OrdType_MarketOnClose
         | MOD_FIX_OrdType_WithOrWithout -> FIX_OrdType_WithOrWithout
         | MOD_FIX_OrdType_LimitOrBetter -> FIX_OrdType_LimitOrBetter
         | MOD_FIX_OrdType_LimitWithOrWithout -> FIX_OrdType_LimitWithOrWithout
         | MOD_FIX_OrdType_OnBasis -> FIX_OrdType_OnBasis
+        | MOD_FIX_OrdType_OnClose -> FIX_OrdType_OnClose
+        | MOD_FIX_OrdType_LimitOnClose -> FIX_OrdType_LimitOnClose
+        | MOD_FIX_OrdType_ForexMarket -> FIX_OrdType_ForexMarket
         | MOD_FIX_OrdType_PreviouslyQuoted -> FIX_OrdType_PreviouslyQuoted
         | MOD_FIX_OrdType_PreviouslyIndicated -> FIX_OrdType_PreviouslyIndicated
+        | MOD_FIX_OrdType_ForexLimit -> FIX_OrdType_ForexLimit
         | MOD_FIX_OrdType_ForexSwap -> FIX_OrdType_ForexSwap
+        | MOD_FIX_OrdType_ForexPreviouslyQuoted -> FIX_OrdType_ForexPreviouslyQuoted
         | MOD_FIX_OrdType_Funari -> FIX_OrdType_Funari
-        | MOD_FIX_OrdType_MarketIfTouched -> FIX_OrdType_MarketIfTouched
-        | MOD_FIX_OrdType_MarketWithLeftOverAsLimit -> FIX_OrdType_MarketWithLeftOverAsLimit
-        | MOD_FIX_OrdType_PreviousFundValuationPoint -> FIX_OrdType_PreviousFundValuationPoint
-        | MOD_FIX_OrdType_NextFundValuationPoint -> FIX_OrdType_NextFundValuationPoint
         | MOD_FIX_OrdType_Pegged -> FIX_OrdType_Pegged
+    )
+;;
+
+let convert__model_to_full_HandlInst ( f : model_fix_handlinst ) =
+    (match f with
+        | MOD_FIX_HandlInst_AutomatedExecutionNoIntervention -> FIX_HandlInst_AutomatedExecutionNoIntervention
+        | MOD_FIX_HandlInst_AutomatedExecutionInterventionOK -> FIX_HandlInst_AutomatedExecutionInterventionOK
+        | MOD_FIX_HandlInst_ManualOrder -> FIX_HandlInst_ManualOrder
     )
 ;;
