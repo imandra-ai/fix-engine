@@ -33,18 +33,18 @@ let parse_header msg =
     req msg "56"  parse_string        @@ fun msg h_target_comp_id              ->
     req msg "34"  parse_int           @@ fun msg h_msg_seq_num                 ->
     req msg "52"  parse_UTCTimestamp  @@ fun msg h_sending_time                ->   
-    opt msg "115" parse_int           @@ fun msg h_on_behalf_of_comp_id        -> 
-    opt msg "128" parse_int           @@ fun msg h_deliver_to_comp_id          ->  
+    opt msg "115" parse_string        @@ fun msg h_on_behalf_of_comp_id        -> 
+    opt msg "128" parse_string        @@ fun msg h_deliver_to_comp_id          ->  
     opt msg "90"  parse_int           @@ fun msg h_secure_data_len             ->   
     opt msg "91"  parse_int           @@ fun msg h_secure_data                 ->   
-    opt msg "50"  parse_int           @@ fun msg h_sender_sub_id               ->   
-    opt msg "142" parse_int           @@ fun msg h_sender_location_id          ->  
-    opt msg "57"  parse_int           @@ fun msg h_target_sub_id               ->   
-    opt msg "143" parse_int           @@ fun msg h_target_location_id          ->  
-    opt msg "116" parse_int           @@ fun msg h_on_behalf_of_sub_id         ->  
-    opt msg "114" parse_int           @@ fun msg h_on_behalf_of_location_id    ->  
-    opt msg "129" parse_int           @@ fun msg h_deliver_to_sub_id           ->  
-    opt msg "145" parse_int           @@ fun msg h_deliver_to_location_id      ->  
+    opt msg "50"  parse_string        @@ fun msg h_sender_sub_id               ->   
+    opt msg "142" parse_string        @@ fun msg h_sender_location_id          ->  
+    opt msg "57"  parse_string        @@ fun msg h_target_sub_id               ->   
+    opt msg "143" parse_string        @@ fun msg h_target_location_id          ->  
+    opt msg "116" parse_string        @@ fun msg h_on_behalf_of_sub_id         ->  
+    opt msg "114" parse_string        @@ fun msg h_on_behalf_of_location_id    ->  
+    opt msg "129" parse_string        @@ fun msg h_deliver_to_sub_id           ->  
+    opt msg "145" parse_string        @@ fun msg h_deliver_to_location_id      ->  
     opt msg "43"  parse_bool          @@ fun msg h_poss_dup_flag               ->    
     opt msg "97"  parse_bool          @@ fun msg h_poss_resend                 ->    
     opt msg "122" parse_UTCTimestamp  @@ fun msg h_orig_sending_time           ->  
