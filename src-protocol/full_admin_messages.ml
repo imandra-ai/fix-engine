@@ -22,7 +22,14 @@ open Full_message_tags;;
 
 (** Heartbeat message data. *)
 type full_msg_heartbeat_data = {
-    hb_test_req_id                        : fix_string option;                       (** Tag 112: Required when the heartbeat *)
+    hb_test_req_id                        : fix_string option;                (** Tag 112: Required when the heartbeat is forced by a test request *)
+}
+;;
+
+(** Repeating group for supported messages passed in Logon<A> *)
+type full_msg_types_inner_rg = {
+    mtps_ref_msg_type                     : full_msg_tag;                     (** Tag 372: Specifies a specific, supported MsgType <35>.  *)
+    mtps_direction                        : fix_msgdirection                  (** Tag 385: Indicates direction (send vs. receive) from the point of view of the sender. *)
 }
 ;;
 
@@ -39,6 +46,8 @@ type full_msg_logon_data = {
     ln_test_message_indicator             : bool option;                      (** Tag 464 *)
     ln_username                           : fix_string option;                (** Tag 553 *)
     ln_password                           : fix_string option;                (** Tag 554 *)
+    
+    ln_msg_types                          : full_msg_types_inner_rg list      (** Repeating group at tag 384 *)    
 }
 ;;
 

@@ -64,6 +64,12 @@ let encryption_method_to_string = function
     | NoEncryption  -> "NoEncryption"
 ;;
 
+let msgdirection_to_string ( d ) =
+    (match d with
+        | FIX_MsgDirection_Send -> "Send"
+        | FIX_MsgDirection_Receive -> "Receive"
+    )
+;;
 
 let session_reject_reason_to_json  x : json = `String ( session_reject_reason_to_string  x ) ;;
 
@@ -78,6 +84,10 @@ let gapFillFlag_to_json            x : json = `String ( gapFillFlag_to_string   
 
 
 let encryption_method_to_json      x : json = `String ( encryption_method_to_string      x ) ;;
+
+(** *)
+let msgdirection_to_json           x : json = `String ( msgdirection_to_string           x ) ;;
+
 
 
 
@@ -94,3 +104,6 @@ let gapFillFlag_opt_to_json            = function None -> `Null | Some x -> gapF
 
 
 let encryption_method_opt_to_json      = function None -> `Null | Some x -> encryption_method_to_json      x ;;
+
+(** *)
+let msgdirection_opt_to_json           = function None -> `Null | Some x -> msgdirection_to_json           x ;; 

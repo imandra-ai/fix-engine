@@ -1,17 +1,13 @@
-
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Base_types;;
-open Datetime;;
-open Model_messages;;
+open Model_tags;;
 open Full_app_messages;;
 open Full_app_records;;
-open Model_tags;;
-open Full_app_tags;;
+open Model_messages;;
 open Enum_converter;;
 (* @meta[imandra_ignore] off @end *)
 
-
-let convert_FIX_Full_Msg_ExecutionReport ( msg : full_fix_executionreport_data ) =
+let convert__full_to_model_ExecutionReport ( msg : full_fix_executionreport_data ) =
     let c_f_ExecutionReport_Text = msg.f_ExecutionReport_Text in
     (match msg.f_ExecutionReport_Instrument.f_Instrument_Symbol with
         | None -> (FIX_TL_Req_Field_Missing {
@@ -51,7 +47,7 @@ let convert_FIX_Full_Msg_ExecutionReport ( msg : full_fix_executionreport_data )
     )
 ;;
 
-let convert_FIX_Full_Msg_NewOrderSingle ( msg : full_fix_newordersingle_data ) =
+let convert__full_to_model_NewOrderSingle ( msg : full_fix_newordersingle_data ) =
     (match msg.f_NewOrderSingle_Instrument.f_Instrument_Symbol with
         | None -> (FIX_TL_Req_Field_Missing {
             field_missing_data_msg = M_Msg_NewOrderSingle_Tag;
@@ -75,13 +71,13 @@ let convert_FIX_Full_Msg_NewOrderSingle ( msg : full_fix_newordersingle_data ) =
 
 let convert_full_to_model_fix ( msg : full_app_msg_data ) =
     (match msg with
-        | FIX_Full_Msg_ExecutionReport msg_data -> (convert_FIX_Full_Msg_ExecutionReport msg_data)
-        | FIX_Full_Msg_NewOrderSingle msg_data -> (convert_FIX_Full_Msg_NewOrderSingle msg_data)
+        | FIX_Full_Msg_ExecutionReport msg_data -> (convert__full_to_model_ExecutionReport msg_data)
+        | FIX_Full_Msg_NewOrderSingle msg_data -> (convert__full_to_model_NewOrderSingle msg_data)
         | _ -> FIX_TL_None
     )
 ;;
 
-let convert_FIX_Msg_ExecutionReport ( msg : mod_executionreport_data ) =
+let convert__model_to_full_ExecutionReport ( msg : mod_executionreport_data ) =
     FIX_Full_Msg_ExecutionReport {
         f_ExecutionReport_OrderID = msg.f_ExecutionReport_OrderID;
         f_ExecutionReport_SecondaryOrderID = None;
@@ -95,26 +91,9 @@ let convert_FIX_Msg_ExecutionReport ( msg : mod_executionreport_data ) =
         f_ExecutionReport_MassStatusReqID = None;
         f_ExecutionReport_TotNumReports = None;
         f_ExecutionReport_LastRptRequested = None;
-        f_ExecutionReport_Parties = {
-            f_Parties_NoPartyIDs = None;
-            f_Parties_PartyID = None;
-            f_Parties_PartyIDSource = None;
-            f_Parties_PartyRole = None;
-            f_Parties_PtysSubGrp = {
-                f_PtysSubGrp_NoPartySubIDs = None;
-                f_PtysSubGrp_PartySubID = None;
-                f_PtysSubGrp_PartySubIDType = None
-            }
-        };
+        f_ExecutionReport_Parties = [];
         f_ExecutionReport_TradeOriginationDate = None;
-        f_ExecutionReport_ContraGrp = {
-            f_ContraGrp_ContraBroker = None;
-            f_ContraGrp_ContraLegRefID = None;
-            f_ContraGrp_ContraTradeQty = None;
-            f_ContraGrp_ContraTradeTime = None;
-            f_ContraGrp_ContraTrader = None;
-            f_ContraGrp_NoContraBrokers = None
-        };
+        f_ExecutionReport_ContraGrp = [];
         f_ExecutionReport_ListID = None;
         f_ExecutionReport_CrossID = None;
         f_ExecutionReport_OrigCrossID = None;
@@ -138,141 +117,67 @@ let convert_FIX_Msg_ExecutionReport ( msg : mod_executionreport_data ) =
         f_ExecutionReport_ClearingFeeIndicator = None;
         f_ExecutionReport_Instrument = {
             f_Instrument_Symbol = Some msg.f_ExecutionReport_Instrument_Symbol;
-            f_Instrument_CFICode = None;
-            f_Instrument_CPProgram = None;
-            f_Instrument_CPRegType = None;
-            f_Instrument_ContractMultiplier = None;
-            f_Instrument_ContractSettlMonth = None;
-            f_Instrument_CountryOfIssue = None;
-            f_Instrument_CouponPaymentDate = None;
-            f_Instrument_CouponRate = None;
-            f_Instrument_CreditRating = None;
-            f_Instrument_DatedDate = None;
-            f_Instrument_EncodedIssuer = None;
-            f_Instrument_EncodedIssuerLen = None;
-            f_Instrument_EncodedSecurityDesc = None;
-            f_Instrument_EncodedSecurityDescLen = None;
-            f_Instrument_Factor = None;
-            f_Instrument_InstrRegistry = None;
-            f_Instrument_InterestAccrualDate = None;
-            f_Instrument_IssueDate = None;
-            f_Instrument_Issuer = None;
-            f_Instrument_LocaleOfIssue = None;
-            f_Instrument_MaturityDate = None;
-            f_Instrument_MaturityMonthYear = None;
-            f_Instrument_OptAttribute = None;
-            f_Instrument_Pool = None;
-            f_Instrument_Product = None;
-            f_Instrument_PutOrCall = None;
-            f_Instrument_RedemptionDate = None;
-            f_Instrument_RepoCollateralSecurityType = None;
-            f_Instrument_RepurchaseRate = None;
-            f_Instrument_RepurchaseTerm = None;
-            f_Instrument_SecurityDesc = None;
-            f_Instrument_SecurityExchange = None;
+            f_Instrument_SymbolSfx = None;
             f_Instrument_SecurityID = None;
             f_Instrument_SecurityIDSource = None;
-            f_Instrument_SecuritySubType = None;
+            f_Instrument_SecAltIDGrp = [];
+            f_Instrument_Product = None;
+            f_Instrument_CFICode = None;
             f_Instrument_SecurityType = None;
+            f_Instrument_SecuritySubType = None;
+            f_Instrument_MaturityMonthYear = None;
+            f_Instrument_MaturityDate = None;
+            f_Instrument_CouponPaymentDate = None;
+            f_Instrument_IssueDate = None;
+            f_Instrument_RepoCollateralSecurityType = None;
+            f_Instrument_RepurchaseTerm = None;
+            f_Instrument_RepurchaseRate = None;
+            f_Instrument_Factor = None;
+            f_Instrument_CreditRating = None;
+            f_Instrument_InstrRegistry = None;
+            f_Instrument_CountryOfIssue = None;
             f_Instrument_StateOrProvinceOfIssue = None;
-            f_Instrument_StrikeCurrency = None;
+            f_Instrument_LocaleOfIssue = None;
+            f_Instrument_RedemptionDate = None;
             f_Instrument_StrikePrice = None;
-            f_Instrument_SymbolSfx = None;
-            f_Instrument_EvntGrp = {
-                f_EvntGrp_EventDate = None;
-                f_EvntGrp_EventPx = None;
-                f_EvntGrp_EventText = None;
-                f_EvntGrp_EventType = None;
-                f_EvntGrp_NoEvents = None
-            };
-            f_Instrument_SecAltIDGrp = {
-                f_SecAltIDGrp_NoSecurityAltID = None;
-                f_SecAltIDGrp_SecurityAltID = None;
-                f_SecAltIDGrp_SecurityAltIDSource = None
-            }
+            f_Instrument_StrikeCurrency = None;
+            f_Instrument_OptAttribute = None;
+            f_Instrument_ContractMultiplier = None;
+            f_Instrument_CouponRate = None;
+            f_Instrument_SecurityExchange = None;
+            f_Instrument_Issuer = None;
+            f_Instrument_EncodedIssuerLen = None;
+            f_Instrument_EncodedIssuer = None;
+            f_Instrument_SecurityDesc = None;
+            f_Instrument_EncodedSecurityDescLen = None;
+            f_Instrument_EncodedSecurityDesc = None;
+            f_Instrument_Pool = None;
+            f_Instrument_ContractSettlMonth = None;
+            f_Instrument_CPProgram = None;
+            f_Instrument_CPRegType = None;
+            f_Instrument_EvntGrp = [];
+            f_Instrument_DatedDate = None;
+            f_Instrument_InterestAccrualDate = None
         };
         f_ExecutionReport_FinancingDetails = {
-            f_FinancingDetails_AgreementCurrency = None;
-            f_FinancingDetails_AgreementDate = None;
             f_FinancingDetails_AgreementDesc = None;
             f_FinancingDetails_AgreementID = None;
-            f_FinancingDetails_DeliveryType = None;
-            f_FinancingDetails_EndDate = None;
-            f_FinancingDetails_MarginRatio = None;
+            f_FinancingDetails_AgreementDate = None;
+            f_FinancingDetails_AgreementCurrency = None;
+            f_FinancingDetails_TerminationType = None;
             f_FinancingDetails_StartDate = None;
-            f_FinancingDetails_TerminationType = None
+            f_FinancingDetails_EndDate = None;
+            f_FinancingDetails_DeliveryType = None;
+            f_FinancingDetails_MarginRatio = None
         };
-        f_ExecutionReport_UndInstrmtGrp = {
-            f_UndInstrmtGrp_NoUnderlyings = None;
-            f_UndInstrmtGrp_UnderlyingInstrument = {
-                f_UnderlyingInstrument_EncodedUnderlyingIssuer = None;
-                f_UnderlyingInstrument_EncodedUnderlyingIssuerLen = None;
-                f_UnderlyingInstrument_EncodedUnderlyingSecurityDesc = None;
-                f_UnderlyingInstrument_EncodedUnderlyingSecurityDescLen = None;
-                f_UnderlyingInstrument_UnderlyingCFICode = None;
-                f_UnderlyingInstrument_UnderlyingCPProgram = None;
-                f_UnderlyingInstrument_UnderlyingCPRegType = None;
-                f_UnderlyingInstrument_UnderlyingContractMultiplier = None;
-                f_UnderlyingInstrument_UnderlyingCountryOfIssue = None;
-                f_UnderlyingInstrument_UnderlyingCouponPaymentDate = None;
-                f_UnderlyingInstrument_UnderlyingCouponRate = None;
-                f_UnderlyingInstrument_UnderlyingCreditRating = None;
-                f_UnderlyingInstrument_UnderlyingCurrency = None;
-                f_UnderlyingInstrument_UnderlyingCurrentValue = None;
-                f_UnderlyingInstrument_UnderlyingDirtyPrice = None;
-                f_UnderlyingInstrument_UnderlyingEndPrice = None;
-                f_UnderlyingInstrument_UnderlyingEndValue = None;
-                f_UnderlyingInstrument_UnderlyingFactor = None;
-                f_UnderlyingInstrument_UnderlyingInstrRegistry = None;
-                f_UnderlyingInstrument_UnderlyingIssueDate = None;
-                f_UnderlyingInstrument_UnderlyingIssuer = None;
-                f_UnderlyingInstrument_UnderlyingLocaleOfIssue = None;
-                f_UnderlyingInstrument_UnderlyingMaturityDate = None;
-                f_UnderlyingInstrument_UnderlyingMaturityMonthYear = None;
-                f_UnderlyingInstrument_UnderlyingOptAttribute = None;
-                f_UnderlyingInstrument_UnderlyingProduct = None;
-                f_UnderlyingInstrument_UnderlyingPutOrCall = None;
-                f_UnderlyingInstrument_UnderlyingPx = None;
-                f_UnderlyingInstrument_UnderlyingQty = None;
-                f_UnderlyingInstrument_UnderlyingRedemptionDate = None;
-                f_UnderlyingInstrument_UnderlyingRepoCollateralSecurityType = None;
-                f_UnderlyingInstrument_UnderlyingRepurchaseRate = None;
-                f_UnderlyingInstrument_UnderlyingRepurchaseTerm = None;
-                f_UnderlyingInstrument_UnderlyingSecurityDesc = None;
-                f_UnderlyingInstrument_UnderlyingSecurityExchange = None;
-                f_UnderlyingInstrument_UnderlyingSecurityID = None;
-                f_UnderlyingInstrument_UnderlyingSecurityIDSource = None;
-                f_UnderlyingInstrument_UnderlyingSecuritySubType = None;
-                f_UnderlyingInstrument_UnderlyingSecurityType = None;
-                f_UnderlyingInstrument_UnderlyingStartValue = None;
-                f_UnderlyingInstrument_UnderlyingStateOrProvinceOfIssue = None;
-                f_UnderlyingInstrument_UnderlyingStrikeCurrency = None;
-                f_UnderlyingInstrument_UnderlyingStrikePrice = None;
-                f_UnderlyingInstrument_UnderlyingSymbol = None;
-                f_UnderlyingInstrument_UnderlyingSymbolSfx = None;
-                f_UnderlyingInstrument_UndSecAltIDGrp = {
-                    f_UndSecAltIDGrp_NoUnderlyingSecurityAltID = None;
-                    f_UndSecAltIDGrp_UnderlyingSecurityAltID = None;
-                    f_UndSecAltIDGrp_UnderlyingSecurityAltIDSource = None
-                };
-                f_UnderlyingInstrument_UnderlyingStipulations = {
-                    f_UnderlyingStipulations_NoUnderlyingStips = None;
-                    f_UnderlyingStipulations_UnderlyingStipType = None;
-                    f_UnderlyingStipulations_UnderlyingStipValue = None
-                }
-            }
-        };
+        f_ExecutionReport_UndInstrmtGrp = [];
         f_ExecutionReport_Side = convert__model_to_full_Side msg.f_ExecutionReport_Side;
-        f_ExecutionReport_Stipulations = {
-            f_Stipulations_NoStipulations = None;
-            f_Stipulations_StipulationType = None;
-            f_Stipulations_StipulationValue = None
-        };
+        f_ExecutionReport_Stipulations = [];
         f_ExecutionReport_QtyType = None;
         f_ExecutionReport_OrderQtyData = {
+            f_OrderQtyData_OrderQty = None;
             f_OrderQtyData_CashOrderQty = None;
             f_OrderQtyData_OrderPercent = None;
-            f_OrderQtyData_OrderQty = None;
             f_OrderQtyData_RoundingDirection = None;
             f_OrderQtyData_RoundingModulus = None
         };
@@ -281,19 +186,19 @@ let convert_FIX_Msg_ExecutionReport ( msg : mod_executionreport_data ) =
         f_ExecutionReport_Price = None;
         f_ExecutionReport_StopPx = None;
         f_ExecutionReport_PegInstructions = {
-            f_PegInstructions_PegLimitType = None;
+            f_PegInstructions_PegOffsetValue = None;
             f_PegInstructions_PegMoveType = None;
             f_PegInstructions_PegOffsetType = None;
-            f_PegInstructions_PegOffsetValue = None;
+            f_PegInstructions_PegLimitType = None;
             f_PegInstructions_PegRoundDirection = None;
             f_PegInstructions_PegScope = None
         };
         f_ExecutionReport_DiscretionInstructions = {
             f_DiscretionInstructions_DiscretionInst = None;
-            f_DiscretionInstructions_DiscretionLimitType = None;
+            f_DiscretionInstructions_DiscretionOffsetValue = None;
             f_DiscretionInstructions_DiscretionMoveType = None;
             f_DiscretionInstructions_DiscretionOffsetType = None;
-            f_DiscretionInstructions_DiscretionOffsetValue = None;
+            f_DiscretionInstructions_DiscretionLimitType = None;
             f_DiscretionInstructions_DiscretionRoundDirection = None;
             f_DiscretionInstructions_DiscretionScope = None
         };
@@ -337,28 +242,28 @@ let convert_FIX_Msg_ExecutionReport ( msg : mod_executionreport_data ) =
         f_ExecutionReport_TransactTime = None;
         f_ExecutionReport_ReportToExch = None;
         f_ExecutionReport_CommissionData = {
-            f_CommissionData_CommCurrency = None;
-            f_CommissionData_CommType = None;
             f_CommissionData_Commission = None;
+            f_CommissionData_CommType = None;
+            f_CommissionData_CommCurrency = None;
             f_CommissionData_FundRenewWaiv = None
         };
         f_ExecutionReport_SpreadOrBenchmarkCurveData = {
+            f_SpreadOrBenchmarkCurveData_Spread = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkCurveName = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkCurvePoint = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkPrice = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkPriceType = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkSecurityID = None;
-            f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource = None;
-            f_SpreadOrBenchmarkCurveData_Spread = None
+            f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource = None
         };
         f_ExecutionReport_YieldData = {
+            f_YieldData_YieldType = None;
             f_YieldData_Yield = None;
             f_YieldData_YieldCalcDate = None;
             f_YieldData_YieldRedemptionDate = None;
             f_YieldData_YieldRedemptionPrice = None;
-            f_YieldData_YieldRedemptionPriceType = None;
-            f_YieldData_YieldType = None
+            f_YieldData_YieldRedemptionPriceType = None
         };
         f_ExecutionReport_GrossTradeAmt = None;
         f_ExecutionReport_NumDaysInterest = None;
@@ -403,115 +308,19 @@ let convert_FIX_Msg_ExecutionReport ( msg : mod_executionreport_data ) =
         f_ExecutionReport_PriorityIndicator = None;
         f_ExecutionReport_PriceImprovement = None;
         f_ExecutionReport_LastLiquidityInd = None;
-        f_ExecutionReport_ContAmtGrp = {
-            f_ContAmtGrp_ContAmtCurr = None;
-            f_ContAmtGrp_ContAmtType = None;
-            f_ContAmtGrp_ContAmtValue = None;
-            f_ContAmtGrp_NoContAmts = None
-        };
-        f_ExecutionReport_InstrmtLegExecGrp = {
-            f_InstrmtLegExecGrp_LegCoveredOrUncovered = None;
-            f_InstrmtLegExecGrp_LegLastPx = None;
-            f_InstrmtLegExecGrp_LegPositionEffect = None;
-            f_InstrmtLegExecGrp_LegPrice = None;
-            f_InstrmtLegExecGrp_LegQty = None;
-            f_InstrmtLegExecGrp_LegRefID = None;
-            f_InstrmtLegExecGrp_LegSettlDate = None;
-            f_InstrmtLegExecGrp_LegSettlType = None;
-            f_InstrmtLegExecGrp_LegSwapType = None;
-            f_InstrmtLegExecGrp_NoLegs = None;
-            f_InstrmtLegExecGrp_InstrumentLeg = {
-                f_InstrumentLeg_EncodedLegIssuer = None;
-                f_InstrumentLeg_EncodedLegIssuerLen = None;
-                f_InstrumentLeg_EncodedLegSecurityDesc = None;
-                f_InstrumentLeg_EncodedLegSecurityDescLen = None;
-                f_InstrumentLeg_LegCFICode = None;
-                f_InstrumentLeg_LegContractMultiplier = None;
-                f_InstrumentLeg_LegContractSettlMonth = None;
-                f_InstrumentLeg_LegCountryOfIssue = None;
-                f_InstrumentLeg_LegCouponPaymentDate = None;
-                f_InstrumentLeg_LegCouponRate = None;
-                f_InstrumentLeg_LegCreditRating = None;
-                f_InstrumentLeg_LegCurrency = None;
-                f_InstrumentLeg_LegDatedDate = None;
-                f_InstrumentLeg_LegFactor = None;
-                f_InstrumentLeg_LegInstrRegistry = None;
-                f_InstrumentLeg_LegInterestAccrualDate = None;
-                f_InstrumentLeg_LegIssueDate = None;
-                f_InstrumentLeg_LegIssuer = None;
-                f_InstrumentLeg_LegLocaleOfIssue = None;
-                f_InstrumentLeg_LegMaturityDate = None;
-                f_InstrumentLeg_LegMaturityMonthYear = None;
-                f_InstrumentLeg_LegOptAttribute = None;
-                f_InstrumentLeg_LegPool = None;
-                f_InstrumentLeg_LegProduct = None;
-                f_InstrumentLeg_LegRatioQty = None;
-                f_InstrumentLeg_LegRedemptionDate = None;
-                f_InstrumentLeg_LegRepoCollateralSecurityType = None;
-                f_InstrumentLeg_LegRepurchaseRate = None;
-                f_InstrumentLeg_LegRepurchaseTerm = None;
-                f_InstrumentLeg_LegSecurityDesc = None;
-                f_InstrumentLeg_LegSecurityExchange = None;
-                f_InstrumentLeg_LegSecurityID = None;
-                f_InstrumentLeg_LegSecurityIDSource = None;
-                f_InstrumentLeg_LegSecuritySubType = None;
-                f_InstrumentLeg_LegSecurityType = None;
-                f_InstrumentLeg_LegSide = None;
-                f_InstrumentLeg_LegStateOrProvinceOfIssue = None;
-                f_InstrumentLeg_LegStrikeCurrency = None;
-                f_InstrumentLeg_LegStrikePrice = None;
-                f_InstrumentLeg_LegSymbol = None;
-                f_InstrumentLeg_LegSymbolSfx = None;
-                f_InstrumentLeg_LegSecAltIDGrp = {
-                    f_LegSecAltIDGrp_LegSecurityAltID = None;
-                    f_LegSecAltIDGrp_LegSecurityAltIDSource = None;
-                    f_LegSecAltIDGrp_NoLegSecurityAltID = None
-                }
-            };
-            f_InstrmtLegExecGrp_LegStipulations = {
-                f_LegStipulations_LegStipulationType = None;
-                f_LegStipulations_LegStipulationValue = None;
-                f_LegStipulations_NoLegStipulations = None
-            };
-            f_InstrmtLegExecGrp_NestedParties = {
-                f_NestedParties_NestedPartyID = None;
-                f_NestedParties_NestedPartyIDSource = None;
-                f_NestedParties_NestedPartyRole = None;
-                f_NestedParties_NoNestedPartyIDs = None;
-                f_NestedParties_NstdPtysSubGrp = {
-                    f_NstdPtysSubGrp_NestedPartySubID = None;
-                    f_NstdPtysSubGrp_NestedPartySubIDType = None;
-                    f_NstdPtysSubGrp_NoNestedPartySubIDs = None
-                }
-            }
-        };
+        f_ExecutionReport_ContAmtGrp = [];
+        f_ExecutionReport_InstrmtLegExecGrp = [];
         f_ExecutionReport_CopyMsgIndicator = None;
-        f_ExecutionReport_MiscFeesGrp = {
-            f_MiscFeesGrp_MiscFeeAmt = None;
-            f_MiscFeesGrp_MiscFeeBasis = None;
-            f_MiscFeesGrp_MiscFeeCurr = None;
-            f_MiscFeesGrp_MiscFeeType = None;
-            f_MiscFeesGrp_NoMiscFees = None
-        }
+        f_ExecutionReport_MiscFeesGrp = []
     }
 ;;
 
-let convert_FIX_Msg_NewOrderSingle ( msg : mod_newordersingle_data ) =
+let convert__model_to_full_NewOrderSingle ( msg : mod_newordersingle_data ) =
     FIX_Full_Msg_NewOrderSingle {
         f_NewOrderSingle_ClOrdID = msg.f_NewOrderSingle_ClOrdID;
         f_NewOrderSingle_SecondaryClOrdID = None;
         f_NewOrderSingle_ClOrdLinkID = None;
-        f_NewOrderSingle_Parties = {
-            f_Parties_NoPartyIDs = None;
-            f_Parties_PartyID = None;
-            f_Parties_PartyIDSource = None;
-            f_Parties_PartyRole = None;
-            f_Parties_PtysSubGrp = {
-                f_PtysSubGrp_NoPartySubIDs = None;
-                f_PtysSubGrp_PartySubID = None;
-                f_PtysSubGrp_PartySubIDType = None
-            }
-        };
+        f_NewOrderSingle_Parties = [];
         f_NewOrderSingle_TradeOriginationDate = None;
         f_NewOrderSingle_TradeDate = None;
         f_NewOrderSingle_Account = None;
@@ -521,25 +330,7 @@ let convert_FIX_Msg_NewOrderSingle ( msg : mod_newordersingle_data ) =
         f_NewOrderSingle_BookingUnit = None;
         f_NewOrderSingle_PreallocMethod = None;
         f_NewOrderSingle_AllocID = None;
-        f_NewOrderSingle_PreAllocGrp = {
-            f_PreAllocGrp_AllocAccount = None;
-            f_PreAllocGrp_AllocAcctIDSource = None;
-            f_PreAllocGrp_AllocQty = None;
-            f_PreAllocGrp_AllocSettlCurrency = None;
-            f_PreAllocGrp_IndividualAllocID = None;
-            f_PreAllocGrp_NoAllocs = None;
-            f_PreAllocGrp_NestedParties = {
-                f_NestedParties_NestedPartyID = None;
-                f_NestedParties_NestedPartyIDSource = None;
-                f_NestedParties_NestedPartyRole = None;
-                f_NestedParties_NoNestedPartyIDs = None;
-                f_NestedParties_NstdPtysSubGrp = {
-                    f_NstdPtysSubGrp_NestedPartySubID = None;
-                    f_NstdPtysSubGrp_NestedPartySubIDType = None;
-                    f_NstdPtysSubGrp_NoNestedPartySubIDs = None
-                }
-            }
-        };
+        f_NewOrderSingle_PreAllocGrp = [];
         f_NewOrderSingle_SettlType = None;
         f_NewOrderSingle_SettlDate = None;
         f_NewOrderSingle_CashMargin = None;
@@ -549,152 +340,74 @@ let convert_FIX_Msg_NewOrderSingle ( msg : mod_newordersingle_data ) =
         f_NewOrderSingle_MinQty = None;
         f_NewOrderSingle_MaxFloor = None;
         f_NewOrderSingle_ExDestination = None;
-        f_NewOrderSingle_TrdgSesGrp = {
-            f_TrdgSesGrp_NoTradingSessions = None;
-            f_TrdgSesGrp_TradingSessionID = None;
-            f_TrdgSesGrp_TradingSessionSubID = None
-        };
+        f_NewOrderSingle_TrdgSesGrp = [];
         f_NewOrderSingle_ProcessCode = None;
         f_NewOrderSingle_Instrument = {
             f_Instrument_Symbol = Some msg.f_NewOrderSingle_Instrument_Symbol;
-            f_Instrument_CFICode = None;
-            f_Instrument_CPProgram = None;
-            f_Instrument_CPRegType = None;
-            f_Instrument_ContractMultiplier = None;
-            f_Instrument_ContractSettlMonth = None;
-            f_Instrument_CountryOfIssue = None;
-            f_Instrument_CouponPaymentDate = None;
-            f_Instrument_CouponRate = None;
-            f_Instrument_CreditRating = None;
-            f_Instrument_DatedDate = None;
-            f_Instrument_EncodedIssuer = None;
-            f_Instrument_EncodedIssuerLen = None;
-            f_Instrument_EncodedSecurityDesc = None;
-            f_Instrument_EncodedSecurityDescLen = None;
-            f_Instrument_Factor = None;
-            f_Instrument_InstrRegistry = None;
-            f_Instrument_InterestAccrualDate = None;
-            f_Instrument_IssueDate = None;
-            f_Instrument_Issuer = None;
-            f_Instrument_LocaleOfIssue = None;
-            f_Instrument_MaturityDate = None;
-            f_Instrument_MaturityMonthYear = None;
-            f_Instrument_OptAttribute = None;
-            f_Instrument_Pool = None;
-            f_Instrument_Product = None;
-            f_Instrument_PutOrCall = None;
-            f_Instrument_RedemptionDate = None;
-            f_Instrument_RepoCollateralSecurityType = None;
-            f_Instrument_RepurchaseRate = None;
-            f_Instrument_RepurchaseTerm = None;
-            f_Instrument_SecurityDesc = None;
-            f_Instrument_SecurityExchange = None;
+            f_Instrument_SymbolSfx = None;
             f_Instrument_SecurityID = None;
             f_Instrument_SecurityIDSource = None;
-            f_Instrument_SecuritySubType = None;
+            f_Instrument_SecAltIDGrp = [];
+            f_Instrument_Product = None;
+            f_Instrument_CFICode = None;
             f_Instrument_SecurityType = None;
+            f_Instrument_SecuritySubType = None;
+            f_Instrument_MaturityMonthYear = None;
+            f_Instrument_MaturityDate = None;
+            f_Instrument_CouponPaymentDate = None;
+            f_Instrument_IssueDate = None;
+            f_Instrument_RepoCollateralSecurityType = None;
+            f_Instrument_RepurchaseTerm = None;
+            f_Instrument_RepurchaseRate = None;
+            f_Instrument_Factor = None;
+            f_Instrument_CreditRating = None;
+            f_Instrument_InstrRegistry = None;
+            f_Instrument_CountryOfIssue = None;
             f_Instrument_StateOrProvinceOfIssue = None;
-            f_Instrument_StrikeCurrency = None;
+            f_Instrument_LocaleOfIssue = None;
+            f_Instrument_RedemptionDate = None;
             f_Instrument_StrikePrice = None;
-            f_Instrument_SymbolSfx = None;
-            f_Instrument_EvntGrp = {
-                f_EvntGrp_EventDate = None;
-                f_EvntGrp_EventPx = None;
-                f_EvntGrp_EventText = None;
-                f_EvntGrp_EventType = None;
-                f_EvntGrp_NoEvents = None
-            };
-            f_Instrument_SecAltIDGrp = {
-                f_SecAltIDGrp_NoSecurityAltID = None;
-                f_SecAltIDGrp_SecurityAltID = None;
-                f_SecAltIDGrp_SecurityAltIDSource = None
-            }
+            f_Instrument_StrikeCurrency = None;
+            f_Instrument_OptAttribute = None;
+            f_Instrument_ContractMultiplier = None;
+            f_Instrument_CouponRate = None;
+            f_Instrument_SecurityExchange = None;
+            f_Instrument_Issuer = None;
+            f_Instrument_EncodedIssuerLen = None;
+            f_Instrument_EncodedIssuer = None;
+            f_Instrument_SecurityDesc = None;
+            f_Instrument_EncodedSecurityDescLen = None;
+            f_Instrument_EncodedSecurityDesc = None;
+            f_Instrument_Pool = None;
+            f_Instrument_ContractSettlMonth = None;
+            f_Instrument_CPProgram = None;
+            f_Instrument_CPRegType = None;
+            f_Instrument_EvntGrp = [];
+            f_Instrument_DatedDate = None;
+            f_Instrument_InterestAccrualDate = None
         };
         f_NewOrderSingle_FinancingDetails = {
-            f_FinancingDetails_AgreementCurrency = None;
-            f_FinancingDetails_AgreementDate = None;
             f_FinancingDetails_AgreementDesc = None;
             f_FinancingDetails_AgreementID = None;
-            f_FinancingDetails_DeliveryType = None;
-            f_FinancingDetails_EndDate = None;
-            f_FinancingDetails_MarginRatio = None;
+            f_FinancingDetails_AgreementDate = None;
+            f_FinancingDetails_AgreementCurrency = None;
+            f_FinancingDetails_TerminationType = None;
             f_FinancingDetails_StartDate = None;
-            f_FinancingDetails_TerminationType = None
+            f_FinancingDetails_EndDate = None;
+            f_FinancingDetails_DeliveryType = None;
+            f_FinancingDetails_MarginRatio = None
         };
-        f_NewOrderSingle_UndInstrmtGrp = {
-            f_UndInstrmtGrp_NoUnderlyings = None;
-            f_UndInstrmtGrp_UnderlyingInstrument = {
-                f_UnderlyingInstrument_EncodedUnderlyingIssuer = None;
-                f_UnderlyingInstrument_EncodedUnderlyingIssuerLen = None;
-                f_UnderlyingInstrument_EncodedUnderlyingSecurityDesc = None;
-                f_UnderlyingInstrument_EncodedUnderlyingSecurityDescLen = None;
-                f_UnderlyingInstrument_UnderlyingCFICode = None;
-                f_UnderlyingInstrument_UnderlyingCPProgram = None;
-                f_UnderlyingInstrument_UnderlyingCPRegType = None;
-                f_UnderlyingInstrument_UnderlyingContractMultiplier = None;
-                f_UnderlyingInstrument_UnderlyingCountryOfIssue = None;
-                f_UnderlyingInstrument_UnderlyingCouponPaymentDate = None;
-                f_UnderlyingInstrument_UnderlyingCouponRate = None;
-                f_UnderlyingInstrument_UnderlyingCreditRating = None;
-                f_UnderlyingInstrument_UnderlyingCurrency = None;
-                f_UnderlyingInstrument_UnderlyingCurrentValue = None;
-                f_UnderlyingInstrument_UnderlyingDirtyPrice = None;
-                f_UnderlyingInstrument_UnderlyingEndPrice = None;
-                f_UnderlyingInstrument_UnderlyingEndValue = None;
-                f_UnderlyingInstrument_UnderlyingFactor = None;
-                f_UnderlyingInstrument_UnderlyingInstrRegistry = None;
-                f_UnderlyingInstrument_UnderlyingIssueDate = None;
-                f_UnderlyingInstrument_UnderlyingIssuer = None;
-                f_UnderlyingInstrument_UnderlyingLocaleOfIssue = None;
-                f_UnderlyingInstrument_UnderlyingMaturityDate = None;
-                f_UnderlyingInstrument_UnderlyingMaturityMonthYear = None;
-                f_UnderlyingInstrument_UnderlyingOptAttribute = None;
-                f_UnderlyingInstrument_UnderlyingProduct = None;
-                f_UnderlyingInstrument_UnderlyingPutOrCall = None;
-                f_UnderlyingInstrument_UnderlyingPx = None;
-                f_UnderlyingInstrument_UnderlyingQty = None;
-                f_UnderlyingInstrument_UnderlyingRedemptionDate = None;
-                f_UnderlyingInstrument_UnderlyingRepoCollateralSecurityType = None;
-                f_UnderlyingInstrument_UnderlyingRepurchaseRate = None;
-                f_UnderlyingInstrument_UnderlyingRepurchaseTerm = None;
-                f_UnderlyingInstrument_UnderlyingSecurityDesc = None;
-                f_UnderlyingInstrument_UnderlyingSecurityExchange = None;
-                f_UnderlyingInstrument_UnderlyingSecurityID = None;
-                f_UnderlyingInstrument_UnderlyingSecurityIDSource = None;
-                f_UnderlyingInstrument_UnderlyingSecuritySubType = None;
-                f_UnderlyingInstrument_UnderlyingSecurityType = None;
-                f_UnderlyingInstrument_UnderlyingStartValue = None;
-                f_UnderlyingInstrument_UnderlyingStateOrProvinceOfIssue = None;
-                f_UnderlyingInstrument_UnderlyingStrikeCurrency = None;
-                f_UnderlyingInstrument_UnderlyingStrikePrice = None;
-                f_UnderlyingInstrument_UnderlyingSymbol = None;
-                f_UnderlyingInstrument_UnderlyingSymbolSfx = None;
-                f_UnderlyingInstrument_UndSecAltIDGrp = {
-                    f_UndSecAltIDGrp_NoUnderlyingSecurityAltID = None;
-                    f_UndSecAltIDGrp_UnderlyingSecurityAltID = None;
-                    f_UndSecAltIDGrp_UnderlyingSecurityAltIDSource = None
-                };
-                f_UnderlyingInstrument_UnderlyingStipulations = {
-                    f_UnderlyingStipulations_NoUnderlyingStips = None;
-                    f_UnderlyingStipulations_UnderlyingStipType = None;
-                    f_UnderlyingStipulations_UnderlyingStipValue = None
-                }
-            }
-        };
+        f_NewOrderSingle_UndInstrmtGrp = [];
         f_NewOrderSingle_PrevClosePx = None;
         f_NewOrderSingle_Side = convert__model_to_full_Side msg.f_NewOrderSingle_Side;
         f_NewOrderSingle_LocateReqd = None;
         f_NewOrderSingle_TransactTime = msg.f_NewOrderSingle_TransactTime;
-        f_NewOrderSingle_Stipulations = {
-            f_Stipulations_NoStipulations = None;
-            f_Stipulations_StipulationType = None;
-            f_Stipulations_StipulationValue = None
-        };
+        f_NewOrderSingle_Stipulations = [];
         f_NewOrderSingle_QtyType = None;
         f_NewOrderSingle_OrderQtyData = {
+            f_OrderQtyData_OrderQty = None;
             f_OrderQtyData_CashOrderQty = None;
             f_OrderQtyData_OrderPercent = None;
-            f_OrderQtyData_OrderQty = None;
             f_OrderQtyData_RoundingDirection = None;
             f_OrderQtyData_RoundingModulus = None
         };
@@ -703,22 +416,22 @@ let convert_FIX_Msg_NewOrderSingle ( msg : mod_newordersingle_data ) =
         f_NewOrderSingle_Price = None;
         f_NewOrderSingle_StopPx = None;
         f_NewOrderSingle_SpreadOrBenchmarkCurveData = {
+            f_SpreadOrBenchmarkCurveData_Spread = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkCurveName = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkCurvePoint = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkPrice = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkPriceType = None;
             f_SpreadOrBenchmarkCurveData_BenchmarkSecurityID = None;
-            f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource = None;
-            f_SpreadOrBenchmarkCurveData_Spread = None
+            f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource = None
         };
         f_NewOrderSingle_YieldData = {
+            f_YieldData_YieldType = None;
             f_YieldData_Yield = None;
             f_YieldData_YieldCalcDate = None;
             f_YieldData_YieldRedemptionDate = None;
             f_YieldData_YieldRedemptionPrice = None;
-            f_YieldData_YieldRedemptionPriceType = None;
-            f_YieldData_YieldType = None
+            f_YieldData_YieldRedemptionPriceType = None
         };
         f_NewOrderSingle_Currency = None;
         f_NewOrderSingle_ComplianceID = None;
@@ -731,9 +444,9 @@ let convert_FIX_Msg_NewOrderSingle ( msg : mod_newordersingle_data ) =
         f_NewOrderSingle_ExpireTime = None;
         f_NewOrderSingle_GTBookingInst = None;
         f_NewOrderSingle_CommissionData = {
-            f_CommissionData_CommCurrency = None;
-            f_CommissionData_CommType = None;
             f_CommissionData_Commission = None;
+            f_CommissionData_CommType = None;
+            f_CommissionData_CommCurrency = None;
             f_CommissionData_FundRenewWaiv = None
         };
         f_NewOrderSingle_OrderCapacity = None;
@@ -752,19 +465,19 @@ let convert_FIX_Msg_NewOrderSingle ( msg : mod_newordersingle_data ) =
         f_NewOrderSingle_CoveredOrUncovered = None;
         f_NewOrderSingle_MaxShow = None;
         f_NewOrderSingle_PegInstructions = {
-            f_PegInstructions_PegLimitType = None;
+            f_PegInstructions_PegOffsetValue = None;
             f_PegInstructions_PegMoveType = None;
             f_PegInstructions_PegOffsetType = None;
-            f_PegInstructions_PegOffsetValue = None;
+            f_PegInstructions_PegLimitType = None;
             f_PegInstructions_PegRoundDirection = None;
             f_PegInstructions_PegScope = None
         };
         f_NewOrderSingle_DiscretionInstructions = {
             f_DiscretionInstructions_DiscretionInst = None;
-            f_DiscretionInstructions_DiscretionLimitType = None;
+            f_DiscretionInstructions_DiscretionOffsetValue = None;
             f_DiscretionInstructions_DiscretionMoveType = None;
             f_DiscretionInstructions_DiscretionOffsetType = None;
-            f_DiscretionInstructions_DiscretionOffsetValue = None;
+            f_DiscretionInstructions_DiscretionLimitType = None;
             f_DiscretionInstructions_DiscretionRoundDirection = None;
             f_DiscretionInstructions_DiscretionScope = None
         };
@@ -780,7 +493,7 @@ let convert_FIX_Msg_NewOrderSingle ( msg : mod_newordersingle_data ) =
 
 let convert_model_to_full_fix ( msg : model_msg ) =
     (match msg with
-        | FIX_Msg_ExecutionReport msg_data -> (convert_FIX_Msg_ExecutionReport msg_data)
-        | FIX_Msg_NewOrderSingle msg_data -> (convert_FIX_Msg_NewOrderSingle msg_data)
+        | FIX_Msg_ExecutionReport msg_data -> (convert__model_to_full_ExecutionReport msg_data)
+        | FIX_Msg_NewOrderSingle msg_data -> (convert__model_to_full_NewOrderSingle msg_data)
     )
 ;;

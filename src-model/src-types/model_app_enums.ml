@@ -1,3 +1,5 @@
+(* Aesthetic Integration copyright 2017 *)
+
 type model_fix_exectype =
     | MOD_FIX_ExecType_New 
     | MOD_FIX_ExecType_DoneForDay 

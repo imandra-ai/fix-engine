@@ -25,9 +25,18 @@ let parse_msg_heartbeat_data msg = (
     ) |> check_unknown_tags 
 ;;
 
+let parse_msg_types msg = (
+    req msg "372" parse_full_msg_tag @@ fun msg mtps_ref_msg_type ->
+    req msg "385" parse_MsgDirection @@ fun msg mtps_direction    ->
+    ParseSuccess 
+    { mtps_ref_msg_type 
+    ; mtps_direction    
+    } , msg )
+;;
 
 let parse_msg_logon_data msg = (
-    check_duplicate_tags msg              @@ fun () ->
+    repeating msg "384" parse_msg_types   @@ fun msg ln_msg_types                 ->
+    check_duplicate_tags msg              @@ fun ()                               ->
     req msg "98"  parse_encryption_method @@ fun msg ln_encrypt_method            ->
     req msg "108" parse_Duration          @@ fun msg ln_heartbeat_interval        ->
     opt msg "95"  parse_int               @@ fun msg ln_raw_data_length           ->
@@ -49,6 +58,7 @@ let parse_msg_logon_data msg = (
     ; ln_test_message_indicator     
     ; ln_username                   
     ; ln_password                   
+    ; ln_msg_types
     } , msg
     ) |> check_unknown_tags 
 ;;

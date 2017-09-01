@@ -1,9 +1,9 @@
 (jbuild_version 1)
 
 (library
-  ( (name        protocol_exts_pp)
+  ( (name protocol_exts_pp)
     (public_name protocol_exts_pp)
-    (wrapped  false)
-    (libraries (yojson core_pp protocol_exts))
+    (wrapped false)
+    (libraries (core_pp protocol_exts yojson))
   )
 )

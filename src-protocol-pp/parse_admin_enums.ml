@@ -67,3 +67,13 @@ let parse_encryption_method = function
     | "6" -> Some NoEncryption 
     |  _  -> None
 ;;
+
+(** *)
+let parse_MsgDirection ( str ) =
+    (match str with
+        | "S" -> (Some (FIX_MsgDirection_Send))
+        | "R" -> (Some (FIX_MsgDirection_Receive))
+        | _ -> (None)
+    )
+;;
+

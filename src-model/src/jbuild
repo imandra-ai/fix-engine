@@ -1,10 +1,9 @@
 (jbuild_version 1)
 
 (library
-  ( (name        venue)
+  ( (name venue)
     (public_name venue)
-    (wrapped  false)
-    (modules (:standard \ act_process_new_style))
-    (libraries (venue_types))
+    (wrapped false)
+    (libraries (core venue_types))
   )
 )

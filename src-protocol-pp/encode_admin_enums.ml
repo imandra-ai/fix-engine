@@ -62,3 +62,11 @@ let encode_encryption_method = function
     | PEM_DES_MD5  -> "5"   
     | NoEncryption -> "6"  
 ;;
+
+(** *)
+let encode_MsgDirection ( d ) =
+    (match d with
+        | FIX_MsgDirection_Send -> "S"
+        | FIX_MsgDirection_Receive -> "R"
+    )
+;;

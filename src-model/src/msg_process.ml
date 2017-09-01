@@ -1,16 +1,17 @@
- (* @meta[imandra_ignore] on @end *)
-open Model_messages;;
+(* Aesthetic Integration copyright 2017 *)
+(* @meta[imandra_ignore] on @end *)
+open Msg_defaults;;
 open Msg_check_fields;;
-open Msg_check_types;;
+open State;;
 open Msg_check_validate;;
 open Msg_reject;;
+open Msg_check_types;;
+open Model_messages;;
 open Msg_receive;;
-open Msg_defaults;;
-open State;;
-open Model_tags;;
- (* @meta[imandra_ignore] off @end *)
+(* @meta[imandra_ignore] off @end *)
 
 let process_NewOrderSingle ( m_state , msg_data : model_state * mod_newordersingle_data ) =
+    let msg_data = assign_defaults_NewOrderSingle (msg_data) in
     let field_check = check_fields_NewOrderSingle (msg_data,m_state) in
     if field_check.is_invalid then
         (reject_NewOrderSingle_invalidfield (m_state,msg_data,field_check.field_text))
@@ -19,8 +20,7 @@ let process_NewOrderSingle ( m_state , msg_data : model_state * mod_newordersing
         if custom_reject.validate_invalid then
             (reject_NewOrderSingle_invalid (m_state,msg_data,custom_reject.validate_text))
         else
-            let msg_data = assign_defaults_NewOrderSingle (msg_data) in
-            receive_message_NewOrderSingle (m_state,msg_data)
+            (receive_message_NewOrderSingle (m_state,msg_data))
 ;;
 
 let process_msg ( m_state , msg : model_state * model_top_level_msg ) =
