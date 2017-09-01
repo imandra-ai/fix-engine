@@ -240,7 +240,7 @@ module Parser = struct
             | [] -> [], [] | (v, following_msg)::tl -> ( (v,[])::tl, leading_msg @ following_msg ) in
         (* Check that every group have parsed cleanly *)
         let groups = groups |> List.map 
-            ( function (v, []) -> v | _ -> RepeatingGroupOutOfOrder tag ) in
+            ( function (v, []) -> v | ( _ , (k , _ )::tl ) -> RepeatingGroupOutOfOrder k ) in
         (* "Monadic flatten" the list and pass into the continuation with the rest of the message *)
         rev_collect groups >|>= f msg 
 
