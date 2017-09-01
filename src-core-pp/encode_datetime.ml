@@ -13,7 +13,7 @@ open Datetime;;
 open Encode_base_types;;
 (* @meta[imandra_ignore] off @end *)
 
-(** *)
+
 let encode_UTCDateOnly x : string =
     Printf.sprintf "%04u%02u%02u" 
         x.utc_dateonly_year
@@ -21,7 +21,7 @@ let encode_UTCDateOnly x : string =
         x.utc_dateonly_day
 ;;
 
-(** *)
+
 let encode_LocalMktDate x : string =
     Printf.sprintf "%04u%02u%02u" 
         x.localmktdate_year  
@@ -29,7 +29,7 @@ let encode_LocalMktDate x : string =
         x.localmktdate_day   
 ;;
 
-(** *)
+
 let encode_UTCTimeOnly x : string = 
     let hms = Printf.sprintf "%02u:%02u:%02u" 
                 x.utc_timeonly_hour  
@@ -41,7 +41,7 @@ let encode_UTCTimeOnly x : string =
         | Some ms -> hms ^ Printf.sprintf ".%03d" ms
 ;;
 
-(** *)
+
 let encode_UTCTimestamp x : string = 
     let ymdhms = Printf.sprintf "%04u%02u%02u-%02u:%02u:%02u" 
             x.utc_timestamp_year     
@@ -56,7 +56,7 @@ let encode_UTCTimestamp x : string =
         | Some ms -> ymdhms ^ Printf.sprintf ".%03d" ms
 ;;
 
-(** *)
+
 let encode_MonthYear x : string =
     let ym = Printf.sprintf "%04u%02u" 
         x.monthyear_year  
@@ -75,7 +75,7 @@ let encode_MonthYear x : string =
     end
 ;;
 
-(** *)
+
 let encode_Duration x : string =
     duration_to_seconds x |> encode_int
 ;;

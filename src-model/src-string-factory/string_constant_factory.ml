@@ -111,7 +111,9 @@ let string_constant_to_model_string ( f , msgin : string * full_app_msg_data ) =
 let all_model_strings ( msgin : full_app_msg_data ) =
     let msg = convert_full_to_model_fix msgin in
     (match msg with
-        | FIX_TL_Normal msg -> ((Model_string 8,("The validity condition, \"valid when it in [Side.Buy, Side.Sell, SellShort] \", is violated for value \""^(match msg with
+        | FIX_TL_None -> []
+        | FIX_TL_PossibleResend msg
+        | FIX_TL_Normal msg -> ((Model_string 18,("The validity condition, \"valid when it in [Side.Buy, Side.Sell, SellShort] \", is violated for value \""^(match msg with
             | FIX_Msg_NewOrderSingle msg_data -> (side_to_string (convert__model_to_full_Side msg_data.f_NewOrderSingle_Side))
             | _ -> ""
         )

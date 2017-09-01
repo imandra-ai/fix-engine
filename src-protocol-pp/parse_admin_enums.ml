@@ -1,4 +1,4 @@
-(** *)
+
 (*** 
 
     Aesthetic Integration Limited
@@ -10,7 +10,7 @@
 
 open Full_admin_enums;;
 
-(** *)
+
 let parse_session_reject_reason = function
     | "0"  -> Some InvalidTagNumber                          
     | "1"  -> Some RequiredTagMissing                        
@@ -33,7 +33,7 @@ let parse_session_reject_reason = function
     |   _  -> None
 ;;
 
-(** *)
+
 let parse_business_reject_reason = function
     | "4" -> Some ApplicationDown         
     | "3" -> Some MessageTypeNotSupported 
@@ -41,7 +41,7 @@ let parse_business_reject_reason = function
     |  _  -> None
 ;;
 
-(** *)
+
 let parse_app_reject_reason = function
     | "5" -> Some FIX_App_Reject_MissingReqField 
     | "1" -> Some FIX_App_Reject_InvalidField    
@@ -49,14 +49,14 @@ let parse_app_reject_reason = function
     |  _  -> None
 ;;
 
-(** *)
+
 let parse_GapFillFlag = function
     | "Y" -> Some FIX_GapFillFlag_Y
     | "N" -> Some FIX_GapFillFlag_N
     |  _  -> None
 ;;
 
-(** *)
+
 let parse_encryption_method = function
     | "0" -> Some PKCS          
     | "1" -> Some DES_ECB       

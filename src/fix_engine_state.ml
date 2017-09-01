@@ -41,7 +41,8 @@ type fix_engine_int_inc_msg =
 
 (** These are the outgoing internal messages - would be sent into the application model. *)
 type fix_engine_int_out_msg = 
-    | OutIntMsg_ApplicationData     of full_app_msg_data    (** Sending application message onto the  *)    
+    | OutIntMsg_ApplicationData       of full_app_msg_data    (** Sending application message *)    
+    | OutIntMsg_ResendApplicationData of full_app_msg_data    (** Sending application message that was flagged as a possible resend   *)    
     | OutIntMsg_Reject                                      (** Rejecting internal message - when we cannot transmit or create new sessions, etc. *)
 ;;
 
@@ -67,7 +68,7 @@ type fix_engine_mode =
     | Retransmit            (** Retransmitting sequence of messages because we were asked to retransmit. *)
     | ShuttingDown          (** We'll nees to send a logoff message adn transition to ShutdownInitiated. *)               
     | ShutdownInitiated     (** Shutting-down protocol. *)
-    | Error                 (** *)
+    | Error                 
     | WaitingForHeartbeat   (** Sent out TestRequest message.  *)
 ;;
 

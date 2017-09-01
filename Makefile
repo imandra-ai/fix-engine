@@ -14,6 +14,12 @@ build_vgs:
 	jbuilder build @install
 	rm jbuild-ignore
 
+build_tests:
+	@echo "src-protocol-exts-pp-vg" > jbuild-ignore 
+	@echo "src-protocol-exts-vg" >> jbuild-ignore 
+	jbuilder build src-tests/test_runner.bc 
+	rm jbuild-ignore
+
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 	sed -e 's/rotate=90;//g' "$<" | dot -Tsvg -o $@
 

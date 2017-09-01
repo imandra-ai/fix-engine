@@ -1,0 +1,17 @@
+(jbuild_version 1)
+
+(library
+  ( (name        test)
+    (public_name test)
+    (wrapped  false)
+    (modules test_cache)
+    (libraries (yojson protocol_pp))
+  )
+)
+
+(executable
+  ( (name test_runner) 
+    (libraries (threads cmdliner lwt.unix fix_simulation protocol_pp))  
+    (modules (test_runner config_parser))
+  )
+)

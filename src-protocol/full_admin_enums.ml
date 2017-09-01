@@ -1,4 +1,4 @@
-(** *)
+
 (***
 
     Aesthetic Integration Limited
@@ -8,7 +8,7 @@
 
 *)
 
-(** Session rejection reasons. *)
+(** SessionRejectReason <373> field. *)
 type fix_session_reject_reason =
     | InvalidTagNumber
     | RequiredTagMissing
@@ -31,14 +31,15 @@ type fix_session_reject_reason =
 ;;
 
 
-(* Business rejection reasons *)
+(** BusinessRejectReason <380> field *)
 type fix_business_reject_reason = 
     | ApplicationDown
     | MessageTypeNotSupported
     | FieldMissing
 ;;
 
-(* Application rejection reasons. *)
+(** Application rejection reasons -- used in internal message exchange between
+    the engine and the venue model . *)
 type fix_app_reject_reason = 
     | FIX_App_Reject_MissingReqField
     | FIX_App_Reject_InvalidField

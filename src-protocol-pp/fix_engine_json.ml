@@ -17,7 +17,7 @@ open Base_types_json
 open Full_app_messages_json
 open Full_messages_json
 
-(** *)
+
 let fix_engine_mode_to_string = function
     | NoActiveSession                                   -> "NoActiveSession"
     | LogonInitiated                                    -> "LogonInitiated"
@@ -43,7 +43,8 @@ let int_inc_msg_to_json x : json = match x with
 ;;
 
 let int_out_msg_to_json x : json = match x with
-    | OutIntMsg_ApplicationData d                       -> `Assoc [ ( "ApplicationData",    `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
+    | OutIntMsg_ResendApplicationData d                 -> `Assoc [ ( "ResendApplicationData", `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
+    | OutIntMsg_ApplicationData d                       -> `Assoc [ ( "ApplicationData",       `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
     | OutIntMsg_Reject                                  -> `String "Reject"
 ;;
 
@@ -55,7 +56,7 @@ let int_out_msg_to_str i =
     Yojson.pretty_to_string (int_out_msg_to_json i)
 ;;
 
-(** *)
+
 let int_inc_msg_opt_to_json : ( fix_engine_int_inc_msg option -> Yojson.json) = 
     function None -> `Null | Some i -> int_inc_msg_to_json (i)
 ;;
@@ -64,7 +65,7 @@ let int_out_msg_opt_to_json : ( fix_engine_int_out_msg option -> Yojson.json) =
     function None -> `Null | Some i -> int_out_msg_to_json (i)
 ;;
 
-(** *)
+
 let fix_engine_state_to_json s = 
     `Assoc [ 
         ( "curr_mode"                                   , `String (fix_engine_mode_to_string s.fe_curr_mode)    );
@@ -89,12 +90,12 @@ let fix_engine_state_to_json s =
     ]
 ;;
 
-(** *)
+
 let engine_state_to_str s =
     Yojson.pretty_to_string (fix_engine_state_to_json s)
 ;;
 
-(** *)
+
 let print_states states = 
     String.concat "\n" (List.map engine_state_to_str states)
 ;;

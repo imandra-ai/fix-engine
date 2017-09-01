@@ -51,7 +51,7 @@ type field_missing_data = {
 
 type model_top_level_msg =
     | FIX_TL_Normal of model_msg
+    | FIX_TL_PossibleResend of model_msg    
     | FIX_TL_Req_Field_Missing of field_missing_data
-    | FIX_TL_PossibleResend of model_msg
     | FIX_TL_None 
 ;;

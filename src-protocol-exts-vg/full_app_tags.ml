@@ -1,4 +1,4 @@
-(** *)
+
 (***
 
     Aesthetic Integration Limited
@@ -9,7 +9,7 @@
 *)
 
 
-(** *)
+
 type full_app_msg_tag = 
     | Full_Msg_ExecutionReport_Tag
     | Full_Msg_OrderCancelRequest_Tag
@@ -18,7 +18,7 @@ type full_app_msg_tag =
     | Full_Msg_CancelReject_Tag               
 ;;
 
-(** *)
+
 type full_app_field_tag = 
     | Full_Msg_Account_Tag          
     | Full_Msg_AvgPx_Tag

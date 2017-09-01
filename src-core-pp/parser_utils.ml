@@ -8,6 +8,10 @@
 
 *)
 
+(** OCaml Stream processing helper functions that break a raw byte stream into 
+    a stream of key=value pairs and then into a stream of messages.  
+*)
+
 (**  Splits a stream of characters into a stream of key*value pairs. *)
 let split_into_key_value (spliton : char) ( stream : char Stream.t ) : (string * string) Stream.t =
     let current = ref [] in
@@ -34,7 +38,7 @@ let split_into_messages (stream : (string * string) Stream.t) =
     let rec next i =
         try 
             let key,value = Stream.next stream in    
-            if (int_of_string key = 10) then (
+            if (key = "10") then (
                 let message = List.rev ( (key,value)::!current ) in
                 current := [];
                 Some message
@@ -53,6 +57,8 @@ let split_into_messages (stream : (string * string) Stream.t) =
 ;; 
 
 
+
+(** Extract a value given a tag, returns a pair with the value and the rest of the list.*)
 let take (key : string) (lst : (string * string) list ) =
     let rec take accu = function
     | (k,v) :: tl -> 
@@ -62,6 +68,15 @@ let take (key : string) (lst : (string * string) list ) =
     take [] lst
 ;;
 
+(** Splits a list of (tag * value) pairs into two lists on a given tag. The tag
+    itself goes into the second list.  If the tag is absent -- returnes an empty
+    second list. 
+
+    split_on_tag 4 [(1,0); (2,0); (3,0); (4,0); (5,0); (6,0)] =>
+    ( [ (1,0); (2,0); (3,0) ] , 
+      [ (4,0); (5,0); (6,0) ]
+    )
+ *)
 let split_on_tag ( key : string ) ( msg : (string * string) list ) =
     let rec split accu = function
     | (k,v) :: tl -> if k = key then (List.rev accu, (k,v)::tl ) 
@@ -70,6 +85,9 @@ let split_on_tag ( key : string ) ( msg : (string * string) list ) =
     split [] msg
 ;;
 
+(** Uses the first entry tag in the input list to split the list into a list of
+    lists, each starting with the tag.
+*)
 let cut_on_separator ( msg : (string * string) list) =
     let rec cut accu = function
     | [] -> List.rev accu 
@@ -81,9 +99,16 @@ let cut_on_separator ( msg : (string * string) list) =
     cut [] msg
 ;;
 
-(** *)
+(** The Parser module collects an API of parser-combinators for parsing FIX
+    messages into OCaml types. Each combinator takes a continuation function 
+    that returns a ( 'a Parser.t * msg ) type  
+ *)
 module Parser = struct 
+
+    (** Type alias for a FIX message -- we assyme it is a list of string parirs *)
     type msg = (string * string) list
+
+    (***)
     type 'a t =
         | ParseSuccess             of 'a
         | UnknownMessageTag        of string 
@@ -95,7 +120,7 @@ module Parser = struct
         | IncorrectNumInGroupCount of string
         | RepeatingGroupOutOfOrder of string
         | GarbledMessage
-
+    (** A standard monadic bind operator for the Parser.t type *)
     let ( >>= ) x f = match x with
         | ParseSuccess             x -> f x   
         | UnknownMessageTag        x -> UnknownMessageTag        x
@@ -108,6 +133,7 @@ module Parser = struct
         | RepeatingGroupOutOfOrder x -> RepeatingGroupOutOfOrder x
         | GarbledMessage             -> GarbledMessage
 
+    (** The modified bind operator that applies a function that returns ('a Parser.t , msg ) pair *)
     let ( >|>= ) x f = match x with
         | ParseSuccess             x -> f x   
         | UnknownMessageTag        x -> UnknownMessageTag        x , []
@@ -120,7 +146,9 @@ module Parser = struct
         | RepeatingGroupOutOfOrder x -> RepeatingGroupOutOfOrder x , []
         | GarbledMessage             -> GarbledMessage , []
 
-
+    (** A "collect" function that convers 'a t list -> 'a list t 
+        Note: Tail-recursive, but reverses the list.
+    *)
     let rev_collect (lst: 'a t list) : 'a list t =
         let rec flatten acc = function
         | ParseSuccess x :: tl -> flatten (x::acc) tl
@@ -136,6 +164,25 @@ module Parser = struct
         | [] -> ParseSuccess acc in
         flatten [] lst
 
+    (** Parser combinators. *)
+
+    (** Each combinator takes the current message as the first argument and the
+        continuation function as the last argument. 
+    
+        A typical message parser would look like this.
+        
+        let parse_message msg = (
+            repeating msg "1" parse_rg @@ fun msg group ->
+            check_duplicate_tags msg   @@ fun () ->
+            block     msg parse_blk    @@ fun msg block ->
+            req msg "2" parse_int      @@ fun msg x -> 
+            opt msg "3" parse_string   @@ fun msg y -> 
+            req msg "4" parse_int      @@ fun msg z -> 
+            ParseSuccess { block; group; x; y; z }, msg 
+            ) |> check_unknown_tags 
+    *)
+
+    (** Optional field combinator, passes None into continuation if the tag is not present *)
     let opt msg tag parser f =
         let value, msg = take tag msg in
         match value with
@@ -147,6 +194,7 @@ module Parser = struct
             | Some t -> f msg (Some t)
         with _ -> WrongValueFormat tag, []
 
+    (** Required field combinator, returns RequiredTagMissing if the tag is not present *)
     let req msg tag parser f =
         let value, msg = take tag msg in
         match value with
@@ -158,12 +206,18 @@ module Parser = struct
             | Some t -> f msg t
         with _ -> WrongValueFormat tag, []
 
+    (** Block parser combinator parsers a record and passes it into the continuation *)
     let block ( msg : msg ) 
               ( block_parser : msg -> 'a t * msg )
               ( f : msg -> 'a -> 'b t * msg) =
         let value, msg = block_parser msg in
         value >|>= f msg 
 
+    (** Repeating group parser combinator, starting from the tag that encodes
+        the length of the list, identifies the subgroups and passes each of them
+        into the block parser. Performs a number of consistency checks on the parsed
+        results. 
+    *)
     let repeating ( msg : msg ) 
                   ( tag : string )
                   ( block_parser : msg ->  'a t * msg  )

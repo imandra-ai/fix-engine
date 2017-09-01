@@ -12,41 +12,42 @@
 open Imandra_utils;;
 (* @meta[imandra_ignore] off @end *)
 
-(** *)
+
 let int_Add ( x , y : int * int ) : int = x + y;;
 
-(** *)
+
 let int_Sub ( x , y : int * int ) : int = x - y;;
 
-(** *)
+
 let int_Neg ( x : int ) : int = -x;;
 
-(** *)
+
 let int_Mult ( x, y : int * int ) : int = x * y;;
 
-(** *)
+
 let int_Div ( x, y : int * int ) : int = x / y;;
 
-(** *)
+
 let int_GreaterThan (x, y : int * int ) : bool = x > y;;
 
-(** *)
+
 let int_GreaterThanEqual ( x, y : int * int ) : bool = x >= y;;
 
-(** *)
+
 let int_LessThan ( x, y : int * int ) : bool =  x < y;;
 
-(** *)
+
 let int_LessThanEqual ( x, y : int * int ) : bool = x <= y;;
 
-(** *)
+(** For the floating point numbers we store the whole and decimal parts as integers. *)
 type fix_float_data = {
     fix_float_whole       : int;
     fix_float_fraction    : int;
 }
 ;;
 
-(** *)
+(** To keep track of the floating point precision, the floating point data
+    type encodes a number of decimal places used.*)
 type fix_float = 
     | Float_0 of fix_float_data
     | Float_1 of fix_float_data
@@ -55,7 +56,7 @@ type fix_float =
     | Float_4 of fix_float_data
 ;;
 
-(** *)
+
 let float_Create ( data, num_decs : fix_float_data * int ) =
     match num_decs with
     | 0 -> Float_0 data
@@ -65,7 +66,7 @@ let float_Create ( data, num_decs : fix_float_data * int ) =
     | _ -> Float_4 data
 ;;
 
-(** *)
+
 let float_GetData ( f : fix_float ) =
     match f with 
     | Float_0 d -> d
@@ -75,7 +76,7 @@ let float_GetData ( f : fix_float ) =
     | Float_4 d -> d
 ;;
 
-(** *)
+
 let float_GetDecs ( f : fix_float ) =
     match f with 
     | Float_0 _ -> 0
@@ -85,7 +86,7 @@ let float_GetDecs ( f : fix_float ) =
     | _         -> 4
 ;;
 
-(** *)
+
 let float_GetFloat ( f : fix_float ) =
     match f with 
     | Float_0 d ->   float_of_int  ( d.fix_float_whole ) 
@@ -95,7 +96,7 @@ let float_GetFloat ( f : fix_float ) =
     | Float_4 d -> ( float_of_int  ( d.fix_float_whole ) ) +. ( float_of_int ( d.fix_float_fraction ) /. 10000.0)
 ;;
 
-(** *)
+
 let getDecPow ( d ) = 
     match d with 
     | 0 -> 1.0
@@ -105,7 +106,7 @@ let getDecPow ( d ) =
     | _ -> 10000.0
 ;;
 
-(** *)
+
 let make_Float ( f, dec : float * int ) = 
     let d = {
         fix_float_whole     = int_of_float f;
@@ -119,7 +120,7 @@ let make_Float ( f, dec : float * int ) =
     | _ -> Float_4 d
 ;;
 
-(** *)
+
 let float_Add ( fOne, fTwo : fix_float * fix_float ) =
     let dOne = float_GetDecs ( fOne ) in 
     let dTwo = float_GetDecs ( fTwo ) in 
@@ -130,7 +131,7 @@ let float_Add ( fOne, fTwo : fix_float * fix_float ) =
     make_Float ( data1 +. data2, min (dOne, dTwo))
 ;;
 
-(** *)
+
 let float_Sub( fOne, fTwo: fix_float * fix_float ) =
   let dOne = float_GetDecs( fOne ) in
   let dTwo = float_GetDecs( fTwo ) in
@@ -140,14 +141,14 @@ let float_Sub( fOne, fTwo: fix_float * fix_float ) =
 
   make_Float (data1 -. data2, min(dOne,dTwo));;
 
-(** *)
+
 let float_Neg (fOne: fix_float ) =
   let dOne = float_GetDecs (fOne) in
   let data1 = float_GetFloat (fOne) in
 
   make_Float(-. data1, dOne);;
 
-(** *)
+
 let float_Div ( fOne, fTwo : fix_float * fix_float ) = 
     let dOne = float_GetDecs ( fOne ) in 
     let dTwo = float_GetDecs ( fTwo ) in 
@@ -158,7 +159,7 @@ let float_Div ( fOne, fTwo : fix_float * fix_float ) =
     make_Float ( data1 /. data2, min (dOne, dTwo))
 ;;
 
-(** *)
+
 let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
     let dOne = float_GetDecs ( fOne ) in 
     let dTwo = float_GetDecs ( fTwo ) in 
@@ -169,17 +170,17 @@ let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
     make_Float ( one *. two, min (dOne, dTwo) )
 ;;
 
-(** *)
+
 let float_GreaterThan ( fOne, fTwo : fix_float * fix_float ) =
     float_GetFloat ( fOne ) > float_GetFloat ( fTwo )
 ;;
 
-(** *)
+
 let float_LessThan ( fOne, fTwo : fix_float * fix_float ) =
     float_GetFloat ( fOne ) < float_GetFloat ( fTwo )
 ;;
 
-(** *)
+
 let float_GreaterThanEqual ( fOne, fTwo : fix_float * fix_float ) =
     not (float_LessThan ( fOne, fTwo ))
 ;;
@@ -191,7 +192,7 @@ let float_Equal ( fOne, fTwo : fix_float * fix_float ) =
     fractQOne = fractQTwo
 ;;
 
-(** *)
+
 let float_LessThanEqual ( fOne, fTwo : fix_float * fix_float ) =
     float_LessThan (fOne, fTwo) || float_Equal (fOne, fTwo)
 ;;

@@ -1,4 +1,4 @@
-(** *)
+
 (*** 
 
     Aesthetic Integration Limited
@@ -51,7 +51,7 @@ type fix_ordstatus =
     | FIX_Ord_Status_PendingReplace
 ;;
 
-(** *)
+
 type fix_timeinforce =
     | FIX_TimeInForce_Day
     | FIX_TimeInForce_IOC
@@ -61,7 +61,7 @@ type fix_timeinforce =
     | FIX_TimeInForce_GoodTillDate
 ;;
 
-(** *)
+
 type fix_execinst = 
     | FIX_ExecInst_NotHeld
     | FIX_ExecInst_Work
@@ -73,14 +73,14 @@ type fix_execinst =
     | FIX_ExecInst_PrimaryPeg
 ;;
 
-(** *)
+
 type fix_handlinst =
     | FIX_HandlInst_Automated_NoInt
     | FIX_HandlInst_Automated_Int
     | FIX_HandlInst_Manual
 ;;
 
-(** *)
+
 type fix_exectype = 
     | FIX_ExecType_New
     | FIX_ExecType_PartialFill
@@ -96,7 +96,7 @@ type fix_exectype =
     | FIX_ExecType_Calculated
 ;;
 
-(** *)
+
 type fix_ordertype = 
     | FIX_Ord_Type_Market
     | FIX_Ord_Type_Limit

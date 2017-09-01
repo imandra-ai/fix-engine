@@ -24,6 +24,7 @@ let parse_char (str: string) : int option =
     Some (Char.code str.[0])
 
 let parse_int ( str : string ) : int option = 
+    if String.get str 0 = '+' then None else
     try 
         Some(int_of_string str) 
     with _ -> None
@@ -37,6 +38,7 @@ let parse_bool ( str : string) : bool option =
 ;;
 
 let parse_float ( str : string ) : fix_float option =
+    if String.get str 0 = '+' then None else
     let mkfloat w f = {fix_float_whole = w; fix_float_fraction = f } in
     let whole, tail = Scanf.sscanf str "%d%s" (fun w f -> (w,f)) in
     if (tail = "") || (tail = ".") then Some ( Float_0 (mkfloat whole 0) ) else

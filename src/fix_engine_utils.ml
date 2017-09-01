@@ -323,7 +323,7 @@ let session_reject ( rejected_data, engine : session_rejected_msg_data * fix_eng
             incoming_fix_msg        = None;
             fe_last_time_data_sent  = engine.fe_curr_time;
             outgoing_fix_msg        = Some ( ValidMsg ( reject_msg ));
-            incoming_seq_num        = rejected_data.srej_msg_msg_seq_num + 1;
+            incoming_seq_num        = rejected_data.srej_msg_msg_seq_num;
             outgoing_seq_num        = engine.outgoing_seq_num + 1;
             fe_history              = add_msg_to_history ( engine.fe_history, reject_msg );
         }
@@ -349,6 +349,7 @@ let hbeat_interval_null ( interval : fix_duration ) =
 (** Check the message header ( presence and value of the OrigSendingTime ) 
     returns None if no problems are found. *)
 let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * fix_header * full_msg_tag ) = 
+    let curr_incoming_seq_num = engine.incoming_seq_num in 
     let reject = { (** No orig_sending_time => create session reject *)
             srej_msg_msg_seq_num   = msg_header.h_msg_seq_num;
             srej_msg_field_tag     = None;
@@ -368,7 +369,7 @@ let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * f
             (** TODO: rejection fix_string here *)
             } in
         let engine = session_reject ( reject , engine ) in
-        Some engine
+        Some { engine with incoming_seq_num = curr_incoming_seq_num }
     | Some orig_sending_time ->
     if utctimestamp_LessThan (msg_header.h_sending_time, orig_sending_time ) then
         let reject = { reject with (** The sending_time is less than orig_sending_time -- reject and logout *)

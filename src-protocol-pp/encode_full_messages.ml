@@ -17,14 +17,14 @@ open Encode_full_tags
 let req f x = Some (f x);;
 let opt f v = match v with Some x -> Some ( f x ) | None -> None;;
 
-(** *)
+
 let encode_msg_data msg =
     match msg with
     | Full_FIX_Admin_Msg msg -> Encode_admin_messages.encode_admin_msg_data msg
     | Full_FIX_App_Msg   msg -> Encode_app_messages.encode_app_msg_data     msg  
 ;;
 
-(** *)
+
 let encode_header msg_tag msg = 
     [ (* Tags 8 and 9 will be added in encode_full_valid_msg *)
       ( "35"  , req encode_full_msg_tag  msg_tag                          )
@@ -55,7 +55,7 @@ let encode_header msg_tag msg =
     ]
 ;;
 
-(** *)
+
 let encode_trailer msg =  
     [ ( "93" , opt encode_int msg.signature_length )
     ; ( "89" , opt encode_int msg.signature        )
@@ -86,6 +86,15 @@ let get_checksum msg =
     scan 0 msg 
 ;;
 
+let prepare_packet msg_body =
+    let encode_checksum = Printf.sprintf "%03u" in
+    let msg = [ ( "8"   , "FIX.4.4" )
+              ; ( "9"   , get_body_length msg_body |> encode_int    )
+              ] @ msg_body
+              in             
+    msg @ [ ( "10" , get_checksum msg |> encode_checksum )] 
+;;
+
 let encode_full_valid_msg x =
     let msgtag = get_full_msg_tag x.full_msg_data in
     let msg_body = 
@@ -97,12 +106,7 @@ let encode_full_valid_msg x =
         |> List.filter (fun (k,v) -> v <> None )
         |> List.map    (fun (k,v) -> (k, match v with Some v -> v | None -> ""))
         in
-    let encode_checksum = Printf.sprintf "%03u" in
-    let msg = [ ( "8"   , "FIX.4.4" )
-              ; ( "9"   , get_body_length msg_body |> encode_int    )
-              ] @ msg_body
-              in             
-    let msg = msg @ [ ( "10" , get_checksum msg |> encode_checksum )] in
-    msg |> List.map ( fun(k,v) -> k^"="^v )
-        |> List.fold_left ( fun a s -> a ^ s ^ "\001" ) ""
+    msg_body |> prepare_packet
+             |> List.map ( fun(k,v) -> k^"="^v )
+             |> List.fold_left ( fun a s -> a ^ s ^ "\001" ) ""
 ;;
