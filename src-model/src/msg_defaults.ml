@@ -1,7 +1,6 @@
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Base_types;;
 open Model_messages;;
-open Numeric;;
 (* @meta[imandra_ignore] off @end *)
 
 let assign_defaults_ExecutionReport ( msg_data : mod_executionreport_data ) =

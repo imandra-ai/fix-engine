@@ -1,3 +1,4 @@
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
 open Full_app_enums;;
 (* @meta[imandra_ignore] off @end *)

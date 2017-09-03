@@ -35,7 +35,7 @@ let utctimestamp_opt_to_json = function
     | Some x  -> utctimestamp_to_json x
 ;;
 
-let utcduration_to_json ( d : fix_duration ) = 
+let duration_to_json ( d : fix_duration ) = 
     let list_assoc = [
         ( "dur_years"   , int_opt_to_json d.dur_years   );
         ( "dur_months"  , int_opt_to_json d.dur_months  );

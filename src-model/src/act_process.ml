@@ -1,11 +1,8 @@
+(* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Base_types;;
-open Datetime;;
-open Numeric;;
-open Model_messages;;
-open Actions;;
 open State;;
-open Model_app_enums;;
+open Actions;;
+open Act_checks;;
 (* @meta[imandra_ignore] off @end *)
 
 let receive_action_x ( m_state , action_data : model_state * m_action_fix_x ) =
@@ -13,7 +10,11 @@ let receive_action_x ( m_state , action_data : model_state * m_action_fix_x ) =
 ;;
 
 let receive_action ( m_state , action : model_state * fix_action ) =
-    (match action with
-        | FIX_Action_x d -> (receive_action_x (m_state,d))
-    )
+    if (is_action_valid (m_state,action)) then
+        ((match action with
+            | FIX_Action_x d -> (receive_action_x (m_state,d))
+        )
+        )
+    else
+        m_state
 ;;

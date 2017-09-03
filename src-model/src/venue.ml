@@ -1,8 +1,10 @@
- (* @meta[imandra_ignore] on @end *)
-open State;;
+(* Aesthetic Integration copyright 2017 *)
+(* @meta[imandra_ignore] on @end *)
 open Act_process;;
+open State;;
+open Model_messages;;
 open Msg_process;;
- (* @meta[imandra_ignore] off @end *)
+(* @meta[imandra_ignore] off @end *)
 
 let one_step ( m_state : model_state ) =
     (match m_state.incoming_action with
@@ -11,11 +13,11 @@ let one_step ( m_state : model_state ) =
             incoming_action = None
         }
         | None -> ((match m_state.incoming_msg with
-            | Some msg -> let s' = process_msg (m_state,msg) in
+            | FIX_TL_None -> m_state
+            | msg -> let s' = process_msg (m_state,msg) in
             { s' with
-                incoming_msg = None
+                incoming_msg = FIX_TL_None
             }
-            | None -> m_state
         )
         )
     )

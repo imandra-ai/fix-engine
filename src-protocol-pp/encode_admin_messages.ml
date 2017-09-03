@@ -20,11 +20,18 @@ let req f x = Some (f x);;
 let opt f v =
     match v with Some x -> Some ( f x ) | None -> None;; 
 
+let repeat f tag lst = match lst with [] -> [] | lst ->
+    ( tag , lst |> List.length |> req encode_int ) :: (lst |> List.map f |> List.concat );;
 
 let encode_msg_heartbeat_data msg = 
     [ ("112" , opt encode_string msg.hb_test_req_id ) ]  
 ;;
 
+let encode_msg_types msg = 
+    [ ( "372" , req encode_full_msg_tag msg.mtps_ref_msg_type )
+    ; ( "385" , req encode_MsgDirection msg.mtps_direction    )
+    ]
+;;
 
 let encode_msg_logon_data msg =
     [ ( "98"  , req encode_encryption_method msg.ln_encrypt_method            )
@@ -38,6 +45,7 @@ let encode_msg_logon_data msg =
     ; ( "553" , opt encode_string            msg.ln_username                  )
     ; ( "554" , opt encode_string            msg.ln_password                  )
     ] 
+    @ repeat encode_msg_types "384"          msg.ln_msg_types
 ;;
 
 

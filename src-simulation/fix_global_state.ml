@@ -75,13 +75,13 @@ let rec while_busy_loop state =
             let model_state = match engine_state.outgoing_int_msg with
                 | Some ( OutIntMsg_ApplicationData data ) ->
                     let model_message = Type_converter.convert_full_to_model_fix data in
-                    let model_state = { model_state with State.incoming_msg = Some model_message } in
+                    let model_state = { model_state with State.incoming_msg = model_message } in
                     Venue.one_step model_state
                 | Some ( OutIntMsg_ResendApplicationData data ) ->
                     let model_message = Type_converter.convert_full_to_model_fix data in
                     let model_message = match model_message with
                     | Model_messages.FIX_TL_Normal m -> Model_messages.FIX_TL_PossibleResend m | m -> m in
-                    let model_state = { model_state with State.incoming_msg = Some model_message } in
+                    let model_state = { model_state with State.incoming_msg = model_message } in
                     Venue.one_step model_state
                 | _ -> model_state (** TODO -- see what to do with other messages *)
                 in

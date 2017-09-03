@@ -11,7 +11,7 @@
 
 (executable
   ( (name test_runner) 
-    (libraries (threads cmdliner lwt.unix fix_simulation))  
+    (libraries (threads cmdliner lwt.unix fix_simulation protocol_pp))  
     (modules (test_runner config_parser))
   )
 )
