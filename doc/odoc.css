@@ -248,7 +248,8 @@ h1 + .modules, h1 + .sel { margin-top: 0.625rem }
 }
 .logo_main {
   width: auto;
-  height: 8rem;
+  height: 8.03rem;
+  margin-top: 1.24rem;
 }
 .space_after {
   margin-bottom: 2rem;
