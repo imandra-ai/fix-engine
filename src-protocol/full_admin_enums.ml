@@ -12,7 +12,7 @@
 type fix_session_reject_reason =
     | InvalidTagNumber
     | RequiredTagMissing
-    | TagNotDefined
+    | TagNotDefinedForThisMessageType
     | UndefinedTag
     | TagSecifiedWithoutAValue
     | ValueIsIncorrect

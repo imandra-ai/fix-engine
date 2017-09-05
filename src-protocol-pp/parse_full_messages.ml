@@ -206,7 +206,7 @@ let parse_top_level_msg msg =
         | RequiredTagMissing       tagstr -> make_session_reject Full_admin_enums.RequiredTagMissing tagstr msg
         | DuplicateTag             tagstr -> make_session_reject Full_admin_enums.TagAppearsMoreThanOnce tagstr msg
         | WrongValueFormat         tagstr -> make_session_reject Full_admin_enums.IncorrectDataFormatForValue tagstr msg
-        | UndefinedTag             tagstr -> make_session_reject Full_admin_enums.UndefinedTag tagstr msg
+        | UndefinedTag             tagstr -> make_session_reject Full_admin_enums.TagNotDefinedForThisMessageType tagstr msg
         | IncorrectNumInGroupCount tagstr -> make_session_reject Full_admin_enums.IncorrectNumInGroupCountForRepeatingGroup tagstr msg
         | RepeatingGroupOutOfOrder tagstr -> make_session_reject Full_admin_enums.RepeatingGroupFieldsOutOfOrder tagstr msg
         | EmptyValue         tag -> make_session_reject Full_admin_enums.TagSecifiedWithoutAValue tag msg

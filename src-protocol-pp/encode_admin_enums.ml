@@ -14,7 +14,7 @@ open Full_admin_enums;;
 let encode_session_reject_reason = function
     | InvalidTagNumber                          -> "0"                            
     | RequiredTagMissing                        -> "1"                          
-    | TagNotDefined                             -> "2"                               
+    | TagNotDefinedForThisMessageType           -> "2"                               
     | UndefinedTag                              -> "3"                                
     | TagSecifiedWithoutAValue                  -> "4"                    
     | ValueIsIncorrect                          -> "5"                            
