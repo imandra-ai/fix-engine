@@ -45,6 +45,7 @@ run_test ./defs/11c_NewSeqNoLess.def
 
 run_test ./defs/14b_RequiredFieldMissing.def
 run_test ./defs/14c_TagNotDefinedForMsgType.def
+run_test ./defs/14d_TagSpecifiedWithoutValue.def
 run_test ./defs/14h_RepeatedTag.def
 run_test ./defs/14f_IncorrectDataFormat.def
 run_test ./defs/14i_RepeatingGroupCountNotEqual.def
