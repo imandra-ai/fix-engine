@@ -224,7 +224,7 @@ let create_heartbeat_msg ( engine, tr_id : fix_engine_state * fix_string option)
 let create_test_request_msg ( engine : fix_engine_state ) =
     let msg_data = Full_FIX_Admin_Msg (
         Full_Msg_Test_Request {
-            test_req_id = Admin_string engine.last_test_req_id;
+            test_req_id = engine.fe_comp_id;
         }
     ) in
     create_outbound_fix_msg ( 
