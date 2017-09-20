@@ -75,7 +75,7 @@ let string_opt_to_json = function
   *)
 
 let symbol_to_json x : json = 
-    `String ( String_utils.fix_string_to_string x ) 
+    `String ( fix_string_to_string x ) 
 ;;
 
 let symbol_opt_to_json = function 
