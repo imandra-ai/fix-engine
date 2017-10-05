@@ -37,6 +37,7 @@ let parse_bool ( str : string) : bool option =
     | _ -> None
 ;;
 
+(** Convert string to fix_float type. *)
 let parse_float ( str : string ) : fix_float option =
     if String.get str 0 = '+' then None else
     let mkfloat w f = {fix_float_whole = w; fix_float_fraction = f } in
