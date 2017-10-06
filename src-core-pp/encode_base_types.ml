@@ -20,7 +20,7 @@ let encode_char = string_of_int ;;
 
 let encode_float = function
     | Float_0 x -> Printf.sprintf "%d" x
-    | Float_1 x -> Printf.sprintf "%.2f" ( float_of_int ( x ) /. 10.0 )
+    | Float_1 x -> Printf.sprintf "%.1f" ( float_of_int ( x ) /. 10.0 )
     | Float_2 x -> Printf.sprintf "%.2f" ( float_of_int ( x ) /. 100.0 )
     | Float_3 x -> Printf.sprintf "%.3f" ( float_of_int ( x ) /. 1000.0 )
     | Float_4 x -> Printf.sprintf "%.4f" ( float_of_int ( x ) /. 10000.0 )
