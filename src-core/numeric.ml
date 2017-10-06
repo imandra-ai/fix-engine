@@ -135,7 +135,7 @@ let float_Add (fOne, fTwo : fix_float * fix_float) =
     | Float_1 d1, Float_1 d2 -> Float_1 ( d1 + d2 )
     | Float_2 d1, Float_2 d2 -> Float_2 ( d1 + d2 )
     | Float_3 d1, Float_3 d2 -> Float_3 ( d1 + d2 )
-    | Float_4 d1, Float_4 d2 -> Float_3 ( d1 + d2 )
+    | Float_4 d1, Float_4 d2 -> Float_4 ( d1 + d2 )
     | _, _                   -> fOne (* This should never happen. *)
 ;;
 
@@ -147,7 +147,7 @@ let float_Sub (fOne, fTwo: fix_float * fix_float) =
     | Float_1 d1, Float_1 d2 -> Float_1 ( d1 - d2 )
     | Float_2 d1, Float_2 d2 -> Float_2 ( d1 - d2 )
     | Float_3 d1, Float_3 d2 -> Float_3 ( d1 - d2 )
-    | Float_4 d1, Float_4 d2 -> Float_3 ( d1 + d2 )
+    | Float_4 d1, Float_4 d2 -> Float_4 ( d1 - d2 )
     | _, _                   -> fOne
 ;;
 
@@ -158,7 +158,7 @@ let float_Neg (fOne : fix_float) =
     | Float_1 d -> Float_1 (-d)
     | Float_2 d -> Float_2 (-d)
     | Float_3 d -> Float_3 (-d)
-    | Float_4 d -> Float_4 (-d)    
+    | Float_4 d -> Float_4 (-d)
 ;;
 
 (** float1 / float2 *)
@@ -166,10 +166,10 @@ let float_Div ( fOne, fTwo : fix_float * fix_float ) =
     let pres = promote(fOne, fTwo) in
     match pres.f1, pres.f2 with
     | Float_0 d1, Float_0 d2 -> Float_0 ( d1 / d2 )
-    | Float_1 d1, Float_1 d2 -> Float_1 ( d1 / d2 )
-    | Float_2 d1, Float_2 d2 -> Float_2 ( d1 / d2 )
-    | Float_3 d1, Float_3 d2 -> Float_3 ( d1 / d2 )
-    | Float_4 d1, Float_4 d2 -> Float_3 ( d1 / d2 )
+    | Float_1 d1, Float_1 d2 -> Float_1 ( d1 / d2 * 10 )
+    | Float_2 d1, Float_2 d2 -> Float_2 ( d1 / d2 * 100 )
+    | Float_3 d1, Float_3 d2 -> Float_3 ( d1 / d2 * 1000 )
+    | Float_4 d1, Float_4 d2 -> Float_4 ( d1 / d2 * 10000 )
     | _, _                   -> fOne
 ;;
 
@@ -178,9 +178,10 @@ let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
     let pres = promote(fOne, fTwo) in
     match pres.f1, pres.f2 with
     | Float_0 d1, Float_0 d2 -> Float_0 ( d1 * d2 )
-    | Float_1 d1, Float_1 d2 -> Float_1 ( d1 * d2 )
-    | Float_2 d1, Float_2 d2 -> Float_2 ( d1 * d2 )
-    | Float_3 d1, Float_3 d2 -> Float_3 ( d1 * d2 )
+    | Float_1 d1, Float_1 d2 -> Float_1 ( d1 * d2 / 10 )
+    | Float_2 d1, Float_2 d2 -> Float_2 ( d1 * d2 / 100 )
+    | Float_3 d1, Float_3 d2 -> Float_3 ( d1 * d2 / 1000 )
+    | Float_4 d1, Float_4 d2 -> Float_4 ( d1 * d2 / 10000 )
     | _, _                   -> fOne
 ;;
 

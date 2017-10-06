@@ -18,7 +18,7 @@ open String_utils;;
 let encode_int  = string_of_int ;;
 let encode_char = string_of_int ;;
 
-let encode_float x = function
+let encode_float = function
     | Float_0 x -> Printf.sprintf "%d" x
     | Float_1 x -> Printf.sprintf "%.2f" ( float_of_int ( x ) /. 10.0 )
     | Float_2 x -> Printf.sprintf "%.2f" ( float_of_int ( x ) /. 100.0 )
