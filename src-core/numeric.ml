@@ -39,25 +39,18 @@ let int_LessThan ( x, y : int * int ) : bool =  x < y;;
 
 let int_LessThanEqual ( x, y : int * int ) : bool = x <= y;;
 
-(** For the floating point numbers we store the whole and decimal parts as integers. *)
-type fix_float_data = {
-    fix_float_whole       : int;
-    fix_float_fraction    : int;
-}
-;;
-
 (** To keep track of the floating point precision, the floating point data
     type encodes a number of decimal places used.*)
 type fix_float = 
-    | Float_0 of fix_float_data
-    | Float_1 of fix_float_data
-    | Float_2 of fix_float_data
-    | Float_3 of fix_float_data
-    | Float_4 of fix_float_data
+    | Float_0 of int
+    | Float_1 of int
+    | Float_2 of int
+    | Float_3 of int
+    | Float_4 of int
 ;;
 
 
-let float_Create ( data, num_decs : fix_float_data * int ) =
+let float_Create ( data, num_decs : int * int ) =
     match num_decs with
     | 0 -> Float_0 data
     | 1 -> Float_1 data
@@ -66,133 +59,174 @@ let float_Create ( data, num_decs : fix_float_data * int ) =
     | _ -> Float_4 data
 ;;
 
-
-let float_GetData ( f : fix_float ) =
-    match f with 
-    | Float_0 d -> d
-    | Float_1 d -> d
-    | Float_2 d -> d
-    | Float_3 d -> d
-    | Float_4 d -> d
-;;
-
-
 let float_GetDecs ( f : fix_float ) =
     match f with 
     | Float_0 _ -> 0
     | Float_1 _ -> 1
     | Float_2 _ -> 2
     | Float_3 _ -> 3
-    | _         -> 4
+    | Float_4 _ -> 4
 ;;
 
-
-let float_GetFloat ( f : fix_float ) =
-    match f with 
-    | Float_0 d ->   float_of_int  ( d.fix_float_whole ) 
-    | Float_1 d -> ( float_of_int  ( d.fix_float_whole ) ) +. ( float_of_int ( d.fix_float_fraction ) /. 10.0 )
-    | Float_2 d -> ( float_of_int  ( d.fix_float_whole ) ) +. ( float_of_int ( d.fix_float_fraction ) /. 100.0) 
-    | Float_3 d -> ( float_of_int  ( d.fix_float_whole ) ) +. ( float_of_int ( d.fix_float_fraction ) /. 1000.0)
-    | Float_4 d -> ( float_of_int  ( d.fix_float_whole ) ) +. ( float_of_int ( d.fix_float_fraction ) /. 10000.0)
+(** Result of promoting over the other. *)
+type promotion_result = {
+    f1 : fix_float;
+    f2 : fix_float;
+}
 ;;
 
-
-let getDecPow ( d ) = 
-    match d with 
-    | 0 -> 1.0
-    | 1 -> 10.0
-    | 2 -> 100.0
-    | 3 -> 1000.0
-    | _ -> 10000.0
-;;
-
-
-let make_Float ( f, dec : float * int ) = 
-    let d = {
-        fix_float_whole     = int_of_float f;
-        fix_float_fraction  = int_of_float (( f -. float_of_int ( int_of_float (f))) *. getDecPow (dec)) ;
-    } in 
-    match dec with 
+let promote_0 ( d, v : int * int ) = 
+    match v with
     | 0 -> Float_0 d
-    | 1 -> Float_1 d 
-    | 2 -> Float_2 d
-    | 3 -> Float_3 d
-    | _ -> Float_4 d
+    | 1 -> Float_1 (d * 10)
+    | 2 -> Float_2 (d * 100)
+    | 3 -> Float_3 (d * 1000)
+    | _ -> Float_4 (d * 10000)
 ;;
 
-
-let float_Add ( fOne, fTwo : fix_float * fix_float ) =
-    let dOne = float_GetDecs ( fOne ) in 
-    let dTwo = float_GetDecs ( fTwo ) in 
-
-    let data1 = float_GetFloat ( fOne ) in
-    let data2 = float_GetFloat ( fTwo ) in 
-
-    make_Float ( data1 +. data2, min (dOne, dTwo))
+let promote_1 ( d, v : int * int ) = 
+    match v with
+    | 0 -> Float_1 d
+    | 1 -> Float_2 (d * 10)
+    | 2 -> Float_3 (d * 100)
+    | _ -> Float_4 (d * 10000)
 ;;
 
+let promote_2 ( d, v : int * int ) = 
+    match v with
+    | 0 -> Float_2 d
+    | 1 -> Float_3 (d * 10)
+    | _ -> Float_4 (d * 100)
+;;
 
-let float_Sub( fOne, fTwo: fix_float * fix_float ) =
-  let dOne = float_GetDecs( fOne ) in
-  let dTwo = float_GetDecs( fTwo ) in
+let promote_3 ( d, v : int * int ) = 
+    match v with
+    | 0 -> Float_3 d
+    | _ -> Float_4 (d * 10)
+;;
 
-  let data1 = float_GetFloat( fOne  ) in
-  let data2 = float_GetFloat ( fTwo ) in
+let promote_float ( f, num_decs : fix_float * int ) =
+    match f, num_decs with 
+    | Float_0 d, v -> promote_0 (d, v)
+    | Float_1 d, v -> promote_1 (d, v)
+    | Float_2 d, v -> promote_2 (d, v)
+    | Float_3 d, v -> promote_3 (d, v)
+    | Float_4 d, v -> f    
+;;
 
-  make_Float (data1 -. data2, min(dOne,dTwo));;
+(* Type-case both floats to match. *)
+let promote ( f1, f2 : fix_float * fix_float ) =
+    let decs1 = float_GetDecs (f1) in
+    let decs2 = float_GetDecs (f2) in
+    let max_decs = max(decs1, decs2) in
+    let new_f1 = promote_float(f1, max_decs - decs1) in
+    let new_f2 = promote_float(f2, max_decs - decs2) in
+    {
+        f1 = new_f1;
+        f2 = new_f2;
+    }
+;;
 
+(** float1 + float2 *)
+let float_Add (fOne, fTwo : fix_float * fix_float) =
+    let pres = promote(fOne, fTwo) in
+    match pres.f1, pres.f2 with
+    | Float_0 d1, Float_0 d2 -> Float_0 ( d1 + d2 )
+    | Float_1 d1, Float_1 d2 -> Float_1 ( d1 + d2 )
+    | Float_2 d1, Float_2 d2 -> Float_2 ( d1 + d2 )
+    | Float_3 d1, Float_3 d2 -> Float_3 ( d1 + d2 )
+    | Float_4 d1, Float_4 d2 -> Float_4 ( d1 + d2 )
+    | _, _                   -> fOne (* This should never happen. *)
+;;
 
-let float_Neg (fOne: fix_float ) =
-  let dOne = float_GetDecs (fOne) in
-  let data1 = float_GetFloat (fOne) in
+(** float1 - float2 *)
+let float_Sub (fOne, fTwo: fix_float * fix_float) =
+    let pres = promote(fOne, fTwo) in
+    match pres.f1, pres.f2 with
+    | Float_0 d1, Float_0 d2 -> Float_0 ( d1 - d2 )
+    | Float_1 d1, Float_1 d2 -> Float_1 ( d1 - d2 )
+    | Float_2 d1, Float_2 d2 -> Float_2 ( d1 - d2 )
+    | Float_3 d1, Float_3 d2 -> Float_3 ( d1 - d2 )
+    | Float_4 d1, Float_4 d2 -> Float_4 ( d1 - d2 )
+    | _, _                   -> fOne
+;;
 
-  make_Float(-. data1, dOne);;
+(** -float1 *)
+let float_Neg (fOne : fix_float) =
+    match fOne with
+    | Float_0 d -> Float_0 (-d)
+    | Float_1 d -> Float_1 (-d)
+    | Float_2 d -> Float_2 (-d)
+    | Float_3 d -> Float_3 (-d)
+    | Float_4 d -> Float_4 (-d)
+;;
 
-
+(** float1 / float2 *)
 let float_Div ( fOne, fTwo : fix_float * fix_float ) = 
-    let dOne = float_GetDecs ( fOne ) in 
-    let dTwo = float_GetDecs ( fTwo ) in 
-
-    let data1 = float_GetFloat ( fOne ) in
-    let data2 = float_GetFloat ( fTwo ) in 
-
-    make_Float ( data1 /. data2, min (dOne, dTwo))
+    let pres = promote(fOne, fTwo) in
+    match pres.f1, pres.f2 with
+    | Float_0 d1, Float_0 d2 -> Float_0 ( d1 / d2 )
+    | Float_1 d1, Float_1 d2 -> Float_1 ( d1 / d2 * 10 )
+    | Float_2 d1, Float_2 d2 -> Float_2 ( d1 / d2 * 100 )
+    | Float_3 d1, Float_3 d2 -> Float_3 ( d1 / d2 * 1000 )
+    | Float_4 d1, Float_4 d2 -> Float_4 ( d1 / d2 * 10000 )
+    | _, _                   -> fOne
 ;;
 
-
+(** float1 * float2 *)
 let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
-    let dOne = float_GetDecs ( fOne ) in 
-    let dTwo = float_GetDecs ( fTwo ) in 
-
-    let one = float_GetFloat ( fOne ) in 
-    let two = float_GetFloat ( fTwo ) in 
-
-    make_Float ( one *. two, min (dOne, dTwo) )
+    let pres = promote(fOne, fTwo) in
+    match pres.f1, pres.f2 with
+    | Float_0 d1, Float_0 d2 -> Float_0 ( d1 * d2 )
+    | Float_1 d1, Float_1 d2 -> Float_1 ( d1 * d2 / 10 )
+    | Float_2 d1, Float_2 d2 -> Float_2 ( d1 * d2 / 100 )
+    | Float_3 d1, Float_3 d2 -> Float_3 ( d1 * d2 / 1000 )
+    | Float_4 d1, Float_4 d2 -> Float_4 ( d1 * d2 / 10000 )
+    | _, _                   -> fOne
 ;;
 
-
+(** float1 > float2 *)
 let float_GreaterThan ( fOne, fTwo : fix_float * fix_float ) =
-    float_GetFloat ( fOne ) > float_GetFloat ( fTwo )
+    let pres = promote(fOne, fTwo) in
+    match pres.f1, pres.f2 with
+    | Float_0 d1, Float_0 d2 -> d1 > d2
+    | Float_1 d1, Float_1 d2 -> d1 > d2
+    | Float_2 d1, Float_2 d2 -> d1 > d2
+    | Float_3 d1, Float_3 d2 -> d1 > d2
+    | Float_4 d1, Float_4 d2 -> d1 > d2
+    | _, _                   -> true
 ;;
 
-
+(** float 1 < float 2 *)
 let float_LessThan ( fOne, fTwo : fix_float * fix_float ) =
-    float_GetFloat ( fOne ) < float_GetFloat ( fTwo )
+    let pres = promote(fOne, fTwo) in
+    match pres.f1, pres.f2 with
+    | Float_0 d1, Float_0 d2 -> d1 < d2
+    | Float_1 d1, Float_1 d2 -> d1 < d2
+    | Float_2 d1, Float_2 d2 -> d1 < d2
+    | Float_3 d1, Float_3 d2 -> d1 < d2
+    | Float_4 d1, Float_4 d2 -> d1 < d2
+    | _, _                   -> true
 ;;
 
-
+(** float1 >= float2 *)
 let float_GreaterThanEqual ( fOne, fTwo : fix_float * fix_float ) =
     not (float_LessThan ( fOne, fTwo ))
 ;;
 
-(** TODO need to do something intelligent here. *)
+(** float1 == float2 *)
 let float_Equal ( fOne, fTwo : fix_float * fix_float ) =
-    let fractQOne = float_GetFloat ( fOne ) in 
-    let fractQTwo = float_GetFloat ( fTwo ) in
-    fractQOne = fractQTwo
+    let pres = promote(fOne, fTwo) in
+    match pres.f1, pres.f2 with
+    | Float_0 d1, Float_0 d2 -> d1 = d2
+    | Float_1 d1, Float_1 d2 -> d1 = d2
+    | Float_2 d1, Float_2 d2 -> d1 = d2
+    | Float_3 d1, Float_3 d2 -> d1 = d2
+    | Float_4 d1, Float_4 d2 -> d1 = d2
+    | _, _                   -> true
 ;;
 
-
+(** float1 <= float2 *)
 let float_LessThanEqual ( fOne, fTwo : fix_float * fix_float ) =
     float_LessThan (fOne, fTwo) || float_Equal (fOne, fTwo)
 ;;
