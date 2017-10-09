@@ -93,9 +93,8 @@ let precision_of_int (i : int) =
 ;;
 
 let promote ( b, d, v : int * int * int ) =
-  let v = precision_of_int (v + b) in
-  { precision = v
-  ; value     = d * base_pow (v) }
+  { precision = precision_of_int (v + b)
+  ; value     = d * base_pow (precision_of_int v) }
 ;;
 
 let promote_float ( f, num_decs : fix_float * int ) =
@@ -219,10 +218,25 @@ let float_LessThanEqual ( fOne, fTwo : fix_float * fix_float ) =
 
 let f1_zero = { precision = Dec1; value = 0 };;
 
+(* Some examples / sanity checks *)
+
 instance _ (x1_order_qty, x2_fill_price, x2_fill_qty) =
 float_Equal(float_Sub(x1_order_qty, x2_fill_qty), f1_zero) 
 && float_GreaterThan(x2_fill_price, f1_zero)
 && float_GreaterThan(x2_fill_qty, f1_zero)
 && float_GreaterThan(x1_order_qty, f1_zero)
 && float_LessThanEqual(x2_fill_qty, x1_order_qty)
+;;
+
+instance _ (x,y) =
+ x.value <> 0 && x.precision = Dec0 && y.precision = Dec1 && float_Equal(x,y);;
+
+theorem _ (x,y) =
+ x.precision = Dec0
+ && y.precision = Dec2
+    ==>
+    let pres = promote_floats(x,y) in
+    pres.f1.precision = pres.f2.precision
+    && pres.f1.precision = Dec2
+    && pres.f1.value = x.value * 100
 ;;
