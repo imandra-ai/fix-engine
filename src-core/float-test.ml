@@ -231,7 +231,7 @@ float_Equal(float_Sub(x1_order_qty, x2_fill_qty), f1_zero)
 instance _ (x,y) =
  x.value <> 0 && x.precision = Dec0 && y.precision = Dec1 && float_Equal(x,y);;
 
-theorem _ (x,y) =
+verify _ (x,y) =
  x.precision = Dec0
  && y.precision = Dec2
     ==>
@@ -296,7 +296,7 @@ theorem[rw] float_Add_commutative (x,y) =
     )
 ;;
 
-theorem[rw] float_Add_left_identity (x, zero) =
+verify float_Add_left_identity (x, zero) =
   float_is_zero zero ==>
   float_Equal
     ( float_Add (zero, x)
@@ -304,7 +304,7 @@ theorem[rw] float_Add_left_identity (x, zero) =
     )
 ;;
 
-theorem[rw] float_Add_right_identity (x, zero) =
+verify float_Add_right_identity (x, zero) =
   float_is_zero zero ==>
   float_Equal
     ( float_Add (x, zero)
@@ -312,7 +312,7 @@ theorem[rw] float_Add_right_identity (x, zero) =
     )
 ;;
 
-theorem[rw] float_Add_preserves_precision (x, y) =
+verify float_Add_preserves_precision (x, y) =
   (float_higher_precision (x, y) ==>
    float_equal_precision (float_Add(x, y), x)) &&
   (float_higher_precision (y, x) ==>
@@ -321,7 +321,7 @@ theorem[rw] float_Add_preserves_precision (x, y) =
 
 (* SUBTRACTION *)
 
-theorem[rw] float_Sub_right_identity (x, zero) =
+verify float_Sub_right_identity (x, zero) =
   float_is_zero zero ==>
   float_Equal
     ( float_Sub (x, zero)
