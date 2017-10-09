@@ -89,7 +89,7 @@ let promote_1 ( d, v : int * int ) =
     | 0 -> Float_1 d
     | 1 -> Float_2 (d * 10)
     | 2 -> Float_3 (d * 100)
-    | _ -> Float_4 (d * 10000)
+    | _ -> Float_4 (d * 1000)
 ;;
 
 let promote_2 ( d, v : int * int ) = 
