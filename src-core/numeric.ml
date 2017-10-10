@@ -59,143 +59,64 @@ let float_Create ( data, num_decs : int * int ) =
     | _ -> Float_4 data
 ;;
 
-let float_GetDecs ( f : fix_float ) =
-    match f with 
-    | Float_0 _ -> 0
-    | Float_1 _ -> 1
-    | Float_2 _ -> 2
-    | Float_3 _ -> 3
-    | Float_4 _ -> 4
-;;
-
-(** Result of promoting over the other. *)
-type promotion_result = {
-    f1 : fix_float;
-    f2 : fix_float;
-}
-;;
-
-let promote_0 ( d, v : int * int ) = 
-    match v with
-    | 0 -> Float_0 d
-    | 1 -> Float_1 (d * 10)
-    | 2 -> Float_2 (d * 100)
-    | 3 -> Float_3 (d * 1000)
-    | _ -> Float_4 (d * 10000)
-;;
-
-let promote_1 ( d, v : int * int ) = 
-    match v with
-    | 0 -> Float_1 d
-    | 1 -> Float_2 (d * 10)
-    | 2 -> Float_3 (d * 100)
-    | _ -> Float_4 (d * 1000)
-;;
-
-let promote_2 ( d, v : int * int ) = 
-    match v with
-    | 0 -> Float_2 d
-    | 1 -> Float_3 (d * 10)
-    | _ -> Float_4 (d * 100)
-;;
-
-let promote_3 ( d, v : int * int ) = 
-    match v with
-    | 0 -> Float_3 d
-    | _ -> Float_4 (d * 10)
-;;
-
-let promote_float ( f, num_decs : fix_float * int ) =
-    match f with 
-    | Float_0 d -> promote_0 (d, num_decs)
-    | Float_1 d -> promote_1 (d, num_decs)
-    | Float_2 d -> promote_2 (d, num_decs)
-    | Float_3 d -> promote_3 (d, num_decs)
-    | Float_4 d -> f    
-;;
-
-let demote_1 ( f, num_decs : int * int ) =
-    match num_decs with
-    | 0 -> Float_1 f
-    | _ -> Float_0 ( f / 10 )
-;;
-
-let demote_2 ( f, num_decs : int * int ) =
-    match num_decs with
-    | 0 -> Float_2 f
-    | 1 -> Float_1 ( f / 10 )
-    | _ -> Float_0 ( f / 100 )
-;;
-
-let demote_3 ( f, num_decs : int * int ) =
-    match num_decs with
-    | 0 -> Float_3 f
-    | 1 -> Float_2 ( f / 10 )
-    | 2 -> Float_1 ( f / 100 )    
-    | _ -> Float_0 ( f / 1000 )
-;;
-
-let demote_4 ( f, num_decs : int * int ) =
-    match num_decs with
-    | 0 -> Float_4 f
-    | 1 -> Float_3 ( f / 10 )
-    | 2 -> Float_2 ( f / 100 )    
-    | 3 -> Float_1 ( f / 1000 )    
-    | _ -> Float_0 ( f / 10000 )
-;;
-
-let demote_float ( f, num_decs : fix_float * int ) =
-    match f with
-    | Float_0 d -> f
-    | Float_1 d -> demote_1 (d, num_decs)
-    | Float_2 d -> demote_2 (d, num_decs)
-    | Float_3 d -> demote_3 (d, num_decs)
-    | Float_4 d -> demote_4 (d, num_decs)
-;;
-    
-let convertFloat ( f, target_dec : fix_float * int ) =
-    let dec_diff = target_dec - float_GetDecs(f) in
-    if target_dec > 0 then
-        promote_float(f, dec_diff)
-    else
-        demote_float(f, -dec_diff)
-;;
-
-(* Type-case both floats to match. *)
-let promote_floats ( f1, f2 : fix_float * fix_float ) =
-    let decs1 = float_GetDecs (f1) in
-    let decs2 = float_GetDecs (f2) in
-    let max_decs = max(decs1, decs2) in
-    let new_f1 = promote_float(f1, max_decs - decs1) in
-    let new_f2 = promote_float(f2, max_decs - decs2) in
-    {
-        f1 = new_f1;
-        f2 = new_f2;
-    }
-;;
-
 (** float1 + float2 *)
 let float_Add (fOne, fTwo : fix_float * fix_float) =
-    let pres = promote_floats(fOne, fTwo) in
-    match pres.f1, pres.f2 with
-    | Float_0 d1, Float_0 d2 -> Float_0 ( d1 + d2 )
-    | Float_1 d1, Float_1 d2 -> Float_1 ( d1 + d2 )
-    | Float_2 d1, Float_2 d2 -> Float_2 ( d1 + d2 )
-    | Float_3 d1, Float_3 d2 -> Float_3 ( d1 + d2 )
-    | Float_4 d1, Float_4 d2 -> Float_4 ( d1 + d2 )
-    | _, _                   -> fOne (* This should never happen. *)
+  match (fOne, fTwo) with
+  | Float_0 d1, Float_0 d2 -> Float_0 (d1            + d2)
+  | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10)     + d2)
+  | Float_0 d1, Float_2 d2 -> Float_2 ((d1 * 100)    + d2)
+  | Float_0 d1, Float_3 d2 -> Float_3 ((d1 * 1000)   + d2)
+  | Float_0 d1, Float_4 d2 -> Float_4 ((d1 * 10000)  + d2)
+  | Float_1 d1, Float_0 d2 -> Float_1 (d1            + (d2 * 10))
+  | Float_1 d1, Float_1 d2 -> Float_1 (d1            + d2)
+  | Float_1 d1, Float_2 d2 -> Float_2 ((d1 * 10)     + d2)
+  | Float_1 d1, Float_3 d2 -> Float_3 ((d1 * 100)    + d2)
+  | Float_1 d1, Float_4 d2 -> Float_4 ((d1 * 1000)   + d2)
+  | Float_2 d1, Float_0 d2 -> Float_2 (d1            + (d2 * 100))
+  | Float_2 d1, Float_1 d2 -> Float_2 (d1            + (d2 * 10))
+  | Float_2 d1, Float_2 d2 -> Float_2 (d1            + d2)
+  | Float_2 d1, Float_3 d2 -> Float_3 ((d1 * 10)     + d2)
+  | Float_2 d1, Float_4 d2 -> Float_4 ((d1 * 100)    + d2)
+  | Float_3 d1, Float_0 d2 -> Float_3 (d1            + (d2 * 1000))
+  | Float_3 d1, Float_1 d2 -> Float_3 (d1            + (d2 * 100))
+  | Float_3 d1, Float_2 d2 -> Float_3 (d1            + (d2 * 10))
+  | Float_3 d1, Float_3 d2 -> Float_3 (d1            + d2)
+  | Float_3 d1, Float_4 d2 -> Float_4 ((d1 * 10)     + d2)
+  | Float_4 d1, Float_0 d2 -> Float_4 (d1            + (d2 * 10000))
+  | Float_4 d1, Float_1 d2 -> Float_4 (d1            + (d2 * 1000))
+  | Float_4 d1, Float_2 d2 -> Float_4 (d1            + (d2 * 100))
+  | Float_4 d1, Float_3 d2 -> Float_4 (d1            + (d2 * 10))
+  | Float_4 d1, Float_4 d2 -> Float_4 (d1            + d2)
 ;;
 
 (** float1 - float2 *)
 let float_Sub (fOne, fTwo: fix_float * fix_float) =
-    let pres = promote_floats(fOne, fTwo) in
-    match pres.f1, pres.f2 with
-    | Float_0 d1, Float_0 d2 -> Float_0 ( d1 - d2 )
-    | Float_1 d1, Float_1 d2 -> Float_1 ( d1 - d2 )
-    | Float_2 d1, Float_2 d2 -> Float_2 ( d1 - d2 )
-    | Float_3 d1, Float_3 d2 -> Float_3 ( d1 - d2 )
-    | Float_4 d1, Float_4 d2 -> Float_4 ( d1 - d2 )
-    | _, _                   -> fOne
+  match (fOne, fTwo) with
+  | Float_0 d1, Float_0 d2 -> Float_0 (d1           - d2)
+  | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10)    - d2)
+  | Float_0 d1, Float_2 d2 -> Float_2 ((d1 * 100)   - d2)
+  | Float_0 d1, Float_3 d2 -> Float_3 ((d1 * 1000)  - d2)
+  | Float_0 d1, Float_4 d2 -> Float_4 ((d1 * 10000) - d2)
+  | Float_1 d1, Float_0 d2 -> Float_1 (d1           - (d2 * 10))
+  | Float_1 d1, Float_1 d2 -> Float_1 (d1           - d2)
+  | Float_1 d1, Float_2 d2 -> Float_2 ((d1 * 10)    - d2)
+  | Float_1 d1, Float_3 d2 -> Float_3 ((d1 * 100)   - d2)
+  | Float_1 d1, Float_4 d2 -> Float_4 ((d1 * 1000)  - d2)
+  | Float_2 d1, Float_0 d2 -> Float_2 (d1           - (d2 * 100))
+  | Float_2 d1, Float_1 d2 -> Float_2 (d1           - (d2 * 10))
+  | Float_2 d1, Float_2 d2 -> Float_2 (d1           - d2)
+  | Float_2 d1, Float_3 d2 -> Float_3 ((d1 * 10)    - d2)
+  | Float_2 d1, Float_4 d2 -> Float_4 ((d1 * 100)   - d2)
+  | Float_3 d1, Float_0 d2 -> Float_3 (d1           - (d2 * 1000))
+  | Float_3 d1, Float_1 d2 -> Float_3 (d1           - (d2 * 100))
+  | Float_3 d1, Float_2 d2 -> Float_3 (d1           - (d2 * 10))
+  | Float_3 d1, Float_3 d2 -> Float_3 (d1           - d2)
+  | Float_3 d1, Float_4 d2 -> Float_4 ((d1 * 10)    - d2)
+  | Float_4 d1, Float_0 d2 -> Float_4 (d1           - (d2 * 10000))
+  | Float_4 d1, Float_1 d2 -> Float_4 (d1           - (d2 * 1000))
+  | Float_4 d1, Float_2 d2 -> Float_4 (d1           - (d2 * 100))
+  | Float_4 d1, Float_3 d2 -> Float_4 (d1           - (d2 * 10))
+  | Float_4 d1, Float_4 d2 -> Float_4 (d1           - d2)
 ;;
 
 (** -float1 *)
@@ -210,50 +131,130 @@ let float_Neg (fOne : fix_float) =
 
 (** float1 / float2 *)
 let float_Div ( fOne, fTwo : fix_float * fix_float ) = 
-    let pres = promote_floats(fOne, fTwo) in
-    match pres.f1, pres.f2 with
-    | Float_0 d1, Float_0 d2 -> Float_0 ( d1 / d2 )
-    | Float_1 d1, Float_1 d2 -> Float_1 ( ( d1 * 10 ) / d2 )
-    | Float_2 d1, Float_2 d2 -> Float_2 ( ( d1 * 100 ) / d2 )
-    | Float_3 d1, Float_3 d2 -> Float_3 ( ( d1 * 1000 ) / d2 )
-    | Float_4 d1, Float_4 d2 -> Float_4 ( ( d1 * 10000 ) / d2 )
-    | _, _                   -> fOne
+  match (fOne, fTwo) with
+  | Float_0 d1, Float_0 d2 -> Float_0 ((d1 * 1     * 1)     / d2)
+  | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10    * 10)    / d2)
+  | Float_0 d1, Float_2 d2 -> Float_2 ((d1 * 100   * 100)   / d2)
+  | Float_0 d1, Float_3 d2 -> Float_3 ((d1 * 1000  * 1000)  / d2)
+  | Float_0 d1, Float_4 d2 -> Float_4 ((d1 * 10000 * 10000) / d2)
+  | Float_1 d1, Float_0 d2 -> Float_1 ((d1 * 1     * 10)    / (d2 * 10))
+  | Float_1 d1, Float_1 d2 -> Float_1 ((d1 * 1     * 10)    / d2)
+  | Float_1 d1, Float_2 d2 -> Float_2 ((d1 * 10    * 100)   / d2)
+  | Float_1 d1, Float_3 d2 -> Float_3 ((d1 * 100   * 1000)  / d2)
+  | Float_1 d1, Float_4 d2 -> Float_4 ((d1 * 1000  * 10000) / d2)
+  | Float_2 d1, Float_0 d2 -> Float_2 ((d1 * 1     * 100)   / (d2 * 100))
+  | Float_2 d1, Float_1 d2 -> Float_2 ((d1 * 1     * 100)   / (d2 * 10))
+  | Float_2 d1, Float_2 d2 -> Float_2 ((d1 * 1     * 100)   / d2)
+  | Float_2 d1, Float_3 d2 -> Float_3 ((d1 * 10    * 1000)  / d2)
+  | Float_2 d1, Float_4 d2 -> Float_4 ((d1 * 100   * 10000) / d2)
+  | Float_3 d1, Float_0 d2 -> Float_3 ((d1 * 1     * 1000)  / (d2 * 1000))
+  | Float_3 d1, Float_1 d2 -> Float_3 ((d1 * 1     * 1000)  / (d2 * 100))
+  | Float_3 d1, Float_2 d2 -> Float_3 ((d1 * 1     * 1000)  / (d2 * 10))
+  | Float_3 d1, Float_3 d2 -> Float_3 ((d1 * 1     * 1000)  / d2)
+  | Float_3 d1, Float_4 d2 -> Float_4 ((d1 * 10    * 10000) / d2)
+  | Float_4 d1, Float_0 d2 -> Float_4 ((d1 * 1     * 10000) / (d2 * 10000))
+  | Float_4 d1, Float_1 d2 -> Float_4 ((d1 * 1     * 10000) / (d2 * 1000))
+  | Float_4 d1, Float_2 d2 -> Float_4 ((d1 * 1     * 10000) / (d2 * 100))
+  | Float_4 d1, Float_3 d2 -> Float_4 ((d1 * 1     * 10000) / (d2 * 10))
+  | Float_4 d1, Float_4 d2 -> Float_4 ((d1 * 1     * 10000) / d2)
 ;;
 
 (** float1 * float2 *)
 let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
-    let pres = promote_floats(fOne, fTwo) in
-    match pres.f1, pres.f2 with
-    | Float_0 d1, Float_0 d2 -> Float_0 ( d1 * d2 )
-    | Float_1 d1, Float_1 d2 -> Float_1 ( d1 * d2 / 10 )
-    | Float_2 d1, Float_2 d2 -> Float_2 ( d1 * d2 / 100 )
-    | Float_3 d1, Float_3 d2 -> Float_3 ( d1 * d2 / 1000 )
-    | Float_4 d1, Float_4 d2 -> Float_4 ( d1 * d2 / 10000 )
-    | _, _                   -> fOne
+  match (fOne, fTwo) with
+  | Float_0 d1, Float_0 d2 -> Float_0 (d1           * d2)
+  | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10)    * d2           / 10)
+  | Float_0 d1, Float_2 d2 -> Float_2 ((d1 * 100)   * d2           / 100)
+  | Float_0 d1, Float_3 d2 -> Float_3 ((d1 * 1000)  * d2           / 1000)
+  | Float_0 d1, Float_4 d2 -> Float_4 ((d1 * 10000) * d2           / 10000)
+  | Float_1 d1, Float_0 d2 -> Float_1 (d1           * (d2 * 10)    / 10)
+  | Float_1 d1, Float_1 d2 -> Float_1 (d1           * d2           / 10)
+  | Float_1 d1, Float_2 d2 -> Float_2 ((d1 * 10)    * d2           / 100)
+  | Float_1 d1, Float_3 d2 -> Float_3 ((d1 * 100)   * d2           / 1000)
+  | Float_1 d1, Float_4 d2 -> Float_4 ((d1 * 1000)  * d2           / 10000)
+  | Float_2 d1, Float_0 d2 -> Float_2 (d1           * (d2 * 100)   / 100)
+  | Float_2 d1, Float_1 d2 -> Float_2 (d1           * (d2 * 10)    / 100)
+  | Float_2 d1, Float_2 d2 -> Float_2 (d1           * d2           / 100)
+  | Float_2 d1, Float_3 d2 -> Float_3 ((d1 * 10)    * d2           / 1000)
+  | Float_2 d1, Float_4 d2 -> Float_4 ((d1 * 100)   * d2           / 10000)
+  | Float_3 d1, Float_0 d2 -> Float_3 (d1           * (d2 * 1000)  / 1000)
+  | Float_3 d1, Float_1 d2 -> Float_3 (d1           * (d2 * 100)   / 1000)
+  | Float_3 d1, Float_2 d2 -> Float_3 (d1           * (d2 * 10)    / 1000)
+  | Float_3 d1, Float_3 d2 -> Float_3 (d1           * d2           / 1000)
+  | Float_3 d1, Float_4 d2 -> Float_4 ((d1 * 10)    * d2           / 10000)
+  | Float_4 d1, Float_0 d2 -> Float_4 (d1           * (d2 * 10000) / 10000)
+  | Float_4 d1, Float_1 d2 -> Float_4 (d1           * (d2 * 1000)  / 10000)
+  | Float_4 d1, Float_2 d2 -> Float_4 (d1           * (d2 * 100)   / 10000)
+  | Float_4 d1, Float_3 d2 -> Float_4 (d1           * (d2 * 10)    / 10000)
+  | Float_4 d1, Float_4 d2 -> Float_4 (d1           * d2           / 10000)
 ;;
 
 (** float1 > float2 *)
 let float_GreaterThan ( fOne, fTwo : fix_float * fix_float ) =
-    let pres = promote_floats(fOne, fTwo) in
-    match pres.f1, pres.f2 with
-    | Float_0 d1, Float_0 d2 -> d1 > d2
-    | Float_1 d1, Float_1 d2 -> d1 > d2
-    | Float_2 d1, Float_2 d2 -> d1 > d2
-    | Float_3 d1, Float_3 d2 -> d1 > d2
-    | Float_4 d1, Float_4 d2 -> d1 > d2
-    | _, _                   -> true
+  match (fOne, fTwo) with
+  | Float_0 d1, Float_0 d2 -> d1           > d2
+  | Float_0 d1, Float_1 d2 -> (d1 * 10)    > d2
+  | Float_0 d1, Float_2 d2 -> (d1 * 100)   > d2
+  | Float_0 d1, Float_3 d2 -> (d1 * 1000)  > d2
+  | Float_0 d1, Float_4 d2 -> (d1 * 10000) > d2
+
+  | Float_1 d1, Float_0 d2 -> d1           > (d2 * 10)
+  | Float_1 d1, Float_1 d2 -> d1           > d2
+  | Float_1 d1, Float_2 d2 -> (d1 * 10)    > d2
+  | Float_1 d1, Float_3 d2 -> (d1 * 100)   > d2
+  | Float_1 d1, Float_4 d2 -> (d1 * 1000)  > d2
+
+  | Float_2 d1, Float_0 d2 -> d1           > (d2 * 100)
+  | Float_2 d1, Float_1 d2 -> d1           > (d2 * 10)
+  | Float_2 d1, Float_2 d2 -> d1           > d2
+  | Float_2 d1, Float_3 d2 -> (d1 * 10)    > d2
+  | Float_2 d1, Float_4 d2 -> (d1 * 100)   > d2
+
+  | Float_3 d1, Float_0 d2 -> d1           > (d2 * 1000)
+  | Float_3 d1, Float_1 d2 -> d1           > (d2 * 100)
+  | Float_3 d1, Float_2 d2 -> d1           > (d2 * 10)
+  | Float_3 d1, Float_3 d2 -> d1           > d2
+  | Float_3 d1, Float_4 d2 -> (d1 * 10)    > d2
+
+  | Float_4 d1, Float_0 d2 -> d1           > (d2 * 10000)
+  | Float_4 d1, Float_1 d2 -> d1           > (d2 * 1000)
+  | Float_4 d1, Float_2 d2 -> d1           > (d2 * 100)
+  | Float_4 d1, Float_3 d2 -> d1           > (d2 * 10)
+  | Float_4 d1, Float_4 d2 -> d1           > d2
 ;;
 
 (** float 1 < float 2 *)
 let float_LessThan ( fOne, fTwo : fix_float * fix_float ) =
-    let pres = promote_floats(fOne, fTwo) in
-    match pres.f1, pres.f2 with
-    | Float_0 d1, Float_0 d2 -> d1 < d2
-    | Float_1 d1, Float_1 d2 -> d1 < d2
-    | Float_2 d1, Float_2 d2 -> d1 < d2
-    | Float_3 d1, Float_3 d2 -> d1 < d2
-    | Float_4 d1, Float_4 d2 -> d1 < d2
-    | _, _                   -> true
+  match (fOne, fTwo) with
+  | Float_0 d1, Float_0 d2 -> d1           < d2
+  | Float_0 d1, Float_1 d2 -> (d1 * 10)    < d2
+  | Float_0 d1, Float_2 d2 -> (d1 * 100)   < d2
+  | Float_0 d1, Float_3 d2 -> (d1 * 1000)  < d2
+  | Float_0 d1, Float_4 d2 -> (d1 * 10000) < d2
+
+  | Float_1 d1, Float_0 d2 -> d1           < (d2 * 10)
+  | Float_1 d1, Float_1 d2 -> d1           < d2
+  | Float_1 d1, Float_2 d2 -> (d1 * 10)    < d2
+  | Float_1 d1, Float_3 d2 -> (d1 * 100)   < d2
+  | Float_1 d1, Float_4 d2 -> (d1 * 1000)  < d2
+
+  | Float_2 d1, Float_0 d2 -> d1           < (d2 * 100)
+  | Float_2 d1, Float_1 d2 -> d1           < (d2 * 10)
+  | Float_2 d1, Float_2 d2 -> d1           < d2
+  | Float_2 d1, Float_3 d2 -> (d1 * 10)    < d2
+  | Float_2 d1, Float_4 d2 -> (d1 * 100)   < d2
+
+  | Float_3 d1, Float_0 d2 -> d1           < (d2 * 1000)
+  | Float_3 d1, Float_1 d2 -> d1           < (d2 * 100)
+  | Float_3 d1, Float_2 d2 -> d1           < (d2 * 10)
+  | Float_3 d1, Float_3 d2 -> d1           < d2
+  | Float_3 d1, Float_4 d2 -> (d1 * 10)    < d2
+
+  | Float_4 d1, Float_0 d2 -> d1           < (d2 * 10000)
+  | Float_4 d1, Float_1 d2 -> d1           < (d2 * 1000)
+  | Float_4 d1, Float_2 d2 -> d1           < (d2 * 100)
+  | Float_4 d1, Float_3 d2 -> d1           < (d2 * 10)
+  | Float_4 d1, Float_4 d2 -> d1           < d2
 ;;
 
 (** float1 >= float2 *)
@@ -261,21 +262,98 @@ let float_GreaterThanEqual ( fOne, fTwo : fix_float * fix_float ) =
     not (float_LessThan (fOne, fTwo))
 ;;
 
-(** float1 == float2 *)
-let float_Equal ( fOne, fTwo : fix_float * fix_float ) =
-    let pres = promote_floats(fOne, fTwo) in
-    match pres.f1, pres.f2 with
-    | Float_0 d1, Float_0 d2 -> d1 = d2
-    | Float_1 d1, Float_1 d2 -> d1 = d2
-    | Float_2 d1, Float_2 d2 -> d1 = d2
-    | Float_3 d1, Float_3 d2 -> d1 = d2
-    | Float_4 d1, Float_4 d2 -> d1 = d2
-    | _, _                   -> true
-;;
-
 (** float1 <= float2 *)
 let float_LessThanEqual ( fOne, fTwo : fix_float * fix_float ) =
-    float_LessThan (fOne, fTwo) || float_Equal (fOne, fTwo)
+    not (float_GreaterThan (fOne, fTwo))
 ;;
 
+(** float1 == float2 *)
+let float_Equal (fOne, fTwo : fix_float * fix_float) =
+  match (fOne, fTwo) with
+  | Float_0 d1, Float_0 d2 -> d1           = d2
+  | Float_0 d1, Float_1 d2 -> (d1 * 10)    = d2
+  | Float_0 d1, Float_2 d2 -> (d1 * 100)   = d2
+  | Float_0 d1, Float_3 d2 -> (d1 * 1000)  = d2
+  | Float_0 d1, Float_4 d2 -> (d1 * 10000) = d2
 
+  | Float_1 d1, Float_0 d2 -> d1           = (d2 * 10)
+  | Float_1 d1, Float_1 d2 -> d1           = d2
+  | Float_1 d1, Float_2 d2 -> (d1 * 10)    = d2
+  | Float_1 d1, Float_3 d2 -> (d1 * 100)   = d2
+  | Float_1 d1, Float_4 d2 -> (d1 * 1000)  = d2
+
+  | Float_2 d1, Float_0 d2 -> d1           = (d2 * 100)
+  | Float_2 d1, Float_1 d2 -> d1           = (d2 * 10)
+  | Float_2 d1, Float_2 d2 -> d1           = d2
+  | Float_2 d1, Float_3 d2 -> (d1 * 10)    = d2
+  | Float_2 d1, Float_4 d2 -> (d1 * 100)   = d2
+
+  | Float_3 d1, Float_0 d2 -> d1           = (d2 * 1000)
+  | Float_3 d1, Float_1 d2 -> d1           = (d2 * 100)
+  | Float_3 d1, Float_2 d2 -> d1           = (d2 * 10)
+  | Float_3 d1, Float_3 d2 -> d1           = d2
+  | Float_3 d1, Float_4 d2 -> (d1 * 10)    = d2
+
+  | Float_4 d1, Float_0 d2 -> d1           = (d2 * 10000)
+  | Float_4 d1, Float_1 d2 -> d1           = (d2 * 1000)
+  | Float_4 d1, Float_2 d2 -> d1           = (d2 * 100)
+  | Float_4 d1, Float_3 d2 -> d1           = (d2 * 10)
+  | Float_4 d1, Float_4 d2 -> d1           = d2
+;;
+
+let float_is_zero (x : fix_float) =
+  match x with
+  | Float_0 0 -> true
+  | Float_0 _ -> false
+  | Float_1 0 -> true
+  | Float_1 _ -> false
+  | Float_2 0 -> true
+  | Float_2 _ -> false
+  | Float_3 0 -> true
+  | Float_3 _ -> false
+  | Float_4 0 -> true
+  | Float_4 _ -> false
+;;
+
+let float_is_one (x : fix_float) =
+  match x with
+  | Float_0 1     -> true
+  | Float_0 _     -> false
+  | Float_1 10    -> true
+  | Float_1 _     -> false
+  | Float_2 100   -> true
+  | Float_2 _     -> false
+  | Float_3 1000  -> true
+  | Float_3 _     -> false
+  | Float_4 10000 -> true
+  | Float_4 _     -> false
+;;
+
+let float_higher_precision (x, y : fix_float * fix_float) =
+  match (x, y) with
+  | Float_0 _, _ -> false
+  | Float_1 _, Float_0 _ -> true
+  | Float_1 _, _ -> false
+  | Float_2 _, Float_0 _ -> true
+  | Float_2 _, Float_1 _ -> true
+  | Float_2 _, _ -> false
+  | Float_3 _, Float_0 _ -> true
+  | Float_3 _, Float_1 _ -> true
+  | Float_3 _, Float_2 _ -> true
+  | Float_3 _, _ -> false
+  | Float_4 _, Float_0 _ -> true
+  | Float_4 _, Float_1 _ -> true
+  | Float_4 _, Float_2 _ -> true
+  | Float_4 _, Float_3 _ -> true
+  | Float_4 _, _ -> false
+;;
+
+let float_equal_precision (x, y : fix_float * fix_float) =
+  match (x, y) with
+  | Float_0 _, Float_0 _ -> true
+  | Float_1 _, Float_1 _ -> true
+  | Float_2 _, Float_2 _ -> true
+  | Float_3 _, Float_3 _ -> true
+  | Float_4 _, Float_4 _ -> true
+  | _ -> false
+;;
