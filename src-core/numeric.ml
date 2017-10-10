@@ -59,6 +59,11 @@ let float_Create ( data, num_decs : int * int ) =
     | _ -> Float_4 data
 ;;
 
+(** We explicitly write out the pattern matches combinatorially to optimize
+    solving constraints around floats. See the Git history for a more
+    sophisticated (but slower) implementation.
+*)
+
 let float_Convert ( f, num_decs : fix_float * int) : fix_float =
   match (f, num_decs) with
   | Float_0 d, 0 -> f
