@@ -54,9 +54,21 @@ verify float_Add_preserves_precision (x, y) =
    float_equal_precision (float_Add(x, y), y))
 ;;
 
-(* TODO: verify associative with precision constraints. *)
+verify float_Add_associative (x, y, z) =
+  float_Equal
+    ( float_Add (float_Add (x, y), z)
+    , float_Add (x, float_Add (y, z))
+    )
+;;
 
 (* SUBTRACTION *)
+
+verify float_Sub_anticommutative (x, y) =
+  float_Equal
+    ( float_Sub (x, y)
+    , float_Neg (float_Sub (y, x))
+    )
+;;
 
 verify float_Sub_right_identity (x, zero) =
   float_is_zero zero ==>
@@ -79,7 +91,7 @@ verify float_Sub_preserves_precision (x, y) =
 
 (* MULTIPLICATION *)
 
-theorem float_Mult_commutative_same_precision (x,y) =
+theorem float_Mult_commutative (x,y) =
  float_Equal
    ( float_Mult (x, y)
    , float_Mult (y, x)
@@ -102,6 +114,22 @@ verify float_Mult_right_identity (x, one) =
     )
 ;;
 
+verify float_Mult_left_zero (x, zero) =
+  float_is_zero zero ==>
+  float_Equal
+    ( float_Mult (zero, x)
+    , zero
+    )
+;;
+
+verify float_Mult_right_zero (x, zero) =
+  float_is_zero zero ==>
+  float_Equal
+    ( float_Mult (x, zero)
+    , zero
+    )
+;;
+
 verify float_Mult_preserves_precision (x, y) =
   (float_higher_precision (x, y) ==>
    float_equal_precision (float_Mult(x, y), x)) &&
@@ -109,8 +137,35 @@ verify float_Mult_preserves_precision (x, y) =
    float_equal_precision (float_Mult(x, y), y))
 ;;
 
-(* TODO: verify associative with precision constraints. *)
-(* TODO: verify distributive with precision constraints. *)
+(* Not proved. *)
+(* theorem float_Mult_associative (x, y, z) =
+ *   float_Equal
+ *     ( float_Mult (float_Mult (x, y), z)
+ *     , float_Mult (x, float_Mult (y, z))
+ *     )
+ * ;; *)
+
+(* Not proved. *)
+(* theorem float_Add_Mult_left_distributive (x, y, z) =
+ *   float_Equal
+ *     ( float_Mult (x, float_Add (y, z))
+ *     , float_Add
+ *         ( float_Mult (x, y)
+ *         , float_Mult (x, z)
+ *         )
+ *     )
+ * ;; *)
+
+(* Not proved. *)
+(* theorem float_Add_Mult_right_distributive (x, y, z) =
+ *   float_Equal
+ *     ( float_Mult (float_Add (x, y), z)
+ *     , float_Add
+ *         ( float_Mult (x, z)
+ *         , float_Mult (y, z)
+ *         )
+ *     )
+ * ;; *)
 
 (* NEGATION *)
 
@@ -150,3 +205,14 @@ verify float_Div_preserves_precision (x, y) =
   (float_higher_precision (y, x) ==>
    float_equal_precision (float_Div(x, y), y))
 ;;
+
+(* Not proved. *)
+(* theorem float_Add_Div_right_distributive (x, y, z) =
+ *   float_Equal
+ *     ( float_Div (float_Add(x, y), z)
+ *     , float_Add
+ *         ( float_Div (x, z)
+ *         , float_Div (y, z)
+ *         )
+ *     )
+ * ;; *)
