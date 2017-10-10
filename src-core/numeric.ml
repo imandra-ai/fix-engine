@@ -59,6 +59,39 @@ let float_Create ( data, num_decs : int * int ) =
     | _ -> Float_4 data
 ;;
 
+let float_Convert ( f, num_decs : fix_float * int) : fix_float =
+  match (f, num_decs) with
+  | Float_0 d, 0 -> f
+  | Float_0 d, 1 -> Float_1 (d * 10)
+  | Float_0 d, 2 -> Float_2 (d * 100)
+  | Float_0 d, 3 -> Float_3 (d * 1000)
+  | Float_0 d, _ -> Float_4 (d * 10000)
+
+  | Float_1 d, 0 -> Float_0 (d / 10)
+  | Float_1 d, 1 -> f
+  | Float_1 d, 2 -> Float_2 (d * 10)
+  | Float_1 d, 3 -> Float_3 (d * 100)
+  | Float_1 d, _ -> Float_4 (d * 1000)
+
+  | Float_2 d, 0 -> Float_0 (d / 100)
+  | Float_2 d, 1 -> Float_1 (d / 10)
+  | Float_2 d, 2 -> f
+  | Float_2 d, 3 -> Float_3 (d * 10)
+  | Float_2 d, _ -> Float_4 (d * 100)
+
+  | Float_3 d, 0 -> Float_0 (d / 1000)
+  | Float_3 d, 1 -> Float_1 (d / 100)
+  | Float_3 d, 2 -> Float_2 (d / 10)
+  | Float_3 d, 3 -> f
+  | Float_3 d, _ -> Float_4 (d * 10)
+
+  | Float_4 d, 0 -> Float_0 (d / 10000)
+  | Float_4 d, 1 -> Float_1 (d / 1000)
+  | Float_4 d, 2 -> Float_2 (d / 100)
+  | Float_4 d, 3 -> Float_3 (d / 10)
+  | Float_4 d, _ -> f
+;;
+
 (** float1 + float2 *)
 let float_Add (fOne, fTwo : fix_float * fix_float) =
   match (fOne, fTwo) with
