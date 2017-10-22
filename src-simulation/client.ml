@@ -70,8 +70,9 @@ let f engine_state (inch, outch) =
         Lwt_io.close outch
         in
     let mailbox, global_state = Fix_global_state.start engine_state State.init_model_state (send_msg outch) in 
+    let initmsg = Fix_engine_state.(IncIntMsg_CreateSession { dest_comp_id = engine_state.fe_target_comp_id } )in
     Lwt.catch ( fun () ->
-        Lwt_io.printl "Received a connection." >>= fun () ->
+        Lwt_mvar.put mailbox ( Fix_global_state.Internal_Message initmsg ) >>= fun () -> 
         Lwt.join [
             heartbeat_thread mailbox;
             Message_stream.from_channel ~verbose:true inch
@@ -96,7 +97,16 @@ let run_client fixhost fixport compid targetid zmqaddr =
     (* Creating the global state *)
     let engine_state = make_engine_state compid targetid in
     (**)
-    Lwt_io.with_connection addr ( f engine_state )
+    let () = [
+        "(*********                   FIX Engine Client                           *********)";
+        "(*********  (c)Copyright Aesthetic Integration Limited., 2014 - 2017     *********)\n";
+        Printf.sprintf " - FIX client connecting to %s:%d" fixhost fixport;
+        Printf.sprintf " - FIX session %s -> %s" compid targetid;
+        Printf.sprintf " - Internal messages are published on ZMQ socket %s" zmqaddr;
+        "\n(*********************************************************************************)\n";
+        ] |> String.concat "\n" |> print_endline in
+    let client_thread = Lwt_io.with_connection addr ( f engine_state ) in
+    Lwt_main.run client_thread
 ;;
 
 let () =
