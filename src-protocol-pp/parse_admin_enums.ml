@@ -58,13 +58,13 @@ let parse_GapFillFlag = function
 
 
 let parse_encryption_method = function
-    | "0" -> Some PKCS          
-    | "1" -> Some DES_ECB       
-    | "2" -> Some PKCS_DES      
-    | "3" -> Some PGP_DES       
-    | "4" -> Some PGP_DES_MD5   
-    | "5" -> Some PEM_DES_MD5   
-    | "6" -> Some NoEncryption 
+    | "0" -> Some NoEncryption 
+    | "1" -> Some PKCS          
+    | "2" -> Some DES_ECB       
+    | "3" -> Some PKCS_DES      
+    | "4" -> Some PGP_DES       
+    | "5" -> Some PGP_DES_MD5   
+    | "6" -> Some PEM_DES_MD5   
     |  _  -> None
 ;;
 
