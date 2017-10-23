@@ -1,6 +1,6 @@
 (* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Base_types;;
+ open Base_types;;
 (* @meta[imandra_ignore] off @end *)
 
 type field_state = {

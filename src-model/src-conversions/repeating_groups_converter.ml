@@ -1,6 +1,6 @@
 (* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Imandra_utils;;
+ open Imandra_utils;;
 (* @meta[imandra_ignore] off @end *)
 
 let rec cap_length ( d , x , h ) =

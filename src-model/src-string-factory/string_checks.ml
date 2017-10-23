@@ -9,7 +9,7 @@ let isAction ( str : string ) =
 
 let isActionField ( str : string ) =
     (match str with
-        | "f_x_x" -> true
+        | "mod_f_x_x" -> true
         | _ -> false
     )
 ;;
@@ -43,22 +43,22 @@ let isModelMessageTag ( str : string ) =
 
 let isMessageField ( str : string ) =
     (match str with
-        | "f_ExecutionReport_ClOrdID" -> true
-        | "f_ExecutionReport_OrderID" -> true
-        | "f_ExecutionReport_ExecID" -> true
-        | "f_ExecutionReport_ExecType" -> true
-        | "f_ExecutionReport_AvgPx" -> true
-        | "f_ExecutionReport_Side" -> true
-        | "f_ExecutionReport_LeavesQty" -> true
-        | "f_ExecutionReport_CumQty" -> true
-        | "f_ExecutionReport_OrdStatus" -> true
-        | "f_ExecutionReport_Instrument_Symbol" -> true
-        | "f_ExecutionReport_Text" -> true
-        | "f_NewOrderSingle_ClOrdID" -> true
-        | "f_NewOrderSingle_Side" -> true
-        | "f_NewOrderSingle_TransactTime" -> true
-        | "f_NewOrderSingle_OrdType" -> true
-        | "f_NewOrderSingle_Instrument_Symbol" -> true
+        | "mod_f_ExecutionReport_ClOrdID" -> true
+        | "mod_f_ExecutionReport_OrderID" -> true
+        | "mod_f_ExecutionReport_ExecID" -> true
+        | "mod_f_ExecutionReport_ExecType" -> true
+        | "mod_f_ExecutionReport_AvgPx" -> true
+        | "mod_f_ExecutionReport_Side" -> true
+        | "mod_f_ExecutionReport_LeavesQty" -> true
+        | "mod_f_ExecutionReport_CumQty" -> true
+        | "mod_f_ExecutionReport_OrdStatus" -> true
+        | "mod_f_ExecutionReport_Instrument_Symbol" -> true
+        | "mod_f_ExecutionReport_Text" -> true
+        | "mod_f_NewOrderSingle_ClOrdID" -> true
+        | "mod_f_NewOrderSingle_Side" -> true
+        | "mod_f_NewOrderSingle_TransactTime" -> true
+        | "mod_f_NewOrderSingle_OrdType" -> true
+        | "mod_f_NewOrderSingle_Instrument_Symbol" -> true
         | _ -> false
     )
 ;;

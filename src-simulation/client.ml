@@ -63,7 +63,26 @@ let rec heartbeat_thread mailbox =
     heartbeat_thread mailbox
 ;;
 
-let f engine_state (inch, outch) =
+let rec zmq_rep_loop (socket, mailbox) =
+    let msg = ZMQ.Socket.(recv socket) in
+    if msg = "LOGOUT" then Lwt_mvar.put mailbox Fix_global_state.Terminate else
+    let action = match msg with 
+        | "NEW"     -> Some Actions.(FIX_Action_x {f_x_x = 0})
+        | "CANCEL"  -> Some Actions.(FIX_Action_x {f_x_x = 1})
+        | "REPLACE" -> Some Actions.(FIX_Action_x {f_x_x = 2})
+        | _  -> None
+        in
+    match action with 
+    | None -> (
+        Lwt.return ZMQ.Socket.(send socket "REJECTED") >>= fun () ->
+        zmq_rep_loop (socket, mailbox) )   
+    | Some action -> (
+        Lwt_mvar.put mailbox (Fix_global_state.ModelAction action) >>= fun () ->
+        Lwt.return ZMQ.Socket.(send socket "ACKED") >>= fun () ->
+        zmq_rep_loop (socket, mailbox) )
+;;
+
+let f engine_state zmqrep (inch, outch) =
     let close_channels () = 
         Lwt_io.printl "Connection closed, shutting down." >>= fun () ->
         Lwt_io.close inch >>= fun () ->
@@ -80,17 +99,20 @@ let f engine_state (inch, outch) =
                 |> Lwt_stream.iter_s ( fun msg ->
                     do_timechange mailbox >>= fun () ->
                     Lwt_mvar.put mailbox (Fix_global_state.FIX_Message msg)
-                )
+                );
+            zmq_rep_loop (zmqrep, mailbox)
         ]
     ) ( fun _ -> close_channels () )
 ;;
 
 
-let run_client fixhost fixport compid targetid zmqaddr = 
-    (* Bringing up a ZMQ-PUB socket *)
+let run_client fixhost fixport compid targetid zmqpub zmqrep = 
+    (* Bringing up a ZMQ sockets *)
     let zmqcontext = ZMQ.Context.create () in
-    let zmqsocket = ZMQ.Socket.(create zmqcontext pub) in
-    let () = ZMQ.Socket.bind zmqsocket zmqaddr in
+    let zmqpubsocket = ZMQ.Socket.(create zmqcontext pub) in
+    let () = ZMQ.Socket.bind zmqpubsocket zmqpub in
+    let zmqrepsocket = ZMQ.Socket.(create zmqcontext rep) in
+    let () = ZMQ.Socket.bind zmqrepsocket zmqrep in    
     (* Creating the address *)
     let addr = Unix.( (gethostbyname fixhost).h_addr_list.(0) ) in      
     let addr = Unix.( ADDR_INET( addr , fixport ) ) in
@@ -102,10 +124,11 @@ let run_client fixhost fixport compid targetid zmqaddr =
         "(*********  (c)Copyright Aesthetic Integration Limited., 2014 - 2017     *********)\n";
         Printf.sprintf " - FIX client connecting to %s:%d" fixhost fixport;
         Printf.sprintf " - FIX session %s -> %s" compid targetid;
-        Printf.sprintf " - Internal messages are published on ZMQ socket %s" zmqaddr;
+        Printf.sprintf " - Internal messages are published on ZMQ socket %s" zmqpub;
+        Printf.sprintf " - Model actions are received on ZMQ socket %s" zmqrep;
         "\n(*********************************************************************************)\n";
         ] |> String.concat "\n" |> print_endline in
-    let client_thread = Lwt_io.with_connection addr ( f engine_state ) in
+    let client_thread = Lwt_io.with_connection addr ( f engine_state zmqrepsocket ) in
     Lwt_main.run client_thread
 ;;
 
@@ -123,12 +146,16 @@ let () =
     let targetid = let doc = "FIX Target ID" in
         Arg.(value & opt string "TARGET" & info ["targetid"] ~docv:"TARGETID" ~doc)
         in        
-    let zmqaddr =
+    let zmqpub =
         let doc = "ZMQ PUB socket adress" in
-        Arg.(value & opt string "tcp://*:5000" & info ["zmq-addr"] ~docv:"ZMQADDR" ~doc)
+        Arg.(value & opt string "tcp://*:5000" & info ["zmq-pub"] ~docv:"ZMQPUBADDR" ~doc)
+        in
+    let zmqrep =
+        let doc = "ZMQ REP socket adress" in
+        Arg.(value & opt string "tcp://*:5001" & info ["zmq-rep"] ~docv:"ZMQREPADDR" ~doc)
         in
     let info = let doc = "FIX engine client, publishing all internal messages on ZMQ socket." in
         Term.info "server" ~version:"%%VERSION%%" ~doc ~exits:Term.default_exits 
         in
-    Term.exit @@ Term.eval (Term. (const run_client $ fixhost $ fixport $ compid $ targetid $ zmqaddr), info)
+    Term.exit @@ Term.eval (Term. (const run_client $ fixhost $ fixport $ compid $ targetid $ zmqpub $ zmqrep ), info)
 ;;

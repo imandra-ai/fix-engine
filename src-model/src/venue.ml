@@ -1,9 +1,9 @@
 (* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Act_process;;
-open State;;
-open Model_messages;;
-open Msg_process;;
+ open Act_process;;
+ open Model_messages;;
+ open Msg_process;;
+ open State;;
 (* @meta[imandra_ignore] off @end *)
 
 let one_step ( m_state : model_state ) =

@@ -14,12 +14,13 @@ type incoming_event =
     | ModelAction      of Actions.fix_action
     | Terminate
 
-(** Starts the Fix_global_state loop, given initial values for fix-engine and
-    fix-venue-model states, callback for FIX message sending and internal 
-    message forwarding, and a mailbox variable for incoming events. 
-    An optional 
+(** Starts the Fix_global_state loop, given 
+    initial values for fix-engine and fix-venue-model states, 
+    callback for FIX message sending, 
+    and a mailbox variable for incoming events. 
+    An optional ?pub 
     *)
-val start : (* ?pub: *)
+val start :  
             Fix_engine_state.fix_engine_state ->
             State.model_state ->
             ( Full_messages.full_top_level_msg -> unit Lwt.t ) ->
