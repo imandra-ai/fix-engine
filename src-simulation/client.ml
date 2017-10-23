@@ -49,6 +49,12 @@ let send_msg outch msg =
         | _ ->  Lwt.return_unit
 ;;
 
+let zmq_publish socket msg =
+    let msg = Model_messages_json.json_of_model_msg msg in
+    let msg = Yojson.to_string msg in
+    Lwt.return (ZMQ.Socket.(send socket msg ) )
+;;
+
 let do_timechange mailbox =
     let time = get_current_utctimstamp () in
     let timechange = Fix_engine_state.IncIntMsg_TimeChange time in
@@ -67,9 +73,9 @@ let rec zmq_rep_loop (socket, mailbox) =
     let msg = ZMQ.Socket.(recv socket) in
     if msg = "LOGOUT" then Lwt_mvar.put mailbox Fix_global_state.Terminate else
     let action = match msg with 
-        | "NEW"     -> Some Actions.(FIX_Action_x {f_x_x = 0})
-        | "CANCEL"  -> Some Actions.(FIX_Action_x {f_x_x = 1})
-        | "REPLACE" -> Some Actions.(FIX_Action_x {f_x_x = 2})
+        | "NEW"     -> Some Actions.(FIX_Action_x {mod_f_x_x = 0})
+        | "CANCEL"  -> Some Actions.(FIX_Action_x {mod_f_x_x = 1})
+        | "REPLACE" -> Some Actions.(FIX_Action_x {mod_f_x_x = 2})
         | _  -> None
         in
     match action with 
@@ -82,13 +88,17 @@ let rec zmq_rep_loop (socket, mailbox) =
         zmq_rep_loop (socket, mailbox) )
 ;;
 
-let f engine_state zmqrep (inch, outch) =
+let f engine_state (zmqrep, zmqpub) (inch, outch) =
     let close_channels () = 
         Lwt_io.printl "Connection closed, shutting down." >>= fun () ->
         Lwt_io.close inch >>= fun () ->
         Lwt_io.close outch
         in
-    let mailbox, global_state = Fix_global_state.start engine_state State.init_model_state (send_msg outch) in 
+    let mailbox, global_state = Fix_global_state.start 
+        ~pub:( Some(zmq_publish zmqpub) )
+        engine_state 
+        State.init_model_state (send_msg outch) 
+        in 
     let initmsg = Fix_engine_state.(IncIntMsg_CreateSession { dest_comp_id = engine_state.fe_target_comp_id } )in
     Lwt.catch ( fun () ->
         Lwt_mvar.put mailbox ( Fix_global_state.Internal_Message initmsg ) >>= fun () -> 
@@ -128,7 +138,7 @@ let run_client fixhost fixport compid targetid zmqpub zmqrep =
         Printf.sprintf " - Model actions are received on ZMQ socket %s" zmqrep;
         "\n(*********************************************************************************)\n";
         ] |> String.concat "\n" |> print_endline in
-    let client_thread = Lwt_io.with_connection addr ( f engine_state zmqrepsocket ) in
+    let client_thread = Lwt_io.with_connection addr ( f engine_state (zmqrepsocket, zmqpubsocket) ) in
     Lwt_main.run client_thread
 ;;
 
