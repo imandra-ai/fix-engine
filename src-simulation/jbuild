@@ -35,12 +35,14 @@
   ( (name client)
     (modules (client))
     (libraries 
-      ( lwt.unix
+      ( yojson
+        lwt.unix
         venue
         fix_engine
         fix_simulation
         string_factory
         protocol_pp
+        types_pp
         cmdliner
         ZMQ
       )

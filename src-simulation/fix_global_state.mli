@@ -18,9 +18,9 @@ type incoming_event =
     initial values for fix-engine and fix-venue-model states, 
     callback for FIX message sending, 
     and a mailbox variable for incoming events. 
-    An optional ?pub 
+    An optional ?pub callback that publishes model messages, arriving from the model
     *)
-val start :  
+val start : ?pub:((Model_messages.model_msg -> unit Lwt.t) option) ->
             Fix_engine_state.fix_engine_state ->
             State.model_state ->
             ( Full_messages.full_top_level_msg -> unit Lwt.t ) ->

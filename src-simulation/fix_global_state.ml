@@ -10,6 +10,7 @@ type incoming_event =
 (** Global state contains a fix_engine state and model_state *)
 type fix_global_state = {
          incoming : incoming_event Lwt_mvar.t;
+     pub_callback : (Model_messages.model_msg -> unit Lwt.t) option;    
      engine_state : Fix_engine_state.fix_engine_state;
       model_state : State.model_state;
      fix_callback : Full_messages.full_top_level_msg -> unit Lwt.t 
@@ -31,17 +32,18 @@ let rec send_all_outgoing_fix engine_state fix_callback =
 
 (** Iterating over a list of model messages, pass each into fix_eigine and
     send anything that fix_engine produces *)
-let rec send_messages_list messages engine_state fix_callback =
+let rec send_messages_list messages engine_state fix_callback pub_callback =
     let open Fix_engine_state in
     match messages with 
     | [] -> Lwt.return engine_state 
     | hd::tl -> (
+        ( match pub_callback with None -> Lwt.return_unit | Some f -> f hd ) >>= fun () ->
         let data = Type_converter.convert_model_to_full_fix hd in
         let msg = IncIntMsg_ApplicationData data in
         let engine_state = { engine_state with incoming_int_msg = Some msg } in
         let engine_state = Fix_engine.one_step engine_state in
         send_all_outgoing_fix engine_state fix_callback >>= fun engine_state ->
-        send_messages_list tl engine_state fix_callback
+        send_messages_list tl engine_state fix_callback pub_callback
     )
 ;;
 
@@ -87,7 +89,11 @@ let rec while_busy_loop state =
                 | _ -> model_state (** TODO -- see what to do with other messages *)
                 in
             let engine_state = { engine_state with outgoing_int_msg = None } in
-            send_messages_list model_state.State.outgoing_msgs engine_state state.fix_callback >>= fun engine_state ->
+            send_messages_list 
+                model_state.State.outgoing_msgs 
+                engine_state 
+                state.fix_callback 
+                state.pub_callback >>= fun engine_state ->
             Lwt.return { state with 
                 engine_state = engine_state ;
                 model_state  = { model_state  with State.outgoing_msgs = [] } } 
@@ -119,7 +125,11 @@ let rec main_loop state =
             let model_state = {state.model_state with State.incoming_action = Some act }  in
             let model_state = Venue.one_step model_state in
             let engine_state = { state.engine_state with outgoing_int_msg = None } in
-            send_messages_list model_state.State.outgoing_msgs engine_state state.fix_callback >>= fun engine_state ->
+            send_messages_list 
+                model_state.State.outgoing_msgs 
+                engine_state 
+                state.fix_callback 
+                state.pub_callback >>= fun engine_state ->
             Lwt.return { state with 
                 engine_state = engine_state ;
                 model_state  = { model_state  with State.outgoing_msgs = [] } } >>= fun state ->
@@ -127,12 +137,13 @@ let rec main_loop state =
         | _ -> main_loop state
 ;;
 
-let start init_engine init_model fix_callback =
+let start ?pub:(pub_callback=None) init_engine init_model fix_callback =
     let state = {
         incoming     = Lwt_mvar.create_empty (); 
         engine_state = init_engine;
         model_state  = init_model;
-        fix_callback = fix_callback   
+        fix_callback = fix_callback;
+        pub_callback = pub_callback   
     } in
     ( state.incoming , main_loop state )
 ;;
