@@ -4,6 +4,7 @@ let (>>=) = Lwt.(>>=)
 type incoming_event =
     | FIX_Message      of Full_messages.full_top_level_msg
     | Internal_Message of Fix_engine_state.fix_engine_int_inc_msg
+    | ModelAction      of Actions.fix_action
     | Terminate
 
 (** Global state contains a fix_engine state and model_state *)
@@ -103,18 +104,27 @@ let rec main_loop state =
     let open Fix_engine_state in
     Lwt_mvar.take state.incoming >>= fun incoming ->
     Lwt_io.flush_all () >>= fun () ->
-    if incoming = Terminate then Lwt.return_unit else
-    let engine_state = state.engine_state in
-    let engine_state = match incoming with 
-        | Internal_Message msg -> { engine_state with incoming_int_msg = Some msg } 
+    match incoming with 
+        | Terminate -> Lwt.return_unit
+        | Internal_Message msg -> 
+            let state = { state with engine_state = { state.engine_state with incoming_int_msg = Some msg } } in
+            while_busy_loop state >>= fun state ->
+            main_loop state
         | FIX_Message msg ->
-            let () = process_strings msg in 
-            { engine_state with incoming_fix_msg = Some msg }  
-        | _ -> engine_state
-        in
-    let state = {state with engine_state = engine_state } in
-    while_busy_loop state >>= fun state ->
-    main_loop state
+            let () = process_strings msg in
+            let state = { state with engine_state = { state.engine_state with incoming_fix_msg = Some msg } } in
+            while_busy_loop state >>= fun state ->
+            main_loop state
+        | ModelAction act ->
+            let model_state = {state.model_state with State.incoming_action = Some act }  in
+            let model_state = Venue.one_step model_state in
+            let engine_state = { state.engine_state with outgoing_int_msg = None } in
+            send_messages_list model_state.State.outgoing_msgs engine_state state.fix_callback >>= fun engine_state ->
+            Lwt.return { state with 
+                engine_state = engine_state ;
+                model_state  = { model_state  with State.outgoing_msgs = [] } } >>= fun state ->
+            main_loop state
+        | _ -> main_loop state
 ;;
 
 let start init_engine init_model fix_callback =
