@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	  <meta charset="utf-8">
+	  <meta http-equiv="x-ua-compatible" content="ie=edge">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	  <title>Message Lifecycle</title>
+
+	  <link rel="stylesheet" href="/css/main.css">
+	  <link rel="canonical" href="http://localhost:4000/documentationDir/documentation/message-lifecycle.html">
+
+</head> 
+
+
+    <body>
+	      <aside>
+	  <div class="container">
+		    <nav>
+             <ul>
+				              
+				            <li><a href="/about/">About</a></li>
+				                
+				            <li><a href="/documentation/">Documentation</a></li>
+				                
+				            <li><a href="/techdocs/">Technical Content</a></li>
+				                  
+				            <li><a href="/documentationDir/model-verification/base.html">Base</a></li>
+				                
+				            <li><a href="/documentationDir/documentation/building-instructions.html">Building Instructions</a></li>
+				                
+				            <li><a href="/documentationDir/documentation/cifsm.html">Modelling State Machines</a></li>
+				                
+				            <li><a href="/documentationDir/test-suite/current-test-pack.html">Current Test Pack</a></li>
+				                
+				            <li><a href="/documentationDir/documentation/getting-started.html">Introduction</a></li>
+				                
+				            <li><a href="/documentationDir/model-verification/heartbeat-messages.html">Heartbeat Messages</a></li>
+				                  
+				            <li><a href="/documentationDir/model-verification/logon-messages.html">Logon Messages</a></li>
+				                  
+				            <li><a href="/documentationDir/documentation/message-lifecycle.html">Message Lifecycle</a></li>
+				                
+				            <li><a href="/documentationDir/documentation/model-technical-documentation.html">Technical Documentation</a></li>
+				                
+				            <li><a href="/documentationDir/model-verification/overview.html">Overview and Status</a></li>
+				                
+				            <li><a href="/documentationDir/documentation/printers-and-parsers.html">Printers and Parsers</a></li>
+				                
+				            <li><a href="/documentationDir/formal-verificatoin/references.html">References</a></li>
+				                
+				            <li><a href="/documentationDir/test-suite/region-decomposition.html">Region Decomposition</a></li>
+				                
+				            <li><a href="/documentationDir/model-verification/rejection-logic.html">Rejection Logic</a></li>
+				                
+				            <li><a href="/documentationDir/model-verification/sequence-number-logic.html">Sequence Number Logic</a></li>
+				                
+				            <li><a href="/documentationDir/model-verification/sequence-reset-messages.html">Sequence Reset Messages</a></li>
+				                
+				            <li><a href="/documentationDir/test-suite/test-suite-generation.html">Test Suite Generation</a></li>
+				                
+			        </ul>
+		    </nav>
+	  </div>
+</aside>
+
+<header>
+	  <h1><a href="">Fix Engine</a></h1>
+</header>
+
+	      <main>
+		        <article>
+			          <h2>Message Lifecycle</h2>
+
+<p>There are 5 outcomes to an engine/venue model to receiving a message:</p>
+<ul>
+  <li>Ignored - cases when message is malformed (missing or out-of-order important tags, etc).</li>
+  <li>Session reject - pertains to violation of protocol requirements.</li>
+  <li>Business reject - there are 3 categories for such reject:
+    <ol>
+      <li>Venue is down (cannot accept any messages)</li>
+      <li>Message type is not supported by venue</li>
+      <li>Message lacks a field conditionally required by the FIX specification (note that this only applies to fields required by the FIX specification, NOT the custom venue requirements).</li>
+    </ol>
+  </li>
+</ul>
+
+<p>Message-specific reject - when an incoming message’s parameters are inconsistent with the state of the model (there ), it will respond with a rejection through a corresponding message. For example, New Order Single message would be rejected through Execution Report. Section below contains the ‘mapping’ of expected outgoing types of messages.
+Processed - message is accepted by the venue and results in a modified state.
+[block:api-header]
+{
+  “title”: “Message Ignored”
+}
+[/block]
+What constitutes a garbled message (message is ignored):</p>
+<ul>
+  <li>BeginString (tag #8)
+    <ul>
+      <li>is not the first tag in a message</li>
+      <li>not of the format 8=FIX.n.m.</li>
+    </ul>
+  </li>
+  <li>BodyLength (tag #9)
+    <ul>
+      <li>is not the second tag in a message</li>
+      <li>is not a properly formatted integer</li>
+      <li>does not contain the correct byte count.</li>
+    </ul>
+  </li>
+  <li>MsgType (tag #35)
+    <ul>
+      <li>is not the third tag in a message.</li>
+      <li>does not have a value</li>
+    </ul>
+  </li>
+  <li>Checksum (tag #10)
+    <ul>
+      <li>is not the last tag of the message</li>
+      <li>does not contain a properly formatted integer</li>
+      <li>is not equal to byte count of the message body
+MsgSeqNum(tag #34)</li>
+      <li>is missing</li>
+      <li>does not contain a properly formatted integer</li>
+    </ul>
+  </li>
+</ul>
+
+<p>If the MsgSeqNum(tag #34) is missing, a logout message should be sent terminating the FIX Connection, as this indicates a serious application error that is likely only circumvented by software modification.
+[block:api-header]
+{
+  “title”: “Session Reject”
+}
+[/block]
+The session reject message should be issued when a message is received but cannot be properly processed due to a session-level rule violation. An example of when a reject may be appropriate would be the receipt of a message with invalid basic data (e.g. MsgType=&amp;) which successfully passes de-encryption, CheckSum and BodyLength checks. As a rule, messages should be forwarded to the trading application for business level rejections whenever possible.</p>
+
+<p>Rejected messages should be logged and the incoming sequence number incremented.</p>
+
+<p>Note: The receiving application should disregard any message that is garbled, cannot be parsed or fails a data integrity check. Processing of the next valid FIX message will cause detection of a sequence gap and a Resend Request will be generated. Logic should be included in the FIX engine to recognize the possible infinite resend loop, which may be encountered in this situation.</p>
+
+<p>Generation and receipt of a Reject message indicates a serious error that may be the result of faulty logic in either the sending or receiving application.</p>
+
+<p>If the sending application chooses to retransmit the rejected message, it should be assigned a new sequence number and sent with PossResend=Y.</p>
+
+<p>Whenever possible, it is strongly recommended that the cause of the failure be described in the Text field (e.g. INVALID DATA - FIELD 35).</p>
+
+<p>If an application-level message received fulfils session-level rules, it should then be processed at a business message-level. If this processing detects a rule violation, a business-level reject should be issued. Many business-level messages have specific “reject” messages, which should be used. All others can be rejected at a business-level via the Business Message Reject message. See Volume 1: “Business Message Reject” message.</p>
+
+<p>Note that in the event a business message is received, fulfils session-level rules, however, the message cannot be communicated to the business-level processing system, a Business Message Reject with BusinessRejectReason = “Application not available at this time” should be issued.</p>
+
+<p>Session Reject Reasons:
+[block:parameters]
+{
+  “data”: {
+    “0-0”: “0”,
+    “0-1”: “Invalid tag number”,
+    “1-1”: “Required tag missing”,
+    “1-0”: “1”,
+    “2-0”: “2”,
+    “2-1”: “Tag not defined for this message type”,
+    “3-0”: “3”,
+    “3-1”: “Undefined Tag”,
+    “4-0”: “4”,
+    “4-1”: “Tag specified without a value”,
+    “5-0”: “5”,
+    “5-1”: “Value is incorrect (out of range) for this tag”,
+    “6-0”: “6”,
+    “6-1”: “Incorrect data format for value”,
+    “7-0”: “7”,
+    “7-1”: “Decryption problem”,
+    “8-0”: “8”,
+    “8-1”: “Signature problem”,
+    “9-0”: “9”,
+    “9-1”: “CompID problem”,
+    “10-0”: “10”,
+    “10-1”: “SendingTime accuracy problem”,
+    “11-0”: “11”,
+    “11-1”: “Invalid MsgType”,
+    “12-0”: “12”,
+    “12-1”: “XML Validation error”,
+    “13-0”: “13”,
+    “13-1”: “Tag appears more than once”,
+    “14-0”: “14”,
+    “14-1”: “Tag specified out of required order”,
+    “15-0”: “15”,
+    “15-1”: “Repeating group fields out of order”,
+    “16-0”: “16”,
+    “16-1”: “Incorrect NumInGroup count for repeating group”,
+    “17-0”: “17”,
+    “17-1”: “Non “data” value includes field delimiter (SOH character)”,
+    “18-0”: “99”,
+    “18-1”: “Other (Note other session-level rule violations may exist in which case SessionRejectReason of Other may be used and further information may be in Text field.)”
+  },
+  “cols”: 2,
+  “rows”: 19
+}
+[/block]
+#When to send a session Reject vs. when to ignore the message</p>
+
+<p>The following excerpt is taken from the Reject message definition within the FIX Protocol specification:
+Note: The receiving application should disregard any message that is garbled, cannot be parsed or fails a data integrity check. Processing of the next valid FIX message will cause detection of a sequence gap and a Resend Request will be generated. Logic should be included in the FIX engine to recognize the possible infinite resend loop, which may be encountered in this situation.</p>
+
+<p>The FIX Protocol takes the optimistic view; it presumes that a garbled message is received due to a transmission error rather than a FIX system problem. Therefore, if a Resend Request is sent the garbled message will be retransmitted correctly. If a message is not considered garbled then it is recommended that a session level Reject message be sent.
+[block:api-header]
+{
+  “title”: “Business Reject”
+}
+[/block]
+The Business Message Reject message can reject an application-level message which fulfils session-level rules and cannot be rejected via any other means. Note if the message fails a session-level rule (e.g. body length is incorrect), a session-level Reject message should be issued.
+Instances when a Business Reject message is sent out for a message that fulfils session-level rules:</p>
+<ul>
+  <li>Cannot be communicated to the venue model.</li>
+  <li>It is not supported by the recipient.</li>
+  <li>Lacks a field conditionally required by the FIX specification. In this situation a Business Message Reject with BusinessRejectReason = “Conditionally Required Field Missing” can be issued if the system is unable to send the specific “reject” message listed above. One example would be a stop order missing StopPx. However, a Business Reject message MUST NOT be used to enforce proprietary rules more restrictive that those explicit in the FIX specification, such as a broker requiring an order to contain an Account, which the FIX specification considers an optional field. 
+[block:api-header]
+{
+“title”: “Message-Specific Reject”
+}
+[/block]
+There are two method of responding with a reject message:</li>
+  <li>Missing required field - a field may be identified as ‘required’ (using ‘req’ or ‘required’ keyword in front of the field name) or ‘optional’ (using ‘opt’ or ‘optional’ keywords in front of the name). By default, if the keyword is omitted, a field is considered optional. If a required field is missing (the arriving message does not contain it), a message would be rejected.</li>
+  <li>Field-reject - results from an inline ‘valid’ statement for an associated field.</li>
+  <li>Custom-reject - results from ‘validate’ statement that is not associated with any specific field and has an associated enum value.</li>
+</ul>
+
+<p>Recall the diagram at the beginning of this page. Here’s a fragment that’s relevant to the current discussion:
+[block:api-header]
+{}
+[/block]</p>
+
+
+		        </article>
+		        <footer>
+	  <p>By <a href="http://imandra.ai">Aesthetic Integration</p>
+</footer>
+
+	      </main>
+    </body>
+
+</html>

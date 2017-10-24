@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	  <meta charset="utf-8">
+	  <meta http-equiv="x-ua-compatible" content="ie=edge">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	  <title>Base</title>
+
+	  <link rel="stylesheet" href="/css/main.css">
+	  <link rel="canonical" href="http://localhost:4000/documentationDir/model-verification/base.html">
+
+</head> 
+
+
+    <body>
+	      <aside>
+	  <div class="container">
+		    <nav>
+             <ul>
+				              
+				            <li><a href="/about/">About</a></li>
+				                
+				            <li><a href="/documentation/">Documentation</a></li>
+				                
+				            <li><a href="/techdocs/">Technical Content</a></li>
+				                  
+				            <li><a href="/documentationDir/model-verification/base.html">Base</a></li>
+				                
+				            <li><a href="/documentationDir/documentation/building-instructions.html">Building Instructions</a></li>
+				                
+				            <li><a href="/documentationDir/documentation/cifsm.html">Modelling State Machines</a></li>
+				                
+				            <li><a href="/documentationDir/test-suite/current-test-pack.html">Current Test Pack</a></li>
+				                
+				            <li><a href="/documentationDir/documentation/getting-started.html">Introduction</a></li>
+				                
+				            <li><a href="/documentationDir/model-verification/heartbeat-messages.html">Heartbeat Messages</a></li>
+				                  
+				            <li><a href="/documentationDir/model-verification/logon-messages.html">Logon Messages</a></li>
+				                  
+				            <li><a href="/documentationDir/documentation/message-lifecycle.html">Message Lifecycle</a></li>
+				                
+				            <li><a href="/documentationDir/documentation/model-technical-documentation.html">Technical Documentation</a></li>
+				                
+				            <li><a href="/documentationDir/model-verification/overview.html">Overview and Status</a></li>
+				                
+				            <li><a href="/documentationDir/documentation/printers-and-parsers.html">Printers and Parsers</a></li>
+				                
+				            <li><a href="/documentationDir/formal-verificatoin/references.html">References</a></li>
+				                
+				            <li><a href="/documentationDir/test-suite/region-decomposition.html">Region Decomposition</a></li>
+				                
+				            <li><a href="/documentationDir/model-verification/rejection-logic.html">Rejection Logic</a></li>
+				                
+				            <li><a href="/documentationDir/model-verification/sequence-number-logic.html">Sequence Number Logic</a></li>
+				                
+				            <li><a href="/documentationDir/model-verification/sequence-reset-messages.html">Sequence Reset Messages</a></li>
+				                
+				            <li><a href="/documentationDir/test-suite/test-suite-generation.html">Test Suite Generation</a></li>
+				                
+			        </ul>
+		    </nav>
+	  </div>
+</aside>
+
+<header>
+	  <h1><a href="">Fix Engine</a></h1>
+</header>
+
+	      <main>
+		        <article>
+			          <h2>Base</h2>
+
+<p>[block:api-header]
+{
+  “title”: “Base VG.1”
+}
+[/block]</p>
+<blockquote>
+  <p><em>When in ActiveSession (normal mode) and receiving a non grabled and non session-level</em>
+<em>rejected message and the application is down. Such message would be sent back with a</em>
+<em>Business Reject.</em></p>
+</blockquote>
+
+<p>[block:code]
+{
+  “codes”: [
+    {
+      “code”: “let msg_is_biz_reject = function\n  | Some (ValidMsg msg_data) -&gt;\n    begin match msg_data.full_msg_data with\n      | Full_FIX_Admin_Msg (Full_Msg_Business_Reject _) -&gt; true\n      | _ -&gt; false\n    end\n  | _ -&gt; false\n;;\n\nlet msg_is_valid = function\n  | Some (ValidMsg _) -&gt; true\n  | _ -&gt; false\n;;\n\nverify app_down_get_biz_reject ( state : fix_engine_state ) =\n  let incoming_biz_rejected = msg_is_valid ( state.incoming_fix_msg ) in\n  let no_incoming_msgs = state.incoming_int_msg = None in\n  let state’ = one_step (state) in\n  let result_biz_reject = msg_is_biz_reject ( state’.outgoing_fix_msg ) in\n  ( state.fe_cache = []\n    &amp;&amp; incoming_biz_rejected &amp;&amp; not (state.fe_application_up)\n    &amp;&amp; state.fe_curr_mode = ActiveSession &amp;&amp; no_incoming_msgs )\n  ==&gt;\n  result_biz_reject\n;;”,
+      “language”: “scala”,
+      “name”: “Base VG.1”
+    }
+  ]
+}
+[/block]</p>
+
+<p>[block:api-header]
+{
+  “title”: “Base VG.2”
+}
+[/block]
+From Vol 2. Page 9:</p>
+<blockquote>
+  <p><em>In *ALL</em> cases except the Sequence Reset - message, the FIX session*
+<em>should be terminated if the incoming sequence number is less than expected and the</em>
+<em>PossDupFlag is not set. A Logout message with some descriptive text should be sent to the</em>
+<em>other side before closing the session.</em>
+[block:code]
+{
+  “codes”: [
+    {
+      “code”: “let poss_dup_flag_not_set ( flag : bool option ) =\n  flag = None\n;;\n\nlet incoming_msg_not_valid ( msg, state_inc_seq_num : full_top_level_msg option * int ) =\n  match msg with\n  | Some (ValidMsg vmsg) -&gt;\n    let seq_num_incorrect = vmsg.full_msg_header.h_msg_seq_num &lt; state_inc_seq_num in\n    let msg_is_seq_reset =\n      begin match vmsg.full_msg_data with\n        | Full_FIX_Admin_Msg (Full_Msg_Sequence_Reset _) -&gt; true\n        | _ -&gt; false\n      end\n    in\n    (seq_num_incorrect &amp;&amp; msg_is_seq_reset\n     &amp;&amp; poss_dup_flag_not_set ( vmsg.full_msg_header.h_poss_dup_flag ))\n  | _   -&gt; false\n;;\n\nlet msg_is_logout = function\n  | Some (ValidMsg vmsg) -&gt;\n    begin match vmsg.full_msg_data with\n      | Full_FIX_Admin_Msg (Full_Msg_Logoff _) -&gt; true\n      | _ -&gt; false\n    end\n  | _ -&gt; false\n;;\n\nverify less_seq_num_logout ( state : fix_engine_state ) =\n  let no_incoming_int_msgs = state.incoming_int_msg = None in\n  let state_good = not ( state.fe_application_up ) &amp;&amp; ( state.fe_curr_mode = ActiveSession ) in\n  let state’ = one_step (state) in\n  ( state.fe_application_up &amp;&amp; no_incoming_int_msgs &amp;&amp; state_good &amp;&amp; state.fe_cache = [] &amp;&amp;\n    incoming_msg_not_valid ( state.incoming_fix_msg, 1 ) )\n  ==&gt; msg_is_logout ( state’.outgoing_fix_msg )\n;;”,
+      “language”: “scala”,
+      “name”: “Base VG.2”
+    }
+  ]
+}
+[/block]</p>
+</blockquote>
+
+<p>[block:api-header]
+{
+  “title”: “Base VG.3”
+}
+[/block]
+Messages that are garbled will be ignored (sequence counter will not be incremented).
+[block:code]
+{
+  “codes”: [
+    {
+      “code”: “let incoming_msg_garbled = function\n  | Some (Garbled) -&gt; true\n  | _ -&gt; false\n;;\n\nverify garbled_are_ignored ( state : fix_engine_state ) =\n  let state’ = one_step (state) in\n  let msg_ignored = ( state’ =  { state with incoming_fix_msg = None } ) in \n  let no_internal_msgs = state.incoming_int_msg = None in\n  let no_cache_replay_or_retransmit = not ( state.fe_curr_mode = CacheReplay || state.fe_curr_mode = Retransmit ) in\n  ( incoming_msg_garbled (state.incoming_fix_msg)\n    &amp;&amp; no_cache_replay_or_retransmit\n    &amp;&amp; no_internal_msgs )\n  ==&gt; msg_ignored\n;;”,
+      “language”: “scala”,
+      “name”: “Base VG.3”
+    }
+  ]
+}
+[/block]</p>
+
+<p>[block:api-header]
+{
+  “title”: “Base VG.4”
+}
+[/block]
+Session rejected messages are rejected with the right reason and counter is incremented.
+[block:code]
+{
+  “codes”: [
+    {
+      “code”: “let incoming_msg_session_reject = function\n  | Some (SessionRejectedMsg _) -&gt; true\n  | _ -&gt; false\n;;\n\nlet msg_is_reject = function\n  | Some (ValidMsg vmsg) -&gt;\n    begin match vmsg.full_msg_data with\n      | Full_FIX_Admin_Msg (Full_Msg_Reject _) -&gt; true\n      | _ -&gt; false\n    end\n  | _ -&gt; false\n;;\n\n(** Note that it’s important to remember that a message may only be rejected if we’re in ActiveSession state. \n    It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or \n    Retransmit modes. *)\nverify session_rejects_are_rejected ( state : fix_engine_state ) =\n  let no_incoming_int_msgs = state.incoming_int_msg = None in\n  let incoming_rejected = incoming_msg_session_reject ( state.incoming_fix_msg ) in\n  let state’ = one_step (state) in\n  let msg_rejected = msg_is_reject ( state’.outgoing_fix_msg ) in\n  let seq_num_updated = ( ( state.outgoing_seq_num + 1 ) = state’.outgoing_seq_num ) in\n  ( no_incoming_int_msgs &amp;&amp; incoming_rejected &amp;&amp; state.fe_curr_mode = ActiveSession)\n  ==&gt;\n  ( msg_rejected &amp;&amp; seq_num_updated )\n;;”,
+      “language”: “scala”,
+      “name”: “Base VG.4”
+    }
+  ]
+}
+[/block]</p>
+
+
+		        </article>
+		        <footer>
+	  <p>By <a href="http://imandra.ai">Aesthetic Integration</p>
+</footer>
+
+	      </main>
+    </body>
+
+</html>
