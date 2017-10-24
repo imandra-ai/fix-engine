@@ -1,4 +1,0 @@
----
-title: "Rejection Logic"
-excerpt: ""
----
