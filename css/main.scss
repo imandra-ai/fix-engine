@@ -1,8 +1,0 @@
----
-# Front matter comment to ensure Jekyll properly reads file.
----
-$baseurl: "{{ site.baseurl }}";
-@import 
-"base",
-"layout",
-"syntax-highlighting"
