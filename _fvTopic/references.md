@@ -5,7 +5,7 @@ permalink: /references/
 colName: Formal Verification
 ---
 Traditionally, the application of formal verification has been reserved to highly specialised teams (often with PhDs in the subject) in academia, institutions such as NASA, and safety-critical industries such as avionics and microprocessor design.
-
+ 
 At AI, our mission is to democratize formal verification, bringing its power to new industries in a user-friendly and scalable way. These applications to new industries are powered by recent advances, including CDCL-based Satisfiability (SAT) and Satisfiability Modulo Theories (SMT) solving, nonlinear decision procedures and scalable techniques for symbolic execution.
 
 For more on our vision for formal verification for finance, see our short explainer [video](https://vimeo.com/123746101).
