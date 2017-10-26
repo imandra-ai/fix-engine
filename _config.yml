@@ -17,11 +17,10 @@ title: Fix Engine Documentation
 email: contact@aestheticintegration.com
 description: >- # this means to ignore newlines until "baseurl:"
   Fix-engine documentation and examples.
-baseurl: "/fix-engine-staging" # the subpath of your site, e.g. /blog
+baseurl: "/fix-engine" # the subpath of your site, e.g. /blog
 url: "http://imandra.ai" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: 
+twitter_username: VerifiedbyAI
 github_username:  
-
 permalink: /:title/
 
 # Build settings
