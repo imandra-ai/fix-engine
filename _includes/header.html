@@ -2,7 +2,7 @@
 	  <div class="container">
 		    <nav>
              <ul>
-				 	<li><a href = "{{ site.url | append: "doc"}}"><AI Docs></img></a></li>
+				 	<li><a href = "{{ site.url | append: "doc"}}"><AI Docs></a></li>
 						{% for collection in site.collections %} 
 						{% assign colName = collection.label %}
 						{% assign topPage = site.[colName] | first %}
