@@ -47,6 +47,10 @@ let duration_to_json ( d : fix_duration ) =
     `Assoc list_assoc
 ;;
 
+let duration_opt_to_json = function
+    | None   -> `Null
+    | Some x -> duration_to_json x
+;;
 
 let localmktdate_to_json ( d : fix_localmktdate ) =
     let list_assoc = [
