@@ -1,6 +1,6 @@
 box: jekyll/jekyll:3.6.2
 
-build-docs:
+build:
   steps:
     - bundle-install:
         path: /usr/local/bundle
