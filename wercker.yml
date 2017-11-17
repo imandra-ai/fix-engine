@@ -2,26 +2,15 @@ box: jekyll/jekyll:3.6.2
 
 build:
   steps:
-    - bundle-install:
-        path: /usr/local/bundle
-
     - script:
-        name: initialize git submodules
+        name: build
         code: |
-            git submodule update --init --recursive
-
-    - script:
-        name: install custom lexers
-        code:
-          - cp jekyll-resources/rouge-lexers/ipl.rb /usr/local/bundle/gems/rouge-2.2.1/lib/rouge/lexers/ipl.rb
-
-    - script:
-        name: create output folder
-        code: mkdir _site
-
-    - script:
-        name: jekyll build
-        code: jekyll build
+          set -ex
+          git submodule update --init --recursive
+          bundle install
+          cp jekyll-resources/rouge-lexers/ipl.rb /usr/local/bundle/gems/rouge-2.2.1/lib/rouge/lexers/ipl.rb
+          mkdir _site
+          jekyll build
 
 deploy-docs:
   steps:
