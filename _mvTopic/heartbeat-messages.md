@@ -4,6 +4,7 @@ excerpt: ""
 layout: pageSbar
 permalink: /HeartbeatMessages/
 colName: Model Verification
+sequence: 2
 ---
 This section contains verification goals for Hearbeat messages.
 ### Heartbeat VG.1

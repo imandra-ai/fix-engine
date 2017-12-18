@@ -4,4 +4,5 @@ excerpt: ""
 layout: pageSbar
 permalink: /regionDecomposition/
 colName: Test Suite
+sequence: 2
 ---

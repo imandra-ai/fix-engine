@@ -4,6 +4,7 @@ excerpt: ""
 layout: pageSbar
 permalink: /messageLifeCycle/
 colName: Documentation
+sequence: 2
 ---
 There are 5 outcomes to an engine/venue model to receiving a message:
 - Ignored - cases when message is malformed (missing or out-of-order important tags, etc).

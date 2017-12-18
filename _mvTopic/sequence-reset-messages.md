@@ -4,6 +4,7 @@ excerpt: ""
 layout: pageSbar
 permalink: /sequenceResetMessages/
 colName: Model Verification
+sequence: 8
 ---
 ## Seq_Reset VG.1
 

@@ -1,6 +1,6 @@
 ---
 layout: pageSbar
-title: "References"
+title: "Formal Verification"
 permalink: /references/
 colName: Formal Verification
 ---

@@ -4,6 +4,7 @@ title: "Building Instructions"
 permalink: /buildingInstructions/
 excerpt: ""
 colName: Documentation
+sequence: 1
 ---
 ## Building with OCaml
 

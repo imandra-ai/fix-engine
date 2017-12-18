@@ -4,6 +4,7 @@ excerpt: ""
 layout: pageSbar
 permalink: /logonMessages/
 colName: Model Verification
+sequence: 3
 ---
 This section describes verification goals for Logon messages. 
 ## Logon VG.1

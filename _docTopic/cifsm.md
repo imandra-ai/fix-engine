@@ -4,6 +4,7 @@ title: "Modelling State Machines"
 excerpt: "We model the FIX engine as a Communicating Infinite State Machine (CISM)"
 permalink: /cifsm/
 colName: Documentation
+sequence: 1
 ---
 ## Introduction
 
