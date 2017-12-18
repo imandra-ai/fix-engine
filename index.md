@@ -35,4 +35,5 @@ IML stands for Imandra Modelling Language - it is a pure subset of OCaml for whi
 
 The model is currently targeting version 4.4 of the FIX protocol. Over time, we plan to cover other relevant versions. View the technical documentation for further information.
 
-Check out the [References]({{ site.baseurl }}/references/)  section for more.
+Check out the [References]({{ site.baseurl }}/references/) section for more.
+
