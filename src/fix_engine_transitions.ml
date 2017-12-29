@@ -118,7 +118,8 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                             fe_encrypt_method  = d.ln_encrypt_method;
                             fe_heartbeat_interval   = d.ln_heartbeat_interval 
                         } in
-                    let logon_msg = create_logon_msg ( engine ) in
+                    (** TODO: process ResestSeqNum logon request*)
+                    let logon_msg = create_logon_msg ( engine, false ) in
                     let engine = { engine with 
                             fe_initiator            = Some false;
                             (*  TODO -- check if we really have to accept all incoming senders *)
@@ -159,7 +160,7 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 if engine.fe_encrypt_method <> d.ln_encrypt_method then
                     begin
                         let engine' = { engine with fe_encrypt_method = d.ln_encrypt_method } in 
-                        let logon_msg = create_logon_msg ( engine' ) in {
+                        let logon_msg = create_logon_msg ( engine', false ) in {
                             engine' with
                                 outgoing_fix_msg        = Some ( ValidMsg (logon_msg ));
                                 outgoing_seq_num        = engine.outgoing_seq_num + 1;

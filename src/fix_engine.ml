@@ -90,8 +90,11 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
         if engine.fe_curr_mode = NoActiveSession then
             begin
                 (* Let's initiate a session here. *)
+                let engine = if sd.reset_seq_num then 
+                    { engine with outgoing_seq_num = 0; incoming_seq_num = 0 }
+                else engine in
                 let engine = { engine with fe_target_comp_id = sd.dest_comp_id } in 
-                let logon_msg = create_logon_msg ( engine ) in { 
+                let logon_msg = create_logon_msg ( engine, sd.reset_seq_num ) in { 
                     engine with 
                         fe_last_time_data_sent = engine.fe_curr_time;
                         outgoing_fix_msg = Some ( ValidMsg (logon_msg));
@@ -157,7 +160,6 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
 
 (** Process incoming FIX message here. *)
 let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) = 
-    print_endline ("Incoming " ^ string_of_int engine.incoming_seq_num) ;
     match m with
     | Garbled                   -> engine   (** Garbled messages are simply ignored. Note the timestamp is not updated. *)
     | SessionRejectedMsg data   -> 

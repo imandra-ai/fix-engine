@@ -25,7 +25,6 @@ type session_details = {
 
 let default_session_details = {
     constant_begin_string = Admin_string 546607350 (* Hash of "FIX.4.4" *)
-
 };;
 
 
@@ -166,14 +165,14 @@ let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, curr_time, msg, 
 
 (** Create a logon message we would send out to initiate a connection 
     with another FIX engine. *)
-let create_logon_msg ( engine : fix_engine_state ) = 
+let create_logon_msg ( engine, reset_seq_num : fix_engine_state * bool ) = 
     let msg_data = Full_FIX_Admin_Msg ( 
         Full_Msg_Logon {
             ln_encrypt_method               = engine.fe_encrypt_method;
             ln_heartbeat_interval           = engine.fe_heartbeat_interval;
             ln_raw_data_length              = None; 
             ln_raw_data                     = None;
-            ln_reset_seq_num_flag           = None; (* Some true; *)
+            ln_reset_seq_num_flag           = if reset_seq_num then Some true else None;
             ln_next_expected_msg_seq_num    = None;
             ln_max_message_size             = None;
 
@@ -184,11 +183,17 @@ let create_logon_msg ( engine : fix_engine_state ) =
             ln_msg_types                    = []
         } 
     ) in 
-    create_outbound_fix_msg ( 
+    let msg = create_outbound_fix_msg ( 
         engine.outgoing_seq_num, engine.fe_target_comp_id, 
         engine.fe_comp_id, engine.fe_curr_time, 
         msg_data, false 
-    ) 
+    ) in
+    { msg with full_msg_header = { 
+        msg.full_msg_header with 
+            h_on_behalf_of_comp_id  = Some engine.fe_comp_id;
+            h_sender_location_id    = engine.fe_sender_location_id
+        } 
+    } 
 ;;
 
 (** Create a Logoff message. *)

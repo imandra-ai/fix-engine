@@ -27,6 +27,7 @@ type manual_int_data = {
 (** Request to initiate a new session. *)
 type session_data = {
     dest_comp_id            : fix_string; (** Destination company ID. *)
+    reset_seq_num           : bool;       (** Shall we reset sequence numbers? *)
 }
 ;;
 
@@ -84,6 +85,7 @@ type fix_engine_state = {
 
     fe_comp_id              : fix_string;                   (** Our company ID *)
     fe_target_comp_id       : fix_string;                   (** Target company ID *)
+    fe_sender_location_id   : fix_string option;            (** On behalf of string *)
 
     incoming_int_msg        : fix_engine_int_inc_msg option;(** Incoming internal messages (application). *)
     outgoing_int_msg        : fix_engine_int_out_msg option;(** These are messages we send back to our owner *)
@@ -132,6 +134,7 @@ let init_fix_engine_state = {
 
     fe_comp_id              = Admin_string 183924456; (* Hash of "IMANDRA" *)
     fe_target_comp_id       = Admin_string 780720412; (* Hash of "TARGET"  *)
+    fe_sender_location_id   = None;
 
     incoming_int_msg        = None;                           
     outgoing_int_msg        = None;
