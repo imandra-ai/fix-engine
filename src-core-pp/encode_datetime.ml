@@ -53,7 +53,11 @@ let encode_UTCTimestamp x : string =
     in
     match x.utc_timestamp_millisec with
         | None -> ymdhms 
-        | Some ms -> ymdhms ^ Printf.sprintf ".%03d" ms
+        | Some ms -> 
+            if ms < 1000 then (*TODO: Milli-micro second hack needs fixing asap *)
+                (ymdhms ^ Printf.sprintf ".%03d" ms)
+            else
+                (ymdhms ^ Printf.sprintf ".%06d" ms)
 ;;
 
 

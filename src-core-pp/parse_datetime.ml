@@ -40,12 +40,13 @@ let parse_LocalMktDate str =
 
 let parse_UTCTimeOnly str = 
     let length = String.length str in
-    if (length != 8) && (length != 12) then None else
+(*    if (length != 8) && (length != 12) && (length != 15) then None else *)
     let hours, minutes, seconds, mseconds = 
         Scanf.sscanf str "%02u:%02u:%02u%s" 
         ( fun h m s ms -> (
             let mseconds = if(ms = "") then None 
-                else ( Scanf.sscanf ms ".%03d" (fun x -> Some x) ) in
+            else if (length = 12) then ( Scanf.sscanf ms ".%03d" (fun x -> Some x) ) 
+            else ( Scanf.sscanf ms ".%06d" (fun x -> Some x) ) in
             (h,m,s,mseconds) ) ) in
     Some {
         utc_timeonly_hour    = hours;
@@ -58,7 +59,7 @@ let parse_UTCTimeOnly str =
 
 let parse_UTCTimestamp str = 
     let length = String.length str in
-    if (length != 17) && (length != 21) then None else
+(*    if (length != 17) && (length != 21) && (length != 24) then None else *)
     let date, time = Scanf.sscanf str "%s@-%s" 
         ( fun d t -> (parse_UTCDateOnly d , parse_UTCTimeOnly t) ) in
     match date, time with 
