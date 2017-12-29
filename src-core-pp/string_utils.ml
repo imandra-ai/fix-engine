@@ -19,13 +19,13 @@ let add_model_string ( fixstr, rawstr : fix_string * string ) : unit =
     Hashtbl.add fix_to_str_hashtbl fixstr rawstr
 ;;
 
-add_model_string ( Model_string 1, "Empty");;
-
 let fix_string_to_string fixstr = 
     if not (Hashtbl.mem fix_to_str_hashtbl fixstr) then
         ( match fixstr with
-            | Model_string hash ->  failwith ( "Unrecognized model string \"" ^ string_of_int hash ^ "\".")
-            | Admin_string hash ->  failwith ( "Unrecognized admin string \"" ^ string_of_int hash ^ "\".")
+            | Model_string hash ->  
+                failwith ( "Unrecognized model string \"" ^ string_of_int hash ^ "\".")
+            | Admin_string hash ->  
+                failwith ( "Unrecognized admin string \"" ^ string_of_int hash ^ "\".")
             | Empty_string -> ( add_model_string ( Empty_string, "" ); "")
         )
     else Hashtbl.find fix_to_str_hashtbl fixstr;;
