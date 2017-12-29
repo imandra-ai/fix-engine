@@ -24,6 +24,8 @@ let encode_float = function
     | Float_2 x -> Printf.sprintf "%.2f" ( float_of_int ( x ) /. 100.0 )
     | Float_3 x -> Printf.sprintf "%.3f" ( float_of_int ( x ) /. 1000.0 )
     | Float_4 x -> Printf.sprintf "%.4f" ( float_of_int ( x ) /. 10000.0 )
+    | Float_5 x -> Printf.sprintf "%.5f" ( float_of_int ( x ) /. 100000.0 )
+    | Float_6 x -> Printf.sprintf "%.6f" ( float_of_int ( x ) /. 1000000.0 )
 ;;
 
 let encode_string = fix_string_to_string;;

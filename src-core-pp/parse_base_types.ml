@@ -49,6 +49,8 @@ let parse_float ( str : string ) : fix_float option =
         | 2 -> Some ( Float_2 ( whole * 100 + fraction ) )
         | 3 -> Some ( Float_3 ( whole * 1000 + fraction ) )
         | 4 -> Some ( Float_4 ( whole * 10000 + fraction ) )
+        | 5 -> Some ( Float_5 ( whole * 100000 + fraction ) )
+        | 6 -> Some ( Float_6 ( whole * 1000000 + fraction ) )
         | _ -> None
 ;;
 

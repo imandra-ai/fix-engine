@@ -47,6 +47,8 @@ type fix_float =
     | Float_2 of int
     | Float_3 of int
     | Float_4 of int
+    | Float_5 of int
+    | Float_6 of int
 ;;
 
 
@@ -56,7 +58,9 @@ let float_Create ( data, num_decs : int * int ) =
     | 1 -> Float_1 data
     | 2 -> Float_2 data
     | 3 -> Float_3 data
-    | _ -> Float_4 data
+    | 4 -> Float_4 data
+    | 5 -> Float_5 data
+    | _ -> Float_6 data
 ;;
 
 (** We explicitly write out the pattern matches combinatorially to optimize
@@ -70,31 +74,58 @@ let float_Convert ( f, num_decs : fix_float * int) : fix_float =
   | Float_0 d, 1 -> Float_1 (d * 10)
   | Float_0 d, 2 -> Float_2 (d * 100)
   | Float_0 d, 3 -> Float_3 (d * 1000)
-  | Float_0 d, _ -> Float_4 (d * 10000)
+  | Float_0 d, 4 -> Float_4 (d * 10000)
+  | Float_0 d, 5 -> Float_5 (d * 100000)
+  | Float_0 d, _ -> Float_6 (d * 1000000)
 
   | Float_1 d, 0 -> Float_0 (d / 10)
   | Float_1 d, 1 -> f
   | Float_1 d, 2 -> Float_2 (d * 10)
   | Float_1 d, 3 -> Float_3 (d * 100)
-  | Float_1 d, _ -> Float_4 (d * 1000)
+  | Float_1 d, 4 -> Float_4 (d * 1000)
+  | Float_1 d, 5 -> Float_5 (d * 10000)
+  | Float_1 d, _ -> Float_6 (d * 100000)
 
   | Float_2 d, 0 -> Float_0 (d / 100)
   | Float_2 d, 1 -> Float_1 (d / 10)
   | Float_2 d, 2 -> f
   | Float_2 d, 3 -> Float_3 (d * 10)
-  | Float_2 d, _ -> Float_4 (d * 100)
+  | Float_2 d, 4 -> Float_4 (d * 100)
+  | Float_2 d, 5 -> Float_5 (d * 1000)
+  | Float_2 d, _ -> Float_6 (d * 10000)
 
   | Float_3 d, 0 -> Float_0 (d / 1000)
   | Float_3 d, 1 -> Float_1 (d / 100)
   | Float_3 d, 2 -> Float_2 (d / 10)
   | Float_3 d, 3 -> f
-  | Float_3 d, _ -> Float_4 (d * 10)
+  | Float_3 d, 4 -> Float_4 (d * 10)
+  | Float_3 d, 5 -> Float_5 (d * 100)
+  | Float_3 d, _ -> Float_6 (d * 1000)
 
   | Float_4 d, 0 -> Float_0 (d / 10000)
   | Float_4 d, 1 -> Float_1 (d / 1000)
   | Float_4 d, 2 -> Float_2 (d / 100)
   | Float_4 d, 3 -> Float_3 (d / 10)
-  | Float_4 d, _ -> f
+  | Float_4 d, 4 -> f
+  | Float_4 d, 5 -> Float_5 (d * 10)
+  | Float_4 d, _ -> Float_6 (d * 100)
+
+  | Float_5 d, 0 -> Float_0 (d / 100000)
+  | Float_5 d, 1 -> Float_1 (d / 10000)
+  | Float_5 d, 2 -> Float_2 (d / 1000)
+  | Float_5 d, 3 -> Float_3 (d / 100)
+  | Float_5 d, 4 -> Float_4 (d / 10)
+  | Float_5 d, 5 -> f
+  | Float_5 d, _ -> Float_6 (d * 10)
+
+  | Float_6 d, 0 -> Float_0 (d / 1000000)
+  | Float_6 d, 1 -> Float_1 (d / 100000)
+  | Float_6 d, 2 -> Float_2 (d / 10000)
+  | Float_6 d, 3 -> Float_3 (d / 1000)
+  | Float_6 d, 4 -> Float_4 (d / 100)
+  | Float_6 d, 5 -> Float_5 (d / 10)
+  | Float_6 d, _ -> f
+
 ;;
 
 (** float1 + float2 *)
@@ -105,56 +136,104 @@ let float_Add (fOne, fTwo : fix_float * fix_float) =
   | Float_0 d1, Float_2 d2 -> Float_2 ((d1 * 100)    + d2)
   | Float_0 d1, Float_3 d2 -> Float_3 ((d1 * 1000)   + d2)
   | Float_0 d1, Float_4 d2 -> Float_4 ((d1 * 10000)  + d2)
+  | Float_0 d1, Float_5 d2 -> Float_5 ((d1 * 100000) + d2)
+  | Float_0 d1, Float_6 d2 -> Float_6 ((d1 * 1000000)+ d2)
   | Float_1 d1, Float_0 d2 -> Float_1 (d1            + (d2 * 10))
   | Float_1 d1, Float_1 d2 -> Float_1 (d1            + d2)
   | Float_1 d1, Float_2 d2 -> Float_2 ((d1 * 10)     + d2)
   | Float_1 d1, Float_3 d2 -> Float_3 ((d1 * 100)    + d2)
   | Float_1 d1, Float_4 d2 -> Float_4 ((d1 * 1000)   + d2)
+  | Float_1 d1, Float_5 d2 -> Float_5 ((d1 * 10000)  + d2)
+  | Float_1 d1, Float_6 d2 -> Float_6 ((d1 * 100000) + d2)
   | Float_2 d1, Float_0 d2 -> Float_2 (d1            + (d2 * 100))
   | Float_2 d1, Float_1 d2 -> Float_2 (d1            + (d2 * 10))
   | Float_2 d1, Float_2 d2 -> Float_2 (d1            + d2)
   | Float_2 d1, Float_3 d2 -> Float_3 ((d1 * 10)     + d2)
   | Float_2 d1, Float_4 d2 -> Float_4 ((d1 * 100)    + d2)
+  | Float_2 d1, Float_5 d2 -> Float_5 ((d1 * 1000)   + d2)
+  | Float_2 d1, Float_6 d2 -> Float_6 ((d1 * 10000)  + d2)
   | Float_3 d1, Float_0 d2 -> Float_3 (d1            + (d2 * 1000))
   | Float_3 d1, Float_1 d2 -> Float_3 (d1            + (d2 * 100))
   | Float_3 d1, Float_2 d2 -> Float_3 (d1            + (d2 * 10))
   | Float_3 d1, Float_3 d2 -> Float_3 (d1            + d2)
   | Float_3 d1, Float_4 d2 -> Float_4 ((d1 * 10)     + d2)
+  | Float_3 d1, Float_5 d2 -> Float_5 ((d1 * 100)    + d2)
+  | Float_3 d1, Float_6 d2 -> Float_6 ((d1 * 1000)   + d2)
   | Float_4 d1, Float_0 d2 -> Float_4 (d1            + (d2 * 10000))
   | Float_4 d1, Float_1 d2 -> Float_4 (d1            + (d2 * 1000))
   | Float_4 d1, Float_2 d2 -> Float_4 (d1            + (d2 * 100))
   | Float_4 d1, Float_3 d2 -> Float_4 (d1            + (d2 * 10))
   | Float_4 d1, Float_4 d2 -> Float_4 (d1            + d2)
+  | Float_4 d1, Float_5 d2 -> Float_5 ((d1 * 10)     + d2)
+  | Float_4 d1, Float_6 d2 -> Float_6 ((d1 * 100)    + d2)
+  | Float_5 d1, Float_0 d2 -> Float_5 (d1            + (d2 * 100000))
+  | Float_5 d1, Float_1 d2 -> Float_5 (d1            + (d2 * 10000))
+  | Float_5 d1, Float_2 d2 -> Float_5 (d1            + (d2 * 1000))
+  | Float_5 d1, Float_3 d2 -> Float_5 (d1            + (d2 * 100))
+  | Float_5 d1, Float_4 d2 -> Float_5 (d1            + (d2 * 10))
+  | Float_5 d1, Float_5 d2 -> Float_5 (d1            + d2)
+  | Float_5 d1, Float_6 d2 -> Float_6 ((d1 * 10)     + d2)
+  | Float_6 d1, Float_0 d2 -> Float_6 (d1            + (d2 * 1000000))
+  | Float_6 d1, Float_1 d2 -> Float_6 (d1            + (d2 * 100000))
+  | Float_6 d1, Float_2 d2 -> Float_6 (d1            + (d2 * 10000))
+  | Float_6 d1, Float_3 d2 -> Float_6 (d1            + (d2 * 1000))
+  | Float_6 d1, Float_4 d2 -> Float_6 (d1            + (d2 * 100))
+  | Float_6 d1, Float_5 d2 -> Float_6 (d1            + (d2 * 10))
+  | Float_6 d1, Float_6 d2 -> Float_6 (d1            + d2)
 ;;
 
 (** float1 - float2 *)
 let float_Sub (fOne, fTwo: fix_float * fix_float) =
   match (fOne, fTwo) with
-  | Float_0 d1, Float_0 d2 -> Float_0 (d1           - d2)
-  | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10)    - d2)
-  | Float_0 d1, Float_2 d2 -> Float_2 ((d1 * 100)   - d2)
-  | Float_0 d1, Float_3 d2 -> Float_3 ((d1 * 1000)  - d2)
-  | Float_0 d1, Float_4 d2 -> Float_4 ((d1 * 10000) - d2)
-  | Float_1 d1, Float_0 d2 -> Float_1 (d1           - (d2 * 10))
-  | Float_1 d1, Float_1 d2 -> Float_1 (d1           - d2)
-  | Float_1 d1, Float_2 d2 -> Float_2 ((d1 * 10)    - d2)
-  | Float_1 d1, Float_3 d2 -> Float_3 ((d1 * 100)   - d2)
-  | Float_1 d1, Float_4 d2 -> Float_4 ((d1 * 1000)  - d2)
+  | Float_0 d1, Float_0 d2 -> Float_0 (d1             - d2)
+  | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10)      - d2)
+  | Float_0 d1, Float_2 d2 -> Float_2 ((d1 * 100)     - d2)
+  | Float_0 d1, Float_3 d2 -> Float_3 ((d1 * 1000)    - d2)
+  | Float_0 d1, Float_4 d2 -> Float_4 ((d1 * 10000)   - d2)
+  | Float_0 d1, Float_5 d2 -> Float_5 ((d1 * 100000)  - d2)
+  | Float_0 d1, Float_6 d2 -> Float_6 ((d1 * 1000000) - d2)
+  | Float_1 d1, Float_0 d2 -> Float_1 (d1             - (d2 * 10))
+  | Float_1 d1, Float_1 d2 -> Float_1 (d1             - d2)
+  | Float_1 d1, Float_2 d2 -> Float_2 ((d1 * 10)      - d2)
+  | Float_1 d1, Float_3 d2 -> Float_3 ((d1 * 100)     - d2)
+  | Float_1 d1, Float_4 d2 -> Float_4 ((d1 * 1000)    - d2)
+  | Float_1 d1, Float_5 d2 -> Float_5 ((d1 * 10000)   - d2)
+  | Float_1 d1, Float_6 d2 -> Float_6 ((d1 * 100000)  - d2)
   | Float_2 d1, Float_0 d2 -> Float_2 (d1           - (d2 * 100))
   | Float_2 d1, Float_1 d2 -> Float_2 (d1           - (d2 * 10))
   | Float_2 d1, Float_2 d2 -> Float_2 (d1           - d2)
   | Float_2 d1, Float_3 d2 -> Float_3 ((d1 * 10)    - d2)
   | Float_2 d1, Float_4 d2 -> Float_4 ((d1 * 100)   - d2)
+  | Float_2 d1, Float_5 d2 -> Float_5 ((d1 * 1000)  - d2)
+  | Float_2 d1, Float_6 d2 -> Float_6 ((d1 * 10000) - d2)
   | Float_3 d1, Float_0 d2 -> Float_3 (d1           - (d2 * 1000))
   | Float_3 d1, Float_1 d2 -> Float_3 (d1           - (d2 * 100))
   | Float_3 d1, Float_2 d2 -> Float_3 (d1           - (d2 * 10))
   | Float_3 d1, Float_3 d2 -> Float_3 (d1           - d2)
   | Float_3 d1, Float_4 d2 -> Float_4 ((d1 * 10)    - d2)
+  | Float_3 d1, Float_5 d2 -> Float_5 ((d1 * 100)   - d2)
+  | Float_3 d1, Float_6 d2 -> Float_6 ((d1 * 1000)  - d2)
   | Float_4 d1, Float_0 d2 -> Float_4 (d1           - (d2 * 10000))
   | Float_4 d1, Float_1 d2 -> Float_4 (d1           - (d2 * 1000))
   | Float_4 d1, Float_2 d2 -> Float_4 (d1           - (d2 * 100))
   | Float_4 d1, Float_3 d2 -> Float_4 (d1           - (d2 * 10))
   | Float_4 d1, Float_4 d2 -> Float_4 (d1           - d2)
+  | Float_4 d1, Float_5 d2 -> Float_5 ((d1 * 10)    - d2)
+  | Float_4 d1, Float_6 d2 -> Float_6 ((d1 * 100)   - d2)
+  | Float_5 d1, Float_0 d2 -> Float_5 (d1           - (d2 * 100000))
+  | Float_5 d1, Float_1 d2 -> Float_5 (d1           - (d2 * 10000))
+  | Float_5 d1, Float_2 d2 -> Float_5 (d1           - (d2 * 1000))
+  | Float_5 d1, Float_3 d2 -> Float_5 (d1           - (d2 * 100))
+  | Float_5 d1, Float_4 d2 -> Float_5 (d1           - (d2 * 10))
+  | Float_5 d1, Float_5 d2 -> Float_5 (d1           - d2)
+  | Float_5 d1, Float_6 d2 -> Float_6 ((d1 * 10)    - d2)
+  | Float_6 d1, Float_0 d2 -> Float_6 (d1           - (d2 * 1000000))
+  | Float_6 d1, Float_1 d2 -> Float_6 (d1           - (d2 * 100000))
+  | Float_6 d1, Float_2 d2 -> Float_6 (d1           - (d2 * 10000))
+  | Float_6 d1, Float_3 d2 -> Float_6 (d1           - (d2 * 1000))
+  | Float_6 d1, Float_4 d2 -> Float_6 (d1           - (d2 * 100))
+  | Float_6 d1, Float_5 d2 -> Float_6 (d1           - (d2 * 10))
+  | Float_6 d1, Float_6 d2 -> Float_6 (d1           - d2)
 ;;
 
 (** -float1 *)
@@ -165,134 +244,240 @@ let float_Neg (fOne : fix_float) =
     | Float_2 d -> Float_2 (-d)
     | Float_3 d -> Float_3 (-d)
     | Float_4 d -> Float_4 (-d)
+    | Float_5 d -> Float_5 (-d)
+    | Float_6 d -> Float_6 (-d)
 ;;
 
 (** float1 / float2 *)
 let float_Div ( fOne, fTwo : fix_float * fix_float ) = 
   match (fOne, fTwo) with
-  | Float_0 d1, Float_0 d2 -> Float_0 ((d1 * 1     * 1)     / d2)
-  | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10    * 10)    / d2)
-  | Float_0 d1, Float_2 d2 -> Float_2 ((d1 * 100   * 100)   / d2)
-  | Float_0 d1, Float_3 d2 -> Float_3 ((d1 * 1000  * 1000)  / d2)
-  | Float_0 d1, Float_4 d2 -> Float_4 ((d1 * 10000 * 10000) / d2)
-  | Float_1 d1, Float_0 d2 -> Float_1 ((d1 * 1     * 10)    / (d2 * 10))
-  | Float_1 d1, Float_1 d2 -> Float_1 ((d1 * 1     * 10)    / d2)
-  | Float_1 d1, Float_2 d2 -> Float_2 ((d1 * 10    * 100)   / d2)
-  | Float_1 d1, Float_3 d2 -> Float_3 ((d1 * 100   * 1000)  / d2)
-  | Float_1 d1, Float_4 d2 -> Float_4 ((d1 * 1000  * 10000) / d2)
-  | Float_2 d1, Float_0 d2 -> Float_2 ((d1 * 1     * 100)   / (d2 * 100))
-  | Float_2 d1, Float_1 d2 -> Float_2 ((d1 * 1     * 100)   / (d2 * 10))
-  | Float_2 d1, Float_2 d2 -> Float_2 ((d1 * 1     * 100)   / d2)
-  | Float_2 d1, Float_3 d2 -> Float_3 ((d1 * 10    * 1000)  / d2)
-  | Float_2 d1, Float_4 d2 -> Float_4 ((d1 * 100   * 10000) / d2)
-  | Float_3 d1, Float_0 d2 -> Float_3 ((d1 * 1     * 1000)  / (d2 * 1000))
-  | Float_3 d1, Float_1 d2 -> Float_3 ((d1 * 1     * 1000)  / (d2 * 100))
-  | Float_3 d1, Float_2 d2 -> Float_3 ((d1 * 1     * 1000)  / (d2 * 10))
-  | Float_3 d1, Float_3 d2 -> Float_3 ((d1 * 1     * 1000)  / d2)
-  | Float_3 d1, Float_4 d2 -> Float_4 ((d1 * 10    * 10000) / d2)
-  | Float_4 d1, Float_0 d2 -> Float_4 ((d1 * 1     * 10000) / (d2 * 10000))
-  | Float_4 d1, Float_1 d2 -> Float_4 ((d1 * 1     * 10000) / (d2 * 1000))
-  | Float_4 d1, Float_2 d2 -> Float_4 ((d1 * 1     * 10000) / (d2 * 100))
-  | Float_4 d1, Float_3 d2 -> Float_4 ((d1 * 1     * 10000) / (d2 * 10))
-  | Float_4 d1, Float_4 d2 -> Float_4 ((d1 * 1     * 10000) / d2)
+  | Float_0 d1, Float_0 d2 -> Float_0 ((d1 * 1       * 1)         / d2)
+  | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10      * 10)        / d2)
+  | Float_0 d1, Float_2 d2 -> Float_2 ((d1 * 100     * 100)       / d2)
+  | Float_0 d1, Float_3 d2 -> Float_3 ((d1 * 1000    * 1000)      / d2)
+  | Float_0 d1, Float_4 d2 -> Float_4 ((d1 * 10000   * 10000)     / d2)
+  | Float_0 d1, Float_5 d2 -> Float_5 ((d1 * 100000  * 100000)    / d2)
+  | Float_0 d1, Float_6 d2 -> Float_6 ((d1 * 1000000 * 1000000) / d2)
+  | Float_1 d1, Float_0 d2 -> Float_1 ((d1 * 1       * 10)        / (d2 * 10))
+  | Float_1 d1, Float_1 d2 -> Float_1 ((d1 * 1       * 10)        / d2)
+  | Float_1 d1, Float_2 d2 -> Float_2 ((d1 * 10      * 100)       / d2)
+  | Float_1 d1, Float_3 d2 -> Float_3 ((d1 * 100     * 1000)      / d2)
+  | Float_1 d1, Float_4 d2 -> Float_4 ((d1 * 1000    * 10000)     / d2)
+  | Float_1 d1, Float_5 d2 -> Float_5 ((d1 * 10000   * 100000)    / d2)
+  | Float_1 d1, Float_6 d2 -> Float_6 ((d1 * 100000  * 1000000)   / d2)
+  | Float_2 d1, Float_0 d2 -> Float_2 ((d1 * 1       * 100)       / (d2 * 100))
+  | Float_2 d1, Float_1 d2 -> Float_2 ((d1 * 1       * 100)       / (d2 * 10))
+  | Float_2 d1, Float_2 d2 -> Float_2 ((d1 * 1       * 100)       / d2)
+  | Float_2 d1, Float_3 d2 -> Float_3 ((d1 * 10      * 1000)      / d2)
+  | Float_2 d1, Float_4 d2 -> Float_4 ((d1 * 100     * 10000)     / d2)
+  | Float_2 d1, Float_5 d2 -> Float_5 ((d1 * 1000    * 100000)    / d2)
+  | Float_2 d1, Float_6 d2 -> Float_6 ((d1 * 10000   * 1000000)   / d2)
+  | Float_3 d1, Float_0 d2 -> Float_3 ((d1 * 1       * 1000)      / (d2 * 1000))
+  | Float_3 d1, Float_1 d2 -> Float_3 ((d1 * 1       * 1000)      / (d2 * 100))
+  | Float_3 d1, Float_2 d2 -> Float_3 ((d1 * 1       * 1000)      / (d2 * 10))
+  | Float_3 d1, Float_3 d2 -> Float_3 ((d1 * 1       * 1000)      / d2)
+  | Float_3 d1, Float_4 d2 -> Float_4 ((d1 * 10      * 10000)     / d2)
+  | Float_3 d1, Float_5 d2 -> Float_5 ((d1 * 100     * 100000)    / d2)
+  | Float_3 d1, Float_6 d2 -> Float_6 ((d1 * 1000    * 1000000)   / d2)
+  | Float_4 d1, Float_0 d2 -> Float_4 ((d1 * 1       * 10000)     / (d2 * 10000))
+  | Float_4 d1, Float_1 d2 -> Float_4 ((d1 * 1       * 10000)     / (d2 * 1000))
+  | Float_4 d1, Float_2 d2 -> Float_4 ((d1 * 1       * 10000)     / (d2 * 100))
+  | Float_4 d1, Float_3 d2 -> Float_4 ((d1 * 1       * 10000)     / (d2 * 10))
+  | Float_4 d1, Float_4 d2 -> Float_4 ((d1 * 1       * 10000)     / d2)
+  | Float_4 d1, Float_5 d2 -> Float_5 ((d1 * 10      * 100000)    / d2)
+  | Float_4 d1, Float_6 d2 -> Float_6 ((d1 * 100     * 1000000)   / d2)
+  | Float_5 d1, Float_0 d2 -> Float_5 ((d1 * 1       * 100000)    / (d2 * 100000))
+  | Float_5 d1, Float_1 d2 -> Float_5 ((d1 * 1       * 100000)    / (d2 * 10000))
+  | Float_5 d1, Float_2 d2 -> Float_5 ((d1 * 1       * 100000)    / (d2 * 1000))
+  | Float_5 d1, Float_3 d2 -> Float_5 ((d1 * 1       * 100000)    / (d2 * 100))
+  | Float_5 d1, Float_4 d2 -> Float_5 ((d1 * 1       * 100000)    / (d2 * 10))
+  | Float_5 d1, Float_5 d2 -> Float_5 ((d1 * 1       * 100000)    / d2)
+  | Float_5 d1, Float_6 d2 -> Float_6 ((d1 * 10      * 1000000)   / d2)
+  | Float_6 d1, Float_0 d2 -> Float_6 ((d1 * 1       * 1000000)   / (d2 * 1000000))
+  | Float_6 d1, Float_1 d2 -> Float_6 ((d1 * 1       * 1000000)   / (d2 * 100000))
+  | Float_6 d1, Float_2 d2 -> Float_6 ((d1 * 1       * 1000000)   / (d2 * 10000))
+  | Float_6 d1, Float_3 d2 -> Float_6 ((d1 * 1       * 1000000)   / (d2 * 1000))
+  | Float_6 d1, Float_4 d2 -> Float_6 ((d1 * 1       * 1000000)   / (d2 * 100))
+  | Float_6 d1, Float_5 d2 -> Float_6 ((d1 * 1       * 1000000)   / (d2 * 10))
+  | Float_6 d1, Float_6 d2 -> Float_6 ((d1 * 1       * 1000000)   / d2)
+
+
 ;;
 
 (** float1 * float2 *)
 let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
   match (fOne, fTwo) with
-  | Float_0 d1, Float_0 d2 -> Float_0 (d1           * d2)
-  | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10)    * d2           / 10)
-  | Float_0 d1, Float_2 d2 -> Float_2 ((d1 * 100)   * d2           / 100)
-  | Float_0 d1, Float_3 d2 -> Float_3 ((d1 * 1000)  * d2           / 1000)
-  | Float_0 d1, Float_4 d2 -> Float_4 ((d1 * 10000) * d2           / 10000)
-  | Float_1 d1, Float_0 d2 -> Float_1 (d1           * (d2 * 10)    / 10)
-  | Float_1 d1, Float_1 d2 -> Float_1 (d1           * d2           / 10)
-  | Float_1 d1, Float_2 d2 -> Float_2 ((d1 * 10)    * d2           / 100)
-  | Float_1 d1, Float_3 d2 -> Float_3 ((d1 * 100)   * d2           / 1000)
-  | Float_1 d1, Float_4 d2 -> Float_4 ((d1 * 1000)  * d2           / 10000)
-  | Float_2 d1, Float_0 d2 -> Float_2 (d1           * (d2 * 100)   / 100)
-  | Float_2 d1, Float_1 d2 -> Float_2 (d1           * (d2 * 10)    / 100)
-  | Float_2 d1, Float_2 d2 -> Float_2 (d1           * d2           / 100)
-  | Float_2 d1, Float_3 d2 -> Float_3 ((d1 * 10)    * d2           / 1000)
-  | Float_2 d1, Float_4 d2 -> Float_4 ((d1 * 100)   * d2           / 10000)
-  | Float_3 d1, Float_0 d2 -> Float_3 (d1           * (d2 * 1000)  / 1000)
-  | Float_3 d1, Float_1 d2 -> Float_3 (d1           * (d2 * 100)   / 1000)
-  | Float_3 d1, Float_2 d2 -> Float_3 (d1           * (d2 * 10)    / 1000)
-  | Float_3 d1, Float_3 d2 -> Float_3 (d1           * d2           / 1000)
-  | Float_3 d1, Float_4 d2 -> Float_4 ((d1 * 10)    * d2           / 10000)
-  | Float_4 d1, Float_0 d2 -> Float_4 (d1           * (d2 * 10000) / 10000)
-  | Float_4 d1, Float_1 d2 -> Float_4 (d1           * (d2 * 1000)  / 10000)
-  | Float_4 d1, Float_2 d2 -> Float_4 (d1           * (d2 * 100)   / 10000)
-  | Float_4 d1, Float_3 d2 -> Float_4 (d1           * (d2 * 10)    / 10000)
-  | Float_4 d1, Float_4 d2 -> Float_4 (d1           * d2           / 10000)
+  | Float_0 d1, Float_0 d2 -> Float_0 (d1             * d2)
+  | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10)      * d2             / 10)
+  | Float_0 d1, Float_2 d2 -> Float_2 ((d1 * 100)     * d2             / 100)
+  | Float_0 d1, Float_3 d2 -> Float_3 ((d1 * 1000)    * d2             / 1000)
+  | Float_0 d1, Float_4 d2 -> Float_4 ((d1 * 10000)   * d2             / 10000)
+  | Float_0 d1, Float_5 d2 -> Float_5 ((d1 * 100000)  * d2             / 100000)
+  | Float_0 d1, Float_6 d2 -> Float_6 ((d1 * 1000000) * d2             / 1000000)
+  | Float_1 d1, Float_0 d2 -> Float_1 (d1             * (d2 * 10)      / 10)
+  | Float_1 d1, Float_1 d2 -> Float_1 (d1             * d2             / 10)
+  | Float_1 d1, Float_2 d2 -> Float_2 ((d1 * 10)      * d2             / 100)
+  | Float_1 d1, Float_3 d2 -> Float_3 ((d1 * 100)     * d2             / 1000)
+  | Float_1 d1, Float_4 d2 -> Float_4 ((d1 * 1000)    * d2             / 10000)
+  | Float_1 d1, Float_5 d2 -> Float_5 ((d1 * 10000)   * d2             / 100000)
+  | Float_1 d1, Float_6 d2 -> Float_6 ((d1 * 100000)  * d2             / 1000000)
+  | Float_2 d1, Float_0 d2 -> Float_2 (d1             * (d2 * 100)     / 100)
+  | Float_2 d1, Float_1 d2 -> Float_2 (d1             * (d2 * 10)      / 100)
+  | Float_2 d1, Float_2 d2 -> Float_2 (d1             * d2             / 100)
+  | Float_2 d1, Float_3 d2 -> Float_3 ((d1 * 10)      * d2             / 1000)
+  | Float_2 d1, Float_4 d2 -> Float_4 ((d1 * 100)     * d2             / 10000)
+  | Float_2 d1, Float_5 d2 -> Float_5 ((d1 * 1000)    * d2             / 100000)
+  | Float_2 d1, Float_6 d2 -> Float_6 ((d1 * 10000)   * d2             / 1000000)
+  | Float_3 d1, Float_0 d2 -> Float_3 (d1             * (d2 * 1000)    / 1000)
+  | Float_3 d1, Float_1 d2 -> Float_3 (d1             * (d2 * 100)     / 1000)
+  | Float_3 d1, Float_2 d2 -> Float_3 (d1             * (d2 * 10)      / 1000)
+  | Float_3 d1, Float_3 d2 -> Float_3 (d1             * d2             / 1000)
+  | Float_3 d1, Float_4 d2 -> Float_4 ((d1 * 10)      * d2             / 10000)
+  | Float_3 d1, Float_5 d2 -> Float_5 ((d1 * 100)     * d2             / 100000)
+  | Float_3 d1, Float_6 d2 -> Float_6 ((d1 * 1000)    * d2             / 1000000)
+  | Float_4 d1, Float_0 d2 -> Float_4 (d1             * (d2 * 10000)   / 10000)
+  | Float_4 d1, Float_1 d2 -> Float_4 (d1             * (d2 * 1000)    / 10000)
+  | Float_4 d1, Float_2 d2 -> Float_4 (d1             * (d2 * 100)     / 10000)
+  | Float_4 d1, Float_3 d2 -> Float_4 (d1             * (d2 * 10)      / 10000)
+  | Float_4 d1, Float_4 d2 -> Float_4 (d1             * d2             / 10000)
+  | Float_4 d1, Float_5 d2 -> Float_5 ((d1 * 10)      * d2             / 100000)
+  | Float_4 d1, Float_6 d2 -> Float_6 ((d1 * 100)     * d2             / 1000000)
+  | Float_5 d1, Float_0 d2 -> Float_5 (d1             * (d2 * 100000)  / 100000)
+  | Float_5 d1, Float_1 d2 -> Float_5 (d1             * (d2 * 10000)   / 100000)
+  | Float_5 d1, Float_2 d2 -> Float_5 (d1             * (d2 * 1000)    / 100000)
+  | Float_5 d1, Float_3 d2 -> Float_5 (d1             * (d2 * 100)     / 100000)
+  | Float_5 d1, Float_4 d2 -> Float_5 (d1             * (d2 * 10)      / 100000)
+  | Float_5 d1, Float_5 d2 -> Float_5 (d1             * d2             / 100000)
+  | Float_5 d1, Float_6 d2 -> Float_6 ((d1 * 10)      * d2             / 1000000)
+  | Float_6 d1, Float_0 d2 -> Float_6 (d1             * (d2 * 1000000) / 1000000)
+  | Float_6 d1, Float_1 d2 -> Float_6 (d1             * (d2 * 100000)  / 1000000)
+  | Float_6 d1, Float_2 d2 -> Float_6 (d1             * (d2 * 10000)   / 1000000)
+  | Float_6 d1, Float_3 d2 -> Float_6 (d1             * (d2 * 1000)    / 1000000)
+  | Float_6 d1, Float_4 d2 -> Float_6 (d1             * (d2 * 100)     / 1000000)
+  | Float_6 d1, Float_5 d2 -> Float_6 (d1             * (d2 * 10)      / 1000000)
+  | Float_6 d1, Float_6 d2 -> Float_6 (d1             * d2             / 1000000)
 ;;
 
 (** float1 > float2 *)
 let float_GreaterThan ( fOne, fTwo : fix_float * fix_float ) =
   match (fOne, fTwo) with
-  | Float_0 d1, Float_0 d2 -> d1           > d2
-  | Float_0 d1, Float_1 d2 -> (d1 * 10)    > d2
-  | Float_0 d1, Float_2 d2 -> (d1 * 100)   > d2
-  | Float_0 d1, Float_3 d2 -> (d1 * 1000)  > d2
-  | Float_0 d1, Float_4 d2 -> (d1 * 10000) > d2
+  | Float_0 d1, Float_0 d2 -> d1             > d2
+  | Float_0 d1, Float_1 d2 -> (d1 * 10)      > d2
+  | Float_0 d1, Float_2 d2 -> (d1 * 100)     > d2
+  | Float_0 d1, Float_3 d2 -> (d1 * 1000)    > d2
+  | Float_0 d1, Float_4 d2 -> (d1 * 10000)   > d2
+  | Float_0 d1, Float_5 d2 -> (d1 * 100000)  > d2
+  | Float_0 d1, Float_6 d2 -> (d1 * 1000000) > d2
 
-  | Float_1 d1, Float_0 d2 -> d1           > (d2 * 10)
-  | Float_1 d1, Float_1 d2 -> d1           > d2
-  | Float_1 d1, Float_2 d2 -> (d1 * 10)    > d2
-  | Float_1 d1, Float_3 d2 -> (d1 * 100)   > d2
-  | Float_1 d1, Float_4 d2 -> (d1 * 1000)  > d2
+  | Float_1 d1, Float_0 d2 -> d1             > (d2 * 10)
+  | Float_1 d1, Float_1 d2 -> d1             > d2
+  | Float_1 d1, Float_2 d2 -> (d1 * 10)      > d2
+  | Float_1 d1, Float_3 d2 -> (d1 * 100)     > d2
+  | Float_1 d1, Float_4 d2 -> (d1 * 1000)    > d2
+  | Float_1 d1, Float_5 d2 -> (d1 * 10000)   > d2
+  | Float_1 d1, Float_6 d2 -> (d1 * 100000)  > d2
 
-  | Float_2 d1, Float_0 d2 -> d1           > (d2 * 100)
-  | Float_2 d1, Float_1 d2 -> d1           > (d2 * 10)
-  | Float_2 d1, Float_2 d2 -> d1           > d2
-  | Float_2 d1, Float_3 d2 -> (d1 * 10)    > d2
-  | Float_2 d1, Float_4 d2 -> (d1 * 100)   > d2
+  | Float_2 d1, Float_0 d2 -> d1             > (d2 * 100)
+  | Float_2 d1, Float_1 d2 -> d1             > (d2 * 10)
+  | Float_2 d1, Float_2 d2 -> d1             > d2
+  | Float_2 d1, Float_3 d2 -> (d1 * 10)      > d2
+  | Float_2 d1, Float_4 d2 -> (d1 * 100)     > d2
+  | Float_2 d1, Float_5 d2 -> (d1 * 1000)    > d2
+  | Float_2 d1, Float_6 d2 -> (d1 * 10000)   > d2
 
-  | Float_3 d1, Float_0 d2 -> d1           > (d2 * 1000)
-  | Float_3 d1, Float_1 d2 -> d1           > (d2 * 100)
-  | Float_3 d1, Float_2 d2 -> d1           > (d2 * 10)
-  | Float_3 d1, Float_3 d2 -> d1           > d2
-  | Float_3 d1, Float_4 d2 -> (d1 * 10)    > d2
+  | Float_3 d1, Float_0 d2 -> d1             > (d2 * 1000)
+  | Float_3 d1, Float_1 d2 -> d1             > (d2 * 100)
+  | Float_3 d1, Float_2 d2 -> d1             > (d2 * 10)
+  | Float_3 d1, Float_3 d2 -> d1             > d2
+  | Float_3 d1, Float_4 d2 -> (d1 * 10)      > d2
+  | Float_3 d1, Float_5 d2 -> (d1 * 100)     > d2
+  | Float_3 d1, Float_6 d2 -> (d1 * 1000)    > d2
 
-  | Float_4 d1, Float_0 d2 -> d1           > (d2 * 10000)
-  | Float_4 d1, Float_1 d2 -> d1           > (d2 * 1000)
-  | Float_4 d1, Float_2 d2 -> d1           > (d2 * 100)
-  | Float_4 d1, Float_3 d2 -> d1           > (d2 * 10)
-  | Float_4 d1, Float_4 d2 -> d1           > d2
+  | Float_4 d1, Float_0 d2 -> d1             > (d2 * 10000)
+  | Float_4 d1, Float_1 d2 -> d1             > (d2 * 1000)
+  | Float_4 d1, Float_2 d2 -> d1             > (d2 * 100)
+  | Float_4 d1, Float_3 d2 -> d1             > (d2 * 10)
+  | Float_4 d1, Float_4 d2 -> d1             > d2
+  | Float_4 d1, Float_5 d2 -> (d1 * 10)      > d2
+  | Float_4 d1, Float_6 d2 -> (d1 * 100)     > d2
+
+  | Float_5 d1, Float_0 d2 -> d1             > (d2 * 100000)
+  | Float_5 d1, Float_1 d2 -> d1             > (d2 * 10000)
+  | Float_5 d1, Float_2 d2 -> d1             > (d2 * 1000)
+  | Float_5 d1, Float_3 d2 -> d1             > (d2 * 100)
+  | Float_5 d1, Float_4 d2 -> d1             > (d2 * 10)
+  | Float_5 d1, Float_5 d2 -> d1             > d2
+  | Float_5 d1, Float_6 d2 -> (d1 * 10)      > d2
+
+  | Float_6 d1, Float_0 d2 -> d1             > (d2 * 1000000)
+  | Float_6 d1, Float_1 d2 -> d1             > (d2 * 100000)
+  | Float_6 d1, Float_2 d2 -> d1             > (d2 * 10000)
+  | Float_6 d1, Float_3 d2 -> d1             > (d2 * 1000)
+  | Float_6 d1, Float_4 d2 -> d1             > (d2 * 100)
+  | Float_6 d1, Float_5 d2 -> d1             > (d2 * 10)
+  | Float_6 d1, Float_6 d2 -> d1             > d2
+
 ;;
 
 (** float 1 < float 2 *)
 let float_LessThan ( fOne, fTwo : fix_float * fix_float ) =
   match (fOne, fTwo) with
-  | Float_0 d1, Float_0 d2 -> d1           < d2
-  | Float_0 d1, Float_1 d2 -> (d1 * 10)    < d2
-  | Float_0 d1, Float_2 d2 -> (d1 * 100)   < d2
-  | Float_0 d1, Float_3 d2 -> (d1 * 1000)  < d2
-  | Float_0 d1, Float_4 d2 -> (d1 * 10000) < d2
+  | Float_0 d1, Float_0 d2 -> d1             < d2
+  | Float_0 d1, Float_1 d2 -> (d1 * 10)      < d2
+  | Float_0 d1, Float_2 d2 -> (d1 * 100)     < d2
+  | Float_0 d1, Float_3 d2 -> (d1 * 1000)    < d2
+  | Float_0 d1, Float_4 d2 -> (d1 * 10000)   < d2
+  | Float_0 d1, Float_5 d2 -> (d1 * 100000)  < d2
+  | Float_0 d1, Float_6 d2 -> (d1 * 1000000) < d2
 
-  | Float_1 d1, Float_0 d2 -> d1           < (d2 * 10)
-  | Float_1 d1, Float_1 d2 -> d1           < d2
-  | Float_1 d1, Float_2 d2 -> (d1 * 10)    < d2
-  | Float_1 d1, Float_3 d2 -> (d1 * 100)   < d2
-  | Float_1 d1, Float_4 d2 -> (d1 * 1000)  < d2
+  | Float_1 d1, Float_0 d2 -> d1             < (d2 * 10)
+  | Float_1 d1, Float_1 d2 -> d1             < d2
+  | Float_1 d1, Float_2 d2 -> (d1 * 10)      < d2
+  | Float_1 d1, Float_3 d2 -> (d1 * 100)     < d2
+  | Float_1 d1, Float_4 d2 -> (d1 * 1000)    < d2
+  | Float_1 d1, Float_5 d2 -> (d1 * 10000)   < d2
+  | Float_1 d1, Float_6 d2 -> (d1 * 100000)  < d2
 
-  | Float_2 d1, Float_0 d2 -> d1           < (d2 * 100)
-  | Float_2 d1, Float_1 d2 -> d1           < (d2 * 10)
-  | Float_2 d1, Float_2 d2 -> d1           < d2
-  | Float_2 d1, Float_3 d2 -> (d1 * 10)    < d2
-  | Float_2 d1, Float_4 d2 -> (d1 * 100)   < d2
+  | Float_2 d1, Float_0 d2 -> d1             < (d2 * 100)
+  | Float_2 d1, Float_1 d2 -> d1             < (d2 * 10)
+  | Float_2 d1, Float_2 d2 -> d1             < d2
+  | Float_2 d1, Float_3 d2 -> (d1 * 10)      < d2
+  | Float_2 d1, Float_4 d2 -> (d1 * 100)     < d2
+  | Float_2 d1, Float_5 d2 -> (d1 * 1000)    < d2
+  | Float_2 d1, Float_6 d2 -> (d1 * 10000)   < d2
 
-  | Float_3 d1, Float_0 d2 -> d1           < (d2 * 1000)
-  | Float_3 d1, Float_1 d2 -> d1           < (d2 * 100)
-  | Float_3 d1, Float_2 d2 -> d1           < (d2 * 10)
-  | Float_3 d1, Float_3 d2 -> d1           < d2
-  | Float_3 d1, Float_4 d2 -> (d1 * 10)    < d2
+  | Float_3 d1, Float_0 d2 -> d1             < (d2 * 1000)
+  | Float_3 d1, Float_1 d2 -> d1             < (d2 * 100)
+  | Float_3 d1, Float_2 d2 -> d1             < (d2 * 10)
+  | Float_3 d1, Float_3 d2 -> d1             < d2
+  | Float_3 d1, Float_4 d2 -> (d1 * 10)      < d2
+  | Float_3 d1, Float_5 d2 -> (d1 * 100)     < d2
+  | Float_3 d1, Float_6 d2 -> (d1 * 1000)    < d2
 
-  | Float_4 d1, Float_0 d2 -> d1           < (d2 * 10000)
-  | Float_4 d1, Float_1 d2 -> d1           < (d2 * 1000)
-  | Float_4 d1, Float_2 d2 -> d1           < (d2 * 100)
-  | Float_4 d1, Float_3 d2 -> d1           < (d2 * 10)
-  | Float_4 d1, Float_4 d2 -> d1           < d2
+  | Float_4 d1, Float_0 d2 -> d1             < (d2 * 10000)
+  | Float_4 d1, Float_1 d2 -> d1             < (d2 * 1000)
+  | Float_4 d1, Float_2 d2 -> d1             < (d2 * 100)
+  | Float_4 d1, Float_3 d2 -> d1             < (d2 * 10)
+  | Float_4 d1, Float_4 d2 -> d1             < d2
+  | Float_4 d1, Float_5 d2 -> (d1 * 10)      < d2
+  | Float_4 d1, Float_6 d2 -> (d1 * 100)     < d2
+
+  | Float_5 d1, Float_0 d2 -> d1             < (d2 * 100000)
+  | Float_5 d1, Float_1 d2 -> d1             < (d2 * 10000)
+  | Float_5 d1, Float_2 d2 -> d1             < (d2 * 1000)
+  | Float_5 d1, Float_3 d2 -> d1             < (d2 * 100)
+  | Float_5 d1, Float_4 d2 -> d1             < (d2 * 10)
+  | Float_5 d1, Float_5 d2 -> d1             < d2
+  | Float_5 d1, Float_6 d2 -> (d1 * 10)      < d2
+
+  | Float_6 d1, Float_0 d2 -> d1             < (d2 * 1000000)
+  | Float_6 d1, Float_1 d2 -> d1             < (d2 * 100000)
+  | Float_6 d1, Float_2 d2 -> d1             < (d2 * 10000)
+  | Float_6 d1, Float_3 d2 -> d1             < (d2 * 1000)
+  | Float_6 d1, Float_4 d2 -> d1             < (d2 * 100)
+  | Float_6 d1, Float_5 d2 -> d1             < (d2 * 10)
+  | Float_6 d1, Float_6 d2 -> d1             < d2
+
 ;;
 
 (** float1 >= float2 *)
@@ -308,35 +493,62 @@ let float_LessThanEqual ( fOne, fTwo : fix_float * fix_float ) =
 (** float1 == float2 *)
 let float_Equal (fOne, fTwo : fix_float * fix_float) =
   match (fOne, fTwo) with
-  | Float_0 d1, Float_0 d2 -> d1           = d2
-  | Float_0 d1, Float_1 d2 -> (d1 * 10)    = d2
-  | Float_0 d1, Float_2 d2 -> (d1 * 100)   = d2
-  | Float_0 d1, Float_3 d2 -> (d1 * 1000)  = d2
-  | Float_0 d1, Float_4 d2 -> (d1 * 10000) = d2
+  | Float_0 d1, Float_0 d2 -> d1             = d2
+  | Float_0 d1, Float_1 d2 -> (d1 * 10)      = d2
+  | Float_0 d1, Float_2 d2 -> (d1 * 100)     = d2
+  | Float_0 d1, Float_3 d2 -> (d1 * 1000)    = d2
+  | Float_0 d1, Float_4 d2 -> (d1 * 10000)   = d2
+  | Float_0 d1, Float_5 d2 -> (d1 * 100000)  = d2
+  | Float_0 d1, Float_6 d2 -> (d1 * 1000000) = d2
 
-  | Float_1 d1, Float_0 d2 -> d1           = (d2 * 10)
-  | Float_1 d1, Float_1 d2 -> d1           = d2
-  | Float_1 d1, Float_2 d2 -> (d1 * 10)    = d2
-  | Float_1 d1, Float_3 d2 -> (d1 * 100)   = d2
-  | Float_1 d1, Float_4 d2 -> (d1 * 1000)  = d2
+  | Float_1 d1, Float_0 d2 -> d1             = (d2 * 10)
+  | Float_1 d1, Float_1 d2 -> d1             = d2
+  | Float_1 d1, Float_2 d2 -> (d1 * 10)      = d2
+  | Float_1 d1, Float_3 d2 -> (d1 * 100)     = d2
+  | Float_1 d1, Float_4 d2 -> (d1 * 1000)    = d2
+  | Float_1 d1, Float_5 d2 -> (d1 * 10000)   = d2
+  | Float_1 d1, Float_6 d2 -> (d1 * 100000)  = d2
 
-  | Float_2 d1, Float_0 d2 -> d1           = (d2 * 100)
-  | Float_2 d1, Float_1 d2 -> d1           = (d2 * 10)
-  | Float_2 d1, Float_2 d2 -> d1           = d2
-  | Float_2 d1, Float_3 d2 -> (d1 * 10)    = d2
-  | Float_2 d1, Float_4 d2 -> (d1 * 100)   = d2
+  | Float_2 d1, Float_0 d2 -> d1             = (d2 * 100)
+  | Float_2 d1, Float_1 d2 -> d1             = (d2 * 10)
+  | Float_2 d1, Float_2 d2 -> d1             = d2
+  | Float_2 d1, Float_3 d2 -> (d1 * 10)      = d2
+  | Float_2 d1, Float_4 d2 -> (d1 * 100)     = d2
+  | Float_2 d1, Float_5 d2 -> (d1 * 1000)    = d2
+  | Float_2 d1, Float_6 d2 -> (d1 * 10000)   = d2
 
-  | Float_3 d1, Float_0 d2 -> d1           = (d2 * 1000)
-  | Float_3 d1, Float_1 d2 -> d1           = (d2 * 100)
-  | Float_3 d1, Float_2 d2 -> d1           = (d2 * 10)
-  | Float_3 d1, Float_3 d2 -> d1           = d2
-  | Float_3 d1, Float_4 d2 -> (d1 * 10)    = d2
+  | Float_3 d1, Float_0 d2 -> d1             = (d2 * 1000)
+  | Float_3 d1, Float_1 d2 -> d1             = (d2 * 100)
+  | Float_3 d1, Float_2 d2 -> d1             = (d2 * 10)
+  | Float_3 d1, Float_3 d2 -> d1             = d2
+  | Float_3 d1, Float_4 d2 -> (d1 * 10)      = d2
+  | Float_3 d1, Float_5 d2 -> (d1 * 100)     = d2
+  | Float_3 d1, Float_6 d2 -> (d1 * 1000)    = d2
 
-  | Float_4 d1, Float_0 d2 -> d1           = (d2 * 10000)
-  | Float_4 d1, Float_1 d2 -> d1           = (d2 * 1000)
-  | Float_4 d1, Float_2 d2 -> d1           = (d2 * 100)
-  | Float_4 d1, Float_3 d2 -> d1           = (d2 * 10)
-  | Float_4 d1, Float_4 d2 -> d1           = d2
+  | Float_4 d1, Float_0 d2 -> d1             = (d2 * 10000)
+  | Float_4 d1, Float_1 d2 -> d1             = (d2 * 1000)
+  | Float_4 d1, Float_2 d2 -> d1             = (d2 * 100)
+  | Float_4 d1, Float_3 d2 -> d1             = (d2 * 10)
+  | Float_4 d1, Float_4 d2 -> d1             = d2
+  | Float_4 d1, Float_5 d2 -> (d1 * 10)      = d2
+  | Float_4 d1, Float_6 d2 -> (d1 * 100)     = d2
+
+  | Float_5 d1, Float_0 d2 -> d1             = (d2 * 100000)
+  | Float_5 d1, Float_1 d2 -> d1             = (d2 * 10000)
+  | Float_5 d1, Float_2 d2 -> d1             = (d2 * 1000)
+  | Float_5 d1, Float_3 d2 -> d1             = (d2 * 100)
+  | Float_5 d1, Float_4 d2 -> d1             = (d2 * 10)
+  | Float_5 d1, Float_5 d2 -> d1             = d2
+  | Float_5 d1, Float_6 d2 -> (d1 * 10)      = d2
+
+  | Float_6 d1, Float_0 d2 -> d1             = (d2 * 1000000)
+  | Float_6 d1, Float_1 d2 -> d1             = (d2 * 100000)
+  | Float_6 d1, Float_2 d2 -> d1             = (d2 * 10000)
+  | Float_6 d1, Float_3 d2 -> d1             = (d2 * 1000)
+  | Float_6 d1, Float_4 d2 -> d1             = (d2 * 100)
+  | Float_6 d1, Float_5 d2 -> d1             = (d2 * 10)
+  | Float_6 d1, Float_6 d2 -> d1             = d2
+
 ;;
 
 let float_is_zero (x : fix_float) =
@@ -351,20 +563,28 @@ let float_is_zero (x : fix_float) =
   | Float_3 _ -> false
   | Float_4 0 -> true
   | Float_4 _ -> false
+  | Float_5 0 -> true
+  | Float_5 _ -> false
+  | Float_6 0 -> true
+  | Float_6 _ -> false
 ;;
 
 let float_is_one (x : fix_float) =
   match x with
-  | Float_0 1     -> true
-  | Float_0 _     -> false
-  | Float_1 10    -> true
-  | Float_1 _     -> false
-  | Float_2 100   -> true
-  | Float_2 _     -> false
-  | Float_3 1000  -> true
-  | Float_3 _     -> false
-  | Float_4 10000 -> true
-  | Float_4 _     -> false
+  | Float_0 1       -> true
+  | Float_0 _       -> false
+  | Float_1 10      -> true
+  | Float_1 _       -> false
+  | Float_2 100     -> true
+  | Float_2 _       -> false
+  | Float_3 1000    -> true
+  | Float_3 _       -> false
+  | Float_4 10000   -> true
+  | Float_4 _       -> false
+  | Float_5 100000  -> true
+  | Float_5 _       -> false
+  | Float_6 1000000 -> true
+  | Float_6 _       -> false
 ;;
 
 let float_higher_precision (x, y : fix_float * fix_float) =
@@ -384,6 +604,19 @@ let float_higher_precision (x, y : fix_float * fix_float) =
   | Float_4 _, Float_2 _ -> true
   | Float_4 _, Float_3 _ -> true
   | Float_4 _, _ -> false
+  | Float_5 _, Float_0 _ -> true
+  | Float_5 _, Float_1 _ -> true
+  | Float_5 _, Float_2 _ -> true
+  | Float_5 _, Float_3 _ -> true
+  | Float_5 _, Float_4 _ -> true
+  | Float_5 _, _ -> false
+  | Float_6 _, Float_0 _ -> true
+  | Float_6 _, Float_1 _ -> true
+  | Float_6 _, Float_2 _ -> true
+  | Float_6 _, Float_3 _ -> true
+  | Float_6 _, Float_4 _ -> true
+  | Float_6 _, Float_5 _ -> true
+  | Float_6 _, _ -> false
 ;;
 
 let float_equal_precision (x, y : fix_float * fix_float) =
@@ -393,5 +626,7 @@ let float_equal_precision (x, y : fix_float * fix_float) =
   | Float_2 _, Float_2 _ -> true
   | Float_3 _, Float_3 _ -> true
   | Float_4 _, Float_4 _ -> true
+  | Float_5 _, Float_5 _ -> true
+  | Float_6 _, Float_6 _ -> true
   | _ -> false
 ;;

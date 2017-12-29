@@ -44,6 +44,8 @@ let float_to_json x : json =
         | Float_2 x -> x, 2
         | Float_3 x -> x, 3
         | Float_4 x -> x, 4
+        | Float_5 x -> x, 5
+        | Float_6 x -> x, 6
     in `Assoc 
     [ ( "Precision", `Int precision ) 
     ; ( "Number"   , `Int data      ) 
