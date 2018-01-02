@@ -29,14 +29,7 @@ let split_into_messages (verbose:bool) (stream : (string * string) Lwt_stream.t)
         Lwt_stream.get_while (fun (k,v) -> k <> "10") stream >>= fun msg ->
         Lwt_stream.get stream >>= function None -> Lwt.return_none | Some chsum ->
         if msg <> [] 
-        then (
-            let msg = (msg @ [chsum]) in
-            let str = msg 
-                |> List.map (fun (k,v) -> k ^ "=" ^ v)
-                |> String.concat "|" in
-            (if verbose then Lwt_io.printl ("Receive: " ^ str ) else Lwt.return_unit) >>= fun () ->
-            Lwt.return_some msg
-        )
+        then ( let msg = (msg @ [chsum]) in Lwt.return_some msg )
         else Lwt.return_none
         in
     Lwt_stream.from f    

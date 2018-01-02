@@ -1,9 +1,9 @@
 (jbuild_version 1)
 
 (library
-  ( (name string_constant_factory)
-    (public_name string_constant_factory)
+  ( (name string_factory)
+    (public_name string_factory)
     (wrapped false)
-    (libraries (conversions core venue_types protocol_exts_pp protocol_exts))
+    (libraries (conversions core core_pp protocol_exts venue_types yojson))
   )
 )

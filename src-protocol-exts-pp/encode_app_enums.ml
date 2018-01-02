@@ -1,6 +1,6 @@
 (* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Full_app_enums;;
+ open Full_app_enums;;
 (* @meta[imandra_ignore] off @end *)
 
 let encode_AccountType ( d ) =
@@ -873,7 +873,7 @@ let encode_GTBookingInst ( d ) =
     (match d with
         | FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution -> "0"
         | FIX_GTBookingInst_AccumulateUntilFilledOrExpired -> "1"
-        | FIX_GTBookingInst_AccumulateUntilVerballlyNotifiedOtherwise -> "2"
+        | FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise -> "2"
     )
 ;;
 

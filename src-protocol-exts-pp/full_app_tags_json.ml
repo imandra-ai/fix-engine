@@ -1,7 +1,7 @@
 (* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Yojson;;
-open Full_app_tags;;
+ open Full_app_tags;;
+ open Yojson;;
 (* @meta[imandra_ignore] off @end *)
 
 let full_app_msg_tag_to_string ( tag ) =

@@ -1,6 +1,6 @@
 (* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Full_app_enums;;
+ open Full_app_enums;;
 (* @meta[imandra_ignore] off @end *)
 
 let parse_AccountType ( str ) =
@@ -957,7 +957,7 @@ let parse_GTBookingInst ( str ) =
     (match str with
         | "0" -> (Some (FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution))
         | "1" -> (Some (FIX_GTBookingInst_AccumulateUntilFilledOrExpired))
-        | "2" -> (Some (FIX_GTBookingInst_AccumulateUntilVerballlyNotifiedOtherwise))
+        | "2" -> (Some (FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise))
         | _ -> (None)
     )
 ;;

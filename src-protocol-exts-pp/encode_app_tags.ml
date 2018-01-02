@@ -1,6 +1,6 @@
 (* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Full_app_tags;;
+ open Full_app_tags;;
 (* @meta[imandra_ignore] off @end *)
 
 let encode_app_msg_tag ( d ) =

@@ -11,7 +11,6 @@ type m_field_tag =
     | M_Field_CumQty_Tag 
     | M_Field_OrdStatus_Tag 
     | M_Field_Symbol_Tag 
-    | M_Field_Text_Tag 
     | M_Field_TransactTime_Tag 
     | M_Field_OrdType_Tag 
 ;;

@@ -1,7 +1,7 @@
 (* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
-open Full_app_enums;;
-open Yojson;;
+ open Full_app_enums;;
+ open Yojson;;
 (* @meta[imandra_ignore] off @end *)
 
 let accounttype_to_string ( d ) =
@@ -874,7 +874,7 @@ let gtbookinginst_to_string ( d ) =
     (match d with
         | FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution -> "BookOutAllTradesOnDayOfExecution"
         | FIX_GTBookingInst_AccumulateUntilFilledOrExpired -> "AccumulateUntilFilledOrExpired"
-        | FIX_GTBookingInst_AccumulateUntilVerballlyNotifiedOtherwise -> "AccumulateUntilVerballlyNotifiedOtherwise"
+        | FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise -> "AccumulateUntilVerballyNotifiedOtherwise"
     )
 ;;
 

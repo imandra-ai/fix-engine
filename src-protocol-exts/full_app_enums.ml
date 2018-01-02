@@ -795,7 +795,7 @@ type fix_fundrenewwaiv =
 type fix_gtbookinginst =
     | FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution 
     | FIX_GTBookingInst_AccumulateUntilFilledOrExpired 
-    | FIX_GTBookingInst_AccumulateUntilVerballlyNotifiedOtherwise 
+    | FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise 
 ;;
 
 (** Denotes the reason for the Opening Delay or Trading Halt*)
