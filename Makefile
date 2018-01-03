@@ -49,6 +49,9 @@ install-upgrade-deps:
 	opam install -y jbuilder
 	opam install -y yojson
 	opam install -y odoc
+	opam depext -y conf-zmq.0.1
+	opam install -y lwt-zmq
+
 
 # dev-setup is used by (human) developers
 dev-setup: install-upgrade-deps
