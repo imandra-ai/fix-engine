@@ -4,7 +4,7 @@
   ( (name        fix_simulation)
     (public_name fix_simulation)
     (wrapped  false)
-    (modules (:standard \ server ))
+    (modules (:standard \ server client))
     (libraries 
       ( lwt.unix
         venue
@@ -32,3 +32,22 @@
   )
 )
 
+(executable
+  ( (name client)
+    (modules (client))
+    (libraries 
+      ( yojson
+        lwt.unix
+        venue
+        fix_engine
+        fix_simulation
+        string_factory
+        protocol_pp
+        types_pp
+        cmdliner
+        ZMQ
+        lwt-zmq
+      )
+    )
+  )
+)
