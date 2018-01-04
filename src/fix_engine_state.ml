@@ -85,7 +85,8 @@ type fix_engine_state = {
 
     fe_comp_id              : fix_string;                   (** Our company ID *)
     fe_target_comp_id       : fix_string;                   (** Target company ID *)
-    fe_sender_location_id   : fix_string option;            (** On behalf of string *)
+    fe_sender_location_id   : fix_string option;            (** Sender location string *)
+    fe_on_behalf_of_comp_id : fix_string option;            (** On behalf of string *)
 
     incoming_int_msg        : fix_engine_int_inc_msg option;(** Incoming internal messages (application). *)
     outgoing_int_msg        : fix_engine_int_out_msg option;(** These are messages we send back to our owner *)
@@ -135,6 +136,7 @@ let init_fix_engine_state = {
     fe_comp_id              = Admin_string 183924456; (* Hash of "IMANDRA" *)
     fe_target_comp_id       = Admin_string 780720412; (* Hash of "TARGET"  *)
     fe_sender_location_id   = None;
+    fe_on_behalf_of_comp_id = None;
 
     incoming_int_msg        = None;                           
     outgoing_int_msg        = None;

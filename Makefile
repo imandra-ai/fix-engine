@@ -40,6 +40,12 @@ server:
 	jbuilder build src-simulation/server.bc
 	rm jbuild-ignore
 
+client:
+	@echo "src-protocol-exts-pp-vg" > jbuild-ignore 
+	@echo "src-protocol-exts-vg" >> jbuild-ignore 
+	jbuilder build src-simulation/client.bc
+	rm jbuild-ignore
+
 install-upgrade-deps: 
 	opam update
 	opam depext lwt=2.6.0
