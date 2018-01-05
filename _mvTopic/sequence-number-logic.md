@@ -1,7 +1,5 @@
 ---
 title: "Sequence Number Logic"
-excerpt: ""
-layout: pageSbar
-permalink: /sequenceNumberLogic/
-sequence: 7
+tag: sequenceNumberLogic
+sequence: 8
 ---

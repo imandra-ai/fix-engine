@@ -1,13 +1,10 @@
 ---
 title: "Logon Messages"
-excerpt: ""
-layout: pageSbar
-permalink: /logonMessages/
-colName: Model Verification
-sequence: 3
+tag: logonMessages
+sequence: 4
 ---
 This section describes verification goals for Logon messages. 
-## Logon VG.1
+### Logon VG.1
 
 "The logon message must be the first message sent by the application requesting to initiate a FIX session."
 
@@ -59,7 +56,7 @@ verify logon_msg_is_first ( engine, targetID : fix_engine_state * int ) =
 ;;
 {% endhighlight %}
 
-## Logon VG.2
+### Logon VG.2
 
 "The session acceptor must be prepared to immediately begin processing messages after receipt of the Logon. The session initiator can choose to begin transmission of FIX messages before receipt of the confirmation Logon, however it is recommended that normal message delivery wait until after the return Logon is received to accommodate encryption key negotiation."
 
@@ -113,7 +110,7 @@ verify receive_logon_ack ( engine : fix_engine_state ) =
 
 {% endhighlight %}
 
-## Logon VG.3
+### Logon VG.3
 
 "After authentication, the initiator and acceptor must synchronize their messages through interrogation of the `MsgSeqNum` field before sending any queued or new messages. A comparison of the `MsgSeqNum` in the Logon message to the internally monitored next expected sequence number will indicate any message gaps. Likewise, the initiator can detect gaps by comparing the acknowledgment Logon message’s MsgSeqNum to the next expected value. The section on message recovery later in this document deals with message gap handling."
 
@@ -133,7 +130,7 @@ verify when_gap_detected_request_is_sent ( engine : fix_engine_state ) =
 
 {% endhighlight %}
 
-## Logon VG.4
+### Logon VG.4
 
 "If the session acceptor has chosen to change the session encryption key, the session initiator must send a third Logon back to the other side in order to acknowledge the key change request. This also allows the session acceptor to know when the session initiator has started to encrypt using the new session key. Both parties are responsible for infinite loop detection and prevention during this phase of the session."
 
@@ -203,7 +200,7 @@ verify max_num_logons_breached_error ( engine : fix_engine_state ) =
 ;;
 {% endhighlight %}
 
-## Logon VG.5
+### Logon VG.5
 
 > *"`NextExpectedMsgSeqNum (789)` is used as follows:*
 > *In its Logon request the session initiator supplies in `NextExpectedMsgSeqNum (789)` the value next expected from the session acceptor in MsgSeqNum (34). The outgoing header MsgSeqNum (34) of the Logon request is assigned the next-to-be-assigned sequence number as usual.*

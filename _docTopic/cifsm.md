@@ -1,12 +1,9 @@
 ---
-layout: pageSbar
 title: "Modelling State Machines"
-excerpt: "We model the FIX engine as a Communicating Infinite State Machine (CISM)"
-permalink: /cifsm/
-colName: Documentation
-sequence: 1
+tag: modellingStateMachines
+sequence: 3
 ---
-## Introduction
+### Introduction
 
 Our model consists of:
 - FIX dictionary definitions 
@@ -14,6 +11,6 @@ Our model consists of:
 - Transition functions
 - Printers and parsers (generated for the FIX dictionary)
 
-## Message Types
+### Message Types
 
-## Composition with Application Model
+### Composition with Application Model

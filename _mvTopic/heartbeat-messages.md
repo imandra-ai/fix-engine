@@ -1,10 +1,7 @@
 ---
 title: "Heartbeat Messages"
-excerpt: ""
-layout: pageSbar
-permalink: /HeartbeatMessages/
-colName: Model Verification
-sequence: 2
+tag: hearbeatMessages
+sequence: 3
 ---
 This section contains verification goals for Hearbeat messages.
 ### Heartbeat VG.1
@@ -61,7 +58,7 @@ verify hbeat_sent_if_no_data_received ( engine : fix_engine_state ) =
 ;;
 {% endhighlight %}
 
-## Heartbeat VG.2
+### Heartbeat VG.2
 
 Notes: there's no mention of what constitutes a successful data - i.e. is it a non-garbled (but still rejected message)? We interpret this here as that a Non-garbled message results in update of data received.
 
@@ -85,7 +82,7 @@ verify non_garbled_updates_clock ( engine : fix_engine_state ) =
 ;;
 {% endhighlight %}
 
-## Heartbeat VG.3
+### Heartbeat VG.3
 
 'When either end of the connection has not received any data for (`HeartBtInt` + “some reasonable transmission time”) seconds, it will transmit a Test Request message.'
 
@@ -135,7 +132,7 @@ verify test_request_sent_out ( engine : fix_engine_state ) =
 ;;
 {% endhighlight %}
 
-## Heartbeat VG.4
+### Heartbeat VG.4
 
 "If there is still no Heartbeat message received after (HeartBtInt + “some reasonable transmission time”) seconds then the connection should be considered lost and corrective action be initiated."
 
@@ -169,7 +166,7 @@ verify no_response_logoff ( engine : fix_engine_state ) =
 ;;
 {% endhighlight %}
 
-## Heartbeat VG.5
+### Heartbeat VG.5
 
 "If HeartBtInt is set to zero then no regular heartbeat messages will be generated. Note that a test request message can still be sent independent of the value of the `HeartBtInt`, which will force a Heartbeat message."
 
@@ -200,7 +197,7 @@ let hbeat_sent_if_no_data_received_new ( engine : fix_engine_state ) =
 ;;
 {% endhighlight %}
 
-## Heartbeat VG.6
+### Heartbeat VG.6
 
 "Heartbeats issued as the result of `Test Request` must contain the `TestReqID` transmitted in the `Test Request` message. This is useful to verify that the Heartbeat is the result of the `Test Request` and not as the result of a regular timeout."
 

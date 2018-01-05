@@ -1,12 +1,9 @@
 ---
-layout: pageSbar
 title: "Building Instructions"
-permalink: /buildingInstructions/
-excerpt: ""
-colName: Documentation
-sequence: 1
+tag: buildingInstructions
+sequence: 2
 ---
-## Building with OCaml
+### Building with OCaml
 
 We use the following versions of the compiler/packages in order to build the `fix-engine` code with OCaml: 
 
@@ -19,7 +16,7 @@ We use the following versions of the compiler/packages in order to build the `fi
 Currently, the  `fix-engine` repository contains two sets of application level messages: the folders `src-protocol-exts` and `src-protocol-exts-pp` are DSL-generated and contain all the application-level FIX messages that are present in the FIX specification. Folders `src-protocol-exts-vg` and `src-protocol-exts-pp-vg` are hand-written and contain a small subset of FIX messages -- those are used in VGs and examples.  
 
 In order to build the code with the "full" set of messages, just type `make`. To build with "VGs-compatible" messages, do `make build_vgs`.
-## Testing with quickfixj/banzai client
+### Testing with quickfixj/banzai client
 
 The sever executable is built only with the "full" message set. You can start the server with
 

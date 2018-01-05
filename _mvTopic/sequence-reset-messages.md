@@ -1,12 +1,9 @@
 ---
 title: "Sequence Reset Messages"
-excerpt: ""
-layout: pageSbar
-permalink: /sequenceResetMessages/
-colName: Model Verification
-sequence: 8
+tag: sequenceResetMessage
+sequence: 9
 ---
-## Seq_Reset VG.1
+### Seq_Reset VG.1
 
 "When the incoming sequence number does not match the expected corrective processing is required. Note that the `SeqReset-Reset` message (used only to recover from a disaster vs. normal resend request processing) is an exception to this rule as it should be processed without regards to its `MsgSeqNum`."
 {% highlight ocaml %}
