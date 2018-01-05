@@ -12,6 +12,7 @@ run_test () {
     sleep 1
     ./test_runner.bc $1 | tr '\001' '|'
     kill $pid_server
+    rm -rf IMANDRA.BANZAI.NoHostid.session/
 }
 
 run_test ./defs/1a_ValidLogonMsgSeqNumTooHigh.def
