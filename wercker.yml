@@ -12,6 +12,7 @@ build:
           cp jekyll-resources/rouge-lexers/iml.rb /usr/local/bundle/gems/rouge-2.2.1/lib/rouge/lexers/iml.rb
           mkdir _site
           jekyll build
+          touch _site/.nojekyll
 
 deploy-docs:
   steps:

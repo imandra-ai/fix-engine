@@ -1,14 +1,11 @@
 ---
 title: "Base"
-excerpt: ""
-layout: pageSbar
-permalink: /base/
-colName: Model Verification
-sequence: 4
+tag: base
+sequence: 5
 ---
 
 
-## Base VG.1
+### Base VG.1
 
 > *When in ActiveSession (normal mode) and receiving a non grabled and non session-level*
 > *rejected message and the application is down. Such message would be sent back with a*
@@ -42,7 +39,7 @@ verify app_down_get_biz_reject ( state : fix_engine_state ) =
 {% endhighlight %}
   
 
-## Base VG.2
+### Base VG.2
 
 From Vol 2. Page 9:
 > *In *ALL* cases except the Sequence Reset - message, the FIX session*
@@ -88,7 +85,7 @@ verify less_seq_num_logout ( state : fix_engine_state ) =
 ;;
 {% endhighlight %}
 
-## Base VG.3
+### Base VG.3
 
 > *Messages that are garbled will be ignored (sequence counter will not be incremented).*
 {% highlight ocaml %}
@@ -109,7 +106,7 @@ verify garbled_are_ignored ( state : fix_engine_state ) =
 ;;
 {% endhighlight %}
 
-## Base VG.4
+### Base VG.4
 
 > *Session rejected messages are rejected with the right reason and counter is incremented.*
 {% highlight ocaml %}

@@ -2,7 +2,6 @@
 layout: pageSbar
 title: "Formal Verification"
 permalink: /references/
-colName: Formal Verification
 ---
 Traditionally, the application of formal verification has been reserved to highly specialised teams (often with PhDs in the subject) in academia, institutions such as NASA, and safety-critical industries such as avionics and microprocessor design.
  

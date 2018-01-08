@@ -1,9 +1,7 @@
 ---
 title: "Overview and Status"
-excerpt: ""
-layout: pageSbar
-permalink: /overview/
-sequence: 1
+tag: overviewAndStatus
+sequence: 2
 ---
 In addition to the model source code, you will find a collection of Verification Goals (VGs). VGs are statements in IML expressing properties of the FIX engine model that we wish to verify. It's important to note that IML is used for both building the model and describing the properties we wish to verify about it.
 
@@ -68,7 +66,7 @@ It's important to note that the 'translation' of the English-prose statements in
 
 Notice how this approach differs from traditional 'testing'. In the statement above, we're making a high-level claim about the model behaviour, and we can subject this claim to analysis over the entire system state-space. When Imandra analyses the model with respect to such a statement, it works to symbolically verify that the claim holds in *all* possible scenarios. When such a claim does not hold, Imandra works to construct a precise sequence of events (a "counterexample") which exhibits a violation of the property.
 
-## VG Status
+### VG Status
 
 For updates, see the Announcements page.
 

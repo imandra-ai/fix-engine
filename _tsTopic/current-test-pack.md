@@ -1,8 +1,5 @@
 ---
 title: "Current Test Pack"
-excerpt: "Region decomposition for the current model."
-layout: pageSbar
-permalink: /currentTestPack/
-colName: Test Suite
-sequence: 1
+tag: currentTestPack
+sequence: 4
 ---
