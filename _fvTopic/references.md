@@ -27,11 +27,8 @@ If you're interested in further background on techniques underlying Imandra, see
 
 For a great non-technical introduction to the discipline of formal verification and some of its history, we recommend ["Mechanizing Proof"](https://mitpress.mit.edu/books/mechanizing-proof) by Donald Mackenzie.
 
-[block:api-header]
-{
-  "title": "Some great interactive and automated theorem provers"
-}
-[/block]
+### Some great interactive and automated theorem provers
+
 Here are links to some great interactive and automated theorem provers:
 - [ACL2](http://www.cs.utexas.edu/users/moore/acl2/)
 - [Agda](http://wiki.portal.chalmers.se/agda/pmwiki.php)
@@ -44,11 +41,9 @@ Here are links to some great interactive and automated theorem provers:
 - [PVS](http://pvs.csl.sri.com/)
 - [SPASS](http://www.mpi-inf.mpg.de/departments/automation-of-logic/software/spass-workbench/)
 - [Z3](https://github.com/Z3Prover/z3)
-[block:api-header]
-{
-  "title": "Further academic references"
-}
-[/block]
+
+### Further academic references
+
 For learning the mathematics behind the techniques, we suggest:
 - [Handbook of Practical Logic and Automated Reasoning](http://www.cambridge.org/catalogue/catalogue.asp?isbn=9780521899574) by John Harrison, Intel
 - [Coq'Art](https://www.labri.fr/perso/casteran/CoqArt/) by Yves Bertot and Pierre Castéran, INRIA
