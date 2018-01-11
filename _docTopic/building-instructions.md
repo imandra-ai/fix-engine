@@ -26,10 +26,12 @@ The server is listening on port 9880 in the acceptor mode, the default `SenderCo
 
 One can test the server with a "banzai" example client from the QuickfixJ software. Here's how to checkout and build the QuickfixJ code 
 
+{% highlight %}
     git clone https://github.com/quickfix-j/quickfixj.git
     cd quickfixj/
     git checkout QFJ_1_6_x
     vim quickfixj-examples/banzai/src/main/resources/quickfix/examples/banzai/banzai.cfg
+{% endhighlight %}
 
 Edit the banzai.cfg file, so it looks like this:
 
