@@ -8,37 +8,6 @@
 
 *)
 
-(* @meta[imandra_ignore] on @end *)
-open Imandra_utils;;
-(* @meta[imandra_ignore] off @end *)
-
-
-let int_Add ( x , y : int * int ) : int = x + y;;
-
-
-let int_Sub ( x , y : int * int ) : int = x - y;;
-
-
-let int_Neg ( x : int ) : int = -x;;
-
-
-let int_Mult ( x, y : int * int ) : int = x * y;;
-
-
-let int_Div ( x, y : int * int ) : int = x / y;;
-
-
-let int_GreaterThan (x, y : int * int ) : bool = x > y;;
-
-
-let int_GreaterThanEqual ( x, y : int * int ) : bool = x >= y;;
-
-
-let int_LessThan ( x, y : int * int ) : bool =  x < y;;
-
-
-let int_LessThanEqual ( x, y : int * int ) : bool = x <= y;;
-
 (** To keep track of the floating point precision, the floating point data
     type encodes a number of decimal places used.*)
 type fix_float = 
