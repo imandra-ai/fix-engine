@@ -8,8 +8,4 @@
 *)
 
 
-let (==>) p q = not (p) || q;;
-
-let min (x,y) = min x y;;
-
-let max (x,y) = max x y;;
+let implies p q = not (p) || q;;
