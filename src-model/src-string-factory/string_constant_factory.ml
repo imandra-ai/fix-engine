@@ -119,6 +119,5 @@ let all_model_strings ( msgin : full_app_msg_data ) =
         )
         ^"\".")) :: ((Model_string 2,"None") :: ((Model_string 1,"Test") :: [])))
         | FIX_TL_Req_Field_Missing _ -> ((Model_string 7,"The field \"Instrument.Symbol\" is required but missing.") :: ((Model_string 6,"The field \"OrdType\" is required but missing.") :: ((Model_string 5,"The field \"TransactTime\" is required but missing.") :: ((Model_string 4,"The field \"Side\" is required but missing.") :: ((Model_string 3,"The field \"ClOrdID\" is required but missing.") :: ((Model_string 2,"None") :: ((Model_string 1,"Test") :: [])))))))
-        | _ -> []
     )
 ;;
