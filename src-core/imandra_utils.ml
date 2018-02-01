@@ -8,4 +8,4 @@
 *)
 
 
-let implies p q = not (p) || q;;
+let (==>) p q = not (p) || q;;
