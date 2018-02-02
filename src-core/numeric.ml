@@ -8,37 +8,6 @@
 
 *)
 
-(* @meta[imandra_ignore] on @end *)
-open Imandra_utils;;
-(* @meta[imandra_ignore] off @end *)
-
-
-let int_Add ( x , y : int * int ) : int = x + y;;
-
-
-let int_Sub ( x , y : int * int ) : int = x - y;;
-
-
-let int_Neg ( x : int ) : int = -x;;
-
-
-let int_Mult ( x, y : int * int ) : int = x * y;;
-
-
-let int_Div ( x, y : int * int ) : int = x / y;;
-
-
-let int_GreaterThan (x, y : int * int ) : bool = x > y;;
-
-
-let int_GreaterThanEqual ( x, y : int * int ) : bool = x >= y;;
-
-
-let int_LessThan ( x, y : int * int ) : bool =  x < y;;
-
-
-let int_LessThanEqual ( x, y : int * int ) : bool = x <= y;;
-
 (** To keep track of the floating point precision, the floating point data
     type encodes a number of decimal places used.*)
 type fix_float = 
@@ -50,7 +19,7 @@ type fix_float =
 ;;
 
 
-let float_Create ( data, num_decs : int * int ) =
+let float_Create ( data:int) (num_decs : int) =
     match num_decs with
     | 0 -> Float_0 data
     | 1 -> Float_1 data
@@ -64,7 +33,7 @@ let float_Create ( data, num_decs : int * int ) =
     sophisticated (but slower) implementation.
 *)
 
-let float_Convert ( f, num_decs : fix_float * int) : fix_float =
+let float_Convert ( f:fix_float) (num_decs:int) : fix_float =
   match (f, num_decs) with
   | Float_0 d, 0 -> f
   | Float_0 d, 1 -> Float_1 (d * 10)
@@ -98,7 +67,7 @@ let float_Convert ( f, num_decs : fix_float * int) : fix_float =
 ;;
 
 (** float1 + float2 *)
-let float_Add (fOne, fTwo : fix_float * fix_float) =
+let float_Add (fOne:fix_float) (fTwo : fix_float) =
   match (fOne, fTwo) with
   | Float_0 d1, Float_0 d2 -> Float_0 (d1            + d2)
   | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10)     + d2)
@@ -128,7 +97,7 @@ let float_Add (fOne, fTwo : fix_float * fix_float) =
 ;;
 
 (** float1 - float2 *)
-let float_Sub (fOne, fTwo: fix_float * fix_float) =
+let float_Sub (fOne:fix_float) (fTwo: fix_float) =
   match (fOne, fTwo) with
   | Float_0 d1, Float_0 d2 -> Float_0 (d1           - d2)
   | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10)    - d2)
@@ -168,7 +137,7 @@ let float_Neg (fOne : fix_float) =
 ;;
 
 (** float1 / float2 *)
-let float_Div ( fOne, fTwo : fix_float * fix_float ) = 
+let float_Div ( fOne: fix_float) (fTwo : fix_float) = 
   match (fOne, fTwo) with
   | Float_0 d1, Float_0 d2 -> Float_0 ((d1 * 1     * 1)     / d2)
   | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10    * 10)    / d2)
@@ -198,7 +167,7 @@ let float_Div ( fOne, fTwo : fix_float * fix_float ) =
 ;;
 
 (** float1 * float2 *)
-let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
+let float_Mult ( fOne : fix_float)  (fTwo : fix_float ) =
   match (fOne, fTwo) with
   | Float_0 d1, Float_0 d2 -> Float_0 (d1           * d2)
   | Float_0 d1, Float_1 d2 -> Float_1 ((d1 * 10)    * d2           / 10)
@@ -228,7 +197,7 @@ let float_Mult ( fOne, fTwo : fix_float * fix_float ) =
 ;;
 
 (** float1 > float2 *)
-let float_GreaterThan ( fOne, fTwo : fix_float * fix_float ) =
+let float_GreaterThan ( fOne : fix_float)  (fTwo : fix_float ) =
   match (fOne, fTwo) with
   | Float_0 d1, Float_0 d2 -> d1           > d2
   | Float_0 d1, Float_1 d2 -> (d1 * 10)    > d2
@@ -262,7 +231,7 @@ let float_GreaterThan ( fOne, fTwo : fix_float * fix_float ) =
 ;;
 
 (** float 1 < float 2 *)
-let float_LessThan ( fOne, fTwo : fix_float * fix_float ) =
+let float_LessThan ( fOne :fix_float) (fTwo : fix_float ) =
   match (fOne, fTwo) with
   | Float_0 d1, Float_0 d2 -> d1           < d2
   | Float_0 d1, Float_1 d2 -> (d1 * 10)    < d2
@@ -296,17 +265,17 @@ let float_LessThan ( fOne, fTwo : fix_float * fix_float ) =
 ;;
 
 (** float1 >= float2 *)
-let float_GreaterThanEqual ( fOne, fTwo : fix_float * fix_float ) =
-    not (float_LessThan (fOne, fTwo))
+let float_GreaterThanEqual ( fOne : fix_float) (fTwo : fix_float  ) =
+    not (float_LessThan fOne fTwo)
 ;;
 
 (** float1 <= float2 *)
-let float_LessThanEqual ( fOne, fTwo : fix_float * fix_float ) =
-    not (float_GreaterThan (fOne, fTwo))
+let float_LessThanEqual ( fOne : fix_float) (fTwo : fix_float  ) =
+    not (float_GreaterThan fOne fTwo)
 ;;
 
 (** float1 == float2 *)
-let float_Equal (fOne, fTwo : fix_float * fix_float) =
+let float_Equal (fOne : fix_float) (fTwo : fix_float) =
   match (fOne, fTwo) with
   | Float_0 d1, Float_0 d2 -> d1           = d2
   | Float_0 d1, Float_1 d2 -> (d1 * 10)    = d2
@@ -367,7 +336,7 @@ let float_is_one (x : fix_float) =
   | Float_4 _     -> false
 ;;
 
-let float_higher_precision (x, y : fix_float * fix_float) =
+let float_higher_precision (x : fix_float) (y : fix_float) =
   match (x, y) with
   | Float_0 _, _ -> false
   | Float_1 _, Float_0 _ -> true
@@ -386,7 +355,7 @@ let float_higher_precision (x, y : fix_float * fix_float) =
   | Float_4 _, _ -> false
 ;;
 
-let float_equal_precision (x, y : fix_float * fix_float) =
+let float_equal_precision (x: fix_float) (y : fix_float) =
   match (x, y) with
   | Float_0 _, Float_0 _ -> true
   | Float_1 _, Float_1 _ -> true

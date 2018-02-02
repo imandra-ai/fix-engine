@@ -27,7 +27,7 @@ let make_fix_msg i =
     create_outbound_fix_msg (i - 1, 
         Admin_string 780720412,     
         Admin_string 183924456, 
-        make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None ),
+        make_utctimestamp 2017 1 1 0 1 0 None,
         msg, false
     )
 ;;

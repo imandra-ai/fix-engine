@@ -371,7 +371,7 @@ let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * f
         let engine = session_reject ( reject , engine ) in
         Some { engine with incoming_seq_num = curr_incoming_seq_num }
     | Some orig_sending_time ->
-    if utctimestamp_LessThan (msg_header.h_sending_time, orig_sending_time ) then
+    if (utctimestamp_LessThan msg_header.h_sending_time orig_sending_time ) then
         let reject = { reject with (** The sending_time is less than orig_sending_time -- reject and logout *)
             srej_msg_field_tag = Some (Full_Admin_Field_Tag Full_Msg_OrigSendingTime_Tag);
             srej_msg_reject_reason = Some SendingTimeAccuracyProblem;

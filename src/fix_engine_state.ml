@@ -128,7 +128,7 @@ let init_fix_engine_state = {
     fe_curr_status          = Normal;
     fe_initiator            = None;                         
     fe_curr_mode            = NoActiveSession;              
-    fe_curr_time            = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
+    fe_curr_time            = make_utctimestamp 2017 1 1 0 1 0 None;
 
     fe_comp_id              = Admin_string 183924456; (* Hash of "IMANDRA" *)
     fe_target_comp_id       = Admin_string 780720412; (* Hash of "TARGET"  *)
@@ -145,10 +145,10 @@ let init_fix_engine_state = {
     fe_cache                = [];
     fe_history              = [];
 
-    fe_last_data_received   = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
-    fe_heartbeat_interval   = make_duration ( None, None, None, None, None, Some 30 ); (* 30 seconds *)
-    fe_last_time_data_sent  = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
-    fe_testreq_interval     = make_duration ( None, None, None, None, None, Some 30 );
+    fe_last_data_received   = make_utctimestamp 2017 1 1 0 1 0 None;
+    fe_heartbeat_interval   = make_duration None None None None None (Some 30 ); (* 30 seconds *)
+    fe_last_time_data_sent  = make_utctimestamp 2017 1 1 0 1 0 None;
+    fe_testreq_interval     = make_duration None None None None None (Some 30 );
 
     fe_history_to_send      = [];
     fe_retransmit_start_idx = 0;
@@ -186,8 +186,8 @@ let engine_state_busy engine =
     we need to maintain that every state transition from a valid state 
     would result in another valid state. *)
 let is_state_valid ( engine : fix_engine_state ) =
-    utctimestamp_LessThanEqual ( engine.fe_last_data_received, engine.fe_curr_time ) &&
-    utctimestamp_LessThanEqual ( engine.fe_last_time_data_sent, engine.fe_curr_time ) &&
+    utctimestamp_LessThanEqual engine.fe_last_data_received engine.fe_curr_time &&
+    utctimestamp_LessThanEqual engine.fe_last_time_data_sent engine.fe_curr_time  &&
     is_valid_utctimestamp ( engine.fe_curr_time ) && 
     is_valid_utctimestamp ( engine.fe_last_time_data_sent ) && 
     is_valid_utctimestamp ( engine.fe_last_data_received ) &&
