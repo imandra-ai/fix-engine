@@ -9,15 +9,13 @@
 *)
 
 
-(* @meta[imandra_ignore] on @end *)
-open Imandra_pervasives;;
+open Imandra_lib;;
 open Datetime;;
 open Base_types;;
 open Fix_engine;;
-open Full_session_core;;
+open Fix_engine_state;;
 open Full_admin_messages;;
 open Full_messages;;
-(* @meta[imandra_ignore] off @end *)
 
 
 (** **************************************************************************************** *)
@@ -42,7 +40,7 @@ let msg_is_valid = function
   | _ -> false
 ;;
 
-verify app_down_get_biz_reject ( state : fix_engine_state ) =
+let app_down_get_biz_reject ( state : fix_engine_state ) =
   let incoming_biz_rejected = msg_is_valid ( state.incoming_fix_msg ) in
   let no_incoming_msgs = state.incoming_int_msg = None in
   let state' = one_step (state) in
@@ -53,6 +51,8 @@ verify app_down_get_biz_reject ( state : fix_engine_state ) =
   ==>
   result_biz_reject
 ;;
+
+Verify.top "app_down_get_biz_reject";;
 
 (** **************************************************************************************** *)
 (**
@@ -93,7 +93,7 @@ let msg_is_logout = function
   | _ -> false
 ;;
 
-verify less_seq_num_logout ( state : fix_engine_state ) =
+let less_seq_num_logout ( state : fix_engine_state ) =
   let no_incoming_int_msgs = state.incoming_int_msg = None in
   let state_good = not ( state.fe_application_up ) && ( state.fe_curr_mode = ActiveSession ) in
   let state' = one_step (state) in
@@ -101,6 +101,8 @@ verify less_seq_num_logout ( state : fix_engine_state ) =
     incoming_msg_not_valid ( state.incoming_fix_msg, 1 ) )
   ==> msg_is_logout ( state'.outgoing_fix_msg )
 ;;
+
+Verify.top "less_seq_num_logout";;
 
 (** **************************************************************************************** *)
 (**
@@ -116,7 +118,7 @@ let incoming_msg_garbled = function
   | _ -> false
 ;;
 
-verify garbled_are_ignored ( state : fix_engine_state ) =
+let garbled_are_ignored ( state : fix_engine_state ) =
   let state' = one_step (state) in
   let msg_ignored = ( state' =  { state with incoming_fix_msg = None } ) in
   let no_internal_msgs = state.incoming_int_msg = None in
@@ -126,6 +128,8 @@ verify garbled_are_ignored ( state : fix_engine_state ) =
     && no_internal_msgs )
   ==> msg_ignored
 ;;
+
+Verify.top "garbled_are_ignored";;
 
 (** **************************************************************************************** *)
 (**
@@ -151,7 +155,7 @@ let msg_is_reject = function
 (** Note that it's important to remember that a message may only be rejected if we're in ActiveSession state.
     It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or
     Retransmit modes. *)
-verify session_rejects_are_rejected ( state : fix_engine_state ) =
+let session_rejects_are_rejected ( state : fix_engine_state ) =
   let no_incoming_int_msgs = state.incoming_int_msg = None in
   let incoming_rejected = incoming_msg_session_reject ( state.incoming_fix_msg ) in
   let state' = one_step (state) in
@@ -161,3 +165,5 @@ verify session_rejects_are_rejected ( state : fix_engine_state ) =
   ==>
   ( msg_rejected && seq_num_updated )
 ;;
+
+Verify.top "session_rejects_are_rejected";;
