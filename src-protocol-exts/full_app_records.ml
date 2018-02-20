@@ -20,7 +20,7 @@ type fix_rg_inner_positionamountdata = {
     (** Number of Position Amount entries*)
     f_PositionAmountData_NoPosAmt : int option;
     f_PositionAmountData_PosAmtType : fix_posamttype option;
-    f_PositionAmountData_PosAmt : fix_float option
+    f_PositionAmountData_PosAmt : fix_float_4 option
 }
 ;;
 
@@ -28,7 +28,7 @@ type fix_rg_positionamountdata = fix_rg_inner_positionamountdata list
 ;;
 
 type fix_commissiondata = {
-    f_CommissionData_Commission : fix_float option;
+    f_CommissionData_Commission : fix_float_4 option;
     f_CommissionData_CommType : fix_commtype option;
     (** For CIV - Optional*)
     f_CommissionData_CommCurrency : fix_currency option;
@@ -51,7 +51,7 @@ type fix_discretioninstructions = {
     (** What the discretionary price is related to (e.g. primary price, display price etc)*)
     f_DiscretionInstructions_DiscretionInst : fix_discretioninst option;
     (** Amount (signed) added to the "related to" price specified via DiscretionInst, in the context of DiscretionOffsetType*)
-    f_DiscretionInstructions_DiscretionOffsetValue : fix_float option;
+    f_DiscretionInstructions_DiscretionOffsetValue : fix_float_4 option;
     (** Describes whether discretion price is static/fixed or floats*)
     f_DiscretionInstructions_DiscretionMoveType : fix_discretionmovetype option;
     (** Type of Discretion Offset (e.g. price offset, tick offset etc)*)
@@ -89,14 +89,14 @@ type fix_rg_inner_biddescreqgrp = {
     f_BidDescReqGrp_BidDescriptorType : fix_biddescriptortype option;
     f_BidDescReqGrp_BidDescriptor : fix_string option;
     f_BidDescReqGrp_SideValueInd : fix_sidevalueind option;
-    f_BidDescReqGrp_LiquidityValue : fix_float option;
+    f_BidDescReqGrp_LiquidityValue : fix_float_4 option;
     f_BidDescReqGrp_LiquidityNumSecurities : int option;
-    f_BidDescReqGrp_LiquidityPctLow : fix_float option;
-    f_BidDescReqGrp_LiquidityPctHigh : fix_float option;
-    f_BidDescReqGrp_EFPTrackingError : fix_float option;
-    f_BidDescReqGrp_FairValue : fix_float option;
-    f_BidDescReqGrp_OutsideIndexPct : fix_float option;
-    f_BidDescReqGrp_ValueOfFutures : fix_float option
+    f_BidDescReqGrp_LiquidityPctLow : fix_float_4 option;
+    f_BidDescReqGrp_LiquidityPctHigh : fix_float_4 option;
+    f_BidDescReqGrp_EFPTrackingError : fix_float_4 option;
+    f_BidDescReqGrp_FairValue : fix_float_4 option;
+    f_BidDescReqGrp_OutsideIndexPct : fix_float_4 option;
+    f_BidDescReqGrp_ValueOfFutures : fix_float_4 option
 }
 ;;
 
@@ -215,22 +215,22 @@ type fix_rg_nstdptys3subgrp = fix_rg_inner_nstdptys3subgrp list
 
 type fix_orderqtydata = {
     (** One of CashOrderQty, OrderQty, or (for CIV only) OrderPercent is required. Note that unless otherwise specified, only one of CashOrderQty, OrderQty, or OrderPercent should be specified.*)
-    f_OrderQtyData_OrderQty : fix_float option;
+    f_OrderQtyData_OrderQty : fix_float_4 option;
     (** One of CashOrderQty, OrderQty, or (for CIV only) OrderPercent is required. Note that unless otherwise specified, only one of CashOrderQty, OrderQty, or OrderPercent should be specified. Specifies the approximate "monetary quantity" for the order. Broker is responsible for converting and calculating OrderQty in tradeable units (e.g. shares) for subsequent messages.*)
-    f_OrderQtyData_CashOrderQty : fix_float option;
+    f_OrderQtyData_CashOrderQty : fix_float_4 option;
     (** For CIV - Optional. One of CashOrderQty, OrderQty or (for CIV only) OrderPercent is required. Note that unless otherwise specified, only one of CashOrderQty, OrderQty, or OrderPercent should be specified.*)
-    f_OrderQtyData_OrderPercent : fix_float option;
+    f_OrderQtyData_OrderPercent : fix_float_4 option;
     (** For CIV - Optional*)
     f_OrderQtyData_RoundingDirection : fix_roundingdirection option;
     (** For CIV - Optional*)
-    f_OrderQtyData_RoundingModulus : fix_float option
+    f_OrderQtyData_RoundingModulus : fix_float_4 option
 }
 ;;
 
 type fix_rg_inner_contamtgrp = {
     f_ContAmtGrp_NoContAmts : int option;
     f_ContAmtGrp_ContAmtType : fix_contamttype option;
-    f_ContAmtGrp_ContAmtValue : fix_float option;
+    f_ContAmtGrp_ContAmtValue : fix_float_4 option;
     f_ContAmtGrp_ContAmtCurr : fix_currency option
 }
 ;;
@@ -252,7 +252,7 @@ type fix_rg_inner_evntgrp = {
     f_EvntGrp_NoEvents : int option;
     f_EvntGrp_EventType : fix_eventtype option;
     f_EvntGrp_EventDate : fix_localmktdate option;
-    f_EvntGrp_EventPx : fix_float option;
+    f_EvntGrp_EventPx : fix_float_4 option;
     f_EvntGrp_EventText : fix_string option
 }
 ;;
@@ -319,7 +319,7 @@ type fix_rg_inner_cpctyconfgrp = {
     f_CpctyConfGrp_NoCapacities : int;
     f_CpctyConfGrp_OrderCapacity : fix_ordercapacity;
     f_CpctyConfGrp_OrderRestrictions : fix_orderrestrictions option;
-    f_CpctyConfGrp_OrderCapacityQty : fix_float
+    f_CpctyConfGrp_OrderCapacityQty : fix_float_4
 }
 ;;
 
@@ -328,7 +328,7 @@ type fix_rg_cpctyconfgrp = fix_rg_inner_cpctyconfgrp list
 
 type fix_rg_inner_miscfeesgrp = {
     f_MiscFeesGrp_NoMiscFees : int option;
-    f_MiscFeesGrp_MiscFeeAmt : fix_float option;
+    f_MiscFeesGrp_MiscFeeAmt : fix_float_4 option;
     f_MiscFeesGrp_MiscFeeCurr : fix_currency option;
     f_MiscFeesGrp_MiscFeeType : fix_miscfeetype option;
     f_MiscFeesGrp_MiscFeeBasis : fix_miscfeebasis option
@@ -356,7 +356,7 @@ type fix_financingdetails = {
     (** Delivery or custody arrangement for the underlying securities*)
     f_FinancingDetails_DeliveryType : fix_deliverytype option;
     (** Percentage of cash value that underlying security collateral must meet.*)
-    f_FinancingDetails_MarginRatio : fix_float option
+    f_FinancingDetails_MarginRatio : fix_float_4 option
 }
 ;;
 
@@ -372,11 +372,11 @@ type fix_rg_trdcollgrp = fix_rg_inner_trdcollgrp list
 
 type fix_rg_inner_execallocgrp = {
     f_ExecAllocGrp_NoExecs : int option;
-    f_ExecAllocGrp_LastQty : fix_float option;
+    f_ExecAllocGrp_LastQty : fix_float_4 option;
     f_ExecAllocGrp_ExecID : fix_string option;
     f_ExecAllocGrp_SecondaryExecID : fix_string option;
-    f_ExecAllocGrp_LastPx : fix_float option;
-    f_ExecAllocGrp_LastParPx : fix_float option;
+    f_ExecAllocGrp_LastPx : fix_float_4 option;
+    f_ExecAllocGrp_LastParPx : fix_float_4 option;
     f_ExecAllocGrp_LastCapacity : fix_lastcapacity option
 }
 ;;
@@ -387,9 +387,9 @@ type fix_rg_execallocgrp = fix_rg_inner_execallocgrp list
 type fix_rg_inner_mdfullgrp = {
     f_MDFullGrp_NoMDEntries : int;
     f_MDFullGrp_MDEntryType : fix_mdentrytype;
-    f_MDFullGrp_MDEntryPx : fix_float option;
+    f_MDFullGrp_MDEntryPx : fix_float_4 option;
     f_MDFullGrp_Currency : fix_currency option;
-    f_MDFullGrp_MDEntrySize : fix_float option;
+    f_MDFullGrp_MDEntrySize : fix_float_4 option;
     f_MDFullGrp_MDEntryDate : fix_utcdateonly option;
     f_MDFullGrp_MDEntryTime : fix_utctimeonly option;
     f_MDFullGrp_TickDirection : fix_tickdirection option;
@@ -405,7 +405,7 @@ type fix_rg_inner_mdfullgrp = {
     f_MDFullGrp_TimeInForce : fix_timeinforce option;
     f_MDFullGrp_ExpireDate : fix_localmktdate option;
     f_MDFullGrp_ExpireTime : fix_utctimestamp option;
-    f_MDFullGrp_MinQty : fix_float option;
+    f_MDFullGrp_MinQty : fix_float_4 option;
     f_MDFullGrp_ExecInst : fix_execinst option;
     f_MDFullGrp_SellerDays : int option;
     f_MDFullGrp_OrderID : fix_string option;
@@ -415,7 +415,7 @@ type fix_rg_inner_mdfullgrp = {
     f_MDFullGrp_NumberOfOrders : int option;
     f_MDFullGrp_MDEntryPositionNo : int option;
     f_MDFullGrp_Scope : fix_scope option;
-    f_MDFullGrp_PriceDelta : fix_float option;
+    f_MDFullGrp_PriceDelta : fix_float_4 option;
     f_MDFullGrp_Text : fix_string option;
     f_MDFullGrp_EncodedTextLen : int option;
     f_MDFullGrp_EncodedText : fix_string option
@@ -466,7 +466,7 @@ type fix_legbenchmarkcurvedata = {
     f_LegBenchmarkCurveData_LegBenchmarkCurveCurrency : fix_currency option;
     f_LegBenchmarkCurveData_LegBenchmarkCurveName : fix_string option;
     f_LegBenchmarkCurveData_LegBenchmarkCurvePoint : fix_string option;
-    f_LegBenchmarkCurveData_LegBenchmarkPrice : fix_float option;
+    f_LegBenchmarkCurveData_LegBenchmarkPrice : fix_float_4 option;
     f_LegBenchmarkCurveData_LegBenchmarkPriceType : int option
 }
 ;;
@@ -475,7 +475,7 @@ type fix_rg_inner_allocackgrp = {
     f_AllocAckGrp_NoAllocs : int option;
     f_AllocAckGrp_AllocAccount : fix_string option;
     f_AllocAckGrp_AllocAcctIDSource : int option;
-    f_AllocAckGrp_AllocPrice : fix_float option;
+    f_AllocAckGrp_AllocPrice : fix_float_4 option;
     f_AllocAckGrp_IndividualAllocID : fix_string option;
     f_AllocAckGrp_IndividualAllocRejCode : int option;
     f_AllocAckGrp_AllocText : fix_string option;
@@ -491,7 +491,7 @@ type fix_rg_inner_contragrp = {
     f_ContraGrp_NoContraBrokers : int option;
     f_ContraGrp_ContraBroker : fix_string option;
     f_ContraGrp_ContraTrader : fix_string option;
-    f_ContraGrp_ContraTradeQty : fix_float option;
+    f_ContraGrp_ContraTradeQty : fix_float_4 option;
     f_ContraGrp_ContraTradeTime : fix_utctimestamp option;
     f_ContraGrp_ContraLegRefID : fix_string option
 }
@@ -540,7 +540,7 @@ type fix_rg_execcollgrp = fix_rg_inner_execcollgrp list
 
 type fix_peginstructions = {
     (** Amount (signed) added to the peg for a pegged order in the context of the PegOffsetType*)
-    f_PegInstructions_PegOffsetValue : fix_float option;
+    f_PegInstructions_PegOffsetValue : fix_float_4 option;
     (** Describes whether peg is static/fixed or floats*)
     f_PegInstructions_PegMoveType : fix_pegmovetype option;
     (** Type of Peg Offset (e.g. price offset, tick offset etc)*)
@@ -590,12 +590,12 @@ type fix_rg_inner_ordliststatgrp = {
     f_OrdListStatGrp_NoOrders : int;
     f_OrdListStatGrp_ClOrdID : fix_string;
     f_OrdListStatGrp_SecondaryClOrdID : fix_string option;
-    f_OrdListStatGrp_CumQty : fix_float;
+    f_OrdListStatGrp_CumQty : fix_float_4;
     f_OrdListStatGrp_OrdStatus : fix_ordstatus;
     f_OrdListStatGrp_WorkingIndicator : fix_workingindicator option;
-    f_OrdListStatGrp_LeavesQty : fix_float;
-    f_OrdListStatGrp_CxlQty : fix_float;
-    f_OrdListStatGrp_AvgPx : fix_float;
+    f_OrdListStatGrp_LeavesQty : fix_float_4;
+    f_OrdListStatGrp_CxlQty : fix_float_4;
+    f_OrdListStatGrp_AvgPx : fix_float_4;
     f_OrdListStatGrp_OrdRejReason : fix_ordrejreason option;
     f_OrdListStatGrp_Text : fix_string option;
     f_OrdListStatGrp_EncodedTextLen : int option;
@@ -618,7 +618,7 @@ type fix_rg_ioiqualgrp = fix_rg_inner_ioiqualgrp list
 type fix_rg_inner_rgstdistinstgrp = {
     f_RgstDistInstGrp_NoDistribInsts : int option;
     f_RgstDistInstGrp_DistribPaymentMethod : fix_distribpaymentmethod option;
-    f_RgstDistInstGrp_DistribPercentage : fix_float option;
+    f_RgstDistInstGrp_DistribPercentage : fix_float_4 option;
     f_RgstDistInstGrp_CashDistribCurr : fix_currency option;
     f_RgstDistInstGrp_CashDistribAgentName : fix_string option;
     f_RgstDistInstGrp_CashDistribAgentCode : fix_string option;
@@ -639,10 +639,10 @@ type fix_interval = {
 
 type fix_yielddata = {
     f_YieldData_YieldType : fix_yieldtype option;
-    f_YieldData_Yield : fix_float option;
+    f_YieldData_Yield : fix_float_4 option;
     f_YieldData_YieldCalcDate : fix_localmktdate option;
     f_YieldData_YieldRedemptionDate : fix_localmktdate option;
-    f_YieldData_YieldRedemptionPrice : fix_float option;
+    f_YieldData_YieldRedemptionPrice : fix_float_4 option;
     f_YieldData_YieldRedemptionPriceType : int option
 }
 ;;
@@ -659,11 +659,11 @@ type fix_rg_routinggrp = fix_rg_inner_routinggrp list
 
 type fix_spreadorbenchmarkcurvedata = {
     (** For Fixed Income*)
-    f_SpreadOrBenchmarkCurveData_Spread : fix_float option;
+    f_SpreadOrBenchmarkCurveData_Spread : fix_float_4 option;
     f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency : fix_currency option;
     f_SpreadOrBenchmarkCurveData_BenchmarkCurveName : fix_string option;
     f_SpreadOrBenchmarkCurveData_BenchmarkCurvePoint : fix_string option;
-    f_SpreadOrBenchmarkCurveData_BenchmarkPrice : fix_float option;
+    f_SpreadOrBenchmarkCurveData_BenchmarkPrice : fix_float_4 option;
     (** Must be present if BenchmarkPrice is used.*)
     f_SpreadOrBenchmarkCurveData_BenchmarkPriceType : int option;
     (** The identifier of the benchmark security, e.g. Treasury against Corporate bond.*)
@@ -679,9 +679,9 @@ type fix_rg_inner_bidcomprspgrp = {
     f_BidCompRspGrp_ListID : fix_string option;
     f_BidCompRspGrp_Country : fix_country option;
     f_BidCompRspGrp_Side : fix_side option;
-    f_BidCompRspGrp_Price : fix_float option;
+    f_BidCompRspGrp_Price : fix_float_4 option;
     f_BidCompRspGrp_PriceType : fix_pricetype option;
-    f_BidCompRspGrp_FairValue : fix_float option;
+    f_BidCompRspGrp_FairValue : fix_float_4 option;
     f_BidCompRspGrp_NetGrossInd : fix_netgrossind option;
     f_BidCompRspGrp_SettlType : fix_settltype option;
     f_BidCompRspGrp_SettlDate : fix_localmktdate option;
@@ -766,8 +766,8 @@ type fix_instrumentleg = {
     (** (Deprecated, not applicable/used for Repos)*)
     f_InstrumentLeg_LegRepurchaseTerm : int option;
     (** (Deprecated, not applicable/used for Repos)*)
-    f_InstrumentLeg_LegRepurchaseRate : fix_float option;
-    f_InstrumentLeg_LegFactor : fix_float option;
+    f_InstrumentLeg_LegRepurchaseRate : fix_float_4 option;
+    f_InstrumentLeg_LegFactor : fix_float_4 option;
     f_InstrumentLeg_LegCreditRating : fix_string option;
     f_InstrumentLeg_LegInstrRegistry : fix_string option;
     f_InstrumentLeg_LegCountryOfIssue : fix_country option;
@@ -775,11 +775,11 @@ type fix_instrumentleg = {
     f_InstrumentLeg_LegLocaleOfIssue : fix_string option;
     (** (Deprecated, use YieldRedemptionDate (696) in <YieldData> component block)*)
     f_InstrumentLeg_LegRedemptionDate : fix_localmktdate option;
-    f_InstrumentLeg_LegStrikePrice : fix_float option;
+    f_InstrumentLeg_LegStrikePrice : fix_float_4 option;
     f_InstrumentLeg_LegStrikeCurrency : fix_currency option;
     f_InstrumentLeg_LegOptAttribute : int option;
-    f_InstrumentLeg_LegContractMultiplier : fix_float option;
-    f_InstrumentLeg_LegCouponRate : fix_float option;
+    f_InstrumentLeg_LegContractMultiplier : fix_float_4 option;
+    f_InstrumentLeg_LegCouponRate : fix_float_4 option;
     f_InstrumentLeg_LegSecurityExchange : fix_exchange option;
     f_InstrumentLeg_LegIssuer : fix_string option;
     f_InstrumentLeg_EncodedLegIssuerLen : int option;
@@ -788,7 +788,7 @@ type fix_instrumentleg = {
     f_InstrumentLeg_EncodedLegSecurityDescLen : int option;
     f_InstrumentLeg_EncodedLegSecurityDesc : fix_string option;
     (** Specific to the <InstrumentLeg> (not in <Instrument>)*)
-    f_InstrumentLeg_LegRatioQty : fix_float option;
+    f_InstrumentLeg_LegRatioQty : fix_float_4 option;
     (** Specific to the <InstrumentLeg> (not in <Instrument>)*)
     f_InstrumentLeg_LegSide : int option;
     (** Specific to the <InstrumentLeg> (not in <Instrument>)*)
@@ -837,12 +837,12 @@ type fix_instrument = {
     (** (Deprecated, use TerminationType (788) )*)
     f_Instrument_RepurchaseTerm : int option;
     (** (Deprecated, use Price (44) )*)
-    f_Instrument_RepurchaseRate : fix_float option;
+    f_Instrument_RepurchaseRate : fix_float_4 option;
     (** For Fixed Income: Amortization Factor for deriving Current face from Original face for ABS or MBS securities, note the fraction may be greater than, equal to or less than 1. In TIPS securities this is the Inflation index.
      Qty * Factor * Price = Gross Trade Amount
      For Derivatives: Contract Value Factor by which price must be adjusted to determine the true nominal value of one futures/options contract.
      (Qty * Price) * Factor = Nominal Value*)
-    f_Instrument_Factor : fix_float option;
+    f_Instrument_Factor : fix_float_4 option;
     f_Instrument_CreditRating : fix_string option;
     (** The location at which records of ownership are maintained for this instrument, and at which ownership changes must be recorded. Can be used in conjunction with ISIN to address ISIN uniqueness issues.*)
     f_Instrument_InstrRegistry : fix_string option;
@@ -855,15 +855,15 @@ type fix_instrument = {
     (** (Deprecated, use YieldRedemptionDate (696) in <YieldData> component block)*)
     f_Instrument_RedemptionDate : fix_localmktdate option;
     (** Used for derivatives, such as options and covered warrants*)
-    f_Instrument_StrikePrice : fix_float option;
+    f_Instrument_StrikePrice : fix_float_4 option;
     (** Used for derivatives*)
     f_Instrument_StrikeCurrency : fix_currency option;
     (** Used for derivatives, such as options and covered warrants to indicate a versioning of the contract when required due to corporate actions to the underlying. Should not be used to indicate type of option - use the CFICode[461] for this purpose.*)
     f_Instrument_OptAttribute : int option;
     (** For Fixed Income, Convertible Bonds, Derivatives, etc. Note: If used, quantities should be expressed in the "nominal" (e.g. contracts vs. shares) amount.*)
-    f_Instrument_ContractMultiplier : fix_float option;
+    f_Instrument_ContractMultiplier : fix_float_4 option;
     (** For Fixed Income.*)
-    f_Instrument_CouponRate : fix_float option;
+    f_Instrument_CouponRate : fix_float_4 option;
     (** Can be used to identify the security.*)
     f_Instrument_SecurityExchange : fix_exchange option;
     f_Instrument_Issuer : fix_string option;
@@ -914,7 +914,7 @@ type fix_instrumentextension = {
     (** Identifies the form of delivery.*)
     f_InstrumentExtension_DeliveryForm : fix_deliveryform option;
     (** Percent at risk due to lowest possible call.*)
-    f_InstrumentExtension_PctAtRisk : fix_float option;
+    f_InstrumentExtension_PctAtRisk : fix_float_4 option;
     (** Number of repeating InstrAttrib group entries.*)
     f_InstrumentExtension_AttrbGrp : fix_rg_attrbgrp
 }
@@ -956,8 +956,8 @@ type fix_underlyinginstrument = {
     (** (Deprecated, not applicable/used for Repos)*)
     f_UnderlyingInstrument_UnderlyingRepurchaseTerm : int option;
     (** (Deprecated, not applicable/used for Repos)*)
-    f_UnderlyingInstrument_UnderlyingRepurchaseRate : fix_float option;
-    f_UnderlyingInstrument_UnderlyingFactor : fix_float option;
+    f_UnderlyingInstrument_UnderlyingRepurchaseRate : fix_float_4 option;
+    f_UnderlyingInstrument_UnderlyingFactor : fix_float_4 option;
     f_UnderlyingInstrument_UnderlyingCreditRating : fix_string option;
     f_UnderlyingInstrument_UnderlyingInstrRegistry : fix_string option;
     f_UnderlyingInstrument_UnderlyingCountryOfIssue : fix_country option;
@@ -965,11 +965,11 @@ type fix_underlyinginstrument = {
     f_UnderlyingInstrument_UnderlyingLocaleOfIssue : fix_string option;
     (** (Deprecated, use YieldRedemptionDate (696) in <YieldData> component block)*)
     f_UnderlyingInstrument_UnderlyingRedemptionDate : fix_localmktdate option;
-    f_UnderlyingInstrument_UnderlyingStrikePrice : fix_float option;
+    f_UnderlyingInstrument_UnderlyingStrikePrice : fix_float_4 option;
     f_UnderlyingInstrument_UnderlyingStrikeCurrency : fix_currency option;
     f_UnderlyingInstrument_UnderlyingOptAttribute : int option;
-    f_UnderlyingInstrument_UnderlyingContractMultiplier : fix_float option;
-    f_UnderlyingInstrument_UnderlyingCouponRate : fix_float option;
+    f_UnderlyingInstrument_UnderlyingContractMultiplier : fix_float_4 option;
+    f_UnderlyingInstrument_UnderlyingCouponRate : fix_float_4 option;
     f_UnderlyingInstrument_UnderlyingSecurityExchange : fix_exchange option;
     f_UnderlyingInstrument_UnderlyingIssuer : fix_string option;
     f_UnderlyingInstrument_EncodedUnderlyingIssuerLen : int option;
@@ -983,25 +983,25 @@ type fix_underlyinginstrument = {
     f_UnderlyingInstrument_UnderlyingCurrency : fix_currency option;
     (** Specific to the <UnderlyingInstrument> (not in <Instrument>)
      Unit amount of the underlying security (par, shares, currency, etc.)*)
-    f_UnderlyingInstrument_UnderlyingQty : fix_float option;
+    f_UnderlyingInstrument_UnderlyingQty : fix_float_4 option;
     (** Specific to the <UnderlyingInstrument> (not in <Instrument>)
      In a financing deal clean price (percent-of-par or per unit) of the underlying security or basket.*)
-    f_UnderlyingInstrument_UnderlyingPx : fix_float option;
+    f_UnderlyingInstrument_UnderlyingPx : fix_float_4 option;
     (** Specific to the <UnderlyingInstrument> (not in <Instrument>)
      In a financing deal price (percent-of-par or per unit) of the underlying security or basket. "Dirty" means it includes accrued interest*)
-    f_UnderlyingInstrument_UnderlyingDirtyPrice : fix_float option;
+    f_UnderlyingInstrument_UnderlyingDirtyPrice : fix_float_4 option;
     (** Specific to the <UnderlyingInstrument> (not in <Instrument>)
      In a financing deal price (percent-of-par or per unit) of the underlying security or basket at the end of the agreement.*)
-    f_UnderlyingInstrument_UnderlyingEndPrice : fix_float option;
+    f_UnderlyingInstrument_UnderlyingEndPrice : fix_float_4 option;
     (** Specific to the <UnderlyingInstrument> (not in <Instrument>)
      Currency value attributed to this collateral at the start of the agreement*)
-    f_UnderlyingInstrument_UnderlyingStartValue : fix_float option;
+    f_UnderlyingInstrument_UnderlyingStartValue : fix_float_4 option;
     (** Specific to the <UnderlyingInstrument> (not in <Instrument>)
      Currency value currently attributed to this collateral*)
-    f_UnderlyingInstrument_UnderlyingCurrentValue : fix_float option;
+    f_UnderlyingInstrument_UnderlyingCurrentValue : fix_float_4 option;
     (** Specific to the <UnderlyingInstrument> (not in <Instrument>)
      Currency value attributed to this collateral at the end of the agreement*)
-    f_UnderlyingInstrument_UnderlyingEndValue : fix_float option;
+    f_UnderlyingInstrument_UnderlyingEndValue : fix_float_4 option;
     (** Specific to the <UnderlyingInstrument> (not in <Instrument>)
      Insert here the contents of the <UnderlyingStipulations> Component Block*)
     f_UnderlyingInstrument_UnderlyingStipulations : fix_rg_underlyingstipulations
@@ -1029,9 +1029,9 @@ type fix_rg_inner_ordallocgrp = {
     f_OrdAllocGrp_SecondaryClOrdID : fix_string option;
     f_OrdAllocGrp_ListID : fix_string option;
     f_OrdAllocGrp_NestedParties2 : fix_rg_nestedparties2;
-    f_OrdAllocGrp_OrderQty : fix_float option;
-    f_OrdAllocGrp_OrderAvgPx : fix_float option;
-    f_OrdAllocGrp_OrderBookingQty : fix_float option
+    f_OrdAllocGrp_OrderQty : fix_float_4 option;
+    f_OrdAllocGrp_OrderAvgPx : fix_float_4 option;
+    f_OrdAllocGrp_OrderBookingQty : fix_float_4 option
 }
 ;;
 
@@ -1056,7 +1056,7 @@ type fix_rg_inner_preallocgrp = {
     f_PreAllocGrp_AllocSettlCurrency : fix_currency option;
     f_PreAllocGrp_IndividualAllocID : fix_string option;
     f_PreAllocGrp_NestedParties : fix_rg_nestedparties;
-    f_PreAllocGrp_AllocQty : fix_float option
+    f_PreAllocGrp_AllocQty : fix_float_4 option
 }
 ;;
 
@@ -1083,8 +1083,8 @@ type fix_rg_inner_positionqty = {
     f_PositionQty_NoPositions : int option;
     (** Required if NoPositions > 1*)
     f_PositionQty_PosType : fix_postype option;
-    f_PositionQty_LongQty : fix_float option;
-    f_PositionQty_ShortQty : fix_float option;
+    f_PositionQty_LongQty : fix_float_4 option;
+    f_PositionQty_ShortQty : fix_float_4 option;
     f_PositionQty_PosQtyStatus : fix_posqtystatus option;
     (** Optional repeating group - used to associate or distribute position to a specific party other than the party that currently owns the position.*)
     f_PositionQty_NestedParties : fix_rg_nestedparties
@@ -1097,7 +1097,7 @@ type fix_rg_positionqty = fix_rg_inner_positionqty list
 type fix_rg_inner_quotreqlegsgrp = {
     f_QuotReqLegsGrp_NoLegs : int option;
     f_QuotReqLegsGrp_InstrumentLeg : fix_instrumentleg;
-    f_QuotReqLegsGrp_LegQty : fix_float option;
+    f_QuotReqLegsGrp_LegQty : fix_float_4 option;
     f_QuotReqLegsGrp_LegSwapType : fix_legswaptype option;
     f_QuotReqLegsGrp_LegSettlType : int option;
     f_QuotReqLegsGrp_LegSettlDate : fix_localmktdate option;
@@ -1113,11 +1113,11 @@ type fix_rg_quotreqlegsgrp = fix_rg_inner_quotreqlegsgrp list
 type fix_rg_inner_undinstrmtstrkpxgrp = {
     f_UndInstrmtStrkPxGrp_NoUnderlyings : int option;
     f_UndInstrmtStrkPxGrp_UnderlyingInstrument : fix_underlyinginstrument;
-    f_UndInstrmtStrkPxGrp_PrevClosePx : fix_float option;
+    f_UndInstrmtStrkPxGrp_PrevClosePx : fix_float_4 option;
     f_UndInstrmtStrkPxGrp_ClOrdID : fix_string option;
     f_UndInstrmtStrkPxGrp_SecondaryClOrdID : fix_string option;
     f_UndInstrmtStrkPxGrp_Side : fix_side option;
-    f_UndInstrmtStrkPxGrp_Price : fix_float;
+    f_UndInstrmtStrkPxGrp_Price : fix_float_4;
     f_UndInstrmtStrkPxGrp_Currency : fix_currency option;
     f_UndInstrmtStrkPxGrp_Text : fix_string option;
     f_UndInstrmtStrkPxGrp_EncodedTextLen : int option;
@@ -1131,17 +1131,17 @@ type fix_rg_undinstrmtstrkpxgrp = fix_rg_inner_undinstrmtstrkpxgrp list
 type fix_rg_inner_trdinstrmtleggrp = {
     f_TrdInstrmtLegGrp_NoLegs : int option;
     f_TrdInstrmtLegGrp_InstrumentLeg : fix_instrumentleg;
-    f_TrdInstrmtLegGrp_LegQty : fix_float option;
+    f_TrdInstrmtLegGrp_LegQty : fix_float_4 option;
     f_TrdInstrmtLegGrp_LegSwapType : fix_legswaptype option;
     f_TrdInstrmtLegGrp_LegStipulations : fix_rg_legstipulations;
     f_TrdInstrmtLegGrp_LegPositionEffect : int option;
     f_TrdInstrmtLegGrp_LegCoveredOrUncovered : int option;
     f_TrdInstrmtLegGrp_NestedParties : fix_rg_nestedparties;
     f_TrdInstrmtLegGrp_LegRefID : fix_string option;
-    f_TrdInstrmtLegGrp_LegPrice : fix_float option;
+    f_TrdInstrmtLegGrp_LegPrice : fix_float_4 option;
     f_TrdInstrmtLegGrp_LegSettlType : int option;
     f_TrdInstrmtLegGrp_LegSettlDate : fix_localmktdate option;
-    f_TrdInstrmtLegGrp_LegLastPx : fix_float option
+    f_TrdInstrmtLegGrp_LegLastPx : fix_float_4 option
 }
 ;;
 
@@ -1151,15 +1151,15 @@ type fix_rg_trdinstrmtleggrp = fix_rg_inner_trdinstrmtleggrp list
 type fix_rg_inner_legquotgrp = {
     f_LegQuotGrp_NoLegs : int option;
     f_LegQuotGrp_InstrumentLeg : fix_instrumentleg;
-    f_LegQuotGrp_LegQty : fix_float option;
+    f_LegQuotGrp_LegQty : fix_float_4 option;
     f_LegQuotGrp_LegSwapType : fix_legswaptype option;
     f_LegQuotGrp_LegSettlType : int option;
     f_LegQuotGrp_LegSettlDate : fix_localmktdate option;
     f_LegQuotGrp_LegStipulations : fix_rg_legstipulations;
     f_LegQuotGrp_NestedParties : fix_rg_nestedparties;
     f_LegQuotGrp_LegPriceType : int option;
-    f_LegQuotGrp_LegBidPx : fix_float option;
-    f_LegQuotGrp_LegOfferPx : fix_float option;
+    f_LegQuotGrp_LegBidPx : fix_float_4 option;
+    f_LegQuotGrp_LegOfferPx : fix_float_4 option;
     f_LegQuotGrp_LegBenchmarkCurveData : fix_legbenchmarkcurvedata
 }
 ;;
@@ -1183,7 +1183,7 @@ type fix_rg_inner_trdallocgrp = {
     f_TrdAllocGrp_AllocSettlCurrency : fix_currency option;
     f_TrdAllocGrp_IndividualAllocID : fix_string option;
     f_TrdAllocGrp_NestedParties2 : fix_rg_nestedparties2;
-    f_TrdAllocGrp_AllocQty : fix_float option
+    f_TrdAllocGrp_AllocQty : fix_float_4 option
 }
 ;;
 
@@ -1240,7 +1240,7 @@ type fix_rg_inner_preallocmleggrp = {
     f_PreAllocMlegGrp_AllocSettlCurrency : fix_currency option;
     f_PreAllocMlegGrp_IndividualAllocID : fix_string option;
     f_PreAllocMlegGrp_NestedParties3 : fix_rg_nestedparties3;
-    f_PreAllocMlegGrp_AllocQty : fix_float option
+    f_PreAllocMlegGrp_AllocQty : fix_float_4 option
 }
 ;;
 
@@ -1259,7 +1259,7 @@ type fix_rg_undinstrmtgrp = fix_rg_inner_undinstrmtgrp list
 type fix_rg_inner_posundinstrmtgrp = {
     f_PosUndInstrmtGrp_NoUnderlyings : int option;
     f_PosUndInstrmtGrp_UnderlyingInstrument : fix_underlyinginstrument;
-    f_PosUndInstrmtGrp_UnderlyingSettlPrice : fix_float;
+    f_PosUndInstrmtGrp_UnderlyingSettlPrice : fix_float_4;
     f_PosUndInstrmtGrp_UnderlyingSettlPriceType : int
 }
 ;;
@@ -1279,17 +1279,17 @@ type fix_rg_instrmtstrkpxgrp = fix_rg_inner_instrmtstrkpxgrp list
 type fix_rg_inner_instrmtlegexecgrp = {
     f_InstrmtLegExecGrp_NoLegs : int option;
     f_InstrmtLegExecGrp_InstrumentLeg : fix_instrumentleg;
-    f_InstrmtLegExecGrp_LegQty : fix_float option;
+    f_InstrmtLegExecGrp_LegQty : fix_float_4 option;
     f_InstrmtLegExecGrp_LegSwapType : fix_legswaptype option;
     f_InstrmtLegExecGrp_LegStipulations : fix_rg_legstipulations;
     f_InstrmtLegExecGrp_LegPositionEffect : int option;
     f_InstrmtLegExecGrp_LegCoveredOrUncovered : int option;
     f_InstrmtLegExecGrp_NestedParties : fix_rg_nestedparties;
     f_InstrmtLegExecGrp_LegRefID : fix_string option;
-    f_InstrmtLegExecGrp_LegPrice : fix_float option;
+    f_InstrmtLegExecGrp_LegPrice : fix_float_4 option;
     f_InstrmtLegExecGrp_LegSettlType : int option;
     f_InstrmtLegExecGrp_LegSettlDate : fix_localmktdate option;
-    f_InstrmtLegExecGrp_LegLastPx : fix_float option
+    f_InstrmtLegExecGrp_LegLastPx : fix_float_4 option
 }
 ;;
 
@@ -1299,7 +1299,7 @@ type fix_rg_instrmtlegexecgrp = fix_rg_inner_instrmtlegexecgrp list
 type fix_rg_inner_legquotstatgrp = {
     f_LegQuotStatGrp_NoLegs : int option;
     f_LegQuotStatGrp_InstrumentLeg : fix_instrumentleg;
-    f_LegQuotStatGrp_LegQty : fix_float option;
+    f_LegQuotStatGrp_LegQty : fix_float_4 option;
     f_LegQuotStatGrp_LegSwapType : fix_legswaptype option;
     f_LegQuotStatGrp_LegSettlType : int option;
     f_LegQuotStatGrp_LegSettlDate : fix_localmktdate option;
@@ -1325,7 +1325,7 @@ type fix_rg_inner_legpreallocgrp = {
     f_LegPreAllocGrp_LegAllocAccount : fix_string option;
     f_LegPreAllocGrp_LegIndividualAllocID : fix_string option;
     f_LegPreAllocGrp_NestedParties2 : fix_rg_nestedparties2;
-    f_LegPreAllocGrp_LegAllocQty : fix_float option;
+    f_LegPreAllocGrp_LegAllocQty : fix_float_4 option;
     f_LegPreAllocGrp_LegAllocAcctIDSource : fix_string option;
     f_LegPreAllocGrp_LegSettlCurrency : fix_currency option
 }
@@ -1339,7 +1339,7 @@ type fix_rg_inner_quotreqgrp = {
     f_QuotReqGrp_Instrument : fix_instrument;
     f_QuotReqGrp_FinancingDetails : fix_financingdetails;
     f_QuotReqGrp_UndInstrmtGrp : fix_rg_undinstrmtgrp;
-    f_QuotReqGrp_PrevClosePx : fix_float option;
+    f_QuotReqGrp_PrevClosePx : fix_float_4 option;
     f_QuotReqGrp_QuoteRequestType : fix_quoterequesttype option;
     f_QuotReqGrp_QuoteType : fix_quotetype option;
     f_QuotReqGrp_TradingSessionID : fix_string option;
@@ -1351,7 +1351,7 @@ type fix_rg_inner_quotreqgrp = {
     f_QuotReqGrp_SettlType : fix_settltype option;
     f_QuotReqGrp_SettlDate : fix_localmktdate option;
     f_QuotReqGrp_SettlDate2 : fix_localmktdate option;
-    f_QuotReqGrp_OrderQty2 : fix_float option;
+    f_QuotReqGrp_OrderQty2 : fix_float_4 option;
     f_QuotReqGrp_Currency : fix_currency option;
     f_QuotReqGrp_Stipulations : fix_rg_stipulations;
     f_QuotReqGrp_Account : fix_string option;
@@ -1366,8 +1366,8 @@ type fix_rg_inner_quotreqgrp = {
     f_QuotReqGrp_TransactTime : fix_utctimestamp option;
     f_QuotReqGrp_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     f_QuotReqGrp_PriceType : fix_pricetype option;
-    f_QuotReqGrp_Price : fix_float option;
-    f_QuotReqGrp_Price2 : fix_float option;
+    f_QuotReqGrp_Price : fix_float_4 option;
+    f_QuotReqGrp_Price2 : fix_float_4 option;
     f_QuotReqGrp_YieldData : fix_yielddata;
     f_QuotReqGrp_Parties : fix_rg_parties
 }
@@ -1381,28 +1381,28 @@ type fix_rg_inner_quotentrygrp = {
     f_QuotEntryGrp_QuoteEntryID : fix_string;
     f_QuotEntryGrp_Instrument : fix_instrument;
     f_QuotEntryGrp_InstrmtLegGrp : fix_rg_instrmtleggrp;
-    f_QuotEntryGrp_BidPx : fix_float option;
-    f_QuotEntryGrp_OfferPx : fix_float option;
-    f_QuotEntryGrp_BidSize : fix_float option;
-    f_QuotEntryGrp_OfferSize : fix_float option;
+    f_QuotEntryGrp_BidPx : fix_float_4 option;
+    f_QuotEntryGrp_OfferPx : fix_float_4 option;
+    f_QuotEntryGrp_BidSize : fix_float_4 option;
+    f_QuotEntryGrp_OfferSize : fix_float_4 option;
     f_QuotEntryGrp_ValidUntilTime : fix_utctimestamp option;
-    f_QuotEntryGrp_BidSpotRate : fix_float option;
-    f_QuotEntryGrp_OfferSpotRate : fix_float option;
-    f_QuotEntryGrp_BidForwardPoints : fix_float option;
-    f_QuotEntryGrp_OfferForwardPoints : fix_float option;
-    f_QuotEntryGrp_MidPx : fix_float option;
-    f_QuotEntryGrp_BidYield : fix_float option;
-    f_QuotEntryGrp_MidYield : fix_float option;
-    f_QuotEntryGrp_OfferYield : fix_float option;
+    f_QuotEntryGrp_BidSpotRate : fix_float_4 option;
+    f_QuotEntryGrp_OfferSpotRate : fix_float_4 option;
+    f_QuotEntryGrp_BidForwardPoints : fix_float_4 option;
+    f_QuotEntryGrp_OfferForwardPoints : fix_float_4 option;
+    f_QuotEntryGrp_MidPx : fix_float_4 option;
+    f_QuotEntryGrp_BidYield : fix_float_4 option;
+    f_QuotEntryGrp_MidYield : fix_float_4 option;
+    f_QuotEntryGrp_OfferYield : fix_float_4 option;
     f_QuotEntryGrp_TransactTime : fix_utctimestamp option;
     f_QuotEntryGrp_TradingSessionID : fix_string option;
     f_QuotEntryGrp_TradingSessionSubID : fix_string option;
     f_QuotEntryGrp_SettlDate : fix_localmktdate option;
     f_QuotEntryGrp_OrdType : fix_ordtype option;
     f_QuotEntryGrp_SettlDate2 : fix_localmktdate option;
-    f_QuotEntryGrp_OrderQty2 : fix_float option;
-    f_QuotEntryGrp_BidForwardPoints2 : fix_float option;
-    f_QuotEntryGrp_OfferForwardPoints2 : fix_float option;
+    f_QuotEntryGrp_OrderQty2 : fix_float_4 option;
+    f_QuotEntryGrp_BidForwardPoints2 : fix_float_4 option;
+    f_QuotEntryGrp_OfferForwardPoints2 : fix_float_4 option;
     f_QuotEntryGrp_Currency : fix_currency option
 }
 ;;
@@ -1413,7 +1413,7 @@ type fix_rg_quotentrygrp = fix_rg_inner_quotentrygrp list
 type fix_rg_inner_legordgrp = {
     f_LegOrdGrp_NoLegs : int;
     f_LegOrdGrp_InstrumentLeg : fix_instrumentleg;
-    f_LegOrdGrp_LegQty : fix_float option;
+    f_LegOrdGrp_LegQty : fix_float_4 option;
     f_LegOrdGrp_LegSwapType : fix_legswaptype option;
     f_LegOrdGrp_LegStipulations : fix_rg_legstipulations;
     f_LegOrdGrp_LegPreAllocGrp : fix_rg_legpreallocgrp;
@@ -1421,7 +1421,7 @@ type fix_rg_inner_legordgrp = {
     f_LegOrdGrp_LegCoveredOrUncovered : int option;
     f_LegOrdGrp_NestedParties : fix_rg_nestedparties;
     f_LegOrdGrp_LegRefID : fix_string option;
-    f_LegOrdGrp_LegPrice : fix_float option;
+    f_LegOrdGrp_LegPrice : fix_float_4 option;
     f_LegOrdGrp_LegSettlType : int option;
     f_LegOrdGrp_LegSettlDate : fix_localmktdate option
 }
@@ -1461,21 +1461,21 @@ type fix_rg_inner_trdcaprptsidegrp = {
     f_TrdCapRptSideGrp_TradingSessionSubID : fix_string option;
     f_TrdCapRptSideGrp_TimeBracket : fix_string option;
     f_TrdCapRptSideGrp_CommissionData : fix_commissiondata;
-    f_TrdCapRptSideGrp_GrossTradeAmt : fix_float option;
+    f_TrdCapRptSideGrp_GrossTradeAmt : fix_float_4 option;
     f_TrdCapRptSideGrp_NumDaysInterest : int option;
     f_TrdCapRptSideGrp_ExDate : fix_localmktdate option;
-    f_TrdCapRptSideGrp_AccruedInterestRate : fix_float option;
-    f_TrdCapRptSideGrp_AccruedInterestAmt : fix_float option;
-    f_TrdCapRptSideGrp_InterestAtMaturity : fix_float option;
-    f_TrdCapRptSideGrp_EndAccruedInterestAmt : fix_float option;
-    f_TrdCapRptSideGrp_StartCash : fix_float option;
-    f_TrdCapRptSideGrp_EndCash : fix_float option;
-    f_TrdCapRptSideGrp_Concession : fix_float option;
-    f_TrdCapRptSideGrp_TotalTakedown : fix_float option;
-    f_TrdCapRptSideGrp_NetMoney : fix_float option;
-    f_TrdCapRptSideGrp_SettlCurrAmt : fix_float option;
+    f_TrdCapRptSideGrp_AccruedInterestRate : fix_float_4 option;
+    f_TrdCapRptSideGrp_AccruedInterestAmt : fix_float_4 option;
+    f_TrdCapRptSideGrp_InterestAtMaturity : fix_float_4 option;
+    f_TrdCapRptSideGrp_EndAccruedInterestAmt : fix_float_4 option;
+    f_TrdCapRptSideGrp_StartCash : fix_float_4 option;
+    f_TrdCapRptSideGrp_EndCash : fix_float_4 option;
+    f_TrdCapRptSideGrp_Concession : fix_float_4 option;
+    f_TrdCapRptSideGrp_TotalTakedown : fix_float_4 option;
+    f_TrdCapRptSideGrp_NetMoney : fix_float_4 option;
+    f_TrdCapRptSideGrp_SettlCurrAmt : fix_float_4 option;
     f_TrdCapRptSideGrp_SettlCurrency : fix_currency option;
-    f_TrdCapRptSideGrp_SettlCurrFxRate : fix_float option;
+    f_TrdCapRptSideGrp_SettlCurrFxRate : fix_float_4 option;
     f_TrdCapRptSideGrp_SettlCurrFxRateCalc : fix_settlcurrfxratecalc option;
     f_TrdCapRptSideGrp_PositionEffect : fix_positioneffect option;
     f_TrdCapRptSideGrp_Text : fix_string option;
@@ -1520,14 +1520,14 @@ type fix_rg_inner_listordgrp = {
     f_ListOrdGrp_ClearingFeeIndicator : fix_clearingfeeindicator option;
     f_ListOrdGrp_HandlInst : fix_handlinst option;
     f_ListOrdGrp_ExecInst : fix_execinst option;
-    f_ListOrdGrp_MinQty : fix_float option;
-    f_ListOrdGrp_MaxFloor : fix_float option;
+    f_ListOrdGrp_MinQty : fix_float_4 option;
+    f_ListOrdGrp_MaxFloor : fix_float_4 option;
     f_ListOrdGrp_ExDestination : fix_exchange option;
     f_ListOrdGrp_TrdgSesGrp : fix_rg_trdgsesgrp;
     f_ListOrdGrp_ProcessCode : fix_processcode option;
     f_ListOrdGrp_Instrument : fix_instrument;
     f_ListOrdGrp_UndInstrmtGrp : fix_rg_undinstrmtgrp;
-    f_ListOrdGrp_PrevClosePx : fix_float option;
+    f_ListOrdGrp_PrevClosePx : fix_float_4 option;
     f_ListOrdGrp_Side : fix_side;
     f_ListOrdGrp_SideValueInd : fix_sidevalueind option;
     f_ListOrdGrp_LocateReqd : fix_locatereqd option;
@@ -1537,8 +1537,8 @@ type fix_rg_inner_listordgrp = {
     f_ListOrdGrp_OrderQtyData : fix_orderqtydata;
     f_ListOrdGrp_OrdType : fix_ordtype option;
     f_ListOrdGrp_PriceType : fix_pricetype option;
-    f_ListOrdGrp_Price : fix_float option;
-    f_ListOrdGrp_StopPx : fix_float option;
+    f_ListOrdGrp_Price : fix_float_4 option;
+    f_ListOrdGrp_StopPx : fix_float_4 option;
     f_ListOrdGrp_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     f_ListOrdGrp_YieldData : fix_yielddata;
     f_ListOrdGrp_Currency : fix_currency option;
@@ -1562,16 +1562,16 @@ type fix_rg_inner_listordgrp = {
     f_ListOrdGrp_EncodedTextLen : int option;
     f_ListOrdGrp_EncodedText : fix_string option;
     f_ListOrdGrp_SettlDate2 : fix_localmktdate option;
-    f_ListOrdGrp_OrderQty2 : fix_float option;
-    f_ListOrdGrp_Price2 : fix_float option;
+    f_ListOrdGrp_OrderQty2 : fix_float_4 option;
+    f_ListOrdGrp_Price2 : fix_float_4 option;
     f_ListOrdGrp_PositionEffect : fix_positioneffect option;
     f_ListOrdGrp_CoveredOrUncovered : fix_coveredoruncovered option;
-    f_ListOrdGrp_MaxShow : fix_float option;
+    f_ListOrdGrp_MaxShow : fix_float_4 option;
     f_ListOrdGrp_PegInstructions : fix_peginstructions;
     f_ListOrdGrp_DiscretionInstructions : fix_discretioninstructions;
     f_ListOrdGrp_TargetStrategy : fix_targetstrategy option;
     f_ListOrdGrp_TargetStrategyParameters : fix_string option;
-    f_ListOrdGrp_ParticipationRate : fix_float option;
+    f_ListOrdGrp_ParticipationRate : fix_float_4 option;
     f_ListOrdGrp_Designation : fix_string option
 }
 ;;
@@ -1584,7 +1584,7 @@ type fix_rg_inner_rfqreqgrp = {
     f_RFQReqGrp_Instrument : fix_instrument;
     f_RFQReqGrp_UndInstrmtGrp : fix_rg_undinstrmtgrp;
     f_RFQReqGrp_InstrmtLegGrp : fix_rg_instrmtleggrp;
-    f_RFQReqGrp_PrevClosePx : fix_float option;
+    f_RFQReqGrp_PrevClosePx : fix_float_4 option;
     f_RFQReqGrp_QuoteRequestType : fix_quoterequesttype option;
     f_RFQReqGrp_QuoteType : fix_quotetype option;
     f_RFQReqGrp_TradingSessionID : fix_string option;
@@ -1658,8 +1658,8 @@ type fix_rg_inner_seclistgrp = {
     f_SecListGrp_InstrmtLegSecListGrp : fix_rg_instrmtlegseclistgrp;
     f_SecListGrp_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     f_SecListGrp_YieldData : fix_yielddata;
-    f_SecListGrp_RoundLot : fix_float option;
-    f_SecListGrp_MinTradeVol : fix_float option;
+    f_SecListGrp_RoundLot : fix_float_4 option;
+    f_SecListGrp_MinTradeVol : fix_float_4 option;
     f_SecListGrp_TradingSessionID : fix_string option;
     f_SecListGrp_TradingSessionSubID : fix_string option;
     f_SecListGrp_ExpirationCycle : fix_expirationcycle option;
@@ -1692,28 +1692,28 @@ type fix_rg_inner_quotentryackgrp = {
     f_QuotEntryAckGrp_QuoteEntryID : fix_string option;
     f_QuotEntryAckGrp_Instrument : fix_instrument;
     f_QuotEntryAckGrp_InstrmtLegGrp : fix_rg_instrmtleggrp;
-    f_QuotEntryAckGrp_BidPx : fix_float option;
-    f_QuotEntryAckGrp_OfferPx : fix_float option;
-    f_QuotEntryAckGrp_BidSize : fix_float option;
-    f_QuotEntryAckGrp_OfferSize : fix_float option;
+    f_QuotEntryAckGrp_BidPx : fix_float_4 option;
+    f_QuotEntryAckGrp_OfferPx : fix_float_4 option;
+    f_QuotEntryAckGrp_BidSize : fix_float_4 option;
+    f_QuotEntryAckGrp_OfferSize : fix_float_4 option;
     f_QuotEntryAckGrp_ValidUntilTime : fix_utctimestamp option;
-    f_QuotEntryAckGrp_BidSpotRate : fix_float option;
-    f_QuotEntryAckGrp_OfferSpotRate : fix_float option;
-    f_QuotEntryAckGrp_BidForwardPoints : fix_float option;
-    f_QuotEntryAckGrp_OfferForwardPoints : fix_float option;
-    f_QuotEntryAckGrp_MidPx : fix_float option;
-    f_QuotEntryAckGrp_BidYield : fix_float option;
-    f_QuotEntryAckGrp_MidYield : fix_float option;
-    f_QuotEntryAckGrp_OfferYield : fix_float option;
+    f_QuotEntryAckGrp_BidSpotRate : fix_float_4 option;
+    f_QuotEntryAckGrp_OfferSpotRate : fix_float_4 option;
+    f_QuotEntryAckGrp_BidForwardPoints : fix_float_4 option;
+    f_QuotEntryAckGrp_OfferForwardPoints : fix_float_4 option;
+    f_QuotEntryAckGrp_MidPx : fix_float_4 option;
+    f_QuotEntryAckGrp_BidYield : fix_float_4 option;
+    f_QuotEntryAckGrp_MidYield : fix_float_4 option;
+    f_QuotEntryAckGrp_OfferYield : fix_float_4 option;
     f_QuotEntryAckGrp_TransactTime : fix_utctimestamp option;
     f_QuotEntryAckGrp_TradingSessionID : fix_string option;
     f_QuotEntryAckGrp_TradingSessionSubID : fix_string option;
     f_QuotEntryAckGrp_SettlDate : fix_localmktdate option;
     f_QuotEntryAckGrp_OrdType : fix_ordtype option;
     f_QuotEntryAckGrp_SettlDate2 : fix_localmktdate option;
-    f_QuotEntryAckGrp_OrderQty2 : fix_float option;
-    f_QuotEntryAckGrp_BidForwardPoints2 : fix_float option;
-    f_QuotEntryAckGrp_OfferForwardPoints2 : fix_float option;
+    f_QuotEntryAckGrp_OrderQty2 : fix_float_4 option;
+    f_QuotEntryAckGrp_BidForwardPoints2 : fix_float_4 option;
+    f_QuotEntryAckGrp_OfferForwardPoints2 : fix_float_4 option;
     f_QuotEntryAckGrp_Currency : fix_currency option;
     f_QuotEntryAckGrp_QuoteEntryRejectReason : int option
 }
@@ -1727,7 +1727,7 @@ type fix_rg_inner_quotreqrjctgrp = {
     f_QuotReqRjctGrp_Instrument : fix_instrument;
     f_QuotReqRjctGrp_FinancingDetails : fix_financingdetails;
     f_QuotReqRjctGrp_UndInstrmtGrp : fix_rg_undinstrmtgrp;
-    f_QuotReqRjctGrp_PrevClosePx : fix_float option;
+    f_QuotReqRjctGrp_PrevClosePx : fix_float_4 option;
     f_QuotReqRjctGrp_QuoteRequestType : fix_quoterequesttype option;
     f_QuotReqRjctGrp_QuoteType : fix_quotetype option;
     f_QuotReqRjctGrp_TradingSessionID : fix_string option;
@@ -1739,7 +1739,7 @@ type fix_rg_inner_quotreqrjctgrp = {
     f_QuotReqRjctGrp_SettlType : fix_settltype option;
     f_QuotReqRjctGrp_SettlDate : fix_localmktdate option;
     f_QuotReqRjctGrp_SettlDate2 : fix_localmktdate option;
-    f_QuotReqRjctGrp_OrderQty2 : fix_float option;
+    f_QuotReqRjctGrp_OrderQty2 : fix_float_4 option;
     f_QuotReqRjctGrp_Currency : fix_currency option;
     f_QuotReqRjctGrp_Stipulations : fix_rg_stipulations;
     f_QuotReqRjctGrp_Account : fix_string option;
@@ -1753,8 +1753,8 @@ type fix_rg_inner_quotreqrjctgrp = {
     f_QuotReqRjctGrp_TransactTime : fix_utctimestamp option;
     f_QuotReqRjctGrp_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     f_QuotReqRjctGrp_PriceType : fix_pricetype option;
-    f_QuotReqRjctGrp_Price : fix_float option;
-    f_QuotReqRjctGrp_Price2 : fix_float option;
+    f_QuotReqRjctGrp_Price : fix_float_4 option;
+    f_QuotReqRjctGrp_Price2 : fix_float_4 option;
     f_QuotReqRjctGrp_YieldData : fix_yielddata;
     f_QuotReqRjctGrp_Parties : fix_rg_parties
 }
@@ -1805,9 +1805,9 @@ type fix_rg_inner_mdincgrp = {
     f_MDIncGrp_InstrmtLegGrp : fix_rg_instrmtleggrp;
     f_MDIncGrp_FinancialStatus : fix_financialstatus option;
     f_MDIncGrp_CorporateAction : fix_corporateaction option;
-    f_MDIncGrp_MDEntryPx : fix_float option;
+    f_MDIncGrp_MDEntryPx : fix_float_4 option;
     f_MDIncGrp_Currency : fix_currency option;
-    f_MDIncGrp_MDEntrySize : fix_float option;
+    f_MDIncGrp_MDEntrySize : fix_float_4 option;
     f_MDIncGrp_MDEntryDate : fix_utcdateonly option;
     f_MDIncGrp_MDEntryTime : fix_utctimeonly option;
     f_MDIncGrp_TickDirection : fix_tickdirection option;
@@ -1823,7 +1823,7 @@ type fix_rg_inner_mdincgrp = {
     f_MDIncGrp_TimeInForce : fix_timeinforce option;
     f_MDIncGrp_ExpireDate : fix_localmktdate option;
     f_MDIncGrp_ExpireTime : fix_utctimestamp option;
-    f_MDIncGrp_MinQty : fix_float option;
+    f_MDIncGrp_MinQty : fix_float_4 option;
     f_MDIncGrp_ExecInst : fix_execinst option;
     f_MDIncGrp_SellerDays : int option;
     f_MDIncGrp_OrderID : fix_string option;
@@ -1833,8 +1833,8 @@ type fix_rg_inner_mdincgrp = {
     f_MDIncGrp_NumberOfOrders : int option;
     f_MDIncGrp_MDEntryPositionNo : int option;
     f_MDIncGrp_Scope : fix_scope option;
-    f_MDIncGrp_PriceDelta : fix_float option;
-    f_MDIncGrp_NetChgPrevDay : fix_float option;
+    f_MDIncGrp_PriceDelta : fix_float_4 option;
+    f_MDIncGrp_NetChgPrevDay : fix_float_4 option;
     f_MDIncGrp_Text : fix_string option;
     f_MDIncGrp_EncodedTextLen : int option;
     f_MDIncGrp_EncodedText : fix_string option
@@ -1878,8 +1878,8 @@ type fix_rg_inner_allocgrp = {
     f_AllocGrp_AllocAccount : fix_string option;
     f_AllocGrp_AllocAcctIDSource : int option;
     f_AllocGrp_MatchStatus : fix_matchstatus option;
-    f_AllocGrp_AllocPrice : fix_float option;
-    f_AllocGrp_AllocQty : fix_float option;
+    f_AllocGrp_AllocPrice : fix_float_4 option;
+    f_AllocGrp_AllocQty : fix_float_4 option;
     f_AllocGrp_IndividualAllocID : fix_string option;
     f_AllocGrp_ProcessCode : fix_processcode option;
     f_AllocGrp_NestedParties : fix_rg_nestedparties;
@@ -1889,16 +1889,16 @@ type fix_rg_inner_allocgrp = {
     f_AllocGrp_EncodedAllocTextLen : int option;
     f_AllocGrp_EncodedAllocText : fix_string option;
     f_AllocGrp_CommissionData : fix_commissiondata;
-    f_AllocGrp_AllocAvgPx : fix_float option;
-    f_AllocGrp_AllocNetMoney : fix_float option;
-    f_AllocGrp_SettlCurrAmt : fix_float option;
-    f_AllocGrp_AllocSettlCurrAmt : fix_float option;
+    f_AllocGrp_AllocAvgPx : fix_float_4 option;
+    f_AllocGrp_AllocNetMoney : fix_float_4 option;
+    f_AllocGrp_SettlCurrAmt : fix_float_4 option;
+    f_AllocGrp_AllocSettlCurrAmt : fix_float_4 option;
     f_AllocGrp_SettlCurrency : fix_currency option;
     f_AllocGrp_AllocSettlCurrency : fix_currency option;
-    f_AllocGrp_SettlCurrFxRate : fix_float option;
+    f_AllocGrp_SettlCurrFxRate : fix_float_4 option;
     f_AllocGrp_SettlCurrFxRateCalc : fix_settlcurrfxratecalc option;
-    f_AllocGrp_AllocAccruedInterestAmt : fix_float option;
-    f_AllocGrp_AllocInterestAtMaturity : fix_float option;
+    f_AllocGrp_AllocAccruedInterestAmt : fix_float_4 option;
+    f_AllocGrp_AllocInterestAtMaturity : fix_float_4 option;
     f_AllocGrp_MiscFeesGrp : fix_rg_miscfeesgrp;
     f_AllocGrp_ClrInstGrp : fix_rg_clrinstgrp;
     f_AllocGrp_AllocSettlInstType : fix_allocsettlinsttype option;

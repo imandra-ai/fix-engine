@@ -22,9 +22,9 @@ type full_fix_advertisement_data = {
     (** Number of underlyings*)
     f_Advertisement_UndInstrmtGrp : fix_rg_undinstrmtgrp;
     f_Advertisement_AdvSide : fix_advside;
-    f_Advertisement_Quantity : fix_float;
+    f_Advertisement_Quantity : fix_float_4;
     f_Advertisement_QtyType : fix_qtytype option;
-    f_Advertisement_Price : fix_float option;
+    f_Advertisement_Price : fix_float_4 option;
     f_Advertisement_Currency : fix_currency option;
     f_Advertisement_TradeDate : fix_localmktdate option;
     f_Advertisement_TransactTime : fix_utctimestamp option;
@@ -84,7 +84,7 @@ type full_fix_allocationinstruction_data = {
     f_AllocationInstruction_UndInstrmtGrp : fix_rg_undinstrmtgrp;
     f_AllocationInstruction_InstrmtLegGrp : fix_rg_instrmtleggrp;
     (** Total quantity (e.g. number of shares) allocated to all accounts, or that is Ready-To-Book*)
-    f_AllocationInstruction_Quantity : fix_float;
+    f_AllocationInstruction_Quantity : fix_float_4;
     f_AllocationInstruction_QtyType : fix_qtytype option;
     (** Market of the executions.*)
     f_AllocationInstruction_LastMkt : fix_exchange option;
@@ -93,8 +93,8 @@ type full_fix_allocationinstruction_data = {
     f_AllocationInstruction_TradingSessionSubID : fix_string option;
     f_AllocationInstruction_PriceType : fix_pricetype option;
     (** For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points).*)
-    f_AllocationInstruction_AvgPx : fix_float;
-    f_AllocationInstruction_AvgParPx : fix_float option;
+    f_AllocationInstruction_AvgPx : fix_float_4;
+    f_AllocationInstruction_AvgParPx : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" fields defined in "Common Components of Application Messages"*)
     f_AllocationInstruction_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Currency of AvgPx. Should be the currency of the local market or exchange where the trade was conducted.*)
@@ -112,11 +112,11 @@ type full_fix_allocationinstruction_data = {
     (** Method for booking. Used to provide notification that this is to be booked out as an OTC derivative (e.g. CFD or similar). Absence of this field implies regular booking.*)
     f_AllocationInstruction_BookingType : fix_bookingtype option;
     (** Expressed in same currency as AvgPx. Sum of (AllocQty * AllocAvgPx or AllocPrice).*)
-    f_AllocationInstruction_GrossTradeAmt : fix_float option;
-    f_AllocationInstruction_Concession : fix_float option;
-    f_AllocationInstruction_TotalTakedown : fix_float option;
+    f_AllocationInstruction_GrossTradeAmt : fix_float_4 option;
+    f_AllocationInstruction_Concession : fix_float_4 option;
+    f_AllocationInstruction_TotalTakedown : fix_float_4 option;
     (** Expressed in same currency as AvgPx. Sum of AllocNetMoney.*)
-    f_AllocationInstruction_NetMoney : fix_float option;
+    f_AllocationInstruction_NetMoney : fix_float_4 option;
     f_AllocationInstruction_PositionEffect : fix_positioneffect option;
     (** Indicates if Allocation has been automatically accepted on behalf of the Carry Firm by the Clearing House*)
     f_AllocationInstruction_AutoAcceptIndicator : bool option;
@@ -128,18 +128,18 @@ type full_fix_allocationinstruction_data = {
     (** Applicable for Convertible Bonds and fixed income*)
     f_AllocationInstruction_NumDaysInterest : int option;
     (** Applicable for Convertible Bonds and fixed income*)
-    f_AllocationInstruction_AccruedInterestRate : fix_float option;
+    f_AllocationInstruction_AccruedInterestRate : fix_float_4 option;
     (** Applicable for Convertible Bonds and fixed income (REMOVED FROM THIS LOCATION AS OF FIX 4.4, REPLACED BY AllocAccruedInterest)*)
-    f_AllocationInstruction_AccruedInterestAmt : fix_float option;
+    f_AllocationInstruction_AccruedInterestAmt : fix_float_4 option;
     (** (Deprecated) use AccruedInterestAmt Sum of AccruedInterestAmt within repeating group.*)
-    f_AllocationInstruction_TotalAccruedInterestAmt : fix_float option;
-    f_AllocationInstruction_InterestAtMaturity : fix_float option;
+    f_AllocationInstruction_TotalAccruedInterestAmt : fix_float_4 option;
+    f_AllocationInstruction_InterestAtMaturity : fix_float_4 option;
     (** For repurchase agreements the accrued interest on termination.*)
-    f_AllocationInstruction_EndAccruedInterestAmt : fix_float option;
+    f_AllocationInstruction_EndAccruedInterestAmt : fix_float_4 option;
     (** For repurchase agreements the start (dirty) cash consideration*)
-    f_AllocationInstruction_StartCash : fix_float option;
+    f_AllocationInstruction_StartCash : fix_float_4 option;
     (** For repurchase agreements the end (dirty) cash consideration*)
-    f_AllocationInstruction_EndCash : fix_float option;
+    f_AllocationInstruction_EndCash : fix_float_4 option;
     f_AllocationInstruction_LegalConfirm : fix_legalconfirm option;
     f_AllocationInstruction_Stipulations : fix_rg_stipulations;
     f_AllocationInstruction_YieldData : fix_yielddata;
@@ -240,7 +240,7 @@ type full_fix_allocationreport_data = {
     f_AllocationReport_UndInstrmtGrp : fix_rg_undinstrmtgrp;
     f_AllocationReport_InstrmtLegGrp : fix_rg_instrmtleggrp;
     (** Total quantity (e.g. number of shares) allocated to all accounts, or that is Ready-To-Book*)
-    f_AllocationReport_Quantity : fix_float;
+    f_AllocationReport_Quantity : fix_float_4;
     f_AllocationReport_QtyType : fix_qtytype option;
     (** Market of the executions.*)
     f_AllocationReport_LastMkt : fix_exchange option;
@@ -249,8 +249,8 @@ type full_fix_allocationreport_data = {
     f_AllocationReport_TradingSessionSubID : fix_string option;
     f_AllocationReport_PriceType : fix_pricetype option;
     (** For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points).*)
-    f_AllocationReport_AvgPx : fix_float;
-    f_AllocationReport_AvgParPx : fix_float option;
+    f_AllocationReport_AvgPx : fix_float_4;
+    f_AllocationReport_AvgParPx : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" fields defined in "Common Components of Application Messages"*)
     f_AllocationReport_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Currency of AvgPx. Should be the currency of the local market or exchange where the trade was conducted.*)
@@ -268,11 +268,11 @@ type full_fix_allocationreport_data = {
     (** Method for booking. Used to provide notification that this is to be booked out as an OTC derivative (e.g. CFD or similar). Absence of this field implies regular booking.*)
     f_AllocationReport_BookingType : fix_bookingtype option;
     (** Expressed in same currency as AvgPx. Sum of (AllocQty * AllocAvgPx or AllocPrice).*)
-    f_AllocationReport_GrossTradeAmt : fix_float option;
-    f_AllocationReport_Concession : fix_float option;
-    f_AllocationReport_TotalTakedown : fix_float option;
+    f_AllocationReport_GrossTradeAmt : fix_float_4 option;
+    f_AllocationReport_Concession : fix_float_4 option;
+    f_AllocationReport_TotalTakedown : fix_float_4 option;
     (** Expressed in same currency as AvgPx. Sum of AllocNetMoney.*)
-    f_AllocationReport_NetMoney : fix_float option;
+    f_AllocationReport_NetMoney : fix_float_4 option;
     f_AllocationReport_PositionEffect : fix_positioneffect option;
     (** Indicates if Allocation has been automatically accepted on behalf of the Carry Firm by the Clearing House*)
     f_AllocationReport_AutoAcceptIndicator : bool option;
@@ -284,18 +284,18 @@ type full_fix_allocationreport_data = {
     (** Applicable for Convertible Bonds and fixed income*)
     f_AllocationReport_NumDaysInterest : int option;
     (** Applicable for Convertible Bonds and fixed income*)
-    f_AllocationReport_AccruedInterestRate : fix_float option;
+    f_AllocationReport_AccruedInterestRate : fix_float_4 option;
     (** Sum of AllocAccruedInterestAmt within repeating group.*)
-    f_AllocationReport_AccruedInterestAmt : fix_float option;
+    f_AllocationReport_AccruedInterestAmt : fix_float_4 option;
     (** (Deprecated) use AccruedInterestAmt Sum of AccruedInterestAmt within repeating group.*)
-    f_AllocationReport_TotalAccruedInterestAmt : fix_float option;
-    f_AllocationReport_InterestAtMaturity : fix_float option;
+    f_AllocationReport_TotalAccruedInterestAmt : fix_float_4 option;
+    f_AllocationReport_InterestAtMaturity : fix_float_4 option;
     (** For repurchase agreements the accrued interest on termination.*)
-    f_AllocationReport_EndAccruedInterestAmt : fix_float option;
+    f_AllocationReport_EndAccruedInterestAmt : fix_float_4 option;
     (** For repurchase agreements the start (dirty) cash consideration*)
-    f_AllocationReport_StartCash : fix_float option;
+    f_AllocationReport_StartCash : fix_float_4 option;
     (** For repurchase agreements the end (dirty) cash consideration*)
-    f_AllocationReport_EndCash : fix_float option;
+    f_AllocationReport_EndCash : fix_float_4 option;
     f_AllocationReport_LegalConfirm : fix_legalconfirm option;
     f_AllocationReport_Stipulations : fix_rg_stipulations;
     f_AllocationReport_YieldData : fix_yielddata;
@@ -377,22 +377,22 @@ type full_fix_assignmentreport_data = {
     (** Insert here here the set of "Position Amount Data" fields defined in "Common Components of Application Messages"
      FMTM - Final Mark-to-Market for Assignment*)
     f_AssignmentReport_PositionAmountData : fix_rg_positionamountdata;
-    f_AssignmentReport_ThresholdAmount : fix_float option;
+    f_AssignmentReport_ThresholdAmount : fix_float_4 option;
     (** Settlement Price of Option*)
-    f_AssignmentReport_SettlPrice : fix_float;
+    f_AssignmentReport_SettlPrice : fix_float_4;
     (** Values = Final, Theoretical*)
     f_AssignmentReport_SettlPriceType : fix_settlpricetype;
     (** Settlement Price of Underlying*)
-    f_AssignmentReport_UnderlyingSettlPrice : fix_float;
+    f_AssignmentReport_UnderlyingSettlPrice : fix_float_4;
     (** Expiration Date of Option*)
     f_AssignmentReport_ExpireDate : fix_localmktdate option;
     (** Method under which assignment was conducted
      Values = Random, ProRata*)
     f_AssignmentReport_AssignmentMethod : fix_assignmentmethod;
     (** Quantity Increment used in performing assignment*)
-    f_AssignmentReport_AssignmentUnit : fix_float option;
+    f_AssignmentReport_AssignmentUnit : fix_float_4 option;
     (** Open interest that was eligible for assignment*)
-    f_AssignmentReport_OpenInterest : fix_float;
+    f_AssignmentReport_OpenInterest : fix_float_4;
     (** Exercise Method used to in performing assignment
      Values = Automatic, Manual*)
     f_AssignmentReport_ExerciseMethod : fix_exercisemethod;
@@ -426,21 +426,21 @@ type full_fix_bidrequest_data = {
     (** Used to represent the currency of monetary amounts.*)
     f_BidRequest_Currency : fix_currency option;
     (** Expressed in Currency*)
-    f_BidRequest_SideValue1 : fix_float option;
+    f_BidRequest_SideValue1 : fix_float_4 option;
     (** Expressed in Currency*)
-    f_BidRequest_SideValue2 : fix_float option;
+    f_BidRequest_SideValue2 : fix_float_4 option;
     (** Used if BidType="Non Disclosed"*)
     f_BidRequest_BidDescReqGrp : fix_rg_biddescreqgrp;
     (** Used if BidType="Disclosed"*)
     f_BidRequest_BidCompReqGrp : fix_rg_bidcompreqgrp;
     f_BidRequest_LiquidityIndType : fix_liquidityindtype option;
     (** Overall weighted average liquidity expressed as a % of average daily volume*)
-    f_BidRequest_WtAverageLiquidity : fix_float option;
+    f_BidRequest_WtAverageLiquidity : fix_float_4 option;
     f_BidRequest_ExchangeForPhysical : fix_exchangeforphysical option;
     (** % value of stocks outside main country in Currency*)
-    f_BidRequest_OutMainCntryUIndex : fix_float option;
+    f_BidRequest_OutMainCntryUIndex : fix_float_4 option;
     (** % of program that crosses in Currency*)
-    f_BidRequest_CrossPercent : fix_float option;
+    f_BidRequest_CrossPercent : fix_float_4 option;
     f_BidRequest_ProgRptReqs : fix_progrptreqs option;
     (** Time in minutes between each ListStatus report sent by SellSide. Zero means don’t send status.*)
     f_BidRequest_ProgPeriodInterval : int option;
@@ -511,28 +511,28 @@ type full_fix_collateralassignment_data = {
     (** Insert here the set of "FinancingDetails" fields defined in "Common Components of Application Messages"*)
     f_CollateralAssignment_FinancingDetails : fix_financingdetails;
     f_CollateralAssignment_SettlDate : fix_localmktdate option;
-    f_CollateralAssignment_Quantity : fix_float option;
+    f_CollateralAssignment_Quantity : fix_float_4 option;
     f_CollateralAssignment_QtyType : fix_qtytype option;
     f_CollateralAssignment_Currency : fix_currency option;
     (** Number of legs that make up the Security*)
     f_CollateralAssignment_InstrmtLegGrp : fix_rg_instrmtleggrp;
     (** Number of legs that make up the Security*)
     f_CollateralAssignment_UndInstrmtCollGrp : fix_rg_undinstrmtcollgrp;
-    f_CollateralAssignment_MarginExcess : fix_float option;
-    f_CollateralAssignment_TotalNetValue : fix_float option;
-    f_CollateralAssignment_CashOutstanding : fix_float option;
+    f_CollateralAssignment_MarginExcess : fix_float_4 option;
+    f_CollateralAssignment_TotalNetValue : fix_float_4 option;
+    f_CollateralAssignment_CashOutstanding : fix_float_4 option;
     (** Insert here the set of "TrdRegTimestamps" fields defined in "Common Components of Application Messages"*)
     f_CollateralAssignment_TrdRegTimestamps : fix_rg_trdregtimestamps;
     f_CollateralAssignment_Side : fix_side option;
     (** Required if any miscellaneous fees are reported. Indicates number of repeating entries
      ** Nested Repeating Group follows ***)
     f_CollateralAssignment_MiscFeesGrp : fix_rg_miscfeesgrp;
-    f_CollateralAssignment_Price : fix_float option;
+    f_CollateralAssignment_Price : fix_float_4 option;
     f_CollateralAssignment_PriceType : fix_pricetype option;
-    f_CollateralAssignment_AccruedInterestAmt : fix_float option;
-    f_CollateralAssignment_EndAccruedInterestAmt : fix_float option;
-    f_CollateralAssignment_StartCash : fix_float option;
-    f_CollateralAssignment_EndCash : fix_float option;
+    f_CollateralAssignment_AccruedInterestAmt : fix_float_4 option;
+    f_CollateralAssignment_EndAccruedInterestAmt : fix_float_4 option;
+    f_CollateralAssignment_StartCash : fix_float_4 option;
+    f_CollateralAssignment_EndCash : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" fields defined in "Common Components of Application Messages"*)
     f_CollateralAssignment_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Insert here the set of "Stipulations" fields defined in "Common Components of Application Messages"*)
@@ -589,25 +589,25 @@ type full_fix_collateralinquiry_data = {
     (** Insert here the set of "FinancingDetails" fields defined in "Common Components of Application Messages"*)
     f_CollateralInquiry_FinancingDetails : fix_financingdetails;
     f_CollateralInquiry_SettlDate : fix_localmktdate option;
-    f_CollateralInquiry_Quantity : fix_float option;
+    f_CollateralInquiry_Quantity : fix_float_4 option;
     f_CollateralInquiry_QtyType : fix_qtytype option;
     f_CollateralInquiry_Currency : fix_currency option;
     (** Number of legs that make up the Security*)
     f_CollateralInquiry_InstrmtLegGrp : fix_rg_instrmtleggrp;
     (** Number of legs that make up the Security*)
     f_CollateralInquiry_UndInstrmtGrp : fix_rg_undinstrmtgrp;
-    f_CollateralInquiry_MarginExcess : fix_float option;
-    f_CollateralInquiry_TotalNetValue : fix_float option;
-    f_CollateralInquiry_CashOutstanding : fix_float option;
+    f_CollateralInquiry_MarginExcess : fix_float_4 option;
+    f_CollateralInquiry_TotalNetValue : fix_float_4 option;
+    f_CollateralInquiry_CashOutstanding : fix_float_4 option;
     (** Insert here the set of "TrdRegTimestamps" fields defined in "Common Components of Application Messages"*)
     f_CollateralInquiry_TrdRegTimestamps : fix_rg_trdregtimestamps;
     f_CollateralInquiry_Side : fix_side option;
-    f_CollateralInquiry_Price : fix_float option;
+    f_CollateralInquiry_Price : fix_float_4 option;
     f_CollateralInquiry_PriceType : fix_pricetype option;
-    f_CollateralInquiry_AccruedInterestAmt : fix_float option;
-    f_CollateralInquiry_EndAccruedInterestAmt : fix_float option;
-    f_CollateralInquiry_StartCash : fix_float option;
-    f_CollateralInquiry_EndCash : fix_float option;
+    f_CollateralInquiry_AccruedInterestAmt : fix_float_4 option;
+    f_CollateralInquiry_EndAccruedInterestAmt : fix_float_4 option;
+    f_CollateralInquiry_StartCash : fix_float_4 option;
+    f_CollateralInquiry_EndCash : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" fields defined in "Common Components of Application Messages"*)
     f_CollateralInquiry_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Insert here the set of "Stipulations" fields defined in "Common Components of Application Messages"*)
@@ -663,7 +663,7 @@ type full_fix_collateralinquiryack_data = {
     (** Insert here the set of "FinancingDetails" fields defined in "Common Components of Application Messages"*)
     f_CollateralInquiryAck_FinancingDetails : fix_financingdetails;
     f_CollateralInquiryAck_SettlDate : fix_localmktdate option;
-    f_CollateralInquiryAck_Quantity : fix_float option;
+    f_CollateralInquiryAck_Quantity : fix_float_4 option;
     f_CollateralInquiryAck_QtyType : fix_qtytype option;
     f_CollateralInquiryAck_Currency : fix_currency option;
     (** Number of legs that make up the Security*)
@@ -721,28 +721,28 @@ type full_fix_collateralreport_data = {
     (** Insert here the set of "FinancingDetails" fields defined in "Common Components of Application Messages"*)
     f_CollateralReport_FinancingDetails : fix_financingdetails;
     f_CollateralReport_SettlDate : fix_localmktdate option;
-    f_CollateralReport_Quantity : fix_float option;
+    f_CollateralReport_Quantity : fix_float_4 option;
     f_CollateralReport_QtyType : fix_qtytype option;
     f_CollateralReport_Currency : fix_currency option;
     (** Number of legs that make up the Security*)
     f_CollateralReport_InstrmtLegGrp : fix_rg_instrmtleggrp;
     (** Number of legs that make up the Security*)
     f_CollateralReport_UndInstrmtGrp : fix_rg_undinstrmtgrp;
-    f_CollateralReport_MarginExcess : fix_float option;
-    f_CollateralReport_TotalNetValue : fix_float option;
-    f_CollateralReport_CashOutstanding : fix_float option;
+    f_CollateralReport_MarginExcess : fix_float_4 option;
+    f_CollateralReport_TotalNetValue : fix_float_4 option;
+    f_CollateralReport_CashOutstanding : fix_float_4 option;
     (** Insert here the set of "TrdRegTimestamps" fields defined in "Common Components of Application Messages"*)
     f_CollateralReport_TrdRegTimestamps : fix_rg_trdregtimestamps;
     f_CollateralReport_Side : fix_side option;
     (** Required if any miscellaneous fees are reported. Indicates number of repeating entries
      ** Nested Repeating Group follows ***)
     f_CollateralReport_MiscFeesGrp : fix_rg_miscfeesgrp;
-    f_CollateralReport_Price : fix_float option;
+    f_CollateralReport_Price : fix_float_4 option;
     f_CollateralReport_PriceType : fix_pricetype option;
-    f_CollateralReport_AccruedInterestAmt : fix_float option;
-    f_CollateralReport_EndAccruedInterestAmt : fix_float option;
-    f_CollateralReport_StartCash : fix_float option;
-    f_CollateralReport_EndCash : fix_float option;
+    f_CollateralReport_AccruedInterestAmt : fix_float_4 option;
+    f_CollateralReport_EndAccruedInterestAmt : fix_float_4 option;
+    f_CollateralReport_StartCash : fix_float_4 option;
+    f_CollateralReport_EndCash : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" fields defined in "Common Components of Application Messages"*)
     f_CollateralReport_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Insert here the set of "Stipulations" fields defined in "Common Components of Application Messages"*)
@@ -795,28 +795,28 @@ type full_fix_collateralrequest_data = {
     (** Details of the Agreement and Deal*)
     f_CollateralRequest_FinancingDetails : fix_financingdetails;
     f_CollateralRequest_SettlDate : fix_localmktdate option;
-    f_CollateralRequest_Quantity : fix_float option;
+    f_CollateralRequest_Quantity : fix_float_4 option;
     f_CollateralRequest_QtyType : fix_qtytype option;
     f_CollateralRequest_Currency : fix_currency option;
     (** Number of legs that make up the Security*)
     f_CollateralRequest_InstrmtLegGrp : fix_rg_instrmtleggrp;
     (** Number of legs that make up the Security*)
     f_CollateralRequest_UndInstrmtCollGrp : fix_rg_undinstrmtcollgrp;
-    f_CollateralRequest_MarginExcess : fix_float option;
-    f_CollateralRequest_TotalNetValue : fix_float option;
-    f_CollateralRequest_CashOutstanding : fix_float option;
+    f_CollateralRequest_MarginExcess : fix_float_4 option;
+    f_CollateralRequest_TotalNetValue : fix_float_4 option;
+    f_CollateralRequest_CashOutstanding : fix_float_4 option;
     (** Insert here the set of "TrdRegTimestamps" fields defined in "Common Components of Application Messages"*)
     f_CollateralRequest_TrdRegTimestamps : fix_rg_trdregtimestamps;
     f_CollateralRequest_Side : fix_side option;
     (** Required if any miscellaneous fees are reported. Indicates number of repeating entries
      ** Nested Repeating Group follows ***)
     f_CollateralRequest_MiscFeesGrp : fix_rg_miscfeesgrp;
-    f_CollateralRequest_Price : fix_float option;
+    f_CollateralRequest_Price : fix_float_4 option;
     f_CollateralRequest_PriceType : fix_pricetype option;
-    f_CollateralRequest_AccruedInterestAmt : fix_float option;
-    f_CollateralRequest_EndAccruedInterestAmt : fix_float option;
-    f_CollateralRequest_StartCash : fix_float option;
-    f_CollateralRequest_EndCash : fix_float option;
+    f_CollateralRequest_AccruedInterestAmt : fix_float_4 option;
+    f_CollateralRequest_EndAccruedInterestAmt : fix_float_4 option;
+    f_CollateralRequest_StartCash : fix_float_4 option;
+    f_CollateralRequest_EndCash : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" fields defined in "Common Components of Application Messages"*)
     f_CollateralRequest_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Insert here the set of "Stipulations" fields defined in "Common Components of Application Messages"*)
@@ -875,28 +875,28 @@ type full_fix_collateralresponse_data = {
     (** Insert here the set of "FinancingDetails" fields defined in "Common Components of Application Messages"*)
     f_CollateralResponse_FinancingDetails : fix_financingdetails;
     f_CollateralResponse_SettlDate : fix_localmktdate option;
-    f_CollateralResponse_Quantity : fix_float option;
+    f_CollateralResponse_Quantity : fix_float_4 option;
     f_CollateralResponse_QtyType : fix_qtytype option;
     f_CollateralResponse_Currency : fix_currency option;
     (** Number of legs that make up the Security*)
     f_CollateralResponse_InstrmtLegGrp : fix_rg_instrmtleggrp;
     (** Number of legs that make up the Security*)
     f_CollateralResponse_UndInstrmtCollGrp : fix_rg_undinstrmtcollgrp;
-    f_CollateralResponse_MarginExcess : fix_float option;
-    f_CollateralResponse_TotalNetValue : fix_float option;
-    f_CollateralResponse_CashOutstanding : fix_float option;
+    f_CollateralResponse_MarginExcess : fix_float_4 option;
+    f_CollateralResponse_TotalNetValue : fix_float_4 option;
+    f_CollateralResponse_CashOutstanding : fix_float_4 option;
     (** Insert here the set of "TrdRegTimestamps" fields defined in "Common Components of Application Messages"*)
     f_CollateralResponse_TrdRegTimestamps : fix_rg_trdregtimestamps;
     f_CollateralResponse_Side : fix_side option;
     (** Required if any miscellaneous fees are reported. Indicates number of repeating entries
      ** Nested Repeating Group follows ***)
     f_CollateralResponse_MiscFeesGrp : fix_rg_miscfeesgrp;
-    f_CollateralResponse_Price : fix_float option;
+    f_CollateralResponse_Price : fix_float_4 option;
     f_CollateralResponse_PriceType : fix_pricetype option;
-    f_CollateralResponse_AccruedInterestAmt : fix_float option;
-    f_CollateralResponse_EndAccruedInterestAmt : fix_float option;
-    f_CollateralResponse_StartCash : fix_float option;
-    f_CollateralResponse_EndCash : fix_float option;
+    f_CollateralResponse_AccruedInterestAmt : fix_float_4 option;
+    f_CollateralResponse_EndAccruedInterestAmt : fix_float_4 option;
+    f_CollateralResponse_StartCash : fix_float_4 option;
+    f_CollateralResponse_EndCash : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" fields defined in "Common Components of Application Messages"*)
     f_CollateralResponse_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Insert here the set of "Stipulations" fields defined in "Common Components of Application Messages"*)
@@ -962,7 +962,7 @@ type full_fix_confirmation_data = {
     (** If traded on Yield, price must be calculated "to worst" and the <Yield> component block must specify how calculated, redemption date and price (if not par). If traded on Price, the <Yield> component block must specify how calculated - "Worst", and include redemptiondate and price (if not par).*)
     f_Confirmation_YieldData : fix_yielddata;
     (** The quantity being confirmed by this message (this is at a trade level, not block or order level)*)
-    f_Confirmation_AllocQty : fix_float;
+    f_Confirmation_AllocQty : fix_float_4;
     f_Confirmation_QtyType : fix_qtytype option;
     f_Confirmation_Side : fix_side;
     f_Confirmation_Currency : fix_currency option;
@@ -976,44 +976,44 @@ type full_fix_confirmation_data = {
     f_Confirmation_AllocAccountType : fix_allocaccounttype option;
     (** Gross price for the trade being confirmed
      Always expressed in percent-of-par for Fixed Income*)
-    f_Confirmation_AvgPx : fix_float;
+    f_Confirmation_AvgPx : fix_float_4;
     (** Absence of this field indicates that default precision arranged by the broker/institution is to be used*)
     f_Confirmation_AvgPxPrecision : int option;
     (** Price type for the AvgPx field*)
     f_Confirmation_PriceType : fix_pricetype option;
-    f_Confirmation_AvgParPx : fix_float option;
+    f_Confirmation_AvgParPx : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" fields defined in "Common Components of Application Messages"*)
     f_Confirmation_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Reported price (may be different to AvgPx in the event of a marked-up or marked-down principal trade)*)
-    f_Confirmation_ReportedPx : fix_float option;
+    f_Confirmation_ReportedPx : fix_float_4 option;
     f_Confirmation_Text : fix_string option;
     f_Confirmation_EncodedTextLen : int option;
     f_Confirmation_EncodedText : fix_string option;
     (** Used to identify whether the trade was a soft dollar trade, step in/out etc. Broker of credit, where relevant, can be specified using the Parties nested block above.*)
     f_Confirmation_ProcessCode : fix_processcode option;
-    f_Confirmation_GrossTradeAmt : fix_float;
+    f_Confirmation_GrossTradeAmt : fix_float_4;
     f_Confirmation_NumDaysInterest : int option;
     (** Optional "next coupon date" for Fixed Income*)
     f_Confirmation_ExDate : fix_localmktdate option;
-    f_Confirmation_AccruedInterestRate : fix_float option;
+    f_Confirmation_AccruedInterestRate : fix_float_4 option;
     (** Required for Fixed Income products that trade with accrued interest*)
-    f_Confirmation_AccruedInterestAmt : fix_float option;
+    f_Confirmation_AccruedInterestAmt : fix_float_4 option;
     (** Required for Fixed Income products that pay lump sum interest at maturity*)
-    f_Confirmation_InterestAtMaturity : fix_float option;
+    f_Confirmation_InterestAtMaturity : fix_float_4 option;
     (** For repurchase agreements the accrued interest on termination.*)
-    f_Confirmation_EndAccruedInterestAmt : fix_float option;
+    f_Confirmation_EndAccruedInterestAmt : fix_float_4 option;
     (** For repurchase agreements the start (dirty) cash consideration*)
-    f_Confirmation_StartCash : fix_float option;
+    f_Confirmation_StartCash : fix_float_4 option;
     (** For repurchase agreements the end (dirty) cash consideration*)
-    f_Confirmation_EndCash : fix_float option;
-    f_Confirmation_Concession : fix_float option;
-    f_Confirmation_TotalTakedown : fix_float option;
-    f_Confirmation_NetMoney : fix_float;
+    f_Confirmation_EndCash : fix_float_4 option;
+    f_Confirmation_Concession : fix_float_4 option;
+    f_Confirmation_TotalTakedown : fix_float_4 option;
+    f_Confirmation_NetMoney : fix_float_4;
     (** Net Money at maturity if Zero Coupon and maturity value is different from par value*)
-    f_Confirmation_MaturityNetMoney : fix_float option;
-    f_Confirmation_SettlCurrAmt : fix_float option;
+    f_Confirmation_MaturityNetMoney : fix_float_4 option;
+    f_Confirmation_SettlCurrAmt : fix_float_4 option;
     f_Confirmation_SettlCurrency : fix_currency option;
-    f_Confirmation_SettlCurrFxRate : fix_float option;
+    f_Confirmation_SettlCurrFxRate : fix_float_4 option;
     f_Confirmation_SettlCurrFxRateCalc : fix_settlcurrfxratecalc option;
     f_Confirmation_SettlType : fix_settltype option;
     f_Confirmation_SettlDate : fix_localmktdate option;
@@ -1022,7 +1022,7 @@ type full_fix_confirmation_data = {
     f_Confirmation_SettlInstructionsData : fix_settlinstructionsdata;
     f_Confirmation_CommissionData : fix_commissiondata;
     (** Used to identify any commission shared with a third party (e.g. directed brokerage)*)
-    f_Confirmation_SharedCommission : fix_float option;
+    f_Confirmation_SharedCommission : fix_float_4 option;
     f_Confirmation_Stipulations : fix_rg_stipulations;
     (** Required if any miscellaneous fees are reported. Indicates number of repeating entries. Repeating group.
      ** Nested Repeating Group follows ***)
@@ -1100,15 +1100,15 @@ type full_fix_crossordercancelreplacerequest_data = {
     f_CrossOrderCancelReplaceRequest_HandlInst : fix_handlinst option;
     (** Can contain multiple instructions, space delimited. If OrdType=P, exactly one of the following values (ExecInst = L, R, M, P, O, T, or W) must be specified.*)
     f_CrossOrderCancelReplaceRequest_ExecInst : fix_execinst option;
-    f_CrossOrderCancelReplaceRequest_MinQty : fix_float option;
-    f_CrossOrderCancelReplaceRequest_MaxFloor : fix_float option;
+    f_CrossOrderCancelReplaceRequest_MinQty : fix_float_4 option;
+    f_CrossOrderCancelReplaceRequest_MaxFloor : fix_float_4 option;
     f_CrossOrderCancelReplaceRequest_ExDestination : fix_exchange option;
     (** Specifies the number of repeating TradingSessionIDs*)
     f_CrossOrderCancelReplaceRequest_TrdgSesGrp : fix_rg_trdgsesgrp;
     (** Used to identify soft trades at order entry.*)
     f_CrossOrderCancelReplaceRequest_ProcessCode : fix_processcode option;
     (** Useful for verifying security identification*)
-    f_CrossOrderCancelReplaceRequest_PrevClosePx : fix_float option;
+    f_CrossOrderCancelReplaceRequest_PrevClosePx : fix_float_4 option;
     (** Required for short sell orders*)
     f_CrossOrderCancelReplaceRequest_LocateReqd : fix_locatereqd option;
     (** Time this order request was initiated/released by the trader, trading system, or intermediary.*)
@@ -1118,9 +1118,9 @@ type full_fix_crossordercancelreplacerequest_data = {
     f_CrossOrderCancelReplaceRequest_OrdType : fix_ordtype;
     f_CrossOrderCancelReplaceRequest_PriceType : fix_pricetype option;
     (** Required for limit OrdTypes. For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points). Can be used to specify a limit price for a pegged order, previously indicated, etc.*)
-    f_CrossOrderCancelReplaceRequest_Price : fix_float option;
+    f_CrossOrderCancelReplaceRequest_Price : fix_float_4 option;
     (** Required for OrdType = "Stop" or OrdType = "Stop limit".*)
-    f_CrossOrderCancelReplaceRequest_StopPx : fix_float option;
+    f_CrossOrderCancelReplaceRequest_StopPx : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" (Fixed Income spread or benchmark curve) fields defined in "Common Components of Application Messages"*)
     f_CrossOrderCancelReplaceRequest_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Insert here the set of "YieldData" (yield-related) fields defined in "Common Components of Application Messages"*)
@@ -1141,7 +1141,7 @@ type full_fix_crossordercancelreplacerequest_data = {
     f_CrossOrderCancelReplaceRequest_ExpireTime : fix_utctimestamp option;
     (** States whether executions are booked out or accumulated on a partially filled GT order*)
     f_CrossOrderCancelReplaceRequest_GTBookingInst : fix_gtbookinginst option;
-    f_CrossOrderCancelReplaceRequest_MaxShow : fix_float option;
+    f_CrossOrderCancelReplaceRequest_MaxShow : fix_float_4 option;
     (** Insert here the set of "PegInstruction" fields defined in "Common Components of Application Messages"*)
     f_CrossOrderCancelReplaceRequest_PegInstructions : fix_peginstructions;
     (** Insert here the set of "DiscretionInstruction" fields defined in "Common Components of Application Messages"*)
@@ -1152,7 +1152,7 @@ type full_fix_crossordercancelreplacerequest_data = {
     f_CrossOrderCancelReplaceRequest_TargetStrategyParameters : fix_string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
-    f_CrossOrderCancelReplaceRequest_ParticipationRate : fix_float option;
+    f_CrossOrderCancelReplaceRequest_ParticipationRate : fix_float_4 option;
     (** For CIV - Optional*)
     f_CrossOrderCancelReplaceRequest_CancellationRights : fix_cancellationrights option;
     f_CrossOrderCancelReplaceRequest_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
@@ -1244,9 +1244,9 @@ type full_fix_dontknowtrade_data = {
     (** Insert here the set of "OrderQtyData" fields defined in "Common Components of Application Messages"*)
     f_DontKnowTrade_OrderQtyData : fix_orderqtydata;
     (** Required if specified on the ExecutionRpt*)
-    f_DontKnowTrade_LastQty : fix_float option;
+    f_DontKnowTrade_LastQty : fix_float_4 option;
     (** Required if specified on the ExecutionRpt*)
-    f_DontKnowTrade_LastPx : fix_float option;
+    f_DontKnowTrade_LastPx : fix_float_4 option;
     f_DontKnowTrade_Text : fix_string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_DontKnowTrade_EncodedTextLen : int option;
@@ -1370,26 +1370,26 @@ type full_fix_executionreport_data = {
     f_ExecutionReport_OrdType : fix_ordtype option;
     f_ExecutionReport_PriceType : fix_pricetype option;
     (** Required if specified on the order*)
-    f_ExecutionReport_Price : fix_float option;
+    f_ExecutionReport_Price : fix_float_4 option;
     (** Required if specified on the order*)
-    f_ExecutionReport_StopPx : fix_float option;
+    f_ExecutionReport_StopPx : fix_float_4 option;
     (** Insert here the set of "PegInstruction" fields defined in "Common Components of Application Messages"*)
     f_ExecutionReport_PegInstructions : fix_peginstructions;
     (** Insert here the set of "DiscretionInstruction" fields defined in "Common Components of Application Messages"*)
     f_ExecutionReport_DiscretionInstructions : fix_discretioninstructions;
     (** The current price the order is pegged at*)
-    f_ExecutionReport_PeggedPrice : fix_float option;
+    f_ExecutionReport_PeggedPrice : fix_float_4 option;
     (** The current discretionary price of the order*)
-    f_ExecutionReport_DiscretionPrice : fix_float option;
+    f_ExecutionReport_DiscretionPrice : fix_float_4 option;
     (** The target strategy of the order*)
     f_ExecutionReport_TargetStrategy : fix_targetstrategy option;
     (** For further specification of the TargetStrategy*)
     f_ExecutionReport_TargetStrategyParameters : fix_string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
-    f_ExecutionReport_ParticipationRate : fix_float option;
+    f_ExecutionReport_ParticipationRate : fix_float_4 option;
     (** For communication of the performance of the order versus the target strategy*)
-    f_ExecutionReport_TargetStrategyPerformance : fix_float option;
+    f_ExecutionReport_TargetStrategyPerformance : fix_float_4 option;
     f_ExecutionReport_Currency : fix_currency option;
     f_ExecutionReport_ComplianceID : fix_string option;
     f_ExecutionReport_SolicitedFlag : fix_solicitedflag option;
@@ -1408,19 +1408,19 @@ type full_fix_executionreport_data = {
     f_ExecutionReport_CustOrderCapacity : fix_custordercapacity option;
     (** Quantity (e.g. shares) bought/sold on this (last) fill. Required if ExecType = Trade or Trade Correct.
      If ExecType=Stopped, represents the quantity stopped/guaranteed/protected for.*)
-    f_ExecutionReport_LastQty : fix_float option;
-    f_ExecutionReport_UnderlyingLastQty : fix_float option;
+    f_ExecutionReport_LastQty : fix_float_4 option;
+    f_ExecutionReport_UnderlyingLastQty : fix_float_4 option;
     (** Price of this (last) fill. Required if ExecType = Trade or Trade Correct.
      Should represent the "all-in" (LastSpotRate + LastForwardPoints) rate for F/X orders. ).
      If ExecType=Stopped, represents the price stopped/guaranteed/protected at.*)
-    f_ExecutionReport_LastPx : fix_float option;
-    f_ExecutionReport_UnderlyingLastPx : fix_float option;
+    f_ExecutionReport_LastPx : fix_float_4 option;
+    f_ExecutionReport_UnderlyingLastPx : fix_float_4 option;
     (** Last price expressed in percent-of-par. Conditionally required for Fixed Income trades when LastPx is expressed in Yield, Spread, Discount or any other price type that is not percent-of-par.*)
-    f_ExecutionReport_LastParPx : fix_float option;
+    f_ExecutionReport_LastParPx : fix_float_4 option;
     (** Applicable for F/X orders*)
-    f_ExecutionReport_LastSpotRate : fix_float option;
+    f_ExecutionReport_LastSpotRate : fix_float_4 option;
     (** Applicable for F/X orders*)
-    f_ExecutionReport_LastForwardPoints : fix_float option;
+    f_ExecutionReport_LastForwardPoints : fix_float_4 option;
     (** If ExecType = Trade (F), indicates the market where the trade was executed. If ExecType = New (0), indicates the market where the order was routed.*)
     f_ExecutionReport_LastMkt : fix_exchange option;
     f_ExecutionReport_TradingSessionID : fix_string option;
@@ -1428,16 +1428,16 @@ type full_fix_executionreport_data = {
     f_ExecutionReport_TimeBracket : fix_string option;
     f_ExecutionReport_LastCapacity : fix_lastcapacity option;
     (** Quantity open for further execution. If the OrdStatus is Canceled, DoneForTheDay, Expired, Calculated, or Rejected (in which case the order is no longer active) then LeavesQty could be 0, otherwise LeavesQty = OrderQty - CumQty.*)
-    f_ExecutionReport_LeavesQty : fix_float;
+    f_ExecutionReport_LeavesQty : fix_float_4;
     (** Currently executed quantity for chain of orders.*)
-    f_ExecutionReport_CumQty : fix_float;
-    f_ExecutionReport_AvgPx : fix_float;
+    f_ExecutionReport_CumQty : fix_float_4;
+    f_ExecutionReport_AvgPx : fix_float_4;
     (** For GT orders on days following the day of the first trade.*)
-    f_ExecutionReport_DayOrderQty : fix_float option;
+    f_ExecutionReport_DayOrderQty : fix_float_4 option;
     (** For GT orders on days following the day of the first trade.*)
-    f_ExecutionReport_DayCumQty : fix_float option;
+    f_ExecutionReport_DayCumQty : fix_float_4 option;
     (** For GT orders on days following the day of the first trade.*)
-    f_ExecutionReport_DayAvgPx : fix_float option;
+    f_ExecutionReport_DayAvgPx : fix_float_4 option;
     (** States whether executions are booked out or accumulated on a partially filled GT order*)
     f_ExecutionReport_GTBookingInst : fix_gtbookinginst option;
     (** Used when reporting other than current day trades.*)
@@ -1452,40 +1452,40 @@ type full_fix_executionreport_data = {
     f_ExecutionReport_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Insert here the set of "YieldData" (yield-related) fields defined in "Common Components of Application Messages"*)
     f_ExecutionReport_YieldData : fix_yielddata;
-    f_ExecutionReport_GrossTradeAmt : fix_float option;
+    f_ExecutionReport_GrossTradeAmt : fix_float_4 option;
     f_ExecutionReport_NumDaysInterest : int option;
     f_ExecutionReport_ExDate : fix_localmktdate option;
-    f_ExecutionReport_AccruedInterestRate : fix_float option;
-    f_ExecutionReport_AccruedInterestAmt : fix_float option;
+    f_ExecutionReport_AccruedInterestRate : fix_float_4 option;
+    f_ExecutionReport_AccruedInterestAmt : fix_float_4 option;
     (** For fixed income products which pay lump-sum interest at maturity.*)
-    f_ExecutionReport_InterestAtMaturity : fix_float option;
+    f_ExecutionReport_InterestAtMaturity : fix_float_4 option;
     (** For repurchase agreements the accrued interest on termination.*)
-    f_ExecutionReport_EndAccruedInterestAmt : fix_float option;
+    f_ExecutionReport_EndAccruedInterestAmt : fix_float_4 option;
     (** For repurchase agreements the start (dirty) cash consideration*)
-    f_ExecutionReport_StartCash : fix_float option;
+    f_ExecutionReport_StartCash : fix_float_4 option;
     (** For repurchase agreements the end (dirty) cash consideration*)
-    f_ExecutionReport_EndCash : fix_float option;
+    f_ExecutionReport_EndCash : fix_float_4 option;
     f_ExecutionReport_TradedFlatSwitch : fix_tradedflatswitch option;
     f_ExecutionReport_BasisFeatureDate : fix_localmktdate option;
-    f_ExecutionReport_BasisFeaturePrice : fix_float option;
-    f_ExecutionReport_Concession : fix_float option;
-    f_ExecutionReport_TotalTakedown : fix_float option;
+    f_ExecutionReport_BasisFeaturePrice : fix_float_4 option;
+    f_ExecutionReport_Concession : fix_float_4 option;
+    f_ExecutionReport_TotalTakedown : fix_float_4 option;
     (** Note: On a fill/partial fill messages, it represents value for that fill/partial fill, on ExecType=Calculated, it represents cumulative value for the order. Value expressed in the currency reflected by the Currency field.*)
-    f_ExecutionReport_NetMoney : fix_float option;
+    f_ExecutionReport_NetMoney : fix_float_4 option;
     (** Used to report results of forex accommodation trade*)
-    f_ExecutionReport_SettlCurrAmt : fix_float option;
+    f_ExecutionReport_SettlCurrAmt : fix_float_4 option;
     (** Used to report results of forex accommodation trade*)
     f_ExecutionReport_SettlCurrency : fix_currency option;
     (** Foreign exchange rate used to compute SettlCurrAmt from Currency to SettlCurrency*)
-    f_ExecutionReport_SettlCurrFxRate : fix_float option;
+    f_ExecutionReport_SettlCurrFxRate : fix_float_4 option;
     (** Specifies whether the SettlCurrFxRate should be multiplied or divided*)
     f_ExecutionReport_SettlCurrFxRateCalc : fix_settlcurrfxratecalc option;
     f_ExecutionReport_HandlInst : fix_handlinst option;
-    f_ExecutionReport_MinQty : fix_float option;
-    f_ExecutionReport_MaxFloor : fix_float option;
+    f_ExecutionReport_MinQty : fix_float_4 option;
+    f_ExecutionReport_MaxFloor : fix_float_4 option;
     (** For use in derivatives omnibus accounting*)
     f_ExecutionReport_PositionEffect : fix_positioneffect option;
-    f_ExecutionReport_MaxShow : fix_float option;
+    f_ExecutionReport_MaxShow : fix_float_4 option;
     (** Method for booking out this order. Used when notifying a broker that an order to be settled by that broker is to be booked out as an OTC derivative (e.g. CFD or similar). Absence of this field implies regular booking.*)
     f_ExecutionReport_BookingType : fix_bookingtype option;
     f_ExecutionReport_Text : fix_string option;
@@ -1496,9 +1496,9 @@ type full_fix_executionreport_data = {
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_ExecutionReport_SettlDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
-    f_ExecutionReport_OrderQty2 : fix_float option;
+    f_ExecutionReport_OrderQty2 : fix_float_4 option;
     (** Can be used with OrdType = "Forex - Swap" to specify the forward points (added to LastSpotRate) for the future portion of a F/X swap.*)
-    f_ExecutionReport_LastForwardPoints2 : fix_float option;
+    f_ExecutionReport_LastForwardPoints2 : fix_float_4 option;
     (** Default is a single security if not specified.*)
     f_ExecutionReport_MultiLegReportingType : fix_multilegreportingtype option;
     (** For CIV - Optional*)
@@ -1515,9 +1515,9 @@ type full_fix_executionreport_data = {
     (** For CIV - Optional*)
     f_ExecutionReport_ExecPriceType : fix_execpricetype option;
     (** For CIV - Optional*)
-    f_ExecutionReport_ExecPriceAdjustment : fix_float option;
+    f_ExecutionReport_ExecPriceAdjustment : fix_float_4 option;
     f_ExecutionReport_PriorityIndicator : fix_priorityindicator option;
-    f_ExecutionReport_PriceImprovement : fix_float option;
+    f_ExecutionReport_PriceImprovement : fix_float_4 option;
     (** Applicable only on OrdStatus of Partial or Filled.*)
     f_ExecutionReport_LastLiquidityInd : fix_lastliquidityind option;
     (** Number of contract details in this message (number of repeating groups to follow)*)
@@ -1565,7 +1565,7 @@ type full_fix_ioi_data = {
     (** Required for multileg IOIs*)
     f_IOI_InstrmtLegIOIGrp : fix_rg_instrmtlegioigrp;
     f_IOI_PriceType : fix_pricetype option;
-    f_IOI_Price : fix_float option;
+    f_IOI_Price : fix_float_4 option;
     f_IOI_ValidUntilTime : fix_utctimestamp option;
     f_IOI_IOIQltyInd : fix_ioiqltyind option;
     f_IOI_IOINaturalFlag : fix_ioinaturalflag option;
@@ -1736,7 +1736,7 @@ type full_fix_marketdatasnapshotfullrefresh_data = {
     f_MarketDataSnapshotFullRefresh_InstrmtLegGrp : fix_rg_instrmtleggrp;
     f_MarketDataSnapshotFullRefresh_FinancialStatus : fix_financialstatus option;
     f_MarketDataSnapshotFullRefresh_CorporateAction : fix_corporateaction option;
-    f_MarketDataSnapshotFullRefresh_NetChgPrevDay : fix_float option;
+    f_MarketDataSnapshotFullRefresh_NetChgPrevDay : fix_float_4 option;
     (** Number of entries following.*)
     f_MarketDataSnapshotFullRefresh_MDFullGrp : fix_rg_mdfullgrp;
     (** Depth of application messages queued for transmission as of delivery of this message*)
@@ -1763,9 +1763,9 @@ type full_fix_massquote_data = {
     (** Type of account associated with the order (Origin)*)
     f_MassQuote_AccountType : fix_accounttype option;
     (** Default Bid Size for quote contained within this quote message - if not explicitly provided.*)
-    f_MassQuote_DefBidSize : fix_float option;
+    f_MassQuote_DefBidSize : fix_float_4 option;
     (** Default Offer Size for quotes contained within this quote message - if not explicitly provided.*)
-    f_MassQuote_DefOfferSize : fix_float option;
+    f_MassQuote_DefOfferSize : fix_float_4 option;
     (** The number of sets of quotes in the message*)
     f_MassQuote_QuotSetGrp : fix_rg_quotsetgrp
 }
@@ -1832,8 +1832,8 @@ type full_fix_multilegordercancelreplace_data = {
     f_MultilegOrderCancelReplace_HandlInst : fix_handlinst option;
     (** Can contain multiple instructions, space delimited. If OrdType=P, exactly one of the following values (ExecInst = L, R, M, P, O, T, or W) must be specified.*)
     f_MultilegOrderCancelReplace_ExecInst : fix_execinst option;
-    f_MultilegOrderCancelReplace_MinQty : fix_float option;
-    f_MultilegOrderCancelReplace_MaxFloor : fix_float option;
+    f_MultilegOrderCancelReplace_MinQty : fix_float_4 option;
+    f_MultilegOrderCancelReplace_MaxFloor : fix_float_4 option;
     f_MultilegOrderCancelReplace_ExDestination : fix_exchange option;
     (** Specifies the number of repeating TradingSessionIDs*)
     f_MultilegOrderCancelReplace_TrdgSesGrp : fix_rg_trdgsesgrp;
@@ -1848,7 +1848,7 @@ type full_fix_multilegordercancelreplace_data = {
     (** Number of underlyings*)
     f_MultilegOrderCancelReplace_UndInstrmtGrp : fix_rg_undinstrmtgrp;
     (** Useful for verifying security identification*)
-    f_MultilegOrderCancelReplace_PrevClosePx : fix_float option;
+    f_MultilegOrderCancelReplace_PrevClosePx : fix_float_4 option;
     (** Number of legs
      Can be zero (e.g. standardized multileg instrument such as an Option strategy) - must be provided even if zero*)
     f_MultilegOrderCancelReplace_LegOrdGrp : fix_rg_legordgrp;
@@ -1862,9 +1862,9 @@ type full_fix_multilegordercancelreplace_data = {
     f_MultilegOrderCancelReplace_OrdType : fix_ordtype;
     f_MultilegOrderCancelReplace_PriceType : fix_pricetype option;
     (** Required for limit OrdTypes. For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points). Can be used to specify a limit price for a pegged order, previously indicated, etc.*)
-    f_MultilegOrderCancelReplace_Price : fix_float option;
+    f_MultilegOrderCancelReplace_Price : fix_float_4 option;
     (** Required for OrdType = "Stop" or OrdType = "Stop limit".*)
-    f_MultilegOrderCancelReplace_StopPx : fix_float option;
+    f_MultilegOrderCancelReplace_StopPx : fix_float_4 option;
     f_MultilegOrderCancelReplace_Currency : fix_currency option;
     f_MultilegOrderCancelReplace_ComplianceID : fix_string option;
     f_MultilegOrderCancelReplace_SolicitedFlag : fix_solicitedflag option;
@@ -1902,7 +1902,7 @@ type full_fix_multilegordercancelreplace_data = {
     f_MultilegOrderCancelReplace_PositionEffect : fix_positioneffect option;
     (** For use with derivatives, such as options*)
     f_MultilegOrderCancelReplace_CoveredOrUncovered : fix_coveredoruncovered option;
-    f_MultilegOrderCancelReplace_MaxShow : fix_float option;
+    f_MultilegOrderCancelReplace_MaxShow : fix_float_4 option;
     (** Insert here the set of "PegInstruction" fields defined in "Common Components of Application Messages"*)
     f_MultilegOrderCancelReplace_PegInstructions : fix_peginstructions;
     (** Insert here the set of "DiscretionInstruction" fields defined in "Common Components of Application Messages"*)
@@ -1913,7 +1913,7 @@ type full_fix_multilegordercancelreplace_data = {
     f_MultilegOrderCancelReplace_TargetStrategyParameters : fix_string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
-    f_MultilegOrderCancelReplace_ParticipationRate : fix_float option;
+    f_MultilegOrderCancelReplace_ParticipationRate : fix_float_4 option;
     (** For CIV - Optional*)
     f_MultilegOrderCancelReplace_CancellationRights : fix_cancellationrights option;
     f_MultilegOrderCancelReplace_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
@@ -1967,15 +1967,15 @@ type full_fix_newordercross_data = {
     f_NewOrderCross_HandlInst : fix_handlinst option;
     (** Can contain multiple instructions, space delimited. If OrdType=P, exactly one of the following values (ExecInst = L, R, M, P, O, T, or W) must be specified.*)
     f_NewOrderCross_ExecInst : fix_execinst option;
-    f_NewOrderCross_MinQty : fix_float option;
-    f_NewOrderCross_MaxFloor : fix_float option;
+    f_NewOrderCross_MinQty : fix_float_4 option;
+    f_NewOrderCross_MaxFloor : fix_float_4 option;
     f_NewOrderCross_ExDestination : fix_exchange option;
     (** Specifies the number of repeating TradingSessionIDs*)
     f_NewOrderCross_TrdgSesGrp : fix_rg_trdgsesgrp;
     (** Used to identify soft trades at order entry.*)
     f_NewOrderCross_ProcessCode : fix_processcode option;
     (** Useful for verifying security identification*)
-    f_NewOrderCross_PrevClosePx : fix_float option;
+    f_NewOrderCross_PrevClosePx : fix_float_4 option;
     (** Required for short sell orders*)
     f_NewOrderCross_LocateReqd : fix_locatereqd option;
     (** Time this order request was initiated/released by the trader, trading system, or intermediary.*)
@@ -1985,9 +1985,9 @@ type full_fix_newordercross_data = {
     f_NewOrderCross_OrdType : fix_ordtype;
     f_NewOrderCross_PriceType : fix_pricetype option;
     (** Required for limit OrdTypes. For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points). Can be used to specify a limit price for a pegged order, previously indicated, etc.*)
-    f_NewOrderCross_Price : fix_float option;
+    f_NewOrderCross_Price : fix_float_4 option;
     (** Required for OrdType = "Stop" or OrdType = "Stop limit".*)
-    f_NewOrderCross_StopPx : fix_float option;
+    f_NewOrderCross_StopPx : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" (Fixed Income spread or benchmark curve) fields defined in "Common Components of Application Messages"*)
     f_NewOrderCross_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Insert here the set of "YieldData" (yield-related) fields defined in "Common Components of Application Messages"*)
@@ -2008,7 +2008,7 @@ type full_fix_newordercross_data = {
     f_NewOrderCross_ExpireTime : fix_utctimestamp option;
     (** States whether executions are booked out or accumulated on a partially filled GT order*)
     f_NewOrderCross_GTBookingInst : fix_gtbookinginst option;
-    f_NewOrderCross_MaxShow : fix_float option;
+    f_NewOrderCross_MaxShow : fix_float_4 option;
     (** Insert here the set of "PegInstruction" fields defined in "Common Components of Application Messages"*)
     f_NewOrderCross_PegInstructions : fix_peginstructions;
     (** Insert here the set of "DiscretionInstruction" fields defined in "Common Components of Application Messages"*)
@@ -2019,7 +2019,7 @@ type full_fix_newordercross_data = {
     f_NewOrderCross_TargetStrategyParameters : fix_string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
-    f_NewOrderCross_ParticipationRate : fix_float option;
+    f_NewOrderCross_ParticipationRate : fix_float_4 option;
     (** For CIV - Optional*)
     f_NewOrderCross_CancellationRights : fix_cancellationrights option;
     f_NewOrderCross_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
@@ -2055,9 +2055,9 @@ type full_fix_neworderlist_data = {
     (** Encoded (non-ASCII characters) representation of the ListExecInst field in the encoded format specified via the MessageEncoding field.*)
     f_NewOrderList_EncodedListExecInst : fix_string option;
     (** The maximum percentage that execution of one side of a program trade can exceed execution of the other.*)
-    f_NewOrderList_AllowableOneSidednessPct : fix_float option;
+    f_NewOrderList_AllowableOneSidednessPct : fix_float_4 option;
     (** The maximum amount that execution of one side of a program trade can exceed execution of the other.*)
-    f_NewOrderList_AllowableOneSidednessValue : fix_float option;
+    f_NewOrderList_AllowableOneSidednessValue : fix_float_4 option;
     (** The currency that AllowableOneSidedness is expressed in if AllowableOneSidednessValue is used.*)
     f_NewOrderList_AllowableOneSidednessCurr : fix_currency option;
     (** Used to support fragmentation. Sum of NoOrders across all messages with the same ListID.*)
@@ -2097,8 +2097,8 @@ type full_fix_newordermultileg_data = {
     f_NewOrderMultileg_HandlInst : fix_handlinst option;
     (** Can contain multiple instructions, space delimited. If OrdType=P, exactly one of the following values (ExecInst = L, R, M, P, O, T, or W) must be specified.*)
     f_NewOrderMultileg_ExecInst : fix_execinst option;
-    f_NewOrderMultileg_MinQty : fix_float option;
-    f_NewOrderMultileg_MaxFloor : fix_float option;
+    f_NewOrderMultileg_MinQty : fix_float_4 option;
+    f_NewOrderMultileg_MaxFloor : fix_float_4 option;
     f_NewOrderMultileg_ExDestination : fix_exchange option;
     (** Specifies the number of repeating TradingSessionIDs*)
     f_NewOrderMultileg_TrdgSesGrp : fix_rg_trdgsesgrp;
@@ -2113,7 +2113,7 @@ type full_fix_newordermultileg_data = {
     (** Number of underlyings*)
     f_NewOrderMultileg_UndInstrmtGrp : fix_rg_undinstrmtgrp;
     (** Useful for verifying security identification*)
-    f_NewOrderMultileg_PrevClosePx : fix_float option;
+    f_NewOrderMultileg_PrevClosePx : fix_float_4 option;
     (** Number of legs
      Can be zero (e.g. standardized multileg instrument such as an Option strategy) - must be provided even if zero*)
     f_NewOrderMultileg_LegOrdGrp : fix_rg_legordgrp;
@@ -2127,9 +2127,9 @@ type full_fix_newordermultileg_data = {
     f_NewOrderMultileg_OrdType : fix_ordtype;
     f_NewOrderMultileg_PriceType : fix_pricetype option;
     (** Required for limit OrdTypes. For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points). Can be used to specify a limit price for a pegged order, previously indicated, etc.*)
-    f_NewOrderMultileg_Price : fix_float option;
+    f_NewOrderMultileg_Price : fix_float_4 option;
     (** Required for OrdType = "Stop" or OrdType = "Stop limit".*)
-    f_NewOrderMultileg_StopPx : fix_float option;
+    f_NewOrderMultileg_StopPx : fix_float_4 option;
     f_NewOrderMultileg_Currency : fix_currency option;
     f_NewOrderMultileg_ComplianceID : fix_string option;
     f_NewOrderMultileg_SolicitedFlag : fix_solicitedflag option;
@@ -2167,7 +2167,7 @@ type full_fix_newordermultileg_data = {
     f_NewOrderMultileg_PositionEffect : fix_positioneffect option;
     (** For use with derivatives, such as options*)
     f_NewOrderMultileg_CoveredOrUncovered : fix_coveredoruncovered option;
-    f_NewOrderMultileg_MaxShow : fix_float option;
+    f_NewOrderMultileg_MaxShow : fix_float_4 option;
     (** Insert here the set of "PegInstruction" fields defined in "Common Components of Application Messages"*)
     f_NewOrderMultileg_PegInstructions : fix_peginstructions;
     (** Insert here the set of "DiscretionInstruction" fields defined in "Common Components of Application Messages"*)
@@ -2178,7 +2178,7 @@ type full_fix_newordermultileg_data = {
     f_NewOrderMultileg_TargetStrategyParameters : fix_string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
-    f_NewOrderMultileg_ParticipationRate : fix_float option;
+    f_NewOrderMultileg_ParticipationRate : fix_float_4 option;
     (** For CIV - Optional*)
     f_NewOrderMultileg_CancellationRights : fix_cancellationrights option;
     f_NewOrderMultileg_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
@@ -2220,8 +2220,8 @@ type full_fix_newordersingle_data = {
     f_NewOrderSingle_HandlInst : fix_handlinst option;
     (** Can contain multiple instructions, space delimited. If OrdType=P, exactly one of the following values (ExecInst = L, R, M, P, O, T, W, a, d) must be specified.*)
     f_NewOrderSingle_ExecInst : fix_execinst option;
-    f_NewOrderSingle_MinQty : fix_float option;
-    f_NewOrderSingle_MaxFloor : fix_float option;
+    f_NewOrderSingle_MinQty : fix_float_4 option;
+    f_NewOrderSingle_MaxFloor : fix_float_4 option;
     f_NewOrderSingle_ExDestination : fix_exchange option;
     (** Specifies the number of repeating TradingSessionIDs*)
     f_NewOrderSingle_TrdgSesGrp : fix_rg_trdgsesgrp;
@@ -2234,7 +2234,7 @@ type full_fix_newordersingle_data = {
     (** Number of underlyings*)
     f_NewOrderSingle_UndInstrmtGrp : fix_rg_undinstrmtgrp;
     (** Useful for verifying security identification*)
-    f_NewOrderSingle_PrevClosePx : fix_float option;
+    f_NewOrderSingle_PrevClosePx : fix_float_4 option;
     f_NewOrderSingle_Side : fix_side;
     (** Required for short sell orders*)
     f_NewOrderSingle_LocateReqd : fix_locatereqd option;
@@ -2248,9 +2248,9 @@ type full_fix_newordersingle_data = {
     f_NewOrderSingle_OrdType : fix_ordtype;
     f_NewOrderSingle_PriceType : fix_pricetype option;
     (** Required for limit OrdTypes. For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points). Can be used to specify a limit price for a pegged order, previously indicated, etc.*)
-    f_NewOrderSingle_Price : fix_float option;
+    f_NewOrderSingle_Price : fix_float_4 option;
     (** Required for OrdType = "Stop" or OrdType = "Stop limit".*)
-    f_NewOrderSingle_StopPx : fix_float option;
+    f_NewOrderSingle_StopPx : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" (Fixed Income spread or benchmark curve) fields defined in "Common Components of Application Messages"*)
     f_NewOrderSingle_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Insert here the set of "YieldData" (yield-related) fields defined in "Common Components of Application Messages"*)
@@ -2291,14 +2291,14 @@ type full_fix_newordersingle_data = {
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_NewOrderSingle_SettlDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
-    f_NewOrderSingle_OrderQty2 : fix_float option;
+    f_NewOrderSingle_OrderQty2 : fix_float_4 option;
     (** Can be used with OrdType = "Forex - Swap" to specify the price for the future portion of a F/X swap which is also a limit order. For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points).*)
-    f_NewOrderSingle_Price2 : fix_float option;
+    f_NewOrderSingle_Price2 : fix_float_4 option;
     (** For use in derivatives omnibus accounting*)
     f_NewOrderSingle_PositionEffect : fix_positioneffect option;
     (** For use with derivatives, such as options*)
     f_NewOrderSingle_CoveredOrUncovered : fix_coveredoruncovered option;
-    f_NewOrderSingle_MaxShow : fix_float option;
+    f_NewOrderSingle_MaxShow : fix_float_4 option;
     (** Insert here the set of "PegInstruction" fields defined in "Common Components of Application Messages"*)
     f_NewOrderSingle_PegInstructions : fix_peginstructions;
     (** Insert here the set of "DiscretionInstruction" fields defined in "Common Components of Application Messages"*)
@@ -2309,7 +2309,7 @@ type full_fix_newordersingle_data = {
     f_NewOrderSingle_TargetStrategyParameters : fix_string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
-    f_NewOrderSingle_ParticipationRate : fix_float option;
+    f_NewOrderSingle_ParticipationRate : fix_float_4 option;
     (** For CIV - Optional*)
     f_NewOrderSingle_CancellationRights : fix_cancellationrights option;
     f_NewOrderSingle_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
@@ -2420,8 +2420,8 @@ type full_fix_ordercancelreplacerequest_data = {
     f_OrderCancelReplaceRequest_HandlInst : fix_handlinst option;
     (** Can contain multiple instructions, space delimited. Replacement order must be created with new parameters (i.e. original order values will not be brought forward to replacement order unless redefined within this message).*)
     f_OrderCancelReplaceRequest_ExecInst : fix_execinst option;
-    f_OrderCancelReplaceRequest_MinQty : fix_float option;
-    f_OrderCancelReplaceRequest_MaxFloor : fix_float option;
+    f_OrderCancelReplaceRequest_MinQty : fix_float_4 option;
+    f_OrderCancelReplaceRequest_MaxFloor : fix_float_4 option;
     f_OrderCancelReplaceRequest_ExDestination : fix_exchange option;
     (** Specifies the number of repeating TradingSessionIDs*)
     f_OrderCancelReplaceRequest_TrdgSesGrp : fix_rg_trdgsesgrp;
@@ -2447,9 +2447,9 @@ type full_fix_ordercancelreplacerequest_data = {
     f_OrderCancelReplaceRequest_OrdType : fix_ordtype;
     f_OrderCancelReplaceRequest_PriceType : fix_pricetype option;
     (** Required for limit OrdTypes. For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points). Can be used to specify a limit price for a pegged order, previously indicated, etc.*)
-    f_OrderCancelReplaceRequest_Price : fix_float option;
+    f_OrderCancelReplaceRequest_Price : fix_float_4 option;
     (** Required for OrdType = "Stop" or OrdType = "Stop limit".*)
-    f_OrderCancelReplaceRequest_StopPx : fix_float option;
+    f_OrderCancelReplaceRequest_StopPx : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" (Fixed Income spread or benchmark curve) fields defined in "Common Components of Application Messages"*)
     f_OrderCancelReplaceRequest_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Insert here the set of "YieldData" (yield-related) fields defined in "Common Components of Application Messages"*)
@@ -2464,7 +2464,7 @@ type full_fix_ordercancelreplacerequest_data = {
     f_OrderCancelReplaceRequest_TargetStrategyParameters : fix_string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
-    f_OrderCancelReplaceRequest_ParticipationRate : fix_float option;
+    f_OrderCancelReplaceRequest_ParticipationRate : fix_float_4 option;
     f_OrderCancelReplaceRequest_ComplianceID : fix_string option;
     f_OrderCancelReplaceRequest_SolicitedFlag : fix_solicitedflag option;
     (** Must match original order.*)
@@ -2498,14 +2498,14 @@ type full_fix_ordercancelreplacerequest_data = {
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_OrderCancelReplaceRequest_SettlDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
-    f_OrderCancelReplaceRequest_OrderQty2 : fix_float option;
+    f_OrderCancelReplaceRequest_OrderQty2 : fix_float_4 option;
     (** Can be used with OrdType = "Forex - Swap" to specify the price for the future portion of a F/X swap.*)
-    f_OrderCancelReplaceRequest_Price2 : fix_float option;
+    f_OrderCancelReplaceRequest_Price2 : fix_float_4 option;
     (** For use in derivatives omnibus accounting*)
     f_OrderCancelReplaceRequest_PositionEffect : fix_positioneffect option;
     (** For use with derivatives, such as options*)
     f_OrderCancelReplaceRequest_CoveredOrUncovered : fix_coveredoruncovered option;
-    f_OrderCancelReplaceRequest_MaxShow : fix_float option;
+    f_OrderCancelReplaceRequest_MaxShow : fix_float_4 option;
     (** Required for short sell orders*)
     f_OrderCancelReplaceRequest_LocateReqd : fix_locatereqd option;
     (** For CIV - Optional*)
@@ -2712,7 +2712,7 @@ type full_fix_positionmaintenancereport_data = {
     (** Type of adjustment to be applied
      Delta_plus, Delta_minus, Final. If Adjustment Type is null, the PCS request will be processed as Margin Disposition only*)
     f_PositionMaintenanceReport_AdjustmentType : fix_adjustmenttype option;
-    f_PositionMaintenanceReport_ThresholdAmount : fix_float option;
+    f_PositionMaintenanceReport_ThresholdAmount : fix_float_4 option;
     f_PositionMaintenanceReport_Text : fix_string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_PositionMaintenanceReport_EncodedTextLen : int option;
@@ -2762,7 +2762,7 @@ type full_fix_positionmaintenancerequest_data = {
     f_PositionMaintenanceRequest_ContraryInstructionIndicator : bool option;
     (** Boolean - Y indicates you are requesting rollover of prior day’s spread submissions*)
     f_PositionMaintenanceRequest_PriorSpreadIndicator : bool option;
-    f_PositionMaintenanceRequest_ThresholdAmount : fix_float option;
+    f_PositionMaintenanceRequest_ThresholdAmount : fix_float_4 option;
     f_PositionMaintenanceRequest_Text : fix_string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_PositionMaintenanceRequest_EncodedTextLen : int option;
@@ -2799,10 +2799,10 @@ type full_fix_positionreport_data = {
     f_PositionReport_AccountType : fix_accounttype;
     f_PositionReport_Instrument : fix_instrument;
     f_PositionReport_Currency : fix_currency option;
-    f_PositionReport_SettlPrice : fix_float;
+    f_PositionReport_SettlPrice : fix_float_4;
     (** Values = Final, Theoretical*)
     f_PositionReport_SettlPriceType : fix_settlpricetype;
-    f_PositionReport_PriorSettlPrice : fix_float;
+    f_PositionReport_PriorSettlPrice : fix_float_4;
     (** Specifies the number of legs that make up the Security*)
     f_PositionReport_InstrmtLegGrp : fix_rg_instrmtleggrp;
     (** Specifies the number of underlying legs that make up the Security*)
@@ -2855,7 +2855,7 @@ type full_fix_quote_data = {
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_Quote_SettlDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
-    f_Quote_OrderQty2 : fix_float option;
+    f_Quote_OrderQty2 : fix_float_4 option;
     (** Can be used to specify the currency of the quoted prices. May differ from the ‘normal’ trading currency of the instrument being quoted*)
     f_Quote_Currency : fix_currency option;
     (** Insert here the set of "Stipulations" (repeating group of Fixed Income stipulations) fields defined in "Common Components of Application Messages"*)
@@ -2867,52 +2867,52 @@ type full_fix_quote_data = {
     (** Required for multileg quotes*)
     f_Quote_LegQuotGrp : fix_rg_legquotgrp;
     (** If F/X quote, should be the "all-in" rate (spot rate adjusted for forward points). Note that either BidPx, OfferPx or both must be specified.*)
-    f_Quote_BidPx : fix_float option;
+    f_Quote_BidPx : fix_float_4 option;
     (** If F/X quote, should be the "all-in" rate (spot rate adjusted for forward points). Note that either BidPx, OfferPx or both must be specified.*)
-    f_Quote_OfferPx : fix_float option;
+    f_Quote_OfferPx : fix_float_4 option;
     (** Can be used by markets that require showing the current best bid and offer*)
-    f_Quote_MktBidPx : fix_float option;
+    f_Quote_MktBidPx : fix_float_4 option;
     (** Can be used by markets that require showing the current best bid and offer*)
-    f_Quote_MktOfferPx : fix_float option;
+    f_Quote_MktOfferPx : fix_float_4 option;
     (** Specifies the minimum bid size. Used for markets that use a minimum and maximum bid size.*)
-    f_Quote_MinBidSize : fix_float option;
+    f_Quote_MinBidSize : fix_float_4 option;
     (** Specifies the bid size. If MinBidSize is specified, BidSize is interpreted to contain the maximum bid size.*)
-    f_Quote_BidSize : fix_float option;
+    f_Quote_BidSize : fix_float_4 option;
     (** Specifies the minimum offer size. If MinOfferSize is specified, OfferSize is interpreted to contain the maximum offer size.*)
-    f_Quote_MinOfferSize : fix_float option;
+    f_Quote_MinOfferSize : fix_float_4 option;
     (** Specified the offer size. If MinOfferSize is specified, OfferSize is interpreted to contain the maximum offer size.*)
-    f_Quote_OfferSize : fix_float option;
+    f_Quote_OfferSize : fix_float_4 option;
     (** The time when the quote will expire*)
     f_Quote_ValidUntilTime : fix_utctimestamp option;
     (** May be applicable for F/X quotes*)
-    f_Quote_BidSpotRate : fix_float option;
+    f_Quote_BidSpotRate : fix_float_4 option;
     (** May be applicable for F/X quotes*)
-    f_Quote_OfferSpotRate : fix_float option;
+    f_Quote_OfferSpotRate : fix_float_4 option;
     (** May be applicable for F/X quotes*)
-    f_Quote_BidForwardPoints : fix_float option;
+    f_Quote_BidForwardPoints : fix_float_4 option;
     (** May be applicable for F/X quotes*)
-    f_Quote_OfferForwardPoints : fix_float option;
-    f_Quote_MidPx : fix_float option;
-    f_Quote_BidYield : fix_float option;
-    f_Quote_MidYield : fix_float option;
-    f_Quote_OfferYield : fix_float option;
+    f_Quote_OfferForwardPoints : fix_float_4 option;
+    f_Quote_MidPx : fix_float_4 option;
+    f_Quote_BidYield : fix_float_4 option;
+    f_Quote_MidYield : fix_float_4 option;
+    f_Quote_OfferYield : fix_float_4 option;
     f_Quote_TransactTime : fix_utctimestamp option;
     (** Can be used to specify the type of order the quote is for*)
     f_Quote_OrdType : fix_ordtype option;
     (** Bid F/X forward points of the future portion of a F/X swap quote added to spot rate. May be a negative value*)
-    f_Quote_BidForwardPoints2 : fix_float option;
+    f_Quote_BidForwardPoints2 : fix_float_4 option;
     (** Offer F/X forward points of the future portion of a F/X swap quote added to spot rate. May be a negative value*)
-    f_Quote_OfferForwardPoints2 : fix_float option;
+    f_Quote_OfferForwardPoints2 : fix_float_4 option;
     (** Can be used when the quote is provided in a currency other than the instrument’s ‘normal’ trading currency. Applies to all bid prices contained in this quote message*)
-    f_Quote_SettlCurrBidFxRate : fix_float option;
+    f_Quote_SettlCurrBidFxRate : fix_float_4 option;
     (** Can be used when the quote is provided in a currency other than the instrument’s ‘normal’ trading currency. Applies to all offer prices contained in this quote message*)
-    f_Quote_SettlCurrOfferFxRate : fix_float option;
+    f_Quote_SettlCurrOfferFxRate : fix_float_4 option;
     (** Can be used when the quote is provided in a currency other than the instruments trading currency.*)
     f_Quote_SettlCurrFxRateCalc : fix_settlcurrfxratecalc option;
     (** Can be used to show the counterparty the commission associated with the transaction.*)
     f_Quote_CommType : fix_commtype option;
     (** Can be used to show the counterparty the commission associated with the transaction.*)
-    f_Quote_Commission : fix_float option;
+    f_Quote_Commission : fix_float_4 option;
     (** For Futures Exchanges*)
     f_Quote_CustOrderCapacity : fix_custordercapacity option;
     (** Used when routing quotes to multiple markets*)
@@ -3026,7 +3026,7 @@ type full_fix_quoteresponse_data = {
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_QuoteResponse_SettlDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
-    f_QuoteResponse_OrderQty2 : fix_float option;
+    f_QuoteResponse_OrderQty2 : fix_float_4 option;
     (** Can be used to specify the currency of the quoted prices. May differ from the ‘normal’ trading currency of the instrument being quoted*)
     f_QuoteResponse_Currency : fix_currency option;
     (** Optional*)
@@ -3039,51 +3039,51 @@ type full_fix_quoteresponse_data = {
     (** Required for multileg quote response*)
     f_QuoteResponse_LegQuotGrp : fix_rg_legquotgrp;
     (** If F/X quote, should be the "all-in" rate (spot rate adjusted for forward points). Note that either BidPx, OfferPx or both must be specified.*)
-    f_QuoteResponse_BidPx : fix_float option;
+    f_QuoteResponse_BidPx : fix_float_4 option;
     (** If F/X quote, should be the "all-in" rate (spot rate adjusted for forward points). Note that either BidPx, OfferPx or both must be specified.*)
-    f_QuoteResponse_OfferPx : fix_float option;
+    f_QuoteResponse_OfferPx : fix_float_4 option;
     (** Can be used by markets that require showing the current best bid and offer*)
-    f_QuoteResponse_MktBidPx : fix_float option;
+    f_QuoteResponse_MktBidPx : fix_float_4 option;
     (** Can be used by markets that require showing the current best bid and offer*)
-    f_QuoteResponse_MktOfferPx : fix_float option;
+    f_QuoteResponse_MktOfferPx : fix_float_4 option;
     (** Specifies the minimum bid size. Used for markets that use a minimum and maximum bid size.*)
-    f_QuoteResponse_MinBidSize : fix_float option;
+    f_QuoteResponse_MinBidSize : fix_float_4 option;
     (** Specifies the bid size. If MinBidSize is specified, BidSize is interpreted to contain the maximum bid size.*)
-    f_QuoteResponse_BidSize : fix_float option;
+    f_QuoteResponse_BidSize : fix_float_4 option;
     (** Specifies the minimum offer size. If MinOfferSize is specified, OfferSize is interpreted to contain the maximum offer size.*)
-    f_QuoteResponse_MinOfferSize : fix_float option;
+    f_QuoteResponse_MinOfferSize : fix_float_4 option;
     (** Specified the offer size. If MinOfferSize is specified, OfferSize is interpreted to contain the maximum offer size.*)
-    f_QuoteResponse_OfferSize : fix_float option;
+    f_QuoteResponse_OfferSize : fix_float_4 option;
     (** The time when the quote will expire.
      Required for FI when the QuoteRespType is 2 (Counter quote) to indicate to the Respondent when the counter offer is valid until.*)
     f_QuoteResponse_ValidUntilTime : fix_utctimestamp option;
     (** May be applicable for F/X quotes*)
-    f_QuoteResponse_BidSpotRate : fix_float option;
+    f_QuoteResponse_BidSpotRate : fix_float_4 option;
     (** May be applicable for F/X quotes*)
-    f_QuoteResponse_OfferSpotRate : fix_float option;
+    f_QuoteResponse_OfferSpotRate : fix_float_4 option;
     (** May be applicable for F/X quotes*)
-    f_QuoteResponse_BidForwardPoints : fix_float option;
+    f_QuoteResponse_BidForwardPoints : fix_float_4 option;
     (** May be applicable for F/X quotes*)
-    f_QuoteResponse_OfferForwardPoints : fix_float option;
-    f_QuoteResponse_MidPx : fix_float option;
-    f_QuoteResponse_BidYield : fix_float option;
-    f_QuoteResponse_MidYield : fix_float option;
-    f_QuoteResponse_OfferYield : fix_float option;
+    f_QuoteResponse_OfferForwardPoints : fix_float_4 option;
+    f_QuoteResponse_MidPx : fix_float_4 option;
+    f_QuoteResponse_BidYield : fix_float_4 option;
+    f_QuoteResponse_MidYield : fix_float_4 option;
+    f_QuoteResponse_OfferYield : fix_float_4 option;
     f_QuoteResponse_TransactTime : fix_utctimestamp option;
     (** Can be used to specify the type of order the quote is for.*)
     f_QuoteResponse_OrdType : fix_ordtype option;
     (** Bid F/X forward points of the future portion of a F/X swap quote added to spot rate. May be a negative value*)
-    f_QuoteResponse_BidForwardPoints2 : fix_float option;
+    f_QuoteResponse_BidForwardPoints2 : fix_float_4 option;
     (** Offer F/X forward points of the future portion of a F/X swap quote added to spot rate. May be a negative value*)
-    f_QuoteResponse_OfferForwardPoints2 : fix_float option;
+    f_QuoteResponse_OfferForwardPoints2 : fix_float_4 option;
     (** Can be used when the quote is provided in a currency other than the instrument’s ‘normal’ trading currency. Applies to all bid prices contained in this quote message*)
-    f_QuoteResponse_SettlCurrBidFxRate : fix_float option;
+    f_QuoteResponse_SettlCurrBidFxRate : fix_float_4 option;
     (** Can be used when the quote is provided in a currency other than the instrument’s ‘normal’ trading currency. Applies to all offer prices contained in this quote message*)
-    f_QuoteResponse_SettlCurrOfferFxRate : fix_float option;
+    f_QuoteResponse_SettlCurrOfferFxRate : fix_float_4 option;
     (** Can be used when the quote is provided in a currency other than the instruments trading currency.*)
     f_QuoteResponse_SettlCurrFxRateCalc : fix_settlcurrfxratecalc option;
     (** Can be used to show the counterparty the commission associated with the transaction.*)
-    f_QuoteResponse_Commission : fix_float option;
+    f_QuoteResponse_Commission : fix_float_4 option;
     (** Can be used to show the counterparty the commission associated with the transaction.*)
     f_QuoteResponse_CommType : fix_commtype option;
     (** For Futures Exchanges*)
@@ -3095,7 +3095,7 @@ type full_fix_quoteresponse_data = {
     f_QuoteResponse_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
     f_QuoteResponse_EncodedText : fix_string option;
-    f_QuoteResponse_Price : fix_float option;
+    f_QuoteResponse_Price : fix_float_4 option;
     f_QuoteResponse_PriceType : fix_pricetype option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" fields defined in "Common Components of Application Messages"*)
     f_QuoteResponse_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
@@ -3137,7 +3137,7 @@ type full_fix_quotestatusreport_data = {
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_QuoteStatusReport_SettlDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
-    f_QuoteStatusReport_OrderQty2 : fix_float option;
+    f_QuoteStatusReport_OrderQty2 : fix_float_4 option;
     (** Can be used to specify the currency of the quoted prices. May differ from the ‘normal’ trading currency of the instrument being quoted*)
     f_QuoteStatusReport_Currency : fix_currency option;
     f_QuoteStatusReport_Stipulations : fix_rg_stipulations;
@@ -3149,56 +3149,56 @@ type full_fix_quotestatusreport_data = {
     f_QuoteStatusReport_LegQuotStatGrp : fix_rg_legquotstatgrp;
     f_QuoteStatusReport_QuotQualGrp : fix_rg_quotqualgrp;
     f_QuoteStatusReport_ExpireTime : fix_utctimestamp option;
-    f_QuoteStatusReport_Price : fix_float option;
+    f_QuoteStatusReport_Price : fix_float_4 option;
     f_QuoteStatusReport_PriceType : fix_pricetype option;
     f_QuoteStatusReport_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     f_QuoteStatusReport_YieldData : fix_yielddata;
     (** If F/X quote, should be the "all-in" rate (spot rate adjusted for forward points). Note that either BidPx, OfferPx or both must be specified.*)
-    f_QuoteStatusReport_BidPx : fix_float option;
+    f_QuoteStatusReport_BidPx : fix_float_4 option;
     (** If F/X quote, should be the "all-in" rate (spot rate adjusted for forward points). Note that either BidPx, OfferPx or both must be specified.*)
-    f_QuoteStatusReport_OfferPx : fix_float option;
+    f_QuoteStatusReport_OfferPx : fix_float_4 option;
     (** Can be used by markets that require showing the current best bid and offer*)
-    f_QuoteStatusReport_MktBidPx : fix_float option;
+    f_QuoteStatusReport_MktBidPx : fix_float_4 option;
     (** Can be used by markets that require showing the current best bid and offer*)
-    f_QuoteStatusReport_MktOfferPx : fix_float option;
+    f_QuoteStatusReport_MktOfferPx : fix_float_4 option;
     (** Specifies the minimum bid size. Used for markets that use a minimum and maximum bid size.*)
-    f_QuoteStatusReport_MinBidSize : fix_float option;
+    f_QuoteStatusReport_MinBidSize : fix_float_4 option;
     (** Specifies the bid size. If MinBidSize is specified, BidSize is interpreted to contain the maximum bid size.*)
-    f_QuoteStatusReport_BidSize : fix_float option;
+    f_QuoteStatusReport_BidSize : fix_float_4 option;
     (** Specifies the minimum offer size. If MinOfferSize is specified, OfferSize is interpreted to contain the maximum offer size.*)
-    f_QuoteStatusReport_MinOfferSize : fix_float option;
+    f_QuoteStatusReport_MinOfferSize : fix_float_4 option;
     (** Specified the offer size. If MinOfferSize is specified, OfferSize is interpreted to contain the maximum offer size.*)
-    f_QuoteStatusReport_OfferSize : fix_float option;
+    f_QuoteStatusReport_OfferSize : fix_float_4 option;
     f_QuoteStatusReport_ValidUntilTime : fix_utctimestamp option;
     (** May be applicable for F/X quotes*)
-    f_QuoteStatusReport_BidSpotRate : fix_float option;
+    f_QuoteStatusReport_BidSpotRate : fix_float_4 option;
     (** May be applicable for F/X quotes*)
-    f_QuoteStatusReport_OfferSpotRate : fix_float option;
+    f_QuoteStatusReport_OfferSpotRate : fix_float_4 option;
     (** May be applicable for F/X quotes*)
-    f_QuoteStatusReport_BidForwardPoints : fix_float option;
+    f_QuoteStatusReport_BidForwardPoints : fix_float_4 option;
     (** May be applicable for F/X quotes*)
-    f_QuoteStatusReport_OfferForwardPoints : fix_float option;
-    f_QuoteStatusReport_MidPx : fix_float option;
-    f_QuoteStatusReport_BidYield : fix_float option;
-    f_QuoteStatusReport_MidYield : fix_float option;
-    f_QuoteStatusReport_OfferYield : fix_float option;
+    f_QuoteStatusReport_OfferForwardPoints : fix_float_4 option;
+    f_QuoteStatusReport_MidPx : fix_float_4 option;
+    f_QuoteStatusReport_BidYield : fix_float_4 option;
+    f_QuoteStatusReport_MidYield : fix_float_4 option;
+    f_QuoteStatusReport_OfferYield : fix_float_4 option;
     f_QuoteStatusReport_TransactTime : fix_utctimestamp option;
     (** Can be used to specify the type of order the quote is for*)
     f_QuoteStatusReport_OrdType : fix_ordtype option;
     (** Bid F/X forward points of the future portion of a F/X swap quote added to spot rate. May be a negative value*)
-    f_QuoteStatusReport_BidForwardPoints2 : fix_float option;
+    f_QuoteStatusReport_BidForwardPoints2 : fix_float_4 option;
     (** Offer F/X forward points of the future portion of a F/X swap quote added to spot rate. May be a negative value*)
-    f_QuoteStatusReport_OfferForwardPoints2 : fix_float option;
+    f_QuoteStatusReport_OfferForwardPoints2 : fix_float_4 option;
     (** Can be used when the quote is provided in a currency other than the instrument’s ‘normal’ trading currency. Applies to all bid prices contained in this message*)
-    f_QuoteStatusReport_SettlCurrBidFxRate : fix_float option;
+    f_QuoteStatusReport_SettlCurrBidFxRate : fix_float_4 option;
     (** Can be used when the quote is provided in a currency other than the instrument’s ‘normal’ trading currency. Applies to all offer prices contained in this message*)
-    f_QuoteStatusReport_SettlCurrOfferFxRate : fix_float option;
+    f_QuoteStatusReport_SettlCurrOfferFxRate : fix_float_4 option;
     (** Can be used when the quote is provided in a currency other than the instruments trading currency.*)
     f_QuoteStatusReport_SettlCurrFxRateCalc : fix_settlcurrfxratecalc option;
     (** Can be used to show the counterparty the commission associated with the transaction.*)
     f_QuoteStatusReport_CommType : fix_commtype option;
     (** Can be used to show the counterparty the commission associated with the transaction.*)
-    f_QuoteStatusReport_Commission : fix_float option;
+    f_QuoteStatusReport_Commission : fix_float_4 option;
     (** For Futures Exchanges*)
     f_QuoteStatusReport_CustOrderCapacity : fix_custordercapacity option;
     (** Used when routing quotes to multiple markets*)
@@ -3396,8 +3396,8 @@ type full_fix_securitydefinition_data = {
     (** Number of legs that make up the Security*)
     f_SecurityDefinition_InstrmtLegGrp : fix_rg_instrmtleggrp;
     f_SecurityDefinition_ExpirationCycle : fix_expirationcycle option;
-    f_SecurityDefinition_RoundLot : fix_float option;
-    f_SecurityDefinition_MinTradeVol : fix_float option
+    f_SecurityDefinition_RoundLot : fix_float_4 option;
+    f_SecurityDefinition_MinTradeVol : fix_float_4 option
 }
 ;;
 
@@ -3502,12 +3502,12 @@ type full_fix_securitystatus_data = {
     f_SecurityStatus_HaltReason : fix_haltreason option;
     f_SecurityStatus_InViewOfCommon : fix_inviewofcommon option;
     f_SecurityStatus_DueToRelated : fix_duetorelated option;
-    f_SecurityStatus_BuyVolume : fix_float option;
-    f_SecurityStatus_SellVolume : fix_float option;
-    f_SecurityStatus_HighPx : fix_float option;
-    f_SecurityStatus_LowPx : fix_float option;
+    f_SecurityStatus_BuyVolume : fix_float_4 option;
+    f_SecurityStatus_SellVolume : fix_float_4 option;
+    f_SecurityStatus_HighPx : fix_float_4 option;
+    f_SecurityStatus_LowPx : fix_float_4 option;
     (** Represents the last price for that security either on a Consolidated or an individual participant basis at the time it is disseminated.*)
-    f_SecurityStatus_LastPx : fix_float option;
+    f_SecurityStatus_LastPx : fix_float_4 option;
     (** Trade Dissemination Time*)
     f_SecurityStatus_TransactTime : fix_utctimestamp option;
     f_SecurityStatus_Adjustment : fix_adjustment option;
@@ -3710,21 +3710,21 @@ type full_fix_tradecapturereport_data = {
     f_TradeCaptureReport_UnderlyingTradingSessionID : fix_string option;
     f_TradeCaptureReport_UnderlyingTradingSessionSubID : fix_string option;
     (** Trade Quantity.*)
-    f_TradeCaptureReport_LastQty : fix_float;
+    f_TradeCaptureReport_LastQty : fix_float_4;
     (** Trade Price.*)
-    f_TradeCaptureReport_LastPx : fix_float;
+    f_TradeCaptureReport_LastPx : fix_float_4;
     (** Last price expressed in percent-of-par. Conditionally required for Fixed Income trades when LastPx is expressed in Yield, Spread, Discount or any other price type that is not percent-of-par.*)
-    f_TradeCaptureReport_LastParPx : fix_float option;
+    f_TradeCaptureReport_LastParPx : fix_float_4 option;
     (** Applicable for F/X orders*)
-    f_TradeCaptureReport_LastSpotRate : fix_float option;
+    f_TradeCaptureReport_LastSpotRate : fix_float_4 option;
     (** Applicable for F/X orders*)
-    f_TradeCaptureReport_LastForwardPoints : fix_float option;
+    f_TradeCaptureReport_LastForwardPoints : fix_float_4 option;
     f_TradeCaptureReport_LastMkt : fix_exchange option;
     (** Used when reporting other than current day trades.*)
     f_TradeCaptureReport_TradeDate : fix_localmktdate;
     f_TradeCaptureReport_ClearingBusinessDate : fix_localmktdate option;
     (** Average Price - if present then the LastPx will contain the original price on the execution*)
-    f_TradeCaptureReport_AvgPx : fix_float option;
+    f_TradeCaptureReport_AvgPx : fix_float_4 option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" fields defined in "Common Components of Application Messages"*)
     f_TradeCaptureReport_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Average Pricing indicator*)
@@ -3977,7 +3977,7 @@ type full_fix_tradingsessionstatus_data = {
     f_TradingSessionStatus_TradSesCloseTime : fix_utctimestamp option;
     (** End time of the trading session*)
     f_TradingSessionStatus_TradSesEndTime : fix_utctimestamp option;
-    f_TradingSessionStatus_TotalVolumeTraded : fix_float option;
+    f_TradingSessionStatus_TotalVolumeTraded : fix_float_4 option;
     f_TradingSessionStatus_Text : fix_string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_TradingSessionStatus_EncodedTextLen : int option;
