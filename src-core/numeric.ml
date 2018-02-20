@@ -27,6 +27,10 @@ type fix_float_4 =
     | Float_4 of int
 ;;
 
+type fix_float = 
+    fix_float_4
+;;
+
 let float_Convert_0_0 (f : fix_float_0)  : fix_float_0 =
     f
 ;;
