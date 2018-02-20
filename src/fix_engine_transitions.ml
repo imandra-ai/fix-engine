@@ -8,7 +8,7 @@
     
 *)
 
-(* @meta[imandra_ignore] on @end *)
+
 open Datetime;;
 open Base_types;;
 open Full_admin_enums;;
@@ -17,7 +17,8 @@ open Full_app_messages;;
 open Full_messages;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
-(* @meta[imandra_ignore] off @end *)
+open Full_admin_tags;;
+open Full_message_tags;;
 
 (** In many abnormal cases we need to send out the Logout messages and
     transition to ShutdownInitiated state. *)
