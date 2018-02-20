@@ -156,8 +156,8 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
 ;;
 
 (** Process incoming FIX message here. *)
-let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) = 
-    print_endline ("Incoming " ^ string_of_int engine.incoming_seq_num) ;
+let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
+    let () = print_endline ("Incoming " ^ string_of_int engine.incoming_seq_num) in
     match m with
     | Garbled                   -> engine   (** Garbled messages are simply ignored. Note the timestamp is not updated. *)
     | SessionRejectedMsg data   -> 
