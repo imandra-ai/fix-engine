@@ -1201,103 +1201,103 @@ let float_GreaterThanEqual_4_4 (f : fix_float_4) (x : fix_float_4)  : bool =
     not (float_LessThan_4_4 f x)
 ;;
 
-let float_GreaterThanEqual_0_0 (f : fix_float_0) (x : fix_float_0)  : bool =
+let float_LessThanEqual_0_0 (f : fix_float_0) (x : fix_float_0)  : bool =
     not (float_GreaterThan_0_0 f x)
 ;;
 
-let float_GreaterThanEqual_0_1 (f : fix_float_0) (x : fix_float_1)  : bool =
+let float_LessThanEqual_0_1 (f : fix_float_0) (x : fix_float_1)  : bool =
     not (float_GreaterThan_0_1 f x)
 ;;
 
-let float_GreaterThanEqual_0_2 (f : fix_float_0) (x : fix_float_2)  : bool =
+let float_LessThanEqual_0_2 (f : fix_float_0) (x : fix_float_2)  : bool =
     not (float_GreaterThan_0_2 f x)
 ;;
 
-let float_GreaterThanEqual_0_3 (f : fix_float_0) (x : fix_float_3)  : bool =
+let float_LessThanEqual_0_3 (f : fix_float_0) (x : fix_float_3)  : bool =
     not (float_GreaterThan_0_3 f x)
 ;;
 
-let float_GreaterThanEqual_0_4 (f : fix_float_0) (x : fix_float_4)  : bool =
+let float_LessThanEqual_0_4 (f : fix_float_0) (x : fix_float_4)  : bool =
     not (float_GreaterThan_0_4 f x)
 ;;
 
-let float_GreaterThanEqual_1_0 (f : fix_float_1) (x : fix_float_0)  : bool =
+let float_LessThanEqual_1_0 (f : fix_float_1) (x : fix_float_0)  : bool =
     not (float_GreaterThan_1_0 f x)
 ;;
 
-let float_GreaterThanEqual_1_1 (f : fix_float_1) (x : fix_float_1)  : bool =
+let float_LessThanEqual_1_1 (f : fix_float_1) (x : fix_float_1)  : bool =
     not (float_GreaterThan_1_1 f x)
 ;;
 
-let float_GreaterThanEqual_1_2 (f : fix_float_1) (x : fix_float_2)  : bool =
+let float_LessThanEqual_1_2 (f : fix_float_1) (x : fix_float_2)  : bool =
     not (float_GreaterThan_1_2 f x)
 ;;
 
-let float_GreaterThanEqual_1_3 (f : fix_float_1) (x : fix_float_3)  : bool =
+let float_LessThanEqual_1_3 (f : fix_float_1) (x : fix_float_3)  : bool =
     not (float_GreaterThan_1_3 f x)
 ;;
 
-let float_GreaterThanEqual_1_4 (f : fix_float_1) (x : fix_float_4)  : bool =
+let float_LessThanEqual_1_4 (f : fix_float_1) (x : fix_float_4)  : bool =
     not (float_GreaterThan_1_4 f x)
 ;;
 
-let float_GreaterThanEqual_2_0 (f : fix_float_2) (x : fix_float_0)  : bool =
+let float_LessThanEqual_2_0 (f : fix_float_2) (x : fix_float_0)  : bool =
     not (float_GreaterThan_2_0 f x)
 ;;
 
-let float_GreaterThanEqual_2_1 (f : fix_float_2) (x : fix_float_1)  : bool =
+let float_LessThanEqual_2_1 (f : fix_float_2) (x : fix_float_1)  : bool =
     not (float_GreaterThan_2_1 f x)
 ;;
 
-let float_GreaterThanEqual_2_2 (f : fix_float_2) (x : fix_float_2)  : bool =
+let float_LessThanEqual_2_2 (f : fix_float_2) (x : fix_float_2)  : bool =
     not (float_GreaterThan_2_2 f x)
 ;;
 
-let float_GreaterThanEqual_2_3 (f : fix_float_2) (x : fix_float_3)  : bool =
+let float_LessThanEqual_2_3 (f : fix_float_2) (x : fix_float_3)  : bool =
     not (float_GreaterThan_2_3 f x)
 ;;
 
-let float_GreaterThanEqual_2_4 (f : fix_float_2) (x : fix_float_4)  : bool =
+let float_LessThanEqual_2_4 (f : fix_float_2) (x : fix_float_4)  : bool =
     not (float_GreaterThan_2_4 f x)
 ;;
 
-let float_GreaterThanEqual_3_0 (f : fix_float_3) (x : fix_float_0)  : bool =
+let float_LessThanEqual_3_0 (f : fix_float_3) (x : fix_float_0)  : bool =
     not (float_GreaterThan_3_0 f x)
 ;;
 
-let float_GreaterThanEqual_3_1 (f : fix_float_3) (x : fix_float_1)  : bool =
+let float_LessThanEqual_3_1 (f : fix_float_3) (x : fix_float_1)  : bool =
     not (float_GreaterThan_3_1 f x)
 ;;
 
-let float_GreaterThanEqual_3_2 (f : fix_float_3) (x : fix_float_2)  : bool =
+let float_LessThanEqual_3_2 (f : fix_float_3) (x : fix_float_2)  : bool =
     not (float_GreaterThan_3_2 f x)
 ;;
 
-let float_GreaterThanEqual_3_3 (f : fix_float_3) (x : fix_float_3)  : bool =
+let float_LessThanEqual_3_3 (f : fix_float_3) (x : fix_float_3)  : bool =
     not (float_GreaterThan_3_3 f x)
 ;;
 
-let float_GreaterThanEqual_3_4 (f : fix_float_3) (x : fix_float_4)  : bool =
+let float_LessThanEqual_3_4 (f : fix_float_3) (x : fix_float_4)  : bool =
     not (float_GreaterThan_3_4 f x)
 ;;
 
-let float_GreaterThanEqual_4_0 (f : fix_float_4) (x : fix_float_0)  : bool =
+let float_LessThanEqual_4_0 (f : fix_float_4) (x : fix_float_0)  : bool =
     not (float_GreaterThan_4_0 f x)
 ;;
 
-let float_GreaterThanEqual_4_1 (f : fix_float_4) (x : fix_float_1)  : bool =
+let float_LessThanEqual_4_1 (f : fix_float_4) (x : fix_float_1)  : bool =
     not (float_GreaterThan_4_1 f x)
 ;;
 
-let float_GreaterThanEqual_4_2 (f : fix_float_4) (x : fix_float_2)  : bool =
+let float_LessThanEqual_4_2 (f : fix_float_4) (x : fix_float_2)  : bool =
     not (float_GreaterThan_4_2 f x)
 ;;
 
-let float_GreaterThanEqual_4_3 (f : fix_float_4) (x : fix_float_3)  : bool =
+let float_LessThanEqual_4_3 (f : fix_float_4) (x : fix_float_3)  : bool =
     not (float_GreaterThan_4_3 f x)
 ;;
 
-let float_GreaterThanEqual_4_4 (f : fix_float_4) (x : fix_float_4)  : bool =
+let float_LessThanEqual_4_4 (f : fix_float_4) (x : fix_float_4)  : bool =
     not (float_GreaterThan_4_4 f x)
 ;;
 
