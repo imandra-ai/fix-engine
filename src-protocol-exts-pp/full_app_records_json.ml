@@ -25,31 +25,31 @@ let ptyssubgrp_to_json x : json =
 let yielddata_to_json x : json =
     assoc_filter_nulls [
     ( "YieldType" , yieldtype_opt_to_json x.f_YieldData_YieldType );
-    ( "Yield" , fix_float_4_opt_to_json x.f_YieldData_Yield );
+    ( "Yield" , float_4_opt_to_json x.f_YieldData_Yield );
     ( "YieldCalcDate" , localmktdate_opt_to_json x.f_YieldData_YieldCalcDate );
     ( "YieldRedemptionDate" , localmktdate_opt_to_json x.f_YieldData_YieldRedemptionDate );
-    ( "YieldRedemptionPrice" , fix_float_4_opt_to_json x.f_YieldData_YieldRedemptionPrice );
+    ( "YieldRedemptionPrice" , float_4_opt_to_json x.f_YieldData_YieldRedemptionPrice );
     ( "YieldRedemptionPriceType" , int_opt_to_json x.f_YieldData_YieldRedemptionPriceType )
     ]
 ;;
 
 let orderqtydata_to_json x : json =
     assoc_filter_nulls [
-    ( "OrderQty" , fix_float_4_opt_to_json x.f_OrderQtyData_OrderQty );
-    ( "CashOrderQty" , fix_float_4_opt_to_json x.f_OrderQtyData_CashOrderQty );
-    ( "OrderPercent" , fix_float_4_opt_to_json x.f_OrderQtyData_OrderPercent );
+    ( "OrderQty" , float_4_opt_to_json x.f_OrderQtyData_OrderQty );
+    ( "CashOrderQty" , float_4_opt_to_json x.f_OrderQtyData_CashOrderQty );
+    ( "OrderPercent" , float_4_opt_to_json x.f_OrderQtyData_OrderPercent );
     ( "RoundingDirection" , roundingdirection_opt_to_json x.f_OrderQtyData_RoundingDirection );
-    ( "RoundingModulus" , fix_float_4_opt_to_json x.f_OrderQtyData_RoundingModulus )
+    ( "RoundingModulus" , float_4_opt_to_json x.f_OrderQtyData_RoundingModulus )
     ]
 ;;
 
 let spreadorbenchmarkcurvedata_to_json x : json =
     assoc_filter_nulls [
-    ( "Spread" , fix_float_4_opt_to_json x.f_SpreadOrBenchmarkCurveData_Spread );
+    ( "Spread" , float_4_opt_to_json x.f_SpreadOrBenchmarkCurveData_Spread );
     ( "BenchmarkCurveCurrency" , currency_opt_to_json x.f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency );
     ( "BenchmarkCurveName" , string_opt_to_json x.f_SpreadOrBenchmarkCurveData_BenchmarkCurveName );
     ( "BenchmarkCurvePoint" , string_opt_to_json x.f_SpreadOrBenchmarkCurveData_BenchmarkCurvePoint );
-    ( "BenchmarkPrice" , fix_float_4_opt_to_json x.f_SpreadOrBenchmarkCurveData_BenchmarkPrice );
+    ( "BenchmarkPrice" , float_4_opt_to_json x.f_SpreadOrBenchmarkCurveData_BenchmarkPrice );
     ( "BenchmarkPriceType" , int_opt_to_json x.f_SpreadOrBenchmarkCurveData_BenchmarkPriceType );
     ( "BenchmarkSecurityID" , string_opt_to_json x.f_SpreadOrBenchmarkCurveData_BenchmarkSecurityID );
     ( "BenchmarkSecurityIDSource" , string_opt_to_json x.f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource )
@@ -69,12 +69,12 @@ let ordliststatgrp_to_json x : json =
     ( "NoOrders" , int_to_json x.f_OrdListStatGrp_NoOrders );
     ( "ClOrdID" , string_to_json x.f_OrdListStatGrp_ClOrdID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_OrdListStatGrp_SecondaryClOrdID );
-    ( "CumQty" , fix_float_4_to_json x.f_OrdListStatGrp_CumQty );
+    ( "CumQty" , float_4_to_json x.f_OrdListStatGrp_CumQty );
     ( "OrdStatus" , ordstatus_to_json x.f_OrdListStatGrp_OrdStatus );
     ( "WorkingIndicator" , workingindicator_opt_to_json x.f_OrdListStatGrp_WorkingIndicator );
-    ( "LeavesQty" , fix_float_4_to_json x.f_OrdListStatGrp_LeavesQty );
-    ( "CxlQty" , fix_float_4_to_json x.f_OrdListStatGrp_CxlQty );
-    ( "AvgPx" , fix_float_4_to_json x.f_OrdListStatGrp_AvgPx );
+    ( "LeavesQty" , float_4_to_json x.f_OrdListStatGrp_LeavesQty );
+    ( "CxlQty" , float_4_to_json x.f_OrdListStatGrp_CxlQty );
+    ( "AvgPx" , float_4_to_json x.f_OrdListStatGrp_AvgPx );
     ( "OrdRejReason" , ordrejreason_opt_to_json x.f_OrdListStatGrp_OrdRejReason );
     ( "Text" , string_opt_to_json x.f_OrdListStatGrp_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_OrdListStatGrp_EncodedTextLen );
@@ -95,7 +95,7 @@ let legbenchmarkcurvedata_to_json x : json =
     ( "LegBenchmarkCurveCurrency" , currency_opt_to_json x.f_LegBenchmarkCurveData_LegBenchmarkCurveCurrency );
     ( "LegBenchmarkCurveName" , string_opt_to_json x.f_LegBenchmarkCurveData_LegBenchmarkCurveName );
     ( "LegBenchmarkCurvePoint" , string_opt_to_json x.f_LegBenchmarkCurveData_LegBenchmarkCurvePoint );
-    ( "LegBenchmarkPrice" , fix_float_4_opt_to_json x.f_LegBenchmarkCurveData_LegBenchmarkPrice );
+    ( "LegBenchmarkPrice" , float_4_opt_to_json x.f_LegBenchmarkCurveData_LegBenchmarkPrice );
     ( "LegBenchmarkPriceType" , int_opt_to_json x.f_LegBenchmarkCurveData_LegBenchmarkPriceType )
     ]
 ;;
@@ -105,7 +105,7 @@ let cpctyconfgrp_to_json x : json =
     ( "NoCapacities" , int_to_json x.f_CpctyConfGrp_NoCapacities );
     ( "OrderCapacity" , ordercapacity_to_json x.f_CpctyConfGrp_OrderCapacity );
     ( "OrderRestrictions" , orderrestrictions_opt_to_json x.f_CpctyConfGrp_OrderRestrictions );
-    ( "OrderCapacityQty" , fix_float_4_to_json x.f_CpctyConfGrp_OrderCapacityQty )
+    ( "OrderCapacityQty" , float_4_to_json x.f_CpctyConfGrp_OrderCapacityQty )
     ]
 ;;
 
@@ -137,7 +137,7 @@ let evntgrp_to_json x : json =
     ( "NoEvents" , int_opt_to_json x.f_EvntGrp_NoEvents );
     ( "EventType" , eventtype_opt_to_json x.f_EvntGrp_EventType );
     ( "EventDate" , localmktdate_opt_to_json x.f_EvntGrp_EventDate );
-    ( "EventPx" , fix_float_4_opt_to_json x.f_EvntGrp_EventPx );
+    ( "EventPx" , float_4_opt_to_json x.f_EvntGrp_EventPx );
     ( "EventText" , string_opt_to_json x.f_EvntGrp_EventText )
     ]
 ;;
@@ -174,7 +174,7 @@ let financingdetails_to_json x : json =
     ( "StartDate" , localmktdate_opt_to_json x.f_FinancingDetails_StartDate );
     ( "EndDate" , localmktdate_opt_to_json x.f_FinancingDetails_EndDate );
     ( "DeliveryType" , deliverytype_opt_to_json x.f_FinancingDetails_DeliveryType );
-    ( "MarginRatio" , fix_float_4_opt_to_json x.f_FinancingDetails_MarginRatio )
+    ( "MarginRatio" , float_4_opt_to_json x.f_FinancingDetails_MarginRatio )
     ]
 ;;
 
@@ -223,7 +223,7 @@ let contragrp_to_json x : json =
     ( "NoContraBrokers" , int_opt_to_json x.f_ContraGrp_NoContraBrokers );
     ( "ContraBroker" , string_opt_to_json x.f_ContraGrp_ContraBroker );
     ( "ContraTrader" , string_opt_to_json x.f_ContraGrp_ContraTrader );
-    ( "ContraTradeQty" , fix_float_4_opt_to_json x.f_ContraGrp_ContraTradeQty );
+    ( "ContraTradeQty" , float_4_opt_to_json x.f_ContraGrp_ContraTradeQty );
     ( "ContraTradeTime" , utctimestamp_opt_to_json x.f_ContraGrp_ContraTradeTime );
     ( "ContraLegRefID" , string_opt_to_json x.f_ContraGrp_ContraLegRefID )
     ]
@@ -255,7 +255,7 @@ let logonmsgtypes_to_json x : json =
 let miscfeesgrp_to_json x : json =
     assoc_filter_nulls [
     ( "NoMiscFees" , int_opt_to_json x.f_MiscFeesGrp_NoMiscFees );
-    ( "MiscFeeAmt" , fix_float_4_opt_to_json x.f_MiscFeesGrp_MiscFeeAmt );
+    ( "MiscFeeAmt" , float_4_opt_to_json x.f_MiscFeesGrp_MiscFeeAmt );
     ( "MiscFeeCurr" , currency_opt_to_json x.f_MiscFeesGrp_MiscFeeCurr );
     ( "MiscFeeType" , miscfeetype_opt_to_json x.f_MiscFeesGrp_MiscFeeType );
     ( "MiscFeeBasis" , miscfeebasis_opt_to_json x.f_MiscFeesGrp_MiscFeeBasis )
@@ -267,7 +267,7 @@ let allocackgrp_to_json x : json =
     ( "NoAllocs" , int_opt_to_json x.f_AllocAckGrp_NoAllocs );
     ( "AllocAccount" , string_opt_to_json x.f_AllocAckGrp_AllocAccount );
     ( "AllocAcctIDSource" , int_opt_to_json x.f_AllocAckGrp_AllocAcctIDSource );
-    ( "AllocPrice" , fix_float_4_opt_to_json x.f_AllocAckGrp_AllocPrice );
+    ( "AllocPrice" , float_4_opt_to_json x.f_AllocAckGrp_AllocPrice );
     ( "IndividualAllocID" , string_opt_to_json x.f_AllocAckGrp_IndividualAllocID );
     ( "IndividualAllocRejCode" , int_opt_to_json x.f_AllocAckGrp_IndividualAllocRejCode );
     ( "AllocText" , string_opt_to_json x.f_AllocAckGrp_AllocText );
@@ -280,7 +280,7 @@ let contamtgrp_to_json x : json =
     assoc_filter_nulls [
     ( "NoContAmts" , int_opt_to_json x.f_ContAmtGrp_NoContAmts );
     ( "ContAmtType" , contamttype_opt_to_json x.f_ContAmtGrp_ContAmtType );
-    ( "ContAmtValue" , fix_float_4_opt_to_json x.f_ContAmtGrp_ContAmtValue );
+    ( "ContAmtValue" , float_4_opt_to_json x.f_ContAmtGrp_ContAmtValue );
     ( "ContAmtCurr" , currency_opt_to_json x.f_ContAmtGrp_ContAmtCurr )
     ]
 ;;
@@ -288,18 +288,18 @@ let contamtgrp_to_json x : json =
 let execallocgrp_to_json x : json =
     assoc_filter_nulls [
     ( "NoExecs" , int_opt_to_json x.f_ExecAllocGrp_NoExecs );
-    ( "LastQty" , fix_float_4_opt_to_json x.f_ExecAllocGrp_LastQty );
+    ( "LastQty" , float_4_opt_to_json x.f_ExecAllocGrp_LastQty );
     ( "ExecID" , string_opt_to_json x.f_ExecAllocGrp_ExecID );
     ( "SecondaryExecID" , string_opt_to_json x.f_ExecAllocGrp_SecondaryExecID );
-    ( "LastPx" , fix_float_4_opt_to_json x.f_ExecAllocGrp_LastPx );
-    ( "LastParPx" , fix_float_4_opt_to_json x.f_ExecAllocGrp_LastParPx );
+    ( "LastPx" , float_4_opt_to_json x.f_ExecAllocGrp_LastPx );
+    ( "LastParPx" , float_4_opt_to_json x.f_ExecAllocGrp_LastParPx );
     ( "LastCapacity" , lastcapacity_opt_to_json x.f_ExecAllocGrp_LastCapacity )
     ]
 ;;
 
 let commissiondata_to_json x : json =
     assoc_filter_nulls [
-    ( "Commission" , fix_float_4_opt_to_json x.f_CommissionData_Commission );
+    ( "Commission" , float_4_opt_to_json x.f_CommissionData_Commission );
     ( "CommType" , commtype_opt_to_json x.f_CommissionData_CommType );
     ( "CommCurrency" , currency_opt_to_json x.f_CommissionData_CommCurrency );
     ( "FundRenewWaiv" , fundrenewwaiv_opt_to_json x.f_CommissionData_FundRenewWaiv )
@@ -312,14 +312,14 @@ let biddescreqgrp_to_json x : json =
     ( "BidDescriptorType" , biddescriptortype_opt_to_json x.f_BidDescReqGrp_BidDescriptorType );
     ( "BidDescriptor" , string_opt_to_json x.f_BidDescReqGrp_BidDescriptor );
     ( "SideValueInd" , sidevalueind_opt_to_json x.f_BidDescReqGrp_SideValueInd );
-    ( "LiquidityValue" , fix_float_4_opt_to_json x.f_BidDescReqGrp_LiquidityValue );
+    ( "LiquidityValue" , float_4_opt_to_json x.f_BidDescReqGrp_LiquidityValue );
     ( "LiquidityNumSecurities" , int_opt_to_json x.f_BidDescReqGrp_LiquidityNumSecurities );
-    ( "LiquidityPctLow" , fix_float_4_opt_to_json x.f_BidDescReqGrp_LiquidityPctLow );
-    ( "LiquidityPctHigh" , fix_float_4_opt_to_json x.f_BidDescReqGrp_LiquidityPctHigh );
-    ( "EFPTrackingError" , fix_float_4_opt_to_json x.f_BidDescReqGrp_EFPTrackingError );
-    ( "FairValue" , fix_float_4_opt_to_json x.f_BidDescReqGrp_FairValue );
-    ( "OutsideIndexPct" , fix_float_4_opt_to_json x.f_BidDescReqGrp_OutsideIndexPct );
-    ( "ValueOfFutures" , fix_float_4_opt_to_json x.f_BidDescReqGrp_ValueOfFutures )
+    ( "LiquidityPctLow" , float_4_opt_to_json x.f_BidDescReqGrp_LiquidityPctLow );
+    ( "LiquidityPctHigh" , float_4_opt_to_json x.f_BidDescReqGrp_LiquidityPctHigh );
+    ( "EFPTrackingError" , float_4_opt_to_json x.f_BidDescReqGrp_EFPTrackingError );
+    ( "FairValue" , float_4_opt_to_json x.f_BidDescReqGrp_FairValue );
+    ( "OutsideIndexPct" , float_4_opt_to_json x.f_BidDescReqGrp_OutsideIndexPct );
+    ( "ValueOfFutures" , float_4_opt_to_json x.f_BidDescReqGrp_ValueOfFutures )
     ]
 ;;
 
@@ -344,7 +344,7 @@ let positionamountdata_to_json x : json =
     assoc_filter_nulls [
     ( "NoPosAmt" , int_opt_to_json x.f_PositionAmountData_NoPosAmt );
     ( "PosAmtType" , posamttype_opt_to_json x.f_PositionAmountData_PosAmtType );
-    ( "PosAmt" , fix_float_4_opt_to_json x.f_PositionAmountData_PosAmt )
+    ( "PosAmt" , float_4_opt_to_json x.f_PositionAmountData_PosAmt )
     ]
 ;;
 
@@ -375,7 +375,7 @@ let rgstdistinstgrp_to_json x : json =
     assoc_filter_nulls [
     ( "NoDistribInsts" , int_opt_to_json x.f_RgstDistInstGrp_NoDistribInsts );
     ( "DistribPaymentMethod" , distribpaymentmethod_opt_to_json x.f_RgstDistInstGrp_DistribPaymentMethod );
-    ( "DistribPercentage" , fix_float_4_opt_to_json x.f_RgstDistInstGrp_DistribPercentage );
+    ( "DistribPercentage" , float_4_opt_to_json x.f_RgstDistInstGrp_DistribPercentage );
     ( "CashDistribCurr" , currency_opt_to_json x.f_RgstDistInstGrp_CashDistribCurr );
     ( "CashDistribAgentName" , string_opt_to_json x.f_RgstDistInstGrp_CashDistribAgentName );
     ( "CashDistribAgentCode" , string_opt_to_json x.f_RgstDistInstGrp_CashDistribAgentCode );
@@ -387,7 +387,7 @@ let rgstdistinstgrp_to_json x : json =
 
 let peginstructions_to_json x : json =
     assoc_filter_nulls [
-    ( "PegOffsetValue" , fix_float_4_opt_to_json x.f_PegInstructions_PegOffsetValue );
+    ( "PegOffsetValue" , float_4_opt_to_json x.f_PegInstructions_PegOffsetValue );
     ( "PegMoveType" , pegmovetype_opt_to_json x.f_PegInstructions_PegMoveType );
     ( "PegOffsetType" , pegoffsettype_opt_to_json x.f_PegInstructions_PegOffsetType );
     ( "PegLimitType" , peglimittype_opt_to_json x.f_PegInstructions_PegLimitType );
@@ -407,7 +407,7 @@ let legstipulations_to_json x : json =
 let discretioninstructions_to_json x : json =
     assoc_filter_nulls [
     ( "DiscretionInst" , discretioninst_opt_to_json x.f_DiscretionInstructions_DiscretionInst );
-    ( "DiscretionOffsetValue" , fix_float_4_opt_to_json x.f_DiscretionInstructions_DiscretionOffsetValue );
+    ( "DiscretionOffsetValue" , float_4_opt_to_json x.f_DiscretionInstructions_DiscretionOffsetValue );
     ( "DiscretionMoveType" , discretionmovetype_opt_to_json x.f_DiscretionInstructions_DiscretionMoveType );
     ( "DiscretionOffsetType" , discretionoffsettype_opt_to_json x.f_DiscretionInstructions_DiscretionOffsetType );
     ( "DiscretionLimitType" , discretionlimittype_opt_to_json x.f_DiscretionInstructions_DiscretionLimitType );
@@ -443,9 +443,9 @@ let mdfullgrp_to_json x : json =
     assoc_filter_nulls [
     ( "NoMDEntries" , int_to_json x.f_MDFullGrp_NoMDEntries );
     ( "MDEntryType" , mdentrytype_to_json x.f_MDFullGrp_MDEntryType );
-    ( "MDEntryPx" , fix_float_4_opt_to_json x.f_MDFullGrp_MDEntryPx );
+    ( "MDEntryPx" , float_4_opt_to_json x.f_MDFullGrp_MDEntryPx );
     ( "Currency" , currency_opt_to_json x.f_MDFullGrp_Currency );
-    ( "MDEntrySize" , fix_float_4_opt_to_json x.f_MDFullGrp_MDEntrySize );
+    ( "MDEntrySize" , float_4_opt_to_json x.f_MDFullGrp_MDEntrySize );
     ( "MDEntryDate" , utcdateonly_opt_to_json x.f_MDFullGrp_MDEntryDate );
     ( "MDEntryTime" , utctimeonly_opt_to_json x.f_MDFullGrp_MDEntryTime );
     ( "TickDirection" , tickdirection_opt_to_json x.f_MDFullGrp_TickDirection );
@@ -461,7 +461,7 @@ let mdfullgrp_to_json x : json =
     ( "TimeInForce" , timeinforce_opt_to_json x.f_MDFullGrp_TimeInForce );
     ( "ExpireDate" , localmktdate_opt_to_json x.f_MDFullGrp_ExpireDate );
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_MDFullGrp_ExpireTime );
-    ( "MinQty" , fix_float_4_opt_to_json x.f_MDFullGrp_MinQty );
+    ( "MinQty" , float_4_opt_to_json x.f_MDFullGrp_MinQty );
     ( "ExecInst" , execinst_opt_to_json x.f_MDFullGrp_ExecInst );
     ( "SellerDays" , int_opt_to_json x.f_MDFullGrp_SellerDays );
     ( "OrderID" , string_opt_to_json x.f_MDFullGrp_OrderID );
@@ -471,7 +471,7 @@ let mdfullgrp_to_json x : json =
     ( "NumberOfOrders" , int_opt_to_json x.f_MDFullGrp_NumberOfOrders );
     ( "MDEntryPositionNo" , int_opt_to_json x.f_MDFullGrp_MDEntryPositionNo );
     ( "Scope" , scope_opt_to_json x.f_MDFullGrp_Scope );
-    ( "PriceDelta" , fix_float_4_opt_to_json x.f_MDFullGrp_PriceDelta );
+    ( "PriceDelta" , float_4_opt_to_json x.f_MDFullGrp_PriceDelta );
     ( "Text" , string_opt_to_json x.f_MDFullGrp_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_MDFullGrp_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_MDFullGrp_EncodedText )
@@ -564,9 +564,9 @@ let bidcomprspgrp_to_json x : json =
     ( "ListID" , string_opt_to_json x.f_BidCompRspGrp_ListID );
     ( "Country" , country_opt_to_json x.f_BidCompRspGrp_Country );
     ( "Side" , side_opt_to_json x.f_BidCompRspGrp_Side );
-    ( "Price" , fix_float_4_opt_to_json x.f_BidCompRspGrp_Price );
+    ( "Price" , float_4_opt_to_json x.f_BidCompRspGrp_Price );
     ( "PriceType" , pricetype_opt_to_json x.f_BidCompRspGrp_PriceType );
-    ( "FairValue" , fix_float_4_opt_to_json x.f_BidCompRspGrp_FairValue );
+    ( "FairValue" , float_4_opt_to_json x.f_BidCompRspGrp_FairValue );
     ( "NetGrossInd" , netgrossind_opt_to_json x.f_BidCompRspGrp_NetGrossInd );
     ( "SettlType" , settltype_opt_to_json x.f_BidCompRspGrp_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_BidCompRspGrp_SettlDate );
@@ -604,19 +604,19 @@ let instrument_to_json x : json =
     ( "IssueDate" , localmktdate_opt_to_json x.f_Instrument_IssueDate );
     ( "RepoCollateralSecurityType" , string_opt_to_json x.f_Instrument_RepoCollateralSecurityType );
     ( "RepurchaseTerm" , int_opt_to_json x.f_Instrument_RepurchaseTerm );
-    ( "RepurchaseRate" , fix_float_4_opt_to_json x.f_Instrument_RepurchaseRate );
-    ( "Factor" , fix_float_4_opt_to_json x.f_Instrument_Factor );
+    ( "RepurchaseRate" , float_4_opt_to_json x.f_Instrument_RepurchaseRate );
+    ( "Factor" , float_4_opt_to_json x.f_Instrument_Factor );
     ( "CreditRating" , string_opt_to_json x.f_Instrument_CreditRating );
     ( "InstrRegistry" , string_opt_to_json x.f_Instrument_InstrRegistry );
     ( "CountryOfIssue" , country_opt_to_json x.f_Instrument_CountryOfIssue );
     ( "StateOrProvinceOfIssue" , string_opt_to_json x.f_Instrument_StateOrProvinceOfIssue );
     ( "LocaleOfIssue" , string_opt_to_json x.f_Instrument_LocaleOfIssue );
     ( "RedemptionDate" , localmktdate_opt_to_json x.f_Instrument_RedemptionDate );
-    ( "StrikePrice" , fix_float_4_opt_to_json x.f_Instrument_StrikePrice );
+    ( "StrikePrice" , float_4_opt_to_json x.f_Instrument_StrikePrice );
     ( "StrikeCurrency" , currency_opt_to_json x.f_Instrument_StrikeCurrency );
     ( "OptAttribute" , char_opt_to_json x.f_Instrument_OptAttribute );
-    ( "ContractMultiplier" , fix_float_4_opt_to_json x.f_Instrument_ContractMultiplier );
-    ( "CouponRate" , fix_float_4_opt_to_json x.f_Instrument_CouponRate );
+    ( "ContractMultiplier" , float_4_opt_to_json x.f_Instrument_ContractMultiplier );
+    ( "CouponRate" , float_4_opt_to_json x.f_Instrument_CouponRate );
     ( "SecurityExchange" , exchange_opt_to_json x.f_Instrument_SecurityExchange );
     ( "Issuer" , string_opt_to_json x.f_Instrument_Issuer );
     ( "EncodedIssuerLen" , int_opt_to_json x.f_Instrument_EncodedIssuerLen );
@@ -651,19 +651,19 @@ let underlyinginstrument_to_json x : json =
     ( "UnderlyingIssueDate" , localmktdate_opt_to_json x.f_UnderlyingInstrument_UnderlyingIssueDate );
     ( "UnderlyingRepoCollateralSecurityType" , string_opt_to_json x.f_UnderlyingInstrument_UnderlyingRepoCollateralSecurityType );
     ( "UnderlyingRepurchaseTerm" , int_opt_to_json x.f_UnderlyingInstrument_UnderlyingRepurchaseTerm );
-    ( "UnderlyingRepurchaseRate" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingRepurchaseRate );
-    ( "UnderlyingFactor" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingFactor );
+    ( "UnderlyingRepurchaseRate" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingRepurchaseRate );
+    ( "UnderlyingFactor" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingFactor );
     ( "UnderlyingCreditRating" , string_opt_to_json x.f_UnderlyingInstrument_UnderlyingCreditRating );
     ( "UnderlyingInstrRegistry" , string_opt_to_json x.f_UnderlyingInstrument_UnderlyingInstrRegistry );
     ( "UnderlyingCountryOfIssue" , country_opt_to_json x.f_UnderlyingInstrument_UnderlyingCountryOfIssue );
     ( "UnderlyingStateOrProvinceOfIssue" , string_opt_to_json x.f_UnderlyingInstrument_UnderlyingStateOrProvinceOfIssue );
     ( "UnderlyingLocaleOfIssue" , string_opt_to_json x.f_UnderlyingInstrument_UnderlyingLocaleOfIssue );
     ( "UnderlyingRedemptionDate" , localmktdate_opt_to_json x.f_UnderlyingInstrument_UnderlyingRedemptionDate );
-    ( "UnderlyingStrikePrice" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingStrikePrice );
+    ( "UnderlyingStrikePrice" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingStrikePrice );
     ( "UnderlyingStrikeCurrency" , currency_opt_to_json x.f_UnderlyingInstrument_UnderlyingStrikeCurrency );
     ( "UnderlyingOptAttribute" , char_opt_to_json x.f_UnderlyingInstrument_UnderlyingOptAttribute );
-    ( "UnderlyingContractMultiplier" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingContractMultiplier );
-    ( "UnderlyingCouponRate" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingCouponRate );
+    ( "UnderlyingContractMultiplier" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingContractMultiplier );
+    ( "UnderlyingCouponRate" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingCouponRate );
     ( "UnderlyingSecurityExchange" , exchange_opt_to_json x.f_UnderlyingInstrument_UnderlyingSecurityExchange );
     ( "UnderlyingIssuer" , string_opt_to_json x.f_UnderlyingInstrument_UnderlyingIssuer );
     ( "EncodedUnderlyingIssuerLen" , int_opt_to_json x.f_UnderlyingInstrument_EncodedUnderlyingIssuerLen );
@@ -674,13 +674,13 @@ let underlyinginstrument_to_json x : json =
     ( "UnderlyingCPProgram" , string_opt_to_json x.f_UnderlyingInstrument_UnderlyingCPProgram );
     ( "UnderlyingCPRegType" , string_opt_to_json x.f_UnderlyingInstrument_UnderlyingCPRegType );
     ( "UnderlyingCurrency" , currency_opt_to_json x.f_UnderlyingInstrument_UnderlyingCurrency );
-    ( "UnderlyingQty" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingQty );
-    ( "UnderlyingPx" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingPx );
-    ( "UnderlyingDirtyPrice" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingDirtyPrice );
-    ( "UnderlyingEndPrice" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingEndPrice );
-    ( "UnderlyingStartValue" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingStartValue );
-    ( "UnderlyingCurrentValue" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingCurrentValue );
-    ( "UnderlyingEndValue" , fix_float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingEndValue );
+    ( "UnderlyingQty" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingQty );
+    ( "UnderlyingPx" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingPx );
+    ( "UnderlyingDirtyPrice" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingDirtyPrice );
+    ( "UnderlyingEndPrice" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingEndPrice );
+    ( "UnderlyingStartValue" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingStartValue );
+    ( "UnderlyingCurrentValue" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingCurrentValue );
+    ( "UnderlyingEndValue" , float_4_opt_to_json x.f_UnderlyingInstrument_UnderlyingEndValue );
     ( "UndSecAltIDGrp" , rg undsecaltidgrp_to_json x.f_UnderlyingInstrument_UndSecAltIDGrp );
     ( "UnderlyingStipulations" , rg underlyingstipulations_to_json x.f_UnderlyingInstrument_UnderlyingStipulations )
     ]
@@ -702,19 +702,19 @@ let instrumentleg_to_json x : json =
     ( "LegIssueDate" , localmktdate_opt_to_json x.f_InstrumentLeg_LegIssueDate );
     ( "LegRepoCollateralSecurityType" , string_opt_to_json x.f_InstrumentLeg_LegRepoCollateralSecurityType );
     ( "LegRepurchaseTerm" , int_opt_to_json x.f_InstrumentLeg_LegRepurchaseTerm );
-    ( "LegRepurchaseRate" , fix_float_4_opt_to_json x.f_InstrumentLeg_LegRepurchaseRate );
-    ( "LegFactor" , fix_float_4_opt_to_json x.f_InstrumentLeg_LegFactor );
+    ( "LegRepurchaseRate" , float_4_opt_to_json x.f_InstrumentLeg_LegRepurchaseRate );
+    ( "LegFactor" , float_4_opt_to_json x.f_InstrumentLeg_LegFactor );
     ( "LegCreditRating" , string_opt_to_json x.f_InstrumentLeg_LegCreditRating );
     ( "LegInstrRegistry" , string_opt_to_json x.f_InstrumentLeg_LegInstrRegistry );
     ( "LegCountryOfIssue" , country_opt_to_json x.f_InstrumentLeg_LegCountryOfIssue );
     ( "LegStateOrProvinceOfIssue" , string_opt_to_json x.f_InstrumentLeg_LegStateOrProvinceOfIssue );
     ( "LegLocaleOfIssue" , string_opt_to_json x.f_InstrumentLeg_LegLocaleOfIssue );
     ( "LegRedemptionDate" , localmktdate_opt_to_json x.f_InstrumentLeg_LegRedemptionDate );
-    ( "LegStrikePrice" , fix_float_4_opt_to_json x.f_InstrumentLeg_LegStrikePrice );
+    ( "LegStrikePrice" , float_4_opt_to_json x.f_InstrumentLeg_LegStrikePrice );
     ( "LegStrikeCurrency" , currency_opt_to_json x.f_InstrumentLeg_LegStrikeCurrency );
     ( "LegOptAttribute" , char_opt_to_json x.f_InstrumentLeg_LegOptAttribute );
-    ( "LegContractMultiplier" , fix_float_4_opt_to_json x.f_InstrumentLeg_LegContractMultiplier );
-    ( "LegCouponRate" , fix_float_4_opt_to_json x.f_InstrumentLeg_LegCouponRate );
+    ( "LegContractMultiplier" , float_4_opt_to_json x.f_InstrumentLeg_LegContractMultiplier );
+    ( "LegCouponRate" , float_4_opt_to_json x.f_InstrumentLeg_LegCouponRate );
     ( "LegSecurityExchange" , exchange_opt_to_json x.f_InstrumentLeg_LegSecurityExchange );
     ( "LegIssuer" , string_opt_to_json x.f_InstrumentLeg_LegIssuer );
     ( "EncodedLegIssuerLen" , int_opt_to_json x.f_InstrumentLeg_EncodedLegIssuerLen );
@@ -722,7 +722,7 @@ let instrumentleg_to_json x : json =
     ( "LegSecurityDesc" , string_opt_to_json x.f_InstrumentLeg_LegSecurityDesc );
     ( "EncodedLegSecurityDescLen" , int_opt_to_json x.f_InstrumentLeg_EncodedLegSecurityDescLen );
     ( "EncodedLegSecurityDesc" , string_opt_to_json x.f_InstrumentLeg_EncodedLegSecurityDesc );
-    ( "LegRatioQty" , fix_float_4_opt_to_json x.f_InstrumentLeg_LegRatioQty );
+    ( "LegRatioQty" , float_4_opt_to_json x.f_InstrumentLeg_LegRatioQty );
     ( "LegSide" , char_opt_to_json x.f_InstrumentLeg_LegSide );
     ( "LegCurrency" , currency_opt_to_json x.f_InstrumentLeg_LegCurrency );
     ( "LegPool" , string_opt_to_json x.f_InstrumentLeg_LegPool );
@@ -756,7 +756,7 @@ let parties_to_json x : json =
 let instrumentextension_to_json x : json =
     assoc_filter_nulls [
     ( "DeliveryForm" , deliveryform_opt_to_json x.f_InstrumentExtension_DeliveryForm );
-    ( "PctAtRisk" , fix_float_4_opt_to_json x.f_InstrumentExtension_PctAtRisk );
+    ( "PctAtRisk" , float_4_opt_to_json x.f_InstrumentExtension_PctAtRisk );
     ( "AttrbGrp" , rg attrbgrp_to_json x.f_InstrumentExtension_AttrbGrp )
     ]
 ;;
@@ -799,15 +799,15 @@ let instrmtlegexecgrp_to_json x : json =
     assoc_filter_nulls [
     ( "InstrumentLeg" , instrumentleg_to_json x.f_InstrmtLegExecGrp_InstrumentLeg );
     ( "NoLegs" , int_opt_to_json x.f_InstrmtLegExecGrp_NoLegs );
-    ( "LegQty" , fix_float_4_opt_to_json x.f_InstrmtLegExecGrp_LegQty );
+    ( "LegQty" , float_4_opt_to_json x.f_InstrmtLegExecGrp_LegQty );
     ( "LegSwapType" , legswaptype_opt_to_json x.f_InstrmtLegExecGrp_LegSwapType );
     ( "LegPositionEffect" , char_opt_to_json x.f_InstrmtLegExecGrp_LegPositionEffect );
     ( "LegCoveredOrUncovered" , int_opt_to_json x.f_InstrmtLegExecGrp_LegCoveredOrUncovered );
     ( "LegRefID" , string_opt_to_json x.f_InstrmtLegExecGrp_LegRefID );
-    ( "LegPrice" , fix_float_4_opt_to_json x.f_InstrmtLegExecGrp_LegPrice );
+    ( "LegPrice" , float_4_opt_to_json x.f_InstrmtLegExecGrp_LegPrice );
     ( "LegSettlType" , char_opt_to_json x.f_InstrmtLegExecGrp_LegSettlType );
     ( "LegSettlDate" , localmktdate_opt_to_json x.f_InstrmtLegExecGrp_LegSettlDate );
-    ( "LegLastPx" , fix_float_4_opt_to_json x.f_InstrmtLegExecGrp_LegLastPx );
+    ( "LegLastPx" , float_4_opt_to_json x.f_InstrmtLegExecGrp_LegLastPx );
     ( "LegStipulations" , rg legstipulations_to_json x.f_InstrmtLegExecGrp_LegStipulations );
     ( "NestedParties" , rg nestedparties_to_json x.f_InstrmtLegExecGrp_NestedParties )
     ]
@@ -820,7 +820,7 @@ let trdallocgrp_to_json x : json =
     ( "AllocAcctIDSource" , int_opt_to_json x.f_TrdAllocGrp_AllocAcctIDSource );
     ( "AllocSettlCurrency" , currency_opt_to_json x.f_TrdAllocGrp_AllocSettlCurrency );
     ( "IndividualAllocID" , string_opt_to_json x.f_TrdAllocGrp_IndividualAllocID );
-    ( "AllocQty" , fix_float_4_opt_to_json x.f_TrdAllocGrp_AllocQty );
+    ( "AllocQty" , float_4_opt_to_json x.f_TrdAllocGrp_AllocQty );
     ( "NestedParties2" , rg nestedparties2_to_json x.f_TrdAllocGrp_NestedParties2 )
     ]
 ;;
@@ -840,15 +840,15 @@ let trdinstrmtleggrp_to_json x : json =
     assoc_filter_nulls [
     ( "InstrumentLeg" , instrumentleg_to_json x.f_TrdInstrmtLegGrp_InstrumentLeg );
     ( "NoLegs" , int_opt_to_json x.f_TrdInstrmtLegGrp_NoLegs );
-    ( "LegQty" , fix_float_4_opt_to_json x.f_TrdInstrmtLegGrp_LegQty );
+    ( "LegQty" , float_4_opt_to_json x.f_TrdInstrmtLegGrp_LegQty );
     ( "LegSwapType" , legswaptype_opt_to_json x.f_TrdInstrmtLegGrp_LegSwapType );
     ( "LegPositionEffect" , char_opt_to_json x.f_TrdInstrmtLegGrp_LegPositionEffect );
     ( "LegCoveredOrUncovered" , int_opt_to_json x.f_TrdInstrmtLegGrp_LegCoveredOrUncovered );
     ( "LegRefID" , string_opt_to_json x.f_TrdInstrmtLegGrp_LegRefID );
-    ( "LegPrice" , fix_float_4_opt_to_json x.f_TrdInstrmtLegGrp_LegPrice );
+    ( "LegPrice" , float_4_opt_to_json x.f_TrdInstrmtLegGrp_LegPrice );
     ( "LegSettlType" , char_opt_to_json x.f_TrdInstrmtLegGrp_LegSettlType );
     ( "LegSettlDate" , localmktdate_opt_to_json x.f_TrdInstrmtLegGrp_LegSettlDate );
-    ( "LegLastPx" , fix_float_4_opt_to_json x.f_TrdInstrmtLegGrp_LegLastPx );
+    ( "LegLastPx" , float_4_opt_to_json x.f_TrdInstrmtLegGrp_LegLastPx );
     ( "LegStipulations" , rg legstipulations_to_json x.f_TrdInstrmtLegGrp_LegStipulations );
     ( "NestedParties" , rg nestedparties_to_json x.f_TrdInstrmtLegGrp_NestedParties )
     ]
@@ -861,7 +861,7 @@ let preallocmleggrp_to_json x : json =
     ( "AllocAcctIDSource" , int_opt_to_json x.f_PreAllocMlegGrp_AllocAcctIDSource );
     ( "AllocSettlCurrency" , currency_opt_to_json x.f_PreAllocMlegGrp_AllocSettlCurrency );
     ( "IndividualAllocID" , string_opt_to_json x.f_PreAllocMlegGrp_IndividualAllocID );
-    ( "AllocQty" , fix_float_4_opt_to_json x.f_PreAllocMlegGrp_AllocQty );
+    ( "AllocQty" , float_4_opt_to_json x.f_PreAllocMlegGrp_AllocQty );
     ( "NestedParties3" , rg nestedparties3_to_json x.f_PreAllocMlegGrp_NestedParties3 )
     ]
 ;;
@@ -881,9 +881,9 @@ let ordallocgrp_to_json x : json =
     ( "SecondaryOrderID" , string_opt_to_json x.f_OrdAllocGrp_SecondaryOrderID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_OrdAllocGrp_SecondaryClOrdID );
     ( "ListID" , string_opt_to_json x.f_OrdAllocGrp_ListID );
-    ( "OrderQty" , fix_float_4_opt_to_json x.f_OrdAllocGrp_OrderQty );
-    ( "OrderAvgPx" , fix_float_4_opt_to_json x.f_OrdAllocGrp_OrderAvgPx );
-    ( "OrderBookingQty" , fix_float_4_opt_to_json x.f_OrdAllocGrp_OrderBookingQty );
+    ( "OrderQty" , float_4_opt_to_json x.f_OrdAllocGrp_OrderQty );
+    ( "OrderAvgPx" , float_4_opt_to_json x.f_OrdAllocGrp_OrderAvgPx );
+    ( "OrderBookingQty" , float_4_opt_to_json x.f_OrdAllocGrp_OrderBookingQty );
     ( "NestedParties2" , rg nestedparties2_to_json x.f_OrdAllocGrp_NestedParties2 )
     ]
 ;;
@@ -901,11 +901,11 @@ let undinstrmtstrkpxgrp_to_json x : json =
     assoc_filter_nulls [
     ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_UndInstrmtStrkPxGrp_UnderlyingInstrument );
     ( "NoUnderlyings" , int_opt_to_json x.f_UndInstrmtStrkPxGrp_NoUnderlyings );
-    ( "PrevClosePx" , fix_float_4_opt_to_json x.f_UndInstrmtStrkPxGrp_PrevClosePx );
+    ( "PrevClosePx" , float_4_opt_to_json x.f_UndInstrmtStrkPxGrp_PrevClosePx );
     ( "ClOrdID" , string_opt_to_json x.f_UndInstrmtStrkPxGrp_ClOrdID );
     ( "SecondaryClOrdID" , string_opt_to_json x.f_UndInstrmtStrkPxGrp_SecondaryClOrdID );
     ( "Side" , side_opt_to_json x.f_UndInstrmtStrkPxGrp_Side );
-    ( "Price" , fix_float_4_to_json x.f_UndInstrmtStrkPxGrp_Price );
+    ( "Price" , float_4_to_json x.f_UndInstrmtStrkPxGrp_Price );
     ( "Currency" , currency_opt_to_json x.f_UndInstrmtStrkPxGrp_Currency );
     ( "Text" , string_opt_to_json x.f_UndInstrmtStrkPxGrp_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_UndInstrmtStrkPxGrp_EncodedTextLen );
@@ -932,13 +932,13 @@ let legquotgrp_to_json x : json =
     ( "InstrumentLeg" , instrumentleg_to_json x.f_LegQuotGrp_InstrumentLeg );
     ( "LegBenchmarkCurveData" , legbenchmarkcurvedata_to_json x.f_LegQuotGrp_LegBenchmarkCurveData );
     ( "NoLegs" , int_opt_to_json x.f_LegQuotGrp_NoLegs );
-    ( "LegQty" , fix_float_4_opt_to_json x.f_LegQuotGrp_LegQty );
+    ( "LegQty" , float_4_opt_to_json x.f_LegQuotGrp_LegQty );
     ( "LegSwapType" , legswaptype_opt_to_json x.f_LegQuotGrp_LegSwapType );
     ( "LegSettlType" , char_opt_to_json x.f_LegQuotGrp_LegSettlType );
     ( "LegSettlDate" , localmktdate_opt_to_json x.f_LegQuotGrp_LegSettlDate );
     ( "LegPriceType" , int_opt_to_json x.f_LegQuotGrp_LegPriceType );
-    ( "LegBidPx" , fix_float_4_opt_to_json x.f_LegQuotGrp_LegBidPx );
-    ( "LegOfferPx" , fix_float_4_opt_to_json x.f_LegQuotGrp_LegOfferPx );
+    ( "LegBidPx" , float_4_opt_to_json x.f_LegQuotGrp_LegBidPx );
+    ( "LegOfferPx" , float_4_opt_to_json x.f_LegQuotGrp_LegOfferPx );
     ( "LegStipulations" , rg legstipulations_to_json x.f_LegQuotGrp_LegStipulations );
     ( "NestedParties" , rg nestedparties_to_json x.f_LegQuotGrp_NestedParties )
     ]
@@ -956,7 +956,7 @@ let legquotstatgrp_to_json x : json =
     assoc_filter_nulls [
     ( "InstrumentLeg" , instrumentleg_to_json x.f_LegQuotStatGrp_InstrumentLeg );
     ( "NoLegs" , int_opt_to_json x.f_LegQuotStatGrp_NoLegs );
-    ( "LegQty" , fix_float_4_opt_to_json x.f_LegQuotStatGrp_LegQty );
+    ( "LegQty" , float_4_opt_to_json x.f_LegQuotStatGrp_LegQty );
     ( "LegSwapType" , legswaptype_opt_to_json x.f_LegQuotStatGrp_LegSwapType );
     ( "LegSettlType" , char_opt_to_json x.f_LegQuotStatGrp_LegSettlType );
     ( "LegSettlDate" , localmktdate_opt_to_json x.f_LegQuotStatGrp_LegSettlDate );
@@ -985,7 +985,7 @@ let posundinstrmtgrp_to_json x : json =
     assoc_filter_nulls [
     ( "UnderlyingInstrument" , underlyinginstrument_to_json x.f_PosUndInstrmtGrp_UnderlyingInstrument );
     ( "NoUnderlyings" , int_opt_to_json x.f_PosUndInstrmtGrp_NoUnderlyings );
-    ( "UnderlyingSettlPrice" , fix_float_4_to_json x.f_PosUndInstrmtGrp_UnderlyingSettlPrice );
+    ( "UnderlyingSettlPrice" , float_4_to_json x.f_PosUndInstrmtGrp_UnderlyingSettlPrice );
     ( "UnderlyingSettlPriceType" , int_to_json x.f_PosUndInstrmtGrp_UnderlyingSettlPriceType )
     ]
 ;;
@@ -994,8 +994,8 @@ let positionqty_to_json x : json =
     assoc_filter_nulls [
     ( "NoPositions" , int_opt_to_json x.f_PositionQty_NoPositions );
     ( "PosType" , postype_opt_to_json x.f_PositionQty_PosType );
-    ( "LongQty" , fix_float_4_opt_to_json x.f_PositionQty_LongQty );
-    ( "ShortQty" , fix_float_4_opt_to_json x.f_PositionQty_ShortQty );
+    ( "LongQty" , float_4_opt_to_json x.f_PositionQty_LongQty );
+    ( "ShortQty" , float_4_opt_to_json x.f_PositionQty_ShortQty );
     ( "PosQtyStatus" , posqtystatus_opt_to_json x.f_PositionQty_PosQtyStatus );
     ( "NestedParties" , rg nestedparties_to_json x.f_PositionQty_NestedParties )
     ]
@@ -1006,7 +1006,7 @@ let quotreqlegsgrp_to_json x : json =
     ( "InstrumentLeg" , instrumentleg_to_json x.f_QuotReqLegsGrp_InstrumentLeg );
     ( "LegBenchmarkCurveData" , legbenchmarkcurvedata_to_json x.f_QuotReqLegsGrp_LegBenchmarkCurveData );
     ( "NoLegs" , int_opt_to_json x.f_QuotReqLegsGrp_NoLegs );
-    ( "LegQty" , fix_float_4_opt_to_json x.f_QuotReqLegsGrp_LegQty );
+    ( "LegQty" , float_4_opt_to_json x.f_QuotReqLegsGrp_LegQty );
     ( "LegSwapType" , legswaptype_opt_to_json x.f_QuotReqLegsGrp_LegSwapType );
     ( "LegSettlType" , char_opt_to_json x.f_QuotReqLegsGrp_LegSettlType );
     ( "LegSettlDate" , localmktdate_opt_to_json x.f_QuotReqLegsGrp_LegSettlDate );
@@ -1040,7 +1040,7 @@ let legpreallocgrp_to_json x : json =
     ( "NoLegAllocs" , int_opt_to_json x.f_LegPreAllocGrp_NoLegAllocs );
     ( "LegAllocAccount" , string_opt_to_json x.f_LegPreAllocGrp_LegAllocAccount );
     ( "LegIndividualAllocID" , string_opt_to_json x.f_LegPreAllocGrp_LegIndividualAllocID );
-    ( "LegAllocQty" , fix_float_4_opt_to_json x.f_LegPreAllocGrp_LegAllocQty );
+    ( "LegAllocQty" , float_4_opt_to_json x.f_LegPreAllocGrp_LegAllocQty );
     ( "LegAllocAcctIDSource" , string_opt_to_json x.f_LegPreAllocGrp_LegAllocAcctIDSource );
     ( "LegSettlCurrency" , currency_opt_to_json x.f_LegPreAllocGrp_LegSettlCurrency );
     ( "NestedParties2" , rg nestedparties2_to_json x.f_LegPreAllocGrp_NestedParties2 )
@@ -1054,7 +1054,7 @@ let preallocgrp_to_json x : json =
     ( "AllocAcctIDSource" , int_opt_to_json x.f_PreAllocGrp_AllocAcctIDSource );
     ( "AllocSettlCurrency" , currency_opt_to_json x.f_PreAllocGrp_AllocSettlCurrency );
     ( "IndividualAllocID" , string_opt_to_json x.f_PreAllocGrp_IndividualAllocID );
-    ( "AllocQty" , fix_float_4_opt_to_json x.f_PreAllocGrp_AllocQty );
+    ( "AllocQty" , float_4_opt_to_json x.f_PreAllocGrp_AllocQty );
     ( "NestedParties" , rg nestedparties_to_json x.f_PreAllocGrp_NestedParties )
     ]
 ;;
@@ -1067,7 +1067,7 @@ let quotreqgrp_to_json x : json =
     ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_QuotReqGrp_SpreadOrBenchmarkCurveData );
     ( "YieldData" , yielddata_to_json x.f_QuotReqGrp_YieldData );
     ( "NoRelatedSym" , int_to_json x.f_QuotReqGrp_NoRelatedSym );
-    ( "PrevClosePx" , fix_float_4_opt_to_json x.f_QuotReqGrp_PrevClosePx );
+    ( "PrevClosePx" , float_4_opt_to_json x.f_QuotReqGrp_PrevClosePx );
     ( "QuoteRequestType" , quoterequesttype_opt_to_json x.f_QuotReqGrp_QuoteRequestType );
     ( "QuoteType" , quotetype_opt_to_json x.f_QuotReqGrp_QuoteType );
     ( "TradingSessionID" , string_opt_to_json x.f_QuotReqGrp_TradingSessionID );
@@ -1078,7 +1078,7 @@ let quotreqgrp_to_json x : json =
     ( "SettlType" , settltype_opt_to_json x.f_QuotReqGrp_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_QuotReqGrp_SettlDate );
     ( "SettlDate2" , localmktdate_opt_to_json x.f_QuotReqGrp_SettlDate2 );
-    ( "OrderQty2" , fix_float_4_opt_to_json x.f_QuotReqGrp_OrderQty2 );
+    ( "OrderQty2" , float_4_opt_to_json x.f_QuotReqGrp_OrderQty2 );
     ( "Currency" , currency_opt_to_json x.f_QuotReqGrp_Currency );
     ( "Account" , string_opt_to_json x.f_QuotReqGrp_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_QuotReqGrp_AcctIDSource );
@@ -1089,8 +1089,8 @@ let quotreqgrp_to_json x : json =
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_QuotReqGrp_ExpireTime );
     ( "TransactTime" , utctimestamp_opt_to_json x.f_QuotReqGrp_TransactTime );
     ( "PriceType" , pricetype_opt_to_json x.f_QuotReqGrp_PriceType );
-    ( "Price" , fix_float_4_opt_to_json x.f_QuotReqGrp_Price );
-    ( "Price2" , fix_float_4_opt_to_json x.f_QuotReqGrp_Price2 );
+    ( "Price" , float_4_opt_to_json x.f_QuotReqGrp_Price );
+    ( "Price2" , float_4_opt_to_json x.f_QuotReqGrp_Price2 );
     ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_QuotReqGrp_UndInstrmtGrp );
     ( "Stipulations" , rg stipulations_to_json x.f_QuotReqGrp_Stipulations );
     ( "QuotReqLegsGrp" , rg quotreqlegsgrp_to_json x.f_QuotReqGrp_QuotReqLegsGrp );
@@ -1103,12 +1103,12 @@ let legordgrp_to_json x : json =
     assoc_filter_nulls [
     ( "InstrumentLeg" , instrumentleg_to_json x.f_LegOrdGrp_InstrumentLeg );
     ( "NoLegs" , int_to_json x.f_LegOrdGrp_NoLegs );
-    ( "LegQty" , fix_float_4_opt_to_json x.f_LegOrdGrp_LegQty );
+    ( "LegQty" , float_4_opt_to_json x.f_LegOrdGrp_LegQty );
     ( "LegSwapType" , legswaptype_opt_to_json x.f_LegOrdGrp_LegSwapType );
     ( "LegPositionEffect" , char_opt_to_json x.f_LegOrdGrp_LegPositionEffect );
     ( "LegCoveredOrUncovered" , int_opt_to_json x.f_LegOrdGrp_LegCoveredOrUncovered );
     ( "LegRefID" , string_opt_to_json x.f_LegOrdGrp_LegRefID );
-    ( "LegPrice" , fix_float_4_opt_to_json x.f_LegOrdGrp_LegPrice );
+    ( "LegPrice" , float_4_opt_to_json x.f_LegOrdGrp_LegPrice );
     ( "LegSettlType" , char_opt_to_json x.f_LegOrdGrp_LegSettlType );
     ( "LegSettlDate" , localmktdate_opt_to_json x.f_LegOrdGrp_LegSettlDate );
     ( "LegStipulations" , rg legstipulations_to_json x.f_LegOrdGrp_LegStipulations );
@@ -1137,7 +1137,7 @@ let rfqreqgrp_to_json x : json =
     assoc_filter_nulls [
     ( "Instrument" , instrument_to_json x.f_RFQReqGrp_Instrument );
     ( "NoRelatedSym" , int_to_json x.f_RFQReqGrp_NoRelatedSym );
-    ( "PrevClosePx" , fix_float_4_opt_to_json x.f_RFQReqGrp_PrevClosePx );
+    ( "PrevClosePx" , float_4_opt_to_json x.f_RFQReqGrp_PrevClosePx );
     ( "QuoteRequestType" , quoterequesttype_opt_to_json x.f_RFQReqGrp_QuoteRequestType );
     ( "QuoteType" , quotetype_opt_to_json x.f_RFQReqGrp_QuoteType );
     ( "TradingSessionID" , string_opt_to_json x.f_RFQReqGrp_TradingSessionID );
@@ -1156,8 +1156,8 @@ let seclistgrp_to_json x : json =
     ( "YieldData" , yielddata_to_json x.f_SecListGrp_YieldData );
     ( "NoRelatedSym" , int_opt_to_json x.f_SecListGrp_NoRelatedSym );
     ( "Currency" , currency_opt_to_json x.f_SecListGrp_Currency );
-    ( "RoundLot" , fix_float_4_opt_to_json x.f_SecListGrp_RoundLot );
-    ( "MinTradeVol" , fix_float_4_opt_to_json x.f_SecListGrp_MinTradeVol );
+    ( "RoundLot" , float_4_opt_to_json x.f_SecListGrp_RoundLot );
+    ( "MinTradeVol" , float_4_opt_to_json x.f_SecListGrp_MinTradeVol );
     ( "TradingSessionID" , string_opt_to_json x.f_SecListGrp_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_SecListGrp_TradingSessionSubID );
     ( "ExpirationCycle" , expirationcycle_opt_to_json x.f_SecListGrp_ExpirationCycle );
@@ -1175,28 +1175,28 @@ let quotentrygrp_to_json x : json =
     ( "Instrument" , instrument_to_json x.f_QuotEntryGrp_Instrument );
     ( "NoQuoteEntries" , int_to_json x.f_QuotEntryGrp_NoQuoteEntries );
     ( "QuoteEntryID" , string_to_json x.f_QuotEntryGrp_QuoteEntryID );
-    ( "BidPx" , fix_float_4_opt_to_json x.f_QuotEntryGrp_BidPx );
-    ( "OfferPx" , fix_float_4_opt_to_json x.f_QuotEntryGrp_OfferPx );
-    ( "BidSize" , fix_float_4_opt_to_json x.f_QuotEntryGrp_BidSize );
-    ( "OfferSize" , fix_float_4_opt_to_json x.f_QuotEntryGrp_OfferSize );
+    ( "BidPx" , float_4_opt_to_json x.f_QuotEntryGrp_BidPx );
+    ( "OfferPx" , float_4_opt_to_json x.f_QuotEntryGrp_OfferPx );
+    ( "BidSize" , float_4_opt_to_json x.f_QuotEntryGrp_BidSize );
+    ( "OfferSize" , float_4_opt_to_json x.f_QuotEntryGrp_OfferSize );
     ( "ValidUntilTime" , utctimestamp_opt_to_json x.f_QuotEntryGrp_ValidUntilTime );
-    ( "BidSpotRate" , fix_float_4_opt_to_json x.f_QuotEntryGrp_BidSpotRate );
-    ( "OfferSpotRate" , fix_float_4_opt_to_json x.f_QuotEntryGrp_OfferSpotRate );
-    ( "BidForwardPoints" , fix_float_4_opt_to_json x.f_QuotEntryGrp_BidForwardPoints );
-    ( "OfferForwardPoints" , fix_float_4_opt_to_json x.f_QuotEntryGrp_OfferForwardPoints );
-    ( "MidPx" , fix_float_4_opt_to_json x.f_QuotEntryGrp_MidPx );
-    ( "BidYield" , fix_float_4_opt_to_json x.f_QuotEntryGrp_BidYield );
-    ( "MidYield" , fix_float_4_opt_to_json x.f_QuotEntryGrp_MidYield );
-    ( "OfferYield" , fix_float_4_opt_to_json x.f_QuotEntryGrp_OfferYield );
+    ( "BidSpotRate" , float_4_opt_to_json x.f_QuotEntryGrp_BidSpotRate );
+    ( "OfferSpotRate" , float_4_opt_to_json x.f_QuotEntryGrp_OfferSpotRate );
+    ( "BidForwardPoints" , float_4_opt_to_json x.f_QuotEntryGrp_BidForwardPoints );
+    ( "OfferForwardPoints" , float_4_opt_to_json x.f_QuotEntryGrp_OfferForwardPoints );
+    ( "MidPx" , float_4_opt_to_json x.f_QuotEntryGrp_MidPx );
+    ( "BidYield" , float_4_opt_to_json x.f_QuotEntryGrp_BidYield );
+    ( "MidYield" , float_4_opt_to_json x.f_QuotEntryGrp_MidYield );
+    ( "OfferYield" , float_4_opt_to_json x.f_QuotEntryGrp_OfferYield );
     ( "TransactTime" , utctimestamp_opt_to_json x.f_QuotEntryGrp_TransactTime );
     ( "TradingSessionID" , string_opt_to_json x.f_QuotEntryGrp_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_QuotEntryGrp_TradingSessionSubID );
     ( "SettlDate" , localmktdate_opt_to_json x.f_QuotEntryGrp_SettlDate );
     ( "OrdType" , ordtype_opt_to_json x.f_QuotEntryGrp_OrdType );
     ( "SettlDate2" , localmktdate_opt_to_json x.f_QuotEntryGrp_SettlDate2 );
-    ( "OrderQty2" , fix_float_4_opt_to_json x.f_QuotEntryGrp_OrderQty2 );
-    ( "BidForwardPoints2" , fix_float_4_opt_to_json x.f_QuotEntryGrp_BidForwardPoints2 );
-    ( "OfferForwardPoints2" , fix_float_4_opt_to_json x.f_QuotEntryGrp_OfferForwardPoints2 );
+    ( "OrderQty2" , float_4_opt_to_json x.f_QuotEntryGrp_OrderQty2 );
+    ( "BidForwardPoints2" , float_4_opt_to_json x.f_QuotEntryGrp_BidForwardPoints2 );
+    ( "OfferForwardPoints2" , float_4_opt_to_json x.f_QuotEntryGrp_OfferForwardPoints2 );
     ( "Currency" , currency_opt_to_json x.f_QuotEntryGrp_Currency );
     ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_QuotEntryGrp_InstrmtLegGrp )
     ]
@@ -1217,28 +1217,28 @@ let quotentryackgrp_to_json x : json =
     ( "Instrument" , instrument_to_json x.f_QuotEntryAckGrp_Instrument );
     ( "NoQuoteEntries" , int_opt_to_json x.f_QuotEntryAckGrp_NoQuoteEntries );
     ( "QuoteEntryID" , string_opt_to_json x.f_QuotEntryAckGrp_QuoteEntryID );
-    ( "BidPx" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_BidPx );
-    ( "OfferPx" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_OfferPx );
-    ( "BidSize" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_BidSize );
-    ( "OfferSize" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_OfferSize );
+    ( "BidPx" , float_4_opt_to_json x.f_QuotEntryAckGrp_BidPx );
+    ( "OfferPx" , float_4_opt_to_json x.f_QuotEntryAckGrp_OfferPx );
+    ( "BidSize" , float_4_opt_to_json x.f_QuotEntryAckGrp_BidSize );
+    ( "OfferSize" , float_4_opt_to_json x.f_QuotEntryAckGrp_OfferSize );
     ( "ValidUntilTime" , utctimestamp_opt_to_json x.f_QuotEntryAckGrp_ValidUntilTime );
-    ( "BidSpotRate" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_BidSpotRate );
-    ( "OfferSpotRate" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_OfferSpotRate );
-    ( "BidForwardPoints" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_BidForwardPoints );
-    ( "OfferForwardPoints" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_OfferForwardPoints );
-    ( "MidPx" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_MidPx );
-    ( "BidYield" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_BidYield );
-    ( "MidYield" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_MidYield );
-    ( "OfferYield" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_OfferYield );
+    ( "BidSpotRate" , float_4_opt_to_json x.f_QuotEntryAckGrp_BidSpotRate );
+    ( "OfferSpotRate" , float_4_opt_to_json x.f_QuotEntryAckGrp_OfferSpotRate );
+    ( "BidForwardPoints" , float_4_opt_to_json x.f_QuotEntryAckGrp_BidForwardPoints );
+    ( "OfferForwardPoints" , float_4_opt_to_json x.f_QuotEntryAckGrp_OfferForwardPoints );
+    ( "MidPx" , float_4_opt_to_json x.f_QuotEntryAckGrp_MidPx );
+    ( "BidYield" , float_4_opt_to_json x.f_QuotEntryAckGrp_BidYield );
+    ( "MidYield" , float_4_opt_to_json x.f_QuotEntryAckGrp_MidYield );
+    ( "OfferYield" , float_4_opt_to_json x.f_QuotEntryAckGrp_OfferYield );
     ( "TransactTime" , utctimestamp_opt_to_json x.f_QuotEntryAckGrp_TransactTime );
     ( "TradingSessionID" , string_opt_to_json x.f_QuotEntryAckGrp_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_QuotEntryAckGrp_TradingSessionSubID );
     ( "SettlDate" , localmktdate_opt_to_json x.f_QuotEntryAckGrp_SettlDate );
     ( "OrdType" , ordtype_opt_to_json x.f_QuotEntryAckGrp_OrdType );
     ( "SettlDate2" , localmktdate_opt_to_json x.f_QuotEntryAckGrp_SettlDate2 );
-    ( "OrderQty2" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_OrderQty2 );
-    ( "BidForwardPoints2" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_BidForwardPoints2 );
-    ( "OfferForwardPoints2" , fix_float_4_opt_to_json x.f_QuotEntryAckGrp_OfferForwardPoints2 );
+    ( "OrderQty2" , float_4_opt_to_json x.f_QuotEntryAckGrp_OrderQty2 );
+    ( "BidForwardPoints2" , float_4_opt_to_json x.f_QuotEntryAckGrp_BidForwardPoints2 );
+    ( "OfferForwardPoints2" , float_4_opt_to_json x.f_QuotEntryAckGrp_OfferForwardPoints2 );
     ( "Currency" , currency_opt_to_json x.f_QuotEntryAckGrp_Currency );
     ( "QuoteEntryRejectReason" , int_opt_to_json x.f_QuotEntryAckGrp_QuoteEntryRejectReason );
     ( "InstrmtLegGrp" , rg instrmtleggrp_to_json x.f_QuotEntryAckGrp_InstrmtLegGrp )
@@ -1285,11 +1285,11 @@ let listordgrp_to_json x : json =
     ( "ClearingFeeIndicator" , clearingfeeindicator_opt_to_json x.f_ListOrdGrp_ClearingFeeIndicator );
     ( "HandlInst" , handlinst_opt_to_json x.f_ListOrdGrp_HandlInst );
     ( "ExecInst" , execinst_opt_to_json x.f_ListOrdGrp_ExecInst );
-    ( "MinQty" , fix_float_4_opt_to_json x.f_ListOrdGrp_MinQty );
-    ( "MaxFloor" , fix_float_4_opt_to_json x.f_ListOrdGrp_MaxFloor );
+    ( "MinQty" , float_4_opt_to_json x.f_ListOrdGrp_MinQty );
+    ( "MaxFloor" , float_4_opt_to_json x.f_ListOrdGrp_MaxFloor );
     ( "ExDestination" , exchange_opt_to_json x.f_ListOrdGrp_ExDestination );
     ( "ProcessCode" , processcode_opt_to_json x.f_ListOrdGrp_ProcessCode );
-    ( "PrevClosePx" , fix_float_4_opt_to_json x.f_ListOrdGrp_PrevClosePx );
+    ( "PrevClosePx" , float_4_opt_to_json x.f_ListOrdGrp_PrevClosePx );
     ( "Side" , side_to_json x.f_ListOrdGrp_Side );
     ( "SideValueInd" , sidevalueind_opt_to_json x.f_ListOrdGrp_SideValueInd );
     ( "LocateReqd" , locatereqd_opt_to_json x.f_ListOrdGrp_LocateReqd );
@@ -1297,8 +1297,8 @@ let listordgrp_to_json x : json =
     ( "QtyType" , qtytype_opt_to_json x.f_ListOrdGrp_QtyType );
     ( "OrdType" , ordtype_opt_to_json x.f_ListOrdGrp_OrdType );
     ( "PriceType" , pricetype_opt_to_json x.f_ListOrdGrp_PriceType );
-    ( "Price" , fix_float_4_opt_to_json x.f_ListOrdGrp_Price );
-    ( "StopPx" , fix_float_4_opt_to_json x.f_ListOrdGrp_StopPx );
+    ( "Price" , float_4_opt_to_json x.f_ListOrdGrp_Price );
+    ( "StopPx" , float_4_opt_to_json x.f_ListOrdGrp_StopPx );
     ( "Currency" , currency_opt_to_json x.f_ListOrdGrp_Currency );
     ( "ComplianceID" , string_opt_to_json x.f_ListOrdGrp_ComplianceID );
     ( "SolicitedFlag" , solicitedflag_opt_to_json x.f_ListOrdGrp_SolicitedFlag );
@@ -1319,14 +1319,14 @@ let listordgrp_to_json x : json =
     ( "EncodedTextLen" , int_opt_to_json x.f_ListOrdGrp_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_ListOrdGrp_EncodedText );
     ( "SettlDate2" , localmktdate_opt_to_json x.f_ListOrdGrp_SettlDate2 );
-    ( "OrderQty2" , fix_float_4_opt_to_json x.f_ListOrdGrp_OrderQty2 );
-    ( "Price2" , fix_float_4_opt_to_json x.f_ListOrdGrp_Price2 );
+    ( "OrderQty2" , float_4_opt_to_json x.f_ListOrdGrp_OrderQty2 );
+    ( "Price2" , float_4_opt_to_json x.f_ListOrdGrp_Price2 );
     ( "PositionEffect" , positioneffect_opt_to_json x.f_ListOrdGrp_PositionEffect );
     ( "CoveredOrUncovered" , coveredoruncovered_opt_to_json x.f_ListOrdGrp_CoveredOrUncovered );
-    ( "MaxShow" , fix_float_4_opt_to_json x.f_ListOrdGrp_MaxShow );
+    ( "MaxShow" , float_4_opt_to_json x.f_ListOrdGrp_MaxShow );
     ( "TargetStrategy" , targetstrategy_opt_to_json x.f_ListOrdGrp_TargetStrategy );
     ( "TargetStrategyParameters" , string_opt_to_json x.f_ListOrdGrp_TargetStrategyParameters );
-    ( "ParticipationRate" , fix_float_4_opt_to_json x.f_ListOrdGrp_ParticipationRate );
+    ( "ParticipationRate" , float_4_opt_to_json x.f_ListOrdGrp_ParticipationRate );
     ( "Designation" , string_opt_to_json x.f_ListOrdGrp_Designation );
     ( "Parties" , rg parties_to_json x.f_ListOrdGrp_Parties );
     ( "PreAllocGrp" , rg preallocgrp_to_json x.f_ListOrdGrp_PreAllocGrp );
@@ -1347,9 +1347,9 @@ let mdincgrp_to_json x : json =
     ( "MDEntryRefID" , string_opt_to_json x.f_MDIncGrp_MDEntryRefID );
     ( "FinancialStatus" , financialstatus_opt_to_json x.f_MDIncGrp_FinancialStatus );
     ( "CorporateAction" , corporateaction_opt_to_json x.f_MDIncGrp_CorporateAction );
-    ( "MDEntryPx" , fix_float_4_opt_to_json x.f_MDIncGrp_MDEntryPx );
+    ( "MDEntryPx" , float_4_opt_to_json x.f_MDIncGrp_MDEntryPx );
     ( "Currency" , currency_opt_to_json x.f_MDIncGrp_Currency );
-    ( "MDEntrySize" , fix_float_4_opt_to_json x.f_MDIncGrp_MDEntrySize );
+    ( "MDEntrySize" , float_4_opt_to_json x.f_MDIncGrp_MDEntrySize );
     ( "MDEntryDate" , utcdateonly_opt_to_json x.f_MDIncGrp_MDEntryDate );
     ( "MDEntryTime" , utctimeonly_opt_to_json x.f_MDIncGrp_MDEntryTime );
     ( "TickDirection" , tickdirection_opt_to_json x.f_MDIncGrp_TickDirection );
@@ -1365,7 +1365,7 @@ let mdincgrp_to_json x : json =
     ( "TimeInForce" , timeinforce_opt_to_json x.f_MDIncGrp_TimeInForce );
     ( "ExpireDate" , localmktdate_opt_to_json x.f_MDIncGrp_ExpireDate );
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_MDIncGrp_ExpireTime );
-    ( "MinQty" , fix_float_4_opt_to_json x.f_MDIncGrp_MinQty );
+    ( "MinQty" , float_4_opt_to_json x.f_MDIncGrp_MinQty );
     ( "ExecInst" , execinst_opt_to_json x.f_MDIncGrp_ExecInst );
     ( "SellerDays" , int_opt_to_json x.f_MDIncGrp_SellerDays );
     ( "OrderID" , string_opt_to_json x.f_MDIncGrp_OrderID );
@@ -1375,8 +1375,8 @@ let mdincgrp_to_json x : json =
     ( "NumberOfOrders" , int_opt_to_json x.f_MDIncGrp_NumberOfOrders );
     ( "MDEntryPositionNo" , int_opt_to_json x.f_MDIncGrp_MDEntryPositionNo );
     ( "Scope" , scope_opt_to_json x.f_MDIncGrp_Scope );
-    ( "PriceDelta" , fix_float_4_opt_to_json x.f_MDIncGrp_PriceDelta );
-    ( "NetChgPrevDay" , fix_float_4_opt_to_json x.f_MDIncGrp_NetChgPrevDay );
+    ( "PriceDelta" , float_4_opt_to_json x.f_MDIncGrp_PriceDelta );
+    ( "NetChgPrevDay" , float_4_opt_to_json x.f_MDIncGrp_NetChgPrevDay );
     ( "Text" , string_opt_to_json x.f_MDIncGrp_Text );
     ( "EncodedTextLen" , int_opt_to_json x.f_MDIncGrp_EncodedTextLen );
     ( "EncodedText" , string_opt_to_json x.f_MDIncGrp_EncodedText );
@@ -1402,7 +1402,7 @@ let quotreqrjctgrp_to_json x : json =
     ( "SpreadOrBenchmarkCurveData" , spreadorbenchmarkcurvedata_to_json x.f_QuotReqRjctGrp_SpreadOrBenchmarkCurveData );
     ( "YieldData" , yielddata_to_json x.f_QuotReqRjctGrp_YieldData );
     ( "NoRelatedSym" , int_to_json x.f_QuotReqRjctGrp_NoRelatedSym );
-    ( "PrevClosePx" , fix_float_4_opt_to_json x.f_QuotReqRjctGrp_PrevClosePx );
+    ( "PrevClosePx" , float_4_opt_to_json x.f_QuotReqRjctGrp_PrevClosePx );
     ( "QuoteRequestType" , quoterequesttype_opt_to_json x.f_QuotReqRjctGrp_QuoteRequestType );
     ( "QuoteType" , quotetype_opt_to_json x.f_QuotReqRjctGrp_QuoteType );
     ( "TradingSessionID" , string_opt_to_json x.f_QuotReqRjctGrp_TradingSessionID );
@@ -1413,7 +1413,7 @@ let quotreqrjctgrp_to_json x : json =
     ( "SettlType" , settltype_opt_to_json x.f_QuotReqRjctGrp_SettlType );
     ( "SettlDate" , localmktdate_opt_to_json x.f_QuotReqRjctGrp_SettlDate );
     ( "SettlDate2" , localmktdate_opt_to_json x.f_QuotReqRjctGrp_SettlDate2 );
-    ( "OrderQty2" , fix_float_4_opt_to_json x.f_QuotReqRjctGrp_OrderQty2 );
+    ( "OrderQty2" , float_4_opt_to_json x.f_QuotReqRjctGrp_OrderQty2 );
     ( "Currency" , currency_opt_to_json x.f_QuotReqRjctGrp_Currency );
     ( "Account" , string_opt_to_json x.f_QuotReqRjctGrp_Account );
     ( "AcctIDSource" , acctidsource_opt_to_json x.f_QuotReqRjctGrp_AcctIDSource );
@@ -1423,8 +1423,8 @@ let quotreqrjctgrp_to_json x : json =
     ( "ExpireTime" , utctimestamp_opt_to_json x.f_QuotReqRjctGrp_ExpireTime );
     ( "TransactTime" , utctimestamp_opt_to_json x.f_QuotReqRjctGrp_TransactTime );
     ( "PriceType" , pricetype_opt_to_json x.f_QuotReqRjctGrp_PriceType );
-    ( "Price" , fix_float_4_opt_to_json x.f_QuotReqRjctGrp_Price );
-    ( "Price2" , fix_float_4_opt_to_json x.f_QuotReqRjctGrp_Price2 );
+    ( "Price" , float_4_opt_to_json x.f_QuotReqRjctGrp_Price );
+    ( "Price2" , float_4_opt_to_json x.f_QuotReqRjctGrp_Price2 );
     ( "UndInstrmtGrp" , rg undinstrmtgrp_to_json x.f_QuotReqRjctGrp_UndInstrmtGrp );
     ( "Stipulations" , rg stipulations_to_json x.f_QuotReqRjctGrp_Stipulations );
     ( "QuotReqLegsGrp" , rg quotreqlegsgrp_to_json x.f_QuotReqRjctGrp_QuotReqLegsGrp );
@@ -1502,21 +1502,21 @@ let trdcaprptsidegrp_to_json x : json =
     ( "TradingSessionID" , string_opt_to_json x.f_TrdCapRptSideGrp_TradingSessionID );
     ( "TradingSessionSubID" , string_opt_to_json x.f_TrdCapRptSideGrp_TradingSessionSubID );
     ( "TimeBracket" , string_opt_to_json x.f_TrdCapRptSideGrp_TimeBracket );
-    ( "GrossTradeAmt" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_GrossTradeAmt );
+    ( "GrossTradeAmt" , float_4_opt_to_json x.f_TrdCapRptSideGrp_GrossTradeAmt );
     ( "NumDaysInterest" , int_opt_to_json x.f_TrdCapRptSideGrp_NumDaysInterest );
     ( "ExDate" , localmktdate_opt_to_json x.f_TrdCapRptSideGrp_ExDate );
-    ( "AccruedInterestRate" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_AccruedInterestRate );
-    ( "AccruedInterestAmt" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_AccruedInterestAmt );
-    ( "InterestAtMaturity" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_InterestAtMaturity );
-    ( "EndAccruedInterestAmt" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_EndAccruedInterestAmt );
-    ( "StartCash" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_StartCash );
-    ( "EndCash" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_EndCash );
-    ( "Concession" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_Concession );
-    ( "TotalTakedown" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_TotalTakedown );
-    ( "NetMoney" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_NetMoney );
-    ( "SettlCurrAmt" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_SettlCurrAmt );
+    ( "AccruedInterestRate" , float_4_opt_to_json x.f_TrdCapRptSideGrp_AccruedInterestRate );
+    ( "AccruedInterestAmt" , float_4_opt_to_json x.f_TrdCapRptSideGrp_AccruedInterestAmt );
+    ( "InterestAtMaturity" , float_4_opt_to_json x.f_TrdCapRptSideGrp_InterestAtMaturity );
+    ( "EndAccruedInterestAmt" , float_4_opt_to_json x.f_TrdCapRptSideGrp_EndAccruedInterestAmt );
+    ( "StartCash" , float_4_opt_to_json x.f_TrdCapRptSideGrp_StartCash );
+    ( "EndCash" , float_4_opt_to_json x.f_TrdCapRptSideGrp_EndCash );
+    ( "Concession" , float_4_opt_to_json x.f_TrdCapRptSideGrp_Concession );
+    ( "TotalTakedown" , float_4_opt_to_json x.f_TrdCapRptSideGrp_TotalTakedown );
+    ( "NetMoney" , float_4_opt_to_json x.f_TrdCapRptSideGrp_NetMoney );
+    ( "SettlCurrAmt" , float_4_opt_to_json x.f_TrdCapRptSideGrp_SettlCurrAmt );
     ( "SettlCurrency" , currency_opt_to_json x.f_TrdCapRptSideGrp_SettlCurrency );
-    ( "SettlCurrFxRate" , fix_float_4_opt_to_json x.f_TrdCapRptSideGrp_SettlCurrFxRate );
+    ( "SettlCurrFxRate" , float_4_opt_to_json x.f_TrdCapRptSideGrp_SettlCurrFxRate );
     ( "SettlCurrFxRateCalc" , settlcurrfxratecalc_opt_to_json x.f_TrdCapRptSideGrp_SettlCurrFxRateCalc );
     ( "PositionEffect" , positioneffect_opt_to_json x.f_TrdCapRptSideGrp_PositionEffect );
     ( "Text" , string_opt_to_json x.f_TrdCapRptSideGrp_Text );
@@ -1594,8 +1594,8 @@ let allocgrp_to_json x : json =
     ( "AllocAccount" , string_opt_to_json x.f_AllocGrp_AllocAccount );
     ( "AllocAcctIDSource" , int_opt_to_json x.f_AllocGrp_AllocAcctIDSource );
     ( "MatchStatus" , matchstatus_opt_to_json x.f_AllocGrp_MatchStatus );
-    ( "AllocPrice" , fix_float_4_opt_to_json x.f_AllocGrp_AllocPrice );
-    ( "AllocQty" , fix_float_4_opt_to_json x.f_AllocGrp_AllocQty );
+    ( "AllocPrice" , float_4_opt_to_json x.f_AllocGrp_AllocPrice );
+    ( "AllocQty" , float_4_opt_to_json x.f_AllocGrp_AllocQty );
     ( "IndividualAllocID" , string_opt_to_json x.f_AllocGrp_IndividualAllocID );
     ( "ProcessCode" , processcode_opt_to_json x.f_AllocGrp_ProcessCode );
     ( "NotifyBrokerOfCredit" , notifybrokerofcredit_opt_to_json x.f_AllocGrp_NotifyBrokerOfCredit );
@@ -1603,16 +1603,16 @@ let allocgrp_to_json x : json =
     ( "AllocText" , string_opt_to_json x.f_AllocGrp_AllocText );
     ( "EncodedAllocTextLen" , int_opt_to_json x.f_AllocGrp_EncodedAllocTextLen );
     ( "EncodedAllocText" , string_opt_to_json x.f_AllocGrp_EncodedAllocText );
-    ( "AllocAvgPx" , fix_float_4_opt_to_json x.f_AllocGrp_AllocAvgPx );
-    ( "AllocNetMoney" , fix_float_4_opt_to_json x.f_AllocGrp_AllocNetMoney );
-    ( "SettlCurrAmt" , fix_float_4_opt_to_json x.f_AllocGrp_SettlCurrAmt );
-    ( "AllocSettlCurrAmt" , fix_float_4_opt_to_json x.f_AllocGrp_AllocSettlCurrAmt );
+    ( "AllocAvgPx" , float_4_opt_to_json x.f_AllocGrp_AllocAvgPx );
+    ( "AllocNetMoney" , float_4_opt_to_json x.f_AllocGrp_AllocNetMoney );
+    ( "SettlCurrAmt" , float_4_opt_to_json x.f_AllocGrp_SettlCurrAmt );
+    ( "AllocSettlCurrAmt" , float_4_opt_to_json x.f_AllocGrp_AllocSettlCurrAmt );
     ( "SettlCurrency" , currency_opt_to_json x.f_AllocGrp_SettlCurrency );
     ( "AllocSettlCurrency" , currency_opt_to_json x.f_AllocGrp_AllocSettlCurrency );
-    ( "SettlCurrFxRate" , fix_float_4_opt_to_json x.f_AllocGrp_SettlCurrFxRate );
+    ( "SettlCurrFxRate" , float_4_opt_to_json x.f_AllocGrp_SettlCurrFxRate );
     ( "SettlCurrFxRateCalc" , settlcurrfxratecalc_opt_to_json x.f_AllocGrp_SettlCurrFxRateCalc );
-    ( "AllocAccruedInterestAmt" , fix_float_4_opt_to_json x.f_AllocGrp_AllocAccruedInterestAmt );
-    ( "AllocInterestAtMaturity" , fix_float_4_opt_to_json x.f_AllocGrp_AllocInterestAtMaturity );
+    ( "AllocAccruedInterestAmt" , float_4_opt_to_json x.f_AllocGrp_AllocAccruedInterestAmt );
+    ( "AllocInterestAtMaturity" , float_4_opt_to_json x.f_AllocGrp_AllocInterestAtMaturity );
     ( "AllocSettlInstType" , allocsettlinsttype_opt_to_json x.f_AllocGrp_AllocSettlInstType );
     ( "NestedParties" , rg nestedparties_to_json x.f_AllocGrp_NestedParties );
     ( "MiscFeesGrp" , rg miscfeesgrp_to_json x.f_AllocGrp_MiscFeesGrp );
