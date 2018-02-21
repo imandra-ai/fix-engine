@@ -37,22 +37,69 @@ let char_opt_to_json = int_opt_to_json;;
   *  FIX_Float
   *)
 
-let float_to_json x : json = 
-    let data, precision = match x with
-        | Float_0 x -> x, 0
-        | Float_1 x -> x, 1
-        | Float_2 x -> x, 2
-        | Float_3 x -> x, 3
-        | Float_4 x -> x, 4
-    in `Assoc 
-    [ ( "Precision", `Int precision ) 
-    ; ( "Number"   , `Int data      ) 
-    ] 
+let fix_float_0_to_json : fix_float_0 -> json = function
+  | Float_0 x ->
+     `Assoc
+      [ ( "Precision", `Int 0 )
+      ; ( "Number"   , `Int x      )
+      ]
 ;;
 
-let float_opt_to_json = function 
+let fix_float_0_opt_to_json = function 
     | None -> `Null
-    | Some x -> float_to_json x
+    | Some x -> fix_float_0_to_json x
+;;
+
+let fix_float_1_to_json : fix_float_1 -> json = function
+  | Float_1 x ->
+    `Assoc
+    [ ( "Precision", `Int 1 )
+    ; ( "Number"   , `Int x      )
+    ]
+;;
+
+let fix_float_1_opt_to_json = function 
+    | None -> `Null
+    | Some x -> fix_float_1_to_json x
+;;
+
+let fix_float_2_to_json : fix_float_2 -> json = function
+  | Float_2 x ->
+    `Assoc
+    [ ( "Precision", `Int 2 )
+    ; ( "Number"   , `Int x      )
+    ]
+;;
+
+let float_2_opt_to_json = function 
+    | None -> `Null
+    | Some x -> fix_float_2_to_json x
+;;
+
+let fix_float_3_to_json : fix_float_3 -> json = function
+  | Float_3 x ->
+    `Assoc
+    [ ( "Precision", `Int 3 )
+    ; ( "Number"   , `Int x      )
+    ]
+;;
+
+let fix_float_3_opt_to_json = function 
+    | None -> `Null
+    | Some x -> fix_float_3_to_json x
+;;
+
+let fix_float_4_to_json : fix_float_4 -> json = function
+  | Float_4 x ->
+    `Assoc
+    [ ( "Precision", `Int 4)
+    ; ( "Number"   , `Int x      )
+    ]
+;;
+
+let fix_float_4_opt_to_json = function 
+    | None -> `Null
+    | Some x -> fix_float_4_to_json x
 ;;
 
 (**

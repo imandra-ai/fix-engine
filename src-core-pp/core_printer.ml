@@ -13,8 +13,24 @@ open Encode_base_types;;
 open Encode_datetime;;
 (* @meta[imandra_ignore] off @end *)
 
-let fix_float_to_string x =
-  encode_float x
+let fix_float_0_to_string x =
+  encode_float_0 x
+;;
+
+let fix_float_1_to_string x =
+  encode_float_1 x
+;;
+
+let fix_float_2_to_string x =
+  encode_float_2 x
+;;
+
+let fix_float_3_to_string x =
+  encode_float_3 x
+;;
+
+let fix_float_4_to_string x =
+  encode_float_4 x
 ;;
 
 let int_to_string x =
