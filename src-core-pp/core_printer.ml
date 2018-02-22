@@ -33,6 +33,10 @@ let fix_float_4_to_string x =
   encode_float_4 x
 ;;
 
+let fix_float_to_string x = 
+  fix_float_4_to_string x
+;;
+
 let int_to_string x =
   encode_int x
 ;;
