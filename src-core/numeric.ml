@@ -31,6 +31,21 @@ type fix_float =
     fix_float_4
 ;;
 
+let float_Create_0 x =
+  Float_0 x;;
+
+let float_Create_1 x =
+  Float_1 x;;
+
+let float_Create_2 x =
+  Float_2 x;;
+
+let float_Create_3 x =
+  Float_3 x;;
+
+let float_Create_4 x =
+  Float_4 x;;
+
 let float_Convert_0_0 (f : fix_float_0)  : fix_float_0 =
     f
 ;;
