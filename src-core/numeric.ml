@@ -27,24 +27,32 @@ type fix_float_4 =
     | Float_4 of int
 ;;
 
-type fix_float =
-    fix_float_4
+type fix_float = fix_float_4
 ;;
 
-let float_Create_0 x =
-  Float_0 x;;
+let float_Create_0 (x : int)  : fix_float_0 =
+    Float_0 x
+;;
 
-let float_Create_1 x =
-  Float_1 x;;
+let float_Create_1 (x : int)  : fix_float_1 =
+    Float_1 x
+;;
 
-let float_Create_2 x =
-  Float_2 x;;
+let float_Create_2 (x : int)  : fix_float_2 =
+    Float_2 x
+;;
 
-let float_Create_3 x =
-  Float_3 x;;
+let float_Create_3 (x : int)  : fix_float_3 =
+    Float_3 x
+;;
 
-let float_Create_4 x =
-  Float_4 x;;
+let float_Create_4 (x : int)  : fix_float_4 =
+    Float_4 x
+;;
+
+let float_Create (x : int)  : fix_float =
+    Float_4 x
+;;
 
 let float_Convert_0_0 (f : fix_float_0)  : fix_float_0 =
     f
@@ -278,13 +286,13 @@ let float_Add_2_4 (f : fix_float_2) (x : fix_float_4)  : fix_float_4 =
 
 let float_Add_3_0 (f : fix_float_3) (x : fix_float_0)  : fix_float_3 =
     (match (f,x) with
-     | (Float_3 f,Float_0 x) -> (Float_3 ((+) f (( * ) x 1000)))
+        | (Float_3 f,Float_0 x) -> (Float_3 ((+) f (( * ) x 1000)))
     )
 ;;
 
 let float_Add_3_1 (f : fix_float_3) (x : fix_float_1)  : fix_float_3 =
     (match (f,x) with
-        | (Float_3 f,Float_1 x) -> (Float_3 ((+) f (( * ) x 1000)))
+        | (Float_3 f,Float_1 x) -> (Float_3 ((+) f (( * ) x 100)))
     )
 ;;
 
