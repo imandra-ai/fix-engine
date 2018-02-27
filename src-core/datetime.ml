@@ -189,7 +189,7 @@ let localmktdate_GreaterThanEqual ( lmdOne: fix_localmktdate) (lmdTwo : fix_loca
     localmktdate_GreaterThan lmdOne lmdTwo || localmktdate_Equal lmdOne lmdTwo
 ;;
 
-let localmktdateLessThanEqual ( lmdOne: fix_localmktdate) (lmdTwo :  fix_localmktdate ) = 
+let localmktdate_LessThanEqual ( lmdOne: fix_localmktdate) (lmdTwo :  fix_localmktdate ) =
     localmktdate_LessThan lmdOne lmdTwo || localmktdate_Equal lmdOne lmdTwo
 ;;
 
@@ -401,11 +401,11 @@ let utcdateonly_Equal ( dOne:fix_utcdateonly) (dTwo : fix_utcdateonly ) =
     dOne.utc_dateonly_day = dTwo.utc_dateonly_month
 ;;
 
-let utddateonly_GreaterThanEqual ( dOne:fix_utcdateonly) (dTwo : fix_utcdateonly  ) =
+let utcdateonly_GreaterThanEqual ( dOne:fix_utcdateonly) (dTwo : fix_utcdateonly  ) =
     utcdateonly_GreaterThan dOne dTwo || utcdateonly_Equal dOne dTwo
 ;;
 
-let utddateonly_LessThanEqual ( dOne:fix_utcdateonly) (dTwo : fix_utcdateonly ) =
+let utcdateonly_LessThanEqual ( dOne:fix_utcdateonly) (dTwo : fix_utcdateonly ) =
     utcdateonly_LessThan dOne dTwo || utcdateonly_Equal dOne dTwo
 ;;
 
