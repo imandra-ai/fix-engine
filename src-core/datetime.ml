@@ -45,8 +45,23 @@ let make_utctimestamp ( year:int) (month:int) (day:int) (hour:int) (minute:int) 
 
 (** Helper function that determines wether the year is a leap year *)
 let is_leapyear ( year : int ) =
-    match year with 
-    | 1972 | 1976 | 1980 | 1984 | 1988 | 1992 | 1996 | 2000 | 2004 | 2008 | 2012 | 2016 | 2020 | 2024 | 2028 | 2032 -> true
+    match year with
+    | 1972 -> true
+    | 1976 -> true
+    | 1980 -> true
+    | 1984 -> true
+    | 1988 -> true
+    | 1992 -> true
+    | 1996 -> true
+    | 2000 -> true
+    | 2004 -> true
+    | 2008 -> true
+    | 2012 -> true
+    | 2016 -> true
+    | 2020 -> true
+    | 2024 -> true
+    | 2028 -> true
+    | 2032 -> true
     | _ -> false
 ;;
 
