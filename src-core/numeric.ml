@@ -346,151 +346,151 @@ let float_Add_4_4 (f : fix_float_4) (x : fix_float_4)  : fix_float_4 =
 
 let float_Mult_0_0 (f : fix_float_0) (x : fix_float_0)  : fix_float_0 =
     (match (f,x) with
-        | (Float_0 f,Float_0 x) -> (Float_0 ((/) (( * ) f x) 1))
+        | (Float_0 f,Float_0 x) -> (Float_0 (( * ) f x))
     )
 ;;
 
 let float_Mult_0_1 (f : fix_float_0) (x : fix_float_1)  : fix_float_1 =
     (match (f,x) with
-        | (Float_0 f,Float_1 x) -> (Float_1 ((/) (( * ) (( * ) f 10) x) 10))
+        | (Float_0 f,Float_1 x) -> (Float_1 (( * ) f x))
     )
 ;;
 
 let float_Mult_0_2 (f : fix_float_0) (x : fix_float_2)  : fix_float_2 =
     (match (f,x) with
-        | (Float_0 f,Float_2 x) -> (Float_2 ((/) (( * ) (( * ) f 100) x) 100))
+        | (Float_0 f,Float_2 x) -> (Float_2 (( * ) f x))
     )
 ;;
 
 let float_Mult_0_3 (f : fix_float_0) (x : fix_float_3)  : fix_float_3 =
     (match (f,x) with
-        | (Float_0 f,Float_3 x) -> (Float_3 ((/) (( * ) (( * ) f 1000) x) 1000))
+        | (Float_0 f,Float_3 x) -> (Float_3 (( * ) f x))
     )
 ;;
 
 let float_Mult_0_4 (f : fix_float_0) (x : fix_float_4)  : fix_float_4 =
     (match (f,x) with
-        | (Float_0 f,Float_4 x) -> (Float_4 ((/) (( * ) (( * ) f 10000) x) 10000))
+        | (Float_0 f,Float_4 x) -> (Float_4 (( * ) f x))
     )
 ;;
 
 let float_Mult_1_0 (f : fix_float_1) (x : fix_float_0)  : fix_float_1 =
     (match (f,x) with
-        | (Float_1 f,Float_0 x) -> (Float_1 ((/) (( * ) f (( * ) x 10)) 10))
+        | (Float_1 f,Float_0 x) -> (Float_1 (( * ) f x))
     )
 ;;
 
 let float_Mult_1_1 (f : fix_float_1) (x : fix_float_1)  : fix_float_1 =
     (match (f,x) with
-        | (Float_1 f,Float_1 x) -> (Float_1 ((/) (( * ) f x) 10))
+        | (Float_1 f,Float_1 x) -> (Float_1 (( / ) (( * ) f x) 10))
     )
 ;;
 
 let float_Mult_1_2 (f : fix_float_1) (x : fix_float_2)  : fix_float_2 =
     (match (f,x) with
-        | (Float_1 f,Float_2 x) -> (Float_2 ((/) (( * ) (( * ) f 10) x) 100))
+        | (Float_1 f,Float_2 x) -> (Float_2 (( / ) (( * ) f x) 10))
     )
 ;;
 
 let float_Mult_1_3 (f : fix_float_1) (x : fix_float_3)  : fix_float_3 =
     (match (f,x) with
-        | (Float_1 f,Float_3 x) -> (Float_3 ((/) (( * ) (( * ) f 100) x) 1000))
+        | (Float_1 f,Float_3 x) -> (Float_3 (( / ) (( * ) f x) 10))
     )
 ;;
 
 let float_Mult_1_4 (f : fix_float_1) (x : fix_float_4)  : fix_float_4 =
     (match (f,x) with
-        | (Float_1 f,Float_4 x) -> (Float_4 ((/) (( * ) (( * ) f 1000) x) 10000))
+        | (Float_1 f,Float_4 x) -> (Float_4 (( / ) (( * ) f x) 10))
     )
 ;;
 
 let float_Mult_2_0 (f : fix_float_2) (x : fix_float_0)  : fix_float_2 =
     (match (f,x) with
-        | (Float_2 f,Float_0 x) -> (Float_2 ((/) (( * ) f (( * ) x 100)) 100))
+        | (Float_2 f,Float_0 x) -> (Float_2 (( * ) f x))
     )
 ;;
 
 let float_Mult_2_1 (f : fix_float_2) (x : fix_float_1)  : fix_float_2 =
     (match (f,x) with
-        | (Float_2 f,Float_1 x) -> (Float_2 ((/) (( * ) f (( * ) x 10)) 100))
+        | (Float_2 f,Float_1 x) -> (Float_2 (( / ) (( * ) f x) 10))
     )
 ;;
 
 let float_Mult_2_2 (f : fix_float_2) (x : fix_float_2)  : fix_float_2 =
     (match (f,x) with
-        | (Float_2 f,Float_2 x) -> (Float_2 ((/) (( * ) f x) 100))
+        | (Float_2 f,Float_2 x) -> (Float_2 (( / ) (( * ) f x) 100))
     )
 ;;
 
 let float_Mult_2_3 (f : fix_float_2) (x : fix_float_3)  : fix_float_3 =
     (match (f,x) with
-        | (Float_2 f,Float_3 x) -> (Float_3 ((/) (( * ) (( * ) f 10) x) 1000))
+        | (Float_2 f,Float_3 x) -> (Float_3 (( / ) (( * ) f x) 100))
     )
 ;;
 
 let float_Mult_2_4 (f : fix_float_2) (x : fix_float_4)  : fix_float_4 =
     (match (f,x) with
-        | (Float_2 f,Float_4 x) -> (Float_4 ((/) (( * ) (( * ) f 100) x) 10000))
+        | (Float_2 f,Float_4 x) -> (Float_4 (( / ) (( * ) f x) 100))
     )
 ;;
 
 let float_Mult_3_0 (f : fix_float_3) (x : fix_float_0)  : fix_float_3 =
     (match (f,x) with
-        | (Float_3 f,Float_0 x) -> (Float_3 ((/) (( * ) f (( * ) x 1000)) 1000))
+        | (Float_3 f,Float_0 x) -> (Float_3 (( * ) f x))
     )
 ;;
 
 let float_Mult_3_1 (f : fix_float_3) (x : fix_float_1)  : fix_float_3 =
     (match (f,x) with
-        | (Float_3 f,Float_1 x) -> (Float_3 ((/) (( * ) f (( * ) x 100)) 1000))
+        | (Float_3 f,Float_1 x) -> (Float_3 (( / ) (( * ) f x) 10))
     )
 ;;
 
 let float_Mult_3_2 (f : fix_float_3) (x : fix_float_2)  : fix_float_3 =
     (match (f,x) with
-        | (Float_3 f,Float_2 x) -> (Float_3 ((/) (( * ) f (( * ) x 10)) 1000))
+        | (Float_3 f,Float_2 x) -> (Float_3 (( / ) (( * ) f x) 100))
     )
 ;;
 
 let float_Mult_3_3 (f : fix_float_3) (x : fix_float_3)  : fix_float_3 =
     (match (f,x) with
-        | (Float_3 f,Float_3 x) -> (Float_3 ((/) (( * ) f x) 1000))
+        | (Float_3 f,Float_3 x) -> (Float_3 (( / ) (( * ) f x) 1000))
     )
 ;;
 
 let float_Mult_3_4 (f : fix_float_3) (x : fix_float_4)  : fix_float_4 =
     (match (f,x) with
-        | (Float_3 f,Float_4 x) -> (Float_4 ((/) (( * ) (( * ) f 10) x) 10000))
+        | (Float_3 f,Float_4 x) -> (Float_4 (( / ) (( * ) f x) 1000))
     )
 ;;
 
 let float_Mult_4_0 (f : fix_float_4) (x : fix_float_0)  : fix_float_4 =
     (match (f,x) with
-        | (Float_4 f,Float_0 x) -> (Float_4 ((/) (( * ) f (( * ) x 10000)) 10000))
+        | (Float_4 f,Float_0 x) -> (Float_4 (( * ) f x))
     )
 ;;
 
 let float_Mult_4_1 (f : fix_float_4) (x : fix_float_1)  : fix_float_4 =
     (match (f,x) with
-        | (Float_4 f,Float_1 x) -> (Float_4 ((/) (( * ) f (( * ) x 1000)) 10000))
+        | (Float_4 f,Float_1 x) -> (Float_4 (( / ) (( * ) f x) 10))
     )
 ;;
 
 let float_Mult_4_2 (f : fix_float_4) (x : fix_float_2)  : fix_float_4 =
     (match (f,x) with
-        | (Float_4 f,Float_2 x) -> (Float_4 ((/) (( * ) f (( * ) x 100)) 10000))
+        | (Float_4 f,Float_2 x) -> (Float_4 (( / ) (( * ) f x) 100))
     )
 ;;
 
 let float_Mult_4_3 (f : fix_float_4) (x : fix_float_3)  : fix_float_4 =
     (match (f,x) with
-        | (Float_4 f,Float_3 x) -> (Float_4 ((/) (( * ) f (( * ) x 10)) 10000))
+        | (Float_4 f,Float_3 x) -> (Float_4 (( / ) (( * ) f x) 1000))
     )
 ;;
 
 let float_Mult_4_4 (f : fix_float_4) (x : fix_float_4)  : fix_float_4 =
     (match (f,x) with
-        | (Float_4 f,Float_4 x) -> (Float_4 ((/) (( * ) f x) 10000))
+        | (Float_4 f,Float_4 x) -> (Float_4 (( / ) (( * ) f x) 10000))
     )
 ;;
 
@@ -646,151 +646,151 @@ let float_Sub_4_4 (f : fix_float_4) (x : fix_float_4)  : fix_float_4 =
 
 let float_Div_0_0 (f : fix_float_0) (x : fix_float_0)  : fix_float_0 =
     (match (f,x) with
-        | (Float_0 f,Float_0 x) -> (Float_0 (( * ) ((/) f x) 1))
+        | (Float_0 f,Float_0 x) -> (Float_0 (( / ) f x))
     )
 ;;
 
 let float_Div_0_1 (f : fix_float_0) (x : fix_float_1)  : fix_float_1 =
     (match (f,x) with
-        | (Float_0 f,Float_1 x) -> (Float_1 (( * ) ((/) (( * ) f 10) x) 10))
+        | (Float_0 f,Float_1 x) -> (Float_1 (( / ) (( * ) f 100) x))
     )
 ;;
 
 let float_Div_0_2 (f : fix_float_0) (x : fix_float_2)  : fix_float_2 =
     (match (f,x) with
-        | (Float_0 f,Float_2 x) -> (Float_2 (( * ) ((/) (( * ) f 100) x) 100))
+        | (Float_0 f,Float_2 x) -> (Float_2 (( / ) (( * ) f 10000) x))
     )
 ;;
 
 let float_Div_0_3 (f : fix_float_0) (x : fix_float_3)  : fix_float_3 =
     (match (f,x) with
-        | (Float_0 f,Float_3 x) -> (Float_3 (( * ) ((/) (( * ) f 1000) x) 1000))
+        | (Float_0 f,Float_3 x) -> (Float_3 (( / ) (( * ) f 1000000) x))
     )
 ;;
 
 let float_Div_0_4 (f : fix_float_0) (x : fix_float_4)  : fix_float_4 =
     (match (f,x) with
-        | (Float_0 f,Float_4 x) -> (Float_4 (( * ) ((/) (( * ) f 10000) x) 10000))
+        | (Float_0 f,Float_4 x) -> (Float_4 (( / ) (( * ) f 100000000) x))
     )
 ;;
 
 let float_Div_1_0 (f : fix_float_1) (x : fix_float_0)  : fix_float_1 =
     (match (f,x) with
-        | (Float_1 f,Float_0 x) -> (Float_1 (( * ) ((/) f (( * ) x 10)) 10))
+        | (Float_1 f,Float_0 x) -> (Float_1 (( / ) f x))
     )
 ;;
 
 let float_Div_1_1 (f : fix_float_1) (x : fix_float_1)  : fix_float_1 =
     (match (f,x) with
-        | (Float_1 f,Float_1 x) -> (Float_1 (( * ) ((/) f x) 10))
+        | (Float_1 f,Float_1 x) -> (Float_1 (( / ) (( * ) f 10) x))
     )
 ;;
 
 let float_Div_1_2 (f : fix_float_1) (x : fix_float_2)  : fix_float_2 =
     (match (f,x) with
-        | (Float_1 f,Float_2 x) -> (Float_2 (( * ) ((/) (( * ) f 10) x) 100))
+        | (Float_1 f,Float_2 x) -> (Float_2 (( / ) (( * ) f 1000) x))
     )
 ;;
 
 let float_Div_1_3 (f : fix_float_1) (x : fix_float_3)  : fix_float_3 =
     (match (f,x) with
-        | (Float_1 f,Float_3 x) -> (Float_3 (( * ) ((/) (( * ) f 100) x) 1000))
+        | (Float_1 f,Float_3 x) -> (Float_3 (( / ) (( * ) f 100000) x))
     )
 ;;
 
 let float_Div_1_4 (f : fix_float_1) (x : fix_float_4)  : fix_float_4 =
     (match (f,x) with
-        | (Float_1 f,Float_4 x) -> (Float_4 (( * ) ((/) (( * ) f 1000) x) 10000))
+        | (Float_1 f,Float_4 x) -> (Float_4 (( / ) (( * ) f 10000000) x))
     )
 ;;
 
 let float_Div_2_0 (f : fix_float_2) (x : fix_float_0)  : fix_float_2 =
     (match (f,x) with
-        | (Float_2 f,Float_0 x) -> (Float_2 (( * ) ((/) f (( * ) x 100)) 100))
+        | (Float_2 f,Float_0 x) -> (Float_2 (( / ) f x))
     )
 ;;
 
 let float_Div_2_1 (f : fix_float_2) (x : fix_float_1)  : fix_float_2 =
     (match (f,x) with
-        | (Float_2 f,Float_1 x) -> (Float_2 (( * ) ((/) f (( * ) x 10)) 100))
+        | (Float_2 f,Float_1 x) -> (Float_2 (( / ) (( * ) f 10) x))
     )
 ;;
 
 let float_Div_2_2 (f : fix_float_2) (x : fix_float_2)  : fix_float_2 =
     (match (f,x) with
-        | (Float_2 f,Float_2 x) -> (Float_2 (( * ) ((/) f x) 100))
+        | (Float_2 f,Float_2 x) -> (Float_2 (( / ) (( * ) f 100) x))
     )
 ;;
 
 let float_Div_2_3 (f : fix_float_2) (x : fix_float_3)  : fix_float_3 =
     (match (f,x) with
-        | (Float_2 f,Float_3 x) -> (Float_3 (( * ) ((/) (( * ) f 10) x) 1000))
+        | (Float_2 f,Float_3 x) -> (Float_3 (( / ) (( * ) f 10000) x))
     )
 ;;
 
 let float_Div_2_4 (f : fix_float_2) (x : fix_float_4)  : fix_float_4 =
     (match (f,x) with
-        | (Float_2 f,Float_4 x) -> (Float_4 (( * ) ((/) (( * ) f 100) x) 10000))
+        | (Float_2 f,Float_4 x) -> (Float_4 (( / ) (( * ) f 1000000) x))
     )
 ;;
 
 let float_Div_3_0 (f : fix_float_3) (x : fix_float_0)  : fix_float_3 =
     (match (f,x) with
-        | (Float_3 f,Float_0 x) -> (Float_3 (( * ) ((/) f (( * ) x 1000)) 1000))
+        | (Float_3 f,Float_0 x) -> (Float_3 (( / ) f x))
     )
 ;;
 
 let float_Div_3_1 (f : fix_float_3) (x : fix_float_1)  : fix_float_3 =
     (match (f,x) with
-        | (Float_3 f,Float_1 x) -> (Float_3 (( * ) ((/) f (( * ) x 100)) 1000))
+        | (Float_3 f,Float_1 x) -> (Float_3 (( / ) (( * ) f 10) x))
     )
 ;;
 
 let float_Div_3_2 (f : fix_float_3) (x : fix_float_2)  : fix_float_3 =
     (match (f,x) with
-        | (Float_3 f,Float_2 x) -> (Float_3 (( * ) ((/) f (( * ) x 10)) 1000))
+        | (Float_3 f,Float_2 x) -> (Float_3 (( / ) (( * ) f 100) x))
     )
 ;;
 
 let float_Div_3_3 (f : fix_float_3) (x : fix_float_3)  : fix_float_3 =
     (match (f,x) with
-        | (Float_3 f,Float_3 x) -> (Float_3 (( * ) ((/) f x) 1000))
+        | (Float_3 f,Float_3 x) -> (Float_3 (( / ) (( * ) f 1000) x))
     )
 ;;
 
 let float_Div_3_4 (f : fix_float_3) (x : fix_float_4)  : fix_float_4 =
     (match (f,x) with
-        | (Float_3 f,Float_4 x) -> (Float_4 (( * ) ((/) (( * ) f 10) x) 10000))
+        | (Float_3 f,Float_4 x) -> (Float_4 (( / ) (( * ) f 100000) x))
     )
 ;;
 
 let float_Div_4_0 (f : fix_float_4) (x : fix_float_0)  : fix_float_4 =
     (match (f,x) with
-        | (Float_4 f,Float_0 x) -> (Float_4 (( * ) ((/) f (( * ) x 10000)) 10000))
+        | (Float_4 f,Float_0 x) -> (Float_4 (( / ) f x))
     )
 ;;
 
 let float_Div_4_1 (f : fix_float_4) (x : fix_float_1)  : fix_float_4 =
     (match (f,x) with
-        | (Float_4 f,Float_1 x) -> (Float_4 (( * ) ((/) f (( * ) x 1000)) 10000))
+        | (Float_4 f,Float_1 x) -> (Float_4 (( / ) (( * ) f 10) x))
     )
 ;;
 
 let float_Div_4_2 (f : fix_float_4) (x : fix_float_2)  : fix_float_4 =
     (match (f,x) with
-        | (Float_4 f,Float_2 x) -> (Float_4 (( * ) ((/) f (( * ) x 100)) 10000))
+        | (Float_4 f,Float_2 x) -> (Float_4 (( / ) (( * ) f 100) x))
     )
 ;;
 
 let float_Div_4_3 (f : fix_float_4) (x : fix_float_3)  : fix_float_4 =
     (match (f,x) with
-        | (Float_4 f,Float_3 x) -> (Float_4 (( * ) ((/) f (( * ) x 10)) 10000))
+        | (Float_4 f,Float_3 x) -> (Float_4 (( / ) (( * ) f 1000) x))
     )
 ;;
 
 let float_Div_4_4 (f : fix_float_4) (x : fix_float_4)  : fix_float_4 =
     (match (f,x) with
-        | (Float_4 f,Float_4 x) -> (Float_4 (( * ) ((/) f x) 10000))
+        | (Float_4 f,Float_4 x) -> (Float_4 (( / ) (( * ) f 10000) x))
     )
 ;;
 
