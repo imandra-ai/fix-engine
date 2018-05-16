@@ -29,8 +29,8 @@ let get_current_utctimstamp () =
 let engine_state = 
     let open Fix_engine_state in
     { init_fix_engine_state with
-    fe_comp_id = String_utils.string_to_fix_string "IMANDRA";
-    fe_target_comp_id = String_utils.string_to_fix_string "BANZAI";
+    fe_comp_id = "IMANDRA";
+    fe_target_comp_id = "BANZAI";
     fe_curr_time = get_current_utctimstamp ();
     fe_max_num_logons_sent = 10;
     fe_application_up = true }
@@ -64,14 +64,13 @@ let rec heartbeat_thread mailbox =
     heartbeat_thread mailbox
 ;;
 
-let f (inch, outch) =
+let f _ (inch, outch) =
     let close_channels () = 
         Lwt_io.printl "Connection closed, shutting down." >>= fun () ->
         Lwt_io.close inch >>= fun () ->
         Lwt_io.close outch
         in
     let mailbox, global_state = Fix_global_state.start engine_state State.init_model_state (send_msg outch) in 
-    Lwt.async ( fun () -> 
     Lwt.catch ( fun () ->
         Lwt_io.printl "Received a connection." >>= fun () ->
         Lwt.join [
@@ -84,12 +83,11 @@ let f (inch, outch) =
                 )
         ]
     ) ( fun _ -> close_channels () )
-    )
 ;;
 
 let server_thread =
     let addr = Unix.( ADDR_INET( inet_addr_loopback , 9880 ) ) in
-    let server = Lwt_io.establish_server addr f in
+    let server = Lwt_io.establish_server_with_client_address addr f in
     print_endline "Started server on localhost:9880 ...";
     fst (Lwt.wait ())
 ;;
