@@ -8,10 +8,10 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Base_types;;
+(* open Base_types;; *)
 (* @meta[imandra_ignore] off @end *)
 
-let fix_to_str_hashtbl : (fix_string, string) Hashtbl.t = Hashtbl.create 10;;
+(*let fix_to_str_hashtbl : (fix_string, string) Hashtbl.t = Hashtbl.create 10;;
 let str_to_fix_hashtbl : (string, fix_string) Hashtbl.t = Hashtbl.create 10;;
 
 let add_model_string ( fixstr, rawstr : fix_string * string ) : unit = 
@@ -40,3 +40,4 @@ let string_to_fix_string rawstr =
         hash
     end
 ;;
+*)

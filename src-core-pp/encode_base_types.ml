@@ -9,7 +9,6 @@
 
 (* @meta[imandra_ignore] on @end *)
 open Yojson;;
-open Base_types;;
 open Numeric;;
 open String_utils;;
 (* @meta[imandra_ignore] off @end *)
@@ -27,8 +26,8 @@ let encode_float x = encode_float_4 x;;
 
 
 
-let encode_string = fix_string_to_string;;
-let encode_symbol = fix_string_to_string;;
+let encode_string x = x;;
+let encode_symbol x = x;;
 
 let encode_bool : bool -> string = function
     | true  -> "Y" 

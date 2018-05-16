@@ -22,11 +22,11 @@ let pe = print_endline;;
 
 let make_fix_msg i =
     let msg = Full_FIX_Admin_Msg ( 
-        Full_Msg_Heartbeat { hb_test_req_id = Some(Admin_string 123) }
+        Full_Msg_Heartbeat { hb_test_req_id = Some "123" }
     ) in
     create_outbound_fix_msg (i - 1, 
-        Admin_string 780720412,     
-        Admin_string 183924456, 
+        "IMANDRA",     
+        "TARGET", 
         make_utctimestamp 2017 1 1 0 1 0 None,
         msg, false
     )

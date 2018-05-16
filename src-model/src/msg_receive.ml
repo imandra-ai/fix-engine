@@ -1,7 +1,6 @@
 (* Aesthetic Integration copyright 2017 *)
 (* @meta[imandra_ignore] on @end *)
 open State;;
-open Base_types;;
 open Model_app_enums;;
 open Numeric;;
 open Model_messages;;
@@ -16,7 +15,7 @@ let receive_message_NewOrderSingle ( m_state , msg_data : model_state * mod_newo
         f_ExecutionReport_Instrument_Symbol = msg_data.f_NewOrderSingle_Instrument_Symbol;
         f_ExecutionReport_OrderID = msg_data.f_NewOrderSingle_ClOrdID;
         f_ExecutionReport_Text = None;
-        f_ExecutionReport_ExecID = Model_string 1;
+        f_ExecutionReport_ExecID = "a";
         f_ExecutionReport_OrdStatus = MOD_FIX_OrdStatus_New;
         f_ExecutionReport_AvgPx = Float_4 0;
         f_ExecutionReport_CumQty = Float_4 0

@@ -10,7 +10,6 @@
 
 (* @meta[imandra_ignore] on @end *)
 open Datetime;;
-open Base_types;;
 open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_app_messages;;
@@ -20,11 +19,11 @@ open Fix_engine_state;;
 (* @meta[imandra_ignore] off @end *)
 
 type session_details = {
-    constant_begin_string : fix_string
+    constant_begin_string : string
 };;
 
 let default_session_details = {
-    constant_begin_string = Admin_string 546607350 (* Hash of "FIX.4.4" *)
+    constant_begin_string = "FIX.4.4"
 
 };;
 
@@ -207,7 +206,7 @@ let create_logoff_msg ( engine : fix_engine_state ) =
 ;;
 
 (** Create a heartbeat message *)
-let create_heartbeat_msg ( engine, tr_id : fix_engine_state * fix_string option) =
+let create_heartbeat_msg ( engine, tr_id : fix_engine_state * string option) =
     let msg_data = Full_FIX_Admin_Msg (
         Full_Msg_Heartbeat {
             hb_test_req_id = tr_id;
@@ -224,7 +223,7 @@ let create_heartbeat_msg ( engine, tr_id : fix_engine_state * fix_string option)
 let create_test_request_msg ( engine : fix_engine_state ) =
     let msg_data = Full_FIX_Admin_Msg (
         Full_Msg_Test_Request {
-            test_req_id = Admin_string engine.last_test_req_id;
+            test_req_id = engine.last_test_req_id;
         }
     ) in
     create_outbound_fix_msg ( 
@@ -253,7 +252,7 @@ let create_resend_request_msg ( engine : fix_engine_state ) =
 
 (** Create session-rejection message. *)
 let create_session_reject_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, reject_info : 
-                                int * fix_string * fix_string * fix_utctimestamp * session_rejected_msg_data  ) = 
+                                int * string * string * fix_utctimestamp * session_rejected_msg_data  ) = 
     let msg_data = 
         Full_FIX_Admin_Msg (
             Full_Msg_Reject {
@@ -270,7 +269,7 @@ let create_session_reject_msg ( outbound_seq_num, target_comp_id, comp_id, curr_
 
 (** Create business reject message.
     Note: the reason we're separating the ApplicationDown reason is that the parser would not have access to this information. *)
-let create_business_reject_msg ( outbound_seq_num, target_comp_id, comp_id , curr_time, reject_info: int * fix_string * fix_string * fix_utctimestamp * biz_rejected_msg_data ) =
+let create_business_reject_msg ( outbound_seq_num, target_comp_id, comp_id , curr_time, reject_info: int * string * string * fix_utctimestamp * biz_rejected_msg_data ) =
     let msg_data = 
         Full_FIX_Admin_Msg (
             Full_Msg_Business_Reject {
@@ -366,7 +365,7 @@ let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * f
         let reject =  { reject with (** No orig_sending_time => create session reject *)
             srej_msg_field_tag = Some (Full_Admin_Field_Tag Full_Msg_OrigSendingTime_Tag);
             srej_msg_reject_reason = Some RequiredTagMissing; 
-            (** TODO: rejection fix_string here *)
+            (** TODO: rejection string here *)
             } in
         let engine = session_reject ( reject , engine ) in
         Some { engine with incoming_seq_num = curr_incoming_seq_num }

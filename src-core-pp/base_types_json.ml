@@ -9,7 +9,6 @@
 
 (* @meta[imandra_ignore] on @end *)
 open Yojson;;
-open Base_types;;
 open Numeric;;
 open String_utils;;
 (* @meta[imandra_ignore] off @end *)
@@ -111,7 +110,7 @@ let float_opt_to_json x = float_4_opt_to_json x;;
   *)
 
 let string_to_json x : json = 
-    `String ( fix_string_to_string x ) 
+    `String  x  
 ;;
 
 let string_opt_to_json = function 
@@ -125,7 +124,7 @@ let string_opt_to_json = function
   *)
 
 let symbol_to_json x : json = 
-    `String ( fix_string_to_string x ) 
+    `String x  
 ;;
 
 let symbol_opt_to_json = function 

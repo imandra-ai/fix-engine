@@ -9,15 +9,14 @@
 
 (* @meta[imandra_ignore] on @end *)
 open Numeric;;
-open Base_types;;
 (* @meta[imandra_ignore] off @end *)
 
-let parse_string (str : string) : fix_string option = 
-    Some ( String_utils.string_to_fix_string str )
+let parse_string (str : string) : string option = 
+   Some str
 ;; 
 
-let parse_symbol (str : string) : fix_symbol option = 
-    Some ( String_utils.string_to_fix_string str )
+let parse_symbol (str : string) : string option = 
+    Some str
 ;;
 
 let parse_char (str: string) : int option =

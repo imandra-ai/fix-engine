@@ -9,7 +9,6 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Base_types;;
 open Datetime;;
 open Full_admin_enums;;
 open Full_admin_tags;;
@@ -22,7 +21,7 @@ open Full_message_tags;;
 
 (** Heartbeat message data. *)
 type full_msg_heartbeat_data = {
-    hb_test_req_id                        : fix_string option;                (** Tag 112: Required when the heartbeat is forced by a test request *)
+    hb_test_req_id                        : string option;                (** Tag 112: Required when the heartbeat is forced by a test request *)
 }
 ;;
 
@@ -38,14 +37,14 @@ type full_msg_logon_data = {
     ln_encrypt_method                     : fix_encryption_method;            (** Tag  98 *)
     ln_heartbeat_interval                 : fix_duration;                     (** Tag 108 *)
     ln_raw_data_length                    : int option;                       (** Tag  95 *)
-    ln_raw_data                           : fix_string option;                (** Tag  96 *)
+    ln_raw_data                           : string option;                (** Tag  96 *)
     ln_reset_seq_num_flag                 : bool option;                      (** Tag 141 *)
     ln_next_expected_msg_seq_num          : int option;                       (** Tag 789 *)
     ln_max_message_size                   : int option;                       (** Tag 383 *)
 
     ln_test_message_indicator             : bool option;                      (** Tag 464 *)
-    ln_username                           : fix_string option;                (** Tag 553 *)
-    ln_password                           : fix_string option;                (** Tag 554 *)
+    ln_username                           : string option;                (** Tag 553 *)
+    ln_password                           : string option;                (** Tag 554 *)
     
     ln_msg_types                          : full_msg_types_inner_rg list      (** Repeating group at tag 384 *)    
 }
@@ -54,7 +53,7 @@ type full_msg_logon_data = {
 (** Logoff message data. *)
 type full_msg_logoff_data = {
     lo_encoded_text_len                   : int option;                       (** Tag 354 *)
-    lo_encoded_text                       : fix_string option;                (** Tag 355 *)
+    lo_encoded_text                       : string option;                (** Tag 355 *)
 }
 ;;
 
@@ -71,9 +70,9 @@ type full_msg_reject_data = {
     sr_ref_tag_id                         : full_field_tag option;            (** Tag 371. The tag number of the FIX field being referenced.*)
     sr_ref_msg_type                       : full_msg_tag option;              (** Tag 372. The MsgType of the FIX message being referenced.*)
     sr_session_reject_reason              : fix_session_reject_reason option; (** Tag 373. Code to identify reason for a session-level Reject <3> message.*)
-    sr_text                               : fix_string option;                (** Tag 58. Where possible, message to explain reason for rejection.*)
+    sr_text                               : string option;                (** Tag 58. Where possible, message to explain reason for rejection.*)
     sr_encoded_text_len                   : int option;                       (** Tag 354. Encoded text length. *)
-    sr_encoded_text                       : fix_string option;                (** Tag 354. Encoded text. *)
+    sr_encoded_text                       : string option;                (** Tag 354. Encoded text. *)
 }
 ;;
 
@@ -86,7 +85,7 @@ type full_msg_sequence_reset_data = {
 
 (** Test Request message data.  *)
 type full_msg_test_request_data = {
-    test_req_id                           : fix_string;                       (** Tag 112 *)
+    test_req_id                           : string;                       (** Tag 112 *)
 }
 ;;
 
@@ -96,9 +95,9 @@ type full_msg_business_reject_data = {
     br_ref_msg_type                       : full_msg_tag;                     (** Tag 372. The MsgType of the FIX message being referenced.*)
     br_ref_field_id                       : full_field_tag option;            (** Tag 379. The business-level field on the message being referenced.*)    
     br_business_reject_reason             : fix_business_reject_reason;       (** Tag 380. Code to identify reason for a BusinessReject <j> message.*)
-    br_text                               : fix_string option;                (** Tag 58. Where possible, message to explain reason for rejection.*)
+    br_text                               : string option;                (** Tag 58. Where possible, message to explain reason for rejection.*)
     br_encoded_text_len                   : int option;                       (** Tag 354. Encoded text length. *)
-    br_encoded_text                       : fix_string option;                (** Tag 354. Encoded text. *)
+    br_encoded_text                       : string option;                (** Tag 354. Encoded text. *)
 }
 ;;
 

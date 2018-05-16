@@ -9,7 +9,6 @@
 *)
 
 (* @meta[imandra_ignore] on @end *)
-open Base_types;;
 open Datetime;;
 open Full_message_tags;;
 open Full_admin_enums;;
@@ -55,9 +54,9 @@ type session_rejected_msg_data = {
     srej_msg_field_tag                              : full_field_tag option;
     srej_msg_msg_type                               : full_msg_tag option;
     srej_msg_reject_reason                          : fix_session_reject_reason option;
-    srej_text                                       : fix_string option;
+    srej_text                                       : string option;
     srej_encoded_text_len                           : int option;
-    srej_encoded_text                               : fix_string option;
+    srej_encoded_text                               : string option;
 }
 ;;
 
@@ -78,8 +77,8 @@ type biz_rejected_msg_data = {
     brej_msg_msg_tag                                : full_msg_tag;
     brej_msg_reject_reason                          : fix_business_reject_reason;
     brej_msg_field_tag                              : full_field_tag option;
-    brej_msg_text                                   : fix_string option;
-    brej_msg_encoded_text                           : fix_string option;
+    brej_msg_text                                   : string option;
+    brej_msg_encoded_text                           : string option;
 }
 ;;
 
@@ -88,10 +87,10 @@ type biz_rejected_msg_data = {
     message type. We do not need this tag as message type is 
     explicit. *)
 type fix_header = {
-    h_begin_string                    : fix_string;   (* Tag 8    *)
+    h_begin_string                    : string;   (* Tag 8    *)
     h_body_length                     : int;          (* Tag 9    *)
-    h_sender_comp_id                  : fix_string;   (* Tag 49   *)
-    h_target_comp_id                  : fix_string;   (* Tag 56   *)
+    h_sender_comp_id                  : string;   (* Tag 49   *)
+    h_target_comp_id                  : string;   (* Tag 56   *)
     h_msg_seq_num                     : int;          (* Tag 34   *)
 
     h_on_behalf_of_comp_id            : int option;   (* Tag 115  *)
