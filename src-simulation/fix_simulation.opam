@@ -18,4 +18,5 @@ depends: [
   "topkg" {build}
   "yojson"
   "lwt" {="4.0.1"}
+  "cmdliner"
 ]
