@@ -1,4 +1,4 @@
-(* Aesthetic Integration copyright 2017 *)
+(* Aesthetic Integration copyright 2018 *)
 
 (** Type of account associated with an order*)
 type fix_accounttype =

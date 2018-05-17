@@ -2,13 +2,12 @@
 (***
     
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     fix_engine.ml
     
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Datetime;;
 open Full_admin_enums;;
 open Full_admin_messages;;
@@ -17,7 +16,6 @@ open Full_messages;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
 open Fix_engine_transitions;;
-(* @meta[imandra_ignore] off @end *)
 
 (** Process incoming internal transition message. *)
 let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_state) = 

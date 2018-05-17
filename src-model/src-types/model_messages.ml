@@ -1,10 +1,8 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Datetime;;
 open Model_app_enums;;
 open Model_tags;;
 open Numeric;;
-(* @meta[imandra_ignore] off @end *)
 
 type mod_executionreport_data = {
     f_ExecutionReport_ClOrdID : string;

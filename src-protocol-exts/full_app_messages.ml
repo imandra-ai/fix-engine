@@ -1,11 +1,9 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Full_app_enums;;
 open Datetime;;
 open Numeric;;
 open Full_app_records;;
 open Full_app_tags;;
-(* @meta[imandra_ignore] off @end *)
 
 (** Advertisement messages are used to announce completed transactions.*)
 type full_fix_advertisement_data = {

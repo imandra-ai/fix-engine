@@ -2,20 +2,18 @@
 (*** 
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
     
     full_app_messages.ml
 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Base_types;;
 open Numeric;;
 open Datetime;;
 open Full_app_enums;;
 open Full_app_tags;;
 open Full_app_records;;
-(* @meta[imandra_ignore] off @end *)
 
 (** New Order Single message data. {{: http://www.onixs.biz/fix-dictionary/4.4/msgType_D_68.html} More details. } *)
 type full_msg_new_order_single_data = {

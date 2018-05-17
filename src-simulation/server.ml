@@ -2,7 +2,7 @@
 (***
     
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     server.ml
     
@@ -87,7 +87,7 @@ let f _ (inch, outch) =
 
 let server_thread =
     let addr = Unix.( ADDR_INET( inet_addr_loopback , 9880 ) ) in
-    let server = Lwt_io.establish_server_with_client_address addr f in
+    let _server = Lwt_io.establish_server_with_client_address addr f in
     print_endline "Started server on localhost:9880 ...";
     fst (Lwt.wait ())
 ;;

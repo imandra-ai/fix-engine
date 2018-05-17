@@ -1,4 +1,4 @@
-(* Aesthetic Integration copyright 2017 *)
+(* Aesthetic Integration copyright 2018 *)
 
 let isAction ( str : string ) =
     (match str with

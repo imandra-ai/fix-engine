@@ -1,9 +1,7 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Full_app_enums;;
 open Datetime;;
 open Numeric;;
-(* @meta[imandra_ignore] off @end *)
 
 type fix_rg_inner_attrbgrp = {
     f_AttrbGrp_NoInstrAttrib : int option;

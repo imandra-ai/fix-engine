@@ -2,14 +2,12 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     datetime_json.ml 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Numeric;;
-(* @meta[imandra_ignore] off @end *)
 
 let parse_string (str : string) : string option = 
    Some str

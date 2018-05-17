@@ -1,8 +1,6 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Datetime;;
 open Numeric;;
-(* @meta[imandra_ignore] off @end *)
 
 type m_action_fix_x = {
     f_x_x : int

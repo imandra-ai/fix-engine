@@ -4,7 +4,7 @@
     Usage examples.
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     example_runner.ml
 

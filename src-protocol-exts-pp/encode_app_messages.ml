@@ -1,11 +1,9 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Encode_datetime;;
 open Encode_base_types;;
 open Full_app_messages;;
 open Encode_app_records;;
 open Encode_app_enums;;
-(* @meta[imandra_ignore] off @end *)
 
 let req f x = Some (f x);;
 let opt f v = match v with Some x -> Some ( f x ) | None -> None;;

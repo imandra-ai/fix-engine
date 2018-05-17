@@ -2,13 +2,12 @@
 (***
     
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     fix_engine_transitions.ml
     
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Datetime;;
 open Full_admin_enums;;
 open Full_admin_messages;;
@@ -16,7 +15,6 @@ open Full_app_messages;;
 open Full_messages;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
-(* @meta[imandra_ignore] off @end *)
 
 (** In many abnormal cases we need to send out the Logout messages and
     transition to ShutdownInitiated state. *)
