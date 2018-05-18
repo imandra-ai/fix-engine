@@ -17,8 +17,8 @@ let parse_symbol (str : string) : string option =
     Some str
 ;;
 
-let parse_char (str: string) : int option =
-    Some (Char.code str.[0])
+let parse_char (str: string) : string option =
+    Some str
 
 let parse_int ( str : string ) : int option = 
     if String.get str 0 = '+' then None else
