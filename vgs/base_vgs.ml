@@ -13,6 +13,7 @@
 open Imandra_pervasives;;
 open Datetime;;
 open Fix_engine;;
+open Fix_engine_state;;
 open Full_session_core;;
 open Full_admin_messages;;
 open Full_messages;;
@@ -41,7 +42,7 @@ let msg_is_valid = function
   | _ -> false
 ;;
 
-verify app_down_get_biz_reject ( state : fix_engine_state ) =
+theorem app_down_get_biz_reject ( state : fix_engine_state ) =
   let incoming_biz_rejected = msg_is_valid ( state.incoming_fix_msg ) in
   let no_incoming_msgs = state.incoming_int_msg = None in
   let state' = one_step (state) in
@@ -92,7 +93,7 @@ let msg_is_logout = function
   | _ -> false
 ;;
 
-verify less_seq_num_logout ( state : fix_engine_state ) =
+theorem less_seq_num_logout ( state : fix_engine_state ) =
   let no_incoming_int_msgs = state.incoming_int_msg = None in
   let state_good = not ( state.fe_application_up ) && ( state.fe_curr_mode = ActiveSession ) in
   let state' = one_step (state) in
@@ -115,7 +116,7 @@ let incoming_msg_garbled = function
   | _ -> false
 ;;
 
-verify garbled_are_ignored ( state : fix_engine_state ) =
+theorem garbled_are_ignored ( state : fix_engine_state ) =
   let state' = one_step (state) in
   let msg_ignored = ( state' =  { state with incoming_fix_msg = None } ) in
   let no_internal_msgs = state.incoming_int_msg = None in
@@ -150,7 +151,7 @@ let msg_is_reject = function
 (** Note that it's important to remember that a message may only be rejected if we're in ActiveSession state.
     It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or
     Retransmit modes. *)
-verify session_rejects_are_rejected ( state : fix_engine_state ) =
+theorem session_rejects_are_rejected ( state : fix_engine_state ) =
   let no_incoming_int_msgs = state.incoming_int_msg = None in
   let incoming_rejected = incoming_msg_session_reject ( state.incoming_fix_msg ) in
   let state' = one_step (state) in
