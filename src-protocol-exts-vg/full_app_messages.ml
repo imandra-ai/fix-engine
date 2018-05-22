@@ -64,7 +64,7 @@ type full_msg_order_cancel_replace_request_data = {
     full_orderCancelReplaceRequest_OrigClOrdID      : string option;
     full_orderCancelReplaceRequest_ExecInst         : fix_execinst option;
     full_orderCancelReplaceRequest_TransactTime     : fix_utctimestamp option;
-    full_orderCancelReplaceRequest_Symbol           : fix_symbol option;
+    full_orderCancelReplaceRequest_Symbol           : string option;
     full_orderCancelReplaceRequest_SymbolSfx        : string option;
     full_orderCancelReplaceRequest_Side             : fix_side option;
     full_orderCancelReplaceRequest_OrderQty         : fix_float option;
@@ -102,8 +102,8 @@ type full_msg_order_cancel_request_data = {
     full_orderCancelRequest_OrigClOrdID              : string option;
     full_orderCancelRequest_OrderID                  : string option;
     full_orderCancelRequest_TransactTime             : fix_utctimestamp option;
-    full_orderCancelRequest_Symbol                   : fix_symbol option;
-    full_orderCancelRequest_SymbolSfx                : fix_symbol option;
+    full_orderCancelRequest_Symbol                   : string option;
+    full_orderCancelRequest_SymbolSfx                : string option;
     full_orderCancelRequest_Side                     : fix_side option;
 }
 ;;
