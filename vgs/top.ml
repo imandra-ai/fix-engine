@@ -13,7 +13,6 @@
 let src = 
   [ "src-core/datetime.ml"
   ; "src-core/numeric.ml"
-  ; "src-core/base_types.ml"
   ; "src-protocol/full_admin_tags.ml"
   ; "src-protocol-exts-vg/full_app_tags.ml"
   ; "src-protocol/full_message_tags.ml"

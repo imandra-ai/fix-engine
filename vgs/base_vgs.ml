@@ -12,7 +12,6 @@
 (* @meta[imandra_ignore] on @end *)
 open Imandra_pervasives;;
 open Datetime;;
-open Base_types;;
 open Fix_engine;;
 open Full_session_core;;
 open Full_admin_messages;;

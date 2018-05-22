@@ -10,7 +10,6 @@
 
 
 (* @meta[imandra_ignore] on @end *)
-open Base_types;;
 open Numeric;;
 open Datetime;;
 open Full_app_enums;;
