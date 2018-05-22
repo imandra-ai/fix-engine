@@ -120,12 +120,12 @@ theorem float_Mult_4_4_preserves_precision (x, y) =
 (* Not proved. *)
 (*
 ! Breaks imandra
+*)
 theorem float_Mult_4_4_associative (x, y, z) =
   let a = float_Mult_4_4 (float_Mult_4_4 x y) z in
   let b = float_Mult_4_4 x (float_Mult_4_4 y z) in
   float_Equal_4_4 a b
 ;; 
-*)
 
 (* Not proved. *)
 (*
