@@ -12,6 +12,8 @@
 open Datetime;;
 open Full_admin_enums;;
 open Full_admin_messages;;
+open Full_message_tags;;
+open Full_admin_tags;;
 open Full_app_messages;;
 open Full_messages;;
 open Fix_engine_state;;
