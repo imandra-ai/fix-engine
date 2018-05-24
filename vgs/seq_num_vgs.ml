@@ -1,7 +1,7 @@
 (** 
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     The following verification goals were derived from the table
     on page 9 with description on how messages would be handled.
@@ -10,14 +10,12 @@
 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Imandra_pervasives;;
 open Datetime;;
 open Fix_engine;;
 open Full_admin_messages;;
 open Full_session_core;;
 open Full_messages;;
-(* @meta[imandra_ignore] off @end *)
 
 
 (** **************************************************************************************** *)

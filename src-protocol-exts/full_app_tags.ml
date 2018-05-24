@@ -1,4 +1,4 @@
-(* Aesthetic Integration copyright 2017 *)
+(* Aesthetic Integration copyright 2018 *)
 
 type full_app_msg_tag =
     | Full_Msg_Advertisement_Tag 

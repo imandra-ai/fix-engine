@@ -1,10 +1,8 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open State;;
 open Model_app_enums;;
 open Numeric;;
 open Model_messages;;
-(* @meta[imandra_ignore] off @end *)
 
 let receive_message_NewOrderSingle ( m_state , msg_data : model_state * mod_newordersingle_data ) =
     let msg_data_inner = {

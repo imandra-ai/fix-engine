@@ -2,20 +2,18 @@
 (***
     
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     fix_engine_state.ml
     
 *)
 
 
-(* @meta[imandra_ignore] on @end *)
 open Datetime;;
 open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_app_messages;;
 open Full_messages;;
-(* @meta[imandra_ignore] off @end *)
 
 (** Define set of actions + data for manual intervention by the user. *)
 type manual_int_data = {

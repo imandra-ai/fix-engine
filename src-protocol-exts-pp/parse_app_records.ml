@@ -1,11 +1,9 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Parse_datetime;;
 open Parser_utils.Parser;;
 open Parse_app_enums;;
 open Full_app_records;;
 open Parse_base_types;;
-(* @meta[imandra_ignore] off @end *)
 
 let parse_UndSecAltIDGrp msg = (
     opt msg "457" parse_int @@ fun msg f_UndSecAltIDGrp_NoUnderlyingSecurityAltID ->

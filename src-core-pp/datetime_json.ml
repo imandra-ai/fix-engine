@@ -2,16 +2,14 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     datetime_json.ml 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Yojson;;
 open Datetime;;
 open Base_types_json;;
-(* @meta[imandra_ignore] off @end *)
 
 let filter_nulls =
     List.filter (function ( _, `Null ) -> false | _ -> true )

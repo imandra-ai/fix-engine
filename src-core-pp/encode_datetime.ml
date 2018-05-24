@@ -2,16 +2,14 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     parse_datetime.ml
     
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Datetime;;
 open Encode_base_types;;
-(* @meta[imandra_ignore] off @end *)
 
 
 let encode_UTCDateOnly x : string =

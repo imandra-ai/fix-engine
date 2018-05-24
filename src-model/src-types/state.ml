@@ -1,8 +1,6 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Model_messages;;
 open Actions;;
-(* @meta[imandra_ignore] off @end *)
 
 type model_state = {
     incoming_action : fix_action option;

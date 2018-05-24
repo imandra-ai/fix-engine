@@ -1,10 +1,8 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open State;;
 open Model_app_enums;;
 open Msg_check_types;;
 open Model_messages;;
-(* @meta[imandra_ignore] off @end *)
 
 let check_fields_ExecutionReport ( msg_data , m_state : mod_executionreport_data * model_state ) =
     fields_are_good

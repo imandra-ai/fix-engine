@@ -2,16 +2,13 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     base_types_json.ml 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Yojson;;
 open Numeric;;
-open String_utils;;
-(* @meta[imandra_ignore] off @end *)
 
 (**
   *  Int
@@ -29,8 +26,10 @@ let int_opt_to_json : int option -> json = function
   *  Char
   *)
 
-let char_to_json = int_to_json ;;
-let char_opt_to_json = int_opt_to_json;;
+let char_to_json x = `String x ;;
+let char_opt_to_json = function 
+    | None -> `Null
+    | Some x -> `String x;;
 
 (**
   *  FIX_Float

@@ -1,11 +1,9 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open State;;
 open Model_app_enums;;
 open Numeric;;
 open Model_tags;;
 open Model_messages;;
-(* @meta[imandra_ignore] off @end *)
 
 let reject_NewOrderSingle_missingfield ( m_state , reject_text : model_state * string ) =
     let msg_data_inner = {

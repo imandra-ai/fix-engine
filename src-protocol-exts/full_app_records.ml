@@ -1,9 +1,7 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Full_app_enums;;
 open Datetime;;
 open Numeric;;
-(* @meta[imandra_ignore] off @end *)
 
 type fix_rg_inner_attrbgrp = {
     f_AttrbGrp_NoInstrAttrib : int option;
@@ -521,7 +519,7 @@ type fix_rg_stipulations = fix_rg_inner_stipulations list
 
 type fix_rg_inner_quotqualgrp = {
     f_QuotQualGrp_NoQuoteQualifiers : int option;
-    f_QuotQualGrp_QuoteQualifier : int option
+    f_QuotQualGrp_QuoteQualifier : string option
 }
 ;;
 
@@ -701,7 +699,7 @@ type fix_rg_inner_nestedparties2 = {
     (** Used to identify source of Nested2PartyID. Required if Nested2PartyIDSource is specified. Required if NoNested2PartyIDs > 0.*)
     f_NestedParties2_Nested2PartyID : string option;
     (** Used to identify class source of Nested2PartyID value (e.g. BIC). Required if Nested2PartyID is specified. Required if NoNested2PartyIDs > 0.*)
-    f_NestedParties2_Nested2PartyIDSource : int option;
+    f_NestedParties2_Nested2PartyIDSource : string option;
     (** Identifies the type of Nested2PartyID (e.g. Executing Broker). Required if NoNested2PartyIDs > 0.*)
     f_NestedParties2_Nested2PartyRole : int option;
     (** Repeating group of Nested2Party sub-identifiers.*)
@@ -718,7 +716,7 @@ type fix_rg_inner_settlparties = {
     (** Used to identify source of SettlPartyID. Required if SettlPartyIDSource is specified. Required if NoSettlPartyIDs > 0.*)
     f_SettlParties_SettlPartyID : string option;
     (** Used to identify class source of SettlPartyID value (e.g. BIC). Required if SettlPartyID is specified. Required if NoSettlPartyIDs > 0.*)
-    f_SettlParties_SettlPartyIDSource : int option;
+    f_SettlParties_SettlPartyIDSource : string option;
     (** Identifies the type of SettlPartyID (e.g. Executing Broker). Required if NoSettlPartyIDs > 0.*)
     f_SettlParties_SettlPartyRole : int option;
     (** Repeating group of SettlParty sub-identifiers.*)
@@ -735,7 +733,7 @@ type fix_rg_inner_nestedparties = {
     (** Used to identify source of NestedPartyID. Required if NestedPartyIDSource is specified. Required if NoNestedPartyIDs > 0.*)
     f_NestedParties_NestedPartyID : string option;
     (** Used to identify class source of NestedPartyID value (e.g. BIC). Required if NestedPartyID is specified. Required if NoNestedPartyIDs > 0.*)
-    f_NestedParties_NestedPartyIDSource : int option;
+    f_NestedParties_NestedPartyIDSource : string option;
     (** Identifies the type of NestedPartyID (e.g. Executing Broker). Required if NoNestedPartyIDs > 0.*)
     f_NestedParties_NestedPartyRole : int option;
     (** Repeating group of NestedParty sub-identifiers.*)
@@ -776,7 +774,7 @@ type fix_instrumentleg = {
     f_InstrumentLeg_LegRedemptionDate : fix_localmktdate option;
     f_InstrumentLeg_LegStrikePrice : fix_float_4 option;
     f_InstrumentLeg_LegStrikeCurrency : fix_currency option;
-    f_InstrumentLeg_LegOptAttribute : int option;
+    f_InstrumentLeg_LegOptAttribute : string option;
     f_InstrumentLeg_LegContractMultiplier : fix_float_4 option;
     f_InstrumentLeg_LegCouponRate : fix_float_4 option;
     f_InstrumentLeg_LegSecurityExchange : fix_exchange option;
@@ -789,7 +787,7 @@ type fix_instrumentleg = {
     (** Specific to the <InstrumentLeg> (not in <Instrument>)*)
     f_InstrumentLeg_LegRatioQty : fix_float_4 option;
     (** Specific to the <InstrumentLeg> (not in <Instrument>)*)
-    f_InstrumentLeg_LegSide : int option;
+    f_InstrumentLeg_LegSide : string option;
     (** Specific to the <InstrumentLeg> (not in <Instrument>)*)
     f_InstrumentLeg_LegCurrency : fix_currency option;
     (** Identifies MBS / ABS pool*)
@@ -858,7 +856,7 @@ type fix_instrument = {
     (** Used for derivatives*)
     f_Instrument_StrikeCurrency : fix_currency option;
     (** Used for derivatives, such as options and covered warrants to indicate a versioning of the contract when required due to corporate actions to the underlying. Should not be used to indicate type of option - use the CFICode[461] for this purpose.*)
-    f_Instrument_OptAttribute : int option;
+    f_Instrument_OptAttribute : string option;
     (** For Fixed Income, Convertible Bonds, Derivatives, etc. Note: If used, quantities should be expressed in the "nominal" (e.g. contracts vs. shares) amount.*)
     f_Instrument_ContractMultiplier : fix_float_4 option;
     (** For Fixed Income.*)
@@ -898,7 +896,7 @@ type fix_rg_inner_nestedparties3 = {
     (** Used to identify source of Nested3PartyID. Required if Nested3PartyIDSource is specified. Required if NoNested3PartyIDs > 0.*)
     f_NestedParties3_Nested3PartyID : string option;
     (** Used to identify class source of Nested3PartyID value (e.g. BIC). Required if Nested3PartyID is specified. Required if NoNested3PartyIDs > 0.*)
-    f_NestedParties3_Nested3PartyIDSource : int option;
+    f_NestedParties3_Nested3PartyIDSource : string option;
     (** Identifies the type of Nested3PartyID (e.g. Executing Broker). Required if NoNested3PartyIDs > 0.*)
     f_NestedParties3_Nested3PartyRole : int option;
     (** Repeating group of Nested3Party sub-identifiers.*)
@@ -966,7 +964,7 @@ type fix_underlyinginstrument = {
     f_UnderlyingInstrument_UnderlyingRedemptionDate : fix_localmktdate option;
     f_UnderlyingInstrument_UnderlyingStrikePrice : fix_float_4 option;
     f_UnderlyingInstrument_UnderlyingStrikeCurrency : fix_currency option;
-    f_UnderlyingInstrument_UnderlyingOptAttribute : int option;
+    f_UnderlyingInstrument_UnderlyingOptAttribute : string option;
     f_UnderlyingInstrument_UnderlyingContractMultiplier : fix_float_4 option;
     f_UnderlyingInstrument_UnderlyingCouponRate : fix_float_4 option;
     f_UnderlyingInstrument_UnderlyingSecurityExchange : fix_exchange option;
@@ -1011,7 +1009,7 @@ type fix_rg_inner_instrmtlegseclistgrp = {
     f_InstrmtLegSecListGrp_NoLegs : int option;
     f_InstrmtLegSecListGrp_InstrumentLeg : fix_instrumentleg;
     f_InstrmtLegSecListGrp_LegSwapType : fix_legswaptype option;
-    f_InstrmtLegSecListGrp_LegSettlType : int option;
+    f_InstrmtLegSecListGrp_LegSettlType : string option;
     f_InstrmtLegSecListGrp_LegStipulations : fix_rg_legstipulations;
     f_InstrmtLegSecListGrp_LegBenchmarkCurveData : fix_legbenchmarkcurvedata
 }
@@ -1098,7 +1096,7 @@ type fix_rg_inner_quotreqlegsgrp = {
     f_QuotReqLegsGrp_InstrumentLeg : fix_instrumentleg;
     f_QuotReqLegsGrp_LegQty : fix_float_4 option;
     f_QuotReqLegsGrp_LegSwapType : fix_legswaptype option;
-    f_QuotReqLegsGrp_LegSettlType : int option;
+    f_QuotReqLegsGrp_LegSettlType : string option;
     f_QuotReqLegsGrp_LegSettlDate : fix_localmktdate option;
     f_QuotReqLegsGrp_LegStipulations : fix_rg_legstipulations;
     f_QuotReqLegsGrp_NestedParties : fix_rg_nestedparties;
@@ -1133,12 +1131,12 @@ type fix_rg_inner_trdinstrmtleggrp = {
     f_TrdInstrmtLegGrp_LegQty : fix_float_4 option;
     f_TrdInstrmtLegGrp_LegSwapType : fix_legswaptype option;
     f_TrdInstrmtLegGrp_LegStipulations : fix_rg_legstipulations;
-    f_TrdInstrmtLegGrp_LegPositionEffect : int option;
+    f_TrdInstrmtLegGrp_LegPositionEffect : string option;
     f_TrdInstrmtLegGrp_LegCoveredOrUncovered : int option;
     f_TrdInstrmtLegGrp_NestedParties : fix_rg_nestedparties;
     f_TrdInstrmtLegGrp_LegRefID : string option;
     f_TrdInstrmtLegGrp_LegPrice : fix_float_4 option;
-    f_TrdInstrmtLegGrp_LegSettlType : int option;
+    f_TrdInstrmtLegGrp_LegSettlType : string option;
     f_TrdInstrmtLegGrp_LegSettlDate : fix_localmktdate option;
     f_TrdInstrmtLegGrp_LegLastPx : fix_float_4 option
 }
@@ -1152,7 +1150,7 @@ type fix_rg_inner_legquotgrp = {
     f_LegQuotGrp_InstrumentLeg : fix_instrumentleg;
     f_LegQuotGrp_LegQty : fix_float_4 option;
     f_LegQuotGrp_LegSwapType : fix_legswaptype option;
-    f_LegQuotGrp_LegSettlType : int option;
+    f_LegQuotGrp_LegSettlType : string option;
     f_LegQuotGrp_LegSettlDate : fix_localmktdate option;
     f_LegQuotGrp_LegStipulations : fix_rg_legstipulations;
     f_LegQuotGrp_NestedParties : fix_rg_nestedparties;
@@ -1281,12 +1279,12 @@ type fix_rg_inner_instrmtlegexecgrp = {
     f_InstrmtLegExecGrp_LegQty : fix_float_4 option;
     f_InstrmtLegExecGrp_LegSwapType : fix_legswaptype option;
     f_InstrmtLegExecGrp_LegStipulations : fix_rg_legstipulations;
-    f_InstrmtLegExecGrp_LegPositionEffect : int option;
+    f_InstrmtLegExecGrp_LegPositionEffect : string option;
     f_InstrmtLegExecGrp_LegCoveredOrUncovered : int option;
     f_InstrmtLegExecGrp_NestedParties : fix_rg_nestedparties;
     f_InstrmtLegExecGrp_LegRefID : string option;
     f_InstrmtLegExecGrp_LegPrice : fix_float_4 option;
-    f_InstrmtLegExecGrp_LegSettlType : int option;
+    f_InstrmtLegExecGrp_LegSettlType : string option;
     f_InstrmtLegExecGrp_LegSettlDate : fix_localmktdate option;
     f_InstrmtLegExecGrp_LegLastPx : fix_float_4 option
 }
@@ -1300,7 +1298,7 @@ type fix_rg_inner_legquotstatgrp = {
     f_LegQuotStatGrp_InstrumentLeg : fix_instrumentleg;
     f_LegQuotStatGrp_LegQty : fix_float_4 option;
     f_LegQuotStatGrp_LegSwapType : fix_legswaptype option;
-    f_LegQuotStatGrp_LegSettlType : int option;
+    f_LegQuotStatGrp_LegSettlType : string option;
     f_LegQuotStatGrp_LegSettlDate : fix_localmktdate option;
     f_LegQuotStatGrp_LegStipulations : fix_rg_legstipulations;
     f_LegQuotStatGrp_NestedParties : fix_rg_nestedparties
@@ -1416,12 +1414,12 @@ type fix_rg_inner_legordgrp = {
     f_LegOrdGrp_LegSwapType : fix_legswaptype option;
     f_LegOrdGrp_LegStipulations : fix_rg_legstipulations;
     f_LegOrdGrp_LegPreAllocGrp : fix_rg_legpreallocgrp;
-    f_LegOrdGrp_LegPositionEffect : int option;
+    f_LegOrdGrp_LegPositionEffect : string option;
     f_LegOrdGrp_LegCoveredOrUncovered : int option;
     f_LegOrdGrp_NestedParties : fix_rg_nestedparties;
     f_LegOrdGrp_LegRefID : string option;
     f_LegOrdGrp_LegPrice : fix_float_4 option;
-    f_LegOrdGrp_LegSettlType : int option;
+    f_LegOrdGrp_LegSettlType : string option;
     f_LegOrdGrp_LegSettlDate : fix_localmktdate option
 }
 ;;

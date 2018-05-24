@@ -2,19 +2,17 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
     
     full_app_records.ml
 
 *)
 
 
-(* @meta[imandra_ignore] on @end *)
 open Numeric;;
 open Datetime;;
 open Full_app_enums;;
 open Full_app_tags;;
-(* @meta[imandra_ignore] off @end *)
 
 
 type fix_instrument = {
