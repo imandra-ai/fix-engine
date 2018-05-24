@@ -12,7 +12,7 @@ open Numeric;;
 
 
 let encode_int  = string_of_int ;;
-let encode_char = string_of_int ;;
+let encode_char x = x ;;
 
 let encode_float_0 = function Float_0 x -> Printf.sprintf "%d" x;;
 let encode_float_1 = function Float_1 x -> Printf.sprintf "%.1f" ( float_of_int ( x ) /. 10.0 );;
