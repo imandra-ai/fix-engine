@@ -154,7 +154,7 @@ let init_fix_engine_state = {
 
     fe_application_up       = true;
 
-    last_test_req_id        = "";
+    last_test_req_id        = "fix-engine";
 
     fe_num_logons_sent      = 0;
     fe_max_num_logons_sent  = 0;

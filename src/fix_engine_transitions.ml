@@ -115,7 +115,8 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                 begin
                     let engine  = { engine with 
                             fe_encrypt_method  = d.ln_encrypt_method;
-                            fe_heartbeat_interval   = d.ln_heartbeat_interval 
+                            fe_heartbeat_interval   = d.ln_heartbeat_interval;
+                            fe_testreq_interval = d.ln_heartbeat_interval;
                         } in
                     let logon_msg = create_logon_msg ( engine ) in
                     let engine = { engine with 

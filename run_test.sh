@@ -34,6 +34,7 @@ run_test ./defs/8_AdminAndApplicationMessages.def
 run_test ./defs/8_OnlyApplicationMessages.def
 run_test ./defs/8_OnlyAdminMessages.def
 run_test ./defs/20_SimultaneousResendRequest.def
+run_test ./defs/6_SendTestRequest.def
 
 run_test ./defs/10_MsgSeqNumEqual.def
 run_test ./defs/10_MsgSeqNumGreater.def
@@ -43,6 +44,9 @@ run_test ./defs/11a_NewSeqNoGreater.def
 run_test ./defs/11b_NewSeqNoEqual.def
 run_test ./defs/11c_NewSeqNoLess.def
 
+run_test ./defs/14b_RequiredFieldMissing.def
+run_test ./defs/14c_TagNotDefinedForMsgType.def
+run_test ./defs/14d_TagSpecifiedWithoutValue.def
 run_test ./defs/14h_RepeatedTag.def
 run_test ./defs/14f_IncorrectDataFormat.def
 run_test ./defs/14i_RepeatingGroupCountNotEqual.def

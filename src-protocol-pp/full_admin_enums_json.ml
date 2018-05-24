@@ -15,7 +15,7 @@ open Full_admin_enums;;
 let session_reject_reason_to_string = function
     | InvalidTagNumber                               -> "InvalidTagNumber"                         
     | RequiredTagMissing                             -> "RequiredTagMissing"                       
-    | TagNotDefined                                  -> "TagNotDefined"                            
+    | TagNotDefinedForThisMessageType                -> "TagNotDefinedForThisMessageType"                            
     | UndefinedTag                                   -> "UndefinedTag"                             
     | TagSecifiedWithoutAValue                       -> "TagSecifiedWithoutAValue"                 
     | ValueIsIncorrect                               -> "ValueIsIncorrect"                         

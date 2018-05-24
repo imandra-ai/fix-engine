@@ -14,7 +14,7 @@ open Full_admin_enums;;
 let parse_session_reject_reason = function
     | "0"  -> Some InvalidTagNumber                          
     | "1"  -> Some RequiredTagMissing                        
-    | "2"  -> Some TagNotDefined                             
+    | "2"  -> Some TagNotDefinedForThisMessageType
     | "3"  -> Some UndefinedTag                              
     | "4"  -> Some TagSecifiedWithoutAValue                  
     | "5"  -> Some ValueIsIncorrect                          
