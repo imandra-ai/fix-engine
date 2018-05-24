@@ -9,7 +9,6 @@
 *)
 
 
-open Base_types;;
 open Numeric;;
 open Datetime;;
 open Full_app_enums;;
@@ -18,10 +17,10 @@ open Full_app_tags;;
 
 type fix_instrument = {
     f_Instrument_IssueDate    : fix_localmktdate option;
-    f_Instrument_Issuer       : fix_string option;
+    f_Instrument_Issuer       : string option;
     f_Instrument_SecurityType : fix_securitytype option;
-    f_Instrument_Symbol       : fix_string option;
-    f_Instrument_SymbolSfx    : fix_string option;
+    f_Instrument_Symbol       : string option;
+    f_Instrument_SymbolSfx    : string option;
 }
 ;;
 

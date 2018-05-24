@@ -164,10 +164,10 @@ let init_fix_engine_state = {
 
 (** THEOREM: one_step calls on busy state eventually terminate *)
 let engine_state_busy engine = 
-   ( engine.incoming_fix_msg != None ) ||
-   ( engine.incoming_int_msg != None ) ||
-   ( engine.outgoing_fix_msg != None ) ||
-   ( engine.outgoing_int_msg != None ) ||
+   ( engine.incoming_fix_msg <> None ) ||
+   ( engine.incoming_int_msg <> None ) ||
+   ( engine.outgoing_fix_msg <> None ) ||
+   ( engine.outgoing_int_msg <> None ) ||
    ( match engine.fe_curr_mode with
         | GapDetected | CacheReplay | Retransmit | ShuttingDown -> true
         | _ -> false
