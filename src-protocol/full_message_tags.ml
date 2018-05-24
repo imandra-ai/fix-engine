@@ -2,16 +2,14 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
     
     full_admin_messages.ml
 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Full_app_tags;;
 open Full_admin_tags;;
-(* @meta[imandra_ignore] off @end *)
 
 
 (** Union Tag types. The tag types must be declared in a separate module,

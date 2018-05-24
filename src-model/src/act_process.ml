@@ -1,9 +1,7 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open State;;
 open Actions;;
 open Act_checks;;
-(* @meta[imandra_ignore] off @end *)
 
 let receive_action_x ( m_state , action_data : model_state * m_action_fix_x ) =
     m_state

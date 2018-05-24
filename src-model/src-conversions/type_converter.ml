@@ -1,11 +1,9 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Model_tags;;
 open Full_app_messages;;
 open Full_app_records;;
 open Model_messages;;
 open Enum_converter;;
-(* @meta[imandra_ignore] off @end *)
 
 let convert__full_to_model_ExecutionReport ( msg : full_fix_executionreport_data ) =
     let c_f_ExecutionReport_Text = msg.f_ExecutionReport_Text in

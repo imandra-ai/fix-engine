@@ -2,15 +2,13 @@
 (***
     
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     fix_engine.ml
     
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Datetime;;
-open Base_types;;
 open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_app_messages;;
@@ -18,7 +16,6 @@ open Full_messages;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
 open Fix_engine_transitions;;
-(* @meta[imandra_ignore] off @end *)
 
 (** Process incoming internal transition message. *)
 let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_state) = 
@@ -28,9 +25,9 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
         if engine.fe_curr_mode = ActiveSession then
             begin
                 (* First, check whether we need to send out a TestRequest message - if we haven't heard anything in a while *)
-                let received_cutoff = utctimestamp_duration_Add ( engine.fe_last_data_received, engine.fe_heartbeat_interval ) in
-                let received_cutoff_padded = utctimestamp_duration_Add ( received_cutoff, engine.fe_testreq_interval ) in
-                let received_cutoff_violated = utctimestamp_GreaterThan ( t, received_cutoff_padded ) in 
+                let received_cutoff = utctimestamp_duration_Add engine.fe_last_data_received engine.fe_heartbeat_interval  in
+                let received_cutoff_padded = utctimestamp_duration_Add received_cutoff engine.fe_testreq_interval in
+                let received_cutoff_violated = utctimestamp_GreaterThan t received_cutoff_padded in 
 
                 if received_cutoff_violated then
                     begin
@@ -39,7 +36,6 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
                                 fe_curr_mode            = WaitingForHeartbeat; 
                                 outgoing_fix_msg        = Some ( ValidMsg (test_request_msg));
                                 outgoing_seq_num        = engine'.outgoing_seq_num + 1;
-                                last_test_req_id        = engine'.last_test_req_id + 1;
                                 fe_last_time_data_sent  = engine'.fe_curr_time;
                                 fe_history              = add_msg_to_history ( engine'.fe_history, test_request_msg );
                         }
@@ -47,8 +43,8 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
                 else
 
                 (* If we have not sent out any data within the last heartbeat_int, need to send a Heatbeat message. *)
-                let sent_cutoff = utctimestamp_duration_Add ( engine.fe_last_time_data_sent, engine.fe_heartbeat_interval ) in
-                let sent_cutoff_violated = utctimestamp_GreaterThan ( t, sent_cutoff ) in 
+                let sent_cutoff = utctimestamp_duration_Add engine.fe_last_time_data_sent engine.fe_heartbeat_interval in
+                let sent_cutoff_violated = utctimestamp_GreaterThan t sent_cutoff in 
 
                 if sent_cutoff_violated && not ( hbeat_interval_null ( engine.fe_heartbeat_interval )) then
                     begin
@@ -66,9 +62,9 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
 
         else if engine.fe_curr_mode = WaitingForHeartbeat then
             begin
-                let received_cutoff = utctimestamp_duration_Add ( engine.fe_last_time_data_sent, engine.fe_heartbeat_interval ) in
-                let received_cutoff_padded = utctimestamp_duration_Add ( received_cutoff, engine.fe_testreq_interval ) in 
-                if utctimestamp_GreaterThan ( t, received_cutoff_padded ) then
+                let received_cutoff = utctimestamp_duration_Add engine.fe_last_time_data_sent engine.fe_heartbeat_interval in
+                let received_cutoff_padded = utctimestamp_duration_Add received_cutoff engine.fe_testreq_interval in 
+                if utctimestamp_GreaterThan t received_cutoff_padded then
                     begin
                         let logoff_msg = create_logoff_msg ( engine ) in { 
                             engine' with
@@ -194,7 +190,7 @@ let is_int_message_valid ( engine : fix_engine_state ) =
     | None -> true
     | Some int_msg ->
     match int_msg with 
-    | IncIntMsg_TimeChange t -> utctimestamp_LessThan ( engine.fe_curr_time, t ) && is_valid_utctimestamp ( t )
+    | IncIntMsg_TimeChange t -> (utctimestamp_LessThan engine.fe_curr_time t ) && is_valid_utctimestamp ( t )
     | IncIntMsg_ApplicationData d -> true
     | IncIntMsg_CreateSession d -> 
         begin

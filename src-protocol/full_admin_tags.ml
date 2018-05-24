@@ -2,7 +2,7 @@
 (*** 
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
     
     full_admin_tags.ml
 
