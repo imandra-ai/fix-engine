@@ -10,11 +10,11 @@
 *)
 
 (* @meta[imandra_ignore] one @end *)
-open Imandra_pervasives;;
 open Datetime;;
 open Fix_engine;;
+open Fix_engine_state;;
+open Full_admin_enums;;
 open Full_admin_messages;;
-open Full_session_core;;
 open Full_messages;;
 (* @meta[imandra_ignore] off @end *)
 
@@ -33,13 +33,13 @@ open Full_messages;;
 *)
 (** **************************************************************************************** *)
 
-let incoming_int_create_session ( m, targetID : fix_engine_int_msg option * int ) =
+let incoming_int_create_session ( m, targetID : fix_engine_int_inc_msg option * string ) =
     match m with
     | None      -> false
     | Some msg  ->
     match msg with
-    | CreateSession data    -> data.dest_comp_id = targetID
-    | _                     -> false
+    | IncIntMsg_CreateSession data -> data.dest_comp_id = targetID
+    | _                            -> false
 ;;
 
 let state_is_init ( engine : fix_engine_state ) =
@@ -52,7 +52,7 @@ let state_is_init ( engine : fix_engine_state ) =
     engine.fe_cache = []
 ;;
 
-let outbound_msg_logon ( m, targetID : full_top_level_msg option * int ) =
+let outbound_msg_logon ( m, targetID : full_top_level_msg option * string ) =
     match m with
     | None      -> false
     | Some msg  ->
@@ -69,7 +69,7 @@ let outbound_msg_logon ( m, targetID : full_top_level_msg option * int ) =
     | _             -> false
 ;;
 
-verify logon_msg_is_first ( engine, targetID : fix_engine_state * int ) =
+theorem logon_msg_is_first ( engine, targetID : fix_engine_state * string ) =
     let engine' = one_step ( engine ) in
     ( state_is_init ( engine ) &&
     incoming_int_create_session ( engine.incoming_int_msg, targetID ) ) ==>
@@ -96,52 +96,55 @@ verify logon_msg_is_first ( engine, targetID : fix_engine_state * int ) =
 (** **************************************************************************************** *)
 
 let waiting_for_logon_ack ( engine : fix_engine_state ) =
-    engine.fe_curr_mode = LogonInitiated
+    engine.fe_curr_mode   = LogonInitiated &&
+    engine.fe_curr_status = Normal
 ;;
 
-let int_app_msg_exists ( m : fix_engine_int_msg option ) =
+let int_app_msg_exists ( m : fix_engine_int_inc_msg option ) =
     match m with
     | None      -> false
     | Some _    -> true
 ;;
 
-let no_msg_sent_until_logon_acked ( engine : fix_engine_state ) =
+theorem no_msg_sent_until_logon_acked ( engine : fix_engine_state ) =
     let engine' = one_step ( engine ) in
-    ( engine.fe_curr_mode = LogonInitiated && int_app_msg_exists ( engine' ))
+    ( waiting_for_logon_ack engine  && int_app_msg_exists ( engine'.incoming_int_msg ))
     ==>
     ( engine'.outgoing_fix_msg = None )
 ;;
 
 (** Logon VG2.2 *)
 
-let incoming_logon_ack ( m, self_comp_id : full_top_level_msg option * int ) =
+let incoming_logon_ack m self_comp_id enc_method =
     match m with
     | None -> false
     | Some msg ->
     match msg with
     | ValidMsg vmsg -> (
-        let valid_header = vmsg.full_msg_header.h_target_comp_id = self_comp_id in
+        let valid_header    = vmsg.full_msg_header.h_target_comp_id = self_comp_id in
         match vmsg.full_msg_data with
         | Full_FIX_App_Msg _ -> false
-        | Full_FIX_Admin_Msg amsg -> (
-            match amsg with
-            | Full_Msg_Logon data -> valid_header
-            | _ -> false
-         )
+        | Full_FIX_Admin_Msg ( Full_Msg_Logon amsg ) -> 
+            let same_encryption = amsg.ln_encrypt_method = enc_method in
+            valid_header && same_encryption
+        | _ -> false
+         
      )
     | _ -> false
 ;;
 
-verify receive_logon_ack ( engine : fix_engine_state ) =
+
+theorem receive_logon_ack ( engine : fix_engine_state ) =
+    let no_incoming_int_msgs = engine.incoming_int_msg = None in
     let engine' = one_step ( engine ) in
-    ( incoming_logon_ack ( engine.incoming_fix_msg, engine.fe_comp_id ) &&
-        engine.fe_curr_mode = LogonInitiated &&
-        engine.fe_cache = [] &&
-        is_state_valid ( engine ) )
+    ( incoming_logon_ack engine.incoming_fix_msg engine.fe_comp_id engine.fe_encrypt_method &&
+      no_incoming_int_msgs &&
+      waiting_for_logon_ack engine &&
+      engine.fe_cache = [] &&
+      is_state_valid ( engine ) )
     ==>
     ( engine'.fe_curr_mode = ActiveSession )
 ;;
-
 
 (** **************************************************************************************** *)
 (** Logon VG.3
@@ -155,6 +158,7 @@ verify receive_logon_ack ( engine : fix_engine_state ) =
 *)
 (** **************************************************************************************** *)
 
+(*
 let logon_msg_out_of_sequence ( m : full_top_level_msg option ) =
     true
 ;;
@@ -167,6 +171,7 @@ verify when_gap_detected_request_is_sent ( engine : fix_engine_state ) =
         ==>
     ( test_request_sent ( engine' ) && engine'.fe_curr_mode = Recovery )
 ;;
+*)
 
 
 (** **************************************************************************************** *)
@@ -187,7 +192,7 @@ verify when_gap_detected_request_is_sent ( engine : fix_engine_state ) =
 *)
 (** **************************************************************************************** *)
 
-let received_logon_diff_key ( m, self_comp_id, encrypt_method : full_top_level_msg option * int * fix_encryption_method ) =
+let received_logon_diff_key ( m, self_comp_id, encrypt_method : full_top_level_msg option * string * fix_encryption_method ) =
     match m with
     | None -> true
     | Some msg ->
@@ -223,10 +228,11 @@ let logon_sent_out ( m, encrypt_method : full_top_level_msg option * fix_encrypt
 ;;
 
 (** Logon VG.4.1 *)
-verify encrypt_key_different_logon_sent ( engine, new_encrypt_method : fix_engine_state * fix_encryption_method ) =
+theorem encrypt_key_different_logon_sent ( engine, new_encrypt_method : fix_engine_state * fix_encryption_method ) =
     let engine' = one_step ( engine ) in
     (   engine.fe_cache = [] &&
         engine.fe_curr_mode = LogonInitiated &&
+        engine.fe_curr_status = Normal &&
         engine.fe_encrypt_method <> new_encrypt_method &&
         received_logon_diff_key ( engine.incoming_fix_msg, engine.fe_comp_id, new_encrypt_method ) &&
         engine.fe_num_logons_sent < engine.fe_max_num_logons_sent
@@ -236,6 +242,7 @@ verify encrypt_key_different_logon_sent ( engine, new_encrypt_method : fix_engin
         engine'.fe_num_logons_sent = (1 + engine.fe_num_logons_sent)
     )
 ;;
+(*
 
 (** Logon VG.4.2 *)
 verify max_num_logons_breached_error ( engine : fix_engine_state ) =
@@ -307,3 +314,4 @@ let is_next_expected_msg_seq_num_present ( m, next_seq_num : full_top_level_msg 
 
 
 verify
+*)

@@ -117,36 +117,26 @@ theorem float_Mult_4_4_preserves_precision (x, y) =
 ;;
 *)
 
-(* Not proved. *)
-(*
-! Breaks imandra
-*)
+(* Not true. *)
 theorem float_Mult_4_4_associative (x, y, z) =
   let a = float_Mult_4_4 (float_Mult_4_4 x y) z in
   let b = float_Mult_4_4 x (float_Mult_4_4 y z) in
   float_Equal_4_4 a b
 ;; 
 
-(* Not proved. *)
-(*
-! Breaks imandra
+(* Not true. *)
 theorem float_Add_Mult_left_distributive (x, y, z) =
   let a = float_Mult_4_4 x (float_Add_4_4 y z) in
   let b = float_Add_4_4 (float_Mult_4_4 x y) (float_Mult_4_4 x z) in
   float_Equal_4_4 a b
 ;; 
-*)
 
 (* Not proved. *)
-(* theorem float_Add_Mult_right_distributive (x, y, z) =
- *   float_Equal_4_4
- *     ( float_Mult_4_4 (float_Add (x, y), z)
- *     , float_Add
- *         ( float_Mult_4_4 (x, z)
- *         , float_Mult_4_4 (y, z)
- *         )
- *     )
- * ;; *)
+theorem float_Add_Mult_right_distributive (x, y, z) =
+  let a = float_Mult_4_4 (float_Add_4_4 x y) z in
+  let b = float_Add_4_4 (float_Mult_4_4 x y) (float_Mult_4_4 y z) in
+  float_Equal_4_4 a b
+;; 
 
 (* NEGATION *)
 theorem float_double_Neg (x) =
@@ -169,6 +159,7 @@ theorem float_Div_identity (x, one) =
 ;;
 
 theorem float_Div_zero_by_x (zero, x) =
+  not (float_is_zero_4 x) ==>
   float_is_zero_4 zero ==>
   float_is_zero_4 (float_Div_4_4 zero x) 
 ;;
@@ -188,14 +179,10 @@ theorem float_Div_4_4_preserves_precision (x, y) =
 ;;
 *)
 
-(* Not proved. *)
-(* theorem float_Add_Div_right_distributive (x, y, z) =
- *   float_Equal_4_4
- *     ( float_Div_4_4 (float_Add(x, y), z)
- *     , float_Add
- *         ( float_Div_4_4 (x, z)
- *         , float_Div_4_4 (y, z)
- *         )
- *     )
- * ;; *)
+(* Not true. *)
+theorem float_Add_Div_right_distributive (x, y, z) =
+  let a = float_Div_4_4 (float_Add_4_4 x y) z in
+  let b = float_Add_4_4 (float_Div_4_4 x y) (float_Div_4_4 y z) in
+  float_Equal_4_4 a b
+;; 
 
