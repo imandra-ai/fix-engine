@@ -17,5 +17,6 @@ depends: [
   "ocamlbuild" {build}
   "topkg" {build}
   "yojson"
-  "lwt" {>= "2.6.0" & < "2.7.0" }
+  "lwt" {= "4.0.1"}
+  "cmdliner"
 ]

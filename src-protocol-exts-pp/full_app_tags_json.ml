@@ -1,8 +1,6 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Yojson;;
 open Full_app_tags;;
-(* @meta[imandra_ignore] off @end *)
 
 let full_app_msg_tag_to_string ( tag ) =
     (match tag with

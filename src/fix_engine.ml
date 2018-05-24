@@ -2,15 +2,13 @@
 (***
     
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     fix_engine.ml
     
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Datetime;;
-open Base_types;;
 open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_app_messages;;
@@ -18,7 +16,6 @@ open Full_messages;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
 open Fix_engine_transitions;;
-(* @meta[imandra_ignore] off @end *)
 
 (** Process incoming internal transition message. *)
 let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_state) = 
@@ -39,7 +36,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
                                 fe_curr_mode            = WaitingForHeartbeat; 
                                 outgoing_fix_msg        = Some ( ValidMsg (test_request_msg));
                                 outgoing_seq_num        = engine'.outgoing_seq_num + 1;
-                                last_test_req_id        = engine'.last_test_req_id + 1;
+                                last_test_req_id        = engine'.last_test_req_id ; (* How to increment string *)
                                 fe_last_time_data_sent  = engine'.fe_curr_time;
                                 fe_history              = add_msg_to_history ( engine'.fe_history, test_request_msg );
                         }

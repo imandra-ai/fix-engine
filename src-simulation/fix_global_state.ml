@@ -45,7 +45,7 @@ let rec send_messages_list messages engine_state fix_callback =
 ;;
 
 (** Populates string hashes, associated with the given message *)
-let process_strings msg : unit =
+(*let process_strings msg : unit =
     let open Full_messages in
     match msg with
     | ValidMsg msg -> begin
@@ -56,7 +56,7 @@ let process_strings msg : unit =
         | _ -> ()
         end
     | _ -> ()
-;;
+;;*)
 
 let rec while_busy_loop state =
     let engine_state = state.engine_state in
@@ -108,7 +108,7 @@ let rec main_loop state =
     let engine_state = match incoming with 
         | Internal_Message msg -> { engine_state with incoming_int_msg = Some msg } 
         | FIX_Message msg ->
-            let () = process_strings msg in 
+            (*let () = process_strings msg in *)
             { engine_state with incoming_fix_msg = Some msg }  
         | _ -> engine_state
         in

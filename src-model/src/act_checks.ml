@@ -1,8 +1,6 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open State;;
 open Actions;;
-(* @meta[imandra_ignore] off @end *)
 
 let is_valid_action_x ( action_data : m_action_fix_x ) =
     true

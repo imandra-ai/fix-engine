@@ -1,5 +1,4 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Msg_defaults;;
 open Msg_check_fields;;
 open State;;
@@ -8,7 +7,6 @@ open Msg_reject;;
 open Msg_check_types;;
 open Model_messages;;
 open Msg_receive;;
-(* @meta[imandra_ignore] off @end *)
 
 let process_NewOrderSingle ( m_state , msg_data : model_state * mod_newordersingle_data ) =
     let msg_data = assign_defaults_NewOrderSingle (msg_data) in

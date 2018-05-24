@@ -1,19 +1,16 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Full_app_enums;;
-open Base_types;;
 open Datetime;;
 open Numeric;;
 open Full_app_records;;
 open Full_app_tags;;
-(* @meta[imandra_ignore] off @end *)
 
 (** Advertisement messages are used to announce completed transactions.*)
 type full_fix_advertisement_data = {
-    f_Advertisement_AdvId : fix_string;
+    f_Advertisement_AdvId : string;
     f_Advertisement_AdvTransType : fix_advtranstype;
     (** Required for Cancel and Replace AdvTransType messages*)
-    f_Advertisement_AdvRefID : fix_string option;
+    f_Advertisement_AdvRefID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_Advertisement_Instrument : fix_instrument;
     (** Number of legs
@@ -28,31 +25,31 @@ type full_fix_advertisement_data = {
     f_Advertisement_Currency : fix_currency option;
     f_Advertisement_TradeDate : fix_localmktdate option;
     f_Advertisement_TransactTime : fix_utctimestamp option;
-    f_Advertisement_Text : fix_string option;
+    f_Advertisement_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_Advertisement_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_Advertisement_EncodedText : fix_string option;
+    f_Advertisement_EncodedText : string option;
     (** A URL (Uniform Resource Locator) link to additional information (i.e. http://www.XYZ.com/research.html)*)
-    f_Advertisement_URLLink : fix_string option;
+    f_Advertisement_URLLink : string option;
     f_Advertisement_LastMkt : fix_exchange option;
-    f_Advertisement_TradingSessionID : fix_string option;
-    f_Advertisement_TradingSessionSubID : fix_string option
+    f_Advertisement_TradingSessionID : string option;
+    f_Advertisement_TradingSessionSubID : string option
 }
 ;;
 
 (** The Allocation Instruction message provides the ability to specify how an order or set of orders should be subdivided amongst one or more accounts. In versions of FIX prior to version 4.4, this same message was known as the Allocation message. Note in versions of FIX prior to version 4.4, the allocation message was also used to communicate fee and expense details from the Sellside to the Buyside. This role has now been removed from the Allocation Instruction and is now performed by the new (to version 4.4) Allocation Report and Confirmation messages.,The Allocation Report message should be used for the Sell-side Initiated Allocation role as defined in previous versions of the protocol.*)
 type full_fix_allocationinstruction_data = {
     (** Unique identifier for this allocation instruction message*)
-    f_AllocationInstruction_AllocID : fix_string;
+    f_AllocationInstruction_AllocID : string;
     (** i.e. New, Cancel, Replace*)
     f_AllocationInstruction_AllocTransType : fix_alloctranstype;
     (** Specifies the purpose or type of Allocation message*)
     f_AllocationInstruction_AllocType : fix_alloctype;
     (** Optional second identifier for this allocation instruction (need not be unique)*)
-    f_AllocationInstruction_SecondaryAllocID : fix_string option;
+    f_AllocationInstruction_SecondaryAllocID : string option;
     (** Required for AllocTransType = Replace or Cancel*)
-    f_AllocationInstruction_RefAllocID : fix_string option;
+    f_AllocationInstruction_RefAllocID : string option;
     (** Required for AllocTransType = Replace or Cancel
      Gives the reason for replacing or cancelling the allocation instruction*)
     f_AllocationInstruction_AllocCancReplaceReason : fix_alloccancreplacereason option;
@@ -60,11 +57,11 @@ type full_fix_allocationinstruction_data = {
      Indicates status that is requested to be transmitted to counterparty by the intermediary (i.e. clearing house)*)
     f_AllocationInstruction_AllocIntermedReqType : fix_allocintermedreqtype option;
     (** Can be used to link two different Allocation messages (each with unique AllocID) together, i.e. for F/X "Netting" or "Swaps"*)
-    f_AllocationInstruction_AllocLinkID : fix_string option;
+    f_AllocationInstruction_AllocLinkID : string option;
     (** Can be used to link two different Allocation messages and identifies the type of link. Required if AllocLinkID is specified.*)
     f_AllocationInstruction_AllocLinkType : fix_alloclinktype option;
     (** Can be used with AllocType=" Ready-To-Book "*)
-    f_AllocationInstruction_BookingRefID : fix_string option;
+    f_AllocationInstruction_BookingRefID : string option;
     (** Indicates how the orders being booked and allocated by this message are identified, i.e. by explicit definition in the NoOrders group or not.*)
     f_AllocationInstruction_AllocNoOrdersType : fix_allocnoorderstype;
     (** Indicates number of orders to be combined for allocation. If order(s) were manually delivered set to 1 (one).Required when AllocNoOrdersType = 1*)
@@ -89,8 +86,8 @@ type full_fix_allocationinstruction_data = {
     (** Market of the executions.*)
     f_AllocationInstruction_LastMkt : fix_exchange option;
     f_AllocationInstruction_TradeOriginationDate : fix_localmktdate option;
-    f_AllocationInstruction_TradingSessionID : fix_string option;
-    f_AllocationInstruction_TradingSessionSubID : fix_string option;
+    f_AllocationInstruction_TradingSessionID : string option;
+    f_AllocationInstruction_TradingSessionSubID : string option;
     f_AllocationInstruction_PriceType : fix_pricetype option;
     (** For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points).*)
     f_AllocationInstruction_AvgPx : fix_float_4;
@@ -120,11 +117,11 @@ type full_fix_allocationinstruction_data = {
     f_AllocationInstruction_PositionEffect : fix_positioneffect option;
     (** Indicates if Allocation has been automatically accepted on behalf of the Carry Firm by the Clearing House*)
     f_AllocationInstruction_AutoAcceptIndicator : bool option;
-    f_AllocationInstruction_Text : fix_string option;
+    f_AllocationInstruction_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_AllocationInstruction_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_AllocationInstruction_EncodedText : fix_string option;
+    f_AllocationInstruction_EncodedText : string option;
     (** Applicable for Convertible Bonds and fixed income*)
     f_AllocationInstruction_NumDaysInterest : int option;
     (** Applicable for Convertible Bonds and fixed income*)
@@ -159,11 +156,11 @@ type full_fix_allocationinstruction_data = {
 (** In versions of FIX prior to version 4.4, this message was known as the Allocation ACK message.
  The Allocation Instruction Ack message is used to acknowledge the receipt of and provide status for an Allocation Instruction message.*)
 type full_fix_allocationinstructionack_data = {
-    f_AllocationInstructionAck_AllocID : fix_string;
+    f_AllocationInstructionAck_AllocID : string;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_AllocationInstructionAck_Parties : fix_rg_parties;
     (** Optional second identifier for the allocation instruction being acknowledged (need not be unique)*)
-    f_AllocationInstructionAck_SecondaryAllocID : fix_string option;
+    f_AllocationInstructionAck_SecondaryAllocID : string option;
     f_AllocationInstructionAck_TradeDate : fix_localmktdate option;
     (** Date/Time Allocation Instruction Ack generated*)
     f_AllocationInstructionAck_TransactTime : fix_utctimestamp;
@@ -180,11 +177,11 @@ type full_fix_allocationinstructionack_data = {
     f_AllocationInstructionAck_Product : fix_product option;
     f_AllocationInstructionAck_SecurityType : fix_securitytype option;
     (** Can include explanation for AllocRejCode = 7 (other)*)
-    f_AllocationInstructionAck_Text : fix_string option;
+    f_AllocationInstructionAck_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_AllocationInstructionAck_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_AllocationInstructionAck_EncodedText : fix_string option;
+    f_AllocationInstructionAck_EncodedText : string option;
     (** This repeating group is optionally used for messages with AllocStatus = 2 (account level reject) to provide details of the individual accounts that caused the rejection, together with reject reasons. This group should not be populated when AllocStatus has any other value.
      Indicates number of allocation groups to follow.*)
     f_AllocationInstructionAck_AllocAckGrp : fix_rg_allocackgrp
@@ -195,32 +192,32 @@ type full_fix_allocationinstructionack_data = {
  Note the response to the Allocation Report message is the Allocation Report Ack message. In versions of FIX prior to version 4.4, the Allocation ACK served this purpose.*)
 type full_fix_allocationreport_data = {
     (** Unique identifier for this message*)
-    f_AllocationReport_AllocReportID : fix_string;
-    f_AllocationReport_AllocID : fix_string option;
+    f_AllocationReport_AllocReportID : string;
+    f_AllocationReport_AllocID : string option;
     (** i.e. New, Cancel, Replace*)
     f_AllocationReport_AllocTransType : fix_alloctranstype;
     (** Required for AllocTransType = Replace or Cancel*)
-    f_AllocationReport_AllocReportRefID : fix_string option;
+    f_AllocationReport_AllocReportRefID : string option;
     (** Required for AllocTransType = Replace or Cancel
      Gives the reason for replacing or cancelling the allocation report*)
     f_AllocationReport_AllocCancReplaceReason : fix_alloccancreplacereason option;
     (** Optional second identifier for this allocation instruction (need not be unique)*)
-    f_AllocationReport_SecondaryAllocID : fix_string option;
+    f_AllocationReport_SecondaryAllocID : string option;
     (** Specifies the purpose or type of Allocation Report message*)
     f_AllocationReport_AllocReportType : fix_allocreporttype;
     f_AllocationReport_AllocStatus : fix_allocstatus;
     (** Required for AllocStatus = 1 (rejected)*)
     f_AllocationReport_AllocRejCode : fix_allocrejcode option;
     (** Required for AllocTransType = Replace or Cancel*)
-    f_AllocationReport_RefAllocID : fix_string option;
+    f_AllocationReport_RefAllocID : string option;
     (** Required if AllocReportType = 8 (Request to Intermediary)
      Indicates status that is requested to be transmitted to counterparty by the intermediary (i.e. clearing house)*)
     f_AllocationReport_AllocIntermedReqType : fix_allocintermedreqtype option;
     (** Can be used to link two different Allocation messages (each with unique AllocID) together, i.e. for F/X "Netting" or "Swaps"*)
-    f_AllocationReport_AllocLinkID : fix_string option;
+    f_AllocationReport_AllocLinkID : string option;
     (** Can be used to link two different Allocation messages and identifies the type of link. Required if AllocLinkID is specified.*)
     f_AllocationReport_AllocLinkType : fix_alloclinktype option;
-    f_AllocationReport_BookingRefID : fix_string option;
+    f_AllocationReport_BookingRefID : string option;
     (** Indicates how the orders being booked and allocated by this message are identified, i.e. by explicit definition in the NoOrders group or not.*)
     f_AllocationReport_AllocNoOrdersType : fix_allocnoorderstype;
     (** Indicates number of orders to be combined for allocation. If order(s) were manually delivered set to 1 (one).Required when AllocNoOrdersType = 1*)
@@ -245,8 +242,8 @@ type full_fix_allocationreport_data = {
     (** Market of the executions.*)
     f_AllocationReport_LastMkt : fix_exchange option;
     f_AllocationReport_TradeOriginationDate : fix_localmktdate option;
-    f_AllocationReport_TradingSessionID : fix_string option;
-    f_AllocationReport_TradingSessionSubID : fix_string option;
+    f_AllocationReport_TradingSessionID : string option;
+    f_AllocationReport_TradingSessionSubID : string option;
     f_AllocationReport_PriceType : fix_pricetype option;
     (** For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points).*)
     f_AllocationReport_AvgPx : fix_float_4;
@@ -276,11 +273,11 @@ type full_fix_allocationreport_data = {
     f_AllocationReport_PositionEffect : fix_positioneffect option;
     (** Indicates if Allocation has been automatically accepted on behalf of the Carry Firm by the Clearing House*)
     f_AllocationReport_AutoAcceptIndicator : bool option;
-    f_AllocationReport_Text : fix_string option;
+    f_AllocationReport_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_AllocationReport_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_AllocationReport_EncodedText : fix_string option;
+    f_AllocationReport_EncodedText : string option;
     (** Applicable for Convertible Bonds and fixed income*)
     f_AllocationReport_NumDaysInterest : int option;
     (** Applicable for Convertible Bonds and fixed income*)
@@ -314,12 +311,12 @@ type full_fix_allocationreport_data = {
 
 (** The Allocation Report Ack message is used to acknowledge the receipt of and provide status for an Allocation Report message.*)
 type full_fix_allocationreportack_data = {
-    f_AllocationReportAck_AllocReportID : fix_string;
-    f_AllocationReportAck_AllocID : fix_string;
+    f_AllocationReportAck_AllocReportID : string;
+    f_AllocationReportAck_AllocID : string;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_AllocationReportAck_Parties : fix_rg_parties;
     (** Optional second identifier for the allocation report being acknowledged (need not be unique)*)
-    f_AllocationReportAck_SecondaryAllocID : fix_string option;
+    f_AllocationReportAck_SecondaryAllocID : string option;
     f_AllocationReportAck_TradeDate : fix_localmktdate option;
     (** Date/Time Allocation Report Ack generated*)
     f_AllocationReportAck_TransactTime : fix_utctimestamp;
@@ -336,11 +333,11 @@ type full_fix_allocationreportack_data = {
     f_AllocationReportAck_Product : fix_product option;
     f_AllocationReportAck_SecurityType : fix_securitytype option;
     (** Can include explanation for AllocRejCode = 7 (other)*)
-    f_AllocationReportAck_Text : fix_string option;
+    f_AllocationReportAck_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_AllocationReportAck_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_AllocationReportAck_EncodedText : fix_string option;
+    f_AllocationReportAck_EncodedText : string option;
     (** This repeating group is optionally used for messages with AllocStatus = 2 (account level reject) to provide details of the individual accounts that caused the rejection, together with reject reasons. This group should not be populated where AllocStatus has any other value.
      Indicates number of allocation groups to follow.*)
     f_AllocationReportAck_AllocAckGrp : fix_rg_allocackgrp
@@ -350,7 +347,7 @@ type full_fix_allocationreportack_data = {
 (** Assignment Reports are sent from a clearing house to counterparties, such as a clearing firm as a result of the assignment process.*)
 type full_fix_assignmentreport_data = {
     (** Unique identifier for the Assignment report*)
-    f_AssignmentReport_AsgnRptID : fix_string;
+    f_AssignmentReport_AsgnRptID : string;
     (** Total Number of Assignment Reports being returned to a firm*)
     f_AssignmentReport_TotNumAssignmentReports : int option;
     f_AssignmentReport_LastRptRequested : bool option;
@@ -361,7 +358,7 @@ type full_fix_assignmentreport_data = {
      Position Account*)
     f_AssignmentReport_Parties : fix_rg_parties;
     (** Customer Account*)
-    f_AssignmentReport_Account : fix_string option;
+    f_AssignmentReport_Account : string option;
     (** Type of account associated with the order (Origin)*)
     f_AssignmentReport_AccountType : fix_accounttype;
     (** CFI Code - Market Indicator (col 4) used to indicate Market of Assignment*)
@@ -399,25 +396,25 @@ type full_fix_assignmentreport_data = {
     (** Settlement Session - EOD or Intraday*)
     f_AssignmentReport_SettlSessID : fix_settlsessid;
     (** Settlement Session enumerator*)
-    f_AssignmentReport_SettlSessSubID : fix_string;
+    f_AssignmentReport_SettlSessSubID : string;
     (** Business date of assignment*)
     f_AssignmentReport_ClearingBusinessDate : fix_localmktdate;
-    f_AssignmentReport_Text : fix_string option;
+    f_AssignmentReport_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_AssignmentReport_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_AssignmentReport_EncodedText : fix_string option
+    f_AssignmentReport_EncodedText : string option
 }
 ;;
 
 (** The BidRequest Message can be used in one of two ways depending on which market conventions are being followed.*)
 type full_fix_bidrequest_data = {
     (** Required to relate the bid response*)
-    f_BidRequest_BidID : fix_string option;
-    f_BidRequest_ClientBidID : fix_string;
+    f_BidRequest_BidID : string option;
+    f_BidRequest_ClientBidID : string;
     (** Identifies the Bid Request message transaction type*)
     f_BidRequest_BidRequestTransType : fix_bidrequesttranstype;
-    f_BidRequest_ListName : fix_string option;
+    f_BidRequest_ListName : string option;
     f_BidRequest_TotNoRelatedSym : int;
     (** e.g. "Non Disclosed", "Disclosed", No Bidding Process*)
     f_BidRequest_BidType : fix_bidtype;
@@ -455,11 +452,11 @@ type full_fix_bidrequest_data = {
     f_BidRequest_BasisPxType : fix_basispxtype;
     (** Used when BasisPxType = "C"*)
     f_BidRequest_StrikeTime : fix_utctimestamp option;
-    f_BidRequest_Text : fix_string option;
+    f_BidRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_BidRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_BidRequest_EncodedText : fix_string option
+    f_BidRequest_EncodedText : string option
 }
 ;;
 
@@ -467,8 +464,8 @@ type full_fix_bidrequest_data = {
        In the "Non disclosed" convention the Bid Response message can be used to supply a bid based on the sector, country, index and liquidity information contained within the corresponding bid request message. See "Program/Basket/List Trading"  for an example.
        In the "Disclosed" convention the Bid Response message can be used to supply bids based on the List Order Detail messages sent in advance of the corresponding Bid Request message.*)
 type full_fix_bidresponse_data = {
-    f_BidResponse_BidID : fix_string option;
-    f_BidResponse_ClientBidID : fix_string option;
+    f_BidResponse_BidID : string option;
+    f_BidResponse_ClientBidID : string option;
     (** Number of bid repeating groups*)
     f_BidResponse_BidCompRspGrp : fix_rg_bidcomprspgrp
 }
@@ -477,31 +474,31 @@ type full_fix_bidresponse_data = {
 (** Used to assign collateral to cover a trading position. This message can be sent unsolicited or in reply to a Collateral Request message.*)
 type full_fix_collateralassignment_data = {
     (** Unique Identifer for collateral assignment*)
-    f_CollateralAssignment_CollAsgnID : fix_string;
+    f_CollateralAssignment_CollAsgnID : string;
     (** Identifer of CollReqID to which the Collateral Assignment is in response*)
-    f_CollateralAssignment_CollReqID : fix_string option;
+    f_CollateralAssignment_CollReqID : string option;
     (** Reason for collateral assignment*)
     f_CollateralAssignment_CollAsgnReason : fix_collasgnreason;
     (** Collateral Transaction Type*)
     f_CollateralAssignment_CollAsgnTransType : fix_collasgntranstype;
     (** Collateral assignment to which this transaction refers*)
-    f_CollateralAssignment_CollAsgnRefID : fix_string option;
+    f_CollateralAssignment_CollAsgnRefID : string option;
     f_CollateralAssignment_TransactTime : fix_utctimestamp;
     (** For an Initial assignment, time by which a response is expected*)
     f_CollateralAssignment_ExpireTime : fix_utctimestamp option;
     f_CollateralAssignment_Parties : fix_rg_parties;
     (** Customer Account*)
-    f_CollateralAssignment_Account : fix_string option;
+    f_CollateralAssignment_Account : string option;
     (** Type of account associated with the order (Origin)*)
     f_CollateralAssignment_AccountType : fix_accounttype option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralAssignment_ClOrdID : fix_string option;
+    f_CollateralAssignment_ClOrdID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralAssignment_OrderID : fix_string option;
+    f_CollateralAssignment_OrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralAssignment_SecondaryOrderID : fix_string option;
+    f_CollateralAssignment_SecondaryOrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralAssignment_SecondaryClOrdID : fix_string option;
+    f_CollateralAssignment_SecondaryClOrdID : string option;
     (** Executions for which collateral is required*)
     f_CollateralAssignment_ExecCollGrp : fix_rg_execcollgrp;
     (** Trades for which collateral is required*)
@@ -540,24 +537,24 @@ type full_fix_collateralassignment_data = {
     (** Insert here the set of "SettlInstructionsData" fields defined in "Common Components of Application Messages"*)
     f_CollateralAssignment_SettlInstructionsData : fix_settlinstructionsdata;
     (** Trading Session in which trade occurred*)
-    f_CollateralAssignment_TradingSessionID : fix_string option;
+    f_CollateralAssignment_TradingSessionID : string option;
     (** Trading Session Subid in which trade occurred*)
-    f_CollateralAssignment_TradingSessionSubID : fix_string option;
+    f_CollateralAssignment_TradingSessionSubID : string option;
     f_CollateralAssignment_SettlSessID : fix_settlsessid option;
-    f_CollateralAssignment_SettlSessSubID : fix_string option;
+    f_CollateralAssignment_SettlSessSubID : string option;
     f_CollateralAssignment_ClearingBusinessDate : fix_localmktdate option;
-    f_CollateralAssignment_Text : fix_string option;
+    f_CollateralAssignment_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_CollateralAssignment_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_CollateralAssignment_EncodedText : fix_string option
+    f_CollateralAssignment_EncodedText : string option
 }
 ;;
 
 (** Used to inquire for collateral status*)
 type full_fix_collateralinquiry_data = {
     (** Identifier for the collateral inquiry to which this message is a reply*)
-    f_CollateralInquiry_CollInquiryID : fix_string option;
+    f_CollateralInquiry_CollInquiryID : string option;
     (** Number of qualifiers to inquiry*)
     f_CollateralInquiry_CollInqQualGrp : fix_rg_collinqqualgrp;
     (** Used to subscribe / unsubscribe for collateral status reports.
@@ -566,20 +563,20 @@ type full_fix_collateralinquiry_data = {
     (** Ability to specify whether the response to the request should be delivered inband or via pre-arranged out-of-band transport.*)
     f_CollateralInquiry_ResponseTransportType : fix_responsetransporttype option;
     (** URI destination name. Used if ResponseTransportType is out-of-band.*)
-    f_CollateralInquiry_ResponseDestination : fix_string option;
+    f_CollateralInquiry_ResponseDestination : string option;
     f_CollateralInquiry_Parties : fix_rg_parties;
     (** Customer Account*)
-    f_CollateralInquiry_Account : fix_string option;
+    f_CollateralInquiry_Account : string option;
     (** Type of account associated with the order (Origin)*)
     f_CollateralInquiry_AccountType : fix_accounttype option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralInquiry_ClOrdID : fix_string option;
+    f_CollateralInquiry_ClOrdID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralInquiry_OrderID : fix_string option;
+    f_CollateralInquiry_OrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralInquiry_SecondaryOrderID : fix_string option;
+    f_CollateralInquiry_SecondaryOrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralInquiry_SecondaryClOrdID : fix_string option;
+    f_CollateralInquiry_SecondaryClOrdID : string option;
     (** Executions for which collateral is required*)
     f_CollateralInquiry_ExecCollGrp : fix_rg_execcollgrp;
     (** Trades for which collateral is required*)
@@ -615,24 +612,24 @@ type full_fix_collateralinquiry_data = {
     (** Insert here the set of "SettlInstructionsData" fields defined in "Common Components of Application Messages"*)
     f_CollateralInquiry_SettlInstructionsData : fix_settlinstructionsdata;
     (** Trading Session in which trade occurred*)
-    f_CollateralInquiry_TradingSessionID : fix_string option;
+    f_CollateralInquiry_TradingSessionID : string option;
     (** Trading Session Subid in which trade occurred*)
-    f_CollateralInquiry_TradingSessionSubID : fix_string option;
+    f_CollateralInquiry_TradingSessionSubID : string option;
     f_CollateralInquiry_SettlSessID : fix_settlsessid option;
-    f_CollateralInquiry_SettlSessSubID : fix_string option;
+    f_CollateralInquiry_SettlSessSubID : string option;
     f_CollateralInquiry_ClearingBusinessDate : fix_localmktdate option;
-    f_CollateralInquiry_Text : fix_string option;
+    f_CollateralInquiry_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_CollateralInquiry_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_CollateralInquiry_EncodedText : fix_string option
+    f_CollateralInquiry_EncodedText : string option
 }
 ;;
 
 (** Used to respond to a Collateral Inquiry*)
 type full_fix_collateralinquiryack_data = {
     (** Identifier for the collateral inquiry to which this message is a reply*)
-    f_CollateralInquiryAck_CollInquiryID : fix_string;
+    f_CollateralInquiryAck_CollInquiryID : string;
     (** Status of the Collateral Inquiry referenced by CollInquiryID*)
     f_CollateralInquiryAck_CollInquiryStatus : fix_collinquirystatus;
     (** Result of the Collateral Inquriy referenced by CollInquiryID - specifies any errors or warnings*)
@@ -643,17 +640,17 @@ type full_fix_collateralinquiryack_data = {
     f_CollateralInquiryAck_TotNumReports : int option;
     f_CollateralInquiryAck_Parties : fix_rg_parties;
     (** Customer Account*)
-    f_CollateralInquiryAck_Account : fix_string option;
+    f_CollateralInquiryAck_Account : string option;
     (** Type of account associated with the order (Origin)*)
     f_CollateralInquiryAck_AccountType : fix_accounttype option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralInquiryAck_ClOrdID : fix_string option;
+    f_CollateralInquiryAck_ClOrdID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralInquiryAck_OrderID : fix_string option;
+    f_CollateralInquiryAck_OrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralInquiryAck_SecondaryOrderID : fix_string option;
+    f_CollateralInquiryAck_SecondaryOrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralInquiryAck_SecondaryClOrdID : fix_string option;
+    f_CollateralInquiryAck_SecondaryClOrdID : string option;
     (** Executions for which collateral is required*)
     f_CollateralInquiryAck_ExecCollGrp : fix_rg_execcollgrp;
     (** Trades for which collateral is required*)
@@ -671,47 +668,47 @@ type full_fix_collateralinquiryack_data = {
     (** Number of legs that make up the Security*)
     f_CollateralInquiryAck_UndInstrmtGrp : fix_rg_undinstrmtgrp;
     (** Trading Session in which trade occurred*)
-    f_CollateralInquiryAck_TradingSessionID : fix_string option;
+    f_CollateralInquiryAck_TradingSessionID : string option;
     (** Trading Session Subid in which trade occurred*)
-    f_CollateralInquiryAck_TradingSessionSubID : fix_string option;
+    f_CollateralInquiryAck_TradingSessionSubID : string option;
     f_CollateralInquiryAck_SettlSessID : fix_settlsessid option;
-    f_CollateralInquiryAck_SettlSessSubID : fix_string option;
+    f_CollateralInquiryAck_SettlSessSubID : string option;
     f_CollateralInquiryAck_ClearingBusinessDate : fix_localmktdate option;
     (** Ability to specify whether the response to the request should be delivered inband or via pre-arranged out-of-band transport.*)
     f_CollateralInquiryAck_ResponseTransportType : fix_responsetransporttype option;
     (** URI destination name. Used if ResponseTransportType is out-of-band.*)
-    f_CollateralInquiryAck_ResponseDestination : fix_string option;
-    f_CollateralInquiryAck_Text : fix_string option;
+    f_CollateralInquiryAck_ResponseDestination : string option;
+    f_CollateralInquiryAck_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_CollateralInquiryAck_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_CollateralInquiryAck_EncodedText : fix_string option
+    f_CollateralInquiryAck_EncodedText : string option
 }
 ;;
 
 (** Used to report collateral status when responding to a Collateral Inquiry message.*)
 type full_fix_collateralreport_data = {
     (** Unique Identifer for collateral report*)
-    f_CollateralReport_CollRptID : fix_string;
+    f_CollateralReport_CollRptID : string;
     (** Identifier for the collateral inquiry to which this message is a reply*)
-    f_CollateralReport_CollInquiryID : fix_string option;
+    f_CollateralReport_CollInquiryID : string option;
     (** Collateral status*)
     f_CollateralReport_CollStatus : fix_collstatus;
     f_CollateralReport_TotNumReports : int option;
     f_CollateralReport_LastRptRequested : bool option;
     f_CollateralReport_Parties : fix_rg_parties;
     (** Customer Account*)
-    f_CollateralReport_Account : fix_string option;
+    f_CollateralReport_Account : string option;
     (** Type of account associated with the order (Origin)*)
     f_CollateralReport_AccountType : fix_accounttype option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralReport_ClOrdID : fix_string option;
+    f_CollateralReport_ClOrdID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralReport_OrderID : fix_string option;
+    f_CollateralReport_OrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralReport_SecondaryOrderID : fix_string option;
+    f_CollateralReport_SecondaryOrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralReport_SecondaryClOrdID : fix_string option;
+    f_CollateralReport_SecondaryClOrdID : string option;
     (** Executions for which collateral is required*)
     f_CollateralReport_ExecCollGrp : fix_rg_execcollgrp;
     (** Trades for which collateral is required*)
@@ -750,24 +747,24 @@ type full_fix_collateralreport_data = {
     (** Insert here the set of "SettlInstructionsData" fields defined in "Common Components of Application Messages"*)
     f_CollateralReport_SettlInstructionsData : fix_settlinstructionsdata;
     (** Trading Session in which trade occurred*)
-    f_CollateralReport_TradingSessionID : fix_string option;
+    f_CollateralReport_TradingSessionID : string option;
     (** Trading Session Subid in which trade occurred*)
-    f_CollateralReport_TradingSessionSubID : fix_string option;
+    f_CollateralReport_TradingSessionSubID : string option;
     f_CollateralReport_SettlSessID : fix_settlsessid option;
-    f_CollateralReport_SettlSessSubID : fix_string option;
+    f_CollateralReport_SettlSessSubID : string option;
     f_CollateralReport_ClearingBusinessDate : fix_localmktdate option;
-    f_CollateralReport_Text : fix_string option;
+    f_CollateralReport_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_CollateralReport_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_CollateralReport_EncodedText : fix_string option
+    f_CollateralReport_EncodedText : string option
 }
 ;;
 
 (** An initiator that requires collateral from a respondent sends a Collateral Request. The initiator can be either counterparty to a trade in a two party model or an intermediary such as an ATS or clearinghouse in a three party model. A Collateral Assignment is expected as a response to a request for collateral.*)
 type full_fix_collateralrequest_data = {
     (** Unique identifier for collateral request*)
-    f_CollateralRequest_CollReqID : fix_string;
+    f_CollateralRequest_CollReqID : string;
     (** Reason collateral assignment is being requested*)
     f_CollateralRequest_CollAsgnReason : fix_collasgnreason;
     f_CollateralRequest_TransactTime : fix_utctimestamp;
@@ -775,17 +772,17 @@ type full_fix_collateralrequest_data = {
     f_CollateralRequest_ExpireTime : fix_utctimestamp option;
     f_CollateralRequest_Parties : fix_rg_parties;
     (** Customer Account*)
-    f_CollateralRequest_Account : fix_string option;
+    f_CollateralRequest_Account : string option;
     (** Type of account associated with the order (Origin)*)
     f_CollateralRequest_AccountType : fix_accounttype option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralRequest_ClOrdID : fix_string option;
+    f_CollateralRequest_ClOrdID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralRequest_OrderID : fix_string option;
+    f_CollateralRequest_OrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralRequest_SecondaryOrderID : fix_string option;
+    f_CollateralRequest_SecondaryOrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralRequest_SecondaryClOrdID : fix_string option;
+    f_CollateralRequest_SecondaryClOrdID : string option;
     (** Executions for which collateral is required*)
     f_CollateralRequest_ExecCollGrp : fix_rg_execcollgrp;
     (** Trades for which collateral is required*)
@@ -822,28 +819,28 @@ type full_fix_collateralrequest_data = {
     (** Insert here the set of "Stipulations" fields defined in "Common Components of Application Messages"*)
     f_CollateralRequest_Stipulations : fix_rg_stipulations;
     (** Trading Session in which trade occurred*)
-    f_CollateralRequest_TradingSessionID : fix_string option;
+    f_CollateralRequest_TradingSessionID : string option;
     (** Trading Session Subid in which trade occurred*)
-    f_CollateralRequest_TradingSessionSubID : fix_string option;
+    f_CollateralRequest_TradingSessionSubID : string option;
     f_CollateralRequest_SettlSessID : fix_settlsessid option;
-    f_CollateralRequest_SettlSessSubID : fix_string option;
+    f_CollateralRequest_SettlSessSubID : string option;
     f_CollateralRequest_ClearingBusinessDate : fix_localmktdate option;
-    f_CollateralRequest_Text : fix_string option;
+    f_CollateralRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_CollateralRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_CollateralRequest_EncodedText : fix_string option
+    f_CollateralRequest_EncodedText : string option
 }
 ;;
 
 (** Used to respond to a Collateral Assignment message*)
 type full_fix_collateralresponse_data = {
     (** Unique identifer for the collateral response*)
-    f_CollateralResponse_CollRespID : fix_string;
+    f_CollateralResponse_CollRespID : string;
     (** Collateral assignment to which this response refers*)
-    f_CollateralResponse_CollAsgnID : fix_string;
+    f_CollateralResponse_CollAsgnID : string;
     (** Identifer of CollReqID to which the Collateral Assignment is in response*)
-    f_CollateralResponse_CollReqID : fix_string option;
+    f_CollateralResponse_CollReqID : string option;
     (** Reason collateral assignment is being requested*)
     f_CollateralResponse_CollAsgnReason : fix_collasgnreason;
     (** Collateral Transaction Type - not recommended because it causes confusion*)
@@ -855,17 +852,17 @@ type full_fix_collateralresponse_data = {
     f_CollateralResponse_TransactTime : fix_utctimestamp;
     f_CollateralResponse_Parties : fix_rg_parties;
     (** Customer Account*)
-    f_CollateralResponse_Account : fix_string option;
+    f_CollateralResponse_Account : string option;
     (** Type of account associated with the order (Origin)*)
     f_CollateralResponse_AccountType : fix_accounttype option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralResponse_ClOrdID : fix_string option;
+    f_CollateralResponse_ClOrdID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralResponse_OrderID : fix_string option;
+    f_CollateralResponse_OrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralResponse_SecondaryOrderID : fix_string option;
+    f_CollateralResponse_SecondaryOrderID : string option;
     (** Identifier fo order for which collateral is required*)
-    f_CollateralResponse_SecondaryClOrdID : fix_string option;
+    f_CollateralResponse_SecondaryClOrdID : string option;
     (** Executions for which collateral is required*)
     f_CollateralResponse_ExecCollGrp : fix_rg_execcollgrp;
     (** Trades for which collateral is required*)
@@ -901,11 +898,11 @@ type full_fix_collateralresponse_data = {
     f_CollateralResponse_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Insert here the set of "Stipulations" fields defined in "Common Components of Application Messages"*)
     f_CollateralResponse_Stipulations : fix_rg_stipulations;
-    f_CollateralResponse_Text : fix_string option;
+    f_CollateralResponse_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_CollateralResponse_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_CollateralResponse_EncodedText : fix_string option
+    f_CollateralResponse_EncodedText : string option
 }
 ;;
 
@@ -913,11 +910,11 @@ type full_fix_collateralresponse_data = {
  This message is also used to report back, confirm or exception, the booking status of each allocation instance. When the buy-side, in response, "affirms" with the ConfirmationAck message, the trade is ready to settle.*)
 type full_fix_confirmation_data = {
     (** Unique ID for this message*)
-    f_Confirmation_ConfirmID : fix_string;
+    f_Confirmation_ConfirmID : string;
     (** Mandatory if ConfirmTransType is Replace or Cancel*)
-    f_Confirmation_ConfirmRefID : fix_string option;
+    f_Confirmation_ConfirmRefID : string option;
     (** Only used when this message is used to respond to a confirmation request (to which this ID refers)*)
-    f_Confirmation_ConfirmReqID : fix_string option;
+    f_Confirmation_ConfirmReqID : string option;
     (** New, Cancel or Replace*)
     f_Confirmation_ConfirmTransType : fix_confirmtranstype;
     (** Denotes whether this message represents a confirmation or a trade status message*)
@@ -937,11 +934,11 @@ type full_fix_confirmation_data = {
     (** Indicates number of orders to be combined for allocation. If order(s) were manually delivered set to 1 (one).Required when AllocNoOrdersType = 1*)
     f_Confirmation_OrdAllocGrp : fix_rg_ordallocgrp;
     (** Used to refer to an earlier Allocation Instruction.*)
-    f_Confirmation_AllocID : fix_string option;
+    f_Confirmation_AllocID : string option;
     (** Used to refer to an earlier Allocation Instruction via its secondary identifier*)
-    f_Confirmation_SecondaryAllocID : fix_string option;
+    f_Confirmation_SecondaryAllocID : string option;
     (** Used to refer to an allocation account within an earlier Allocation Instruction.*)
-    f_Confirmation_IndividualAllocID : fix_string option;
+    f_Confirmation_IndividualAllocID : string option;
     (** Represents the time this message was generated*)
     f_Confirmation_TransactTime : fix_utctimestamp;
     f_Confirmation_TradeDate : fix_localmktdate;
@@ -971,7 +968,7 @@ type full_fix_confirmation_data = {
      ** Nested Repeating Group follows ***)
     f_Confirmation_CpctyConfGrp : fix_rg_cpctyconfgrp;
     (** Account number for the trade being confirmed by this message*)
-    f_Confirmation_AllocAccount : fix_string;
+    f_Confirmation_AllocAccount : string;
     f_Confirmation_AllocAcctIDSource : int option;
     f_Confirmation_AllocAccountType : fix_allocaccounttype option;
     (** Gross price for the trade being confirmed
@@ -986,9 +983,9 @@ type full_fix_confirmation_data = {
     f_Confirmation_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     (** Reported price (may be different to AvgPx in the event of a marked-up or marked-down principal trade)*)
     f_Confirmation_ReportedPx : fix_float_4 option;
-    f_Confirmation_Text : fix_string option;
+    f_Confirmation_Text : string option;
     f_Confirmation_EncodedTextLen : int option;
-    f_Confirmation_EncodedText : fix_string option;
+    f_Confirmation_EncodedText : string option;
     (** Used to identify whether the trade was a soft dollar trade, step in/out etc. Broker of credit, where relevant, can be specified using the Parties nested block above.*)
     f_Confirmation_ProcessCode : fix_processcode option;
     f_Confirmation_GrossTradeAmt : fix_float_4;
@@ -1032,7 +1029,7 @@ type full_fix_confirmation_data = {
 
 (** The Confirmation Ack (aka Affirmation) message is used to respond to a Confirmation message.*)
 type full_fix_confirmationack_data = {
-    f_ConfirmationAck_ConfirmID : fix_string;
+    f_ConfirmationAck_ConfirmID : string;
     f_ConfirmationAck_TradeDate : fix_localmktdate;
     (** Date/Time Allocation Instruction Ack generated*)
     f_ConfirmationAck_TransactTime : fix_utctimestamp;
@@ -1042,48 +1039,48 @@ type full_fix_confirmationack_data = {
     (** Denotes whether the financial details provided on the Confirmation were successfully matched.*)
     f_ConfirmationAck_MatchStatus : fix_matchstatus option;
     (** Can include explanation for AllocRejCode = 7 (other)*)
-    f_ConfirmationAck_Text : fix_string option;
+    f_ConfirmationAck_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_ConfirmationAck_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_ConfirmationAck_EncodedText : fix_string option
+    f_ConfirmationAck_EncodedText : string option
 }
 ;;
 
 (** The Confirmation Request message is used to request a Confirmation message.*)
 type full_fix_confirmationrequest_data = {
     (** Unique identifier for this message*)
-    f_ConfirmationRequest_ConfirmReqID : fix_string;
+    f_ConfirmationRequest_ConfirmReqID : string;
     (** Denotes whether this message is being used to request a confirmation or a trade status message*)
     f_ConfirmationRequest_ConfirmType : fix_confirmtype;
     (** Indicates number of orders to be combined for allocation. If order(s) were manually delivered set to 1 (one).Required when AllocNoOrdersType = 1*)
     f_ConfirmationRequest_OrdAllocGrp : fix_rg_ordallocgrp;
     (** Used to refer to an earlier Allocation Instruction.*)
-    f_ConfirmationRequest_AllocID : fix_string option;
+    f_ConfirmationRequest_AllocID : string option;
     (** Used to refer to an earlier Allocation Instruction via its secondary identifier*)
-    f_ConfirmationRequest_SecondaryAllocID : fix_string option;
+    f_ConfirmationRequest_SecondaryAllocID : string option;
     (** Used to refer to an allocation account within an earlier Allocation Instruction.*)
-    f_ConfirmationRequest_IndividualAllocID : fix_string option;
+    f_ConfirmationRequest_IndividualAllocID : string option;
     (** Represents the time this message was generated*)
     f_ConfirmationRequest_TransactTime : fix_utctimestamp;
     (** Account number for the trade being confirmed by this message*)
-    f_ConfirmationRequest_AllocAccount : fix_string option;
+    f_ConfirmationRequest_AllocAccount : string option;
     f_ConfirmationRequest_AllocAcctIDSource : int option;
     f_ConfirmationRequest_AllocAccountType : fix_allocaccounttype option;
-    f_ConfirmationRequest_Text : fix_string option;
+    f_ConfirmationRequest_Text : string option;
     f_ConfirmationRequest_EncodedTextLen : int option;
-    f_ConfirmationRequest_EncodedText : fix_string option
+    f_ConfirmationRequest_EncodedText : string option
 }
 ;;
 
 (** Used to modify a cross order previously submitted using the New Order - Cross message. See Order Cancel Replace Request for details concerning message usage.*)
 type full_fix_crossordercancelreplacerequest_data = {
     (** Unique identifier of most recent order as assigned by sell-side (broker, exchange, ECN).*)
-    f_CrossOrderCancelReplaceRequest_OrderID : fix_string option;
+    f_CrossOrderCancelReplaceRequest_OrderID : string option;
     (** CrossID for the replacement order*)
-    f_CrossOrderCancelReplaceRequest_CrossID : fix_string;
+    f_CrossOrderCancelReplaceRequest_CrossID : string;
     (** Must match the CrossID of the previous cross order. Same order chaining mechanism as ClOrdID/OrigClOrdID with single order Cancel/Replace.*)
-    f_CrossOrderCancelReplaceRequest_OrigCrossID : fix_string;
+    f_CrossOrderCancelReplaceRequest_OrigCrossID : string;
     f_CrossOrderCancelReplaceRequest_CrossType : fix_crosstype;
     f_CrossOrderCancelReplaceRequest_CrossPrioritization : fix_crossprioritization;
     (** Must be 1 or 2*)
@@ -1126,11 +1123,11 @@ type full_fix_crossordercancelreplacerequest_data = {
     (** Insert here the set of "YieldData" (yield-related) fields defined in "Common Components of Application Messages"*)
     f_CrossOrderCancelReplaceRequest_YieldData : fix_yielddata;
     f_CrossOrderCancelReplaceRequest_Currency : fix_currency option;
-    f_CrossOrderCancelReplaceRequest_ComplianceID : fix_string option;
+    f_CrossOrderCancelReplaceRequest_ComplianceID : string option;
     (** Required for Previously Indicated Orders (OrdType=E)*)
-    f_CrossOrderCancelReplaceRequest_IOIID : fix_string option;
+    f_CrossOrderCancelReplaceRequest_IOIID : string option;
     (** Required for Previously Quoted Orders (OrdType=D)*)
-    f_CrossOrderCancelReplaceRequest_QuoteID : fix_string option;
+    f_CrossOrderCancelReplaceRequest_QuoteID : string option;
     (** Absence of this field indicates Day order*)
     f_CrossOrderCancelReplaceRequest_TimeInForce : fix_timeinforce option;
     (** Can specify the time at which the order should be considered valid*)
@@ -1149,7 +1146,7 @@ type full_fix_crossordercancelreplacerequest_data = {
     (** The target strategy of the order*)
     f_CrossOrderCancelReplaceRequest_TargetStrategy : fix_targetstrategy option;
     (** For further specification of the TargetStrategy*)
-    f_CrossOrderCancelReplaceRequest_TargetStrategyParameters : fix_string option;
+    f_CrossOrderCancelReplaceRequest_TargetStrategyParameters : string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
     f_CrossOrderCancelReplaceRequest_ParticipationRate : fix_float_4 option;
@@ -1157,20 +1154,20 @@ type full_fix_crossordercancelreplacerequest_data = {
     f_CrossOrderCancelReplaceRequest_CancellationRights : fix_cancellationrights option;
     f_CrossOrderCancelReplaceRequest_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
     (** Reference to Registration Instructions message for this Order.*)
-    f_CrossOrderCancelReplaceRequest_RegistID : fix_string option;
+    f_CrossOrderCancelReplaceRequest_RegistID : string option;
     (** Supplementary registration information for this Order*)
-    f_CrossOrderCancelReplaceRequest_Designation : fix_string option
+    f_CrossOrderCancelReplaceRequest_Designation : string option
 }
 ;;
 
 (** Used to fully cancel the remaining open quantity of a cross order.*)
 type full_fix_crossordercancelrequest_data = {
     (** Unique identifier of most recent order as assigned by sell-side (broker, exchange, ECN).*)
-    f_CrossOrderCancelRequest_OrderID : fix_string option;
+    f_CrossOrderCancelRequest_OrderID : string option;
     (** CrossID for the replacement order*)
-    f_CrossOrderCancelRequest_CrossID : fix_string;
+    f_CrossOrderCancelRequest_CrossID : string;
     (** Must match the CrossID of previous cross order. Same order chaining mechanism as ClOrdID/OrigClOrdID with single order Cancel/Replace.*)
-    f_CrossOrderCancelRequest_OrigCrossID : fix_string;
+    f_CrossOrderCancelRequest_OrigCrossID : string;
     f_CrossOrderCancelRequest_CrossType : fix_crosstype;
     f_CrossOrderCancelRequest_CrossPrioritization : fix_crossprioritization;
     (** Must be 1 or 2*)
@@ -1188,9 +1185,9 @@ type full_fix_crossordercancelrequest_data = {
 
 (** The Derivative Security List message is used to return a list of securities that matches the criteria specified in a Derivative Security List Request.*)
 type full_fix_derivativesecuritylist_data = {
-    f_DerivativeSecurityList_SecurityReqID : fix_string;
+    f_DerivativeSecurityList_SecurityReqID : string;
     (** Identifier for the Derivative Security List message*)
-    f_DerivativeSecurityList_SecurityResponseID : fix_string;
+    f_DerivativeSecurityList_SecurityResponseID : string;
     (** Result of the Security Request identified by SecurityReqID*)
     f_DerivativeSecurityList_SecurityRequestResult : fix_securityrequestresult;
     (** Underlying security for which derivatives are being returned*)
@@ -1206,21 +1203,21 @@ type full_fix_derivativesecuritylist_data = {
 
 (** The Derivative Security List Request message is used to return a list of securities from the counterparty that match criteria provided on the request*)
 type full_fix_derivativesecuritylistrequest_data = {
-    f_DerivativeSecurityListRequest_SecurityReqID : fix_string;
+    f_DerivativeSecurityListRequest_SecurityReqID : string;
     f_DerivativeSecurityListRequest_SecurityListRequestType : fix_securitylistrequesttype;
     (** Specifies the underlying instrument*)
     f_DerivativeSecurityListRequest_UnderlyingInstrument : fix_underlyinginstrument;
-    f_DerivativeSecurityListRequest_SecuritySubType : fix_string option;
+    f_DerivativeSecurityListRequest_SecuritySubType : string option;
     f_DerivativeSecurityListRequest_Currency : fix_currency option;
     (** Comment, instructions, or other identifying information.*)
-    f_DerivativeSecurityListRequest_Text : fix_string option;
+    f_DerivativeSecurityListRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_DerivativeSecurityListRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_DerivativeSecurityListRequest_EncodedText : fix_string option;
+    f_DerivativeSecurityListRequest_EncodedText : string option;
     (** Optional Trading Session Identifier to specify a particular trading session for which you want to obtain a list of securities that are tradeable.*)
-    f_DerivativeSecurityListRequest_TradingSessionID : fix_string option;
-    f_DerivativeSecurityListRequest_TradingSessionSubID : fix_string option;
+    f_DerivativeSecurityListRequest_TradingSessionID : string option;
+    f_DerivativeSecurityListRequest_TradingSessionSubID : string option;
     (** Subscribe or unsubscribe for security status to security specified in request.*)
     f_DerivativeSecurityListRequest_SubscriptionRequestType : fix_subscriptionrequesttype option
 }
@@ -1229,10 +1226,10 @@ type full_fix_derivativesecuritylistrequest_data = {
 (** The Don’t Know Trade (DK) message notifies a trading partner that an electronically received execution has been rejected. This message can be thought of as an execution reject message.*)
 type full_fix_dontknowtrade_data = {
     (** Broker Order ID as identified on problem execution*)
-    f_DontKnowTrade_OrderID : fix_string;
-    f_DontKnowTrade_SecondaryOrderID : fix_string option;
+    f_DontKnowTrade_OrderID : string;
+    f_DontKnowTrade_SecondaryOrderID : string option;
     (** Execution ID of problem execution*)
-    f_DontKnowTrade_ExecID : fix_string;
+    f_DontKnowTrade_ExecID : string;
     f_DontKnowTrade_DKReason : fix_dkreason;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_DontKnowTrade_Instrument : fix_instrument;
@@ -1247,26 +1244,26 @@ type full_fix_dontknowtrade_data = {
     f_DontKnowTrade_LastQty : fix_float_4 option;
     (** Required if specified on the ExecutionRpt*)
     f_DontKnowTrade_LastPx : fix_float_4 option;
-    f_DontKnowTrade_Text : fix_string option;
+    f_DontKnowTrade_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_DontKnowTrade_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_DontKnowTrade_EncodedText : fix_string option
+    f_DontKnowTrade_EncodedText : string option
 }
 ;;
 
 (** The email message is similar to the format and purpose of the News message, however, it is intended for private use between two parties.*)
 type full_fix_email_data = {
     (** Unique identifier for the email message thread*)
-    f_Email_EmailThreadID : fix_string;
+    f_Email_EmailThreadID : string;
     f_Email_EmailType : fix_emailtype;
     f_Email_OrigTime : fix_utctimestamp option;
     (** Specifies the Subject text*)
-    f_Email_Subject : fix_string;
+    f_Email_Subject : string;
     (** Must be set if EncodedSubject field is specified and must immediately precede it.*)
     f_Email_EncodedSubjectLen : int option;
     (** Encoded (non-ASCII characters) representation of the Subject field in the encoded format specified via the MessageEncoding field.*)
-    f_Email_EncodedSubject : fix_string option;
+    f_Email_EncodedSubject : string option;
     (** Required if any RoutingType and RoutingIDs are specified. Indicates the number within repeating group.*)
     f_Email_RoutingGrp : fix_rg_routinggrp;
     (** Specifies the number of repeating symbols (instruments) specified*)
@@ -1276,12 +1273,12 @@ type full_fix_email_data = {
     (** Number of legs
      Identifies a Multi-leg Execution if present and non-zero.*)
     f_Email_InstrmtLegGrp : fix_rg_instrmtleggrp;
-    f_Email_OrderID : fix_string option;
-    f_Email_ClOrdID : fix_string option;
+    f_Email_OrderID : string option;
+    f_Email_ClOrdID : string option;
     (** Specifies the number of repeating lines of text specified*)
     f_Email_LinesOfTextGrp : fix_rg_linesoftextgrp;
     f_Email_RawDataLength : int option;
-    f_Email_RawData : fix_string option
+    f_Email_RawData : string option
 }
 ;;
 
@@ -1295,22 +1292,22 @@ type full_fix_email_data = {
  7. Report post-trade fees calculations associated with a trade*)
 type full_fix_executionreport_data = {
     (** OrderID is required to be unique for each chain of orders.*)
-    f_ExecutionReport_OrderID : fix_string;
+    f_ExecutionReport_OrderID : string;
     (** Can be used to provide order id used by exchange or executing system.*)
-    f_ExecutionReport_SecondaryOrderID : fix_string option;
-    f_ExecutionReport_SecondaryClOrdID : fix_string option;
-    f_ExecutionReport_SecondaryExecID : fix_string option;
+    f_ExecutionReport_SecondaryOrderID : string option;
+    f_ExecutionReport_SecondaryClOrdID : string option;
+    f_ExecutionReport_SecondaryExecID : string option;
     (** Required for executions against electronically submitted orders which were assigned an ID by the institution or intermediary. Not required for orders manually entered by the broker or fund manager (for CIV orders).*)
-    f_ExecutionReport_ClOrdID : fix_string option;
+    f_ExecutionReport_ClOrdID : string option;
     (** Conditionally required for response to an electronic Cancel or Cancel/Replace request (ExecType=PendingCancel, Replace, or Canceled). ClOrdID of the previous accepted order (NOT the initial order of the day) when canceling or replacing an order.*)
-    f_ExecutionReport_OrigClOrdID : fix_string option;
-    f_ExecutionReport_ClOrdLinkID : fix_string option;
+    f_ExecutionReport_OrigClOrdID : string option;
+    f_ExecutionReport_ClOrdLinkID : string option;
     (** Required if responding to a QuoteResponse message. Echo back the Initiator’s value specified in the message.*)
-    f_ExecutionReport_QuoteRespID : fix_string option;
+    f_ExecutionReport_QuoteRespID : string option;
     (** Required if responding to and if provided on the Order Status Request message. Echo back the value provided by the requester.*)
-    f_ExecutionReport_OrdStatusReqID : fix_string option;
+    f_ExecutionReport_OrdStatusReqID : string option;
     (** Required if responding to a Order Mass Status Request. Echo back the value provided by the requester.*)
-    f_ExecutionReport_MassStatusReqID : fix_string option;
+    f_ExecutionReport_MassStatusReqID : string option;
     (** Can be used when responding to an Order Mass Status Request to identify the total number of Execution Reports which will be returned.*)
     f_ExecutionReport_TotNumReports : int option;
     (** Can be used when responding to an Order Mass Status Request to indicate that this is the last Execution Reports which will be returned as a result of the request.*)
@@ -1321,16 +1318,16 @@ type full_fix_executionreport_data = {
     (** Number of ContraBrokers repeating group instances.*)
     f_ExecutionReport_ContraGrp : fix_rg_contragrp;
     (** Required for executions against orders which were submitted as part of a list.*)
-    f_ExecutionReport_ListID : fix_string option;
+    f_ExecutionReport_ListID : string option;
     (** CrossID for the replacement order*)
-    f_ExecutionReport_CrossID : fix_string option;
+    f_ExecutionReport_CrossID : string option;
     (** Must match original cross order. Same order chaining mechanism as ClOrdID/OrigClOrdID with single order Cancel/Replace.*)
-    f_ExecutionReport_OrigCrossID : fix_string option;
+    f_ExecutionReport_OrigCrossID : string option;
     f_ExecutionReport_CrossType : fix_crosstype option;
     (** Unique identifier of execution message as assigned by sell-side (broker, exchange, ECN) (will be 0 (zero) forExecType=I (Order Status)).*)
-    f_ExecutionReport_ExecID : fix_string;
+    f_ExecutionReport_ExecID : string;
     (** Required for Trade Cancel and Trade Correct ExecType messages*)
-    f_ExecutionReport_ExecRefID : fix_string option;
+    f_ExecutionReport_ExecRefID : string option;
     (** Describes the purpose of the execution report.*)
     f_ExecutionReport_ExecType : fix_exectype;
     (** Describes the current state of a CHAIN of orders, same scope as OrderQty, CumQty, LeavesQty, and AvgPx*)
@@ -1342,7 +1339,7 @@ type full_fix_executionreport_data = {
     (** Required for ExecType = D (Restated).*)
     f_ExecutionReport_ExecRestatementReason : fix_execrestatementreason option;
     (** Required for executions against electronically submitted orders which were assigned an account by the institution or intermediary*)
-    f_ExecutionReport_Account : fix_string option;
+    f_ExecutionReport_Account : string option;
     f_ExecutionReport_AcctIDSource : fix_acctidsource option;
     (** Specifies type of account*)
     f_ExecutionReport_AccountType : fix_accounttype option;
@@ -1384,14 +1381,14 @@ type full_fix_executionreport_data = {
     (** The target strategy of the order*)
     f_ExecutionReport_TargetStrategy : fix_targetstrategy option;
     (** For further specification of the TargetStrategy*)
-    f_ExecutionReport_TargetStrategyParameters : fix_string option;
+    f_ExecutionReport_TargetStrategyParameters : string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
     f_ExecutionReport_ParticipationRate : fix_float_4 option;
     (** For communication of the performance of the order versus the target strategy*)
     f_ExecutionReport_TargetStrategyPerformance : fix_float_4 option;
     f_ExecutionReport_Currency : fix_currency option;
-    f_ExecutionReport_ComplianceID : fix_string option;
+    f_ExecutionReport_ComplianceID : string option;
     f_ExecutionReport_SolicitedFlag : fix_solicitedflag option;
     (** Absence of this field indicates Day order*)
     f_ExecutionReport_TimeInForce : fix_timeinforce option;
@@ -1423,9 +1420,9 @@ type full_fix_executionreport_data = {
     f_ExecutionReport_LastForwardPoints : fix_float_4 option;
     (** If ExecType = Trade (F), indicates the market where the trade was executed. If ExecType = New (0), indicates the market where the order was routed.*)
     f_ExecutionReport_LastMkt : fix_exchange option;
-    f_ExecutionReport_TradingSessionID : fix_string option;
-    f_ExecutionReport_TradingSessionSubID : fix_string option;
-    f_ExecutionReport_TimeBracket : fix_string option;
+    f_ExecutionReport_TradingSessionID : string option;
+    f_ExecutionReport_TradingSessionSubID : string option;
+    f_ExecutionReport_TimeBracket : string option;
     f_ExecutionReport_LastCapacity : fix_lastcapacity option;
     (** Quantity open for further execution. If the OrdStatus is Canceled, DoneForTheDay, Expired, Calculated, or Rejected (in which case the order is no longer active) then LeavesQty could be 0, otherwise LeavesQty = OrderQty - CumQty.*)
     f_ExecutionReport_LeavesQty : fix_float_4;
@@ -1488,11 +1485,11 @@ type full_fix_executionreport_data = {
     f_ExecutionReport_MaxShow : fix_float_4 option;
     (** Method for booking out this order. Used when notifying a broker that an order to be settled by that broker is to be booked out as an OTC derivative (e.g. CFD or similar). Absence of this field implies regular booking.*)
     f_ExecutionReport_BookingType : fix_bookingtype option;
-    f_ExecutionReport_Text : fix_string option;
+    f_ExecutionReport_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_ExecutionReport_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_ExecutionReport_EncodedText : fix_string option;
+    f_ExecutionReport_EncodedText : string option;
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_ExecutionReport_SettlDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
@@ -1505,9 +1502,9 @@ type full_fix_executionreport_data = {
     f_ExecutionReport_CancellationRights : fix_cancellationrights option;
     f_ExecutionReport_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
     (** Reference to Registration Instructions message for this Order.*)
-    f_ExecutionReport_RegistID : fix_string option;
+    f_ExecutionReport_RegistID : string option;
     (** Supplementary registration information for this Order*)
-    f_ExecutionReport_Designation : fix_string option;
+    f_ExecutionReport_Designation : string option;
     (** For CIV - Optional*)
     f_ExecutionReport_TransBkdTime : fix_utctimestamp option;
     (** For CIV - Optional*)
@@ -1534,10 +1531,10 @@ type full_fix_executionreport_data = {
 
 (** Indication of interest messages are used to market merchandise which the broker is buying or selling in either a proprietary or agency capacity.*)
 type full_fix_ioi_data = {
-    f_IOI_IOIID : fix_string;
+    f_IOI_IOIID : string;
     f_IOI_IOITransType : fix_ioitranstype;
     (** Required for Cancel and Replace IOITransType messages*)
-    f_IOI_IOIRefID : fix_string option;
+    f_IOI_IOIRefID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_IOI_Instrument : fix_instrument;
     (** Insert here the set of "FinancingDetails" (symbology) fields defined in "Common Components of Application Messages"*)
@@ -1571,14 +1568,14 @@ type full_fix_ioi_data = {
     f_IOI_IOINaturalFlag : fix_ioinaturalflag option;
     (** Required if any IOIQualifiers are specified. Indicates the number of repeating IOIQualifiers.*)
     f_IOI_IOIQualGrp : fix_rg_ioiqualgrp;
-    f_IOI_Text : fix_string option;
+    f_IOI_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_IOI_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_IOI_EncodedText : fix_string option;
+    f_IOI_EncodedText : string option;
     f_IOI_TransactTime : fix_utctimestamp option;
     (** A URL (Uniform Resource Locator) link to additional information (i.e. http://www.XYZ.com/research.html)*)
-    f_IOI_URLLink : fix_string option;
+    f_IOI_URLLink : string option;
     (** Required if any RoutingType and RoutingIDs are specified. Indicates the number within repeating group.*)
     f_IOI_RoutingGrp : fix_rg_routinggrp;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" (Fixed Income spread or benchmark curve) fields defined in "Common Components of Application Messages"*)
@@ -1589,50 +1586,50 @@ type full_fix_ioi_data = {
 
 (** The List Cancel Request message type is used by institutions wishing to cancel previously submitted lists either before or during execution.*)
 type full_fix_listcancelrequest_data = {
-    f_ListCancelRequest_ListID : fix_string;
+    f_ListCancelRequest_ListID : string;
     (** Time this order request was initiated/released by the trader or trading system.*)
     f_ListCancelRequest_TransactTime : fix_utctimestamp;
     f_ListCancelRequest_TradeOriginationDate : fix_localmktdate option;
     f_ListCancelRequest_TradeDate : fix_localmktdate option;
-    f_ListCancelRequest_Text : fix_string option;
+    f_ListCancelRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_ListCancelRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_ListCancelRequest_EncodedText : fix_string option
+    f_ListCancelRequest_EncodedText : string option
 }
 ;;
 
 (** The List Execute message type is used by institutions to instruct the broker to begin execution of a previously submitted list. This message may or may not be used, as it may be mirroring a phone conversation.*)
 type full_fix_listexecute_data = {
     (** Must be unique, by customer, for the day*)
-    f_ListExecute_ListID : fix_string;
+    f_ListExecute_ListID : string;
     (** Used with BidType=Disclosed to provide the sell side the ability to determine the direction of the trade to execute.*)
-    f_ListExecute_ClientBidID : fix_string option;
-    f_ListExecute_BidID : fix_string option;
+    f_ListExecute_ClientBidID : string option;
+    f_ListExecute_BidID : string option;
     (** Time this order request was initiated/released by the trader or trading system.*)
     f_ListExecute_TransactTime : fix_utctimestamp;
-    f_ListExecute_Text : fix_string option;
+    f_ListExecute_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_ListExecute_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_ListExecute_EncodedText : fix_string option
+    f_ListExecute_EncodedText : string option
 }
 ;;
 
 (** The list status message is issued as the response to a List Status Request message sent in an unsolicited fashion by the sell-side. It indicates the current state of the orders within the list as they exist at the broker's site. This message may also be used to respond to the List Cancel Request.*)
 type full_fix_liststatus_data = {
-    f_ListStatus_ListID : fix_string;
+    f_ListStatus_ListID : string;
     f_ListStatus_ListStatusType : fix_liststatustype;
     (** Total number of messages required to status complete list.*)
     f_ListStatus_NoRpts : int;
     f_ListStatus_ListOrderStatus : fix_listorderstatus;
     (** Sequence number of this report message.*)
     f_ListStatus_RptSeq : int;
-    f_ListStatus_ListStatusText : fix_string option;
+    f_ListStatus_ListStatusText : string option;
     (** Must be set if EncodedListStatusText field is specified and must immediately precede it.*)
     f_ListStatus_EncodedListStatusTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the ListStatusText field in the encoded format specified via the MessageEncoding field.*)
-    f_ListStatus_EncodedListStatusText : fix_string option;
+    f_ListStatus_EncodedListStatusText : string option;
     f_ListStatus_TransactTime : fix_utctimestamp option;
     (** Used to support fragmentation. Sum of NoOrders across all messages with the same ListID.*)
     f_ListStatus_TotNoOrders : int;
@@ -1645,18 +1642,18 @@ type full_fix_liststatus_data = {
 
 (** The list status request message type is used by institutions to instruct the broker to generate status messages for a list.*)
 type full_fix_liststatusrequest_data = {
-    f_ListStatusRequest_ListID : fix_string;
-    f_ListStatusRequest_Text : fix_string option;
+    f_ListStatusRequest_ListID : string;
+    f_ListStatusRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_ListStatusRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_ListStatusRequest_EncodedText : fix_string option
+    f_ListStatusRequest_EncodedText : string option
 }
 ;;
 
 (** The strike price message is used to exchange strike price information for principal trades. It can also be used to exchange reference prices for agency trades.*)
 type full_fix_liststrikeprice_data = {
-    f_ListStrikePrice_ListID : fix_string;
+    f_ListStrikePrice_ListID : string;
     (** Used to support fragmentation. Sum of NoStrikes across all messages with the same ListID.*)
     f_ListStrikePrice_TotNoStrikes : int;
     (** Indicates whether this is the last fragment in a sequence of message fragments. Only required where message has been fragmented.*)
@@ -1671,7 +1668,7 @@ type full_fix_liststrikeprice_data = {
 (** The second Market Data message format is used for incremental updates.*)
 type full_fix_marketdataincrementalrefresh_data = {
     (** Conditionally required if this message is in response to a Market Data Request.*)
-    f_MarketDataIncrementalRefresh_MDReqID : fix_string option;
+    f_MarketDataIncrementalRefresh_MDReqID : string option;
     (** Number of entries following.*)
     f_MarketDataIncrementalRefresh_MDIncGrp : fix_rg_mdincgrp;
     (** Depth of application messages queued for transmission as of delivery of this message*)
@@ -1684,7 +1681,7 @@ type full_fix_marketdataincrementalrefresh_data = {
 (** Some systems allow the transmission of real-time quote, order, trade, trade volume, open interest, and/or other price information on a subscription basis. A Market Data Request is a general request for market data on specific securities or forex quotes.*)
 type full_fix_marketdatarequest_data = {
     (** Must be unique, or the ID of previous Market Data Request to disable if SubscriptionRequestType = Disable previous Snapshot + Updates Request (2).*)
-    f_MarketDataRequest_MDReqID : fix_string;
+    f_MarketDataRequest_MDReqID : string;
     (** SubcriptionRequestType indicates to the other party what type of response is expected. A snapshot request only asks for current information. A subscribe request asks for updates as the status changes. Unsubscribe will cancel any future update messages from the counter party.*)
     f_MarketDataRequest_SubscriptionRequestType : fix_subscriptionrequesttype;
     f_MarketDataRequest_MarketDepth : int;
@@ -1713,21 +1710,21 @@ type full_fix_marketdatarequest_data = {
 (** The Market Data Request Reject is used when the broker cannot honor the Market Data Request, due to business or technical reasons.*)
 type full_fix_marketdatarequestreject_data = {
     (** Must refer to the MDReqID of the request.*)
-    f_MarketDataRequestReject_MDReqID : fix_string;
+    f_MarketDataRequestReject_MDReqID : string;
     f_MarketDataRequestReject_MDReqRejReason : fix_mdreqrejreason option;
     f_MarketDataRequestReject_MDRjctGrp : fix_rg_mdrjctgrp;
-    f_MarketDataRequestReject_Text : fix_string option;
+    f_MarketDataRequestReject_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_MarketDataRequestReject_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_MarketDataRequestReject_EncodedText : fix_string option
+    f_MarketDataRequestReject_EncodedText : string option
 }
 ;;
 
 (** The Market Data messages are used as the response to a Market Data Request message.*)
 type full_fix_marketdatasnapshotfullrefresh_data = {
     (** Conditionally required if this message is in response to a Market Data Request.*)
-    f_MarketDataSnapshotFullRefresh_MDReqID : fix_string option;
+    f_MarketDataSnapshotFullRefresh_MDReqID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_MarketDataSnapshotFullRefresh_Instrument : fix_instrument;
     (** Number of underlyings*)
@@ -1749,8 +1746,8 @@ type full_fix_marketdatasnapshotfullrefresh_data = {
 (** The Mass Quote message can contain quotes for multiple securities to support applications that allow for the mass quoting of an option series.*)
 type full_fix_massquote_data = {
     (** Required when quote is in response to a Quote Request message*)
-    f_MassQuote_QuoteReqID : fix_string option;
-    f_MassQuote_QuoteID : fix_string;
+    f_MassQuote_QuoteReqID : string option;
+    f_MassQuote_QuoteID : string;
     (** Type of Quote
      Default is Indicative if not specified*)
     f_MassQuote_QuoteType : fix_quotetype option;
@@ -1758,7 +1755,7 @@ type full_fix_massquote_data = {
     f_MassQuote_QuoteResponseLevel : fix_quoteresponselevel option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_MassQuote_Parties : fix_rg_parties;
-    f_MassQuote_Account : fix_string option;
+    f_MassQuote_Account : string option;
     f_MassQuote_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_MassQuote_AccountType : fix_accounttype option;
@@ -1774,9 +1771,9 @@ type full_fix_massquote_data = {
 (** Mass Quote Acknowledgement is used as the application level response to a Mass Quote message.*)
 type full_fix_massquoteacknowledgement_data = {
     (** Required when acknowledgment is in response to a Quote Request message*)
-    f_MassQuoteAcknowledgement_QuoteReqID : fix_string option;
+    f_MassQuoteAcknowledgement_QuoteReqID : string option;
     (** Required when acknowledgment is in response to a Quote message*)
-    f_MassQuoteAcknowledgement_QuoteID : fix_string option;
+    f_MassQuoteAcknowledgement_QuoteID : string option;
     (** Status of the mass quote acknowledgement.*)
     f_MassQuoteAcknowledgement_QuoteStatus : fix_quotestatus;
     (** Reason Quote was rejected.*)
@@ -1787,13 +1784,13 @@ type full_fix_massquoteacknowledgement_data = {
     f_MassQuoteAcknowledgement_QuoteType : fix_quotetype option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_MassQuoteAcknowledgement_Parties : fix_rg_parties;
-    f_MassQuoteAcknowledgement_Account : fix_string option;
+    f_MassQuoteAcknowledgement_Account : string option;
     f_MassQuoteAcknowledgement_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_MassQuoteAcknowledgement_AccountType : fix_accounttype option;
-    f_MassQuoteAcknowledgement_Text : fix_string option;
+    f_MassQuoteAcknowledgement_Text : string option;
     f_MassQuoteAcknowledgement_EncodedTextLen : int option;
-    f_MassQuoteAcknowledgement_EncodedText : fix_string option;
+    f_MassQuoteAcknowledgement_EncodedText : string option;
     (** The number of sets of quotes in the message*)
     f_MassQuoteAcknowledgement_QuotSetAckGrp : fix_rg_quotsetackgrp
 }
@@ -1802,26 +1799,26 @@ type full_fix_massquoteacknowledgement_data = {
 (** Used to modify a multileg order previously submitted using the New Order - Multileg message. See Order Cancel Replace Request for details concerning message usage.*)
 type full_fix_multilegordercancelreplace_data = {
     (** Unique identifier of most recent order as assigned by sell-side (broker, exchange, ECN).*)
-    f_MultilegOrderCancelReplace_OrderID : fix_string option;
+    f_MultilegOrderCancelReplace_OrderID : string option;
     (** ClOrdID of the previous order (NOT the initial order of the day) when canceling or replacing an order.*)
-    f_MultilegOrderCancelReplace_OrigClOrdID : fix_string;
+    f_MultilegOrderCancelReplace_OrigClOrdID : string;
     (** Unique identifier of replacement order as assigned by institution or by the intermediary with closest association with the investor.. Note that this identifier will be used in ClOrdID field of the Cancel Reject message if the replacement request is rejected.*)
-    f_MultilegOrderCancelReplace_ClOrdID : fix_string;
-    f_MultilegOrderCancelReplace_SecondaryClOrdID : fix_string option;
-    f_MultilegOrderCancelReplace_ClOrdLinkID : fix_string option;
+    f_MultilegOrderCancelReplace_ClOrdID : string;
+    f_MultilegOrderCancelReplace_SecondaryClOrdID : string option;
+    f_MultilegOrderCancelReplace_ClOrdLinkID : string option;
     f_MultilegOrderCancelReplace_OrigOrdModTime : fix_utctimestamp option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_MultilegOrderCancelReplace_Parties : fix_rg_parties;
     f_MultilegOrderCancelReplace_TradeOriginationDate : fix_localmktdate option;
     f_MultilegOrderCancelReplace_TradeDate : fix_localmktdate option;
-    f_MultilegOrderCancelReplace_Account : fix_string option;
+    f_MultilegOrderCancelReplace_Account : string option;
     f_MultilegOrderCancelReplace_AcctIDSource : fix_acctidsource option;
     f_MultilegOrderCancelReplace_AccountType : fix_accounttype option;
     f_MultilegOrderCancelReplace_DayBookingInst : fix_daybookinginst option;
     f_MultilegOrderCancelReplace_BookingUnit : fix_bookingunit option;
     f_MultilegOrderCancelReplace_PreallocMethod : fix_preallocmethod option;
     (** Used to assign an identifier to the block of individual preallocations*)
-    f_MultilegOrderCancelReplace_AllocID : fix_string option;
+    f_MultilegOrderCancelReplace_AllocID : string option;
     (** Number of repeating groups for pre-trade allocation*)
     f_MultilegOrderCancelReplace_PreAllocMlegGrp : fix_rg_preallocmleggrp;
     f_MultilegOrderCancelReplace_SettlType : fix_settltype option;
@@ -1866,12 +1863,12 @@ type full_fix_multilegordercancelreplace_data = {
     (** Required for OrdType = "Stop" or OrdType = "Stop limit".*)
     f_MultilegOrderCancelReplace_StopPx : fix_float_4 option;
     f_MultilegOrderCancelReplace_Currency : fix_currency option;
-    f_MultilegOrderCancelReplace_ComplianceID : fix_string option;
+    f_MultilegOrderCancelReplace_ComplianceID : string option;
     f_MultilegOrderCancelReplace_SolicitedFlag : fix_solicitedflag option;
     (** Required for Previously Indicated Orders (OrdType=E)*)
-    f_MultilegOrderCancelReplace_IOIID : fix_string option;
+    f_MultilegOrderCancelReplace_IOIID : string option;
     (** Required for Previously Quoted Orders (OrdType=D)*)
-    f_MultilegOrderCancelReplace_QuoteID : fix_string option;
+    f_MultilegOrderCancelReplace_QuoteID : string option;
     (** Absence of this field indicates Day order*)
     f_MultilegOrderCancelReplace_TimeInForce : fix_timeinforce option;
     (** Can specify the time at which the order should be considered valid*)
@@ -1893,11 +1890,11 @@ type full_fix_multilegordercancelreplace_data = {
     f_MultilegOrderCancelReplace_SettlCurrency : fix_currency option;
     (** Method for booking out this order. Used when notifying a broker that an order to be settled by that broker is to be booked out as an OTC derivative (e.g. CFD or similar). Absence of this field implies regular booking.*)
     f_MultilegOrderCancelReplace_BookingType : fix_bookingtype option;
-    f_MultilegOrderCancelReplace_Text : fix_string option;
+    f_MultilegOrderCancelReplace_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_MultilegOrderCancelReplace_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_MultilegOrderCancelReplace_EncodedText : fix_string option;
+    f_MultilegOrderCancelReplace_EncodedText : string option;
     (** For use in derivatives omnibus accounting*)
     f_MultilegOrderCancelReplace_PositionEffect : fix_positioneffect option;
     (** For use with derivatives, such as options*)
@@ -1910,7 +1907,7 @@ type full_fix_multilegordercancelreplace_data = {
     (** The target strategy of the order*)
     f_MultilegOrderCancelReplace_TargetStrategy : fix_targetstrategy option;
     (** For further specification of the TargetStrategy*)
-    f_MultilegOrderCancelReplace_TargetStrategyParameters : fix_string option;
+    f_MultilegOrderCancelReplace_TargetStrategyParameters : string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
     f_MultilegOrderCancelReplace_ParticipationRate : fix_float_4 option;
@@ -1918,9 +1915,9 @@ type full_fix_multilegordercancelreplace_data = {
     f_MultilegOrderCancelReplace_CancellationRights : fix_cancellationrights option;
     f_MultilegOrderCancelReplace_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
     (** Reference to Registration Instructions message for this Order.*)
-    f_MultilegOrderCancelReplace_RegistID : fix_string option;
+    f_MultilegOrderCancelReplace_RegistID : string option;
     (** Supplementary registration information for this Order*)
-    f_MultilegOrderCancelReplace_Designation : fix_string option;
+    f_MultilegOrderCancelReplace_Designation : string option;
     (** Indicates the method of execution reporting requested by issuer of the order.*)
     f_MultilegOrderCancelReplace_MultiLegRptTypeReq : fix_multilegrpttypereq option
 }
@@ -1928,7 +1925,7 @@ type full_fix_multilegordercancelreplace_data = {
 
 type full_fix_networkcounterpartysystemstatusrequest_data = {
     f_NetworkCounterpartySystemStatusRequest_NetworkRequestType : fix_networkrequesttype;
-    f_NetworkCounterpartySystemStatusRequest_NetworkRequestID : fix_string;
+    f_NetworkCounterpartySystemStatusRequest_NetworkRequestID : string;
     (** Used to restrict updates/request to a list of specific CompID/SubID/LocationID/DeskID combinations.
      If not present request applies to all applicable available counterparties. EG Unless one sell side broker was a customer of another you would not expect to see information about other brokers, similarly one fund manager etc.*)
     f_NetworkCounterpartySystemStatusRequest_CompIDReqGrp : fix_rg_compidreqgrp
@@ -1937,10 +1934,10 @@ type full_fix_networkcounterpartysystemstatusrequest_data = {
 
 type full_fix_networkcounterpartysystemstatusresponse_data = {
     f_NetworkCounterpartySystemStatusResponse_NetworkStatusResponseType : fix_networkstatusresponsetype;
-    f_NetworkCounterpartySystemStatusResponse_NetworkRequestID : fix_string option;
-    f_NetworkCounterpartySystemStatusResponse_NetworkResponseID : fix_string;
+    f_NetworkCounterpartySystemStatusResponse_NetworkRequestID : string option;
+    f_NetworkCounterpartySystemStatusResponse_NetworkResponseID : string;
     (** Required when NetworkStatusResponseType=2*)
-    f_NetworkCounterpartySystemStatusResponse_LastNetworkResponseID : fix_string option;
+    f_NetworkCounterpartySystemStatusResponse_LastNetworkResponseID : string option;
     (** Specifies the number of repeating CompId’s*)
     f_NetworkCounterpartySystemStatusResponse_CompIDStatGrp : fix_rg_compidstatgrp
 }
@@ -1948,7 +1945,7 @@ type full_fix_networkcounterpartysystemstatusresponse_data = {
 
 (** Used to submit a cross order into a market. The cross order contains two order sides (a buy and a sell).*)
 type full_fix_newordercross_data = {
-    f_NewOrderCross_CrossID : fix_string;
+    f_NewOrderCross_CrossID : string;
     f_NewOrderCross_CrossType : fix_crosstype;
     f_NewOrderCross_CrossPrioritization : fix_crossprioritization;
     (** Must be 1 or 2
@@ -1993,11 +1990,11 @@ type full_fix_newordercross_data = {
     (** Insert here the set of "YieldData" (yield-related) fields defined in "Common Components of Application Messages"*)
     f_NewOrderCross_YieldData : fix_yielddata;
     f_NewOrderCross_Currency : fix_currency option;
-    f_NewOrderCross_ComplianceID : fix_string option;
+    f_NewOrderCross_ComplianceID : string option;
     (** Required for Previously Indicated Orders (OrdType=E)*)
-    f_NewOrderCross_IOIID : fix_string option;
+    f_NewOrderCross_IOIID : string option;
     (** Required for Previously Quoted Orders (OrdType=D)*)
-    f_NewOrderCross_QuoteID : fix_string option;
+    f_NewOrderCross_QuoteID : string option;
     (** Absence of this field indicates Day order*)
     f_NewOrderCross_TimeInForce : fix_timeinforce option;
     (** Can specify the time at which the order should be considered valid*)
@@ -2016,7 +2013,7 @@ type full_fix_newordercross_data = {
     (** The target strategy of the order*)
     f_NewOrderCross_TargetStrategy : fix_targetstrategy option;
     (** For further specification of the TargetStrategy*)
-    f_NewOrderCross_TargetStrategyParameters : fix_string option;
+    f_NewOrderCross_TargetStrategyParameters : string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
     f_NewOrderCross_ParticipationRate : fix_float_4 option;
@@ -2024,19 +2021,19 @@ type full_fix_newordercross_data = {
     f_NewOrderCross_CancellationRights : fix_cancellationrights option;
     f_NewOrderCross_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
     (** Reference to Registration Instructions message for this Order.*)
-    f_NewOrderCross_RegistID : fix_string option;
+    f_NewOrderCross_RegistID : string option;
     (** Supplementary registration information for this Order*)
-    f_NewOrderCross_Designation : fix_string option
+    f_NewOrderCross_Designation : string option
 }
 ;;
 
 (** The NewOrderList Message can be used in one of two ways depending on which market conventions are being followed.*)
 type full_fix_neworderlist_data = {
     (** Must be unique, by customer, for the day*)
-    f_NewOrderList_ListID : fix_string;
+    f_NewOrderList_ListID : string;
     (** Should refer to an earlier program if bidding took place.*)
-    f_NewOrderList_BidID : fix_string option;
-    f_NewOrderList_ClientBidID : fix_string option;
+    f_NewOrderList_BidID : string option;
+    f_NewOrderList_ClientBidID : string option;
     f_NewOrderList_ProgRptReqs : fix_progrptreqs option;
     (** e.g. Non Disclosed Model, Disclosed Model, No Bidding Process*)
     f_NewOrderList_BidType : fix_bidtype;
@@ -2045,15 +2042,15 @@ type full_fix_neworderlist_data = {
     f_NewOrderList_CancellationRights : fix_cancellationrights option;
     f_NewOrderList_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
     (** Reference to Registration Instructions message applicable to all Orders in this List.*)
-    f_NewOrderList_RegistID : fix_string option;
+    f_NewOrderList_RegistID : string option;
     (** Controls when execution should begin For CIV Orders indicates order of execution..*)
     f_NewOrderList_ListExecInstType : fix_listexecinsttype option;
     (** Free-form text.*)
-    f_NewOrderList_ListExecInst : fix_string option;
+    f_NewOrderList_ListExecInst : string option;
     (** Must be set if EncodedListExecInst field is specified and must immediately precede it.*)
     f_NewOrderList_EncodedListExecInstLen : int option;
     (** Encoded (non-ASCII characters) representation of the ListExecInst field in the encoded format specified via the MessageEncoding field.*)
-    f_NewOrderList_EncodedListExecInst : fix_string option;
+    f_NewOrderList_EncodedListExecInst : string option;
     (** The maximum percentage that execution of one side of a program trade can exceed execution of the other.*)
     f_NewOrderList_AllowableOneSidednessPct : fix_float_4 option;
     (** The maximum amount that execution of one side of a program trade can exceed execution of the other.*)
@@ -2072,21 +2069,21 @@ type full_fix_neworderlist_data = {
 (** The New Order - Multileg is provided to submit orders for securities that are made up of multiple securities, known as legs.*)
 type full_fix_newordermultileg_data = {
     (** Unique identifier of the order as assigned by institution or by the intermediary with closest association with the investor.*)
-    f_NewOrderMultileg_ClOrdID : fix_string;
-    f_NewOrderMultileg_SecondaryClOrdID : fix_string option;
-    f_NewOrderMultileg_ClOrdLinkID : fix_string option;
+    f_NewOrderMultileg_ClOrdID : string;
+    f_NewOrderMultileg_SecondaryClOrdID : string option;
+    f_NewOrderMultileg_ClOrdLinkID : string option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_NewOrderMultileg_Parties : fix_rg_parties;
     f_NewOrderMultileg_TradeOriginationDate : fix_localmktdate option;
     f_NewOrderMultileg_TradeDate : fix_localmktdate option;
-    f_NewOrderMultileg_Account : fix_string option;
+    f_NewOrderMultileg_Account : string option;
     f_NewOrderMultileg_AcctIDSource : fix_acctidsource option;
     f_NewOrderMultileg_AccountType : fix_accounttype option;
     f_NewOrderMultileg_DayBookingInst : fix_daybookinginst option;
     f_NewOrderMultileg_BookingUnit : fix_bookingunit option;
     f_NewOrderMultileg_PreallocMethod : fix_preallocmethod option;
     (** Used to assign an identifier to the block of individual preallocations*)
-    f_NewOrderMultileg_AllocID : fix_string option;
+    f_NewOrderMultileg_AllocID : string option;
     (** Number of repeating groups for pre-trade allocation*)
     f_NewOrderMultileg_PreAllocMlegGrp : fix_rg_preallocmleggrp;
     f_NewOrderMultileg_SettlType : fix_settltype option;
@@ -2131,12 +2128,12 @@ type full_fix_newordermultileg_data = {
     (** Required for OrdType = "Stop" or OrdType = "Stop limit".*)
     f_NewOrderMultileg_StopPx : fix_float_4 option;
     f_NewOrderMultileg_Currency : fix_currency option;
-    f_NewOrderMultileg_ComplianceID : fix_string option;
+    f_NewOrderMultileg_ComplianceID : string option;
     f_NewOrderMultileg_SolicitedFlag : fix_solicitedflag option;
     (** Required for Previously Indicated Orders (OrdType=E)*)
-    f_NewOrderMultileg_IOIID : fix_string option;
+    f_NewOrderMultileg_IOIID : string option;
     (** Required for Previously Quoted Orders (OrdType=D)*)
-    f_NewOrderMultileg_QuoteID : fix_string option;
+    f_NewOrderMultileg_QuoteID : string option;
     (** Absence of this field indicates Day order*)
     f_NewOrderMultileg_TimeInForce : fix_timeinforce option;
     (** Can specify the time at which the order should be considered valid*)
@@ -2158,11 +2155,11 @@ type full_fix_newordermultileg_data = {
     f_NewOrderMultileg_SettlCurrency : fix_currency option;
     (** Method for booking out this order. Used when notifying a broker that an order to be settled by that broker is to be booked out as an OTC derivative (e.g. CFD or similar). Absence of this field implies regular booking.*)
     f_NewOrderMultileg_BookingType : fix_bookingtype option;
-    f_NewOrderMultileg_Text : fix_string option;
+    f_NewOrderMultileg_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_NewOrderMultileg_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_NewOrderMultileg_EncodedText : fix_string option;
+    f_NewOrderMultileg_EncodedText : string option;
     (** For use in derivatives omnibus accounting*)
     f_NewOrderMultileg_PositionEffect : fix_positioneffect option;
     (** For use with derivatives, such as options*)
@@ -2175,7 +2172,7 @@ type full_fix_newordermultileg_data = {
     (** The target strategy of the order*)
     f_NewOrderMultileg_TargetStrategy : fix_targetstrategy option;
     (** For further specification of the TargetStrategy*)
-    f_NewOrderMultileg_TargetStrategyParameters : fix_string option;
+    f_NewOrderMultileg_TargetStrategyParameters : string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
     f_NewOrderMultileg_ParticipationRate : fix_float_4 option;
@@ -2183,9 +2180,9 @@ type full_fix_newordermultileg_data = {
     f_NewOrderMultileg_CancellationRights : fix_cancellationrights option;
     f_NewOrderMultileg_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
     (** Reference to Registration Instructions message for this Order.*)
-    f_NewOrderMultileg_RegistID : fix_string option;
+    f_NewOrderMultileg_RegistID : string option;
     (** Supplementary registration information for this Order*)
-    f_NewOrderMultileg_Designation : fix_string option;
+    f_NewOrderMultileg_Designation : string option;
     (** Indicates the method of execution reporting requested by issuer of the order.*)
     f_NewOrderMultileg_MultiLegRptTypeReq : fix_multilegrpttypereq option
 }
@@ -2194,14 +2191,14 @@ type full_fix_newordermultileg_data = {
 (** The new order message type is used by institutions wishing to electronically submit securities and forex orders to a broker for execution.*)
 type full_fix_newordersingle_data = {
     (** Unique identifier of the order as assigned by institution or by the intermediary (CIV term, not a hub/service bureau) with closest association with the investor.*)
-    f_NewOrderSingle_ClOrdID : fix_string;
-    f_NewOrderSingle_SecondaryClOrdID : fix_string option;
-    f_NewOrderSingle_ClOrdLinkID : fix_string option;
+    f_NewOrderSingle_ClOrdID : string;
+    f_NewOrderSingle_SecondaryClOrdID : string option;
+    f_NewOrderSingle_ClOrdLinkID : string option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_NewOrderSingle_Parties : fix_rg_parties;
     f_NewOrderSingle_TradeOriginationDate : fix_localmktdate option;
     f_NewOrderSingle_TradeDate : fix_localmktdate option;
-    f_NewOrderSingle_Account : fix_string option;
+    f_NewOrderSingle_Account : string option;
     f_NewOrderSingle_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_NewOrderSingle_AccountType : fix_accounttype option;
@@ -2209,7 +2206,7 @@ type full_fix_newordersingle_data = {
     f_NewOrderSingle_BookingUnit : fix_bookingunit option;
     f_NewOrderSingle_PreallocMethod : fix_preallocmethod option;
     (** Used to assign an overall allocation id to the block of preallocations*)
-    f_NewOrderSingle_AllocID : fix_string option;
+    f_NewOrderSingle_AllocID : string option;
     (** Number of repeating groups for pre-trade allocation*)
     f_NewOrderSingle_PreAllocGrp : fix_rg_preallocgrp;
     f_NewOrderSingle_SettlType : fix_settltype option;
@@ -2256,12 +2253,12 @@ type full_fix_newordersingle_data = {
     (** Insert here the set of "YieldData" (yield-related) fields defined in "Common Components of Application Messages"*)
     f_NewOrderSingle_YieldData : fix_yielddata;
     f_NewOrderSingle_Currency : fix_currency option;
-    f_NewOrderSingle_ComplianceID : fix_string option;
+    f_NewOrderSingle_ComplianceID : string option;
     f_NewOrderSingle_SolicitedFlag : fix_solicitedflag option;
     (** Required for Previously Indicated Orders (OrdType=E)*)
-    f_NewOrderSingle_IOIID : fix_string option;
+    f_NewOrderSingle_IOIID : string option;
     (** Required for Previously Quoted Orders (OrdType=D)*)
-    f_NewOrderSingle_QuoteID : fix_string option;
+    f_NewOrderSingle_QuoteID : string option;
     (** Absence of this field indicates Day order*)
     f_NewOrderSingle_TimeInForce : fix_timeinforce option;
     (** Can specify the time at which the order should be considered valid*)
@@ -2283,11 +2280,11 @@ type full_fix_newordersingle_data = {
     f_NewOrderSingle_SettlCurrency : fix_currency option;
     (** Method for booking out this order. Used when notifying a broker that an order to be settled by that broker is to be booked out as an OTC derivative (e.g. CFD or similar). Absence of this field implies regular booking.*)
     f_NewOrderSingle_BookingType : fix_bookingtype option;
-    f_NewOrderSingle_Text : fix_string option;
+    f_NewOrderSingle_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_NewOrderSingle_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_NewOrderSingle_EncodedText : fix_string option;
+    f_NewOrderSingle_EncodedText : string option;
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_NewOrderSingle_SettlDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
@@ -2306,7 +2303,7 @@ type full_fix_newordersingle_data = {
     (** The target strategy of the order*)
     f_NewOrderSingle_TargetStrategy : fix_targetstrategy option;
     (** For further specification of the TargetStrategy*)
-    f_NewOrderSingle_TargetStrategyParameters : fix_string option;
+    f_NewOrderSingle_TargetStrategyParameters : string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
     f_NewOrderSingle_ParticipationRate : fix_float_4 option;
@@ -2314,9 +2311,9 @@ type full_fix_newordersingle_data = {
     f_NewOrderSingle_CancellationRights : fix_cancellationrights option;
     f_NewOrderSingle_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
     (** Reference to Registration Instructions message for this Order.*)
-    f_NewOrderSingle_RegistID : fix_string option;
+    f_NewOrderSingle_RegistID : string option;
     (** Supplementary registration information for this Order*)
-    f_NewOrderSingle_Designation : fix_string option
+    f_NewOrderSingle_Designation : string option
 }
 ;;
 
@@ -2325,11 +2322,11 @@ type full_fix_news_data = {
     f_News_OrigTime : fix_utctimestamp option;
     f_News_Urgency : fix_urgency option;
     (** Specifies the headline text*)
-    f_News_Headline : fix_string;
+    f_News_Headline : string;
     (** Must be set if EncodedHeadline field is specified and must immediately precede it.*)
     f_News_EncodedHeadlineLen : int option;
     (** Encoded (non-ASCII characters) representation of the Headline field in the encoded format specified via the MessageEncoding field.*)
-    f_News_EncodedHeadline : fix_string option;
+    f_News_EncodedHeadline : string option;
     (** Required if any RoutingType and RoutingIDs are specified. Indicates the number within repeating group.*)
     f_News_RoutingGrp : fix_rg_routinggrp;
     (** Specifies the number of repeating symbols (instruments) specified*)
@@ -2342,24 +2339,24 @@ type full_fix_news_data = {
     (** Specifies the number of repeating lines of text specified*)
     f_News_LinesOfTextGrp : fix_rg_linesoftextgrp;
     (** A URL (Uniform Resource Locator) link to additional information (i.e. http://www.XYZ.com/research.html)*)
-    f_News_URLLink : fix_string option;
+    f_News_URLLink : string option;
     f_News_RawDataLength : int option;
-    f_News_RawData : fix_string option
+    f_News_RawData : string option
 }
 ;;
 
 (** The order cancel reject message is issued by the broker upon receipt of a cancel request or cancel/replace request message which cannot be honored.*)
 type full_fix_ordercancelreject_data = {
     (** If CxlRejReason="Unknown order", specify "NONE".*)
-    f_OrderCancelReject_OrderID : fix_string;
+    f_OrderCancelReject_OrderID : string;
     (** Can be used to provide order id used by exchange or executing system.*)
-    f_OrderCancelReject_SecondaryOrderID : fix_string option;
-    f_OrderCancelReject_SecondaryClOrdID : fix_string option;
+    f_OrderCancelReject_SecondaryOrderID : string option;
+    f_OrderCancelReject_SecondaryClOrdID : string option;
     (** Unique order id assigned by institution or by the intermediary with closest association with the investor. to the cancel request or to the replacement order.*)
-    f_OrderCancelReject_ClOrdID : fix_string;
-    f_OrderCancelReject_ClOrdLinkID : fix_string option;
+    f_OrderCancelReject_ClOrdID : string;
+    f_OrderCancelReject_ClOrdLinkID : string option;
     (** ClOrdID which could not be canceled/replaced. ClOrdID of the previous accepted order (NOT the initial order of the day) when canceling or replacing an order.*)
-    f_OrderCancelReject_OrigClOrdID : fix_string;
+    f_OrderCancelReject_OrigClOrdID : string;
     (** OrdStatus value after this cancel reject is applied.
      If CxlRejReason = "Unknown Order", specify Rejected.*)
     f_OrderCancelReject_OrdStatus : fix_ordstatus;
@@ -2367,8 +2364,8 @@ type full_fix_ordercancelreject_data = {
     f_OrderCancelReject_WorkingIndicator : fix_workingindicator option;
     f_OrderCancelReject_OrigOrdModTime : fix_utctimestamp option;
     (** Required for rejects against orders which were submitted as part of a list.*)
-    f_OrderCancelReject_ListID : fix_string option;
-    f_OrderCancelReject_Account : fix_string option;
+    f_OrderCancelReject_ListID : string option;
+    f_OrderCancelReject_Account : string option;
     f_OrderCancelReject_AcctIDSource : fix_acctidsource option;
     f_OrderCancelReject_AccountType : fix_accounttype option;
     f_OrderCancelReject_TradeOriginationDate : fix_localmktdate option;
@@ -2376,40 +2373,40 @@ type full_fix_ordercancelreject_data = {
     f_OrderCancelReject_TransactTime : fix_utctimestamp option;
     f_OrderCancelReject_CxlRejResponseTo : fix_cxlrejresponseto;
     f_OrderCancelReject_CxlRejReason : fix_cxlrejreason option;
-    f_OrderCancelReject_Text : fix_string option;
+    f_OrderCancelReject_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_OrderCancelReject_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_OrderCancelReject_EncodedText : fix_string option
+    f_OrderCancelReject_EncodedText : string option
 }
 ;;
 
 (** The order cancel/replace request is used to change the parameters of an existing order.*)
 type full_fix_ordercancelreplacerequest_data = {
     (** Unique identifier of most recent order as assigned by sell-side (broker, exchange, ECN).*)
-    f_OrderCancelReplaceRequest_OrderID : fix_string option;
+    f_OrderCancelReplaceRequest_OrderID : string option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_OrderCancelReplaceRequest_Parties : fix_rg_parties;
     f_OrderCancelReplaceRequest_TradeOriginationDate : fix_localmktdate option;
     f_OrderCancelReplaceRequest_TradeDate : fix_localmktdate option;
     (** ClOrdID of the previous non rejected order (NOT the initial order of the day) when canceling or replacing an order.*)
-    f_OrderCancelReplaceRequest_OrigClOrdID : fix_string;
+    f_OrderCancelReplaceRequest_OrigClOrdID : string;
     (** Unique identifier of replacement order as assigned by institution or by the intermediary with closest association with the investor.. Note that this identifier will be used in ClOrdID field of the Cancel Reject message if the replacement request is rejected.*)
-    f_OrderCancelReplaceRequest_ClOrdID : fix_string;
-    f_OrderCancelReplaceRequest_SecondaryClOrdID : fix_string option;
-    f_OrderCancelReplaceRequest_ClOrdLinkID : fix_string option;
+    f_OrderCancelReplaceRequest_ClOrdID : string;
+    f_OrderCancelReplaceRequest_SecondaryClOrdID : string option;
+    f_OrderCancelReplaceRequest_ClOrdLinkID : string option;
     (** Required for List Orders*)
-    f_OrderCancelReplaceRequest_ListID : fix_string option;
+    f_OrderCancelReplaceRequest_ListID : string option;
     (** TransactTime of the last state change that occurred to the original order*)
     f_OrderCancelReplaceRequest_OrigOrdModTime : fix_utctimestamp option;
-    f_OrderCancelReplaceRequest_Account : fix_string option;
+    f_OrderCancelReplaceRequest_Account : string option;
     f_OrderCancelReplaceRequest_AcctIDSource : fix_acctidsource option;
     f_OrderCancelReplaceRequest_AccountType : fix_accounttype option;
     f_OrderCancelReplaceRequest_DayBookingInst : fix_daybookinginst option;
     f_OrderCancelReplaceRequest_BookingUnit : fix_bookingunit option;
     f_OrderCancelReplaceRequest_PreallocMethod : fix_preallocmethod option;
     (** Used to assign an overall allocation id to the block of preallocations*)
-    f_OrderCancelReplaceRequest_AllocID : fix_string option;
+    f_OrderCancelReplaceRequest_AllocID : string option;
     (** Number of repeating groups for pre-trade allocation*)
     f_OrderCancelReplaceRequest_PreAllocGrp : fix_rg_preallocgrp;
     f_OrderCancelReplaceRequest_SettlType : fix_settltype option;
@@ -2461,11 +2458,11 @@ type full_fix_ordercancelreplacerequest_data = {
     (** The target strategy of the order*)
     f_OrderCancelReplaceRequest_TargetStrategy : fix_targetstrategy option;
     (** For further specification of the TargetStrategy*)
-    f_OrderCancelReplaceRequest_TargetStrategyParameters : fix_string option;
+    f_OrderCancelReplaceRequest_TargetStrategyParameters : string option;
     (** Mandatory for a TargetStrategy=Participate order and specifies the target particpation rate.
      For other order types optionally specifies a volume limit (i.e. do not be more than this percent of the market volume)*)
     f_OrderCancelReplaceRequest_ParticipationRate : fix_float_4 option;
-    f_OrderCancelReplaceRequest_ComplianceID : fix_string option;
+    f_OrderCancelReplaceRequest_ComplianceID : string option;
     f_OrderCancelReplaceRequest_SolicitedFlag : fix_solicitedflag option;
     (** Must match original order.*)
     f_OrderCancelReplaceRequest_Currency : fix_currency option;
@@ -2490,11 +2487,11 @@ type full_fix_ordercancelreplacerequest_data = {
     f_OrderCancelReplaceRequest_SettlCurrency : fix_currency option;
     (** Method for booking out this order. Used when notifying a broker that an order to be settled by that broker is to be booked out as an OTC derivative (e.g. CFD or similar). Absence of this field implies regular booking.*)
     f_OrderCancelReplaceRequest_BookingType : fix_bookingtype option;
-    f_OrderCancelReplaceRequest_Text : fix_string option;
+    f_OrderCancelReplaceRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_OrderCancelReplaceRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_OrderCancelReplaceRequest_EncodedText : fix_string option;
+    f_OrderCancelReplaceRequest_EncodedText : string option;
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_OrderCancelReplaceRequest_SettlDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
@@ -2512,26 +2509,26 @@ type full_fix_ordercancelreplacerequest_data = {
     f_OrderCancelReplaceRequest_CancellationRights : fix_cancellationrights option;
     f_OrderCancelReplaceRequest_MoneyLaunderingStatus : fix_moneylaunderingstatus option;
     (** Reference to Registration Instructions message for this Order.*)
-    f_OrderCancelReplaceRequest_RegistID : fix_string option;
+    f_OrderCancelReplaceRequest_RegistID : string option;
     (** Supplementary registration information for this Order*)
-    f_OrderCancelReplaceRequest_Designation : fix_string option
+    f_OrderCancelReplaceRequest_Designation : string option
 }
 ;;
 
 (** The order cancel request message requests the cancellation of all of the remaining quantity of an existing order.*)
 type full_fix_ordercancelrequest_data = {
     (** ClOrdID of the previous non-rejected order (NOT the initial order of the day) when canceling or replacing an order.*)
-    f_OrderCancelRequest_OrigClOrdID : fix_string;
+    f_OrderCancelRequest_OrigClOrdID : string;
     (** Unique identifier of most recent order as assigned by sell-side (broker, exchange, ECN).*)
-    f_OrderCancelRequest_OrderID : fix_string option;
+    f_OrderCancelRequest_OrderID : string option;
     (** Unique ID of cancel request as assigned by the institution.*)
-    f_OrderCancelRequest_ClOrdID : fix_string;
-    f_OrderCancelRequest_SecondaryClOrdID : fix_string option;
-    f_OrderCancelRequest_ClOrdLinkID : fix_string option;
+    f_OrderCancelRequest_ClOrdID : string;
+    f_OrderCancelRequest_SecondaryClOrdID : string option;
+    f_OrderCancelRequest_ClOrdLinkID : string option;
     (** Required for List Orders*)
-    f_OrderCancelRequest_ListID : fix_string option;
+    f_OrderCancelRequest_ListID : string option;
     f_OrderCancelRequest_OrigOrdModTime : fix_utctimestamp option;
-    f_OrderCancelRequest_Account : fix_string option;
+    f_OrderCancelRequest_Account : string option;
     f_OrderCancelRequest_AcctIDSource : fix_acctidsource option;
     f_OrderCancelRequest_AccountType : fix_accounttype option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
@@ -2549,24 +2546,24 @@ type full_fix_ordercancelrequest_data = {
     (** Insert here the set of "OrderQtyData" fields defined in "Common Components of Application Messages"
      Note: OrderQty = CumQty + LeavesQty (see exceptions above)*)
     f_OrderCancelRequest_OrderQtyData : fix_orderqtydata;
-    f_OrderCancelRequest_ComplianceID : fix_string option;
-    f_OrderCancelRequest_Text : fix_string option;
+    f_OrderCancelRequest_ComplianceID : string option;
+    f_OrderCancelRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_OrderCancelRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_OrderCancelRequest_EncodedText : fix_string option
+    f_OrderCancelRequest_EncodedText : string option
 }
 ;;
 
 (** The Order Mass Cancel Report is used to acknowledge an Order Mass Cancel Request. Note that each affected order that is canceled is acknowledged with a separate Execution Report or Order Cancel Reject message.*)
 type full_fix_ordermasscancelreport_data = {
     (** ClOrdID provided on the Order Mass Cancel Request.*)
-    f_OrderMassCancelReport_ClOrdID : fix_string option;
-    f_OrderMassCancelReport_SecondaryClOrdID : fix_string option;
+    f_OrderMassCancelReport_ClOrdID : string option;
+    f_OrderMassCancelReport_SecondaryClOrdID : string option;
     (** Unique Identifier for the Order Mass Cancel Request assigned by the recipient of the Order Mass Cancel Request*)
-    f_OrderMassCancelReport_OrderID : fix_string;
+    f_OrderMassCancelReport_OrderID : string;
     (** Secondary Order ID assigned by the recipient of the Order Mass Cancel Request*)
-    f_OrderMassCancelReport_SecondaryOrderID : fix_string option;
+    f_OrderMassCancelReport_SecondaryOrderID : string option;
     (** Order Mass Cancel Request Type accepted by the system*)
     f_OrderMassCancelReport_MassCancelRequestType : fix_masscancelrequesttype;
     (** Indicates the action taken by the counterparty order handling system as a result of the Cancel Request
@@ -2580,8 +2577,8 @@ type full_fix_ordermasscancelreport_data = {
     (** Optional field used to indicate the number of order identifiers for orders affected by the Order Mass Cancel Request. Must be followed with OrigClOrdID as the next field*)
     f_OrderMassCancelReport_AffectedOrdGrp : fix_rg_affectedordgrp;
     (** Trading Session in which orders are to be canceled*)
-    f_OrderMassCancelReport_TradingSessionID : fix_string option;
-    f_OrderMassCancelReport_TradingSessionSubID : fix_string option;
+    f_OrderMassCancelReport_TradingSessionID : string option;
+    f_OrderMassCancelReport_TradingSessionSubID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_OrderMassCancelReport_Instrument : fix_instrument;
     (** Insert here the set of "UnderlyingInstrument" (underlying symbology) fields defined in "Common Components of Application Messages"*)
@@ -2590,24 +2587,24 @@ type full_fix_ordermasscancelreport_data = {
     f_OrderMassCancelReport_Side : fix_side option;
     (** Time this report was initiated/released by the sells-side (broker, exchange, ECN) or sell-side executing system.*)
     f_OrderMassCancelReport_TransactTime : fix_utctimestamp option;
-    f_OrderMassCancelReport_Text : fix_string option;
+    f_OrderMassCancelReport_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_OrderMassCancelReport_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_OrderMassCancelReport_EncodedText : fix_string option
+    f_OrderMassCancelReport_EncodedText : string option
 }
 ;;
 
 (** The order mass cancel request message requests the cancellation of all of the remaining quantity of a group of orders matching criteria specified within the request. NOTE: This message can only be used to cancel order messages (reduce the full quantity).*)
 type full_fix_ordermasscancelrequest_data = {
     (** Unique ID of Order Mass Cancel Request as assigned by the institution.*)
-    f_OrderMassCancelRequest_ClOrdID : fix_string;
-    f_OrderMassCancelRequest_SecondaryClOrdID : fix_string option;
+    f_OrderMassCancelRequest_ClOrdID : string;
+    f_OrderMassCancelRequest_SecondaryClOrdID : string option;
     (** Specifies the type of cancellation requested*)
     f_OrderMassCancelRequest_MassCancelRequestType : fix_masscancelrequesttype;
     (** Trading Session in which orders are to be canceled*)
-    f_OrderMassCancelRequest_TradingSessionID : fix_string option;
-    f_OrderMassCancelRequest_TradingSessionSubID : fix_string option;
+    f_OrderMassCancelRequest_TradingSessionID : string option;
+    f_OrderMassCancelRequest_TradingSessionSubID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_OrderMassCancelRequest_Instrument : fix_instrument;
     (** Insert here the set of "UnderlyingInstrument" (underlying symbology) fields defined in "Common Components of Application Messages"*)
@@ -2616,28 +2613,28 @@ type full_fix_ordermasscancelrequest_data = {
     f_OrderMassCancelRequest_Side : fix_side option;
     (** Time this order request was initiated/released by the trader or trading system.*)
     f_OrderMassCancelRequest_TransactTime : fix_utctimestamp;
-    f_OrderMassCancelRequest_Text : fix_string option;
+    f_OrderMassCancelRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_OrderMassCancelRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_OrderMassCancelRequest_EncodedText : fix_string option
+    f_OrderMassCancelRequest_EncodedText : string option
 }
 ;;
 
 (** The order mass status request message requests the status for orders matching criteria specified within the request.*)
 type full_fix_ordermassstatusrequest_data = {
     (** Unique ID of mass status request as assigned by the institution.*)
-    f_OrderMassStatusRequest_MassStatusReqID : fix_string;
+    f_OrderMassStatusRequest_MassStatusReqID : string;
     (** Specifies the scope of the mass status request*)
     f_OrderMassStatusRequest_MassStatusReqType : fix_massstatusreqtype;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_OrderMassStatusRequest_Parties : fix_rg_parties;
     (** Account*)
-    f_OrderMassStatusRequest_Account : fix_string option;
+    f_OrderMassStatusRequest_Account : string option;
     f_OrderMassStatusRequest_AcctIDSource : fix_acctidsource option;
     (** Trading Session*)
-    f_OrderMassStatusRequest_TradingSessionID : fix_string option;
-    f_OrderMassStatusRequest_TradingSessionSubID : fix_string option;
+    f_OrderMassStatusRequest_TradingSessionID : string option;
+    f_OrderMassStatusRequest_TradingSessionSubID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_OrderMassStatusRequest_Instrument : fix_instrument;
     (** Insert here the set of "UnderlyingInstrument" (underlying symbology) fields defined in "Common Components of Application Messages"*)
@@ -2649,16 +2646,16 @@ type full_fix_ordermassstatusrequest_data = {
 
 (** The order status request message is used by the institution to generate an order status message back from the broker.*)
 type full_fix_orderstatusrequest_data = {
-    f_OrderStatusRequest_OrderID : fix_string option;
+    f_OrderStatusRequest_OrderID : string option;
     (** The ClOrdID of the order whose status is being requested.*)
-    f_OrderStatusRequest_ClOrdID : fix_string;
-    f_OrderStatusRequest_SecondaryClOrdID : fix_string option;
-    f_OrderStatusRequest_ClOrdLinkID : fix_string option;
+    f_OrderStatusRequest_ClOrdID : string;
+    f_OrderStatusRequest_SecondaryClOrdID : string option;
+    f_OrderStatusRequest_ClOrdLinkID : string option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_OrderStatusRequest_Parties : fix_rg_parties;
     (** Optional, can be used to uniquely identify a specific Order Status Request message. Echoed back on Execution Report if provided.*)
-    f_OrderStatusRequest_OrdStatusReqID : fix_string option;
-    f_OrderStatusRequest_Account : fix_string option;
+    f_OrderStatusRequest_OrdStatusReqID : string option;
+    f_OrderStatusRequest_Account : string option;
     f_OrderStatusRequest_AcctIDSource : fix_acctidsource option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_OrderStatusRequest_Instrument : fix_instrument;
@@ -2674,13 +2671,13 @@ type full_fix_orderstatusrequest_data = {
 (** Position Maintenance Report*)
 type full_fix_positionmaintenancereport_data = {
     (** Unique identifier for this position report*)
-    f_PositionMaintenanceReport_PosMaintRptID : fix_string;
+    f_PositionMaintenanceReport_PosMaintRptID : string;
     f_PositionMaintenanceReport_PosTransType : fix_postranstype;
     (** Unique identifier for the position maintenance request associated with this report*)
-    f_PositionMaintenanceReport_PosReqID : fix_string option;
+    f_PositionMaintenanceReport_PosReqID : string option;
     f_PositionMaintenanceReport_PosMaintAction : fix_posmaintaction;
     (** Reference to the PosReqID of a previous maintenance request that is being replaced or canceled.*)
-    f_PositionMaintenanceReport_OrigPosReqRefID : fix_string;
+    f_PositionMaintenanceReport_OrigPosReqRefID : string;
     (** Status of Position Maintenance Request*)
     f_PositionMaintenanceReport_PosMaintStatus : fix_posmaintstatus;
     f_PositionMaintenanceReport_PosMaintResult : fix_posmaintresult option;
@@ -2688,10 +2685,10 @@ type full_fix_positionmaintenancereport_data = {
     f_PositionMaintenanceReport_ClearingBusinessDate : fix_localmktdate;
     (** Intraday(ITD), Regular Trading Hours(EOD),*)
     f_PositionMaintenanceReport_SettlSessID : fix_settlsessid option;
-    f_PositionMaintenanceReport_SettlSessSubID : fix_string option;
+    f_PositionMaintenanceReport_SettlSessSubID : string option;
     (** Position Account*)
     f_PositionMaintenanceReport_Parties : fix_rg_parties;
-    f_PositionMaintenanceReport_Account : fix_string;
+    f_PositionMaintenanceReport_Account : string;
     f_PositionMaintenanceReport_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_PositionMaintenanceReport_AccountType : fix_accounttype;
@@ -2713,34 +2710,34 @@ type full_fix_positionmaintenancereport_data = {
      Delta_plus, Delta_minus, Final. If Adjustment Type is null, the PCS request will be processed as Margin Disposition only*)
     f_PositionMaintenanceReport_AdjustmentType : fix_adjustmenttype option;
     f_PositionMaintenanceReport_ThresholdAmount : fix_float_4 option;
-    f_PositionMaintenanceReport_Text : fix_string option;
+    f_PositionMaintenanceReport_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_PositionMaintenanceReport_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_PositionMaintenanceReport_EncodedText : fix_string option
+    f_PositionMaintenanceReport_EncodedText : string option
 }
 ;;
 
 (** Position Maintenance Request*)
 type full_fix_positionmaintenancerequest_data = {
     (** Unique identifier for the position maintenance request as assigned by the submitter*)
-    f_PositionMaintenanceRequest_PosReqID : fix_string;
+    f_PositionMaintenanceRequest_PosReqID : string;
     f_PositionMaintenanceRequest_PosTransType : fix_postranstype;
     f_PositionMaintenanceRequest_PosMaintAction : fix_posmaintaction;
     (** Reference to the PosReqID of a previous maintenance request that is being replaced or canceled.*)
-    f_PositionMaintenanceRequest_OrigPosReqRefID : fix_string option;
+    f_PositionMaintenanceRequest_OrigPosReqRefID : string option;
     (** Reference to a PosMaintRptID from a previous Position Maintenance Report that is being replaced or canceled.*)
-    f_PositionMaintenanceRequest_PosMaintRptRefID : fix_string option;
+    f_PositionMaintenanceRequest_PosMaintRptRefID : string option;
     (** The Clearing Business Date referred to by this maintenance request*)
     f_PositionMaintenanceRequest_ClearingBusinessDate : fix_localmktdate;
     f_PositionMaintenanceRequest_SettlSessID : fix_settlsessid option;
-    f_PositionMaintenanceRequest_SettlSessSubID : fix_string option;
+    f_PositionMaintenanceRequest_SettlSessSubID : string option;
     (** The Following PartyRoles can be specified:
      ClearingOrganization
      Clearing Firm
      Position Account*)
     f_PositionMaintenanceRequest_Parties : fix_rg_parties;
-    f_PositionMaintenanceRequest_Account : fix_string;
+    f_PositionMaintenanceRequest_Account : string;
     f_PositionMaintenanceRequest_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_PositionMaintenanceRequest_AccountType : fix_accounttype;
@@ -2763,21 +2760,21 @@ type full_fix_positionmaintenancerequest_data = {
     (** Boolean - Y indicates you are requesting rollover of prior day’s spread submissions*)
     f_PositionMaintenanceRequest_PriorSpreadIndicator : bool option;
     f_PositionMaintenanceRequest_ThresholdAmount : fix_float_4 option;
-    f_PositionMaintenanceRequest_Text : fix_string option;
+    f_PositionMaintenanceRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_PositionMaintenanceRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_PositionMaintenanceRequest_EncodedText : fix_string option
+    f_PositionMaintenanceRequest_EncodedText : string option
 }
 ;;
 
 (** Position Report*)
 type full_fix_positionreport_data = {
     (** Unique identifier for this position report*)
-    f_PositionReport_PosMaintRptID : fix_string;
+    f_PositionReport_PosMaintRptID : string;
     (** Unique identifier for the Request for Positions associated with this report
      This field should not be provided if the report was sent unsolicited.*)
-    f_PositionReport_PosReqID : fix_string option;
+    f_PositionReport_PosReqID : string option;
     f_PositionReport_PosReqType : fix_posreqtype option;
     (** Used to subscribe / unsubscribe for trade capture reports
      If the field is absent, the value 0 will be the default*)
@@ -2790,10 +2787,10 @@ type full_fix_positionreport_data = {
     (** The Clearing Business Date referred to by this maintenance request*)
     f_PositionReport_ClearingBusinessDate : fix_localmktdate;
     f_PositionReport_SettlSessID : fix_settlsessid option;
-    f_PositionReport_SettlSessSubID : fix_string option;
+    f_PositionReport_SettlSessSubID : string option;
     (** Position Account*)
     f_PositionReport_Parties : fix_rg_parties;
-    f_PositionReport_Account : fix_string;
+    f_PositionReport_Account : string;
     f_PositionReport_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_PositionReport_AccountType : fix_accounttype;
@@ -2814,21 +2811,21 @@ type full_fix_positionreport_data = {
     (** RegNonRegInd*)
     f_PositionReport_RegistStatus : fix_registstatus option;
     f_PositionReport_DeliveryDate : fix_localmktdate option;
-    f_PositionReport_Text : fix_string option;
+    f_PositionReport_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_PositionReport_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_PositionReport_EncodedText : fix_string option
+    f_PositionReport_EncodedText : string option
 }
 ;;
 
 (** The Quote message is used as the response to a Quote Request or a Quote Response message in both indicative, tradeable, and restricted tradeable quoting markets.*)
 type full_fix_quote_data = {
     (** Required when quote is in response to a Quote Request message*)
-    f_Quote_QuoteReqID : fix_string option;
-    f_Quote_QuoteID : fix_string;
+    f_Quote_QuoteReqID : string option;
+    f_Quote_QuoteID : string;
     (** Required when responding to the Quote Response message. The counterparty specified ID of the Quote Response message.*)
-    f_Quote_QuoteRespID : fix_string option;
+    f_Quote_QuoteRespID : string option;
     (** Quote Type
      If not specified, the default is an indicative quote*)
     f_Quote_QuoteType : fix_quotetype option;
@@ -2837,8 +2834,8 @@ type full_fix_quote_data = {
     f_Quote_QuoteResponseLevel : fix_quoteresponselevel option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_Quote_Parties : fix_rg_parties;
-    f_Quote_TradingSessionID : fix_string option;
-    f_Quote_TradingSessionSubID : fix_string option;
+    f_Quote_TradingSessionID : string option;
+    f_Quote_TradingSessionSubID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_Quote_Instrument : fix_instrument;
     (** Insert here the set of "FinancingDetails" (symbology) fields defined in "Common Components of Application Messages"*)
@@ -2860,7 +2857,7 @@ type full_fix_quote_data = {
     f_Quote_Currency : fix_currency option;
     (** Insert here the set of "Stipulations" (repeating group of Fixed Income stipulations) fields defined in "Common Components of Application Messages"*)
     f_Quote_Stipulations : fix_rg_stipulations;
-    f_Quote_Account : fix_string option;
+    f_Quote_Account : string option;
     f_Quote_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_Quote_AccountType : fix_accounttype option;
@@ -2921,31 +2918,31 @@ type full_fix_quote_data = {
     f_Quote_PriceType : fix_pricetype option;
     f_Quote_SpreadOrBenchmarkCurveData : fix_spreadorbenchmarkcurvedata;
     f_Quote_YieldData : fix_yielddata;
-    f_Quote_Text : fix_string option;
+    f_Quote_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_Quote_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_Quote_EncodedText : fix_string option
+    f_Quote_EncodedText : string option
 }
 ;;
 
 (** The Quote Cancel message is used by an originator of quotes to cancel quotes.*)
 type full_fix_quotecancel_data = {
     (** Required when quote is in response to a Quote Request message*)
-    f_QuoteCancel_QuoteReqID : fix_string option;
-    f_QuoteCancel_QuoteID : fix_string;
+    f_QuoteCancel_QuoteReqID : string option;
+    f_QuoteCancel_QuoteID : string;
     (** Identifies the type of Quote Cancel request.*)
     f_QuoteCancel_QuoteCancelType : fix_quotecanceltype;
     (** Level of Response requested from receiver of quote messages.*)
     f_QuoteCancel_QuoteResponseLevel : fix_quoteresponselevel option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_QuoteCancel_Parties : fix_rg_parties;
-    f_QuoteCancel_Account : fix_string option;
+    f_QuoteCancel_Account : string option;
     f_QuoteCancel_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_QuoteCancel_AccountType : fix_accounttype option;
-    f_QuoteCancel_TradingSessionID : fix_string option;
-    f_QuoteCancel_TradingSessionSubID : fix_string option;
+    f_QuoteCancel_TradingSessionID : string option;
+    f_QuoteCancel_TradingSessionSubID : string option;
     (** The number of securities (instruments) whose quotes are to be canceled
      Not required when cancelling all quotes.*)
     f_QuoteCancel_QuotCxlEntriesGrp : fix_rg_quotcxlentriesgrp
@@ -2954,59 +2951,59 @@ type full_fix_quotecancel_data = {
 
 (** In some markets it is the practice to request quotes from brokers prior to placement of an order. The quote request message is used for this purpose. This message is commonly referred to as an Request For Quote (RFQ)*)
 type full_fix_quoterequest_data = {
-    f_QuoteRequest_QuoteReqID : fix_string;
+    f_QuoteRequest_QuoteReqID : string;
     (** For tradeable quote model - used to indicate to which RFQ Request this Quote Request is in response.*)
-    f_QuoteRequest_RFQReqID : fix_string option;
+    f_QuoteRequest_RFQReqID : string option;
     (** Required when QuoteType is Tradeable and the OrdType is Limit.*)
-    f_QuoteRequest_ClOrdID : fix_string option;
+    f_QuoteRequest_ClOrdID : string option;
     f_QuoteRequest_OrderCapacity : fix_ordercapacity option;
     (** Number of related symbols (instruments) in Request*)
     f_QuoteRequest_QuotReqGrp : fix_rg_quotreqgrp;
-    f_QuoteRequest_Text : fix_string option;
+    f_QuoteRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_QuoteRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_QuoteRequest_EncodedText : fix_string option
+    f_QuoteRequest_EncodedText : string option
 }
 ;;
 
 (** The Quote Request Reject message is used to reject Quote Request messages for all quoting models.*)
 type full_fix_quoterequestreject_data = {
-    f_QuoteRequestReject_QuoteReqID : fix_string;
+    f_QuoteRequestReject_QuoteReqID : string;
     (** For tradeable quote model - used to indicate to which RFQ Request this Quote Request is in response.*)
-    f_QuoteRequestReject_RFQReqID : fix_string option;
+    f_QuoteRequestReject_RFQReqID : string option;
     (** Reason Quote was rejected*)
     f_QuoteRequestReject_QuoteRequestRejectReason : fix_quoterequestrejectreason;
     (** Number of related symbols (instruments) in Request*)
     f_QuoteRequestReject_QuotReqRjctGrp : fix_rg_quotreqrjctgrp;
-    f_QuoteRequestReject_Text : fix_string option;
+    f_QuoteRequestReject_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_QuoteRequestReject_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_QuoteRequestReject_EncodedText : fix_string option
+    f_QuoteRequestReject_EncodedText : string option
 }
 ;;
 
 (** The Quote Response message is used to respond to a IOI message or Quote message.*)
 type full_fix_quoteresponse_data = {
     (** Unique ID as assigned by the Initiator*)
-    f_QuoteResponse_QuoteRespID : fix_string;
+    f_QuoteResponse_QuoteRespID : string;
     (** Required only when responding to a Quote.*)
-    f_QuoteResponse_QuoteID : fix_string option;
+    f_QuoteResponse_QuoteID : string option;
     (** Type of response this Quote Response is.*)
     f_QuoteResponse_QuoteRespType : fix_quoteresptype;
     (** Required only when QuoteRespType is 1 (Hit/Lift) or 2 (Counter quote).*)
-    f_QuoteResponse_ClOrdID : fix_string option;
+    f_QuoteResponse_ClOrdID : string option;
     f_QuoteResponse_OrderCapacity : fix_ordercapacity option;
     (** Required only when responding to an IOI.*)
-    f_QuoteResponse_IOIID : fix_string option;
+    f_QuoteResponse_IOIID : string option;
     (** Default is Indicative.*)
     f_QuoteResponse_QuoteType : fix_quotetype option;
     f_QuoteResponse_QuotQualGrp : fix_rg_quotqualgrp;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_QuoteResponse_Parties : fix_rg_parties;
-    f_QuoteResponse_TradingSessionID : fix_string option;
-    f_QuoteResponse_TradingSessionSubID : fix_string option;
+    f_QuoteResponse_TradingSessionID : string option;
+    f_QuoteResponse_TradingSessionSubID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"
      For multilegs supply minimally a value for Symbol (55).*)
     f_QuoteResponse_Instrument : fix_instrument;
@@ -3031,7 +3028,7 @@ type full_fix_quoteresponse_data = {
     f_QuoteResponse_Currency : fix_currency option;
     (** Optional*)
     f_QuoteResponse_Stipulations : fix_rg_stipulations;
-    f_QuoteResponse_Account : fix_string option;
+    f_QuoteResponse_Account : string option;
     (** Used to identify the source of the Account code.*)
     f_QuoteResponse_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
@@ -3090,11 +3087,11 @@ type full_fix_quoteresponse_data = {
     f_QuoteResponse_CustOrderCapacity : fix_custordercapacity option;
     (** Used when routing quotes to multiple markets*)
     f_QuoteResponse_ExDestination : fix_exchange option;
-    f_QuoteResponse_Text : fix_string option;
+    f_QuoteResponse_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_QuoteResponse_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_QuoteResponse_EncodedText : fix_string option;
+    f_QuoteResponse_EncodedText : string option;
     f_QuoteResponse_Price : fix_float_4 option;
     f_QuoteResponse_PriceType : fix_pricetype option;
     (** Insert here the set of "SpreadOrBenchmarkCurveData" fields defined in "Common Components of Application Messages"*)
@@ -3109,19 +3106,19 @@ type full_fix_quoteresponse_data = {
  * As a response to a Quote Cancel message
  * As a response to a Quote Response message in a negotiation dialog (see Volume 7 – PRODUCT: FIXED INCOME)*)
 type full_fix_quotestatusreport_data = {
-    f_QuoteStatusReport_QuoteStatusReqID : fix_string option;
+    f_QuoteStatusReport_QuoteStatusReqID : string option;
     (** Required when quote is in response to a Quote Request message*)
-    f_QuoteStatusReport_QuoteReqID : fix_string option;
-    f_QuoteStatusReport_QuoteID : fix_string;
+    f_QuoteStatusReport_QuoteReqID : string option;
+    f_QuoteStatusReport_QuoteID : string;
     (** Required when responding to a Quote Response message.*)
-    f_QuoteStatusReport_QuoteRespID : fix_string option;
+    f_QuoteStatusReport_QuoteRespID : string option;
     (** Quote Type
      If not specified, the default is an indicative quote*)
     f_QuoteStatusReport_QuoteType : fix_quotetype option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_QuoteStatusReport_Parties : fix_rg_parties;
-    f_QuoteStatusReport_TradingSessionID : fix_string option;
-    f_QuoteStatusReport_TradingSessionSubID : fix_string option;
+    f_QuoteStatusReport_TradingSessionID : string option;
+    f_QuoteStatusReport_TradingSessionSubID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_QuoteStatusReport_Instrument : fix_instrument;
     (** Insert here the set of "FinancingDetails" (symbology) fields defined in "Common Components of Application Messages"*)
@@ -3141,7 +3138,7 @@ type full_fix_quotestatusreport_data = {
     (** Can be used to specify the currency of the quoted prices. May differ from the ‘normal’ trading currency of the instrument being quoted*)
     f_QuoteStatusReport_Currency : fix_currency option;
     f_QuoteStatusReport_Stipulations : fix_rg_stipulations;
-    f_QuoteStatusReport_Account : fix_string option;
+    f_QuoteStatusReport_Account : string option;
     f_QuoteStatusReport_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_QuoteStatusReport_AccountType : fix_accounttype option;
@@ -3205,16 +3202,16 @@ type full_fix_quotestatusreport_data = {
     f_QuoteStatusReport_ExDestination : fix_exchange option;
     (** Quote Status*)
     f_QuoteStatusReport_QuoteStatus : fix_quotestatus option;
-    f_QuoteStatusReport_Text : fix_string option;
+    f_QuoteStatusReport_Text : string option;
     f_QuoteStatusReport_EncodedTextLen : int option;
-    f_QuoteStatusReport_EncodedText : fix_string option
+    f_QuoteStatusReport_EncodedText : string option
 }
 ;;
 
 (** The quote status request message is used for the following purposes in markets that employ tradeable or restricted tradeable quotes:*)
 type full_fix_quotestatusrequest_data = {
-    f_QuoteStatusRequest_QuoteStatusReqID : fix_string option;
-    f_QuoteStatusRequest_QuoteID : fix_string option;
+    f_QuoteStatusRequest_QuoteStatusReqID : string option;
+    f_QuoteStatusRequest_QuoteID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_QuoteStatusRequest_Instrument : fix_instrument;
     (** Insert here the set of "FinancingDetails" (symbology) fields defined in "Common Components of Application Messages"*)
@@ -3225,12 +3222,12 @@ type full_fix_quotestatusrequest_data = {
     f_QuoteStatusRequest_InstrmtLegGrp : fix_rg_instrmtleggrp;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_QuoteStatusRequest_Parties : fix_rg_parties;
-    f_QuoteStatusRequest_Account : fix_string option;
+    f_QuoteStatusRequest_Account : string option;
     f_QuoteStatusRequest_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_QuoteStatusRequest_AccountType : fix_accounttype option;
-    f_QuoteStatusRequest_TradingSessionID : fix_string option;
-    f_QuoteStatusRequest_TradingSessionSubID : fix_string option;
+    f_QuoteStatusRequest_TradingSessionID : string option;
+    f_QuoteStatusRequest_TradingSessionSubID : string option;
     (** Used to subscribe for Quote Status Report messages*)
     f_QuoteStatusRequest_SubscriptionRequestType : fix_subscriptionrequesttype option
 }
@@ -3238,7 +3235,7 @@ type full_fix_quotestatusrequest_data = {
 
 (** In tradeable and restricted tradeable quoting markets – Quote Requests are issued by counterparties interested in ascertaining the market for an instrument.*)
 type full_fix_rfqrequest_data = {
-    f_RFQRequest_RFQReqID : fix_string;
+    f_RFQRequest_RFQReqID : string;
     (** Number of related symbols (instruments) in Request*)
     f_RFQRequest_RFQReqGrp : fix_rg_rfqreqgrp;
     (** Used to subscribe for Quote Requests that are sent into a market*)
@@ -3248,17 +3245,17 @@ type full_fix_rfqrequest_data = {
 
 (** The Registration Instructions message type may be used by institutions or retail intermediaries wishing to electronically submit registration information to a broker or fund manager (for CIV) for an order or for an allocation.*)
 type full_fix_registrationinstructions_data = {
-    f_RegistrationInstructions_RegistID : fix_string;
+    f_RegistrationInstructions_RegistID : string;
     f_RegistrationInstructions_RegistTransType : fix_registtranstype;
     (** Required for Cancel and Replace RegistTransType messages*)
-    f_RegistrationInstructions_RegistRefID : fix_string;
+    f_RegistrationInstructions_RegistRefID : string;
     (** Unique identifier of the order as assigned by institution or intermediary to which Registration relates*)
-    f_RegistrationInstructions_ClOrdID : fix_string option;
+    f_RegistrationInstructions_ClOrdID : string option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_RegistrationInstructions_Parties : fix_rg_parties;
-    f_RegistrationInstructions_Account : fix_string option;
+    f_RegistrationInstructions_Account : string option;
     f_RegistrationInstructions_AcctIDSource : fix_acctidsource option;
-    f_RegistrationInstructions_RegistAcctType : fix_string option;
+    f_RegistrationInstructions_RegistAcctType : string option;
     f_RegistrationInstructions_TaxAdvantageType : fix_taxadvantagetype option;
     f_RegistrationInstructions_OwnershipType : fix_ownershiptype option;
     (** Number of registration details in this message (number of repeating groups to follow)*)
@@ -3271,27 +3268,27 @@ type full_fix_registrationinstructions_data = {
 (** The Registration Instructions Response message type may be used by broker or fund manager (for CIV) in response to a Registration Instructions message submitted by an institution or retail intermediary for an order or for an allocation.*)
 type full_fix_registrationinstructionsresponse_data = {
     (** Unique identifier of the original Registration Instructions details*)
-    f_RegistrationInstructionsResponse_RegistID : fix_string;
+    f_RegistrationInstructionsResponse_RegistID : string;
     (** Identifies original Registration Instructions transaction type*)
     f_RegistrationInstructionsResponse_RegistTransType : fix_registtranstype;
     (** Required for Cancel and Replace RegistTransType messages*)
-    f_RegistrationInstructionsResponse_RegistRefID : fix_string;
+    f_RegistrationInstructionsResponse_RegistRefID : string;
     (** Unique identifier of the order as assigned by institution or intermediary.*)
-    f_RegistrationInstructionsResponse_ClOrdID : fix_string option;
+    f_RegistrationInstructionsResponse_ClOrdID : string option;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"*)
     f_RegistrationInstructionsResponse_Parties : fix_rg_parties;
-    f_RegistrationInstructionsResponse_Account : fix_string option;
+    f_RegistrationInstructionsResponse_Account : string option;
     f_RegistrationInstructionsResponse_AcctIDSource : fix_acctidsource option;
     f_RegistrationInstructionsResponse_RegistStatus : fix_registstatus;
     f_RegistrationInstructionsResponse_RegistRejReasonCode : fix_registrejreasoncode option;
-    f_RegistrationInstructionsResponse_RegistRejReasonText : fix_string option
+    f_RegistrationInstructionsResponse_RegistRejReasonText : string option
 }
 ;;
 
 (** Request For Positions*)
 type full_fix_requestforpositions_data = {
     (** Unique identifier for the Request for Positions as assigned by the submitter*)
-    f_RequestForPositions_PosReqID : fix_string;
+    f_RequestForPositions_PosReqID : string;
     f_RequestForPositions_PosReqType : fix_posreqtype;
     f_RequestForPositions_MatchStatus : fix_matchstatus option;
     (** Used to subscribe / unsubscribe for trade capture reports
@@ -3299,7 +3296,7 @@ type full_fix_requestforpositions_data = {
     f_RequestForPositions_SubscriptionRequestType : fix_subscriptionrequesttype option;
     (** Position Account*)
     f_RequestForPositions_Parties : fix_rg_parties;
-    f_RequestForPositions_Account : fix_string;
+    f_RequestForPositions_Account : string;
     f_RequestForPositions_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_RequestForPositions_AccountType : fix_accounttype;
@@ -3313,7 +3310,7 @@ type full_fix_requestforpositions_data = {
     f_RequestForPositions_ClearingBusinessDate : fix_localmktdate;
     (** Intraday(ITD), Regular Trading Hours(EOD)*)
     f_RequestForPositions_SettlSessID : fix_settlsessid option;
-    f_RequestForPositions_SettlSessSubID : fix_string option;
+    f_RequestForPositions_SettlSessSubID : string option;
     (** Specifies the number of repeating TradingSessionIDs*)
     f_RequestForPositions_TrdgSesGrp : fix_rg_trdgsesgrp;
     (** Time this order request was initiated/released by the trader, trading system, or intermediary.*)
@@ -3321,22 +3318,22 @@ type full_fix_requestforpositions_data = {
     (** Ability to specify whether the response to the request should be delivered inband or via pre-arranged out-of-band transport.*)
     f_RequestForPositions_ResponseTransportType : fix_responsetransporttype option;
     (** URI destination name. Used if ResponseTransportType is out-of-band.*)
-    f_RequestForPositions_ResponseDestination : fix_string option;
-    f_RequestForPositions_Text : fix_string option;
+    f_RequestForPositions_ResponseDestination : string option;
+    f_RequestForPositions_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_RequestForPositions_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_RequestForPositions_EncodedText : fix_string option
+    f_RequestForPositions_EncodedText : string option
 }
 ;;
 
 (** Request for Positions Ack*)
 type full_fix_requestforpositionsack_data = {
     (** Unique identifier for this position report*)
-    f_RequestForPositionsAck_PosMaintRptID : fix_string;
+    f_RequestForPositionsAck_PosMaintRptID : string;
     (** Unique identifier for the Request for Position associated with this report
      This field should not be provided if the report was sent unsolicited.*)
-    f_RequestForPositionsAck_PosReqID : fix_string option;
+    f_RequestForPositionsAck_PosReqID : string option;
     (** Total number of Position Reports being returned*)
     f_RequestForPositionsAck_TotalNumPosReports : int option;
     (** Set to 'Y' if message is sent as a result of a subscription request or out of band configuration as opposed to a Position Request.*)
@@ -3345,7 +3342,7 @@ type full_fix_requestforpositionsack_data = {
     f_RequestForPositionsAck_PosReqStatus : fix_posreqstatus;
     (** Position Account*)
     f_RequestForPositionsAck_Parties : fix_rg_parties;
-    f_RequestForPositionsAck_Account : fix_string;
+    f_RequestForPositionsAck_Account : string;
     f_RequestForPositionsAck_AcctIDSource : fix_acctidsource option;
     (** Type of account associated with the order (Origin)*)
     f_RequestForPositionsAck_AccountType : fix_accounttype;
@@ -3358,12 +3355,12 @@ type full_fix_requestforpositionsack_data = {
     (** Ability to specify whether the response to the request should be delivered inband or via pre-arranged out-of-band transport.*)
     f_RequestForPositionsAck_ResponseTransportType : fix_responsetransporttype option;
     (** URI destination name. Used if ResponseTransportType is out-of-band.*)
-    f_RequestForPositionsAck_ResponseDestination : fix_string option;
-    f_RequestForPositionsAck_Text : fix_string option;
+    f_RequestForPositionsAck_ResponseDestination : string option;
+    f_RequestForPositionsAck_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_RequestForPositionsAck_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_RequestForPositionsAck_EncodedText : fix_string option
+    f_RequestForPositionsAck_EncodedText : string option
 }
 ;;
 
@@ -3372,9 +3369,9 @@ type full_fix_requestforpositionsack_data = {
  2. Accept the security defined in a Security Definition message with changes to the definition and/or identity of the security.
  3. Reject the security requested in a Security Definition message*)
 type full_fix_securitydefinition_data = {
-    f_SecurityDefinition_SecurityReqID : fix_string;
+    f_SecurityDefinition_SecurityReqID : string;
     (** Identifier for the Security Definition message*)
-    f_SecurityDefinition_SecurityResponseID : fix_string;
+    f_SecurityDefinition_SecurityResponseID : string;
     (** Response to the Security Definition Request*)
     f_SecurityDefinition_SecurityResponseType : fix_securityresponsetype;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"
@@ -3385,14 +3382,14 @@ type full_fix_securitydefinition_data = {
     (** Number of underlyings*)
     f_SecurityDefinition_UndInstrmtGrp : fix_rg_undinstrmtgrp;
     f_SecurityDefinition_Currency : fix_currency option;
-    f_SecurityDefinition_TradingSessionID : fix_string option;
-    f_SecurityDefinition_TradingSessionSubID : fix_string option;
+    f_SecurityDefinition_TradingSessionID : string option;
+    f_SecurityDefinition_TradingSessionSubID : string option;
     (** Comment, instructions, or other identifying information.*)
-    f_SecurityDefinition_Text : fix_string option;
+    f_SecurityDefinition_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_SecurityDefinition_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_SecurityDefinition_EncodedText : fix_string option;
+    f_SecurityDefinition_EncodedText : string option;
     (** Number of legs that make up the Security*)
     f_SecurityDefinition_InstrmtLegGrp : fix_rg_instrmtleggrp;
     f_SecurityDefinition_ExpirationCycle : fix_expirationcycle option;
@@ -3404,7 +3401,7 @@ type full_fix_securitydefinition_data = {
 (** The Security Definition Request message is used for the following:
  1. Request a specific Security to be traded with the second party. The request security can be defined as a multileg security made up of one or more instrument legs.*)
 type full_fix_securitydefinitionrequest_data = {
-    f_SecurityDefinitionRequest_SecurityReqID : fix_string;
+    f_SecurityDefinitionRequest_SecurityReqID : string;
     f_SecurityDefinitionRequest_SecurityRequestType : fix_securityrequesttype;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"
      of the requested Security*)
@@ -3415,14 +3412,14 @@ type full_fix_securitydefinitionrequest_data = {
     f_SecurityDefinitionRequest_UndInstrmtGrp : fix_rg_undinstrmtgrp;
     f_SecurityDefinitionRequest_Currency : fix_currency option;
     (** Comment, instructions, or other identifying information.*)
-    f_SecurityDefinitionRequest_Text : fix_string option;
+    f_SecurityDefinitionRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_SecurityDefinitionRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_SecurityDefinitionRequest_EncodedText : fix_string option;
+    f_SecurityDefinitionRequest_EncodedText : string option;
     (** Optional Trading Session Identifier to specify a particular trading session for which you want to obtain a list of securities that are tradeable.*)
-    f_SecurityDefinitionRequest_TradingSessionID : fix_string option;
-    f_SecurityDefinitionRequest_TradingSessionSubID : fix_string option;
+    f_SecurityDefinitionRequest_TradingSessionID : string option;
+    f_SecurityDefinitionRequest_TradingSessionSubID : string option;
     (** Number of legs that make up the Security*)
     f_SecurityDefinitionRequest_InstrmtLegGrp : fix_rg_instrmtleggrp;
     f_SecurityDefinitionRequest_ExpirationCycle : fix_expirationcycle option;
@@ -3433,9 +3430,9 @@ type full_fix_securitydefinitionrequest_data = {
 
 (** The Security List message is used to return a list of securities that matches the criteria specified in a Security List Request.*)
 type full_fix_securitylist_data = {
-    f_SecurityList_SecurityReqID : fix_string;
+    f_SecurityList_SecurityReqID : string;
     (** Identifier for the Security List message*)
-    f_SecurityList_SecurityResponseID : fix_string;
+    f_SecurityList_SecurityResponseID : string;
     (** Result of the Security Request identified by the SecurityReqID*)
     f_SecurityList_SecurityRequestResult : fix_securityrequestresult;
     (** Used to indicate the total number of securities being returned for this request. Used in the event that message fragmentation is required.*)
@@ -3449,7 +3446,7 @@ type full_fix_securitylist_data = {
 
 (** The Security List Request message is used to return a list of securities from the counterparty that match criteria provided on the request*)
 type full_fix_securitylistrequest_data = {
-    f_SecurityListRequest_SecurityReqID : fix_string;
+    f_SecurityListRequest_SecurityReqID : string;
     (** Type of Security List Request being made*)
     f_SecurityListRequest_SecurityListRequestType : fix_securitylistrequesttype;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"
@@ -3465,14 +3462,14 @@ type full_fix_securitylistrequest_data = {
     f_SecurityListRequest_InstrmtLegGrp : fix_rg_instrmtleggrp;
     f_SecurityListRequest_Currency : fix_currency option;
     (** Comment, instructions, or other identifying information.*)
-    f_SecurityListRequest_Text : fix_string option;
+    f_SecurityListRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_SecurityListRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_SecurityListRequest_EncodedText : fix_string option;
+    f_SecurityListRequest_EncodedText : string option;
     (** Optional Trading Session Identifier to specify a particular trading session for which you want to obtain a list of securities that are tradeable.*)
-    f_SecurityListRequest_TradingSessionID : fix_string option;
-    f_SecurityListRequest_TradingSessionSubID : fix_string option;
+    f_SecurityListRequest_TradingSessionID : string option;
+    f_SecurityListRequest_TradingSessionSubID : string option;
     (** Subscribe or unsubscribe for security status to security specified in request.*)
     f_SecurityListRequest_SubscriptionRequestType : fix_subscriptionrequesttype option
 }
@@ -3480,7 +3477,7 @@ type full_fix_securitylistrequest_data = {
 
 (** The Security Status message provides for the ability to report changes in status to a security.*)
 type full_fix_securitystatus_data = {
-    f_SecurityStatus_SecurityStatusReqID : fix_string option;
+    f_SecurityStatus_SecurityStatusReqID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_SecurityStatus_Instrument : fix_instrument;
     (** Insert here the set of "InstrumentExtension" fields defined in "Common Components of Application Messages"*)
@@ -3490,8 +3487,8 @@ type full_fix_securitystatus_data = {
     (** Required for multileg quotes*)
     f_SecurityStatus_InstrmtLegGrp : fix_rg_instrmtleggrp;
     f_SecurityStatus_Currency : fix_currency option;
-    f_SecurityStatus_TradingSessionID : fix_string option;
-    f_SecurityStatus_TradingSessionSubID : fix_string option;
+    f_SecurityStatus_TradingSessionID : string option;
+    f_SecurityStatus_TradingSessionSubID : string option;
     (** Set to 'Y' if message is sent as a result of a subscription request not a snapshot request*)
     f_SecurityStatus_UnsolicitedIndicator : fix_unsolicitedindicator option;
     (** Identifies the trading status applicable to the transaction.*)
@@ -3512,18 +3509,18 @@ type full_fix_securitystatus_data = {
     f_SecurityStatus_TransactTime : fix_utctimestamp option;
     f_SecurityStatus_Adjustment : fix_adjustment option;
     (** Comment, instructions, or other identifying information.*)
-    f_SecurityStatus_Text : fix_string option;
+    f_SecurityStatus_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_SecurityStatus_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_SecurityStatus_EncodedText : fix_string option
+    f_SecurityStatus_EncodedText : string option
 }
 ;;
 
 (** The Security Status Request message provides for the ability to request the status of a security.*)
 type full_fix_securitystatusrequest_data = {
     (** Must be unique, or the ID of previous Security Status Request to disable if SubscriptionRequestType = Disable previous Snapshot + Updates Request (2).*)
-    f_SecurityStatusRequest_SecurityStatusReqID : fix_string;
+    f_SecurityStatusRequest_SecurityStatusReqID : string;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_SecurityStatusRequest_Instrument : fix_instrument;
     (** Insert here the set of "InstrumentExtension" fields defined in "Common Components of Application Messages"*)
@@ -3535,37 +3532,37 @@ type full_fix_securitystatusrequest_data = {
     f_SecurityStatusRequest_Currency : fix_currency option;
     (** SubcriptionRequestType indicates to the other party what type of response is expected. A snapshot request only asks for current information. A subscribe request asks for updates as the status changes. Unsubscribe will cancel any future update messages from the counter party.)*)
     f_SecurityStatusRequest_SubscriptionRequestType : fix_subscriptionrequesttype;
-    f_SecurityStatusRequest_TradingSessionID : fix_string option;
-    f_SecurityStatusRequest_TradingSessionSubID : fix_string option
+    f_SecurityStatusRequest_TradingSessionID : string option;
+    f_SecurityStatusRequest_TradingSessionSubID : string option
 }
 ;;
 
 (** The Security Type Request message is used to return a list of security types available from a counterparty or market.*)
 type full_fix_securitytyperequest_data = {
-    f_SecurityTypeRequest_SecurityReqID : fix_string;
+    f_SecurityTypeRequest_SecurityReqID : string;
     (** Comment, instructions, or other identifying information.*)
-    f_SecurityTypeRequest_Text : fix_string option;
+    f_SecurityTypeRequest_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_SecurityTypeRequest_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_SecurityTypeRequest_EncodedText : fix_string option;
+    f_SecurityTypeRequest_EncodedText : string option;
     (** Optional Trading Session Identifier to specify a particular trading session for which you want to obtain a list of securities that are tradeable.*)
-    f_SecurityTypeRequest_TradingSessionID : fix_string option;
-    f_SecurityTypeRequest_TradingSessionSubID : fix_string option;
+    f_SecurityTypeRequest_TradingSessionID : string option;
+    f_SecurityTypeRequest_TradingSessionSubID : string option;
     (** Used to qualify which security types are returned*)
     f_SecurityTypeRequest_Product : fix_product option;
     (** Used to qualify which security type is returned*)
     f_SecurityTypeRequest_SecurityType : fix_securitytype option;
     (** Used to qualify which security types are returned*)
-    f_SecurityTypeRequest_SecuritySubType : fix_string option
+    f_SecurityTypeRequest_SecuritySubType : string option
 }
 ;;
 
 (** The Security Type message is used to return a list of security types available from a counterparty or market.*)
 type full_fix_securitytypes_data = {
-    f_SecurityTypes_SecurityReqID : fix_string;
+    f_SecurityTypes_SecurityReqID : string;
     (** Identifier for the security response message*)
-    f_SecurityTypes_SecurityResponseID : fix_string;
+    f_SecurityTypes_SecurityResponseID : string;
     (** The result of the security request identified by SecurityReqID*)
     f_SecurityTypes_SecurityResponseType : fix_securityresponsetype;
     (** Indicates total number of security types in the event that multiple Security Type messages are used to return results*)
@@ -3574,14 +3571,14 @@ type full_fix_securitytypes_data = {
     f_SecurityTypes_LastFragment : fix_lastfragment option;
     f_SecurityTypes_SecTypesGrp : fix_rg_sectypesgrp;
     (** Comment, instructions, or other identifying information.*)
-    f_SecurityTypes_Text : fix_string option;
+    f_SecurityTypes_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_SecurityTypes_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_SecurityTypes_EncodedText : fix_string option;
+    f_SecurityTypes_EncodedText : string option;
     (** Optional Trading Session Identifier to specify a particular trading session for which you want to obtain a list of securities that are tradeable.*)
-    f_SecurityTypes_TradingSessionID : fix_string option;
-    f_SecurityTypes_TradingSessionSubID : fix_string option;
+    f_SecurityTypes_TradingSessionID : string option;
+    f_SecurityTypes_TradingSessionSubID : string option;
     (** Subscribe or unsubscribe for security status to security specified in request.*)
     f_SecurityTypes_SubscriptionRequestType : fix_subscriptionrequesttype option
 }
@@ -3589,7 +3586,7 @@ type full_fix_securitytypes_data = {
 
 type full_fix_settlementinstructionrequest_data = {
     (** Unique message ID*)
-    f_SettlementInstructionRequest_SettlInstReqID : fix_string;
+    f_SettlementInstructionRequest_SettlInstReqID : string;
     (** Date/Time this request message was generated*)
     f_SettlementInstructionRequest_TransactTime : fix_utctimestamp;
     (** Insert here the set of "Parties" (firm identification) fields defined in "Common Components of Application Messages"
@@ -3597,7 +3594,7 @@ type full_fix_settlementinstructionrequest_data = {
      Not required if database identifiers are being used to request settlement instructions. Required otherwise.*)
     f_SettlementInstructionRequest_Parties : fix_rg_parties;
     (** Should not be populated if StandInstDbType is populated*)
-    f_SettlementInstructionRequest_AllocAccount : fix_string option;
+    f_SettlementInstructionRequest_AllocAccount : string option;
     (** Required if AllocAccount populated
      Should not be populated if StandInstDbType is populated*)
     f_SettlementInstructionRequest_AllocAcctIDSource : int option;
@@ -3608,7 +3605,7 @@ type full_fix_settlementinstructionrequest_data = {
     (** Should not be populated if StandInstDbType is populated*)
     f_SettlementInstructionRequest_SecurityType : fix_securitytype option;
     (** Should not be populated if StandInstDbType is populated*)
-    f_SettlementInstructionRequest_CFICode : fix_string option;
+    f_SettlementInstructionRequest_CFICode : string option;
     (** Should not be populated if StandInstDbType is populated*)
     f_SettlementInstructionRequest_EffectiveTime : fix_utctimestamp option;
     (** Should not be populated if StandInstDbType is populated*)
@@ -3618,30 +3615,30 @@ type full_fix_settlementinstructionrequest_data = {
     (** Should not be populated if any of AllocAccount through to LastUpdateTime are populated*)
     f_SettlementInstructionRequest_StandInstDbType : fix_standinstdbtype option;
     (** Should not be populated if any of AllocAccount through to LastUpdateTime are populated*)
-    f_SettlementInstructionRequest_StandInstDbName : fix_string option;
+    f_SettlementInstructionRequest_StandInstDbName : string option;
     (** The identifier of the standing instructions within the database specified in StandInstDbType
      Required if StandInstDbType populated
      Should not be populated if any of AllocAccount through to LastUpdateTime are populated*)
-    f_SettlementInstructionRequest_StandInstDbID : fix_string option
+    f_SettlementInstructionRequest_StandInstDbID : string option
 }
 ;;
 
 (** The Settlement Instructions message provides the broker’s, the institution’s, or the intermediary’s instructions for trade settlement. This message has been designed so that it can be sent from the broker to the institution, from the institution to the broker, or from either to an independent "standing instructions" database or matching system or, for CIV, from an intermediary to a fund manager.*)
 type full_fix_settlementinstructions_data = {
     (** Unique identifier for this message*)
-    f_SettlementInstructions_SettlInstMsgID : fix_string;
+    f_SettlementInstructions_SettlInstMsgID : string;
     (** Only used when this message is used to respond to a settlement instruction request (to which this ID refers)*)
-    f_SettlementInstructions_SettlInstReqID : fix_string option;
+    f_SettlementInstructions_SettlInstReqID : string option;
     (** 1=Standing Instructions, 2=Specific Allocation Account Overriding, 3=Specific Allocation Account Standing , 4=Specific Order, 5=Reject SSI request*)
     f_SettlementInstructions_SettlInstMode : fix_settlinstmode;
     (** Required for SettlInstMode = 5. Used to provide reason for rejecting a Settlement Instruction Request message.*)
     f_SettlementInstructions_SettlInstReqRejCode : fix_settlinstreqrejcode option;
     (** Can be used to provide any additional rejection text where rejecting a Settlement Instruction Request message.*)
-    f_SettlementInstructions_Text : fix_string option;
+    f_SettlementInstructions_Text : string option;
     f_SettlementInstructions_EncodedTextLen : int option;
-    f_SettlementInstructions_EncodedText : fix_string option;
+    f_SettlementInstructions_EncodedText : string option;
     (** Required for SettlInstMode=4.*)
-    f_SettlementInstructions_ClOrdID : fix_string option;
+    f_SettlementInstructions_ClOrdID : string option;
     (** Date/time this message was generated*)
     f_SettlementInstructions_TransactTime : fix_utctimestamp;
     (** Required except where SettlInstMode is 5=Reject SSI request*)
@@ -3657,16 +3654,16 @@ type full_fix_settlementinstructions_data = {
  • Can be used to report unmatched and matched trades.*)
 type full_fix_tradecapturereport_data = {
     (** Unique identifier for the Trade Capture Report*)
-    f_TradeCaptureReport_TradeReportID : fix_string;
+    f_TradeCaptureReport_TradeReportID : string;
     (** Identifies Trade Report message transaction type.*)
     f_TradeCaptureReport_TradeReportTransType : int option;
     f_TradeCaptureReport_TradeReportType : fix_tradereporttype option;
     (** Request ID if the Trade Capture Report is in response to a Trade Capture Report Request*)
-    f_TradeCaptureReport_TradeRequestID : fix_string option;
+    f_TradeCaptureReport_TradeRequestID : string option;
     f_TradeCaptureReport_TrdType : fix_trdtype option;
     f_TradeCaptureReport_TrdSubType : int option;
     f_TradeCaptureReport_SecondaryTrdType : int option;
-    f_TradeCaptureReport_TransferReason : fix_string option;
+    f_TradeCaptureReport_TransferReason : string option;
     (** Type of Execution being reported:
      Uses subset of ExecType for Trade Capture Reports*)
     f_TradeCaptureReport_ExecType : fix_exectype option;
@@ -3679,17 +3676,17 @@ type full_fix_tradecapturereport_data = {
     (** Used to subscribe / unsubscribe for trade capture reports. If the field is absent, the value 0 will be the default*)
     f_TradeCaptureReport_SubscriptionRequestType : fix_subscriptionrequesttype option;
     (** The TradeReportID that is being referenced for some action, such as correction or cancellation*)
-    f_TradeCaptureReport_TradeReportRefID : fix_string option;
-    f_TradeCaptureReport_SecondaryTradeReportRefID : fix_string option;
-    f_TradeCaptureReport_SecondaryTradeReportID : fix_string option;
+    f_TradeCaptureReport_TradeReportRefID : string option;
+    f_TradeCaptureReport_SecondaryTradeReportRefID : string option;
+    f_TradeCaptureReport_SecondaryTradeReportID : string option;
     (** Used to associate a group of trades together. Useful for average price calculations.*)
-    f_TradeCaptureReport_TradeLinkID : fix_string option;
-    f_TradeCaptureReport_TrdMatchID : fix_string option;
+    f_TradeCaptureReport_TradeLinkID : string option;
+    f_TradeCaptureReport_TrdMatchID : string option;
     (** Exchanged assigned Execution ID (Trade Identifier)*)
-    f_TradeCaptureReport_ExecID : fix_string option;
+    f_TradeCaptureReport_ExecID : string option;
     (** Status of order as of this trade report*)
     f_TradeCaptureReport_OrdStatus : fix_ordstatus option;
-    f_TradeCaptureReport_SecondaryExecID : fix_string option;
+    f_TradeCaptureReport_SecondaryExecID : string option;
     (** Reason for restatement*)
     f_TradeCaptureReport_ExecRestatementReason : fix_execrestatementreason option;
     (** Indicates if the trade capture report was previously reported to the counterparty*)
@@ -3707,8 +3704,8 @@ type full_fix_tradecapturereport_data = {
     (** Insert here the set of "YieldData" fields defined in "Common Components of Application Messages"*)
     f_TradeCaptureReport_YieldData : fix_yielddata;
     f_TradeCaptureReport_UndInstrmtGrp : fix_rg_undinstrmtgrp;
-    f_TradeCaptureReport_UnderlyingTradingSessionID : fix_string option;
-    f_TradeCaptureReport_UnderlyingTradingSessionSubID : fix_string option;
+    f_TradeCaptureReport_UnderlyingTradingSessionID : string option;
+    f_TradeCaptureReport_UnderlyingTradingSessionSubID : string option;
     (** Trade Quantity.*)
     f_TradeCaptureReport_LastQty : fix_float_4;
     (** Trade Price.*)
@@ -3736,7 +3733,7 @@ type full_fix_tradecapturereport_data = {
     f_TradeCaptureReport_MultiLegReportingType : fix_multilegreportingtype option;
     (** Reference to the leg of a multileg instrument to which this trade refers
      Used when MultiLegReportingType = 2 (Single Leg of a Multileg security)*)
-    f_TradeCaptureReport_TradeLegRefID : fix_string option;
+    f_TradeCaptureReport_TradeLegRefID : string option;
     (** Number of legs
      Identifies a Multi-leg Execution if present and non-zero.*)
     f_TradeCaptureReport_TrdInstrmtLegGrp : fix_rg_trdinstrmtleggrp;
@@ -3762,7 +3759,7 @@ type full_fix_tradecapturereport_data = {
  • Used to reject a trade capture report received from a counterparty*)
 type full_fix_tradecapturereportack_data = {
     (** Unique identifier for the Trade Capture Report*)
-    f_TradeCaptureReportAck_TradeReportID : fix_string;
+    f_TradeCaptureReportAck_TradeReportID : string;
     (** Identifies Trade Report message transaction type.*)
     f_TradeCaptureReportAck_TradeReportTransType : int option;
     (** Indicates action to take on trade*)
@@ -3770,28 +3767,28 @@ type full_fix_tradecapturereportack_data = {
     f_TradeCaptureReportAck_TrdType : fix_trdtype option;
     f_TradeCaptureReportAck_TrdSubType : int option;
     f_TradeCaptureReportAck_SecondaryTrdType : int option;
-    f_TradeCaptureReportAck_TransferReason : fix_string option;
+    f_TradeCaptureReportAck_TransferReason : string option;
     (** Type of Execution being reported:
      Uses subset of ExecType for Trade Capture Reports*)
     f_TradeCaptureReportAck_ExecType : fix_exectype;
     (** The TradeReportID that is being referenced for some action, such as correction or cancellation*)
-    f_TradeCaptureReportAck_TradeReportRefID : fix_string option;
+    f_TradeCaptureReportAck_TradeReportRefID : string option;
     (** The SecondaryTradeReportID that is being referenced for some action, such as correction or cancellation*)
-    f_TradeCaptureReportAck_SecondaryTradeReportRefID : fix_string option;
+    f_TradeCaptureReportAck_SecondaryTradeReportRefID : string option;
     (** Status of Trade Report*)
     f_TradeCaptureReportAck_TrdRptStatus : fix_trdrptstatus option;
     (** Reason for Rejection of Trade Report*)
     f_TradeCaptureReportAck_TradeReportRejectReason : fix_tradereportrejectreason option;
-    f_TradeCaptureReportAck_SecondaryTradeReportID : fix_string option;
+    f_TradeCaptureReportAck_SecondaryTradeReportID : string option;
     (** Used to subscribe / unsubscribe for trade capture reports
      If the field is absent, the value 0 will be the default*)
     f_TradeCaptureReportAck_SubscriptionRequestType : fix_subscriptionrequesttype option;
     (** Used to associate a group of trades together. Useful for average price calculations.*)
-    f_TradeCaptureReportAck_TradeLinkID : fix_string option;
-    f_TradeCaptureReportAck_TrdMatchID : fix_string option;
+    f_TradeCaptureReportAck_TradeLinkID : string option;
+    f_TradeCaptureReportAck_TrdMatchID : string option;
     (** Exchanged assigned Execution ID (Trade Identifier)*)
-    f_TradeCaptureReportAck_ExecID : fix_string option;
-    f_TradeCaptureReportAck_SecondaryExecID : fix_string option;
+    f_TradeCaptureReportAck_ExecID : string option;
+    f_TradeCaptureReportAck_SecondaryExecID : string option;
     (** Insert here the set of "Instrument" (symbology) fields defined in "Common Components of Application Messages"*)
     f_TradeCaptureReportAck_Instrument : fix_instrument;
     (** Time ACK was issued by matching system, trading system or counterparty*)
@@ -3800,13 +3797,13 @@ type full_fix_tradecapturereportack_data = {
     (** Ability to specify whether the response to the request should be delivered inband or via pre-arranged out-of-band transport.*)
     f_TradeCaptureReportAck_ResponseTransportType : fix_responsetransporttype option;
     (** URI destination name. Used if ResponseTransportType is out-of-band.*)
-    f_TradeCaptureReportAck_ResponseDestination : fix_string option;
+    f_TradeCaptureReportAck_ResponseDestination : string option;
     (** May be used by the executing market to record any execution Details that are particular to that market*)
-    f_TradeCaptureReportAck_Text : fix_string option;
+    f_TradeCaptureReportAck_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_TradeCaptureReportAck_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_TradeCaptureReportAck_EncodedText : fix_string option;
+    f_TradeCaptureReportAck_EncodedText : string option;
     (** Number of legs
      Identifies a Multi-leg Execution if present and non-zero.*)
     f_TradeCaptureReportAck_TrdInstrmtLegGrp : fix_rg_trdinstrmtleggrp;
@@ -3818,7 +3815,7 @@ type full_fix_tradecapturereportack_data = {
     (** The customer capacity for this trade*)
     f_TradeCaptureReportAck_CustOrderCapacity : fix_custordercapacity option;
     (** Required for executions against electronically submitted orders which were assigned an account by the institution or intermediary*)
-    f_TradeCaptureReportAck_Account : fix_string option;
+    f_TradeCaptureReportAck_Account : string option;
     f_TradeCaptureReportAck_AcctIDSource : fix_acctidsource option;
     (** Specifies type of account*)
     f_TradeCaptureReportAck_AccountType : fix_accounttype option;
@@ -3833,33 +3830,33 @@ type full_fix_tradecapturereportack_data = {
 (** Trade Capture Reporting allows sell-side firms (broker, exchange, ECN) to provide timely reporting of completed trades to an external entity not involved in the execution of the trade.*)
 type full_fix_tradecapturereportrequest_data = {
     (** Identifier for the trade request*)
-    f_TradeCaptureReportRequest_TradeRequestID : fix_string;
+    f_TradeCaptureReportRequest_TradeRequestID : string;
     f_TradeCaptureReportRequest_TradeRequestType : fix_traderequesttype;
     (** Used to subscribe / unsubscribe for trade capture reports
      If the field is absent, the value 0 will be the default (snapshot only - no subscription)*)
     f_TradeCaptureReportRequest_SubscriptionRequestType : fix_subscriptionrequesttype option;
     (** To request a specific trade report*)
-    f_TradeCaptureReportRequest_TradeReportID : fix_string option;
+    f_TradeCaptureReportRequest_TradeReportID : string option;
     (** To request a specific trade report*)
-    f_TradeCaptureReportRequest_SecondaryTradeReportID : fix_string option;
-    f_TradeCaptureReportRequest_ExecID : fix_string option;
+    f_TradeCaptureReportRequest_SecondaryTradeReportID : string option;
+    f_TradeCaptureReportRequest_ExecID : string option;
     (** To requst all trades of a specific execution type*)
     f_TradeCaptureReportRequest_ExecType : fix_exectype option;
-    f_TradeCaptureReportRequest_OrderID : fix_string option;
-    f_TradeCaptureReportRequest_ClOrdID : fix_string option;
+    f_TradeCaptureReportRequest_OrderID : string option;
+    f_TradeCaptureReportRequest_ClOrdID : string option;
     f_TradeCaptureReportRequest_MatchStatus : fix_matchstatus option;
     (** To request all trades of a specific trade type*)
     f_TradeCaptureReportRequest_TrdType : fix_trdtype option;
     (** To request all trades of a specific trade sub type*)
     f_TradeCaptureReportRequest_TrdSubType : int option;
     (** To request all trades for a specific transfer reason*)
-    f_TradeCaptureReportRequest_TransferReason : fix_string option;
+    f_TradeCaptureReportRequest_TransferReason : string option;
     (** To request all trades of a specific trade sub type*)
     f_TradeCaptureReportRequest_SecondaryTrdType : int option;
     (** To request all trades of a specific trade link id*)
-    f_TradeCaptureReportRequest_TradeLinkID : fix_string option;
+    f_TradeCaptureReportRequest_TradeLinkID : string option;
     (** To request a trade matching a specific TrdMatchID*)
-    f_TradeCaptureReportRequest_TrdMatchID : fix_string option;
+    f_TradeCaptureReportRequest_TrdMatchID : string option;
     (** Used to specify the parties for the trades to be returned (clearing firm, execution broker, trader id, etc.)
      ExecutingBroker
      ClearingFirm
@@ -3887,27 +3884,27 @@ type full_fix_tradecapturereportrequest_data = {
     (** To request trades for a specific clearing business date.*)
     f_TradeCaptureReportRequest_ClearingBusinessDate : fix_localmktdate option;
     (** To request trades for a specific trading session.*)
-    f_TradeCaptureReportRequest_TradingSessionID : fix_string option;
+    f_TradeCaptureReportRequest_TradingSessionID : string option;
     (** To request trades for a specific trading session.*)
-    f_TradeCaptureReportRequest_TradingSessionSubID : fix_string option;
+    f_TradeCaptureReportRequest_TradingSessionSubID : string option;
     (** To request trades within a specific time bracket.*)
-    f_TradeCaptureReportRequest_TimeBracket : fix_string option;
+    f_TradeCaptureReportRequest_TimeBracket : string option;
     (** To request trades for a specific side of a trade.*)
     f_TradeCaptureReportRequest_Side : fix_side option;
     (** Used to indicate if trades are to be returned for the individual legs of a multileg instrument or for the overall instrument.*)
     f_TradeCaptureReportRequest_MultiLegReportingType : fix_multilegreportingtype option;
     (** To requests trades that were submitted from a specific trade input source.*)
-    f_TradeCaptureReportRequest_TradeInputSource : fix_string option;
+    f_TradeCaptureReportRequest_TradeInputSource : string option;
     (** To request trades that were submitted from a specific trade input device.*)
-    f_TradeCaptureReportRequest_TradeInputDevice : fix_string option;
+    f_TradeCaptureReportRequest_TradeInputDevice : string option;
     (** Ability to specify whether the response to the request should be delivered inband or via pre-arranged out-of-band transport.*)
     f_TradeCaptureReportRequest_ResponseTransportType : fix_responsetransporttype option;
     (** URI destination name. Used if ResponseTransportType is out-of-band.*)
-    f_TradeCaptureReportRequest_ResponseDestination : fix_string option;
+    f_TradeCaptureReportRequest_ResponseDestination : string option;
     (** Used to match specific values within Text fields*)
-    f_TradeCaptureReportRequest_Text : fix_string option;
+    f_TradeCaptureReportRequest_Text : string option;
     f_TradeCaptureReportRequest_EncodedTextLen : int option;
-    f_TradeCaptureReportRequest_EncodedText : fix_string option
+    f_TradeCaptureReportRequest_EncodedText : string option
 }
 ;;
 
@@ -3918,7 +3915,7 @@ type full_fix_tradecapturereportrequest_data = {
  • The Trade Capture Request was invalid for some business reason, such as request is not authorized, invalid or unknown instrument, party, trading session, etc.*)
 type full_fix_tradecapturereportrequestack_data = {
     (** Identifier for the trade request*)
-    f_TradeCaptureReportRequestAck_TradeRequestID : fix_string;
+    f_TradeCaptureReportRequestAck_TradeRequestID : string;
     f_TradeCaptureReportRequestAck_TradeRequestType : fix_traderequesttype;
     (** Used to subscribe / unsubscribe for trade capture reports
      If the field is absent, the value 0 will be the default*)
@@ -3940,23 +3937,23 @@ type full_fix_tradecapturereportrequestack_data = {
     (** Ability to specify whether the response to the request should be delivered inband or via pre-arranged out-of-band transport.*)
     f_TradeCaptureReportRequestAck_ResponseTransportType : fix_responsetransporttype option;
     (** URI destination name. Used if ResponseTransportType is out-of-band.*)
-    f_TradeCaptureReportRequestAck_ResponseDestination : fix_string option;
+    f_TradeCaptureReportRequestAck_ResponseDestination : string option;
     (** May be used by the executing market to record any execution Details that are particular to that market*)
-    f_TradeCaptureReportRequestAck_Text : fix_string option;
+    f_TradeCaptureReportRequestAck_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_TradeCaptureReportRequestAck_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_TradeCaptureReportRequestAck_EncodedText : fix_string option
+    f_TradeCaptureReportRequestAck_EncodedText : string option
 }
 ;;
 
 (** The Trading Session Status provides information on the status of a market.*)
 type full_fix_tradingsessionstatus_data = {
     (** Provided for a response to a specific Trading Session Status Request message (snapshot).*)
-    f_TradingSessionStatus_TradSesReqID : fix_string option;
+    f_TradingSessionStatus_TradSesReqID : string option;
     (** Identifier for Trading Session*)
-    f_TradingSessionStatus_TradingSessionID : fix_string;
-    f_TradingSessionStatus_TradingSessionSubID : fix_string option;
+    f_TradingSessionStatus_TradingSessionID : string;
+    f_TradingSessionStatus_TradingSessionSubID : string option;
     (** Method of trading:*)
     f_TradingSessionStatus_TradSesMethod : fix_tradsesmethod option;
     (** Trading Session Mode*)
@@ -3978,21 +3975,21 @@ type full_fix_tradingsessionstatus_data = {
     (** End time of the trading session*)
     f_TradingSessionStatus_TradSesEndTime : fix_utctimestamp option;
     f_TradingSessionStatus_TotalVolumeTraded : fix_float_4 option;
-    f_TradingSessionStatus_Text : fix_string option;
+    f_TradingSessionStatus_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_TradingSessionStatus_EncodedTextLen : int option;
     (** Encoded (non-ASCII characters) representation of the Text field in the encoded format specified via the MessageEncoding field.*)
-    f_TradingSessionStatus_EncodedText : fix_string option
+    f_TradingSessionStatus_EncodedText : string option
 }
 ;;
 
 (** The Trading Session Status Request is used to request information on the status of a market.*)
 type full_fix_tradingsessionstatusrequest_data = {
     (** Must be unique, or the ID of previous Trading Session Status Request to disable if SubscriptionRequestType = Disable previous Snapshot + Updates Request (2).*)
-    f_TradingSessionStatusRequest_TradSesReqID : fix_string;
+    f_TradingSessionStatusRequest_TradSesReqID : string;
     (** Trading Session for which status is being requested*)
-    f_TradingSessionStatusRequest_TradingSessionID : fix_string option;
-    f_TradingSessionStatusRequest_TradingSessionSubID : fix_string option;
+    f_TradingSessionStatusRequest_TradingSessionID : string option;
+    f_TradingSessionStatusRequest_TradingSessionSubID : string option;
     (** Method of trading*)
     f_TradingSessionStatusRequest_TradSesMethod : fix_tradsesmethod option;
     (** Trading Session Mode*)
@@ -4002,23 +3999,23 @@ type full_fix_tradingsessionstatusrequest_data = {
 ;;
 
 type full_fix_userrequest_data = {
-    f_UserRequest_UserRequestID : fix_string;
+    f_UserRequest_UserRequestID : string;
     f_UserRequest_UserRequestType : fix_userrequesttype;
-    f_UserRequest_Username : fix_string;
-    f_UserRequest_Password : fix_string option;
-    f_UserRequest_NewPassword : fix_string option;
+    f_UserRequest_Username : string;
+    f_UserRequest_Password : string option;
+    f_UserRequest_NewPassword : string option;
     f_UserRequest_RawDataLength : int option;
     (** Can be used to hand structures etc to other API’s etc*)
-    f_UserRequest_RawData : fix_string option
+    f_UserRequest_RawData : string option
 }
 ;;
 
 type full_fix_userresponse_data = {
-    f_UserResponse_UserRequestID : fix_string;
-    f_UserResponse_Username : fix_string;
+    f_UserResponse_UserRequestID : string;
+    f_UserResponse_Username : string;
     f_UserResponse_UserStatus : fix_userstatus option;
     (** Reason a request was not carried out*)
-    f_UserResponse_UserStatusText : fix_string option
+    f_UserResponse_UserStatusText : string option
 }
 ;;
 

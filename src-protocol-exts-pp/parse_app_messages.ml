@@ -1,5 +1,4 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Parser_utils.Parser;;
 open Parse_datetime;;
 open Parse_app_records;;
@@ -7,7 +6,6 @@ open Parse_base_types;;
 open Full_app_messages;;
 open Parse_app_enums;;
 open Full_app_tags;;
-(* @meta[imandra_ignore] off @end *)
 
 let parse_Advertisement msg = (
     repeating msg "555" parse_InstrmtLegGrp @@ fun msg f_Advertisement_InstrmtLegGrp ->

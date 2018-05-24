@@ -1,10 +1,8 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 2018 *)
 open Act_process;;
 open State;;
 open Model_messages;;
 open Msg_process;;
-(* @meta[imandra_ignore] off @end *)
 
 let one_step ( m_state : model_state ) =
     (match m_state.incoming_action with
