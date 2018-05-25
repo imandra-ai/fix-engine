@@ -31,18 +31,18 @@ let encode_header msg_tag msg =
     ; ( "49"  , req encode_string        msg.h_sender_comp_id             )
     ; ( "56"  , req encode_string        msg.h_target_comp_id             )
     ; ( "34"  , req encode_int           msg.h_msg_seq_num                )
-    ; ( "115" , opt encode_int           msg.h_on_behalf_of_comp_id       ) 
-    ; ( "128" , opt encode_int           msg.h_deliver_to_comp_id         )  
+    ; ( "115" , opt encode_string        msg.h_on_behalf_of_comp_id       ) 
+    ; ( "128" , opt encode_string        msg.h_deliver_to_comp_id         )  
     ; ( "90"  , opt encode_int           msg.h_secure_data_len            )   
     ; ( "91"  , opt encode_int           msg.h_secure_data                )   
-    ; ( "50"  , opt encode_int           msg.h_sender_sub_id              )   
-    ; ( "142" , opt encode_int           msg.h_sender_location_id         )  
-    ; ( "57"  , opt encode_int           msg.h_target_sub_id              )   
-    ; ( "143" , opt encode_int           msg.h_target_location_id         )  
-    ; ( "116" , opt encode_int           msg.h_on_behalf_of_sub_id        )  
-    ; ( "114" , opt encode_int           msg.h_on_behalf_of_location_id   )  
-    ; ( "129" , opt encode_int           msg.h_deliver_to_sub_id          )  
-    ; ( "145" , opt encode_int           msg.h_deliver_to_location_id     )  
+    ; ( "50"  , opt encode_string        msg.h_sender_sub_id              )   
+    ; ( "142" , opt encode_string        msg.h_sender_location_id         )  
+    ; ( "57"  , opt encode_string        msg.h_target_sub_id              )   
+    ; ( "143" , opt encode_string        msg.h_target_location_id         )  
+    ; ( "116" , opt encode_string        msg.h_on_behalf_of_sub_id        )  
+    ; ( "114" , opt encode_string        msg.h_on_behalf_of_location_id   )  
+    ; ( "129" , opt encode_string        msg.h_deliver_to_sub_id          )  
+    ; ( "145" , opt encode_string        msg.h_deliver_to_location_id     )  
     ; ( "43"  , opt encode_bool          msg.h_poss_dup_flag              )    
     ; ( "97"  , opt encode_bool          msg.h_poss_resend                )    
     ; ( "52"  , req encode_UTCTimestamp  msg.h_sending_time               )   
@@ -52,7 +52,7 @@ let encode_header msg_tag msg =
     ; ( "347" , opt encode_int           msg.h_message_enconding          )  
     ; ( "369" , opt encode_int           msg.h_last_msg_seq_num_processed )  
     ; ( "627" , opt encode_int           msg.h_no_hops                    ) 
-    ]
+    ] 
 ;;
 
 
@@ -88,7 +88,7 @@ let get_checksum msg =
 
 let prepare_packet msg_body =
     let encode_checksum = Printf.sprintf "%03u" in
-    let msg = [ ( "8"   , "FIX.4.4" )
+    let msg = [ ( "8"   , "FIX.4.2" )
               ; ( "9"   , get_body_length msg_body |> encode_int    )
               ] @ msg_body
               in             

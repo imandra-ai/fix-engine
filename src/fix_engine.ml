@@ -87,7 +87,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
             begin
                 (* Let's initiate a session here. *)
                 let engine = { engine with fe_target_comp_id = sd.dest_comp_id } in 
-                let logon_msg = create_logon_msg ( engine ) in { 
+                let logon_msg = create_logon_msg ( engine ,  sd.reset_seq_num ) in { 
                     engine with 
                         fe_last_time_data_sent = engine.fe_curr_time;
                         outgoing_fix_msg = Some ( ValidMsg (logon_msg));

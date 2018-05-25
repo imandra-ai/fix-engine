@@ -2,7 +2,7 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Copyright (c) 2014 - 2017
 
     parser_utils.ml
 
@@ -23,7 +23,7 @@ let split_into_key_value (spliton : char) ( stream : char Stream.t ) : (string *
             if c = spliton then (
                 let entry = listref_to_string current in
                 current := [];
-                Scanf.sscanf entry " %s@=%s " (fun k v -> Some (k,v))
+                Scanf.sscanf entry "%s@=%s@\001" (fun k v -> Some (k,v))
             ) else (
                 current := Char.escaped c :: !current;
                 next i
