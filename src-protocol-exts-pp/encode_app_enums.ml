@@ -1,1363 +1,6 @@
 (* Aesthetic Integration copyright 2018 *)
 open Full_app_enums;;
 
-let encode_PartyRoleQualifier (d)  =
-    (match d with
-        | FIX_PartyRoleQualifier_FirmOrLegalEntity -> "23"
-        | FIX_PartyRoleQualifier_Algorithm -> "22"
-        | FIX_PartyRoleQualifier_NaturalPerson -> "24"
-    )
-;;
-
-let encode_LiquidityIndicator (d)  =
-    (match d with
-        | FIX_LiquidityIndicator_RemoveLiquidity -> "R"
-        | FIX_LiquidityIndicator_AddLiquidity -> "A"
-        | FIX_LiquidityIndicator_PeriodicAuction -> "P"
-    )
-;;
-
-let encode_Routing (d)  =
-    (match d with
-        | FIX_Routing_OrderRoutingApproved -> "1"
-        | FIX_Routing_NoOrderRouting -> "0"
-    )
-;;
-
-let encode_TechnicalOrdType (d)  =
-    (match d with
-        | FIX_TechnicalOrdType_CrossMargining -> "C"
-        | FIX_TechnicalOrdType_IndexArbitrage -> "I"
-        | FIX_TechnicalOrdType_UnwindOrder -> "U"
-        | FIX_TechnicalOrdType_OtherOrders -> "A"
-        | FIX_TechnicalOrdType_PortfolioStrategy -> "P"
-    )
-;;
-
-let encode_OrderAttributeTypes (d)  =
-    (match d with
-        | FIX_OrderAttributeTypes_AlgorithmicOrder -> "4"
-        | FIX_OrderAttributeTypes_LiquidityProvisionActivity -> "2"
-    )
-;;
-
-let encode_ClearingHandlingType (d)  =
-    (match d with
-        | FIX_ClearingHandlingType_ManualMode -> "0"
-        | FIX_ClearingHandlingType_AutomaticExtraction -> "1"
-        | FIX_ClearingHandlingType_AutomaticAllocation -> "2"
-    )
-;;
-
-let encode_OrderEntryAllowed (d)  =
-    (match d with
-        | FIX_OrderEntryAllowed_OrderEntryAllowed -> "1"
-        | FIX_OrderEntryAllowed_OrderEntryForbidden -> "0"
-    )
-;;
-
-let encode_CollareRejType (d)  =
-    (match d with
-        | FIX_CollareRejType_HighCollar -> "H"
-        | FIX_CollareRejType_LowCollar -> "L"
-    )
-;;
-
-let encode_BookIndicator (d)  =
-    (match d with
-        | FIX_BookIndicator_Auction -> "A"
-        | FIX_BookIndicator_RPW -> "R"
-    )
-;;
-
-let encode_BrokerPrioritization (d)  =
-    (match d with
-        | FIX_BrokerPrioritization_WithBrokerPrioritization -> "1"
-        | FIX_BrokerPrioritization_WithoutBrokerPriotization -> "0"
-    )
-;;
-
-let encode_ClassStatus (d)  =
-    (match d with
-        | FIX_ClassStatus_SPContinuous -> "SPCO"
-        | FIX_ClassStatus_LateMonitoring -> "LAMO"
-        | FIX_ClassStatus_Closed -> "CLSD"
-        | FIX_ClassStatus_Halted -> "HALT"
-        | FIX_ClassStatus_ClosingCall -> "CLCA"
-        | FIX_ClassStatus_EarlyMonitoring -> "EAMO"
-    )
-;;
-
-let encode_Adjustment (d)  =
-    (match d with
-        | FIX_Adjustment_Cancel -> "1"
-        | FIX_Adjustment_Error -> "2"
-        | FIX_Adjustment_Correction -> "3"
-    )
-;;
-
-let encode_AdvSide (d)  =
-    (match d with
-        | FIX_AdvSide_Buy -> "B"
-        | FIX_AdvSide_Sell -> "S"
-        | FIX_AdvSide_Trade -> "T"
-        | FIX_AdvSide_Cross -> "X"
-    )
-;;
-
-let encode_AdvTransType (d)  =
-    (match d with
-        | FIX_AdvTransType_Cancel -> "C"
-        | FIX_AdvTransType_Replace -> "R"
-        | FIX_AdvTransType_New -> "N"
-    )
-;;
-
-let encode_AggregatedBook (d)  =
-    (match d with
-        | FIX_AggregatedBook_BookEntriesToBeAggregated -> "Y"
-        | FIX_AggregatedBook_BookEntriesShouldNotBeAggregated -> "N"
-    )
-;;
-
-let encode_AllocHandlInst (d)  =
-    (match d with
-        | FIX_AllocHandlInst_ForwardAndMatch -> "3"
-        | FIX_AllocHandlInst_Forward -> "2"
-        | FIX_AllocHandlInst_Match -> "1"
-    )
-;;
-
-let encode_AllocLinkType (d)  =
-    (match d with
-        | FIX_AllocLinkType_FXSwap -> "1"
-        | FIX_AllocLinkType_FXNetting -> "0"
-    )
-;;
-
-let encode_AllocRejCode (d)  =
-    (match d with
-        | FIX_AllocRejCode_UnknownOrStaleExecID -> "10"
-        | FIX_AllocRejCode_UnknownAccount -> "0"
-        | FIX_AllocRejCode_OtherSeeText -> "7"
-        | FIX_AllocRejCode_UnknownListID -> "6"
-        | FIX_AllocRejCode_CalculationDifference -> "9"
-        | FIX_AllocRejCode_IncorrectQuantity -> "1"
-        | FIX_AllocRejCode_UnknownClOrdID -> "12"
-        | FIX_AllocRejCode_CommissionDifference -> "4"
-        | FIX_AllocRejCode_WarehouseRequestRejected -> "13"
-        | FIX_AllocRejCode_UnknownExecutingBrokerMnemonic -> "3"
-        | FIX_AllocRejCode_MismatchedData -> "11"
-        | FIX_AllocRejCode_UnknownOrderID -> "5"
-        | FIX_AllocRejCode_IncorrectAveragegPrice -> "2"
-        | FIX_AllocRejCode_IncorrectAllocatedQuantity -> "8"
-    )
-;;
-
-let encode_AllocStatus (d)  =
-    (match d with
-        | FIX_AllocStatus_Incomplete -> "4"
-        | FIX_AllocStatus_Received -> "3"
-        | FIX_AllocStatus_BlockLevelReject -> "1"
-        | FIX_AllocStatus_AccountLevelReject -> "2"
-        | FIX_AllocStatus_RejectedByIntermediary -> "5"
-        | FIX_AllocStatus_Accepted -> "0"
-    )
-;;
-
-let encode_AllocTransType (d)  =
-    (match d with
-        | FIX_AllocTransType_Preliminary -> "3"
-        | FIX_AllocTransType_CalculatedWithoutPreliminary -> "5"
-        | FIX_AllocTransType_Replace -> "1"
-        | FIX_AllocTransType_Cancel -> "2"
-        | FIX_AllocTransType_Calculated -> "4"
-        | FIX_AllocTransType_New -> "0"
-    )
-;;
-
-let encode_BasisPxType (d)  =
-    (match d with
-        | FIX_BasisPxType_Others -> "Z"
-        | FIX_BasisPxType_VWAPThroughADay -> "6"
-        | FIX_BasisPxType_VWAPThroughAnAfternoonSessionExcept -> "B"
-        | FIX_BasisPxType_VWAPThroughAMorningSession -> "7"
-        | FIX_BasisPxType_ClosingPrice -> "3"
-        | FIX_BasisPxType_CurrentPrice -> "4"
-        | FIX_BasisPxType_Strike -> "C"
-        | FIX_BasisPxType_Open -> "D"
-        | FIX_BasisPxType_ClosingPriceAtMorningSession -> "2"
-        | FIX_BasisPxType_VWAPThroughADayExcept -> "9"
-        | FIX_BasisPxType_VWAPThroughAMorningSessionExcept -> "A"
-        | FIX_BasisPxType_VWAPThroughAnAfternoonSession -> "8"
-        | FIX_BasisPxType_SQ -> "5"
-    )
-;;
-
-let encode_Benchmark (d)  =
-    (match d with
-        | FIX_Benchmark_CURVE -> "1"
-        | FIX_Benchmark_FiveYR -> "2"
-        | FIX_Benchmark_OLD5 -> "3"
-        | FIX_Benchmark_OLD10 -> "5"
-        | FIX_Benchmark_TenYR -> "4"
-        | FIX_Benchmark_ThreeMOLIBOR -> "8"
-        | FIX_Benchmark_SixMOLIBOR -> "9"
-        | FIX_Benchmark_ThirtyYR -> "6"
-        | FIX_Benchmark_OLD30 -> "7"
-    )
-;;
-
-let encode_BidRequestTransType (d)  =
-    (match d with
-        | FIX_BidRequestTransType_Cancel -> "C"
-        | FIX_BidRequestTransType_New -> "N"
-    )
-;;
-
-let encode_CommType (d)  =
-    (match d with
-        | FIX_CommType_PercentageWaivedEnhancedUnits -> "5"
-        | FIX_CommType_PointsPerBondOrContract -> "6"
-        | FIX_CommType_Percent -> "2"
-        | FIX_CommType_PerUnit -> "1"
-        | FIX_CommType_Absolute -> "3"
-        | FIX_CommType_PercentageWaivedCashDiscount -> "4"
-    )
-;;
-
-let encode_CorporateAction (d)  =
-    (match d with
-        | FIX_CorporateAction_ExDistribution -> "B"
-        | FIX_CorporateAction_ExDividend -> "A"
-        | FIX_CorporateAction_ExInterest -> "E"
-        | FIX_CorporateAction_ExRights -> "C"
-        | FIX_CorporateAction_New -> "D"
-    )
-;;
-
-let encode_CoveredOrUncovered (d)  =
-    (match d with
-        | FIX_CoveredOrUncovered_Uncovered -> "1"
-        | FIX_CoveredOrUncovered_Covered -> "0"
-    )
-;;
-
-let encode_CustomerOrFirm (d)  =
-    (match d with
-        | FIX_CustomerOrFirm_Customer -> "0"
-        | FIX_CustomerOrFirm_Firm -> "1"
-    )
-;;
-
-let encode_CxlRejReason (d)  =
-    (match d with
-        | FIX_CxlRejReason_Other -> "99"
-        | FIX_CxlRejReason_OrderAlreadyInPendingStatus -> "3"
-        | FIX_CxlRejReason_TooLateToCancel -> "0"
-        | FIX_CxlRejReason_UnknownOrder -> "1"
-        | FIX_CxlRejReason_UnableToProcessOrderMassCancelRequest -> "4"
-        | FIX_CxlRejReason_OrigOrdModTime -> "5"
-        | FIX_CxlRejReason_DuplicateClOrdID -> "6"
-        | FIX_CxlRejReason_BrokerCredit -> "2"
-    )
-;;
-
-let encode_CxlRejResponseTo (d)  =
-    (match d with
-        | FIX_CxlRejResponseTo_OrderCancelRequest -> "1"
-        | FIX_CxlRejResponseTo_OrderCancel -> "2"
-    )
-;;
-
-let encode_DKReason (d)  =
-    (match d with
-        | FIX_DKReason_WrongSide -> "B"
-        | FIX_DKReason_QuantityExceedsOrder -> "C"
-        | FIX_DKReason_Other -> "Z"
-        | FIX_DKReason_CalculationDifference -> "F"
-        | FIX_DKReason_NoMatchingOrder -> "D"
-        | FIX_DKReason_PriceExceedsLimit -> "E"
-        | FIX_DKReason_UnknownSymbol -> "A"
-    )
-;;
-
-let encode_DeleteReason (d)  =
-    (match d with
-        | FIX_DeleteReason_Error -> "1"
-        | FIX_DeleteReason_Cancellation -> "0"
-    )
-;;
-
-let encode_DiscretionInst (d)  =
-    (match d with
-        | FIX_DiscretionInst_RelatedToPrimaryPrice -> "2"
-        | FIX_DiscretionInst_RelatedToMidpointPrice -> "4"
-        | FIX_DiscretionInst_RelatedToLastTradePrice -> "5"
-        | FIX_DiscretionInst_RelatedToDisplayedPrice -> "0"
-        | FIX_DiscretionInst_RelatedToVWAP -> "6"
-        | FIX_DiscretionInst_RelatedToMarketPrice -> "1"
-        | FIX_DiscretionInst_RelatedToLocalPrimaryPrice -> "3"
-    )
-;;
-
-let encode_DueToRelated (d)  =
-    (match d with
-        | FIX_DueToRelated_NotRelatedToSecurityHalt -> "N"
-        | FIX_DueToRelated_RelatedToSecurityHalt -> "Y"
-    )
-;;
-
-let encode_EmailType (d)  =
-    (match d with
-        | FIX_EmailType_Reply -> "1"
-        | FIX_EmailType_AdminReply -> "2"
-        | FIX_EmailType_New -> "0"
-    )
-;;
-
-let encode_ExchangeForPhysical (d)  =
-    (match d with
-        | FIX_ExchangeForPhysical_False -> "N"
-        | FIX_ExchangeForPhysical_True -> "Y"
-    )
-;;
-
-let encode_ExecInst (d)  =
-    (match d with
-        | FIX_ExecInst_ParticipateDoNotInitiate -> "6"
-        | FIX_ExecInst_AllOrNone -> "G"
-        | FIX_ExecInst_CallFirst -> "C"
-        | FIX_ExecInst_PercentOfVolume -> "D"
-        | FIX_ExecInst_InstitutionsOnly -> "I"
-        | FIX_ExecInst_FullSweep -> "f"
-        | FIX_ExecInst_NoCross -> "A"
-        | FIX_ExecInst_BestOfferPeg -> "z"
-        | FIX_ExecInst_OverTheDay -> "4"
-        | FIX_ExecInst_DoNotIncrease -> "E"
-        | FIX_ExecInst_OpeningPeg -> "O"
-        | FIX_ExecInst_TryToStop -> "Y"
-        | FIX_ExecInst_Netting -> "V"
-        | FIX_ExecInst_StayOnBidSide -> "9"
-        | FIX_ExecInst_Held -> "5"
-        | FIX_ExecInst_OKToCross -> "B"
-        | FIX_ExecInst_CustomerDisplayInstruction -> "U"
-        | FIX_ExecInst_GoAlong -> "3"
-        | FIX_ExecInst_DoNotReduce -> "F"
-        | FIX_ExecInst_StayOnOfferSide -> "0"
-        | FIX_ExecInst_PegToLimitPrice -> "d"
-        | FIX_ExecInst_TryToScale -> "8"
-        | FIX_ExecInst_ReinstateOnSystemFailure -> "H"
-        | FIX_ExecInst_CancelIfNotBest -> "Z"
-        | FIX_ExecInst_BestBidPeg -> "x"
-        | FIX_ExecInst_MidPricePeg -> "M"
-        | FIX_ExecInst_WorkToTargetStrategy -> "e"
-        | FIX_ExecInst_PegToVWAP -> "W"
-        | FIX_ExecInst_TradeAlong -> "X"
-        | FIX_ExecInst_StrictLimit -> "b"
-        | FIX_ExecInst_Suspend -> "S"
-        | FIX_ExecInst_LastPeg -> "L"
-        | FIX_ExecInst_NonNegotiable -> "N"
-        | FIX_ExecInst_HalfSweep -> "h"
-        | FIX_ExecInst_NotHeld -> "1"
-        | FIX_ExecInst_FixedPegToLocalBestBidOrOfferAtTimeOfOrder -> "T"
-        | FIX_ExecInst_CancelOnTradingHalt -> "K"
-        | FIX_ExecInst_CancelOnSystemFailure -> "Q"
-        | FIX_ExecInst_IgnorePriceValidityChecks -> "c"
-        | FIX_ExecInst_Work -> "2"
-        | FIX_ExecInst_ReinstateOnTradingHalt -> "J"
-        | FIX_ExecInst_PrimaryPeg -> "R"
-        | FIX_ExecInst_TrailingStopPeg -> "a"
-        | FIX_ExecInst_MarketPeg -> "P"
-        | FIX_ExecInst_StrictScale -> "7"
-    )
-;;
-
-let encode_ExecRestatementReason (d)  =
-    (match d with
-        | FIX_ExecRestatementReason_Other -> "99"
-        | FIX_ExecRestatementReason_RepricingOfOrder -> "3"
-        | FIX_ExecRestatementReason_GTCorporateAction -> "0"
-        | FIX_ExecRestatementReason_VerbalChange -> "2"
-        | FIX_ExecRestatementReason_WarehouseRecap -> "10"
-        | FIX_ExecRestatementReason_CancelOnTradingHalt -> "6"
-        | FIX_ExecRestatementReason_CancelOnSystemFailure -> "7"
-        | FIX_ExecRestatementReason_GTRenewal -> "1"
-        | FIX_ExecRestatementReason_Market -> "8"
-        | FIX_ExecRestatementReason_Canceled -> "9"
-        | FIX_ExecRestatementReason_BrokerOption -> "4"
-        | FIX_ExecRestatementReason_PartialDeclineOfOrderQty -> "5"
-    )
-;;
-
-let encode_ExecTransType (d)  =
-    (match d with
-        | FIX_ExecTransType_Status -> "3"
-        | FIX_ExecTransType_Cancel -> "1"
-        | FIX_ExecTransType_New -> "0"
-        | FIX_ExecTransType_Correct -> "2"
-    )
-;;
-
-let encode_ExecType (d)  =
-    (match d with
-        | FIX_ExecType_PendingCancel -> "6"
-        | FIX_ExecType_Fill -> "2"
-        | FIX_ExecType_Stopped -> "7"
-        | FIX_ExecType_PendingNew -> "A"
-        | FIX_ExecType_Restated -> "D"
-        | FIX_ExecType_Rejected -> "8"
-        | FIX_ExecType_Calculated -> "B"
-        | FIX_ExecType_TradeCorrect -> "G"
-        | FIX_ExecType_TradeCancel -> "H"
-        | FIX_ExecType_Expired -> "C"
-        | FIX_ExecType_OrderStatus -> "I"
-        | FIX_ExecType_PartialFill -> "1"
-        | FIX_ExecType_Trade -> "F"
-        | FIX_ExecType_Canceled -> "4"
-        | FIX_ExecType_Replaced -> "5"
-        | FIX_ExecType_PendingReplace -> "E"
-        | FIX_ExecType_DoneForDay -> "3"
-        | FIX_ExecType_Suspended -> "9"
-        | FIX_ExecType_New -> "0"
-    )
-;;
-
-let encode_FinancialStatus (d)  =
-    (match d with
-        | FIX_FinancialStatus_PendingDelisting -> "2"
-        | FIX_FinancialStatus_Bankrupt -> "1"
-    )
-;;
-
-let encode_ForexReq (d)  =
-    (match d with
-        | FIX_ForexReq_DoNotExecuteForexAfterSecurityTrade -> "N"
-        | FIX_ForexReq_ExecuteForexAfterSecurityTrade -> "Y"
-    )
-;;
-
-let encode_GTBookingInst (d)  =
-    (match d with
-        | FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise -> "2"
-        | FIX_GTBookingInst_AccumulateUntilFilledOrExpired -> "1"
-        | FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution -> "0"
-    )
-;;
-
-let encode_HaltReason (d)  =
-    (match d with
-        | FIX_HaltReason_OrderImbalance -> "I"
-        | FIX_HaltReason_AdditionalInformation -> "M"
-        | FIX_HaltReason_OrderInflux -> "E"
-        | FIX_HaltReason_NewsPending -> "P"
-        | FIX_HaltReason_EquipmentChangeover -> "X"
-        | FIX_HaltReason_NewsDissemination -> "D"
-    )
-;;
-
-let encode_HandlInst (d)  =
-    (match d with
-        | FIX_HandlInst_ManualOrder -> "3"
-        | FIX_HandlInst_AutomatedExecutionInterventionOK -> "2"
-        | FIX_HandlInst_AutomatedExecutionNoIntervention -> "1"
-    )
-;;
-
-let encode_IDSource (d)  =
-    (match d with
-        | FIX_IDSource_ConsolidatedTapeAssociation -> "9"
-        | FIX_IDSource_QUIK -> "3"
-        | FIX_IDSource_ISOCurrencyCode -> "6"
-        | FIX_IDSource_ISOCountryCode -> "7"
-        | FIX_IDSource_RICCode -> "5"
-        | FIX_IDSource_SEDOL -> "2"
-        | FIX_IDSource_ExchangeSymbol -> "8"
-        | FIX_IDSource_ISINNumber -> "4"
-        | FIX_IDSource_CUSIP -> "1"
-    )
-;;
-
-let encode_IOINaturalFlag (d)  =
-    (match d with
-        | FIX_IOINaturalFlag_Natural -> "Y"
-        | FIX_IOINaturalFlag_NotNatural -> "N"
-    )
-;;
-
-let encode_IOIQltyInd (d)  =
-    (match d with
-        | FIX_IOIQltyInd_Low -> "L"
-        | FIX_IOIQltyInd_High -> "H"
-        | FIX_IOIQltyInd_Medium -> "M"
-    )
-;;
-
-let encode_IOIQualifier (d)  =
-    (match d with
-        | FIX_IOIQualifier_AllOrNone -> "A"
-        | FIX_IOIQualifier_TakingAPosition -> "P"
-        | FIX_IOIQualifier_Indication -> "W"
-        | FIX_IOIQualifier_PreOpen -> "Z"
-        | FIX_IOIQualifier_AtTheOpen -> "O"
-        | FIX_IOIQualifier_VWAP -> "D"
-        | FIX_IOIQualifier_Versus -> "V"
-        | FIX_IOIQualifier_AtTheMidpoint -> "Y"
-        | FIX_IOIQualifier_ReadyToTrade -> "R"
-        | FIX_IOIQualifier_PortfolioShown -> "S"
-        | FIX_IOIQualifier_ThroughTheDay -> "T"
-        | FIX_IOIQualifier_MoreBehind -> "M"
-        | FIX_IOIQualifier_MarketOnClose -> "B"
-        | FIX_IOIQualifier_AtTheClose -> "C"
-        | FIX_IOIQualifier_InTouchWith -> "I"
-        | FIX_IOIQualifier_AtTheMarket -> "Q"
-        | FIX_IOIQualifier_Limit -> "L"
-        | FIX_IOIQualifier_CrossingOpportunity -> "X"
-    )
-;;
-
-let encode_IOIShares (d)  =
-    (match d with
-        | FIX_IOIShares_Small -> "S"
-        | FIX_IOIShares_Large -> "L"
-        | FIX_IOIShares_Medium -> "M"
-    )
-;;
-
-let encode_IOITransType (d)  =
-    (match d with
-        | FIX_IOITransType_Cancel -> "C"
-        | FIX_IOITransType_Replace -> "R"
-        | FIX_IOITransType_New -> "N"
-    )
-;;
-
-let encode_InViewOfCommon (d)  =
-    (match d with
-        | FIX_InViewOfCommon_HaltWasDueToCommonStockBeingHalted -> "Y"
-        | FIX_InViewOfCommon_HaltWasNotRelatedToAHaltOfTheCommonStock -> "N"
-    )
-;;
-
-let encode_IncTaxInd (d)  =
-    (match d with
-        | FIX_IncTaxInd_Net -> "1"
-        | FIX_IncTaxInd_Gross -> "2"
-    )
-;;
-
-let encode_LastCapacity (d)  =
-    (match d with
-        | FIX_LastCapacity_Agent -> "1"
-        | FIX_LastCapacity_CrossAsAgent -> "2"
-        | FIX_LastCapacity_Principal -> "4"
-        | FIX_LastCapacity_CrossAsPrincipal -> "3"
-    )
-;;
-
-let encode_LiquidityIndType (d)  =
-    (match d with
-        | FIX_LiquidityIndType_Other -> "4"
-        | FIX_LiquidityIndType_NormalMarketSize -> "3"
-        | FIX_LiquidityIndType_TwentyDayMovingAverage -> "2"
-        | FIX_LiquidityIndType_FiveDayMovingAverage -> "1"
-    )
-;;
-
-let encode_ListExecInstType (d)  =
-    (match d with
-        | FIX_ListExecInstType_SellDriven -> "3"
-        | FIX_ListExecInstType_Immediate -> "1"
-        | FIX_ListExecInstType_BuyDrivenCashTopUp -> "4"
-        | FIX_ListExecInstType_WaitForInstruction -> "2"
-        | FIX_ListExecInstType_BuyDrivenCashWithdraw -> "5"
-    )
-;;
-
-let encode_LocateReqd (d)  =
-    (match d with
-        | FIX_LocateReqd_No -> "N"
-        | FIX_LocateReqd_Yes -> "Y"
-    )
-;;
-
-let encode_MDEntryType (d)  =
-    (match d with
-        | FIX_MDEntryType_OpenInterest -> "C"
-        | FIX_MDEntryType_ClosingPrice -> "5"
-        | FIX_MDEntryType_IndexValue -> "3"
-        | FIX_MDEntryType_Offer -> "1"
-        | FIX_MDEntryType_SettlementPrice -> "6"
-        | FIX_MDEntryType_TradingSessionVWAPPrice -> "9"
-        | FIX_MDEntryType_Trade -> "2"
-        | FIX_MDEntryType_TradingSessionHighPrice -> "7"
-        | FIX_MDEntryType_OpeningPrice -> "4"
-        | FIX_MDEntryType_TradeVolume -> "B"
-        | FIX_MDEntryType_Imbalance -> "A"
-        | FIX_MDEntryType_Bid -> "0"
-        | FIX_MDEntryType_TradingSessionLowPrice -> "8"
-    )
-;;
-
-let encode_MDReqRejReason (d)  =
-    (match d with
-        | FIX_MDReqRejReason_UnsupportedAggregatedBook -> "7"
-        | FIX_MDReqRejReason_UnsupportedMDUpdateType -> "6"
-        | FIX_MDReqRejReason_UnsupportedMDImplicitDelete -> "C"
-        | FIX_MDReqRejReason_InsufficientPermissions -> "3"
-        | FIX_MDReqRejReason_UnsupportedScope -> "A"
-        | FIX_MDReqRejReason_UnsupportedTradingSessionID -> "9"
-        | FIX_MDReqRejReason_UnsupportedSubscriptionRequestType -> "4"
-        | FIX_MDReqRejReason_UnsupportedMDEntryType -> "8"
-        | FIX_MDReqRejReason_InsufficientBandwidth -> "2"
-        | FIX_MDReqRejReason_DuplicateMDReqID -> "1"
-        | FIX_MDReqRejReason_UnsupportedMarketDepth -> "5"
-        | FIX_MDReqRejReason_UnsupportedOpenCloseSettleFlag -> "B"
-        | FIX_MDReqRejReason_UnknownSymbol -> "0"
-    )
-;;
-
-let encode_MDUpdateAction (d)  =
-    (match d with
-        | FIX_MDUpdateAction_Delete -> "2"
-        | FIX_MDUpdateAction_Change -> "1"
-        | FIX_MDUpdateAction_New -> "0"
-    )
-;;
-
-let encode_MDUpdateType (d)  =
-    (match d with
-        | FIX_MDUpdateType_FullRefresh -> "0"
-        | FIX_MDUpdateType_IncrementalRefresh -> "1"
-    )
-;;
-
-let encode_MessageEncoding (d)  =
-    (match d with
-        | FIX_MessageEncoding_ISO2022JP -> "ISO-2022-JP"
-        | FIX_MessageEncoding_UTF8 -> "UTF-8"
-        | FIX_MessageEncoding_ShiftJIS -> "Shift_JIS"
-        | FIX_MessageEncoding_EUCJP -> "EUC-JP"
-    )
-;;
-
-let encode_MiscFeeType (d)  =
-    (match d with
-        | FIX_MiscFeeType_Other -> "7"
-        | FIX_MiscFeeType_Agent -> "12"
-        | FIX_MiscFeeType_LocalCommission -> "3"
-        | FIX_MiscFeeType_ExchangeFees -> "4"
-        | FIX_MiscFeeType_Stamp -> "5"
-        | FIX_MiscFeeType_Markup -> "8"
-        | FIX_MiscFeeType_PerTransaction -> "10"
-        | FIX_MiscFeeType_Regulatory -> "1"
-        | FIX_MiscFeeType_Tax -> "2"
-        | FIX_MiscFeeType_ConsumptionTax -> "9"
-        | FIX_MiscFeeType_Conversion -> "11"
-        | FIX_MiscFeeType_Levy -> "6"
-    )
-;;
-
-let encode_MsgDirection (d)  =
-    (match d with
-        | FIX_MsgDirection_Send -> "S"
-        | FIX_MsgDirection_Receive -> "R"
-    )
-;;
-
-let encode_MultiLegReportingType (d)  =
-    (match d with
-        | FIX_MultiLegReportingType_SingleSecurity -> "1"
-        | FIX_MultiLegReportingType_IndividualLegOfAMultiLegSecurity -> "2"
-        | FIX_MultiLegReportingType_MultiLegSecurity -> "3"
-    )
-;;
-
-let encode_NetGrossInd (d)  =
-    (match d with
-        | FIX_NetGrossInd_Net -> "1"
-        | FIX_NetGrossInd_Gross -> "2"
-    )
-;;
-
-let encode_NotifyBrokerOfCredit (d)  =
-    (match d with
-        | FIX_NotifyBrokerOfCredit_DetailsShouldNotBeCommunicated -> "N"
-        | FIX_NotifyBrokerOfCredit_DetailsShouldBeCommunicated -> "Y"
-    )
-;;
-
-let encode_OpenClose (d)  =
-    (match d with
-        | FIX_OpenClose_Close -> "C"
-        | FIX_OpenClose_Open -> "O"
-    )
-;;
-
-let encode_OpenCloseSettleFlag (d)  =
-    (match d with
-        | FIX_OpenCloseSettleFlag_DeliverySettlementEntry -> "2"
-        | FIX_OpenCloseSettleFlag_DailyOpen -> "0"
-        | FIX_OpenCloseSettleFlag_SessionOpen -> "1"
-    )
-;;
-
-let encode_OrdRejReason (d)  =
-    (match d with
-        | FIX_OrdRejReason_DuplicateOrder -> "6"
-        | FIX_OrdRejReason_Other -> "99"
-        | FIX_OrdRejReason_UnknownOrder -> "5"
-        | FIX_OrdRejReason_DVC_ThresholdBreached -> "T"
-        | FIX_OrdRejReason_TooLateToEnter -> "4"
-        | FIX_OrdRejReason_OrderExceedsLimit -> "3"
-        | FIX_OrdRejReason_UnknownAccount -> "15"
-        | FIX_OrdRejReason_OtherRejectReason -> "O"
-        | FIX_OrdRejReason_BrokerCredit -> "0"
-        | FIX_OrdRejReason_UnsupportedOrderCharacteristic -> "11"
-        | FIX_OrdRejReason_DuplicateOfAVerballyCommunicatedOrder -> "7"
-        | FIX_OrdRejReason_IncorrectQuantity -> "13"
-        | FIX_OrdRejReason_TradeAlongRequired -> "9"
-        | FIX_OrdRejReason_StaleOrder -> "8"
-        | FIX_OrdRejReason_InvalidInvestorID -> "10"
-        | FIX_OrdRejReason_ExchangeClosed -> "2"
-        | FIX_OrdRejReason_IncorrectAllocatedQuantity -> "14"
-        | FIX_OrdRejReason_DVC_ProactivelyHaltedInstrument -> "P"
-        | FIX_OrdRejReason_UnknownSymbol -> "1"
-    )
-;;
-
-let encode_OrdStatus (d)  =
-    (match d with
-        | FIX_OrdStatus_PendingCancel -> "6"
-        | FIX_OrdStatus_Stopped -> "7"
-        | FIX_OrdStatus_PendingNew -> "A"
-        | FIX_OrdStatus_Rejected -> "8"
-        | FIX_OrdStatus_Calculated -> "B"
-        | FIX_OrdStatus_Expired -> "C"
-        | FIX_OrdStatus_Filled -> "2"
-        | FIX_OrdStatus_Canceled -> "4"
-        | FIX_OrdStatus_Replaced -> "5"
-        | FIX_OrdStatus_PendingReplace -> "E"
-        | FIX_OrdStatus_DoneForDay -> "3"
-        | FIX_OrdStatus_Suspended -> "9"
-        | FIX_OrdStatus_New -> "0"
-        | FIX_OrdStatus_PartiallyFilled -> "1"
-        | FIX_OrdStatus_AcceptedForBidding -> "D"
-    )
-;;
-
-let encode_OrdType (d)  =
-    (match d with
-        | FIX_OrdType_LimitOrBetter -> "7"
-        | FIX_OrdType_NextFundValuationPoint -> "M"
-        | FIX_OrdType_WithOrWithout -> "6"
-        | FIX_OrdType_PreviouslyIndicated -> "E"
-        | FIX_OrdType_Stop -> "3"
-        | FIX_OrdType_ForexPreviouslyQuoted -> "H"
-        | FIX_OrdType_Market -> "1"
-        | FIX_OrdType_OnBasis -> "9"
-        | FIX_OrdType_Funari -> "I"
-        | FIX_OrdType_LimitOnClose -> "B"
-        | FIX_OrdType_Pegged -> "P"
-        | FIX_OrdType_LimitWithOrWithout -> "8"
-        | FIX_OrdType_MarketOnClose -> "5"
-        | FIX_OrdType_StopLimit -> "4"
-        | FIX_OrdType_ForexSwap -> "G"
-        | FIX_OrdType_MarketIfTouched -> "J"
-        | FIX_OrdType_MarketWithLeftOverAsLimit -> "K"
-        | FIX_OrdType_PreviouslyQuoted -> "D"
-        | FIX_OrdType_ForexMarket -> "C"
-        | FIX_OrdType_Limit -> "2"
-        | FIX_OrdType_PreviousFundValuationPoint -> "L"
-        | FIX_OrdType_OnClose -> "A"
-        | FIX_OrdType_ForexLimit -> "F"
-    )
-;;
-
-let encode_PossDupFlag (d)  =
-    (match d with
-        | FIX_PossDupFlag_PossibleDuplicate -> "Y"
-        | FIX_PossDupFlag_OriginalTransmission -> "N"
-    )
-;;
-
-let encode_PossResend (d)  =
-    (match d with
-        | FIX_PossResend_OriginalTransmission -> "N"
-        | FIX_PossResend_PossibleResend -> "Y"
-    )
-;;
-
-let encode_PriceType (d)  =
-    (match d with
-        | FIX_PriceType_Discount -> "4"
-        | FIX_PriceType_Spread -> "6"
-        | FIX_PriceType_TEDPrice -> "7"
-        | FIX_PriceType_FixedCabinetTradePrice -> "10"
-        | FIX_PriceType_Percentage -> "1"
-        | FIX_PriceType_VariableCabinetTradePrice -> "11"
-        | FIX_PriceType_TEDYield -> "8"
-        | FIX_PriceType_PerUnit -> "2"
-        | FIX_PriceType_FixedAmount -> "3"
-        | FIX_PriceType_Premium -> "5"
-        | FIX_PriceType_Yield -> "9"
-    )
-;;
-
-let encode_ProcessCode (d)  =
-    (match d with
-        | FIX_ProcessCode_Regular -> "0"
-        | FIX_ProcessCode_SoftDollarStepOut -> "5"
-        | FIX_ProcessCode_StepIn -> "2"
-        | FIX_ProcessCode_PlanSponsor -> "6"
-        | FIX_ProcessCode_SoftDollarStepIn -> "4"
-        | FIX_ProcessCode_SoftDollar -> "1"
-        | FIX_ProcessCode_StepOut -> "3"
-    )
-;;
-
-let encode_ProgRptReqs (d)  =
-    (match d with
-        | FIX_ProgRptReqs_BuySideRequests -> "1"
-        | FIX_ProgRptReqs_SellSideSends -> "2"
-        | FIX_ProgRptReqs_RealTimeExecutionReports -> "3"
-    )
-;;
-
-let encode_PutOrCall (d)  =
-    (match d with
-        | FIX_PutOrCall_Call -> "1"
-        | FIX_PutOrCall_Put -> "0"
-    )
-;;
-
-let encode_QuoteAckStatus (d)  =
-    (match d with
-        | FIX_QuoteAckStatus_Rejected -> "5"
-        | FIX_QuoteAckStatus_CanceledForSecurityType -> "2"
-        | FIX_QuoteAckStatus_CanceledForUnderlying -> "3"
-        | FIX_QuoteAckStatus_CanceledAll -> "4"
-        | FIX_QuoteAckStatus_Accepted -> "0"
-        | FIX_QuoteAckStatus_CancelForSymbol -> "1"
-    )
-;;
-
-let encode_QuoteCancelType (d)  =
-    (match d with
-        | FIX_QuoteCancelType_CancelAllQuotes -> "4"
-        | FIX_QuoteCancelType_CancelForOneOrMoreSecurities -> "1"
-        | FIX_QuoteCancelType_CancelForUnderlyingSecurity -> "3"
-        | FIX_QuoteCancelType_CancelForSecurityType -> "2"
-    )
-;;
-
-let encode_QuoteCondition (d)  =
-    (match d with
-        | FIX_QuoteCondition_Closed -> "B"
-        | FIX_QuoteCondition_Locked -> "E"
-        | FIX_QuoteCondition_Crossed -> "F"
-        | FIX_QuoteCondition_NonFirm -> "I"
-        | FIX_QuoteCondition_FastTrading -> "H"
-        | FIX_QuoteCondition_ConsolidatedBest -> "D"
-        | FIX_QuoteCondition_Open -> "A"
-        | FIX_QuoteCondition_ExchangeBest -> "C"
-        | FIX_QuoteCondition_Depth -> "G"
-    )
-;;
-
-let encode_QuoteEntryRejectReason (d)  =
-    (match d with
-        | FIX_QuoteEntryRejectReason_DuplicateQuote -> "6"
-        | FIX_QuoteEntryRejectReason_Exchange -> "2"
-        | FIX_QuoteEntryRejectReason_InvalidPrice -> "8"
-        | FIX_QuoteEntryRejectReason_UnknownQuote -> "5"
-        | FIX_QuoteEntryRejectReason_TooLateToEnter -> "4"
-        | FIX_QuoteEntryRejectReason_QuoteExceedsLimit -> "3"
-        | FIX_QuoteEntryRejectReason_NotAuthorizedToQuoteSecurity -> "9"
-        | FIX_QuoteEntryRejectReason_UnknownSymbol -> "1"
-        | FIX_QuoteEntryRejectReason_InvalidBidAskSpread -> "7"
-    )
-;;
-
-let encode_QuoteRejectReason (d)  =
-    (match d with
-        | FIX_QuoteRejectReason_DuplicateQuote -> "6"
-        | FIX_QuoteRejectReason_Other -> "99"
-        | FIX_QuoteRejectReason_Exchange -> "2"
-        | FIX_QuoteRejectReason_InvalidPrice -> "8"
-        | FIX_QuoteRejectReason_InvalidBid -> "7"
-        | FIX_QuoteRejectReason_UnknownQuote -> "5"
-        | FIX_QuoteRejectReason_TooLateToEnter -> "4"
-        | FIX_QuoteRejectReason_QuoteRequestExceedsLimit -> "3"
-        | FIX_QuoteRejectReason_NotAuthorizedToQuoteSecurity -> "9"
-        | FIX_QuoteRejectReason_UnknownSymbol -> "1"
-    )
-;;
-
-let encode_QuoteRequestType (d)  =
-    (match d with
-        | FIX_QuoteRequestType_Manual -> "1"
-        | FIX_QuoteRequestType_Automatic -> "2"
-    )
-;;
-
-let encode_QuoteResponseLevel (d)  =
-    (match d with
-        | FIX_QuoteResponseLevel_NoAcknowledgement -> "0"
-        | FIX_QuoteResponseLevel_AcknowledgeOnlyNegativeOrErroneousQuotes -> "1"
-        | FIX_QuoteResponseLevel_AcknowledgeEachQuoteMessage -> "2"
-    )
-;;
-
-let encode_ReportToExch (d)  =
-    (match d with
-        | FIX_ReportToExch_ReceiverReports -> "Y"
-        | FIX_ReportToExch_SenderReports -> "N"
-    )
-;;
-
-let encode_ResetSeqNumFlag (d)  =
-    (match d with
-        | FIX_ResetSeqNumFlag_No -> "N"
-        | FIX_ResetSeqNumFlag_Yes -> "Y"
-    )
-;;
-
-let encode_RoutingType (d)  =
-    (match d with
-        | FIX_RoutingType_TargetList -> "2"
-        | FIX_RoutingType_TargetFirm -> "1"
-        | FIX_RoutingType_BlockList -> "4"
-        | FIX_RoutingType_BlockFirm -> "3"
-    )
-;;
-
-let encode_Rule80A (d)  =
-    (match d with
-        | FIX_Rule80A_AgencySingleOrder -> "A"
-        | FIX_Rule80A_ShortExemptTransactionForPrincipal -> "E"
-        | FIX_Rule80A_ShortExemptTransactionAType -> "B"
-        | FIX_Rule80A_SpecialistTrades -> "S"
-        | FIX_Rule80A_AgencyNonAlgo -> "Y"
-        | FIX_Rule80A_TransactionUnaffiliatedMember -> "T"
-        | FIX_Rule80A_ShortExemptTransactionWType -> "F"
-        | FIX_Rule80A_ProprietaryAlgo -> "J"
-        | FIX_Rule80A_ProprietaryTransactionAffiliated -> "O"
-        | FIX_Rule80A_AgencyAlgo -> "K"
-        | FIX_Rule80A_Principal -> "P"
-        | FIX_Rule80A_AllOtherOrdersAsAgentForOtherMember -> "W"
-        | FIX_Rule80A_ProprietaryNonAlgo -> "C"
-        | FIX_Rule80A_ShortExemptTransactionIType -> "H"
-        | FIX_Rule80A_AgentForOtherMember -> "N"
-        | FIX_Rule80A_ShortExemptTransactionNonMember -> "Z"
-        | FIX_Rule80A_RisklessPrincipal -> "3"
-        | FIX_Rule80A_AgencyIndexArb -> "U"
-        | FIX_Rule80A_ProgramOrderOtherMember -> "M"
-        | FIX_Rule80A_ShortExemptTransactionMemberNotAffliated -> "X"
-        | FIX_Rule80A_ProgramOrderMember -> "D"
-        | FIX_Rule80A_House -> "2"
-        | FIX_Rule80A_TransactionNonMember -> "R"
-        | FIX_Rule80A_IndividualInvestor -> "I"
-        | FIX_Rule80A_ShortExemptTransactionMemberAffliated -> "L"
-        | FIX_Rule80A_Client -> "1"
-    )
-;;
-
-let encode_SecurityRequestType (d)  =
-    (match d with
-        | FIX_SecurityRequestType_RequestListSecurities -> "3"
-        | FIX_SecurityRequestType_RequestListSecurityTypes -> "2"
-        | FIX_SecurityRequestType_RequestSecurityIdentityAndSpecifications -> "0"
-        | FIX_SecurityRequestType_RequestSecurityIdentityForSpecifications -> "1"
-    )
-;;
-
-let encode_SecurityResponseType (d)  =
-    (match d with
-        | FIX_SecurityResponseType_AcceptAsIs -> "1"
-        | FIX_SecurityResponseType_RejectSecurityProposal -> "5"
-        | FIX_SecurityResponseType_CannotMatchSelectionCriteria -> "6"
-        | FIX_SecurityResponseType_ListOfSecurityTypesReturnedPerRequest -> "3"
-        | FIX_SecurityResponseType_AcceptWithRevisions -> "2"
-        | FIX_SecurityResponseType_ListOfSecuritiesReturnedPerRequest -> "4"
-    )
-;;
-
-let encode_SecurityTradingStatus (d)  =
-    (match d with
-        | FIX_SecurityTradingStatus_ITSPreOpening -> "14"
-        | FIX_SecurityTradingStatus_PreOpen -> "21"
-        | FIX_SecurityTradingStatus_MarketImbalanceBuy -> "7"
-        | FIX_SecurityTradingStatus_NoMarketOnCloseImbalance -> "13"
-        | FIX_SecurityTradingStatus_NotAvailableForTrading -> "18"
-        | FIX_SecurityTradingStatus_OpeningRotation -> "22"
-        | FIX_SecurityTradingStatus_NoMarketImbalance -> "12"
-        | FIX_SecurityTradingStatus_TradeDisseminationTime -> "16"
-        | FIX_SecurityTradingStatus_ReadyToTrade -> "17"
-        | FIX_SecurityTradingStatus_UnknownOrInvalid -> "20"
-        | FIX_SecurityTradingStatus_MarketOnCloseImbalanceBuy -> "9"
-        | FIX_SecurityTradingStatus_OpeningDelay -> "1"
-        | FIX_SecurityTradingStatus_NoOpen -> "4"
-        | FIX_SecurityTradingStatus_MarketOnCloseImbalanceSell -> "10"
-        | FIX_SecurityTradingStatus_TradingHalt -> "2"
-        | FIX_SecurityTradingStatus_NotTradedOnThisMarket -> "19"
-        | FIX_SecurityTradingStatus_MarketImbalanceSell -> "8"
-        | FIX_SecurityTradingStatus_TradingRangeIndication -> "6"
-        | FIX_SecurityTradingStatus_FastMarket -> "23"
-        | FIX_SecurityTradingStatus_NewPriceIndication -> "15"
-        | FIX_SecurityTradingStatus_PriceIndication -> "5"
-        | FIX_SecurityTradingStatus_Resume -> "3"
-    )
-;;
-
-let encode_SecurityType (d)  =
-    (match d with
-        | FIX_SecurityType_MutualFund -> "MF"
-        | FIX_SecurityType_FederalHomeLoan -> "FHL"
-        | FIX_SecurityType_YankeeCorporateBond -> "YANK"
-        | FIX_SecurityType_Matured -> "MATURED"
-        | FIX_SecurityType_Retired -> "RETIRED"
-        | FIX_SecurityType_USDSupranationalCoupons -> "SUPRA"
-        | FIX_SecurityType_CatsTigersAndLions -> "ZOO"
-        | FIX_SecurityType_GeneralObligationBonds -> "GO"
-        | FIX_SecurityType_TimeDeposit -> "TD"
-        | FIX_SecurityType_ExtendedCommNote -> "XCN"
-        | FIX_SecurityType_Future -> "FUT"
-        | FIX_SecurityType_Forward -> "FORWARD"
-        | FIX_SecurityType_VariableRateDemandNote -> "VRDN"
-        | FIX_SecurityType_MediumTermNotes -> "MTN"
-        | FIX_SecurityType_Repurchase -> "REPO"
-        | FIX_SecurityType_PlazosFijos -> "PZFJ"
-        | FIX_SecurityType_BankNotes -> "BN"
-        | FIX_SecurityType_Warrant -> "WAR"
-        | FIX_SecurityType_SpecialTax -> "SPCLT"
-        | FIX_SecurityType_ForeignExchangeContract -> "FOR"
-        | FIX_SecurityType_CertificateOfDeposit -> "CD"
-        | FIX_SecurityType_TaxAnticipationNote -> "TAN"
-        | FIX_SecurityType_LetterOfCredit -> "LOFC"
-        | FIX_SecurityType_CollateralizedMortgageObligation -> "CMO"
-        | FIX_SecurityType_Amended -> "AMENDED"
-        | FIX_SecurityType_RevolverLoan -> "RVLV"
-        | FIX_SecurityType_DepositNotes -> "DN"
-        | FIX_SecurityType_EuroCertificateOfDeposit -> "EUCD"
-        | FIX_SecurityType_Overnight -> "ONITE"
-        | FIX_SecurityType_RepurchaseAgreement -> "RP"
-        | FIX_SecurityType_SpecialObligation -> "SPCLO"
-        | FIX_SecurityType_FederalAgencyDiscountNote -> "FADN"
-        | FIX_SecurityType_GovernmentNationalMortgageAssociation -> "GN"
-        | FIX_SecurityType_DebtorInPossession -> "DINP"
-        | FIX_SecurityType_Replaced -> "REPLACD"
-        | FIX_SecurityType_NoSecurityType -> "NONE"
-        | FIX_SecurityType_SwingLineFacility -> "SWING"
-        | FIX_SecurityType_TaxExemptCommercialPaper -> "TECP"
-        | FIX_SecurityType_DualCurrency -> "DUAL"
-        | FIX_SecurityType_TreasuryInflationProtectedSecurities -> "TIPS"
-        | FIX_SecurityType_BridgeLoan -> "BRIDGE"
-        | FIX_SecurityType_ShortTermLoanNote -> "STN"
-        | FIX_SecurityType_Defaulted -> "DEFLTED"
-        | FIX_SecurityType_StudentLoanMarketingAssociation -> "SL"
-        | FIX_SecurityType_LiquidityNote -> "LQN"
-        | FIX_SecurityType_InterestStripFromAnyBondOrNote -> "TINT"
-        | FIX_SecurityType_Revolver -> "RVLVTRM"
-        | FIX_SecurityType_CommercialPaper -> "CP"
-        | FIX_SecurityType_RevenueAnticipationNote -> "RAN"
-        | FIX_SecurityType_StructuredNotes -> "STRUCT"
-        | FIX_SecurityType_MortgagePrivatePlacement -> "MPP"
-        | FIX_SecurityType_Pfandbriefe -> "PFAND"
-        | FIX_SecurityType_OtherAnticipationNotes -> "AN"
-        | FIX_SecurityType_MandatoryTender -> "MT"
-        | FIX_SecurityType_PreferredStock -> "PS"
-        | FIX_SecurityType_ToBeAnnounced -> "TBA"
-        | FIX_SecurityType_FederalHousingAuthority -> "FHA"
-        | FIX_SecurityType_MiscellaneousPassThrough -> "MPT"
-        | FIX_SecurityType_YankeeCertificateOfDeposit -> "YCD"
-        | FIX_SecurityType_Option -> "OPT"
-        | FIX_SecurityType_MortgagePrincipalOnly -> "MPO"
-        | FIX_SecurityType_USTreasuryBill -> "TBILL"
-        | FIX_SecurityType_MortgageInterestOnly -> "MIO"
-        | FIX_SecurityType_AssetBackedSecurities -> "ABS"
-        | FIX_SecurityType_EuroSupranationalCoupons -> "EUSUPRA"
-        | FIX_SecurityType_USTreasuryBillOld -> "USTB"
-        | FIX_SecurityType_IOETTEMortgage -> "IET"
-        | FIX_SecurityType_MortgageBackedSecurities -> "MBS"
-        | FIX_SecurityType_BillOfExchanges -> "BOX"
-        | FIX_SecurityType_RevenueBonds -> "REV"
-        | FIX_SecurityType_ReverseRepurchaseAgreement -> "RVRP"
-        | FIX_SecurityType_EuroCorporateBond -> "EUCORP"
-        | FIX_SecurityType_PrivateExportFunding -> "PEF"
-        | FIX_SecurityType_PrincipalStripFromANonCallableBondOrNote -> "TPRN"
-        | FIX_SecurityType_Withdrawn -> "WITHDRN"
-        | FIX_SecurityType_SpecialAssessment -> "SPCLA"
-        | FIX_SecurityType_EuroSovereigns -> "EUSOV"
-        | FIX_SecurityType_FederalNationalMortgageAssociation -> "FN"
-        | FIX_SecurityType_TaxAllocation -> "TAXA"
-        | FIX_SecurityType_PromissoryNote -> "PN"
-        | FIX_SecurityType_PrincipalStripOfACallableBondOrNote -> "TCAL"
-        | FIX_SecurityType_ConvertibleBond -> "CB"
-        | FIX_SecurityType_Corp -> "CMBS"
-        | FIX_SecurityType_SecuritiesLoan -> "SECLOAN"
-        | FIX_SecurityType_CertificateOfObligation -> "COFO"
-        | FIX_SecurityType_CallLoans -> "CL"
-        | FIX_SecurityType_USTreasuryBond -> "TBOND"
-        | FIX_SecurityType_SecuritiesPledge -> "SECPLEDGE"
-        | FIX_SecurityType_BradyBond -> "BRADY"
-        | FIX_SecurityType_CorporateBond -> "CORP"
-        | FIX_SecurityType_TermLoan -> "TERM"
-        | FIX_SecurityType_TaxRevenueAnticipationNote -> "TRAN"
-        | FIX_SecurityType_FederalAgencyCoupon -> "FAC"
-        | FIX_SecurityType_BankersAcceptance -> "BA"
-        | FIX_SecurityType_MultilegInstrument -> "MLEG"
-        | FIX_SecurityType_EuroCommercialPaper -> "EUCP"
-        | FIX_SecurityType_CommonStock -> "CS"
-        | FIX_SecurityType_TreasuriesAgencyDebenture -> "GOVT"
-        | FIX_SecurityType_USTreasuryNote -> "TNOTE"
-        | FIX_SecurityType_IndexedLinked -> "XLINKD"
-        | FIX_SecurityType_MunicipalBond -> "MUNI"
-        | FIX_SecurityType_Wildcard -> "?"
-        | FIX_SecurityType_USTreasuryNoteOld -> "UST"
-        | FIX_SecurityType_CertificateOfParticipation -> "COFP"
-        | FIX_SecurityType_CorporatePrivatePlacement -> "CPP"
-        | FIX_SecurityType_BuySellback -> "BUYSELL"
-    )
-;;
-
-let encode_SettlInstMode (d)  =
-    (match d with
-        | FIX_SettlInstMode_SpecificAllocationAccountOverriding -> "2"
-        | FIX_SettlInstMode_RequestReject -> "5"
-        | FIX_SettlInstMode_Default -> "0"
-        | FIX_SettlInstMode_StandingInstructionsProvided -> "1"
-        | FIX_SettlInstMode_SpecificAllocationAccountStanding -> "3"
-        | FIX_SettlInstMode_SpecificOrderForASingleAccount -> "4"
-    )
-;;
-
-let encode_SettlInstSource (d)  =
-    (match d with
-        | FIX_SettlInstSource_Investor -> "3"
-        | FIX_SettlInstSource_Institution -> "2"
-        | FIX_SettlInstSource_BrokerCredit -> "1"
-    )
-;;
-
-let encode_SettlInstTransType (d)  =
-    (match d with
-        | FIX_SettlInstTransType_Cancel -> "C"
-        | FIX_SettlInstTransType_Replace -> "R"
-        | FIX_SettlInstTransType_New -> "N"
-        | FIX_SettlInstTransType_Restate -> "T"
-    )
-;;
-
-let encode_SettlLocation (d)  =
-    (match d with
-        | FIX_SettlLocation_Physical -> "PNY"
-        | FIX_SettlLocation_EuroClear -> "EUR"
-        | FIX_SettlLocation_FederalBookEntry -> "FED"
-        | FIX_SettlLocation_LocalMarketSettleLocation -> "ISO Country Code"
-        | FIX_SettlLocation_CEDEL -> "CED"
-        | FIX_SettlLocation_ParticipantTrustCompany -> "PTC"
-        | FIX_SettlLocation_DepositoryTrustCompany -> "DTC"
-    )
-;;
-
-let encode_SettlmntTyp (d)  =
-    (match d with
-        | FIX_SettlmntTyp_Regular -> "0"
-        | FIX_SettlmntTyp_TPlus2 -> "3"
-        | FIX_SettlmntTyp_SellersOption -> "8"
-        | FIX_SettlmntTyp_TPlus4 -> "5"
-        | FIX_SettlmntTyp_TPlus3 -> "4"
-        | FIX_SettlmntTyp_TPlus5 -> "9"
-        | FIX_SettlmntTyp_NextDay -> "2"
-        | FIX_SettlmntTyp_Future -> "6"
-        | FIX_SettlmntTyp_Cash -> "1"
-        | FIX_SettlmntTyp_WhenAndIfIssued -> "7"
-    )
-;;
-
-let encode_Side (d)  =
-    (match d with
-        | FIX_Side_AsDefined -> "B"
-        | FIX_Side_Opposite -> "C"
-        | FIX_Side_Buy -> "1"
-        | FIX_Side_CrossShortExempt -> "A"
-        | FIX_Side_Borrow -> "G"
-        | FIX_Side_BuyMinus -> "3"
-        | FIX_Side_Subscribe -> "D"
-        | FIX_Side_Lend -> "F"
-        | FIX_Side_SellShortExempt -> "6"
-        | FIX_Side_Redeem -> "E"
-        | FIX_Side_SellPlus -> "4"
-        | FIX_Side_Sell -> "2"
-        | FIX_Side_Undisclosed -> "7"
-        | FIX_Side_Cross -> "8"
-        | FIX_Side_CrossShort -> "9"
-        | FIX_Side_SellShort -> "5"
-    )
-;;
-
-let encode_SolicitedFlag (d)  =
-    (match d with
-        | FIX_SolicitedFlag_WasSolicited -> "Y"
-        | FIX_SolicitedFlag_WasNotSolicited -> "N"
-    )
-;;
-
-let encode_StandInstDbType (d)  =
-    (match d with
-        | FIX_StandInstDbType_Other -> "0"
-        | FIX_StandInstDbType_AccountNet -> "4"
-        | FIX_StandInstDbType_DTCSID -> "1"
-        | FIX_StandInstDbType_ThomsonALERT -> "2"
-        | FIX_StandInstDbType_AGlobalCustodian -> "3"
-    )
-;;
-
-let encode_SubscriptionRequestType (d)  =
-    (match d with
-        | FIX_SubscriptionRequestType_DisablePreviousSnapshot -> "2"
-        | FIX_SubscriptionRequestType_SnapshotAndUpdates -> "1"
-        | FIX_SubscriptionRequestType_Snapshot -> "0"
-    )
-;;
-
-let encode_TickDirection (d)  =
-    (match d with
-        | FIX_TickDirection_ZeroMinusTick -> "3"
-        | FIX_TickDirection_PlusTick -> "0"
-        | FIX_TickDirection_MinusTick -> "2"
-        | FIX_TickDirection_ZeroPlusTick -> "1"
-    )
-;;
-
-let encode_TimeInForce (d)  =
-    (match d with
-        | FIX_TimeInForce_GoodTillCancel -> "1"
-        | FIX_TimeInForce_AtTheClose -> "7"
-        | FIX_TimeInForce_ImmediateOrCancel -> "3"
-        | FIX_TimeInForce_Day -> "0"
-        | FIX_TimeInForce_FillOrKill -> "4"
-        | FIX_TimeInForce_GoodForAuction -> "B"
-        | FIX_TimeInForce_AtTheOpening -> "2"
-        | FIX_TimeInForce_GoodTillCrossing -> "5"
-        | FIX_TimeInForce_GoodTillDate -> "6"
-    )
-;;
-
-let encode_TradSesMethod (d)  =
-    (match d with
-        | FIX_TradSesMethod_OpenOutcry -> "2"
-        | FIX_TradSesMethod_Electronic -> "1"
-        | FIX_TradSesMethod_TwoParty -> "3"
-    )
-;;
-
-let encode_TradSesMode (d)  =
-    (match d with
-        | FIX_TradSesMode_Testing -> "1"
-        | FIX_TradSesMode_Simulated -> "2"
-        | FIX_TradSesMode_Production -> "3"
-    )
-;;
-
-let encode_TradSesStatus (d)  =
-    (match d with
-        | FIX_TradSesStatus_Closed -> "3"
-        | FIX_TradSesStatus_PreOpen -> "4"
-        | FIX_TradSesStatus_RequestRejected -> "6"
-        | FIX_TradSesStatus_PreClose -> "5"
-        | FIX_TradSesStatus_Unknown -> "0"
-        | FIX_TradSesStatus_Halted -> "1"
-        | FIX_TradSesStatus_Open -> "2"
-    )
-;;
-
-let encode_TradeCondition (d)  =
-    (match d with
-        | FIX_TradeCondition_Opened -> "K"
-        | FIX_TradeCondition_Rule127Trade -> "G"
-        | FIX_TradeCondition_CashTrade -> "C"
-        | FIX_TradeCondition_IntradayTradeDetail -> "F"
-        | FIX_TradeCondition_SoldLast -> "I"
-        | FIX_TradeCondition_Cash -> "A"
-        | FIX_TradeCondition_StoppedStock -> "N"
-        | FIX_TradeCondition_ImbalanceMoreSellers -> "Q"
-        | FIX_TradeCondition_Sold -> "M"
-        | FIX_TradeCondition_ImbalanceMoreBuyers -> "P"
-        | FIX_TradeCondition_NextDay -> "D"
-        | FIX_TradeCondition_Opening -> "E"
-        | FIX_TradeCondition_Seller -> "L"
-        | FIX_TradeCondition_OpeningPrice -> "R"
-        | FIX_TradeCondition_AveragePriceTrade -> "B"
-        | FIX_TradeCondition_Rule155Trade -> "H"
-        | FIX_TradeCondition_NextDayTrade -> "J"
-    )
-;;
-
-let encode_TradeType (d)  =
-    (match d with
-        | FIX_TradeType_Agency -> "A"
-        | FIX_TradeType_RiskTrade -> "R"
-        | FIX_TradeType_VWAPGuarantee -> "G"
-        | FIX_TradeType_GuaranteedClose -> "J"
-    )
-;;
-
-let encode_UnsolicitedIndicator (d)  =
-    (match d with
-        | FIX_UnsolicitedIndicator_MessageIsBeingSentAsAResultOfAPriorRequest -> "N"
-        | FIX_UnsolicitedIndicator_MessageIsBeingSentUnsolicited -> "Y"
-    )
-;;
-
-let encode_Urgency (d)  =
-    (match d with
-        | FIX_Urgency_Flash -> "1"
-        | FIX_Urgency_Background -> "2"
-        | FIX_Urgency_Normal -> "0"
-    )
-;;
-
-let encode_week (d)  =
-    (match d with
-        | FIX_week_w1 -> "w1"
-        | FIX_week_w2 -> "w2"
-        | FIX_week_w3 -> "w3"
-        | FIX_week_noweek -> "noweek"
-        | FIX_week_w4 -> "w4"
-        | FIX_week_w5 -> "w5"
-    )
-;;
-
-let encode_Currency (d)  =
-    (match d with
-        | FIX_Currency_EUR -> "EUR"
-        | FIX_Currency_CHF -> "CHF"
-        | FIX_Currency_USD -> "USD"
-        | FIX_Currency_GBP -> "GBP"
-    )
-;;
-
-let encode_Country (d)  =
-    (match d with
-        | FIX_Country_DE -> "DE"
-        | FIX_Country_GB -> "GB"
-        | FIX_Country_US -> "US"
-    )
-;;
-
-let encode_Exchange (d)  =
-    (match d with
-        | FIX_Exchange_XSHG -> "XSHG"
-        | FIX_Exchange_SHSC -> "SHSC"
-        | FIX_Exchange_XNYS -> "XNYS"
-        | FIX_Exchange_XJAS -> "XJAS"
-        | FIX_Exchange_XLON -> "XLON"
-        | FIX_Exchange_XNAS -> "XNAS"
-    )
-;;
-
 let encode_AccountType (d)  =
     (match d with
         | FIX_AccountType_CarriedCustomerSide -> "1"
@@ -1381,6 +24,14 @@ let encode_AcctIDSource (d)  =
     )
 ;;
 
+let encode_Adjustment (d)  =
+    (match d with
+        | FIX_Adjustment_Cancel -> "1"
+        | FIX_Adjustment_Error -> "2"
+        | FIX_Adjustment_Correction -> "3"
+    )
+;;
+
 let encode_AdjustmentType (d)  =
     (match d with
         | FIX_AdjustmentType_ProcessRequestAsMarginDisposition -> "0"
@@ -1390,11 +41,35 @@ let encode_AdjustmentType (d)  =
     )
 ;;
 
+let encode_AdvSide (d)  =
+    (match d with
+        | FIX_AdvSide_Buy -> "B"
+        | FIX_AdvSide_Sell -> "S"
+        | FIX_AdvSide_Trade -> "T"
+        | FIX_AdvSide_Cross -> "X"
+    )
+;;
+
+let encode_AdvTransType (d)  =
+    (match d with
+        | FIX_AdvTransType_Cancel -> "C"
+        | FIX_AdvTransType_Replace -> "R"
+        | FIX_AdvTransType_New -> "N"
+    )
+;;
+
 let encode_AffirmStatus (d)  =
     (match d with
         | FIX_AffirmStatus_Affirmed -> "3"
         | FIX_AffirmStatus_Received -> "1"
         | FIX_AffirmStatus_ConfirmRejected -> "2"
+    )
+;;
+
+let encode_AggregatedBook (d)  =
+    (match d with
+        | FIX_AggregatedBook_BookEntriesToBeAggregated -> "Y"
+        | FIX_AggregatedBook_BookEntriesShouldNotBeAggregated -> "N"
     )
 ;;
 
@@ -1418,6 +93,14 @@ let encode_AllocCancReplaceReason (d)  =
     )
 ;;
 
+let encode_AllocHandlInst (d)  =
+    (match d with
+        | FIX_AllocHandlInst_ForwardAndMatch -> "3"
+        | FIX_AllocHandlInst_Forward -> "2"
+        | FIX_AllocHandlInst_Match -> "1"
+    )
+;;
+
 let encode_AllocIntermedReqType (d)  =
     (match d with
         | FIX_AllocIntermedReqType_PendingAccept -> "1"
@@ -1429,10 +112,36 @@ let encode_AllocIntermedReqType (d)  =
     )
 ;;
 
+let encode_AllocLinkType (d)  =
+    (match d with
+        | FIX_AllocLinkType_FXSwap -> "1"
+        | FIX_AllocLinkType_FXNetting -> "0"
+    )
+;;
+
 let encode_AllocNoOrdersType (d)  =
     (match d with
         | FIX_AllocNoOrdersType_ExplicitListProvided -> "1"
         | FIX_AllocNoOrdersType_NotSpecified -> "0"
+    )
+;;
+
+let encode_AllocRejCode (d)  =
+    (match d with
+        | FIX_AllocRejCode_UnknownOrStaleExecID -> "10"
+        | FIX_AllocRejCode_UnknownAccount -> "0"
+        | FIX_AllocRejCode_OtherSeeText -> "7"
+        | FIX_AllocRejCode_UnknownListID -> "6"
+        | FIX_AllocRejCode_CalculationDifference -> "9"
+        | FIX_AllocRejCode_IncorrectQuantity -> "1"
+        | FIX_AllocRejCode_UnknownClOrdID -> "12"
+        | FIX_AllocRejCode_CommissionDifference -> "4"
+        | FIX_AllocRejCode_WarehouseRequestRejected -> "13"
+        | FIX_AllocRejCode_UnknownExecutingBrokerMnemonic -> "3"
+        | FIX_AllocRejCode_MismatchedData -> "11"
+        | FIX_AllocRejCode_UnknownOrderID -> "5"
+        | FIX_AllocRejCode_IncorrectAveragegPrice -> "2"
+        | FIX_AllocRejCode_IncorrectAllocatedQuantity -> "8"
     )
 ;;
 
@@ -1452,6 +161,25 @@ let encode_AllocSettlInstType (d)  =
         | FIX_AllocSettlInstType_PhoneForInstructions -> "4"
         | FIX_AllocSettlInstType_UseDefaultInstructions -> "0"
         | FIX_AllocSettlInstType_SSIDBIDsProvided -> "3"
+    )
+;;
+
+let encode_AllocStatus (d)  =
+    (match d with
+        | FIX_AllocStatus_Incomplete -> "4"
+        | FIX_AllocStatus_Received -> "3"
+        | FIX_AllocStatus_BlockLevelReject -> "1"
+        | FIX_AllocStatus_AccountLevelReject -> "2"
+        | FIX_AllocStatus_RejectedByIntermediary -> "5"
+        | FIX_AllocStatus_Accepted -> "0"
+    )
+;;
+
+let encode_AllocTransType (d)  =
+    (match d with
+        | FIX_AllocTransType_Replace -> "1"
+        | FIX_AllocTransType_Cancel -> "2"
+        | FIX_AllocTransType_New -> "0"
     )
 ;;
 
@@ -1498,11 +226,36 @@ let encode_AvgPxIndicator (d)  =
     )
 ;;
 
+let encode_BasisPxType (d)  =
+    (match d with
+        | FIX_BasisPxType_Others -> "Z"
+        | FIX_BasisPxType_VWAPThroughADay -> "6"
+        | FIX_BasisPxType_VWAPThroughAnAfternoonSessionExcept -> "B"
+        | FIX_BasisPxType_VWAPThroughAMorningSession -> "7"
+        | FIX_BasisPxType_ClosingPrice -> "3"
+        | FIX_BasisPxType_CurrentPrice -> "4"
+        | FIX_BasisPxType_Strike -> "C"
+        | FIX_BasisPxType_Open -> "D"
+        | FIX_BasisPxType_ClosingPriceAtMorningSession -> "2"
+        | FIX_BasisPxType_VWAPThroughADayExcept -> "9"
+        | FIX_BasisPxType_VWAPThroughAMorningSessionExcept -> "A"
+        | FIX_BasisPxType_VWAPThroughAnAfternoonSession -> "8"
+        | FIX_BasisPxType_SQ -> "5"
+    )
+;;
+
 let encode_BidDescriptorType (d)  =
     (match d with
         | FIX_BidDescriptorType_Sector -> "1"
         | FIX_BidDescriptorType_Index -> "3"
         | FIX_BidDescriptorType_Country -> "2"
+    )
+;;
+
+let encode_BidRequestTransType (d)  =
+    (match d with
+        | FIX_BidRequestTransType_Cancel -> "C"
+        | FIX_BidRequestTransType_New -> "N"
     )
 ;;
 
@@ -1703,6 +456,17 @@ let encode_CollStatus (d)  =
     )
 ;;
 
+let encode_CommType (d)  =
+    (match d with
+        | FIX_CommType_PercentageWaivedEnhancedUnits -> "5"
+        | FIX_CommType_PointsPerBondOrContract -> "6"
+        | FIX_CommType_Percent -> "2"
+        | FIX_CommType_PerUnit -> "1"
+        | FIX_CommType_Absolute -> "3"
+        | FIX_CommType_PercentageWaivedCashDiscount -> "4"
+    )
+;;
+
 let encode_ConfirmRejReason (d)  =
     (match d with
         | FIX_ConfirmRejReason_MissingSettlementInstructions -> "2"
@@ -1757,6 +521,23 @@ let encode_ContAmtType (d)  =
     )
 ;;
 
+let encode_CorporateAction (d)  =
+    (match d with
+        | FIX_CorporateAction_ExDistribution -> "B"
+        | FIX_CorporateAction_ExDividend -> "A"
+        | FIX_CorporateAction_ExInterest -> "E"
+        | FIX_CorporateAction_ExRights -> "C"
+        | FIX_CorporateAction_New -> "D"
+    )
+;;
+
+let encode_CoveredOrUncovered (d)  =
+    (match d with
+        | FIX_CoveredOrUncovered_Uncovered -> "1"
+        | FIX_CoveredOrUncovered_Covered -> "0"
+    )
+;;
+
 let encode_CrossPrioritization (d)  =
     (match d with
         | FIX_CrossPrioritization_BuySideIsPrioritized -> "1"
@@ -1771,8 +552,6 @@ let encode_CrossType (d)  =
         | FIX_CrossType_CrossOneSide -> "3"
         | FIX_CrossType_CrossSamePrice -> "4"
         | FIX_CrossType_CrossAON -> "1"
-        | FIX_CrossType_NotSignificant -> "0"
-        | FIX_CrossType_StandardCross -> "P"
     )
 ;;
 
@@ -1785,11 +564,50 @@ let encode_CustOrderCapacity (d)  =
     )
 ;;
 
+let encode_CxlRejReason (d)  =
+    (match d with
+        | FIX_CxlRejReason_Other -> "99"
+        | FIX_CxlRejReason_OrderAlreadyInPendingStatus -> "3"
+        | FIX_CxlRejReason_TooLateToCancel -> "0"
+        | FIX_CxlRejReason_UnknownOrder -> "1"
+        | FIX_CxlRejReason_UnableToProcessOrderMassCancelRequest -> "4"
+        | FIX_CxlRejReason_OrigOrdModTime -> "5"
+        | FIX_CxlRejReason_DuplicateClOrdID -> "6"
+        | FIX_CxlRejReason_BrokerCredit -> "2"
+    )
+;;
+
+let encode_CxlRejResponseTo (d)  =
+    (match d with
+        | FIX_CxlRejResponseTo_OrderCancelRequest -> "1"
+        | FIX_CxlRejResponseTo_OrderCancel -> "2"
+    )
+;;
+
+let encode_DKReason (d)  =
+    (match d with
+        | FIX_DKReason_WrongSide -> "B"
+        | FIX_DKReason_QuantityExceedsOrder -> "C"
+        | FIX_DKReason_Other -> "Z"
+        | FIX_DKReason_CalculationDifference -> "F"
+        | FIX_DKReason_NoMatchingOrder -> "D"
+        | FIX_DKReason_PriceExceedsLimit -> "E"
+        | FIX_DKReason_UnknownSymbol -> "A"
+    )
+;;
+
 let encode_DayBookingInst (d)  =
     (match d with
         | FIX_DayBookingInst_Auto -> "0"
         | FIX_DayBookingInst_SpeakWithOrderInitiatorBeforeBooking -> "1"
         | FIX_DayBookingInst_Accumulate -> "2"
+    )
+;;
+
+let encode_DeleteReason (d)  =
+    (match d with
+        | FIX_DeleteReason_Error -> "1"
+        | FIX_DeleteReason_Cancellation -> "0"
     )
 ;;
 
@@ -1806,6 +624,18 @@ let encode_DeliveryType (d)  =
         | FIX_DeliveryType_VersusPayment -> "0"
         | FIX_DeliveryType_HoldInCustody -> "3"
         | FIX_DeliveryType_Free -> "1"
+    )
+;;
+
+let encode_DiscretionInst (d)  =
+    (match d with
+        | FIX_DiscretionInst_RelatedToPrimaryPrice -> "2"
+        | FIX_DiscretionInst_RelatedToMidpointPrice -> "4"
+        | FIX_DiscretionInst_RelatedToLastTradePrice -> "5"
+        | FIX_DiscretionInst_RelatedToDisplayedPrice -> "0"
+        | FIX_DiscretionInst_RelatedToVWAP -> "6"
+        | FIX_DiscretionInst_RelatedToMarketPrice -> "1"
+        | FIX_DiscretionInst_RelatedToLocalPrimaryPrice -> "3"
     )
 ;;
 
@@ -1873,6 +703,21 @@ let encode_DlvyInstType (d)  =
     )
 ;;
 
+let encode_DueToRelated (d)  =
+    (match d with
+        | FIX_DueToRelated_RelatedToSecurityHalt -> "Y"
+        | FIX_DueToRelated_NotRelatedToSecurityHalt -> "N"
+    )
+;;
+
+let encode_EmailType (d)  =
+    (match d with
+        | FIX_EmailType_Reply -> "1"
+        | FIX_EmailType_AdminReply -> "2"
+        | FIX_EmailType_New -> "0"
+    )
+;;
+
 let encode_EventType (d)  =
     (match d with
         | FIX_EventType_Other -> "99"
@@ -1880,6 +725,58 @@ let encode_EventType (d)  =
         | FIX_EventType_Tender -> "3"
         | FIX_EventType_Put -> "1"
         | FIX_EventType_SinkingFundCall -> "4"
+    )
+;;
+
+let encode_ExchangeForPhysical (d)  =
+    (match d with
+        | FIX_ExchangeForPhysical_True -> "Y"
+        | FIX_ExchangeForPhysical_False -> "N"
+    )
+;;
+
+let encode_ExecInst (d)  =
+    (match d with
+        | FIX_ExecInst_ParticipateDoNotInitiate -> "6"
+        | FIX_ExecInst_AllOrNone -> "G"
+        | FIX_ExecInst_CallFirst -> "C"
+        | FIX_ExecInst_PercentOfVolume -> "D"
+        | FIX_ExecInst_InstitutionsOnly -> "I"
+        | FIX_ExecInst_NoCross -> "A"
+        | FIX_ExecInst_OverTheDay -> "4"
+        | FIX_ExecInst_DoNotIncrease -> "E"
+        | FIX_ExecInst_OpeningPeg -> "O"
+        | FIX_ExecInst_TryToStop -> "Y"
+        | FIX_ExecInst_Netting -> "V"
+        | FIX_ExecInst_StayOnBidSide -> "9"
+        | FIX_ExecInst_Held -> "5"
+        | FIX_ExecInst_OKToCross -> "B"
+        | FIX_ExecInst_CustomerDisplayInstruction -> "U"
+        | FIX_ExecInst_GoAlong -> "3"
+        | FIX_ExecInst_DoNotReduce -> "F"
+        | FIX_ExecInst_StayOnOfferSide -> "0"
+        | FIX_ExecInst_PegToLimitPrice -> "d"
+        | FIX_ExecInst_TryToScale -> "8"
+        | FIX_ExecInst_ReinstateOnSystemFailure -> "H"
+        | FIX_ExecInst_CancelIfNotBest -> "Z"
+        | FIX_ExecInst_MidPricePeg -> "M"
+        | FIX_ExecInst_WorkToTargetStrategy -> "e"
+        | FIX_ExecInst_PegToVWAP -> "W"
+        | FIX_ExecInst_TradeAlong -> "X"
+        | FIX_ExecInst_StrictLimit -> "b"
+        | FIX_ExecInst_Suspend -> "S"
+        | FIX_ExecInst_LastPeg -> "L"
+        | FIX_ExecInst_NonNegotiable -> "N"
+        | FIX_ExecInst_NotHeld -> "1"
+        | FIX_ExecInst_CancelOnTradingHalt -> "K"
+        | FIX_ExecInst_CancelOnSystemFailure -> "Q"
+        | FIX_ExecInst_IgnorePriceValidityChecks -> "c"
+        | FIX_ExecInst_Work -> "2"
+        | FIX_ExecInst_ReinstateOnTradingHalt -> "J"
+        | FIX_ExecInst_PrimaryPeg -> "R"
+        | FIX_ExecInst_TrailingStopPeg -> "a"
+        | FIX_ExecInst_MarketPeg -> "P"
+        | FIX_ExecInst_StrictScale -> "7"
     )
 ;;
 
@@ -1893,6 +790,45 @@ let encode_ExecPriceType (d)  =
         | FIX_ExecPriceType_SinglePrice -> "S"
         | FIX_ExecPriceType_CreationPrice -> "C"
         | FIX_ExecPriceType_CreationPricePlusAdjustmentPercent -> "D"
+    )
+;;
+
+let encode_ExecRestatementReason (d)  =
+    (match d with
+        | FIX_ExecRestatementReason_Other -> "99"
+        | FIX_ExecRestatementReason_RepricingOfOrder -> "3"
+        | FIX_ExecRestatementReason_GTCorporateAction -> "0"
+        | FIX_ExecRestatementReason_VerbalChange -> "2"
+        | FIX_ExecRestatementReason_WarehouseRecap -> "10"
+        | FIX_ExecRestatementReason_CancelOnTradingHalt -> "6"
+        | FIX_ExecRestatementReason_CancelOnSystemFailure -> "7"
+        | FIX_ExecRestatementReason_GTRenewal -> "1"
+        | FIX_ExecRestatementReason_Market -> "8"
+        | FIX_ExecRestatementReason_Canceled -> "9"
+        | FIX_ExecRestatementReason_BrokerOption -> "4"
+        | FIX_ExecRestatementReason_PartialDeclineOfOrderQty -> "5"
+    )
+;;
+
+let encode_ExecType (d)  =
+    (match d with
+        | FIX_ExecType_PendingCancel -> "6"
+        | FIX_ExecType_Stopped -> "7"
+        | FIX_ExecType_PendingNew -> "A"
+        | FIX_ExecType_Restated -> "D"
+        | FIX_ExecType_Rejected -> "8"
+        | FIX_ExecType_Calculated -> "B"
+        | FIX_ExecType_TradeCorrect -> "G"
+        | FIX_ExecType_TradeCancel -> "H"
+        | FIX_ExecType_Expired -> "C"
+        | FIX_ExecType_OrderStatus -> "I"
+        | FIX_ExecType_Trade -> "F"
+        | FIX_ExecType_Canceled -> "4"
+        | FIX_ExecType_Replaced -> "5"
+        | FIX_ExecType_PendingReplace -> "E"
+        | FIX_ExecType_DoneForDay -> "3"
+        | FIX_ExecType_Suspended -> "9"
+        | FIX_ExecType_New -> "0"
     )
 ;;
 
@@ -1910,10 +846,66 @@ let encode_ExpirationCycle (d)  =
     )
 ;;
 
+let encode_FinancialStatus (d)  =
+    (match d with
+        | FIX_FinancialStatus_PendingDelisting -> "2"
+        | FIX_FinancialStatus_Bankrupt -> "1"
+    )
+;;
+
+let encode_ForexReq (d)  =
+    (match d with
+        | FIX_ForexReq_DoNotExecuteForexAfterSecurityTrade -> "N"
+        | FIX_ForexReq_ExecuteForexAfterSecurityTrade -> "Y"
+    )
+;;
+
 let encode_FundRenewWaiv (d)  =
     (match d with
         | FIX_FundRenewWaiv_No -> "N"
         | FIX_FundRenewWaiv_Yes -> "Y"
+    )
+;;
+
+let encode_GTBookingInst (d)  =
+    (match d with
+        | FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise -> "2"
+        | FIX_GTBookingInst_AccumulateUntilFilledOrExpired -> "1"
+        | FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution -> "0"
+    )
+;;
+
+let encode_HaltReason (d)  =
+    (match d with
+        | FIX_HaltReason_OrderImbalance -> "I"
+        | FIX_HaltReason_AdditionalInformation -> "M"
+        | FIX_HaltReason_NewsPending -> "P"
+        | FIX_HaltReason_OrderInflux -> "E"
+        | FIX_HaltReason_EquipmentChangeover -> "X"
+        | FIX_HaltReason_NewsDissemination -> "D"
+    )
+;;
+
+let encode_HandlInst (d)  =
+    (match d with
+        | FIX_HandlInst_ManualOrder -> "3"
+        | FIX_HandlInst_AutomatedExecutionInterventionOK -> "2"
+        | FIX_HandlInst_AutomatedExecutionNoIntervention -> "1"
+    )
+;;
+
+let encode_IOINaturalFlag (d)  =
+    (match d with
+        | FIX_IOINaturalFlag_Natural -> "Y"
+        | FIX_IOINaturalFlag_NotNatural -> "N"
+    )
+;;
+
+let encode_IOIQltyInd (d)  =
+    (match d with
+        | FIX_IOIQltyInd_Low -> "L"
+        | FIX_IOIQltyInd_High -> "H"
+        | FIX_IOIQltyInd_Medium -> "M"
     )
 ;;
 
@@ -1922,6 +914,51 @@ let encode_IOIQty (d)  =
         | FIX_IOIQty_Small -> "S"
         | FIX_IOIQty_Large -> "L"
         | FIX_IOIQty_Medium -> "M"
+    )
+;;
+
+let encode_IOIQualifier (d)  =
+    (match d with
+        | FIX_IOIQualifier_AllOrNone -> "A"
+        | FIX_IOIQualifier_TakingAPosition -> "P"
+        | FIX_IOIQualifier_Indication -> "W"
+        | FIX_IOIQualifier_PreOpen -> "Z"
+        | FIX_IOIQualifier_VWAP -> "D"
+        | FIX_IOIQualifier_AtTheOpen -> "O"
+        | FIX_IOIQualifier_Versus -> "V"
+        | FIX_IOIQualifier_AtTheMidpoint -> "Y"
+        | FIX_IOIQualifier_ReadyToTrade -> "R"
+        | FIX_IOIQualifier_PortfolioShown -> "S"
+        | FIX_IOIQualifier_ThroughTheDay -> "T"
+        | FIX_IOIQualifier_MoreBehind -> "M"
+        | FIX_IOIQualifier_MarketOnClose -> "B"
+        | FIX_IOIQualifier_AtTheClose -> "C"
+        | FIX_IOIQualifier_InTouchWith -> "I"
+        | FIX_IOIQualifier_AtTheMarket -> "Q"
+        | FIX_IOIQualifier_Limit -> "L"
+        | FIX_IOIQualifier_CrossingOpportunity -> "X"
+    )
+;;
+
+let encode_IOITransType (d)  =
+    (match d with
+        | FIX_IOITransType_Cancel -> "C"
+        | FIX_IOITransType_Replace -> "R"
+        | FIX_IOITransType_New -> "N"
+    )
+;;
+
+let encode_InViewOfCommon (d)  =
+    (match d with
+        | FIX_InViewOfCommon_HaltWasDueToCommonStockBeingHalted -> "Y"
+        | FIX_InViewOfCommon_HaltWasNotRelatedToAHaltOfTheCommonStock -> "N"
+    )
+;;
+
+let encode_IncTaxInd (d)  =
+    (match d with
+        | FIX_IncTaxInd_Net -> "1"
+        | FIX_IncTaxInd_Gross -> "2"
     )
 ;;
 
@@ -1950,6 +987,15 @@ let encode_InstrAttribType (d)  =
         | FIX_InstrAttribType_ZeroCoupon -> "2"
         | FIX_InstrAttribType_EscrowedToMaturity -> "12"
         | FIX_InstrAttribType_Taxable -> "17"
+    )
+;;
+
+let encode_LastCapacity (d)  =
+    (match d with
+        | FIX_LastCapacity_Agent -> "1"
+        | FIX_LastCapacity_CrossAsAgent -> "2"
+        | FIX_LastCapacity_Principal -> "4"
+        | FIX_LastCapacity_CrossAsPrincipal -> "3"
     )
 ;;
 
@@ -1984,6 +1030,25 @@ let encode_LegalConfirm (d)  =
     )
 ;;
 
+let encode_LiquidityIndType (d)  =
+    (match d with
+        | FIX_LiquidityIndType_Other -> "4"
+        | FIX_LiquidityIndType_NormalMarketSize -> "3"
+        | FIX_LiquidityIndType_TwentyDayMovingAverage -> "2"
+        | FIX_LiquidityIndType_FiveDayMovingAverage -> "1"
+    )
+;;
+
+let encode_ListExecInstType (d)  =
+    (match d with
+        | FIX_ListExecInstType_SellDriven -> "3"
+        | FIX_ListExecInstType_Immediate -> "1"
+        | FIX_ListExecInstType_BuyDrivenCashTopUp -> "4"
+        | FIX_ListExecInstType_WaitForInstruction -> "2"
+        | FIX_ListExecInstType_BuyDrivenCashWithdraw -> "5"
+    )
+;;
+
 let encode_ListOrderStatus (d)  =
     (match d with
         | FIX_ListOrderStatus_AllDone -> "6"
@@ -2007,10 +1072,68 @@ let encode_ListStatusType (d)  =
     )
 ;;
 
+let encode_LocateReqd (d)  =
+    (match d with
+        | FIX_LocateReqd_No -> "N"
+        | FIX_LocateReqd_Yes -> "Y"
+    )
+;;
+
+let encode_MDEntryType (d)  =
+    (match d with
+        | FIX_MDEntryType_OpenInterest -> "C"
+        | FIX_MDEntryType_ClosingPrice -> "5"
+        | FIX_MDEntryType_IndexValue -> "3"
+        | FIX_MDEntryType_Offer -> "1"
+        | FIX_MDEntryType_SettlementPrice -> "6"
+        | FIX_MDEntryType_TradingSessionVWAPPrice -> "9"
+        | FIX_MDEntryType_Trade -> "2"
+        | FIX_MDEntryType_TradingSessionHighPrice -> "7"
+        | FIX_MDEntryType_OpeningPrice -> "4"
+        | FIX_MDEntryType_TradeVolume -> "B"
+        | FIX_MDEntryType_Imbalance -> "A"
+        | FIX_MDEntryType_Bid -> "0"
+        | FIX_MDEntryType_TradingSessionLowPrice -> "8"
+    )
+;;
+
 let encode_MDImplicitDelete (d)  =
     (match d with
         | FIX_MDImplicitDelete_No -> "N"
         | FIX_MDImplicitDelete_Yes -> "Y"
+    )
+;;
+
+let encode_MDReqRejReason (d)  =
+    (match d with
+        | FIX_MDReqRejReason_UnsupportedAggregatedBook -> "7"
+        | FIX_MDReqRejReason_UnsupportedMDUpdateType -> "6"
+        | FIX_MDReqRejReason_UnsupportedMDImplicitDelete -> "C"
+        | FIX_MDReqRejReason_InsufficientPermissions -> "3"
+        | FIX_MDReqRejReason_UnsupportedScope -> "A"
+        | FIX_MDReqRejReason_UnsupportedTradingSessionID -> "9"
+        | FIX_MDReqRejReason_UnsupportedSubscriptionRequestType -> "4"
+        | FIX_MDReqRejReason_UnsupportedMDEntryType -> "8"
+        | FIX_MDReqRejReason_InsufficientBandwidth -> "2"
+        | FIX_MDReqRejReason_DuplicateMDReqID -> "1"
+        | FIX_MDReqRejReason_UnsupportedMarketDepth -> "5"
+        | FIX_MDReqRejReason_UnsupportedOpenCloseSettleFlag -> "B"
+        | FIX_MDReqRejReason_UnknownSymbol -> "0"
+    )
+;;
+
+let encode_MDUpdateAction (d)  =
+    (match d with
+        | FIX_MDUpdateAction_Delete -> "2"
+        | FIX_MDUpdateAction_Change -> "1"
+        | FIX_MDUpdateAction_New -> "0"
+    )
+;;
+
+let encode_MDUpdateType (d)  =
+    (match d with
+        | FIX_MDUpdateType_FullRefresh -> "0"
+        | FIX_MDUpdateType_IncrementalRefresh -> "1"
     )
 ;;
 
@@ -2096,11 +1219,37 @@ let encode_MatchType (d)  =
     )
 ;;
 
+let encode_MessageEncoding (d)  =
+    (match d with
+        | FIX_MessageEncoding_ISO2022JP -> "ISO-2022-JP"
+        | FIX_MessageEncoding_UTF8 -> "UTF-8"
+        | FIX_MessageEncoding_ShiftJIS -> "Shift_JIS"
+        | FIX_MessageEncoding_EUCJP -> "EUC-JP"
+    )
+;;
+
 let encode_MiscFeeBasis (d)  =
     (match d with
         | FIX_MiscFeeBasis_Percentage -> "2"
         | FIX_MiscFeeBasis_PerUnit -> "1"
         | FIX_MiscFeeBasis_Absolute -> "0"
+    )
+;;
+
+let encode_MiscFeeType (d)  =
+    (match d with
+        | FIX_MiscFeeType_Other -> "7"
+        | FIX_MiscFeeType_Agent -> "12"
+        | FIX_MiscFeeType_LocalCommission -> "3"
+        | FIX_MiscFeeType_ExchangeFees -> "4"
+        | FIX_MiscFeeType_Stamp -> "5"
+        | FIX_MiscFeeType_Markup -> "8"
+        | FIX_MiscFeeType_PerTransaction -> "10"
+        | FIX_MiscFeeType_Regulatory -> "1"
+        | FIX_MiscFeeType_Tax -> "2"
+        | FIX_MiscFeeType_ConsumptionTax -> "9"
+        | FIX_MiscFeeType_Conversion -> "11"
+        | FIX_MiscFeeType_Levy -> "6"
     )
 ;;
 
@@ -2114,11 +1263,33 @@ let encode_MoneyLaunderingStatus (d)  =
     )
 ;;
 
+let encode_MsgDirection (d)  =
+    (match d with
+        | FIX_MsgDirection_Send -> "S"
+        | FIX_MsgDirection_Receive -> "R"
+    )
+;;
+
+let encode_MultiLegReportingType (d)  =
+    (match d with
+        | FIX_MultiLegReportingType_SingleSecurity -> "1"
+        | FIX_MultiLegReportingType_IndividualLegOfAMultiLegSecurity -> "2"
+        | FIX_MultiLegReportingType_MultiLegSecurity -> "3"
+    )
+;;
+
 let encode_MultiLegRptTypeReq (d)  =
     (match d with
         | FIX_MultiLegRptTypeReq_ReportByInstrumentLegsOnly -> "2"
         | FIX_MultiLegRptTypeReq_ReportByMulitlegSecurityOnly -> "0"
         | FIX_MultiLegRptTypeReq_ReportByMultilegSecurityAndInstrumentLegs -> "1"
+    )
+;;
+
+let encode_NetGrossInd (d)  =
+    (match d with
+        | FIX_NetGrossInd_Net -> "1"
+        | FIX_NetGrossInd_Gross -> "2"
     )
 ;;
 
@@ -2145,6 +1316,13 @@ let encode_NoSides (d)  =
     )
 ;;
 
+let encode_NotifyBrokerOfCredit (d)  =
+    (match d with
+        | FIX_NotifyBrokerOfCredit_DetailsShouldBeCommunicated -> "Y"
+        | FIX_NotifyBrokerOfCredit_DetailsShouldNotBeCommunicated -> "N"
+    )
+;;
+
 let encode_OddLot (d)  =
     (match d with
         | FIX_OddLot_TreatAsRoundLot -> "N"
@@ -2160,6 +1338,69 @@ let encode_OpenCloseSettlFlag (d)  =
         | FIX_OpenCloseSettlFlag_TheoreticalPriceValue -> "5"
         | FIX_OpenCloseSettlFlag_ExpectedEntry -> "3"
         | FIX_OpenCloseSettlFlag_SessionOpen -> "1"
+    )
+;;
+
+let encode_OrdRejReason (d)  =
+    (match d with
+        | FIX_OrdRejReason_DuplicateOrder -> "6"
+        | FIX_OrdRejReason_Other -> "99"
+        | FIX_OrdRejReason_UnknownOrder -> "5"
+        | FIX_OrdRejReason_TooLateToEnter -> "4"
+        | FIX_OrdRejReason_OrderExceedsLimit -> "3"
+        | FIX_OrdRejReason_UnknownAccount -> "15"
+        | FIX_OrdRejReason_BrokerCredit -> "0"
+        | FIX_OrdRejReason_UnsupportedOrderCharacteristic -> "11"
+        | FIX_OrdRejReason_DuplicateOfAVerballyCommunicatedOrder -> "7"
+        | FIX_OrdRejReason_IncorrectQuantity -> "13"
+        | FIX_OrdRejReason_TradeAlongRequired -> "9"
+        | FIX_OrdRejReason_StaleOrder -> "8"
+        | FIX_OrdRejReason_InvalidInvestorID -> "10"
+        | FIX_OrdRejReason_ExchangeClosed -> "2"
+        | FIX_OrdRejReason_IncorrectAllocatedQuantity -> "14"
+        | FIX_OrdRejReason_UnknownSymbol -> "1"
+    )
+;;
+
+let encode_OrdStatus (d)  =
+    (match d with
+        | FIX_OrdStatus_PendingCancel -> "6"
+        | FIX_OrdStatus_Stopped -> "7"
+        | FIX_OrdStatus_PendingNew -> "A"
+        | FIX_OrdStatus_Rejected -> "8"
+        | FIX_OrdStatus_Calculated -> "B"
+        | FIX_OrdStatus_Expired -> "C"
+        | FIX_OrdStatus_Filled -> "2"
+        | FIX_OrdStatus_Canceled -> "4"
+        | FIX_OrdStatus_Replaced -> "5"
+        | FIX_OrdStatus_PendingReplace -> "E"
+        | FIX_OrdStatus_DoneForDay -> "3"
+        | FIX_OrdStatus_Suspended -> "9"
+        | FIX_OrdStatus_New -> "0"
+        | FIX_OrdStatus_PartiallyFilled -> "1"
+        | FIX_OrdStatus_AcceptedForBidding -> "D"
+    )
+;;
+
+let encode_OrdType (d)  =
+    (match d with
+        | FIX_OrdType_LimitOrBetter -> "7"
+        | FIX_OrdType_NextFundValuationPoint -> "M"
+        | FIX_OrdType_WithOrWithout -> "6"
+        | FIX_OrdType_PreviouslyIndicated -> "E"
+        | FIX_OrdType_Stop -> "3"
+        | FIX_OrdType_Market -> "1"
+        | FIX_OrdType_OnBasis -> "9"
+        | FIX_OrdType_Funari -> "I"
+        | FIX_OrdType_Pegged -> "P"
+        | FIX_OrdType_LimitWithOrWithout -> "8"
+        | FIX_OrdType_StopLimit -> "4"
+        | FIX_OrdType_ForexSwap -> "G"
+        | FIX_OrdType_MarketIfTouched -> "J"
+        | FIX_OrdType_MarketWithLeftOverAsLimit -> "K"
+        | FIX_OrdType_PreviouslyQuoted -> "D"
+        | FIX_OrdType_Limit -> "2"
+        | FIX_OrdType_PreviousFundValuationPoint -> "L"
     )
 ;;
 
@@ -2227,7 +1468,6 @@ let encode_PartyIDSource (d)  =
         | FIX_PartyIDSource_USSocialSecurityNumber -> "7"
         | FIX_PartyIDSource_Proprietary -> "D"
         | FIX_PartyIDSource_AustralianTaxFileNumber -> "A"
-        | FIX_PartyIDSource_ShortCodeIdentifier -> "P"
         | FIX_PartyIDSource_MalaysianCentralDepository -> "4"
         | FIX_PartyIDSource_ISITCAcronym -> "I"
         | FIX_PartyIDSource_ISOCountryCode -> "E"
@@ -2274,7 +1514,6 @@ let encode_PartyRole (d)  =
         | FIX_PartyRole_BrokerOfCredit -> "2"
         | FIX_PartyRole_SubCustodian -> "31"
         | FIX_PartyRole_EnteringTrader -> "36"
-        | FIX_PartyRole_InvestmentDecisionMaker -> "112"
         | FIX_PartyRole_ExecutingFirm -> "1"
         | FIX_PartyRole_FundManagerClientID -> "9"
         | FIX_PartyRole_ContraClearingFirm -> "18"
@@ -2491,6 +1730,20 @@ let encode_PositionEffect (d)  =
     )
 ;;
 
+let encode_PossDupFlag (d)  =
+    (match d with
+        | FIX_PossDupFlag_PossibleDuplicate -> "Y"
+        | FIX_PossDupFlag_OriginalTransmission -> "N"
+    )
+;;
+
+let encode_PossResend (d)  =
+    (match d with
+        | FIX_PossResend_OriginalTransmission -> "N"
+        | FIX_PossResend_PossibleResend -> "Y"
+    )
+;;
+
 let encode_PreallocMethod (d)  =
     (match d with
         | FIX_PreallocMethod_ProRata -> "0"
@@ -2505,10 +1758,38 @@ let encode_PreviouslyReported (d)  =
     )
 ;;
 
+let encode_PriceType (d)  =
+    (match d with
+        | FIX_PriceType_Discount -> "4"
+        | FIX_PriceType_Spread -> "6"
+        | FIX_PriceType_TEDPrice -> "7"
+        | FIX_PriceType_FixedCabinetTradePrice -> "10"
+        | FIX_PriceType_Percentage -> "1"
+        | FIX_PriceType_VariableCabinetTradePrice -> "11"
+        | FIX_PriceType_TEDYield -> "8"
+        | FIX_PriceType_PerUnit -> "2"
+        | FIX_PriceType_FixedAmount -> "3"
+        | FIX_PriceType_Premium -> "5"
+        | FIX_PriceType_Yield -> "9"
+    )
+;;
+
 let encode_PriorityIndicator (d)  =
     (match d with
         | FIX_PriorityIndicator_PriorityUnchanged -> "0"
         | FIX_PriorityIndicator_LostPriorityAsResultOfOrderChange -> "1"
+    )
+;;
+
+let encode_ProcessCode (d)  =
+    (match d with
+        | FIX_ProcessCode_Regular -> "0"
+        | FIX_ProcessCode_SoftDollarStepOut -> "5"
+        | FIX_ProcessCode_StepIn -> "2"
+        | FIX_ProcessCode_PlanSponsor -> "6"
+        | FIX_ProcessCode_SoftDollarStepIn -> "4"
+        | FIX_ProcessCode_SoftDollar -> "1"
+        | FIX_ProcessCode_StepOut -> "3"
     )
 ;;
 
@@ -2530,6 +1811,14 @@ let encode_Product (d)  =
     )
 ;;
 
+let encode_ProgRptReqs (d)  =
+    (match d with
+        | FIX_ProgRptReqs_BuySideRequests -> "1"
+        | FIX_ProgRptReqs_SellSideSends -> "2"
+        | FIX_ProgRptReqs_RealTimeExecutionReports -> "3"
+    )
+;;
+
 let encode_PublishTrdIndicator (d)  =
     (match d with
         | FIX_PublishTrdIndicator_ReportTrade -> "Y"
@@ -2537,10 +1826,40 @@ let encode_PublishTrdIndicator (d)  =
     )
 ;;
 
+let encode_PutOrCall (d)  =
+    (match d with
+        | FIX_PutOrCall_Call -> "1"
+        | FIX_PutOrCall_Put -> "0"
+    )
+;;
+
 let encode_QtyType (d)  =
     (match d with
         | FIX_QtyType_Units -> "0"
         | FIX_QtyType_Contracts -> "1"
+    )
+;;
+
+let encode_QuoteCancelType (d)  =
+    (match d with
+        | FIX_QuoteCancelType_CancelAllQuotes -> "4"
+        | FIX_QuoteCancelType_CancelForOneOrMoreSecurities -> "1"
+        | FIX_QuoteCancelType_CancelForUnderlyingSecurity -> "3"
+        | FIX_QuoteCancelType_CancelForSecurityType -> "2"
+    )
+;;
+
+let encode_QuoteCondition (d)  =
+    (match d with
+        | FIX_QuoteCondition_Closed -> "B"
+        | FIX_QuoteCondition_Locked -> "E"
+        | FIX_QuoteCondition_Crossed -> "F"
+        | FIX_QuoteCondition_NonFirm -> "I"
+        | FIX_QuoteCondition_FastTrading -> "H"
+        | FIX_QuoteCondition_ConsolidatedBest -> "D"
+        | FIX_QuoteCondition_Open -> "A"
+        | FIX_QuoteCondition_ExchangeBest -> "C"
+        | FIX_QuoteCondition_Depth -> "G"
     )
 ;;
 
@@ -2556,6 +1875,21 @@ let encode_QuotePriceType (d)  =
         | FIX_QuotePriceType_Yield -> "10"
         | FIX_QuotePriceType_YieldSpread -> "9"
         | FIX_QuotePriceType_PerShare -> "2"
+    )
+;;
+
+let encode_QuoteRejectReason (d)  =
+    (match d with
+        | FIX_QuoteRejectReason_DuplicateQuote -> "6"
+        | FIX_QuoteRejectReason_Other -> "99"
+        | FIX_QuoteRejectReason_Exchange -> "2"
+        | FIX_QuoteRejectReason_InvalidPrice -> "8"
+        | FIX_QuoteRejectReason_InvalidBid -> "7"
+        | FIX_QuoteRejectReason_UnknownQuote -> "5"
+        | FIX_QuoteRejectReason_TooLateToEnter -> "4"
+        | FIX_QuoteRejectReason_QuoteRequestExceedsLimit -> "3"
+        | FIX_QuoteRejectReason_NotAuthorizedToQuoteSecurity -> "9"
+        | FIX_QuoteRejectReason_UnknownSymbol -> "1"
     )
 ;;
 
@@ -2575,6 +1909,13 @@ let encode_QuoteRequestRejectReason (d)  =
     )
 ;;
 
+let encode_QuoteRequestType (d)  =
+    (match d with
+        | FIX_QuoteRequestType_Manual -> "1"
+        | FIX_QuoteRequestType_Automatic -> "2"
+    )
+;;
+
 let encode_QuoteRespType (d)  =
     (match d with
         | FIX_QuoteRespType_Cover -> "4"
@@ -2583,6 +1924,14 @@ let encode_QuoteRespType (d)  =
         | FIX_QuoteRespType_Pass -> "6"
         | FIX_QuoteRespType_DoneAway -> "5"
         | FIX_QuoteRespType_Expired -> "3"
+    )
+;;
+
+let encode_QuoteResponseLevel (d)  =
+    (match d with
+        | FIX_QuoteResponseLevel_NoAcknowledgement -> "0"
+        | FIX_QuoteResponseLevel_AcknowledgeOnlyNegativeOrErroneousQuotes -> "1"
+        | FIX_QuoteResponseLevel_AcknowledgeEachQuoteMessage -> "2"
     )
 ;;
 
@@ -2657,6 +2006,20 @@ let encode_RegistTransType (d)  =
     )
 ;;
 
+let encode_ReportToExch (d)  =
+    (match d with
+        | FIX_ReportToExch_ReceiverReports -> "Y"
+        | FIX_ReportToExch_SenderReports -> "N"
+    )
+;;
+
+let encode_ResetSeqNumFlag (d)  =
+    (match d with
+        | FIX_ResetSeqNumFlag_No -> "N"
+        | FIX_ResetSeqNumFlag_Yes -> "Y"
+    )
+;;
+
 let encode_ResponseTransportType (d)  =
     (match d with
         | FIX_ResponseTransportType_Inband -> "0"
@@ -2669,6 +2032,15 @@ let encode_RoundingDirection (d)  =
         | FIX_RoundingDirection_RoundDown -> "1"
         | FIX_RoundingDirection_RoundUp -> "2"
         | FIX_RoundingDirection_RoundToNearest -> "0"
+    )
+;;
+
+let encode_RoutingType (d)  =
+    (match d with
+        | FIX_RoutingType_TargetList -> "2"
+        | FIX_RoutingType_TargetFirm -> "1"
+        | FIX_RoutingType_BlockList -> "4"
+        | FIX_RoutingType_BlockFirm -> "3"
     )
 ;;
 
@@ -2725,6 +2097,151 @@ let encode_SecurityRequestResult (d)  =
     )
 ;;
 
+let encode_SecurityRequestType (d)  =
+    (match d with
+        | FIX_SecurityRequestType_RequestListSecurities -> "3"
+        | FIX_SecurityRequestType_RequestListSecurityTypes -> "2"
+        | FIX_SecurityRequestType_RequestSecurityIdentityAndSpecifications -> "0"
+        | FIX_SecurityRequestType_RequestSecurityIdentityForSpecifications -> "1"
+    )
+;;
+
+let encode_SecurityResponseType (d)  =
+    (match d with
+        | FIX_SecurityResponseType_AcceptAsIs -> "1"
+        | FIX_SecurityResponseType_RejectSecurityProposal -> "5"
+        | FIX_SecurityResponseType_CannotMatchSelectionCriteria -> "6"
+        | FIX_SecurityResponseType_AcceptWithRevisions -> "2"
+    )
+;;
+
+let encode_SecurityTradingStatus (d)  =
+    (match d with
+        | FIX_SecurityTradingStatus_ITSPreOpening -> "14"
+        | FIX_SecurityTradingStatus_PreOpen -> "21"
+        | FIX_SecurityTradingStatus_MarketImbalanceBuy -> "7"
+        | FIX_SecurityTradingStatus_NoMarketOnCloseImbalance -> "13"
+        | FIX_SecurityTradingStatus_NotAvailableForTrading -> "18"
+        | FIX_SecurityTradingStatus_OpeningRotation -> "22"
+        | FIX_SecurityTradingStatus_NoMarketImbalance -> "12"
+        | FIX_SecurityTradingStatus_TradeDisseminationTime -> "16"
+        | FIX_SecurityTradingStatus_ReadyToTrade -> "17"
+        | FIX_SecurityTradingStatus_UnknownOrInvalid -> "20"
+        | FIX_SecurityTradingStatus_MarketOnCloseImbalanceBuy -> "9"
+        | FIX_SecurityTradingStatus_OpeningDelay -> "1"
+        | FIX_SecurityTradingStatus_NoOpen -> "4"
+        | FIX_SecurityTradingStatus_TradingHalt -> "2"
+        | FIX_SecurityTradingStatus_MarketOnCloseImbalanceSell -> "10"
+        | FIX_SecurityTradingStatus_MarketImbalanceSell -> "8"
+        | FIX_SecurityTradingStatus_NotTradedOnThisMarket -> "19"
+        | FIX_SecurityTradingStatus_TradingRangeIndication -> "6"
+        | FIX_SecurityTradingStatus_FastMarket -> "23"
+        | FIX_SecurityTradingStatus_NewPriceIndication -> "15"
+        | FIX_SecurityTradingStatus_PriceIndication -> "5"
+        | FIX_SecurityTradingStatus_Resume -> "3"
+    )
+;;
+
+let encode_SecurityType (d)  =
+    (match d with
+        | FIX_SecurityType_MutualFund -> "MF"
+        | FIX_SecurityType_YankeeCorporateBond -> "YANK"
+        | FIX_SecurityType_InterestStripFromAnyBondOrNote -> "TINT"
+        | FIX_SecurityType_Revolver -> "RVLVTRM"
+        | FIX_SecurityType_CommercialPaper -> "CP"
+        | FIX_SecurityType_RevenueAnticipationNote -> "RAN"
+        | FIX_SecurityType_Matured -> "MATURED"
+        | FIX_SecurityType_Retired -> "RETIRED"
+        | FIX_SecurityType_StructuredNotes -> "STRUCT"
+        | FIX_SecurityType_MortgagePrivatePlacement -> "MPP"
+        | FIX_SecurityType_Pfandbriefe -> "PFAND"
+        | FIX_SecurityType_OtherAnticipationNotes -> "AN"
+        | FIX_SecurityType_USDSupranationalCoupons -> "SUPRA"
+        | FIX_SecurityType_MandatoryTender -> "MT"
+        | FIX_SecurityType_PreferredStock -> "PS"
+        | FIX_SecurityType_ToBeAnnounced -> "TBA"
+        | FIX_SecurityType_GeneralObligationBonds -> "GO"
+        | FIX_SecurityType_TimeDeposit -> "TD"
+        | FIX_SecurityType_ExtendedCommNote -> "XCN"
+        | FIX_SecurityType_MiscellaneousPassThrough -> "MPT"
+        | FIX_SecurityType_YankeeCertificateOfDeposit -> "YCD"
+        | FIX_SecurityType_Future -> "FUT"
+        | FIX_SecurityType_Forward -> "FORWARD"
+        | FIX_SecurityType_VariableRateDemandNote -> "VRDN"
+        | FIX_SecurityType_MediumTermNotes -> "MTN"
+        | FIX_SecurityType_Option -> "OPT"
+        | FIX_SecurityType_Repurchase -> "REPO"
+        | FIX_SecurityType_PlazosFijos -> "PZFJ"
+        | FIX_SecurityType_USTreasuryBill -> "TBILL"
+        | FIX_SecurityType_BankNotes -> "BN"
+        | FIX_SecurityType_MortgagePrincipalOnly -> "MPO"
+        | FIX_SecurityType_MortgageInterestOnly -> "MIO"
+        | FIX_SecurityType_AssetBackedSecurities -> "ABS"
+        | FIX_SecurityType_Warrant -> "WAR"
+        | FIX_SecurityType_SpecialTax -> "SPCLT"
+        | FIX_SecurityType_EuroSupranationalCoupons -> "EUSUPRA"
+        | FIX_SecurityType_ForeignExchangeContract -> "FOR"
+        | FIX_SecurityType_USTreasuryBillOld -> "USTB"
+        | FIX_SecurityType_CertificateOfDeposit -> "CD"
+        | FIX_SecurityType_TaxAnticipationNote -> "TAN"
+        | FIX_SecurityType_LetterOfCredit -> "LOFC"
+        | FIX_SecurityType_CollateralizedMortgageObligation -> "CMO"
+        | FIX_SecurityType_IOETTEMortgage -> "IET"
+        | FIX_SecurityType_MortgageBackedSecurities -> "MBS"
+        | FIX_SecurityType_BillOfExchanges -> "BOX"
+        | FIX_SecurityType_Amended -> "AMENDED"
+        | FIX_SecurityType_RevenueBonds -> "REV"
+        | FIX_SecurityType_EuroCorporateBond -> "EUCORP"
+        | FIX_SecurityType_PrivateExportFunding -> "PEF"
+        | FIX_SecurityType_RevolverLoan -> "RVLV"
+        | FIX_SecurityType_PrincipalStripFromANonCallableBondOrNote -> "TPRN"
+        | FIX_SecurityType_Withdrawn -> "WITHDRN"
+        | FIX_SecurityType_DepositNotes -> "DN"
+        | FIX_SecurityType_SpecialAssessment -> "SPCLA"
+        | FIX_SecurityType_EuroSovereigns -> "EUSOV"
+        | FIX_SecurityType_TaxAllocation -> "TAXA"
+        | FIX_SecurityType_EuroCertificateOfDeposit -> "EUCD"
+        | FIX_SecurityType_PromissoryNote -> "PN"
+        | FIX_SecurityType_PrincipalStripOfACallableBondOrNote -> "TCAL"
+        | FIX_SecurityType_Overnight -> "ONITE"
+        | FIX_SecurityType_ConvertibleBond -> "CB"
+        | FIX_SecurityType_Corp -> "CMBS"
+        | FIX_SecurityType_SpecialObligation -> "SPCLO"
+        | FIX_SecurityType_SecuritiesLoan -> "SECLOAN"
+        | FIX_SecurityType_CertificateOfObligation -> "COFO"
+        | FIX_SecurityType_FederalAgencyDiscountNote -> "FADN"
+        | FIX_SecurityType_CallLoans -> "CL"
+        | FIX_SecurityType_DebtorInPossession -> "DINP"
+        | FIX_SecurityType_USTreasuryBond -> "TBOND"
+        | FIX_SecurityType_SecuritiesPledge -> "SECPLEDGE"
+        | FIX_SecurityType_Replaced -> "REPLACD"
+        | FIX_SecurityType_BradyBond -> "BRADY"
+        | FIX_SecurityType_CorporateBond -> "CORP"
+        | FIX_SecurityType_TermLoan -> "TERM"
+        | FIX_SecurityType_TaxRevenueAnticipationNote -> "TRAN"
+        | FIX_SecurityType_SwingLineFacility -> "SWING"
+        | FIX_SecurityType_TaxExemptCommercialPaper -> "TECP"
+        | FIX_SecurityType_NoSecurityType -> "NONE"
+        | FIX_SecurityType_DualCurrency -> "DUAL"
+        | FIX_SecurityType_FederalAgencyCoupon -> "FAC"
+        | FIX_SecurityType_BankersAcceptance -> "BA"
+        | FIX_SecurityType_MultilegInstrument -> "MLEG"
+        | FIX_SecurityType_EuroCommercialPaper -> "EUCP"
+        | FIX_SecurityType_CommonStock -> "CS"
+        | FIX_SecurityType_USTreasuryNote -> "TNOTE"
+        | FIX_SecurityType_TreasuryInflationProtectedSecurities -> "TIPS"
+        | FIX_SecurityType_IndexedLinked -> "XLINKD"
+        | FIX_SecurityType_BridgeLoan -> "BRIDGE"
+        | FIX_SecurityType_ShortTermLoanNote -> "STN"
+        | FIX_SecurityType_Defaulted -> "DEFLTED"
+        | FIX_SecurityType_USTreasuryNoteOld -> "UST"
+        | FIX_SecurityType_CertificateOfParticipation -> "COFP"
+        | FIX_SecurityType_CorporatePrivatePlacement -> "CPP"
+        | FIX_SecurityType_BuySellback -> "BUYSELL"
+        | FIX_SecurityType_LiquidityNote -> "LQN"
+    )
+;;
+
 let encode_SettlCurrFxRateCalc (d)  =
     (match d with
         | FIX_SettlCurrFxRateCalc_Multiply -> "M"
@@ -2741,12 +2258,37 @@ let encode_SettlDeliveryType (d)  =
     )
 ;;
 
+let encode_SettlInstMode (d)  =
+    (match d with
+        | FIX_SettlInstMode_RequestReject -> "5"
+        | FIX_SettlInstMode_StandingInstructionsProvided -> "1"
+        | FIX_SettlInstMode_SpecificOrderForASingleAccount -> "4"
+    )
+;;
+
 let encode_SettlInstReqRejCode (d)  =
     (match d with
         | FIX_SettlInstReqRejCode_Other -> "99"
         | FIX_SettlInstReqRejCode_NoMatchingSettlementInstructionsFound -> "2"
         | FIX_SettlInstReqRejCode_UnknownAccount -> "1"
         | FIX_SettlInstReqRejCode_UnableToProcessRequest -> "0"
+    )
+;;
+
+let encode_SettlInstSource (d)  =
+    (match d with
+        | FIX_SettlInstSource_Investor -> "3"
+        | FIX_SettlInstSource_Institution -> "2"
+        | FIX_SettlInstSource_BrokerCredit -> "1"
+    )
+;;
+
+let encode_SettlInstTransType (d)  =
+    (match d with
+        | FIX_SettlInstTransType_Cancel -> "C"
+        | FIX_SettlInstTransType_Replace -> "R"
+        | FIX_SettlInstTransType_New -> "N"
+        | FIX_SettlInstTransType_Restate -> "T"
     )
 ;;
 
@@ -2791,6 +2333,27 @@ let encode_ShortSaleReason (d)  =
     )
 ;;
 
+let encode_Side (d)  =
+    (match d with
+        | FIX_Side_AsDefined -> "B"
+        | FIX_Side_Opposite -> "C"
+        | FIX_Side_Buy -> "1"
+        | FIX_Side_CrossShortExempt -> "A"
+        | FIX_Side_Borrow -> "G"
+        | FIX_Side_BuyMinus -> "3"
+        | FIX_Side_Subscribe -> "D"
+        | FIX_Side_Lend -> "F"
+        | FIX_Side_SellShortExempt -> "6"
+        | FIX_Side_Redeem -> "E"
+        | FIX_Side_SellPlus -> "4"
+        | FIX_Side_Sell -> "2"
+        | FIX_Side_Undisclosed -> "7"
+        | FIX_Side_Cross -> "8"
+        | FIX_Side_CrossShort -> "9"
+        | FIX_Side_SellShort -> "5"
+    )
+;;
+
 let encode_SideMultiLegReportingType (d)  =
     (match d with
         | FIX_SideMultiLegReportingType_SingleSecurity -> "1"
@@ -2803,6 +2366,23 @@ let encode_SideValueInd (d)  =
     (match d with
         | FIX_SideValueInd_SideValue1 -> "1"
         | FIX_SideValueInd_SideValue2 -> "2"
+    )
+;;
+
+let encode_SolicitedFlag (d)  =
+    (match d with
+        | FIX_SolicitedFlag_WasSolicited -> "Y"
+        | FIX_SolicitedFlag_WasNotSolicited -> "N"
+    )
+;;
+
+let encode_StandInstDbType (d)  =
+    (match d with
+        | FIX_StandInstDbType_Other -> "0"
+        | FIX_StandInstDbType_AccountNet -> "4"
+        | FIX_StandInstDbType_DTCSID -> "1"
+        | FIX_StandInstDbType_ThomsonALERT -> "2"
+        | FIX_StandInstDbType_AGlobalCustodian -> "3"
     )
 ;;
 
@@ -2870,6 +2450,14 @@ let encode_StipulationType (d)  =
     )
 ;;
 
+let encode_SubscriptionRequestType (d)  =
+    (match d with
+        | FIX_SubscriptionRequestType_DisablePreviousSnapshot -> "2"
+        | FIX_SubscriptionRequestType_SnapshotAndUpdates -> "1"
+        | FIX_SubscriptionRequestType_Snapshot -> "0"
+    )
+;;
+
 let encode_TargetStrategy (d)  =
     (match d with
         | FIX_TargetStrategy_MininizeMarketImpact -> "3"
@@ -2929,6 +2517,56 @@ let encode_TestMessageIndicator (d)  =
     )
 ;;
 
+let encode_TickDirection (d)  =
+    (match d with
+        | FIX_TickDirection_ZeroMinusTick -> "3"
+        | FIX_TickDirection_PlusTick -> "0"
+        | FIX_TickDirection_MinusTick -> "2"
+        | FIX_TickDirection_ZeroPlusTick -> "1"
+    )
+;;
+
+let encode_TimeInForce (d)  =
+    (match d with
+        | FIX_TimeInForce_GoodTillCancel -> "1"
+        | FIX_TimeInForce_AtTheClose -> "7"
+        | FIX_TimeInForce_ImmediateOrCancel -> "3"
+        | FIX_TimeInForce_Day -> "0"
+        | FIX_TimeInForce_FillOrKill -> "4"
+        | FIX_TimeInForce_AtTheOpening -> "2"
+        | FIX_TimeInForce_GoodTillCrossing -> "5"
+        | FIX_TimeInForce_GoodTillDate -> "6"
+    )
+;;
+
+let encode_TradSesMethod (d)  =
+    (match d with
+        | FIX_TradSesMethod_OpenOutcry -> "2"
+        | FIX_TradSesMethod_Electronic -> "1"
+        | FIX_TradSesMethod_TwoParty -> "3"
+    )
+;;
+
+let encode_TradSesMode (d)  =
+    (match d with
+        | FIX_TradSesMode_Testing -> "1"
+        | FIX_TradSesMode_Simulated -> "2"
+        | FIX_TradSesMode_Production -> "3"
+    )
+;;
+
+let encode_TradSesStatus (d)  =
+    (match d with
+        | FIX_TradSesStatus_Closed -> "3"
+        | FIX_TradSesStatus_PreOpen -> "4"
+        | FIX_TradSesStatus_RequestRejected -> "6"
+        | FIX_TradSesStatus_PreClose -> "5"
+        | FIX_TradSesStatus_Unknown -> "0"
+        | FIX_TradSesStatus_Halted -> "1"
+        | FIX_TradSesStatus_Open -> "2"
+    )
+;;
+
 let encode_TradSesStatusRejReason (d)  =
     (match d with
         | FIX_TradSesStatusRejReason_Other -> "99"
@@ -2941,6 +2579,28 @@ let encode_TradeAllocIndicator (d)  =
         | FIX_TradeAllocIndicator_UseAllocationProvidedWithTheTrade -> "2"
         | FIX_TradeAllocIndicator_AllocationNotRequired -> "0"
         | FIX_TradeAllocIndicator_AllocationRequired -> "1"
+    )
+;;
+
+let encode_TradeCondition (d)  =
+    (match d with
+        | FIX_TradeCondition_Opened -> "K"
+        | FIX_TradeCondition_Rule127Trade -> "G"
+        | FIX_TradeCondition_CashTrade -> "C"
+        | FIX_TradeCondition_IntradayTradeDetail -> "F"
+        | FIX_TradeCondition_SoldLast -> "I"
+        | FIX_TradeCondition_Cash -> "A"
+        | FIX_TradeCondition_StoppedStock -> "N"
+        | FIX_TradeCondition_ImbalanceMoreSellers -> "Q"
+        | FIX_TradeCondition_Sold -> "M"
+        | FIX_TradeCondition_ImbalanceMoreBuyers -> "P"
+        | FIX_TradeCondition_NextDay -> "D"
+        | FIX_TradeCondition_Opening -> "E"
+        | FIX_TradeCondition_Seller -> "L"
+        | FIX_TradeCondition_OpeningPrice -> "R"
+        | FIX_TradeCondition_AveragePriceTrade -> "B"
+        | FIX_TradeCondition_Rule155Trade -> "H"
+        | FIX_TradeCondition_NextDayTrade -> "J"
     )
 ;;
 
@@ -3040,6 +2700,21 @@ let encode_TrdType (d)  =
     )
 ;;
 
+let encode_UnsolicitedIndicator (d)  =
+    (match d with
+        | FIX_UnsolicitedIndicator_MessageIsBeingSentAsAResultOfAPriorRequest -> "N"
+        | FIX_UnsolicitedIndicator_MessageIsBeingSentUnsolicited -> "Y"
+    )
+;;
+
+let encode_Urgency (d)  =
+    (match d with
+        | FIX_Urgency_Flash -> "1"
+        | FIX_Urgency_Background -> "2"
+        | FIX_Urgency_Normal -> "0"
+    )
+;;
+
 let encode_UserRequestType (d)  =
     (match d with
         | FIX_UserRequestType_RequestIndividualUserStatus -> "4"
@@ -3103,5 +2778,44 @@ let encode_YieldType (d)  =
         | FIX_YieldType_PreviousCloseYield -> "PREVCLOSE"
         | FIX_YieldType_MostRecentClosingYield -> "LASTCLOSE"
         | FIX_YieldType_ProceedsYield -> "PROCEEDS"
+    )
+;;
+
+let encode_week (d)  =
+    (match d with
+        | FIX_week_w1 -> "w1"
+        | FIX_week_w2 -> "w2"
+        | FIX_week_w3 -> "w3"
+        | FIX_week_noweek -> "noweek"
+        | FIX_week_w4 -> "w4"
+        | FIX_week_w5 -> "w5"
+    )
+;;
+
+let encode_Currency (d)  =
+    (match d with
+        | FIX_Currency_EUR -> "EUR"
+        | FIX_Currency_CHF -> "CHF"
+        | FIX_Currency_USD -> "USD"
+        | FIX_Currency_GBP -> "GBP"
+    )
+;;
+
+let encode_Country (d)  =
+    (match d with
+        | FIX_Country_DE -> "DE"
+        | FIX_Country_GB -> "GB"
+        | FIX_Country_US -> "US"
+    )
+;;
+
+let encode_Exchange (d)  =
+    (match d with
+        | FIX_Exchange_XSHG -> "XSHG"
+        | FIX_Exchange_SHSC -> "SHSC"
+        | FIX_Exchange_XNYS -> "XNYS"
+        | FIX_Exchange_XJAS -> "XJAS"
+        | FIX_Exchange_XLON -> "XLON"
+        | FIX_Exchange_XNAS -> "XNAS"
     )
 ;;

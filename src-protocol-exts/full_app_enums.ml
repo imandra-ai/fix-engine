@@ -1,1236 +1,5 @@
 (* Aesthetic Integration copyright 2018 *)
 
-type fix_partyrolequalifier =
-    | FIX_PartyRoleQualifier_FirmOrLegalEntity 
-    | FIX_PartyRoleQualifier_Algorithm 
-    | FIX_PartyRoleQualifier_NaturalPerson 
-;;
-
-type fix_liquidityindicator =
-    | FIX_LiquidityIndicator_RemoveLiquidity 
-    | FIX_LiquidityIndicator_AddLiquidity 
-    | FIX_LiquidityIndicator_PeriodicAuction 
-;;
-
-type fix_routing =
-    | FIX_Routing_OrderRoutingApproved 
-    | FIX_Routing_NoOrderRouting 
-;;
-
-type fix_technicalordtype =
-    | FIX_TechnicalOrdType_CrossMargining 
-    | FIX_TechnicalOrdType_IndexArbitrage 
-    | FIX_TechnicalOrdType_UnwindOrder 
-    | FIX_TechnicalOrdType_OtherOrders 
-    | FIX_TechnicalOrdType_PortfolioStrategy 
-;;
-
-type fix_orderattributetypes =
-    | FIX_OrderAttributeTypes_AlgorithmicOrder 
-    | FIX_OrderAttributeTypes_LiquidityProvisionActivity 
-;;
-
-type fix_clearinghandlingtype =
-    | FIX_ClearingHandlingType_ManualMode 
-    | FIX_ClearingHandlingType_AutomaticExtraction 
-    | FIX_ClearingHandlingType_AutomaticAllocation 
-;;
-
-type fix_orderentryallowed =
-    | FIX_OrderEntryAllowed_OrderEntryAllowed 
-    | FIX_OrderEntryAllowed_OrderEntryForbidden 
-;;
-
-type fix_collarerejtype =
-    | FIX_CollareRejType_HighCollar 
-    | FIX_CollareRejType_LowCollar 
-;;
-
-type fix_bookindicator =
-    | FIX_BookIndicator_Auction 
-    | FIX_BookIndicator_RPW 
-;;
-
-type fix_brokerprioritization =
-    | FIX_BrokerPrioritization_WithBrokerPrioritization 
-    | FIX_BrokerPrioritization_WithoutBrokerPriotization 
-;;
-
-type fix_classstatus =
-    | FIX_ClassStatus_SPContinuous 
-    | FIX_ClassStatus_LateMonitoring 
-    | FIX_ClassStatus_Closed 
-    | FIX_ClassStatus_Halted 
-    | FIX_ClassStatus_ClosingCall 
-    | FIX_ClassStatus_EarlyMonitoring 
-;;
-
-(** Identifies the type of adjustment.*)
-type fix_adjustment =
-    | FIX_Adjustment_Cancel 
-    | FIX_Adjustment_Error 
-    | FIX_Adjustment_Correction 
-;;
-
-(** Broker's side of advertised trade*)
-type fix_advside =
-    | FIX_AdvSide_Buy 
-    | FIX_AdvSide_Sell 
-    | FIX_AdvSide_Trade 
-    | FIX_AdvSide_Cross 
-;;
-
-(** Identifies advertisement message transaction type*)
-type fix_advtranstype =
-    | FIX_AdvTransType_Cancel 
-    | FIX_AdvTransType_Replace 
-    | FIX_AdvTransType_New 
-;;
-
-(** Specifies whether or not book entries should be aggregated.*)
-type fix_aggregatedbook =
-    | FIX_AggregatedBook_BookEntriesToBeAggregated 
-    | FIX_AggregatedBook_BookEntriesShouldNotBeAggregated 
-;;
-
-(** Indicates how the receiver (i.e. third party) of Allocation message should handle/process the account details.*)
-type fix_allochandlinst =
-    | FIX_AllocHandlInst_ForwardAndMatch 
-    | FIX_AllocHandlInst_Forward 
-    | FIX_AllocHandlInst_Match 
-;;
-
-(** Identifies the type of Allocation linkage when AllocLinkID is used.*)
-type fix_alloclinktype =
-    | FIX_AllocLinkType_FXSwap 
-    | FIX_AllocLinkType_FXNetting 
-;;
-
-(** Identifies reason for rejection.*)
-type fix_allocrejcode =
-    | FIX_AllocRejCode_UnknownOrStaleExecID 
-    | FIX_AllocRejCode_UnknownAccount 
-    | FIX_AllocRejCode_OtherSeeText 
-    | FIX_AllocRejCode_UnknownListID 
-    | FIX_AllocRejCode_CalculationDifference 
-    | FIX_AllocRejCode_IncorrectQuantity 
-    | FIX_AllocRejCode_UnknownClOrdID 
-    | FIX_AllocRejCode_CommissionDifference 
-    | FIX_AllocRejCode_WarehouseRequestRejected 
-    | FIX_AllocRejCode_UnknownExecutingBrokerMnemonic 
-    | FIX_AllocRejCode_MismatchedData 
-    | FIX_AllocRejCode_UnknownOrderID 
-    | FIX_AllocRejCode_IncorrectAveragegPrice 
-    | FIX_AllocRejCode_IncorrectAllocatedQuantity 
-;;
-
-(** Identifies status of allocation.*)
-type fix_allocstatus =
-    | FIX_AllocStatus_Incomplete 
-    | FIX_AllocStatus_Received 
-    | FIX_AllocStatus_BlockLevelReject 
-    | FIX_AllocStatus_AccountLevelReject 
-    | FIX_AllocStatus_RejectedByIntermediary 
-    | FIX_AllocStatus_Accepted 
-;;
-
-(** Identifies allocation transaction type*)
-type fix_alloctranstype =
-    | FIX_AllocTransType_Preliminary 
-    | FIX_AllocTransType_CalculatedWithoutPreliminary 
-    | FIX_AllocTransType_Replace 
-    | FIX_AllocTransType_Cancel 
-    | FIX_AllocTransType_Calculated 
-    | FIX_AllocTransType_New 
-;;
-
-(** Code to represent the basis price type.*)
-type fix_basispxtype =
-    | FIX_BasisPxType_Others 
-    | FIX_BasisPxType_VWAPThroughADay 
-    | FIX_BasisPxType_VWAPThroughAnAfternoonSessionExcept 
-    | FIX_BasisPxType_VWAPThroughAMorningSession 
-    | FIX_BasisPxType_ClosingPrice 
-    | FIX_BasisPxType_CurrentPrice 
-    | FIX_BasisPxType_Strike 
-    | FIX_BasisPxType_Open 
-    | FIX_BasisPxType_ClosingPriceAtMorningSession 
-    | FIX_BasisPxType_VWAPThroughADayExcept 
-    | FIX_BasisPxType_VWAPThroughAMorningSessionExcept 
-    | FIX_BasisPxType_VWAPThroughAnAfternoonSession 
-    | FIX_BasisPxType_SQ 
-;;
-
-(** For Fixed Income. Identifies the benchmark (e.g. used in conjunction with the SpreadToBenchmark field).*)
-type fix_benchmark =
-    | FIX_Benchmark_CURVE 
-    | FIX_Benchmark_FiveYR 
-    | FIX_Benchmark_OLD5 
-    | FIX_Benchmark_OLD10 
-    | FIX_Benchmark_TenYR 
-    | FIX_Benchmark_ThreeMOLIBOR 
-    | FIX_Benchmark_SixMOLIBOR 
-    | FIX_Benchmark_ThirtyYR 
-    | FIX_Benchmark_OLD30 
-;;
-
-(** Identifies the Bid Request message type.*)
-type fix_bidrequesttranstype =
-    | FIX_BidRequestTransType_Cancel 
-    | FIX_BidRequestTransType_New 
-;;
-
-(** Commission type*)
-type fix_commtype =
-    | FIX_CommType_PercentageWaivedEnhancedUnits 
-    | FIX_CommType_PointsPerBondOrContract 
-    | FIX_CommType_Percent 
-    | FIX_CommType_PerUnit 
-    | FIX_CommType_Absolute 
-    | FIX_CommType_PercentageWaivedCashDiscount 
-;;
-
-(** Identifies the type of Corporate Action.*)
-type fix_corporateaction =
-    | FIX_CorporateAction_ExDistribution 
-    | FIX_CorporateAction_ExDividend 
-    | FIX_CorporateAction_ExInterest 
-    | FIX_CorporateAction_ExRights 
-    | FIX_CorporateAction_New 
-;;
-
-(** Used for options*)
-type fix_coveredoruncovered =
-    | FIX_CoveredOrUncovered_Uncovered 
-    | FIX_CoveredOrUncovered_Covered 
-;;
-
-(** Used for options when delivering the order to an execution system/exchange to specify if the order is for a customer or the firm placing the order itself.*)
-type fix_customerorfirm =
-    | FIX_CustomerOrFirm_Customer 
-    | FIX_CustomerOrFirm_Firm 
-;;
-
-(** Code to identify reason for cancel rejection.*)
-type fix_cxlrejreason =
-    | FIX_CxlRejReason_Other 
-    | FIX_CxlRejReason_OrderAlreadyInPendingStatus 
-    | FIX_CxlRejReason_TooLateToCancel 
-    | FIX_CxlRejReason_UnknownOrder 
-    | FIX_CxlRejReason_UnableToProcessOrderMassCancelRequest 
-    | FIX_CxlRejReason_OrigOrdModTime 
-    | FIX_CxlRejReason_DuplicateClOrdID 
-    | FIX_CxlRejReason_BrokerCredit 
-;;
-
-(** Identifies the type of request that a Cancel Reject is in response to.*)
-type fix_cxlrejresponseto =
-    | FIX_CxlRejResponseTo_OrderCancelRequest 
-    | FIX_CxlRejResponseTo_OrderCancel 
-;;
-
-(** Reason for execution rejection.*)
-type fix_dkreason =
-    | FIX_DKReason_WrongSide 
-    | FIX_DKReason_QuantityExceedsOrder 
-    | FIX_DKReason_Other 
-    | FIX_DKReason_CalculationDifference 
-    | FIX_DKReason_NoMatchingOrder 
-    | FIX_DKReason_PriceExceedsLimit 
-    | FIX_DKReason_UnknownSymbol 
-;;
-
-(** Reason for deletion.*)
-type fix_deletereason =
-    | FIX_DeleteReason_Error 
-    | FIX_DeleteReason_Cancellation 
-;;
-
-(** Code to identify the price a DiscretionOffset is related to and should be mathematically added to.*)
-type fix_discretioninst =
-    | FIX_DiscretionInst_RelatedToPrimaryPrice 
-    | FIX_DiscretionInst_RelatedToMidpointPrice 
-    | FIX_DiscretionInst_RelatedToLastTradePrice 
-    | FIX_DiscretionInst_RelatedToDisplayedPrice 
-    | FIX_DiscretionInst_RelatedToVWAP 
-    | FIX_DiscretionInst_RelatedToMarketPrice 
-    | FIX_DiscretionInst_RelatedToLocalPrimaryPrice 
-;;
-
-(** Indicates whether or not the halt was due to the Related Security being halted.*)
-type fix_duetorelated =
-    | FIX_DueToRelated_NotRelatedToSecurityHalt 
-    | FIX_DueToRelated_RelatedToSecurityHalt 
-;;
-
-(** Email message type.*)
-type fix_emailtype =
-    | FIX_EmailType_Reply 
-    | FIX_EmailType_AdminReply 
-    | FIX_EmailType_New 
-;;
-
-(** Indicates whether or not to exchange for phsyical.*)
-type fix_exchangeforphysical =
-    | FIX_ExchangeForPhysical_False 
-    | FIX_ExchangeForPhysical_True 
-;;
-
-(** Instructions for order handling on exchange trading floor. If more than one instruction is applicable to an order, this field can contain multiple instructions separated by space.*)
-type fix_execinst =
-    | FIX_ExecInst_ParticipateDoNotInitiate 
-    | FIX_ExecInst_AllOrNone 
-    | FIX_ExecInst_CallFirst 
-    | FIX_ExecInst_PercentOfVolume 
-    | FIX_ExecInst_InstitutionsOnly 
-    | FIX_ExecInst_FullSweep 
-    | FIX_ExecInst_NoCross 
-    | FIX_ExecInst_BestOfferPeg 
-    | FIX_ExecInst_OverTheDay 
-    | FIX_ExecInst_DoNotIncrease 
-    | FIX_ExecInst_OpeningPeg 
-    | FIX_ExecInst_TryToStop 
-    | FIX_ExecInst_Netting 
-    | FIX_ExecInst_StayOnBidSide 
-    | FIX_ExecInst_Held 
-    | FIX_ExecInst_OKToCross 
-    | FIX_ExecInst_CustomerDisplayInstruction 
-    | FIX_ExecInst_GoAlong 
-    | FIX_ExecInst_DoNotReduce 
-    | FIX_ExecInst_StayOnOfferSide 
-    | FIX_ExecInst_PegToLimitPrice 
-    | FIX_ExecInst_TryToScale 
-    | FIX_ExecInst_ReinstateOnSystemFailure 
-    | FIX_ExecInst_CancelIfNotBest 
-    | FIX_ExecInst_BestBidPeg 
-    | FIX_ExecInst_MidPricePeg 
-    | FIX_ExecInst_WorkToTargetStrategy 
-    | FIX_ExecInst_PegToVWAP 
-    | FIX_ExecInst_TradeAlong 
-    | FIX_ExecInst_StrictLimit 
-    | FIX_ExecInst_Suspend 
-    | FIX_ExecInst_LastPeg 
-    | FIX_ExecInst_NonNegotiable 
-    | FIX_ExecInst_HalfSweep 
-    | FIX_ExecInst_NotHeld 
-    | FIX_ExecInst_FixedPegToLocalBestBidOrOfferAtTimeOfOrder 
-    | FIX_ExecInst_CancelOnTradingHalt 
-    | FIX_ExecInst_CancelOnSystemFailure 
-    | FIX_ExecInst_IgnorePriceValidityChecks 
-    | FIX_ExecInst_Work 
-    | FIX_ExecInst_ReinstateOnTradingHalt 
-    | FIX_ExecInst_PrimaryPeg 
-    | FIX_ExecInst_TrailingStopPeg 
-    | FIX_ExecInst_MarketPeg 
-    | FIX_ExecInst_StrictScale 
-;;
-
-(** Code to identify reason for an ExecutionRpt message sent with ExecType=Restated or used when communicating an unsolicited cancel.*)
-type fix_execrestatementreason =
-    | FIX_ExecRestatementReason_Other 
-    | FIX_ExecRestatementReason_RepricingOfOrder 
-    | FIX_ExecRestatementReason_GTCorporateAction 
-    | FIX_ExecRestatementReason_VerbalChange 
-    | FIX_ExecRestatementReason_WarehouseRecap 
-    | FIX_ExecRestatementReason_CancelOnTradingHalt 
-    | FIX_ExecRestatementReason_CancelOnSystemFailure 
-    | FIX_ExecRestatementReason_GTRenewal 
-    | FIX_ExecRestatementReason_Market 
-    | FIX_ExecRestatementReason_Canceled 
-    | FIX_ExecRestatementReason_BrokerOption 
-    | FIX_ExecRestatementReason_PartialDeclineOfOrderQty 
-;;
-
-(** Identifies transaction type*)
-type fix_exectranstype =
-    | FIX_ExecTransType_Status 
-    | FIX_ExecTransType_Cancel 
-    | FIX_ExecTransType_New 
-    | FIX_ExecTransType_Correct 
-;;
-
-(** Describes the specific ExecutionRpt (i.e. Pending Cancel) while OrdStatus will always identify the current order status (i.e. Partially Filled)*)
-type fix_exectype =
-    | FIX_ExecType_PendingCancel 
-    | FIX_ExecType_Fill 
-    | FIX_ExecType_Stopped 
-    | FIX_ExecType_PendingNew 
-    | FIX_ExecType_Restated 
-    | FIX_ExecType_Rejected 
-    | FIX_ExecType_Calculated 
-    | FIX_ExecType_TradeCorrect 
-    | FIX_ExecType_TradeCancel 
-    | FIX_ExecType_Expired 
-    | FIX_ExecType_OrderStatus 
-    | FIX_ExecType_PartialFill 
-    | FIX_ExecType_Trade 
-    | FIX_ExecType_Canceled 
-    | FIX_ExecType_Replaced 
-    | FIX_ExecType_PendingReplace 
-    | FIX_ExecType_DoneForDay 
-    | FIX_ExecType_Suspended 
-    | FIX_ExecType_New 
-;;
-
-(** Identifies a firm’s financial status.*)
-type fix_financialstatus =
-    | FIX_FinancialStatus_PendingDelisting 
-    | FIX_FinancialStatus_Bankrupt 
-;;
-
-(** Indicates request for forex accommodation trade to be executed along with security transaction.*)
-type fix_forexreq =
-    | FIX_ForexReq_DoNotExecuteForexAfterSecurityTrade 
-    | FIX_ForexReq_ExecuteForexAfterSecurityTrade 
-;;
-
-(** Code to identify whether to book out executions on a part-filled GT order on the day of execution or to accumulate.*)
-type fix_gtbookinginst =
-    | FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise 
-    | FIX_GTBookingInst_AccumulateUntilFilledOrExpired 
-    | FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution 
-;;
-
-(** Denotes the reason for the Opening Delay or Trading Halt.*)
-type fix_haltreason =
-    | FIX_HaltReason_OrderImbalance 
-    | FIX_HaltReason_AdditionalInformation 
-    | FIX_HaltReason_OrderInflux 
-    | FIX_HaltReason_NewsPending 
-    | FIX_HaltReason_EquipmentChangeover 
-    | FIX_HaltReason_NewsDissemination 
-;;
-
-(** Instructions for order handling on Broker trading floor*)
-type fix_handlinst =
-    | FIX_HandlInst_ManualOrder 
-    | FIX_HandlInst_AutomatedExecutionInterventionOK 
-    | FIX_HandlInst_AutomatedExecutionNoIntervention 
-;;
-
-(** Identifies class of alternative SecurityID*)
-type fix_idsource =
-    | FIX_IDSource_ConsolidatedTapeAssociation 
-    | FIX_IDSource_QUIK 
-    | FIX_IDSource_ISOCurrencyCode 
-    | FIX_IDSource_ISOCountryCode 
-    | FIX_IDSource_RICCode 
-    | FIX_IDSource_SEDOL 
-    | FIX_IDSource_ExchangeSymbol 
-    | FIX_IDSource_ISINNumber 
-    | FIX_IDSource_CUSIP 
-;;
-
-(** Indicates that IOI is the result of an existing agency order or a facilitation position resulting from an agency order, not from principal trading or order solicitation activity.*)
-type fix_ioinaturalflag =
-    | FIX_IOINaturalFlag_Natural 
-    | FIX_IOINaturalFlag_NotNatural 
-;;
-
-(** Relative quality of indication*)
-type fix_ioiqltyind =
-    | FIX_IOIQltyInd_Low 
-    | FIX_IOIQltyInd_High 
-    | FIX_IOIQltyInd_Medium 
-;;
-
-(** Code to qualify IOI use.*)
-type fix_ioiqualifier =
-    | FIX_IOIQualifier_AllOrNone 
-    | FIX_IOIQualifier_TakingAPosition 
-    | FIX_IOIQualifier_Indication 
-    | FIX_IOIQualifier_PreOpen 
-    | FIX_IOIQualifier_AtTheOpen 
-    | FIX_IOIQualifier_VWAP 
-    | FIX_IOIQualifier_Versus 
-    | FIX_IOIQualifier_AtTheMidpoint 
-    | FIX_IOIQualifier_ReadyToTrade 
-    | FIX_IOIQualifier_PortfolioShown 
-    | FIX_IOIQualifier_ThroughTheDay 
-    | FIX_IOIQualifier_MoreBehind 
-    | FIX_IOIQualifier_MarketOnClose 
-    | FIX_IOIQualifier_AtTheClose 
-    | FIX_IOIQualifier_InTouchWith 
-    | FIX_IOIQualifier_AtTheMarket 
-    | FIX_IOIQualifier_Limit 
-    | FIX_IOIQualifier_CrossingOpportunity 
-;;
-
-(** Number of shares in numeric or relative size.*)
-type fix_ioishares =
-    | FIX_IOIShares_Small 
-    | FIX_IOIShares_Large 
-    | FIX_IOIShares_Medium 
-;;
-
-(** Identifies IOI message transaction type*)
-type fix_ioitranstype =
-    | FIX_IOITransType_Cancel 
-    | FIX_IOITransType_Replace 
-    | FIX_IOITransType_New 
-;;
-
-(** Indicates whether or not the halt was due to Common Stock trading being halted.*)
-type fix_inviewofcommon =
-    | FIX_InViewOfCommon_HaltWasDueToCommonStockBeingHalted 
-    | FIX_InViewOfCommon_HaltWasNotRelatedToAHaltOfTheCommonStock 
-;;
-
-(** Code to represent whether value is net (inclusive of tax) or gross.*)
-type fix_inctaxind =
-    | FIX_IncTaxInd_Net 
-    | FIX_IncTaxInd_Gross 
-;;
-
-(** Broker capacity in order execution*)
-type fix_lastcapacity =
-    | FIX_LastCapacity_Agent 
-    | FIX_LastCapacity_CrossAsAgent 
-    | FIX_LastCapacity_Principal 
-    | FIX_LastCapacity_CrossAsPrincipal 
-;;
-
-(** Code to identify the type of liquidity indicator.*)
-type fix_liquidityindtype =
-    | FIX_LiquidityIndType_Other 
-    | FIX_LiquidityIndType_NormalMarketSize 
-    | FIX_LiquidityIndType_TwentyDayMovingAverage 
-    | FIX_LiquidityIndType_FiveDayMovingAverage 
-;;
-
-(** Identifies the type of ListExecInst.*)
-type fix_listexecinsttype =
-    | FIX_ListExecInstType_SellDriven 
-    | FIX_ListExecInstType_Immediate 
-    | FIX_ListExecInstType_BuyDrivenCashTopUp 
-    | FIX_ListExecInstType_WaitForInstruction 
-    | FIX_ListExecInstType_BuyDrivenCashWithdraw 
-;;
-
-(** Indicates whether the broker is to locate the stock in conjunction with a short sell order.*)
-type fix_locatereqd =
-    | FIX_LocateReqd_No 
-    | FIX_LocateReqd_Yes 
-;;
-
-(** Type Market Data entry.*)
-type fix_mdentrytype =
-    | FIX_MDEntryType_OpenInterest 
-    | FIX_MDEntryType_ClosingPrice 
-    | FIX_MDEntryType_IndexValue 
-    | FIX_MDEntryType_Offer 
-    | FIX_MDEntryType_SettlementPrice 
-    | FIX_MDEntryType_TradingSessionVWAPPrice 
-    | FIX_MDEntryType_Trade 
-    | FIX_MDEntryType_TradingSessionHighPrice 
-    | FIX_MDEntryType_OpeningPrice 
-    | FIX_MDEntryType_TradeVolume 
-    | FIX_MDEntryType_Imbalance 
-    | FIX_MDEntryType_Bid 
-    | FIX_MDEntryType_TradingSessionLowPrice 
-;;
-
-(** Reason for the rejection of a Market Data request.*)
-type fix_mdreqrejreason =
-    | FIX_MDReqRejReason_UnsupportedAggregatedBook 
-    | FIX_MDReqRejReason_UnsupportedMDUpdateType 
-    | FIX_MDReqRejReason_UnsupportedMDImplicitDelete 
-    | FIX_MDReqRejReason_InsufficientPermissions 
-    | FIX_MDReqRejReason_UnsupportedScope 
-    | FIX_MDReqRejReason_UnsupportedTradingSessionID 
-    | FIX_MDReqRejReason_UnsupportedSubscriptionRequestType 
-    | FIX_MDReqRejReason_UnsupportedMDEntryType 
-    | FIX_MDReqRejReason_InsufficientBandwidth 
-    | FIX_MDReqRejReason_DuplicateMDReqID 
-    | FIX_MDReqRejReason_UnsupportedMarketDepth 
-    | FIX_MDReqRejReason_UnsupportedOpenCloseSettleFlag 
-    | FIX_MDReqRejReason_UnknownSymbol 
-;;
-
-(** Type of Market Data update action.*)
-type fix_mdupdateaction =
-    | FIX_MDUpdateAction_Delete 
-    | FIX_MDUpdateAction_Change 
-    | FIX_MDUpdateAction_New 
-;;
-
-(** Specifies the type of Market Data update.*)
-type fix_mdupdatetype =
-    | FIX_MDUpdateType_FullRefresh 
-    | FIX_MDUpdateType_IncrementalRefresh 
-;;
-
-(** Type of message encoding (non-ASCII (non-English) characters) used in a message’s "Encoded" fields.*)
-type fix_messageencoding =
-    | FIX_MessageEncoding_ISO2022JP 
-    | FIX_MessageEncoding_UTF8 
-    | FIX_MessageEncoding_ShiftJIS 
-    | FIX_MessageEncoding_EUCJP 
-;;
-
-(** Indicates type of miscellaneous fee.*)
-type fix_miscfeetype =
-    | FIX_MiscFeeType_Other 
-    | FIX_MiscFeeType_Agent 
-    | FIX_MiscFeeType_LocalCommission 
-    | FIX_MiscFeeType_ExchangeFees 
-    | FIX_MiscFeeType_Stamp 
-    | FIX_MiscFeeType_Markup 
-    | FIX_MiscFeeType_PerTransaction 
-    | FIX_MiscFeeType_Regulatory 
-    | FIX_MiscFeeType_Tax 
-    | FIX_MiscFeeType_ConsumptionTax 
-    | FIX_MiscFeeType_Conversion 
-    | FIX_MiscFeeType_Levy 
-;;
-
-(** Specifies the direction of the messsage.*)
-type fix_msgdirection =
-    | FIX_MsgDirection_Send 
-    | FIX_MsgDirection_Receive 
-;;
-
-(** Used to indicate what an Execution Report represents (e.g. used with multi-leg securiteis, such as option strategies, spreads, etc.).*)
-type fix_multilegreportingtype =
-    | FIX_MultiLegReportingType_SingleSecurity 
-    | FIX_MultiLegReportingType_IndividualLegOfAMultiLegSecurity 
-    | FIX_MultiLegReportingType_MultiLegSecurity 
-;;
-
-(** Code to represent whether value is net (inclusive of tax) or gross.*)
-type fix_netgrossind =
-    | FIX_NetGrossInd_Net 
-    | FIX_NetGrossInd_Gross 
-;;
-
-(** Indicates whether or not details should be communicated to BrokerOfCredit (i.e. step-in broker).*)
-type fix_notifybrokerofcredit =
-    | FIX_NotifyBrokerOfCredit_DetailsShouldNotBeCommunicated 
-    | FIX_NotifyBrokerOfCredit_DetailsShouldBeCommunicated 
-;;
-
-(** Indicates whether the resulting position after a trade should be an opening position or closing position. Used for omnibus accounting - where accounts are held on a gross basis instead of being netted together.*)
-type fix_openclose =
-    | FIX_OpenClose_Close 
-    | FIX_OpenClose_Open 
-;;
-
-(** Flag that identifies a price.*)
-type fix_openclosesettleflag =
-    | FIX_OpenCloseSettleFlag_DeliverySettlementEntry 
-    | FIX_OpenCloseSettleFlag_DailyOpen 
-    | FIX_OpenCloseSettleFlag_SessionOpen 
-;;
-
-(** Code to identify reason for order rejection.*)
-type fix_ordrejreason =
-    | FIX_OrdRejReason_DuplicateOrder 
-    | FIX_OrdRejReason_Other 
-    | FIX_OrdRejReason_UnknownOrder 
-    | FIX_OrdRejReason_DVC_ThresholdBreached 
-    | FIX_OrdRejReason_TooLateToEnter 
-    | FIX_OrdRejReason_OrderExceedsLimit 
-    | FIX_OrdRejReason_UnknownAccount 
-    | FIX_OrdRejReason_OtherRejectReason 
-    | FIX_OrdRejReason_BrokerCredit 
-    | FIX_OrdRejReason_UnsupportedOrderCharacteristic 
-    | FIX_OrdRejReason_DuplicateOfAVerballyCommunicatedOrder 
-    | FIX_OrdRejReason_IncorrectQuantity 
-    | FIX_OrdRejReason_TradeAlongRequired 
-    | FIX_OrdRejReason_StaleOrder 
-    | FIX_OrdRejReason_InvalidInvestorID 
-    | FIX_OrdRejReason_ExchangeClosed 
-    | FIX_OrdRejReason_IncorrectAllocatedQuantity 
-    | FIX_OrdRejReason_DVC_ProactivelyHaltedInstrument 
-    | FIX_OrdRejReason_UnknownSymbol 
-;;
-
-(** Identifies current status of order.*)
-type fix_ordstatus =
-    | FIX_OrdStatus_PendingCancel 
-    | FIX_OrdStatus_Stopped 
-    | FIX_OrdStatus_PendingNew 
-    | FIX_OrdStatus_Rejected 
-    | FIX_OrdStatus_Calculated 
-    | FIX_OrdStatus_Expired 
-    | FIX_OrdStatus_Filled 
-    | FIX_OrdStatus_Canceled 
-    | FIX_OrdStatus_Replaced 
-    | FIX_OrdStatus_PendingReplace 
-    | FIX_OrdStatus_DoneForDay 
-    | FIX_OrdStatus_Suspended 
-    | FIX_OrdStatus_New 
-    | FIX_OrdStatus_PartiallyFilled 
-    | FIX_OrdStatus_AcceptedForBidding 
-;;
-
-(** Order type.*)
-type fix_ordtype =
-    | FIX_OrdType_LimitOrBetter 
-    | FIX_OrdType_NextFundValuationPoint 
-    | FIX_OrdType_WithOrWithout 
-    | FIX_OrdType_PreviouslyIndicated 
-    | FIX_OrdType_Stop 
-    | FIX_OrdType_ForexPreviouslyQuoted 
-    | FIX_OrdType_Market 
-    | FIX_OrdType_OnBasis 
-    | FIX_OrdType_Funari 
-    | FIX_OrdType_LimitOnClose 
-    | FIX_OrdType_Pegged 
-    | FIX_OrdType_LimitWithOrWithout 
-    | FIX_OrdType_MarketOnClose 
-    | FIX_OrdType_StopLimit 
-    | FIX_OrdType_ForexSwap 
-    | FIX_OrdType_MarketIfTouched 
-    | FIX_OrdType_MarketWithLeftOverAsLimit 
-    | FIX_OrdType_PreviouslyQuoted 
-    | FIX_OrdType_ForexMarket 
-    | FIX_OrdType_Limit 
-    | FIX_OrdType_PreviousFundValuationPoint 
-    | FIX_OrdType_OnClose 
-    | FIX_OrdType_ForexLimit 
-;;
-
-(** Indicates possible retransmission of message with this sequence number*)
-type fix_possdupflag =
-    | FIX_PossDupFlag_PossibleDuplicate 
-    | FIX_PossDupFlag_OriginalTransmission 
-;;
-
-(** Indicates that message may contain information that has been sent under another sequence number.*)
-type fix_possresend =
-    | FIX_PossResend_OriginalTransmission 
-    | FIX_PossResend_PossibleResend 
-;;
-
-(** Code to represent the price type.*)
-type fix_pricetype =
-    | FIX_PriceType_Discount 
-    | FIX_PriceType_Spread 
-    | FIX_PriceType_TEDPrice 
-    | FIX_PriceType_FixedCabinetTradePrice 
-    | FIX_PriceType_Percentage 
-    | FIX_PriceType_VariableCabinetTradePrice 
-    | FIX_PriceType_TEDYield 
-    | FIX_PriceType_PerUnit 
-    | FIX_PriceType_FixedAmount 
-    | FIX_PriceType_Premium 
-    | FIX_PriceType_Yield 
-;;
-
-(** Processing code for sub-account. Absence of this field in AllocAccount / AllocPrice/AllocShares / ProcessCode instance indicates regular trade.*)
-type fix_processcode =
-    | FIX_ProcessCode_Regular 
-    | FIX_ProcessCode_SoftDollarStepOut 
-    | FIX_ProcessCode_StepIn 
-    | FIX_ProcessCode_PlanSponsor 
-    | FIX_ProcessCode_SoftDollarStepIn 
-    | FIX_ProcessCode_SoftDollar 
-    | FIX_ProcessCode_StepOut 
-;;
-
-(** Code to identify the desired frequency of progress reports.*)
-type fix_progrptreqs =
-    | FIX_ProgRptReqs_BuySideRequests 
-    | FIX_ProgRptReqs_SellSideSends 
-    | FIX_ProgRptReqs_RealTimeExecutionReports 
-;;
-
-(** Indicates whether an Option is for a put or call.*)
-type fix_putorcall =
-    | FIX_PutOrCall_Call 
-    | FIX_PutOrCall_Put 
-;;
-
-(** Identifies the status of the quote acknowledgement.*)
-type fix_quoteackstatus =
-    | FIX_QuoteAckStatus_Rejected 
-    | FIX_QuoteAckStatus_CanceledForSecurityType 
-    | FIX_QuoteAckStatus_CanceledForUnderlying 
-    | FIX_QuoteAckStatus_CanceledAll 
-    | FIX_QuoteAckStatus_Accepted 
-    | FIX_QuoteAckStatus_CancelForSymbol 
-;;
-
-(** Identifies the type of quote cancel.*)
-type fix_quotecanceltype =
-    | FIX_QuoteCancelType_CancelAllQuotes 
-    | FIX_QuoteCancelType_CancelForOneOrMoreSecurities 
-    | FIX_QuoteCancelType_CancelForUnderlyingSecurity 
-    | FIX_QuoteCancelType_CancelForSecurityType 
-;;
-
-(** Space-delimited list of conditions describing a quote.*)
-type fix_quotecondition =
-    | FIX_QuoteCondition_Closed 
-    | FIX_QuoteCondition_Locked 
-    | FIX_QuoteCondition_Crossed 
-    | FIX_QuoteCondition_NonFirm 
-    | FIX_QuoteCondition_FastTrading 
-    | FIX_QuoteCondition_ConsolidatedBest 
-    | FIX_QuoteCondition_Open 
-    | FIX_QuoteCondition_ExchangeBest 
-    | FIX_QuoteCondition_Depth 
-;;
-
-(** Reason Quote Entry was rejected:*)
-type fix_quoteentryrejectreason =
-    | FIX_QuoteEntryRejectReason_DuplicateQuote 
-    | FIX_QuoteEntryRejectReason_Exchange 
-    | FIX_QuoteEntryRejectReason_InvalidPrice 
-    | FIX_QuoteEntryRejectReason_UnknownQuote 
-    | FIX_QuoteEntryRejectReason_TooLateToEnter 
-    | FIX_QuoteEntryRejectReason_QuoteExceedsLimit 
-    | FIX_QuoteEntryRejectReason_NotAuthorizedToQuoteSecurity 
-    | FIX_QuoteEntryRejectReason_UnknownSymbol 
-    | FIX_QuoteEntryRejectReason_InvalidBidAskSpread 
-;;
-
-(** Reason Quote was rejected:*)
-type fix_quoterejectreason =
-    | FIX_QuoteRejectReason_DuplicateQuote 
-    | FIX_QuoteRejectReason_Other 
-    | FIX_QuoteRejectReason_Exchange 
-    | FIX_QuoteRejectReason_InvalidPrice 
-    | FIX_QuoteRejectReason_InvalidBid 
-    | FIX_QuoteRejectReason_UnknownQuote 
-    | FIX_QuoteRejectReason_TooLateToEnter 
-    | FIX_QuoteRejectReason_QuoteRequestExceedsLimit 
-    | FIX_QuoteRejectReason_NotAuthorizedToQuoteSecurity 
-    | FIX_QuoteRejectReason_UnknownSymbol 
-;;
-
-(** Indicates the type of Quote Request being generated*)
-type fix_quoterequesttype =
-    | FIX_QuoteRequestType_Manual 
-    | FIX_QuoteRequestType_Automatic 
-;;
-
-(** Level of Response requested from receiver of quote messages.*)
-type fix_quoteresponselevel =
-    | FIX_QuoteResponseLevel_NoAcknowledgement 
-    | FIX_QuoteResponseLevel_AcknowledgeOnlyNegativeOrErroneousQuotes 
-    | FIX_QuoteResponseLevel_AcknowledgeEachQuoteMessage 
-;;
-
-(** Identifies party of trade responsible for exchange reporting.*)
-type fix_reporttoexch =
-    | FIX_ReportToExch_ReceiverReports 
-    | FIX_ReportToExch_SenderReports 
-;;
-
-(** Indicates that the both sides of the FIX session should reset sequence numbers.*)
-type fix_resetseqnumflag =
-    | FIX_ResetSeqNumFlag_No 
-    | FIX_ResetSeqNumFlag_Yes 
-;;
-
-(** Indicates the type of RoutingID specified.*)
-type fix_routingtype =
-    | FIX_RoutingType_TargetList 
-    | FIX_RoutingType_TargetFirm 
-    | FIX_RoutingType_BlockList 
-    | FIX_RoutingType_BlockFirm 
-;;
-
-(** Note that the name of this field is changing to "OrderCapacity" as Rule80A is a very US market-specific term. Other world markets need to convey similar information, however, often a subset of the US values. . See the "Rule80A (aka OrderCapacity) Usage by Market" appendix for market-specific usage of this field.*)
-type fix_rule80a =
-    | FIX_Rule80A_AgencySingleOrder 
-    | FIX_Rule80A_ShortExemptTransactionForPrincipal 
-    | FIX_Rule80A_ShortExemptTransactionAType 
-    | FIX_Rule80A_SpecialistTrades 
-    | FIX_Rule80A_AgencyNonAlgo 
-    | FIX_Rule80A_TransactionUnaffiliatedMember 
-    | FIX_Rule80A_ShortExemptTransactionWType 
-    | FIX_Rule80A_ProprietaryAlgo 
-    | FIX_Rule80A_ProprietaryTransactionAffiliated 
-    | FIX_Rule80A_AgencyAlgo 
-    | FIX_Rule80A_Principal 
-    | FIX_Rule80A_AllOtherOrdersAsAgentForOtherMember 
-    | FIX_Rule80A_ProprietaryNonAlgo 
-    | FIX_Rule80A_ShortExemptTransactionIType 
-    | FIX_Rule80A_AgentForOtherMember 
-    | FIX_Rule80A_ShortExemptTransactionNonMember 
-    | FIX_Rule80A_RisklessPrincipal 
-    | FIX_Rule80A_AgencyIndexArb 
-    | FIX_Rule80A_ProgramOrderOtherMember 
-    | FIX_Rule80A_ShortExemptTransactionMemberNotAffliated 
-    | FIX_Rule80A_ProgramOrderMember 
-    | FIX_Rule80A_House 
-    | FIX_Rule80A_TransactionNonMember 
-    | FIX_Rule80A_IndividualInvestor 
-    | FIX_Rule80A_ShortExemptTransactionMemberAffliated 
-    | FIX_Rule80A_Client 
-;;
-
-(** Type of Security Definition Request.*)
-type fix_securityrequesttype =
-    | FIX_SecurityRequestType_RequestListSecurities 
-    | FIX_SecurityRequestType_RequestListSecurityTypes 
-    | FIX_SecurityRequestType_RequestSecurityIdentityAndSpecifications 
-    | FIX_SecurityRequestType_RequestSecurityIdentityForSpecifications 
-;;
-
-(** Type of Security Definition message response.*)
-type fix_securityresponsetype =
-    | FIX_SecurityResponseType_AcceptAsIs 
-    | FIX_SecurityResponseType_RejectSecurityProposal 
-    | FIX_SecurityResponseType_CannotMatchSelectionCriteria 
-    | FIX_SecurityResponseType_ListOfSecurityTypesReturnedPerRequest 
-    | FIX_SecurityResponseType_AcceptWithRevisions 
-    | FIX_SecurityResponseType_ListOfSecuritiesReturnedPerRequest 
-;;
-
-(** Identifies the trading status applicable to the transaction.*)
-type fix_securitytradingstatus =
-    | FIX_SecurityTradingStatus_ITSPreOpening 
-    | FIX_SecurityTradingStatus_PreOpen 
-    | FIX_SecurityTradingStatus_MarketImbalanceBuy 
-    | FIX_SecurityTradingStatus_NoMarketOnCloseImbalance 
-    | FIX_SecurityTradingStatus_NotAvailableForTrading 
-    | FIX_SecurityTradingStatus_OpeningRotation 
-    | FIX_SecurityTradingStatus_NoMarketImbalance 
-    | FIX_SecurityTradingStatus_TradeDisseminationTime 
-    | FIX_SecurityTradingStatus_ReadyToTrade 
-    | FIX_SecurityTradingStatus_UnknownOrInvalid 
-    | FIX_SecurityTradingStatus_MarketOnCloseImbalanceBuy 
-    | FIX_SecurityTradingStatus_OpeningDelay 
-    | FIX_SecurityTradingStatus_NoOpen 
-    | FIX_SecurityTradingStatus_MarketOnCloseImbalanceSell 
-    | FIX_SecurityTradingStatus_TradingHalt 
-    | FIX_SecurityTradingStatus_NotTradedOnThisMarket 
-    | FIX_SecurityTradingStatus_MarketImbalanceSell 
-    | FIX_SecurityTradingStatus_TradingRangeIndication 
-    | FIX_SecurityTradingStatus_FastMarket 
-    | FIX_SecurityTradingStatus_NewPriceIndication 
-    | FIX_SecurityTradingStatus_PriceIndication 
-    | FIX_SecurityTradingStatus_Resume 
-;;
-
-(** Indicates type of security (ISITC spec)*)
-type fix_securitytype =
-    | FIX_SecurityType_MutualFund 
-    | FIX_SecurityType_FederalHomeLoan 
-    | FIX_SecurityType_YankeeCorporateBond 
-    | FIX_SecurityType_Matured 
-    | FIX_SecurityType_Retired 
-    | FIX_SecurityType_USDSupranationalCoupons 
-    | FIX_SecurityType_CatsTigersAndLions 
-    | FIX_SecurityType_GeneralObligationBonds 
-    | FIX_SecurityType_TimeDeposit 
-    | FIX_SecurityType_ExtendedCommNote 
-    | FIX_SecurityType_Future 
-    | FIX_SecurityType_Forward 
-    | FIX_SecurityType_VariableRateDemandNote 
-    | FIX_SecurityType_MediumTermNotes 
-    | FIX_SecurityType_Repurchase 
-    | FIX_SecurityType_PlazosFijos 
-    | FIX_SecurityType_BankNotes 
-    | FIX_SecurityType_Warrant 
-    | FIX_SecurityType_SpecialTax 
-    | FIX_SecurityType_ForeignExchangeContract 
-    | FIX_SecurityType_CertificateOfDeposit 
-    | FIX_SecurityType_TaxAnticipationNote 
-    | FIX_SecurityType_LetterOfCredit 
-    | FIX_SecurityType_CollateralizedMortgageObligation 
-    | FIX_SecurityType_Amended 
-    | FIX_SecurityType_RevolverLoan 
-    | FIX_SecurityType_DepositNotes 
-    | FIX_SecurityType_EuroCertificateOfDeposit 
-    | FIX_SecurityType_Overnight 
-    | FIX_SecurityType_RepurchaseAgreement 
-    | FIX_SecurityType_SpecialObligation 
-    | FIX_SecurityType_FederalAgencyDiscountNote 
-    | FIX_SecurityType_GovernmentNationalMortgageAssociation 
-    | FIX_SecurityType_DebtorInPossession 
-    | FIX_SecurityType_Replaced 
-    | FIX_SecurityType_NoSecurityType 
-    | FIX_SecurityType_SwingLineFacility 
-    | FIX_SecurityType_TaxExemptCommercialPaper 
-    | FIX_SecurityType_DualCurrency 
-    | FIX_SecurityType_TreasuryInflationProtectedSecurities 
-    | FIX_SecurityType_BridgeLoan 
-    | FIX_SecurityType_ShortTermLoanNote 
-    | FIX_SecurityType_Defaulted 
-    | FIX_SecurityType_StudentLoanMarketingAssociation 
-    | FIX_SecurityType_LiquidityNote 
-    | FIX_SecurityType_InterestStripFromAnyBondOrNote 
-    | FIX_SecurityType_Revolver 
-    | FIX_SecurityType_CommercialPaper 
-    | FIX_SecurityType_RevenueAnticipationNote 
-    | FIX_SecurityType_StructuredNotes 
-    | FIX_SecurityType_MortgagePrivatePlacement 
-    | FIX_SecurityType_Pfandbriefe 
-    | FIX_SecurityType_OtherAnticipationNotes 
-    | FIX_SecurityType_MandatoryTender 
-    | FIX_SecurityType_PreferredStock 
-    | FIX_SecurityType_ToBeAnnounced 
-    | FIX_SecurityType_FederalHousingAuthority 
-    | FIX_SecurityType_MiscellaneousPassThrough 
-    | FIX_SecurityType_YankeeCertificateOfDeposit 
-    | FIX_SecurityType_Option 
-    | FIX_SecurityType_MortgagePrincipalOnly 
-    | FIX_SecurityType_USTreasuryBill 
-    | FIX_SecurityType_MortgageInterestOnly 
-    | FIX_SecurityType_AssetBackedSecurities 
-    | FIX_SecurityType_EuroSupranationalCoupons 
-    | FIX_SecurityType_USTreasuryBillOld 
-    | FIX_SecurityType_IOETTEMortgage 
-    | FIX_SecurityType_MortgageBackedSecurities 
-    | FIX_SecurityType_BillOfExchanges 
-    | FIX_SecurityType_RevenueBonds 
-    | FIX_SecurityType_ReverseRepurchaseAgreement 
-    | FIX_SecurityType_EuroCorporateBond 
-    | FIX_SecurityType_PrivateExportFunding 
-    | FIX_SecurityType_PrincipalStripFromANonCallableBondOrNote 
-    | FIX_SecurityType_Withdrawn 
-    | FIX_SecurityType_SpecialAssessment 
-    | FIX_SecurityType_EuroSovereigns 
-    | FIX_SecurityType_FederalNationalMortgageAssociation 
-    | FIX_SecurityType_TaxAllocation 
-    | FIX_SecurityType_PromissoryNote 
-    | FIX_SecurityType_PrincipalStripOfACallableBondOrNote 
-    | FIX_SecurityType_ConvertibleBond 
-    | FIX_SecurityType_Corp 
-    | FIX_SecurityType_SecuritiesLoan 
-    | FIX_SecurityType_CertificateOfObligation 
-    | FIX_SecurityType_CallLoans 
-    | FIX_SecurityType_USTreasuryBond 
-    | FIX_SecurityType_SecuritiesPledge 
-    | FIX_SecurityType_BradyBond 
-    | FIX_SecurityType_CorporateBond 
-    | FIX_SecurityType_TermLoan 
-    | FIX_SecurityType_TaxRevenueAnticipationNote 
-    | FIX_SecurityType_FederalAgencyCoupon 
-    | FIX_SecurityType_BankersAcceptance 
-    | FIX_SecurityType_MultilegInstrument 
-    | FIX_SecurityType_EuroCommercialPaper 
-    | FIX_SecurityType_CommonStock 
-    | FIX_SecurityType_TreasuriesAgencyDebenture 
-    | FIX_SecurityType_USTreasuryNote 
-    | FIX_SecurityType_IndexedLinked 
-    | FIX_SecurityType_MunicipalBond 
-    | FIX_SecurityType_Wildcard 
-    | FIX_SecurityType_USTreasuryNoteOld 
-    | FIX_SecurityType_CertificateOfParticipation 
-    | FIX_SecurityType_CorporatePrivatePlacement 
-    | FIX_SecurityType_BuySellback 
-;;
-
-(** Indicates mode used for Settlement Instructions*)
-type fix_settlinstmode =
-    | FIX_SettlInstMode_SpecificAllocationAccountOverriding 
-    | FIX_SettlInstMode_RequestReject 
-    | FIX_SettlInstMode_Default 
-    | FIX_SettlInstMode_StandingInstructionsProvided 
-    | FIX_SettlInstMode_SpecificAllocationAccountStanding 
-    | FIX_SettlInstMode_SpecificOrderForASingleAccount 
-;;
-
-(** Indicates source of Settlement Instructions*)
-type fix_settlinstsource =
-    | FIX_SettlInstSource_Investor 
-    | FIX_SettlInstSource_Institution 
-    | FIX_SettlInstSource_BrokerCredit 
-;;
-
-(** Settlement Instructions message transaction type*)
-type fix_settlinsttranstype =
-    | FIX_SettlInstTransType_Cancel 
-    | FIX_SettlInstTransType_Replace 
-    | FIX_SettlInstTransType_New 
-    | FIX_SettlInstTransType_Restate 
-;;
-
-(** Identifies Settlement Depository or Country Code (ISITC spec)*)
-type fix_settllocation =
-    | FIX_SettlLocation_Physical 
-    | FIX_SettlLocation_EuroClear 
-    | FIX_SettlLocation_FederalBookEntry 
-    | FIX_SettlLocation_LocalMarketSettleLocation 
-    | FIX_SettlLocation_CEDEL 
-    | FIX_SettlLocation_ParticipantTrustCompany 
-    | FIX_SettlLocation_DepositoryTrustCompany 
-;;
-
-(** Indicates order settlement period. Absence of this field is interpreted as Regular. Regular is defined as the default settlement period for the particular security on the exchange of execution.*)
-type fix_settlmnttyp =
-    | FIX_SettlmntTyp_Regular 
-    | FIX_SettlmntTyp_TPlus2 
-    | FIX_SettlmntTyp_SellersOption 
-    | FIX_SettlmntTyp_TPlus4 
-    | FIX_SettlmntTyp_TPlus3 
-    | FIX_SettlmntTyp_TPlus5 
-    | FIX_SettlmntTyp_NextDay 
-    | FIX_SettlmntTyp_Future 
-    | FIX_SettlmntTyp_Cash 
-    | FIX_SettlmntTyp_WhenAndIfIssued 
-;;
-
-(** Side of order*)
-type fix_side =
-    | FIX_Side_AsDefined 
-    | FIX_Side_Opposite 
-    | FIX_Side_Buy 
-    | FIX_Side_CrossShortExempt 
-    | FIX_Side_Borrow 
-    | FIX_Side_BuyMinus 
-    | FIX_Side_Subscribe 
-    | FIX_Side_Lend 
-    | FIX_Side_SellShortExempt 
-    | FIX_Side_Redeem 
-    | FIX_Side_SellPlus 
-    | FIX_Side_Sell 
-    | FIX_Side_Undisclosed 
-    | FIX_Side_Cross 
-    | FIX_Side_CrossShort 
-    | FIX_Side_SellShort 
-;;
-
-(** Indicates whether or not the order was solicited.*)
-type fix_solicitedflag =
-    | FIX_SolicitedFlag_WasSolicited 
-    | FIX_SolicitedFlag_WasNotSolicited 
-;;
-
-(** Identifies the Standing Instruction database used*)
-type fix_standinstdbtype =
-    | FIX_StandInstDbType_Other 
-    | FIX_StandInstDbType_AccountNet 
-    | FIX_StandInstDbType_DTCSID 
-    | FIX_StandInstDbType_ThomsonALERT 
-    | FIX_StandInstDbType_AGlobalCustodian 
-;;
-
-(** Subscription Request Type*)
-type fix_subscriptionrequesttype =
-    | FIX_SubscriptionRequestType_DisablePreviousSnapshot 
-    | FIX_SubscriptionRequestType_SnapshotAndUpdates 
-    | FIX_SubscriptionRequestType_Snapshot 
-;;
-
-(** Direction of the "tick".*)
-type fix_tickdirection =
-    | FIX_TickDirection_ZeroMinusTick 
-    | FIX_TickDirection_PlusTick 
-    | FIX_TickDirection_MinusTick 
-    | FIX_TickDirection_ZeroPlusTick 
-;;
-
-(** Specifies how long the order remains in effect. Absence of this field is interpreted as DAY.*)
-type fix_timeinforce =
-    | FIX_TimeInForce_GoodTillCancel 
-    | FIX_TimeInForce_AtTheClose 
-    | FIX_TimeInForce_ImmediateOrCancel 
-    | FIX_TimeInForce_Day 
-    | FIX_TimeInForce_FillOrKill 
-    | FIX_TimeInForce_GoodForAuction 
-    | FIX_TimeInForce_AtTheOpening 
-    | FIX_TimeInForce_GoodTillCrossing 
-    | FIX_TimeInForce_GoodTillDate 
-;;
-
-(** Method of trading*)
-type fix_tradsesmethod =
-    | FIX_TradSesMethod_OpenOutcry 
-    | FIX_TradSesMethod_Electronic 
-    | FIX_TradSesMethod_TwoParty 
-;;
-
-(** Trading Session Mode*)
-type fix_tradsesmode =
-    | FIX_TradSesMode_Testing 
-    | FIX_TradSesMode_Simulated 
-    | FIX_TradSesMode_Production 
-;;
-
-(** State of the trading session.*)
-type fix_tradsesstatus =
-    | FIX_TradSesStatus_Closed 
-    | FIX_TradSesStatus_PreOpen 
-    | FIX_TradSesStatus_RequestRejected 
-    | FIX_TradSesStatus_PreClose 
-    | FIX_TradSesStatus_Unknown 
-    | FIX_TradSesStatus_Halted 
-    | FIX_TradSesStatus_Open 
-;;
-
-(** Space-delimited list of conditions describing a trade*)
-type fix_tradecondition =
-    | FIX_TradeCondition_Opened 
-    | FIX_TradeCondition_Rule127Trade 
-    | FIX_TradeCondition_CashTrade 
-    | FIX_TradeCondition_IntradayTradeDetail 
-    | FIX_TradeCondition_SoldLast 
-    | FIX_TradeCondition_Cash 
-    | FIX_TradeCondition_StoppedStock 
-    | FIX_TradeCondition_ImbalanceMoreSellers 
-    | FIX_TradeCondition_Sold 
-    | FIX_TradeCondition_ImbalanceMoreBuyers 
-    | FIX_TradeCondition_NextDay 
-    | FIX_TradeCondition_Opening 
-    | FIX_TradeCondition_Seller 
-    | FIX_TradeCondition_OpeningPrice 
-    | FIX_TradeCondition_AveragePriceTrade 
-    | FIX_TradeCondition_Rule155Trade 
-    | FIX_TradeCondition_NextDayTrade 
-;;
-
-(** Code to represent the type of trade.*)
-type fix_tradetype =
-    | FIX_TradeType_Agency 
-    | FIX_TradeType_RiskTrade 
-    | FIX_TradeType_VWAPGuarantee 
-    | FIX_TradeType_GuaranteedClose 
-;;
-
-(** Indicates whether or not message is being sent as a result of a subscription request or not.*)
-type fix_unsolicitedindicator =
-    | FIX_UnsolicitedIndicator_MessageIsBeingSentAsAResultOfAPriorRequest 
-    | FIX_UnsolicitedIndicator_MessageIsBeingSentUnsolicited 
-;;
-
-(** Urgency flag*)
-type fix_urgency =
-    | FIX_Urgency_Flash 
-    | FIX_Urgency_Background 
-    | FIX_Urgency_Normal 
-;;
-
-type fix_week =
-    | FIX_week_w1 
-    | FIX_week_w2 
-    | FIX_week_w3 
-    | FIX_week_noweek 
-    | FIX_week_w4 
-    | FIX_week_w5 
-;;
-
-(** three letter code from ISO4217*)
-type fix_currency =
-    | FIX_Currency_EUR 
-    | FIX_Currency_CHF 
-    | FIX_Currency_USD 
-    | FIX_Currency_GBP 
-;;
-
-(** 2 letter country code - ISO 3166 *)
-type fix_country =
-    | FIX_Country_DE 
-    | FIX_Country_GB 
-    | FIX_Country_US 
-;;
-
-(** ISO 10383 Market Identifier Code*)
-type fix_exchange =
-    | FIX_Exchange_XSHG 
-    | FIX_Exchange_SHSC 
-    | FIX_Exchange_XNYS 
-    | FIX_Exchange_XJAS 
-    | FIX_Exchange_XLON 
-    | FIX_Exchange_XNAS 
-;;
-
 (** Type of account associated with an order*)
 type fix_accounttype =
     | FIX_AccountType_CarriedCustomerSide 
@@ -1252,6 +21,13 @@ type fix_acctidsource =
     | FIX_AcctIDSource_OMGEO 
 ;;
 
+(** Identifies the type of adjustment*)
+type fix_adjustment =
+    | FIX_Adjustment_Cancel 
+    | FIX_Adjustment_Error 
+    | FIX_Adjustment_Correction 
+;;
+
 (** Type of adjustment to be applied, used for PCS & PAJ*)
 type fix_adjustmenttype =
     | FIX_AdjustmentType_ProcessRequestAsMarginDisposition 
@@ -1260,11 +36,32 @@ type fix_adjustmenttype =
     | FIX_AdjustmentType_DeltaMinus 
 ;;
 
+(** Broker's side of advertised trade*)
+type fix_advside =
+    | FIX_AdvSide_Buy 
+    | FIX_AdvSide_Sell 
+    | FIX_AdvSide_Trade 
+    | FIX_AdvSide_Cross 
+;;
+
+(** Identifies advertisement message transaction type*)
+type fix_advtranstype =
+    | FIX_AdvTransType_Cancel 
+    | FIX_AdvTransType_Replace 
+    | FIX_AdvTransType_New 
+;;
+
 (** Identifies the status of the ConfirmationAck*)
 type fix_affirmstatus =
     | FIX_AffirmStatus_Affirmed 
     | FIX_AffirmStatus_Received 
     | FIX_AffirmStatus_ConfirmRejected 
+;;
+
+(** Specifies whether or not book entries should be aggregated.*)
+type fix_aggregatedbook =
+    | FIX_AggregatedBook_BookEntriesToBeAggregated 
+    | FIX_AggregatedBook_BookEntriesShouldNotBeAggregated 
 ;;
 
 (** Type of account associated with a confirmation or other trade-level message*)
@@ -1285,6 +82,13 @@ type fix_alloccancreplacereason =
     | FIX_AllocCancReplaceReason_OriginalDetailsIncomplete 
 ;;
 
+(** Indicates how the receiver (i.e. third party) of Allocation message should handle/process the account details*)
+type fix_allochandlinst =
+    | FIX_AllocHandlInst_ForwardAndMatch 
+    | FIX_AllocHandlInst_Forward 
+    | FIX_AllocHandlInst_Match 
+;;
+
 (** Response to allocation to be communicated to a counterparty through an intermediary, i.e. clearing house. Used in conjunction with AllocType = "Request to Intermediary" and AllocReportType = "Request to Intermediary"*)
 type fix_allocintermedreqtype =
     | FIX_AllocIntermedReqType_PendingAccept 
@@ -1295,10 +99,34 @@ type fix_allocintermedreqtype =
     | FIX_AllocIntermedReqType_Accept 
 ;;
 
+(** Identifies the type of Allocation linkage when AllocLinkID (96) is used.*)
+type fix_alloclinktype =
+    | FIX_AllocLinkType_FXSwap 
+    | FIX_AllocLinkType_FXNetting 
+;;
+
 (** Indicates how the orders being booked and allocated by an Allocation Instruction or Allocation Report message are identified, i.e. by explicit definition in the NoOrders group or not.*)
 type fix_allocnoorderstype =
     | FIX_AllocNoOrdersType_ExplicitListProvided 
     | FIX_AllocNoOrdersType_NotSpecified 
+;;
+
+(** Identifies reason for rejection*)
+type fix_allocrejcode =
+    | FIX_AllocRejCode_UnknownOrStaleExecID 
+    | FIX_AllocRejCode_UnknownAccount 
+    | FIX_AllocRejCode_OtherSeeText 
+    | FIX_AllocRejCode_UnknownListID 
+    | FIX_AllocRejCode_CalculationDifference 
+    | FIX_AllocRejCode_IncorrectQuantity 
+    | FIX_AllocRejCode_UnknownClOrdID 
+    | FIX_AllocRejCode_CommissionDifference 
+    | FIX_AllocRejCode_WarehouseRequestRejected 
+    | FIX_AllocRejCode_UnknownExecutingBrokerMnemonic 
+    | FIX_AllocRejCode_MismatchedData 
+    | FIX_AllocRejCode_UnknownOrderID 
+    | FIX_AllocRejCode_IncorrectAveragegPrice 
+    | FIX_AllocRejCode_IncorrectAllocatedQuantity 
 ;;
 
 (** Describes the specific type or purpose of an Allocation Report message*)
@@ -1316,6 +144,24 @@ type fix_allocsettlinsttype =
     | FIX_AllocSettlInstType_PhoneForInstructions 
     | FIX_AllocSettlInstType_UseDefaultInstructions 
     | FIX_AllocSettlInstType_SSIDBIDsProvided 
+;;
+
+(** Identifies status of allocation*)
+type fix_allocstatus =
+    | FIX_AllocStatus_Incomplete 
+    | FIX_AllocStatus_Received 
+    | FIX_AllocStatus_BlockLevelReject 
+    | FIX_AllocStatus_AccountLevelReject 
+    | FIX_AllocStatus_RejectedByIntermediary 
+    | FIX_AllocStatus_Accepted 
+;;
+
+(** Identifies allocation transaction type
+ *** SOME VALUES HAVE BEEN REPLACED - See "Replaced Features and Supported Approach" ****)
+type fix_alloctranstype =
+    | FIX_AllocTransType_Replace 
+    | FIX_AllocTransType_Cancel 
+    | FIX_AllocTransType_New 
 ;;
 
 (** Describes the specific type or purpose of an Allocation message (i.e. "Buyside Calculated")*)
@@ -1356,11 +202,34 @@ type fix_avgpxindicator =
     | FIX_AvgPxIndicator_LastTrade 
 ;;
 
+(** Code to represent the basis price type*)
+type fix_basispxtype =
+    | FIX_BasisPxType_Others 
+    | FIX_BasisPxType_VWAPThroughADay 
+    | FIX_BasisPxType_VWAPThroughAnAfternoonSessionExcept 
+    | FIX_BasisPxType_VWAPThroughAMorningSession 
+    | FIX_BasisPxType_ClosingPrice 
+    | FIX_BasisPxType_CurrentPrice 
+    | FIX_BasisPxType_Strike 
+    | FIX_BasisPxType_Open 
+    | FIX_BasisPxType_ClosingPriceAtMorningSession 
+    | FIX_BasisPxType_VWAPThroughADayExcept 
+    | FIX_BasisPxType_VWAPThroughAMorningSessionExcept 
+    | FIX_BasisPxType_VWAPThroughAnAfternoonSession 
+    | FIX_BasisPxType_SQ 
+;;
+
 (** Code to identify the type of BidDescriptor (400)*)
 type fix_biddescriptortype =
     | FIX_BidDescriptorType_Sector 
     | FIX_BidDescriptorType_Index 
     | FIX_BidDescriptorType_Country 
+;;
+
+(** Identifies the Bid Request message type*)
+type fix_bidrequesttranstype =
+    | FIX_BidRequestTransType_Cancel 
+    | FIX_BidRequestTransType_New 
 ;;
 
 (** Code to represent the type of trade*)
@@ -1544,6 +413,16 @@ type fix_collstatus =
     | FIX_CollStatus_Unassigned 
 ;;
 
+(** Commission type*)
+type fix_commtype =
+    | FIX_CommType_PercentageWaivedEnhancedUnits 
+    | FIX_CommType_PointsPerBondOrContract 
+    | FIX_CommType_Percent 
+    | FIX_CommType_PerUnit 
+    | FIX_CommType_Absolute 
+    | FIX_CommType_PercentageWaivedCashDiscount 
+;;
+
 (** Identifies the reason for rejecting a Confirmation*)
 type fix_confirmrejreason =
     | FIX_ConfirmRejReason_MissingSettlementInstructions 
@@ -1594,6 +473,21 @@ type fix_contamttype =
     | FIX_ContAmtType_FundBasedRenewalCommissionPercent 
 ;;
 
+(** Identifies the type of Corporate Action*)
+type fix_corporateaction =
+    | FIX_CorporateAction_ExDistribution 
+    | FIX_CorporateAction_ExDividend 
+    | FIX_CorporateAction_ExInterest 
+    | FIX_CorporateAction_ExRights 
+    | FIX_CorporateAction_New 
+;;
+
+(** Used for derivative products, such as options*)
+type fix_coveredoruncovered =
+    | FIX_CoveredOrUncovered_Uncovered 
+    | FIX_CoveredOrUncovered_Covered 
+;;
+
 (** Indicates if one side or the other of a cross order should be prioritized.
  The definition of prioritization is left to the market. In some markets prioritization means which side of the cross order is applied to the market first. In other markets – prioritization may mean that the prioritized side is fully executed (sometimes referred to as the side being protected).*)
 type fix_crossprioritization =
@@ -1608,8 +502,6 @@ type fix_crosstype =
     | FIX_CrossType_CrossOneSide 
     | FIX_CrossType_CrossSamePrice 
     | FIX_CrossType_CrossAON 
-    | FIX_CrossType_NotSignificant 
-    | FIX_CrossType_StandardCross 
 ;;
 
 (** Capacity of customer placing the order
@@ -1621,11 +513,46 @@ type fix_custordercapacity =
     | FIX_CustOrderCapacity_MemberTradingForAnotherMember 
 ;;
 
+(** Code to identify reason for cancel rejection*)
+type fix_cxlrejreason =
+    | FIX_CxlRejReason_Other 
+    | FIX_CxlRejReason_OrderAlreadyInPendingStatus 
+    | FIX_CxlRejReason_TooLateToCancel 
+    | FIX_CxlRejReason_UnknownOrder 
+    | FIX_CxlRejReason_UnableToProcessOrderMassCancelRequest 
+    | FIX_CxlRejReason_OrigOrdModTime 
+    | FIX_CxlRejReason_DuplicateClOrdID 
+    | FIX_CxlRejReason_BrokerCredit 
+;;
+
+(** Identifies the type of request that a Cancel Reject is in response to*)
+type fix_cxlrejresponseto =
+    | FIX_CxlRejResponseTo_OrderCancelRequest 
+    | FIX_CxlRejResponseTo_OrderCancel 
+;;
+
+(** Reason for execution rejection*)
+type fix_dkreason =
+    | FIX_DKReason_WrongSide 
+    | FIX_DKReason_QuantityExceedsOrder 
+    | FIX_DKReason_Other 
+    | FIX_DKReason_CalculationDifference 
+    | FIX_DKReason_NoMatchingOrder 
+    | FIX_DKReason_PriceExceedsLimit 
+    | FIX_DKReason_UnknownSymbol 
+;;
+
 (** Indicates whether or not automatic booking can occur.*)
 type fix_daybookinginst =
     | FIX_DayBookingInst_Auto 
     | FIX_DayBookingInst_SpeakWithOrderInitiatorBeforeBooking 
     | FIX_DayBookingInst_Accumulate 
+;;
+
+(** Reason for deletion*)
+type fix_deletereason =
+    | FIX_DeleteReason_Error 
+    | FIX_DeleteReason_Cancellation 
 ;;
 
 (** Identifies the form of delivery*)
@@ -1640,6 +567,17 @@ type fix_deliverytype =
     | FIX_DeliveryType_VersusPayment 
     | FIX_DeliveryType_HoldInCustody 
     | FIX_DeliveryType_Free 
+;;
+
+(** Code to identify the price a DiscretionOffsetValue (389) is related to and should be mathematically added to*)
+type fix_discretioninst =
+    | FIX_DiscretionInst_RelatedToPrimaryPrice 
+    | FIX_DiscretionInst_RelatedToMidpointPrice 
+    | FIX_DiscretionInst_RelatedToLastTradePrice 
+    | FIX_DiscretionInst_RelatedToDisplayedPrice 
+    | FIX_DiscretionInst_RelatedToVWAP 
+    | FIX_DiscretionInst_RelatedToMarketPrice 
+    | FIX_DiscretionInst_RelatedToLocalPrimaryPrice 
 ;;
 
 (** Type of Discretion Limit*)
@@ -1701,6 +639,19 @@ type fix_dlvyinsttype =
     | FIX_DlvyInstType_Securities 
 ;;
 
+(** Indicates whether or not the halt was due to the Related Security being halted.*)
+type fix_duetorelated =
+    | FIX_DueToRelated_RelatedToSecurityHalt 
+    | FIX_DueToRelated_NotRelatedToSecurityHalt 
+;;
+
+(** Email message type*)
+type fix_emailtype =
+    | FIX_EmailType_Reply 
+    | FIX_EmailType_AdminReply 
+    | FIX_EmailType_New 
+;;
+
 (** Code to represent the type of event*)
 type fix_eventtype =
     | FIX_EventType_Other 
@@ -1708,6 +659,56 @@ type fix_eventtype =
     | FIX_EventType_Tender 
     | FIX_EventType_Put 
     | FIX_EventType_SinkingFundCall 
+;;
+
+(** Indicates whether or not to exchange for phsyical.*)
+type fix_exchangeforphysical =
+    | FIX_ExchangeForPhysical_True 
+    | FIX_ExchangeForPhysical_False 
+;;
+
+(** Instructions for order handling on exchange trading floor. If more than one instruction is applicable to an order, this field can contain multiple instructions separated by space.*)
+type fix_execinst =
+    | FIX_ExecInst_ParticipateDoNotInitiate 
+    | FIX_ExecInst_AllOrNone 
+    | FIX_ExecInst_CallFirst 
+    | FIX_ExecInst_PercentOfVolume 
+    | FIX_ExecInst_InstitutionsOnly 
+    | FIX_ExecInst_NoCross 
+    | FIX_ExecInst_OverTheDay 
+    | FIX_ExecInst_DoNotIncrease 
+    | FIX_ExecInst_OpeningPeg 
+    | FIX_ExecInst_TryToStop 
+    | FIX_ExecInst_Netting 
+    | FIX_ExecInst_StayOnBidSide 
+    | FIX_ExecInst_Held 
+    | FIX_ExecInst_OKToCross 
+    | FIX_ExecInst_CustomerDisplayInstruction 
+    | FIX_ExecInst_GoAlong 
+    | FIX_ExecInst_DoNotReduce 
+    | FIX_ExecInst_StayOnOfferSide 
+    | FIX_ExecInst_PegToLimitPrice 
+    | FIX_ExecInst_TryToScale 
+    | FIX_ExecInst_ReinstateOnSystemFailure 
+    | FIX_ExecInst_CancelIfNotBest 
+    | FIX_ExecInst_MidPricePeg 
+    | FIX_ExecInst_WorkToTargetStrategy 
+    | FIX_ExecInst_PegToVWAP 
+    | FIX_ExecInst_TradeAlong 
+    | FIX_ExecInst_StrictLimit 
+    | FIX_ExecInst_Suspend 
+    | FIX_ExecInst_LastPeg 
+    | FIX_ExecInst_NonNegotiable 
+    | FIX_ExecInst_NotHeld 
+    | FIX_ExecInst_CancelOnTradingHalt 
+    | FIX_ExecInst_CancelOnSystemFailure 
+    | FIX_ExecInst_IgnorePriceValidityChecks 
+    | FIX_ExecInst_Work 
+    | FIX_ExecInst_ReinstateOnTradingHalt 
+    | FIX_ExecInst_PrimaryPeg 
+    | FIX_ExecInst_TrailingStopPeg 
+    | FIX_ExecInst_MarketPeg 
+    | FIX_ExecInst_StrictScale 
 ;;
 
 (** For CIV - Identifies how the execution price LastPx (3) was calculated from the fund unit/share price(s) calculated at the fund valuation point*)
@@ -1722,6 +723,44 @@ type fix_execpricetype =
     | FIX_ExecPriceType_CreationPricePlusAdjustmentPercent 
 ;;
 
+(** Code to identify reason for an ExecutionRpt message sent with ExecType=Restated or used when communicating an unsolicited cancel.*)
+type fix_execrestatementreason =
+    | FIX_ExecRestatementReason_Other 
+    | FIX_ExecRestatementReason_RepricingOfOrder 
+    | FIX_ExecRestatementReason_GTCorporateAction 
+    | FIX_ExecRestatementReason_VerbalChange 
+    | FIX_ExecRestatementReason_WarehouseRecap 
+    | FIX_ExecRestatementReason_CancelOnTradingHalt 
+    | FIX_ExecRestatementReason_CancelOnSystemFailure 
+    | FIX_ExecRestatementReason_GTRenewal 
+    | FIX_ExecRestatementReason_Market 
+    | FIX_ExecRestatementReason_Canceled 
+    | FIX_ExecRestatementReason_BrokerOption 
+    | FIX_ExecRestatementReason_PartialDeclineOfOrderQty 
+;;
+
+(** Describes the specific ExecutionRpt (i.e. Pending Cancel) while OrdStatus (39) will always identify the current order status (i.e. Partially Filled)
+ *** SOME VALUES HAVE BEEN REPLACED - See "Replaced Features and Supported Approach" ****)
+type fix_exectype =
+    | FIX_ExecType_PendingCancel 
+    | FIX_ExecType_Stopped 
+    | FIX_ExecType_PendingNew 
+    | FIX_ExecType_Restated 
+    | FIX_ExecType_Rejected 
+    | FIX_ExecType_Calculated 
+    | FIX_ExecType_TradeCorrect 
+    | FIX_ExecType_TradeCancel 
+    | FIX_ExecType_Expired 
+    | FIX_ExecType_OrderStatus 
+    | FIX_ExecType_Trade 
+    | FIX_ExecType_Canceled 
+    | FIX_ExecType_Replaced 
+    | FIX_ExecType_PendingReplace 
+    | FIX_ExecType_DoneForDay 
+    | FIX_ExecType_Suspended 
+    | FIX_ExecType_New 
+;;
+
 (** Exercise Method used to in performing assignment*)
 type fix_exercisemethod =
     | FIX_ExerciseMethod_Manual 
@@ -1734,10 +773,59 @@ type fix_expirationcycle =
     | FIX_ExpirationCycle_ExpireOnTradingSessionOpen 
 ;;
 
+(** Identifies a firm’s financial status*)
+type fix_financialstatus =
+    | FIX_FinancialStatus_PendingDelisting 
+    | FIX_FinancialStatus_Bankrupt 
+;;
+
+(** Indicates request for forex accommodation trade to be executed along with security transaction.*)
+type fix_forexreq =
+    | FIX_ForexReq_DoNotExecuteForexAfterSecurityTrade 
+    | FIX_ForexReq_ExecuteForexAfterSecurityTrade 
+;;
+
 (** A one character code identifying whether the Fund based renewal commission is to be waived.*)
 type fix_fundrenewwaiv =
     | FIX_FundRenewWaiv_No 
     | FIX_FundRenewWaiv_Yes 
+;;
+
+(** Code to identify whether to book out executions on a part-filled GT order on the day of execution or to accumulate*)
+type fix_gtbookinginst =
+    | FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise 
+    | FIX_GTBookingInst_AccumulateUntilFilledOrExpired 
+    | FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution 
+;;
+
+(** Denotes the reason for the Opening Delay or Trading Halt*)
+type fix_haltreason =
+    | FIX_HaltReason_OrderImbalance 
+    | FIX_HaltReason_AdditionalInformation 
+    | FIX_HaltReason_NewsPending 
+    | FIX_HaltReason_OrderInflux 
+    | FIX_HaltReason_EquipmentChangeover 
+    | FIX_HaltReason_NewsDissemination 
+;;
+
+(** Instructions for order handling on Broker trading floor*)
+type fix_handlinst =
+    | FIX_HandlInst_ManualOrder 
+    | FIX_HandlInst_AutomatedExecutionInterventionOK 
+    | FIX_HandlInst_AutomatedExecutionNoIntervention 
+;;
+
+(** Indicates that IOI is the result of an existing agency order or a facilitation position resulting from an agency order, not from principal trading or order solicitation activity.*)
+type fix_ioinaturalflag =
+    | FIX_IOINaturalFlag_Natural 
+    | FIX_IOINaturalFlag_NotNatural 
+;;
+
+(** Relative quality of indication*)
+type fix_ioiqltyind =
+    | FIX_IOIQltyInd_Low 
+    | FIX_IOIQltyInd_High 
+    | FIX_IOIQltyInd_Medium 
 ;;
 
 (** Quantity (e.g. number of shares) in numeric form or relative size.*)
@@ -1745,6 +833,47 @@ type fix_ioiqty =
     | FIX_IOIQty_Small 
     | FIX_IOIQty_Large 
     | FIX_IOIQty_Medium 
+;;
+
+(** Code to qualify IOI use*)
+type fix_ioiqualifier =
+    | FIX_IOIQualifier_AllOrNone 
+    | FIX_IOIQualifier_TakingAPosition 
+    | FIX_IOIQualifier_Indication 
+    | FIX_IOIQualifier_PreOpen 
+    | FIX_IOIQualifier_VWAP 
+    | FIX_IOIQualifier_AtTheOpen 
+    | FIX_IOIQualifier_Versus 
+    | FIX_IOIQualifier_AtTheMidpoint 
+    | FIX_IOIQualifier_ReadyToTrade 
+    | FIX_IOIQualifier_PortfolioShown 
+    | FIX_IOIQualifier_ThroughTheDay 
+    | FIX_IOIQualifier_MoreBehind 
+    | FIX_IOIQualifier_MarketOnClose 
+    | FIX_IOIQualifier_AtTheClose 
+    | FIX_IOIQualifier_InTouchWith 
+    | FIX_IOIQualifier_AtTheMarket 
+    | FIX_IOIQualifier_Limit 
+    | FIX_IOIQualifier_CrossingOpportunity 
+;;
+
+(** Identifies IOI message transaction type*)
+type fix_ioitranstype =
+    | FIX_IOITransType_Cancel 
+    | FIX_IOITransType_Replace 
+    | FIX_IOITransType_New 
+;;
+
+(** Indicates whether or not the halt was due to Common Stock trading being halted.*)
+type fix_inviewofcommon =
+    | FIX_InViewOfCommon_HaltWasDueToCommonStockBeingHalted 
+    | FIX_InViewOfCommon_HaltWasNotRelatedToAHaltOfTheCommonStock 
+;;
+
+(** Code to represent whether value is net (inclusive of tax) or gross*)
+type fix_inctaxind =
+    | FIX_IncTaxInd_Net 
+    | FIX_IncTaxInd_Gross 
 ;;
 
 (** Code to represent the type of instrument attribute*)
@@ -1774,6 +903,14 @@ type fix_instrattribtype =
     | FIX_InstrAttribType_Taxable 
 ;;
 
+(** Broker capacity in order execution*)
+type fix_lastcapacity =
+    | FIX_LastCapacity_Agent 
+    | FIX_LastCapacity_CrossAsAgent 
+    | FIX_LastCapacity_Principal 
+    | FIX_LastCapacity_CrossAsPrincipal 
+;;
+
 (** Indicates whether this message is the last in a sequence of messages for those messages that support fragmentation, such as Allocation Instruction, Mass Quote, Security List, Derivative Security List*)
 type fix_lastfragment =
     | FIX_LastFragment_LastMessage 
@@ -1801,6 +938,23 @@ type fix_legalconfirm =
     | FIX_LegalConfirm_LegalConfirm 
 ;;
 
+(** Code to identify the type of liquidity indicator*)
+type fix_liquidityindtype =
+    | FIX_LiquidityIndType_Other 
+    | FIX_LiquidityIndType_NormalMarketSize 
+    | FIX_LiquidityIndType_TwentyDayMovingAverage 
+    | FIX_LiquidityIndType_FiveDayMovingAverage 
+;;
+
+(** Identifies the type of ListExecInst (69)*)
+type fix_listexecinsttype =
+    | FIX_ListExecInstType_SellDriven 
+    | FIX_ListExecInstType_Immediate 
+    | FIX_ListExecInstType_BuyDrivenCashTopUp 
+    | FIX_ListExecInstType_WaitForInstruction 
+    | FIX_ListExecInstType_BuyDrivenCashWithdraw 
+;;
+
 (** Code to represent the status of a list order*)
 type fix_listorderstatus =
     | FIX_ListOrderStatus_AllDone 
@@ -1822,10 +976,63 @@ type fix_liststatustype =
     | FIX_ListStatusType_Alert 
 ;;
 
+(** Indicates whether the broker is to locate the stock in conjunction with a short sell order.*)
+type fix_locatereqd =
+    | FIX_LocateReqd_No 
+    | FIX_LocateReqd_Yes 
+;;
+
+(** Type Market Data entry*)
+type fix_mdentrytype =
+    | FIX_MDEntryType_OpenInterest 
+    | FIX_MDEntryType_ClosingPrice 
+    | FIX_MDEntryType_IndexValue 
+    | FIX_MDEntryType_Offer 
+    | FIX_MDEntryType_SettlementPrice 
+    | FIX_MDEntryType_TradingSessionVWAPPrice 
+    | FIX_MDEntryType_Trade 
+    | FIX_MDEntryType_TradingSessionHighPrice 
+    | FIX_MDEntryType_OpeningPrice 
+    | FIX_MDEntryType_TradeVolume 
+    | FIX_MDEntryType_Imbalance 
+    | FIX_MDEntryType_Bid 
+    | FIX_MDEntryType_TradingSessionLowPrice 
+;;
+
 (** Defines how a server handles distribution of a truncated book. Defaults to broker option.*)
 type fix_mdimplicitdelete =
     | FIX_MDImplicitDelete_No 
     | FIX_MDImplicitDelete_Yes 
+;;
+
+(** Reason for the rejection of a Market Data request*)
+type fix_mdreqrejreason =
+    | FIX_MDReqRejReason_UnsupportedAggregatedBook 
+    | FIX_MDReqRejReason_UnsupportedMDUpdateType 
+    | FIX_MDReqRejReason_UnsupportedMDImplicitDelete 
+    | FIX_MDReqRejReason_InsufficientPermissions 
+    | FIX_MDReqRejReason_UnsupportedScope 
+    | FIX_MDReqRejReason_UnsupportedTradingSessionID 
+    | FIX_MDReqRejReason_UnsupportedSubscriptionRequestType 
+    | FIX_MDReqRejReason_UnsupportedMDEntryType 
+    | FIX_MDReqRejReason_InsufficientBandwidth 
+    | FIX_MDReqRejReason_DuplicateMDReqID 
+    | FIX_MDReqRejReason_UnsupportedMarketDepth 
+    | FIX_MDReqRejReason_UnsupportedOpenCloseSettleFlag 
+    | FIX_MDReqRejReason_UnknownSymbol 
+;;
+
+(** Type of Market Data update action*)
+type fix_mdupdateaction =
+    | FIX_MDUpdateAction_Delete 
+    | FIX_MDUpdateAction_Change 
+    | FIX_MDUpdateAction_New 
+;;
+
+(** Specifies the type of Market Data update*)
+type fix_mdupdatetype =
+    | FIX_MDUpdateType_FullRefresh 
+    | FIX_MDUpdateType_IncrementalRefresh 
 ;;
 
 (** Reason Order Mass Cancel Request was rejected*)
@@ -1904,11 +1111,35 @@ type fix_matchtype =
     | FIX_MatchType_StampedAdvisoriesOrSpecialistAccepts 
 ;;
 
+(** Type of message encoding (non-ASCII (non-English) characters) used in a message’s "Encoded" fields.*)
+type fix_messageencoding =
+    | FIX_MessageEncoding_ISO2022JP 
+    | FIX_MessageEncoding_UTF8 
+    | FIX_MessageEncoding_ShiftJIS 
+    | FIX_MessageEncoding_EUCJP 
+;;
+
 (** Defines the unit for a miscellaneous fee.*)
 type fix_miscfeebasis =
     | FIX_MiscFeeBasis_Percentage 
     | FIX_MiscFeeBasis_PerUnit 
     | FIX_MiscFeeBasis_Absolute 
+;;
+
+(** Indicates type of miscellaneous fee*)
+type fix_miscfeetype =
+    | FIX_MiscFeeType_Other 
+    | FIX_MiscFeeType_Agent 
+    | FIX_MiscFeeType_LocalCommission 
+    | FIX_MiscFeeType_ExchangeFees 
+    | FIX_MiscFeeType_Stamp 
+    | FIX_MiscFeeType_Markup 
+    | FIX_MiscFeeType_PerTransaction 
+    | FIX_MiscFeeType_Regulatory 
+    | FIX_MiscFeeType_Tax 
+    | FIX_MiscFeeType_ConsumptionTax 
+    | FIX_MiscFeeType_Conversion 
+    | FIX_MiscFeeType_Levy 
 ;;
 
 (** A one character code identifying Money laundering status*)
@@ -1920,11 +1151,30 @@ type fix_moneylaunderingstatus =
     | FIX_MoneyLaunderingStatus_NotChecked 
 ;;
 
+(** Specifies the direction of the messsage*)
+type fix_msgdirection =
+    | FIX_MsgDirection_Send 
+    | FIX_MsgDirection_Receive 
+;;
+
+(** Used to indicate what an Execution Report represents (e.g. used with multi-leg securities, such as option strategies, spreads, etc.).*)
+type fix_multilegreportingtype =
+    | FIX_MultiLegReportingType_SingleSecurity 
+    | FIX_MultiLegReportingType_IndividualLegOfAMultiLegSecurity 
+    | FIX_MultiLegReportingType_MultiLegSecurity 
+;;
+
 (** Indicates the method of execution reporting requested by issuer of the order*)
 type fix_multilegrpttypereq =
     | FIX_MultiLegRptTypeReq_ReportByInstrumentLegsOnly 
     | FIX_MultiLegRptTypeReq_ReportByMulitlegSecurityOnly 
     | FIX_MultiLegRptTypeReq_ReportByMultilegSecurityAndInstrumentLegs 
+;;
+
+(** Code to represent whether value is net (inclusive of tax) or gross*)
+type fix_netgrossind =
+    | FIX_NetGrossInd_Net 
+    | FIX_NetGrossInd_Gross 
 ;;
 
 (** Indicates the type and level of details required for a Network Status Request Message
@@ -1948,6 +1198,12 @@ type fix_nosides =
     | FIX_NoSides_BothSides 
 ;;
 
+(** Indicates whether or not details should be communicated to BrokerOfCredit (i.e. step-in broker).*)
+type fix_notifybrokerofcredit =
+    | FIX_NotifyBrokerOfCredit_DetailsShouldBeCommunicated 
+    | FIX_NotifyBrokerOfCredit_DetailsShouldNotBeCommunicated 
+;;
+
 (** This trade is to be treated as an odd lot*)
 type fix_oddlot =
     | FIX_OddLot_TreatAsRoundLot 
@@ -1963,6 +1219,70 @@ type fix_openclosesettlflag =
     | FIX_OpenCloseSettlFlag_TheoreticalPriceValue 
     | FIX_OpenCloseSettlFlag_ExpectedEntry 
     | FIX_OpenCloseSettlFlag_SessionOpen 
+;;
+
+(** Code to identify reason for order rejection.*)
+type fix_ordrejreason =
+    | FIX_OrdRejReason_DuplicateOrder 
+    | FIX_OrdRejReason_Other 
+    | FIX_OrdRejReason_UnknownOrder 
+    | FIX_OrdRejReason_TooLateToEnter 
+    | FIX_OrdRejReason_OrderExceedsLimit 
+    | FIX_OrdRejReason_UnknownAccount 
+    | FIX_OrdRejReason_BrokerCredit 
+    | FIX_OrdRejReason_UnsupportedOrderCharacteristic 
+    | FIX_OrdRejReason_DuplicateOfAVerballyCommunicatedOrder 
+    | FIX_OrdRejReason_IncorrectQuantity 
+    | FIX_OrdRejReason_TradeAlongRequired 
+    | FIX_OrdRejReason_StaleOrder 
+    | FIX_OrdRejReason_InvalidInvestorID 
+    | FIX_OrdRejReason_ExchangeClosed 
+    | FIX_OrdRejReason_IncorrectAllocatedQuantity 
+    | FIX_OrdRejReason_UnknownSymbol 
+;;
+
+(** Identifies current status of order.
+ *** SOME VALUES HAVE BEEN REPLACED - See "Replaced Features and Supported Approach" ***
+ (see Volume : "Glossary" for value definitions)*)
+type fix_ordstatus =
+    | FIX_OrdStatus_PendingCancel 
+    | FIX_OrdStatus_Stopped 
+    | FIX_OrdStatus_PendingNew 
+    | FIX_OrdStatus_Rejected 
+    | FIX_OrdStatus_Calculated 
+    | FIX_OrdStatus_Expired 
+    | FIX_OrdStatus_Filled 
+    | FIX_OrdStatus_Canceled 
+    | FIX_OrdStatus_Replaced 
+    | FIX_OrdStatus_PendingReplace 
+    | FIX_OrdStatus_DoneForDay 
+    | FIX_OrdStatus_Suspended 
+    | FIX_OrdStatus_New 
+    | FIX_OrdStatus_PartiallyFilled 
+    | FIX_OrdStatus_AcceptedForBidding 
+;;
+
+(** Order type
+ *** SOME VALUES ARE NO LONGER USED - See "Deprecated (Phased-out) Features and Supported Approach" ***
+ (see Volume : "Glossary" for value definitions)*)
+type fix_ordtype =
+    | FIX_OrdType_LimitOrBetter 
+    | FIX_OrdType_NextFundValuationPoint 
+    | FIX_OrdType_WithOrWithout 
+    | FIX_OrdType_PreviouslyIndicated 
+    | FIX_OrdType_Stop 
+    | FIX_OrdType_Market 
+    | FIX_OrdType_OnBasis 
+    | FIX_OrdType_Funari 
+    | FIX_OrdType_Pegged 
+    | FIX_OrdType_LimitWithOrWithout 
+    | FIX_OrdType_StopLimit 
+    | FIX_OrdType_ForexSwap 
+    | FIX_OrdType_MarketIfTouched 
+    | FIX_OrdType_MarketWithLeftOverAsLimit 
+    | FIX_OrdType_PreviouslyQuoted 
+    | FIX_OrdType_Limit 
+    | FIX_OrdType_PreviousFundValuationPoint 
 ;;
 
 (** Designates the capacity of the firm placing the order
@@ -2028,7 +1348,6 @@ type fix_partyidsource =
     | FIX_PartyIDSource_USSocialSecurityNumber 
     | FIX_PartyIDSource_Proprietary 
     | FIX_PartyIDSource_AustralianTaxFileNumber 
-    | FIX_PartyIDSource_ShortCodeIdentifier 
     | FIX_PartyIDSource_MalaysianCentralDepository 
     | FIX_PartyIDSource_ISITCAcronym 
     | FIX_PartyIDSource_ISOCountryCode 
@@ -2075,7 +1394,6 @@ type fix_partyrole =
     | FIX_PartyRole_BrokerOfCredit 
     | FIX_PartyRole_SubCustodian 
     | FIX_PartyRole_EnteringTrader 
-    | FIX_PartyRole_InvestmentDecisionMaker 
     | FIX_PartyRole_ExecutingFirm 
     | FIX_PartyRole_FundManagerClientID 
     | FIX_PartyRole_ContraClearingFirm 
@@ -2277,6 +1595,18 @@ type fix_positioneffect =
     | FIX_PositionEffect_Open 
 ;;
 
+(** Indicates possible retransmission of message with this sequence number*)
+type fix_possdupflag =
+    | FIX_PossDupFlag_PossibleDuplicate 
+    | FIX_PossDupFlag_OriginalTransmission 
+;;
+
+(** Indicates that message may contain information that has been sent under another sequence number.*)
+type fix_possresend =
+    | FIX_PossResend_OriginalTransmission 
+    | FIX_PossResend_PossibleResend 
+;;
+
 (** Indicates the method of preallocation.*)
 type fix_preallocmethod =
     | FIX_PreallocMethod_ProRata 
@@ -2289,10 +1619,36 @@ type fix_previouslyreported =
     | FIX_PreviouslyReported_NotReportedToCounterparty 
 ;;
 
+(** Code to represent the price type*)
+type fix_pricetype =
+    | FIX_PriceType_Discount 
+    | FIX_PriceType_Spread 
+    | FIX_PriceType_TEDPrice 
+    | FIX_PriceType_FixedCabinetTradePrice 
+    | FIX_PriceType_Percentage 
+    | FIX_PriceType_VariableCabinetTradePrice 
+    | FIX_PriceType_TEDYield 
+    | FIX_PriceType_PerUnit 
+    | FIX_PriceType_FixedAmount 
+    | FIX_PriceType_Premium 
+    | FIX_PriceType_Yield 
+;;
+
 (** Indicates if a Cancel/Replace has caused an order to lose book priority*)
 type fix_priorityindicator =
     | FIX_PriorityIndicator_PriorityUnchanged 
     | FIX_PriorityIndicator_LostPriorityAsResultOfOrderChange 
+;;
+
+(** Processing code for sub-account. Absence of this field in AllocAccount (79) / AllocPrice (366) /AllocQty (80) / ProcessCode instance indicates regular trade.*)
+type fix_processcode =
+    | FIX_ProcessCode_Regular 
+    | FIX_ProcessCode_SoftDollarStepOut 
+    | FIX_ProcessCode_StepIn 
+    | FIX_ProcessCode_PlanSponsor 
+    | FIX_ProcessCode_SoftDollarStepIn 
+    | FIX_ProcessCode_SoftDollar 
+    | FIX_ProcessCode_StepOut 
 ;;
 
 (** Indicates the type of product the security is associated with. See also the CFICode (46) and SecurityType (67) fields.*)
@@ -2312,16 +1668,50 @@ type fix_product =
     | FIX_Product_EQUITY 
 ;;
 
+(** Code to identify the desired frequency of progress reports*)
+type fix_progrptreqs =
+    | FIX_ProgRptReqs_BuySideRequests 
+    | FIX_ProgRptReqs_SellSideSends 
+    | FIX_ProgRptReqs_RealTimeExecutionReports 
+;;
+
 (** Indicates if a trade should be reported via a market reporting service.*)
 type fix_publishtrdindicator =
     | FIX_PublishTrdIndicator_ReportTrade 
     | FIX_PublishTrdIndicator_DoNotReportTrade 
 ;;
 
+(** Indicates whether an Option is for a put or call*)
+type fix_putorcall =
+    | FIX_PutOrCall_Call 
+    | FIX_PutOrCall_Put 
+;;
+
 (** Type of quantity specified in a quantity field*)
 type fix_qtytype =
     | FIX_QtyType_Units 
     | FIX_QtyType_Contracts 
+;;
+
+(** Identifies the type of quote cancel.*)
+type fix_quotecanceltype =
+    | FIX_QuoteCancelType_CancelAllQuotes 
+    | FIX_QuoteCancelType_CancelForOneOrMoreSecurities 
+    | FIX_QuoteCancelType_CancelForUnderlyingSecurity 
+    | FIX_QuoteCancelType_CancelForSecurityType 
+;;
+
+(** Space-delimited list of conditions describing a quote*)
+type fix_quotecondition =
+    | FIX_QuoteCondition_Closed 
+    | FIX_QuoteCondition_Locked 
+    | FIX_QuoteCondition_Crossed 
+    | FIX_QuoteCondition_NonFirm 
+    | FIX_QuoteCondition_FastTrading 
+    | FIX_QuoteCondition_ConsolidatedBest 
+    | FIX_QuoteCondition_Open 
+    | FIX_QuoteCondition_ExchangeBest 
+    | FIX_QuoteCondition_Depth 
 ;;
 
 (** Code to represent price type requested in Quote*)
@@ -2336,6 +1726,20 @@ type fix_quotepricetype =
     | FIX_QuotePriceType_Yield 
     | FIX_QuotePriceType_YieldSpread 
     | FIX_QuotePriceType_PerShare 
+;;
+
+(** Reason Quote was rejected*)
+type fix_quoterejectreason =
+    | FIX_QuoteRejectReason_DuplicateQuote 
+    | FIX_QuoteRejectReason_Other 
+    | FIX_QuoteRejectReason_Exchange 
+    | FIX_QuoteRejectReason_InvalidPrice 
+    | FIX_QuoteRejectReason_InvalidBid 
+    | FIX_QuoteRejectReason_UnknownQuote 
+    | FIX_QuoteRejectReason_TooLateToEnter 
+    | FIX_QuoteRejectReason_QuoteRequestExceedsLimit 
+    | FIX_QuoteRejectReason_NotAuthorizedToQuoteSecurity 
+    | FIX_QuoteRejectReason_UnknownSymbol 
 ;;
 
 (** Reason Quote was rejected:*)
@@ -2353,6 +1757,12 @@ type fix_quoterequestrejectreason =
     | FIX_QuoteRequestRejectReason_UnknownSymbol 
 ;;
 
+(** Indicates the type of Quote Request being generated*)
+type fix_quoterequesttype =
+    | FIX_QuoteRequestType_Manual 
+    | FIX_QuoteRequestType_Automatic 
+;;
+
 (** Identifies the type of Quote Response*)
 type fix_quoteresptype =
     | FIX_QuoteRespType_Cover 
@@ -2361,6 +1771,13 @@ type fix_quoteresptype =
     | FIX_QuoteRespType_Pass 
     | FIX_QuoteRespType_DoneAway 
     | FIX_QuoteRespType_Expired 
+;;
+
+(** Level of Response requested from receiver of quote messages.*)
+type fix_quoteresponselevel =
+    | FIX_QuoteResponseLevel_NoAcknowledgement 
+    | FIX_QuoteResponseLevel_AcknowledgeOnlyNegativeOrErroneousQuotes 
+    | FIX_QuoteResponseLevel_AcknowledgeEachQuoteMessage 
 ;;
 
 (** Identifies the status of the quote acknowledgement*)
@@ -2435,6 +1852,18 @@ type fix_registtranstype =
     | FIX_RegistTransType_New 
 ;;
 
+(** Identifies party of trade responsible for exchange reporting.*)
+type fix_reporttoexch =
+    | FIX_ReportToExch_ReceiverReports 
+    | FIX_ReportToExch_SenderReports 
+;;
+
+(** Indicates that the both sides of the FIX session should reset sequence numbers.*)
+type fix_resetseqnumflag =
+    | FIX_ResetSeqNumFlag_No 
+    | FIX_ResetSeqNumFlag_Yes 
+;;
+
 (** Identifies how the response to the request should be transmitted*)
 type fix_responsetransporttype =
     | FIX_ResponseTransportType_Inband 
@@ -2448,6 +1877,14 @@ type fix_roundingdirection =
     | FIX_RoundingDirection_RoundDown 
     | FIX_RoundingDirection_RoundUp 
     | FIX_RoundingDirection_RoundToNearest 
+;;
+
+(** Indicates the type of RoutingID (27) specified*)
+type fix_routingtype =
+    | FIX_RoutingType_TargetList 
+    | FIX_RoutingType_TargetFirm 
+    | FIX_RoutingType_BlockList 
+    | FIX_RoutingType_BlockFirm 
 ;;
 
 (** Defines the scope of a data element*)
@@ -2499,6 +1936,151 @@ type fix_securityrequestresult =
     | FIX_SecurityRequestResult_NotAuthorizedToRetrieveInstrumentData 
 ;;
 
+(** Type of Security Definition Request.*)
+type fix_securityrequesttype =
+    | FIX_SecurityRequestType_RequestListSecurities 
+    | FIX_SecurityRequestType_RequestListSecurityTypes 
+    | FIX_SecurityRequestType_RequestSecurityIdentityAndSpecifications 
+    | FIX_SecurityRequestType_RequestSecurityIdentityForSpecifications 
+;;
+
+(** Type of Security Definition message response*)
+type fix_securityresponsetype =
+    | FIX_SecurityResponseType_AcceptAsIs 
+    | FIX_SecurityResponseType_RejectSecurityProposal 
+    | FIX_SecurityResponseType_CannotMatchSelectionCriteria 
+    | FIX_SecurityResponseType_AcceptWithRevisions 
+;;
+
+(** Identifies the trading status applicable to the transaction*)
+type fix_securitytradingstatus =
+    | FIX_SecurityTradingStatus_ITSPreOpening 
+    | FIX_SecurityTradingStatus_PreOpen 
+    | FIX_SecurityTradingStatus_MarketImbalanceBuy 
+    | FIX_SecurityTradingStatus_NoMarketOnCloseImbalance 
+    | FIX_SecurityTradingStatus_NotAvailableForTrading 
+    | FIX_SecurityTradingStatus_OpeningRotation 
+    | FIX_SecurityTradingStatus_NoMarketImbalance 
+    | FIX_SecurityTradingStatus_TradeDisseminationTime 
+    | FIX_SecurityTradingStatus_ReadyToTrade 
+    | FIX_SecurityTradingStatus_UnknownOrInvalid 
+    | FIX_SecurityTradingStatus_MarketOnCloseImbalanceBuy 
+    | FIX_SecurityTradingStatus_OpeningDelay 
+    | FIX_SecurityTradingStatus_NoOpen 
+    | FIX_SecurityTradingStatus_TradingHalt 
+    | FIX_SecurityTradingStatus_MarketOnCloseImbalanceSell 
+    | FIX_SecurityTradingStatus_MarketImbalanceSell 
+    | FIX_SecurityTradingStatus_NotTradedOnThisMarket 
+    | FIX_SecurityTradingStatus_TradingRangeIndication 
+    | FIX_SecurityTradingStatus_FastMarket 
+    | FIX_SecurityTradingStatus_NewPriceIndication 
+    | FIX_SecurityTradingStatus_PriceIndication 
+    | FIX_SecurityTradingStatus_Resume 
+;;
+
+(** Indicates type of security. See also the Product (460) and CFICode (46) fields. It is recommended that CFICode be used instead of SecurityType for non-Fixed Income instruments.
+ Example values (grouped by Product field value) (Note: additional values may be used by mutual agreement of the counterparties):
+ * Identify the Issuer in the "Issuer" field(06)
+ *** REPLACED values - See "Replaced Features and Supported Approach" ***
+ NOTE: Additional values may be used by mutual agreement of the counterparties)*)
+type fix_securitytype =
+    | FIX_SecurityType_MutualFund 
+    | FIX_SecurityType_YankeeCorporateBond 
+    | FIX_SecurityType_InterestStripFromAnyBondOrNote 
+    | FIX_SecurityType_Revolver 
+    | FIX_SecurityType_CommercialPaper 
+    | FIX_SecurityType_RevenueAnticipationNote 
+    | FIX_SecurityType_Matured 
+    | FIX_SecurityType_Retired 
+    | FIX_SecurityType_StructuredNotes 
+    | FIX_SecurityType_MortgagePrivatePlacement 
+    | FIX_SecurityType_Pfandbriefe 
+    | FIX_SecurityType_OtherAnticipationNotes 
+    | FIX_SecurityType_USDSupranationalCoupons 
+    | FIX_SecurityType_MandatoryTender 
+    | FIX_SecurityType_PreferredStock 
+    | FIX_SecurityType_ToBeAnnounced 
+    | FIX_SecurityType_GeneralObligationBonds 
+    | FIX_SecurityType_TimeDeposit 
+    | FIX_SecurityType_ExtendedCommNote 
+    | FIX_SecurityType_MiscellaneousPassThrough 
+    | FIX_SecurityType_YankeeCertificateOfDeposit 
+    | FIX_SecurityType_Future 
+    | FIX_SecurityType_Forward 
+    | FIX_SecurityType_VariableRateDemandNote 
+    | FIX_SecurityType_MediumTermNotes 
+    | FIX_SecurityType_Option 
+    | FIX_SecurityType_Repurchase 
+    | FIX_SecurityType_PlazosFijos 
+    | FIX_SecurityType_USTreasuryBill 
+    | FIX_SecurityType_BankNotes 
+    | FIX_SecurityType_MortgagePrincipalOnly 
+    | FIX_SecurityType_MortgageInterestOnly 
+    | FIX_SecurityType_AssetBackedSecurities 
+    | FIX_SecurityType_Warrant 
+    | FIX_SecurityType_SpecialTax 
+    | FIX_SecurityType_EuroSupranationalCoupons 
+    | FIX_SecurityType_ForeignExchangeContract 
+    | FIX_SecurityType_USTreasuryBillOld 
+    | FIX_SecurityType_CertificateOfDeposit 
+    | FIX_SecurityType_TaxAnticipationNote 
+    | FIX_SecurityType_LetterOfCredit 
+    | FIX_SecurityType_CollateralizedMortgageObligation 
+    | FIX_SecurityType_IOETTEMortgage 
+    | FIX_SecurityType_MortgageBackedSecurities 
+    | FIX_SecurityType_BillOfExchanges 
+    | FIX_SecurityType_Amended 
+    | FIX_SecurityType_RevenueBonds 
+    | FIX_SecurityType_EuroCorporateBond 
+    | FIX_SecurityType_PrivateExportFunding 
+    | FIX_SecurityType_RevolverLoan 
+    | FIX_SecurityType_PrincipalStripFromANonCallableBondOrNote 
+    | FIX_SecurityType_Withdrawn 
+    | FIX_SecurityType_DepositNotes 
+    | FIX_SecurityType_SpecialAssessment 
+    | FIX_SecurityType_EuroSovereigns 
+    | FIX_SecurityType_TaxAllocation 
+    | FIX_SecurityType_EuroCertificateOfDeposit 
+    | FIX_SecurityType_PromissoryNote 
+    | FIX_SecurityType_PrincipalStripOfACallableBondOrNote 
+    | FIX_SecurityType_Overnight 
+    | FIX_SecurityType_ConvertibleBond 
+    | FIX_SecurityType_Corp 
+    | FIX_SecurityType_SpecialObligation 
+    | FIX_SecurityType_SecuritiesLoan 
+    | FIX_SecurityType_CertificateOfObligation 
+    | FIX_SecurityType_FederalAgencyDiscountNote 
+    | FIX_SecurityType_CallLoans 
+    | FIX_SecurityType_DebtorInPossession 
+    | FIX_SecurityType_USTreasuryBond 
+    | FIX_SecurityType_SecuritiesPledge 
+    | FIX_SecurityType_Replaced 
+    | FIX_SecurityType_BradyBond 
+    | FIX_SecurityType_CorporateBond 
+    | FIX_SecurityType_TermLoan 
+    | FIX_SecurityType_TaxRevenueAnticipationNote 
+    | FIX_SecurityType_SwingLineFacility 
+    | FIX_SecurityType_TaxExemptCommercialPaper 
+    | FIX_SecurityType_NoSecurityType 
+    | FIX_SecurityType_DualCurrency 
+    | FIX_SecurityType_FederalAgencyCoupon 
+    | FIX_SecurityType_BankersAcceptance 
+    | FIX_SecurityType_MultilegInstrument 
+    | FIX_SecurityType_EuroCommercialPaper 
+    | FIX_SecurityType_CommonStock 
+    | FIX_SecurityType_USTreasuryNote 
+    | FIX_SecurityType_TreasuryInflationProtectedSecurities 
+    | FIX_SecurityType_IndexedLinked 
+    | FIX_SecurityType_BridgeLoan 
+    | FIX_SecurityType_ShortTermLoanNote 
+    | FIX_SecurityType_Defaulted 
+    | FIX_SecurityType_USTreasuryNoteOld 
+    | FIX_SecurityType_CertificateOfParticipation 
+    | FIX_SecurityType_CorporatePrivatePlacement 
+    | FIX_SecurityType_BuySellback 
+    | FIX_SecurityType_LiquidityNote 
+;;
+
 (** Specifies whether or not SettlCurrFxRate (55) should be multiplied or divided*)
 type fix_settlcurrfxratecalc =
     | FIX_SettlCurrFxRateCalc_Multiply 
@@ -2513,12 +2095,35 @@ type fix_settldeliverytype =
     | FIX_SettlDeliveryType_Free 
 ;;
 
+(** Indicates mode used for Settlement Instructions message.
+ *** SOME VALUES HAVE BEEN REPLACED - See "Replaced Features and Supported Approach" ****)
+type fix_settlinstmode =
+    | FIX_SettlInstMode_RequestReject 
+    | FIX_SettlInstMode_StandingInstructionsProvided 
+    | FIX_SettlInstMode_SpecificOrderForASingleAccount 
+;;
+
 (** Identifies reason for rejection (of a settlement instruction request message)*)
 type fix_settlinstreqrejcode =
     | FIX_SettlInstReqRejCode_Other 
     | FIX_SettlInstReqRejCode_NoMatchingSettlementInstructionsFound 
     | FIX_SettlInstReqRejCode_UnknownAccount 
     | FIX_SettlInstReqRejCode_UnableToProcessRequest 
+;;
+
+(** Indicates source of Settlement Instructions*)
+type fix_settlinstsource =
+    | FIX_SettlInstSource_Investor 
+    | FIX_SettlInstSource_Institution 
+    | FIX_SettlInstSource_BrokerCredit 
+;;
+
+(** Settlement Instructions message transaction type*)
+type fix_settlinsttranstype =
+    | FIX_SettlInstTransType_Cancel 
+    | FIX_SettlInstTransType_Replace 
+    | FIX_SettlInstTransType_New 
+    | FIX_SettlInstTransType_Restate 
 ;;
 
 (** Type of settlement price*)
@@ -2560,6 +2165,26 @@ type fix_shortsalereason =
     | FIX_ShortSaleReason_SellingCustomerSoldShortExempt 
 ;;
 
+(** Side of order*)
+type fix_side =
+    | FIX_Side_AsDefined 
+    | FIX_Side_Opposite 
+    | FIX_Side_Buy 
+    | FIX_Side_CrossShortExempt 
+    | FIX_Side_Borrow 
+    | FIX_Side_BuyMinus 
+    | FIX_Side_Subscribe 
+    | FIX_Side_Lend 
+    | FIX_Side_SellShortExempt 
+    | FIX_Side_Redeem 
+    | FIX_Side_SellPlus 
+    | FIX_Side_Sell 
+    | FIX_Side_Undisclosed 
+    | FIX_Side_Cross 
+    | FIX_Side_CrossShort 
+    | FIX_Side_SellShort 
+;;
+
 (** Used to indicate if the side being reported on Trade Capture Report represents a leg of a multileg instrument or a single security*)
 type fix_sidemultilegreportingtype =
     | FIX_SideMultiLegReportingType_SingleSecurity 
@@ -2571,6 +2196,21 @@ type fix_sidemultilegreportingtype =
 type fix_sidevalueind =
     | FIX_SideValueInd_SideValue1 
     | FIX_SideValueInd_SideValue2 
+;;
+
+(** Indicates whether or not the order was solicited.*)
+type fix_solicitedflag =
+    | FIX_SolicitedFlag_WasSolicited 
+    | FIX_SolicitedFlag_WasNotSolicited 
+;;
+
+(** Identifies the Standing Instruction database used*)
+type fix_standinstdbtype =
+    | FIX_StandInstDbType_Other 
+    | FIX_StandInstDbType_AccountNet 
+    | FIX_StandInstDbType_DTCSID 
+    | FIX_StandInstDbType_ThomsonALERT 
+    | FIX_StandInstDbType_AGlobalCustodian 
 ;;
 
 (** Indicates the status of a network connection*)
@@ -2635,6 +2275,13 @@ type fix_stipulationtype =
     | FIX_StipulationType_LotVariance 
 ;;
 
+(** Subscription Request Type*)
+type fix_subscriptionrequesttype =
+    | FIX_SubscriptionRequestType_DisablePreviousSnapshot 
+    | FIX_SubscriptionRequestType_SnapshotAndUpdates 
+    | FIX_SubscriptionRequestType_Snapshot 
+;;
+
 (** The target strategy of the order
  1000+ = Reserved and available for bi-laterally agreed upon user defined values*)
 type fix_targetstrategy =
@@ -2691,6 +2338,51 @@ type fix_testmessageindicator =
     | FIX_TestMessageIndicator_True 
 ;;
 
+(** Direction of the "tick"*)
+type fix_tickdirection =
+    | FIX_TickDirection_ZeroMinusTick 
+    | FIX_TickDirection_PlusTick 
+    | FIX_TickDirection_MinusTick 
+    | FIX_TickDirection_ZeroPlusTick 
+;;
+
+(** Specifies how long the order remains in effect. Absence of this field is interpreted as DAY.*)
+type fix_timeinforce =
+    | FIX_TimeInForce_GoodTillCancel 
+    | FIX_TimeInForce_AtTheClose 
+    | FIX_TimeInForce_ImmediateOrCancel 
+    | FIX_TimeInForce_Day 
+    | FIX_TimeInForce_FillOrKill 
+    | FIX_TimeInForce_AtTheOpening 
+    | FIX_TimeInForce_GoodTillCrossing 
+    | FIX_TimeInForce_GoodTillDate 
+;;
+
+(** Method of trading*)
+type fix_tradsesmethod =
+    | FIX_TradSesMethod_OpenOutcry 
+    | FIX_TradSesMethod_Electronic 
+    | FIX_TradSesMethod_TwoParty 
+;;
+
+(** Trading Session Mode*)
+type fix_tradsesmode =
+    | FIX_TradSesMode_Testing 
+    | FIX_TradSesMode_Simulated 
+    | FIX_TradSesMode_Production 
+;;
+
+(** State of the trading session*)
+type fix_tradsesstatus =
+    | FIX_TradSesStatus_Closed 
+    | FIX_TradSesStatus_PreOpen 
+    | FIX_TradSesStatus_RequestRejected 
+    | FIX_TradSesStatus_PreClose 
+    | FIX_TradSesStatus_Unknown 
+    | FIX_TradSesStatus_Halted 
+    | FIX_TradSesStatus_Open 
+;;
+
 (** Indicates the reason a Trading Session Status Request was rejected*)
 type fix_tradsesstatusrejreason =
     | FIX_TradSesStatusRejReason_Other 
@@ -2702,6 +2394,27 @@ type fix_tradeallocindicator =
     | FIX_TradeAllocIndicator_UseAllocationProvidedWithTheTrade 
     | FIX_TradeAllocIndicator_AllocationNotRequired 
     | FIX_TradeAllocIndicator_AllocationRequired 
+;;
+
+(** Space-delimited list of conditions describing a trade*)
+type fix_tradecondition =
+    | FIX_TradeCondition_Opened 
+    | FIX_TradeCondition_Rule127Trade 
+    | FIX_TradeCondition_CashTrade 
+    | FIX_TradeCondition_IntradayTradeDetail 
+    | FIX_TradeCondition_SoldLast 
+    | FIX_TradeCondition_Cash 
+    | FIX_TradeCondition_StoppedStock 
+    | FIX_TradeCondition_ImbalanceMoreSellers 
+    | FIX_TradeCondition_Sold 
+    | FIX_TradeCondition_ImbalanceMoreBuyers 
+    | FIX_TradeCondition_NextDay 
+    | FIX_TradeCondition_Opening 
+    | FIX_TradeCondition_Seller 
+    | FIX_TradeCondition_OpeningPrice 
+    | FIX_TradeCondition_AveragePriceTrade 
+    | FIX_TradeCondition_Rule155Trade 
+    | FIX_TradeCondition_NextDayTrade 
 ;;
 
 (** Reason Trade Capture Request was rejected.
@@ -2796,6 +2509,19 @@ type fix_trdtype =
     | FIX_TrdType_EFP 
 ;;
 
+(** Indicates whether or not message is being sent as a result of a subscription request or not.*)
+type fix_unsolicitedindicator =
+    | FIX_UnsolicitedIndicator_MessageIsBeingSentAsAResultOfAPriorRequest 
+    | FIX_UnsolicitedIndicator_MessageIsBeingSentUnsolicited 
+;;
+
+(** Urgency flag*)
+type fix_urgency =
+    | FIX_Urgency_Flash 
+    | FIX_Urgency_Background 
+    | FIX_Urgency_Normal 
+;;
+
 (** Indicates the action required by a User Request Message*)
 type fix_userrequesttype =
     | FIX_UserRequestType_RequestIndividualUserStatus 
@@ -2856,4 +2582,38 @@ type fix_yieldtype =
     | FIX_YieldType_PreviousCloseYield 
     | FIX_YieldType_MostRecentClosingYield 
     | FIX_YieldType_ProceedsYield 
+;;
+
+type fix_week =
+    | FIX_week_w1 
+    | FIX_week_w2 
+    | FIX_week_w3 
+    | FIX_week_noweek 
+    | FIX_week_w4 
+    | FIX_week_w5 
+;;
+
+(** three letter code from ISO4217*)
+type fix_currency =
+    | FIX_Currency_EUR 
+    | FIX_Currency_CHF 
+    | FIX_Currency_USD 
+    | FIX_Currency_GBP 
+;;
+
+(** 2 letter country code - ISO 3166 *)
+type fix_country =
+    | FIX_Country_DE 
+    | FIX_Country_GB 
+    | FIX_Country_US 
+;;
+
+(** ISO 10383 Market Identifier Code*)
+type fix_exchange =
+    | FIX_Exchange_XSHG 
+    | FIX_Exchange_SHSC 
+    | FIX_Exchange_XNYS 
+    | FIX_Exchange_XJAS 
+    | FIX_Exchange_XLON 
+    | FIX_Exchange_XNAS 
 ;;
