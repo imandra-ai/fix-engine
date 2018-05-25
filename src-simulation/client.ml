@@ -29,11 +29,12 @@ let get_current_utctimstamp () =
 let make_engine_state me target = 
     let open Fix_engine_state in
     { init_fix_engine_state with
-    fe_comp_id = String_utils.string_to_fix_string me;
-    fe_target_comp_id = String_utils.string_to_fix_string target;
-    fe_curr_time = get_current_utctimstamp ();
-    fe_max_num_logons_sent = 10;
-    fe_application_up = true }
+      fe_comp_id = me
+    ; fe_target_comp_id = target
+    ; fe_curr_time = get_current_utctimstamp ()
+    ; fe_max_num_logons_sent = 10
+    ; fe_application_up = true 
+    }
 ;;  
 
 let send_msg outch msg =
