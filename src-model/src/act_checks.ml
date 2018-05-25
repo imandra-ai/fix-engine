@@ -1,14 +1,12 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
- open Actions;;
- open State;;
-(* @meta[imandra_ignore] off @end *)
+(* Aesthetic Integration copyright 2018 *)
+open State;;
+open Actions;;
 
 let is_valid_action_x ( action_data : m_action_fix_x ) =
     true
 ;;
 
-let is_action_valid ( action , m_state : fix_action * model_state ) =
+let is_action_valid ( m_state , action : model_state * fix_action ) =
     (match action with
         | FIX_Action_x d -> (is_valid_action_x (d))
     )

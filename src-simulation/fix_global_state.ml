@@ -47,20 +47,6 @@ let rec send_messages_list messages engine_state fix_callback pub_callback =
     )
 ;;
 
-(** Populates string hashes, associated with the given message *)
-let process_strings msg : unit =
-    let open Full_messages in
-    match msg with
-    | ValidMsg msg -> begin
-        match msg.full_msg_data with 
-        | Full_FIX_App_Msg data ->
-            String_constant_factory.all_model_strings data
-                |> List.iter String_utils.add_model_string 
-        | _ -> ()
-        end
-    | _ -> ()
-;;
-
 let rec while_busy_loop state =
     let engine_state = state.engine_state in
     let engine_state = Fix_engine.one_step engine_state in
@@ -117,7 +103,6 @@ let rec main_loop state =
             while_busy_loop state >>= fun state ->
             main_loop state
         | FIX_Message msg ->
-            let () = process_strings msg in
             let state = { state with engine_state = { state.engine_state with incoming_fix_msg = Some msg } } in
             while_busy_loop state >>= fun state ->
             main_loop state

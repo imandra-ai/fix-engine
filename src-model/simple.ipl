@@ -6,7 +6,7 @@ outbound message ExecutionReport {
     req ClOrdID
     req OrderID
     req ExecID
-    req ExecType    
+    req ExecType
     req AvgPx
     req Side
     req LeavesQty

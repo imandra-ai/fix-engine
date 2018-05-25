@@ -1,7 +1,5 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
+(* Aesthetic Integration copyright 201 *)
 open Full_app_enums;;
-(* @meta[imandra_ignore] off @end *)
 
 let encode_AccountType ( d ) =
     (match d with

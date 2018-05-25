@@ -1,7 +1,5 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
- open Model_messages;;
-(* @meta[imandra_ignore] off @end *)
+(* Aesthetic Integration copyright 2018 *)
+open Model_messages;;
 
 let assign_defaults_ExecutionReport ( msg_data : mod_executionreport_data ) =
     msg_data

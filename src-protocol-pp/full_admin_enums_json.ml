@@ -2,7 +2,7 @@
 (*** 
     
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     full_admin_enums_json.ml
 
@@ -15,7 +15,7 @@ open Full_admin_enums;;
 let session_reject_reason_to_string = function
     | InvalidTagNumber                               -> "InvalidTagNumber"                         
     | RequiredTagMissing                             -> "RequiredTagMissing"                       
-    | TagNotDefined                                  -> "TagNotDefined"                            
+    | TagNotDefinedForThisMessageType                -> "TagNotDefinedForThisMessageType"                            
     | UndefinedTag                                   -> "UndefinedTag"                             
     | TagSecifiedWithoutAValue                       -> "TagSecifiedWithoutAValue"                 
     | ValueIsIncorrect                               -> "ValueIsIncorrect"                         

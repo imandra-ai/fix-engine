@@ -2,17 +2,13 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     base_types_json.ml 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Yojson;;
-open Base_types;;
 open Numeric;;
-open String_utils;;
-(* @meta[imandra_ignore] off @end *)
 
 (**
   *  Int
@@ -30,37 +26,90 @@ let int_opt_to_json : int option -> json = function
   *  Char
   *)
 
-let char_to_json = int_to_json ;;
-let char_opt_to_json = int_opt_to_json;;
+let char_to_json x = `String x ;;
+let char_opt_to_json = function 
+    | None -> `Null
+    | Some x -> `String x;;
 
 (**
   *  FIX_Float
   *)
 
-let float_to_json x : json = 
-    let data, precision = match x with
-        | Float_0 x -> x, 0
-        | Float_1 x -> x, 1
-        | Float_2 x -> x, 2
-        | Float_3 x -> x, 3
-        | Float_4 x -> x, 4
-    in `Assoc 
-    [ ( "Precision", `Int precision ) 
-    ; ( "Number"   , `Int data      ) 
-    ] 
+let float_0_to_json : fix_float_0 -> json = function
+  | Float_0 x ->
+     `Assoc
+      [ ( "Precision", `Int 0 )
+      ; ( "Number"   , `Int x      )
+      ]
 ;;
 
-let float_opt_to_json = function 
+let float_0_opt_to_json = function 
     | None -> `Null
-    | Some x -> float_to_json x
+    | Some x -> float_0_to_json x
 ;;
+
+let float_1_to_json : fix_float_1 -> json = function
+  | Float_1 x ->
+    `Assoc
+    [ ( "Precision", `Int 1 )
+    ; ( "Number"   , `Int x      )
+    ]
+;;
+
+let float_1_opt_to_json = function 
+    | None -> `Null
+    | Some x -> float_1_to_json x
+;;
+
+let float_2_to_json : fix_float_2 -> json = function
+  | Float_2 x ->
+    `Assoc
+    [ ( "Precision", `Int 2 )
+    ; ( "Number"   , `Int x      )
+    ]
+;;
+
+let float_2_opt_to_json = function 
+    | None -> `Null
+    | Some x -> float_2_to_json x
+;;
+
+let float_3_to_json : fix_float_3 -> json = function
+  | Float_3 x ->
+    `Assoc
+    [ ( "Precision", `Int 3 )
+    ; ( "Number"   , `Int x      )
+    ]
+;;
+
+let float_3_opt_to_json = function 
+    | None -> `Null
+    | Some x -> float_3_to_json x
+;;
+
+let float_4_to_json : fix_float_4 -> json = function
+  | Float_4 x ->
+    `Assoc
+    [ ( "Precision", `Int 4)
+    ; ( "Number"   , `Int x      )
+    ]
+;;
+
+let float_4_opt_to_json = function 
+    | None -> `Null
+    | Some x -> float_4_to_json x
+;;
+
+let float_to_json x = float_4_to_json x;;
+
+let float_opt_to_json x = float_4_opt_to_json x;;
 
 (**
   *  FIX_String
   *)
 
 let string_to_json x : json = 
-    `String ( fix_string_to_string x ) 
+    `String  x  
 ;;
 
 let string_opt_to_json = function 
@@ -74,7 +123,7 @@ let string_opt_to_json = function
   *)
 
 let symbol_to_json x : json = 
-    `String ( fix_string_to_string x ) 
+    `String x  
 ;;
 
 let symbol_opt_to_json = function 

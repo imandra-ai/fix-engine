@@ -2,26 +2,23 @@
 (*** 
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
     
     full_app_messages.ml
 
 *)
 
-(* @meta[imandra_ignore] on @end *)
-open Base_types;;
 open Numeric;;
 open Datetime;;
 open Full_app_enums;;
 open Full_app_tags;;
 open Full_app_records;;
-(* @meta[imandra_ignore] off @end *)
 
 (** New Order Single message data. {{: http://www.onixs.biz/fix-dictionary/4.4/msgType_D_68.html} More details. } *)
 type full_msg_new_order_single_data = {
-    full_newOrderSingle_Account                     : fix_string option;
-    full_newOrderSingle_ClOrdID                     : fix_string option;
-    full_newOrderSingle_OrigClOrdID                 : fix_string option; (*?? This field is not in NewOrderSingle *)
+        full_newOrderSingle_Account                 : string option;
+    full_newOrderSingle_ClOrdID                     : string option;
+    full_newOrderSingle_OrigClOrdID                 : string option; (*?? This field is not in NewOrderSingle *)
     full_newOrderSingle_ExecInst                    : fix_execinst option;
     full_newOrderSingle_HandlInst                   : fix_handlinst option;
     full_newOrderSingle_TransactTime                : fix_utctimestamp option;
@@ -59,14 +56,14 @@ let init_full_msg_new_order_single_data = {
 
 (** Order Cancel/Replace Request message data. {{: http://www.onixs.biz/fix-dictionary/4.4/msgType_G_71.html} More details.} *)
 type full_msg_order_cancel_replace_request_data = {
-    full_orderCancelReplaceRequest_Account          : fix_string option;
-    full_orderCancelReplaceRequest_ClOrdID          : fix_string option;
+    full_orderCancelReplaceRequest_Account          : string option;
+    full_orderCancelReplaceRequest_ClOrdID          : string option;
     full_orderCancelReplaceRequest_HandlInst        : fix_handlinst option;
-    full_orderCancelReplaceRequest_OrigClOrdID      : fix_string option;
+    full_orderCancelReplaceRequest_OrigClOrdID      : string option;
     full_orderCancelReplaceRequest_ExecInst         : fix_execinst option;
     full_orderCancelReplaceRequest_TransactTime     : fix_utctimestamp option;
-    full_orderCancelReplaceRequest_Symbol           : fix_symbol option;
-    full_orderCancelReplaceRequest_SymbolSfx        : fix_string option;
+    full_orderCancelReplaceRequest_Symbol           : string option;
+    full_orderCancelReplaceRequest_SymbolSfx        : string option;
     full_orderCancelReplaceRequest_Side             : fix_side option;
     full_orderCancelReplaceRequest_OrderQty         : fix_float option;
     full_orderCancelReplaceRequest_OrdType          : fix_ordertype option;
@@ -99,12 +96,12 @@ let init_msg_ordercancel_replacerequest_data = {
 
 (** Order Cancel Request message data. {{: http://www.onixs.biz/fix-dictionary/4.4/msgType_F_70.html} More details.} *)
 type full_msg_order_cancel_request_data = {
-    full_orderCancelRequest_ClOrdID                  : fix_string option;
-    full_orderCancelRequest_OrigClOrdID              : fix_string option;
-    full_orderCancelRequest_OrderID                  : fix_string option;
+    full_orderCancelRequest_ClOrdID                  : string option;
+    full_orderCancelRequest_OrigClOrdID              : string option;
+    full_orderCancelRequest_OrderID                  : string option;
     full_orderCancelRequest_TransactTime             : fix_utctimestamp option;
-    full_orderCancelRequest_Symbol                   : fix_symbol option;
-    full_orderCancelRequest_SymbolSfx                : fix_symbol option;
+    full_orderCancelRequest_Symbol                   : string option;
+    full_orderCancelRequest_SymbolSfx                : string option;
     full_orderCancelRequest_Side                     : fix_side option;
 }
 ;;
@@ -123,13 +120,13 @@ let init_msg_order_cancel_request_data = {
 
 (** Order Cancel Reject message data. {{: http://www.onixs.biz/fix-dictionary/4.4/msgType_9_9.html} More details.} *)
 type full_msg_cancel_reject_data = {
-    full_cancelReject_Account                        : fix_string option;
-    full_cancelReject_ClOrdID                        : fix_string option;
-    full_cancelReject_OrigClOrdID                    : fix_string option;
-    full_cancelReject_OrderID                        : fix_string option;
+    full_cancelReject_Account                        : string option;
+    full_cancelReject_ClOrdID                        : string option;
+    full_cancelReject_OrigClOrdID                    : string option;
+    full_cancelReject_OrderID                        : string option;
     full_cancelReject_OrdStatus                      : fix_ordstatus option;
-    full_cancelReject_CxlRejReason                   : fix_string option;
-    full_cancelReject_Text                           : fix_string option;
+    full_cancelReject_CxlRejReason                   : string option;
+    full_cancelReject_Text                           : string option;
 }
 ;;
 
@@ -147,11 +144,11 @@ let init_msg_CancelReject_data = {
 
 (** Execution Report message data. {{: http://www.onixs.biz/fix-dictionary/4.4/msgType_8_8.html} More details.} *)
 type full_msg_execution_report_data = {
-    full_executionReport_OrderID                     : fix_string option;
-    full_executionReport_ClOrdID                     : fix_string option;
+    full_executionReport_OrderID                     : string option;
+    full_executionReport_ClOrdID                     : string option;
     full_executionReport_ExecType                    : fix_exectype option;
-    full_executionReport_ExecID                      : fix_string option;
-    full_executionReport_Account                     : fix_string option;
+    full_executionReport_ExecID                      : string option;
+    full_executionReport_Account                     : string option;
     full_executionReport_Side                        : fix_side option; 
     full_executionReport_OrdType                     : fix_ordertype option;
     full_executionReport_OrdStatus                   : fix_ordstatus option;
