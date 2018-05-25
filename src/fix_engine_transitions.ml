@@ -2,22 +2,21 @@
 (***
     
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     fix_engine_transitions.ml
     
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Datetime;;
-open Base_types;;
 open Full_admin_enums;;
 open Full_admin_messages;;
+open Full_message_tags;;
+open Full_admin_tags;;
 open Full_app_messages;;
 open Full_messages;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
-(* @meta[imandra_ignore] off @end *)
 
 (** In many abnormal cases we need to send out the Logout messages and
     transition to ShutdownInitiated state. *)
@@ -116,9 +115,10 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                 begin
                     let engine  = { engine with 
                             fe_encrypt_method  = d.ln_encrypt_method;
-                            fe_heartbeat_interval   = d.ln_heartbeat_interval 
+                            fe_heartbeat_interval   = d.ln_heartbeat_interval;
+                            fe_testreq_interval = d.ln_heartbeat_interval;
                         } in
-                    let logon_msg = create_logon_msg ( engine ) in
+                    let logon_msg = create_logon_msg ( engine , false ) in
                     let engine = { engine with 
                             fe_initiator            = Some false;
                             (*  TODO -- check if we really have to accept all incoming senders *)
@@ -159,7 +159,7 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 if engine.fe_encrypt_method <> d.ln_encrypt_method then
                     begin
                         let engine' = { engine with fe_encrypt_method = d.ln_encrypt_method } in 
-                        let logon_msg = create_logon_msg ( engine' ) in {
+                        let logon_msg = create_logon_msg ( engine' , false ) in {
                             engine' with
                                 outgoing_fix_msg        = Some ( ValidMsg (logon_msg ));
                                 outgoing_seq_num        = engine.outgoing_seq_num + 1;

@@ -1,7 +1,7 @@
 (** 
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     VGs covering behaviour of Reject message ( Vol 2 ).
 
@@ -9,15 +9,12 @@
 
 *)
 
-(* @meta[imandra_ignore] one @end *)
 open Imandra_pervasives;;
 open Datetime;;
-open Base_types;;
 open Fix_engine;;
 open Full_admin_messages;;
 open Full_session_core;;
 open Full_messages;;
-(* @meta[imandra_ignore] off @end *)
 
 (** **************************************************************************************** *)
 (**

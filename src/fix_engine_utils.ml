@@ -10,7 +10,6 @@
 
 (* @meta[imandra_ignore] on @end *)
 open Datetime;;
-open Base_types;;
 open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_app_messages;;
@@ -20,12 +19,11 @@ open Fix_engine_state;;
 (* @meta[imandra_ignore] off @end *)
 
 type session_details = {
-    constant_begin_string : fix_string
+    constant_begin_string : string
 };;
 
 let default_session_details = {
-    constant_begin_string = Admin_string 546607350 (* Hash of "FIX.4.4" *)
-
+    constant_begin_string = "FIX.4.2" (* Hash of "FIX.4.4" *)
 };;
 
 
@@ -100,8 +98,9 @@ let combine_gapfill_msgs ( msgOne, msgTwo : full_msg_sequence_reset_data * full_
     - converting any message that needs to be converted into a SequenceRest-GapFill
     - ensuring that any two sequential SequenceReset-GapFill messages are combined into one with an updated
         expected NextSeqNum parameter *)
-let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix_msg ) = 
-    let hist_msg = get_historic_msg ( msg ) in 
+let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix_msg ) = []
+    
+(*    let hist_msg = get_historic_msg ( msg ) in 
     match history with
     | [] -> [ hist_msg ]
     | x::xs ->
@@ -118,7 +117,7 @@ let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix
                     new_full_msg :: xs
                 end 
             | _ -> hist_msg :: x :: xs
-        end
+        end*)
 ;;
 
 
@@ -166,14 +165,14 @@ let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, curr_time, msg, 
 
 (** Create a logon message we would send out to initiate a connection 
     with another FIX engine. *)
-let create_logon_msg ( engine : fix_engine_state ) = 
+let create_logon_msg ( engine, reset_seq_num : fix_engine_state * bool ) = 
     let msg_data = Full_FIX_Admin_Msg ( 
         Full_Msg_Logon {
             ln_encrypt_method               = engine.fe_encrypt_method;
             ln_heartbeat_interval           = engine.fe_heartbeat_interval;
             ln_raw_data_length              = None; 
             ln_raw_data                     = None;
-            ln_reset_seq_num_flag           = None; (* Some true; *)
+            ln_reset_seq_num_flag           = if reset_seq_num then Some true else None;
             ln_next_expected_msg_seq_num    = None;
             ln_max_message_size             = None;
 
@@ -184,11 +183,17 @@ let create_logon_msg ( engine : fix_engine_state ) =
             ln_msg_types                    = []
         } 
     ) in 
-    create_outbound_fix_msg ( 
+    let msg = create_outbound_fix_msg ( 
         engine.outgoing_seq_num, engine.fe_target_comp_id, 
         engine.fe_comp_id, engine.fe_curr_time, 
         msg_data, false 
-    ) 
+    ) in
+    { msg with full_msg_header = { 
+        msg.full_msg_header with 
+            h_on_behalf_of_comp_id  = Some engine.fe_comp_id;
+            h_sender_location_id    = engine.fe_sender_location_id
+        } 
+    } 
 ;;
 
 (** Create a Logoff message. *)
@@ -207,7 +212,7 @@ let create_logoff_msg ( engine : fix_engine_state ) =
 ;;
 
 (** Create a heartbeat message *)
-let create_heartbeat_msg ( engine, tr_id : fix_engine_state * fix_string option) =
+let create_heartbeat_msg ( engine, tr_id : fix_engine_state * string option) =
     let msg_data = Full_FIX_Admin_Msg (
         Full_Msg_Heartbeat {
             hb_test_req_id = tr_id;
@@ -224,7 +229,7 @@ let create_heartbeat_msg ( engine, tr_id : fix_engine_state * fix_string option)
 let create_test_request_msg ( engine : fix_engine_state ) =
     let msg_data = Full_FIX_Admin_Msg (
         Full_Msg_Test_Request {
-            test_req_id = Admin_string engine.last_test_req_id;
+            test_req_id = engine.last_test_req_id;
         }
     ) in
     create_outbound_fix_msg ( 
@@ -253,7 +258,7 @@ let create_resend_request_msg ( engine : fix_engine_state ) =
 
 (** Create session-rejection message. *)
 let create_session_reject_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, reject_info : 
-                                int * fix_string * fix_string * fix_utctimestamp * session_rejected_msg_data  ) = 
+                                int * string * string * fix_utctimestamp * session_rejected_msg_data  ) = 
     let msg_data = 
         Full_FIX_Admin_Msg (
             Full_Msg_Reject {
@@ -270,7 +275,7 @@ let create_session_reject_msg ( outbound_seq_num, target_comp_id, comp_id, curr_
 
 (** Create business reject message.
     Note: the reason we're separating the ApplicationDown reason is that the parser would not have access to this information. *)
-let create_business_reject_msg ( outbound_seq_num, target_comp_id, comp_id , curr_time, reject_info: int * fix_string * fix_string * fix_utctimestamp * biz_rejected_msg_data ) =
+let create_business_reject_msg ( outbound_seq_num, target_comp_id, comp_id , curr_time, reject_info: int * string * string * fix_utctimestamp * biz_rejected_msg_data ) =
     let msg_data = 
         Full_FIX_Admin_Msg (
             Full_Msg_Business_Reject {
@@ -371,7 +376,7 @@ let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * f
         let engine = session_reject ( reject , engine ) in
         Some { engine with incoming_seq_num = curr_incoming_seq_num }
     | Some orig_sending_time ->
-    if utctimestamp_LessThan (msg_header.h_sending_time, orig_sending_time ) then
+    if utctimestamp_LessThan  msg_header.h_sending_time  orig_sending_time   then
         let reject = { reject with (** The sending_time is less than orig_sending_time -- reject and logout *)
             srej_msg_field_tag = Some (Full_Admin_Field_Tag Full_Msg_OrigSendingTime_Tag);
             srej_msg_reject_reason = Some SendingTimeAccuracyProblem;

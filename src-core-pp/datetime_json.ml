@@ -2,16 +2,14 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     datetime_json.ml 
 *)
 
-(* @meta[imandra_ignore] on @end *)
 open Yojson;;
 open Datetime;;
 open Base_types_json;;
-(* @meta[imandra_ignore] off @end *)
 
 let filter_nulls =
     List.filter (function ( _, `Null ) -> false | _ -> true )
@@ -47,6 +45,10 @@ let duration_to_json ( d : fix_duration ) =
     `Assoc list_assoc
 ;;
 
+let duration_opt_to_json = function
+    | None   -> `Null
+    | Some x -> duration_to_json x
+;;
 
 let localmktdate_to_json ( d : fix_localmktdate ) =
     let list_assoc = [

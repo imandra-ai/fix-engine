@@ -9,8 +9,9 @@
       ( lwt.unix
         venue
         fix_engine
-        string_factory
         core_pp
+        protocol_pp
+        conversions
       )
     )
   )
@@ -24,8 +25,8 @@
         venue
         fix_engine
         fix_simulation
-        string_factory
         protocol_pp
+        conversions
       )
     )
   )
@@ -40,11 +41,12 @@
         venue
         fix_engine
         fix_simulation
-        string_factory
+        conversions
         protocol_pp
         types_pp
         cmdliner
         ZMQ
+        lwt-zmq
       )
     )
   )

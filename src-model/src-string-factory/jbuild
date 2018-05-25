@@ -4,6 +4,6 @@
   ( (name string_factory)
     (public_name string_factory)
     (wrapped false)
-    (libraries (conversions core protocol_exts venue_types yojson))
+    (libraries (venue_types))
   )
 )

@@ -4,6 +4,6 @@
   ( (name venue)
     (public_name venue)
     (wrapped false)
-    (libraries (core venue_types))
+    (libraries (venue_types))
   )
 )

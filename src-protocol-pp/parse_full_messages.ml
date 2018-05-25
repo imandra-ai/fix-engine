@@ -2,7 +2,7 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     parse_full_messages.ml
 
@@ -25,7 +25,6 @@ let parse_msg_data msg_tag msg =
                                  >>= fun x -> ParseSuccess ( Full_FIX_App_Msg x )
 ;;
 
-
 let parse_header msg = 
     req msg "8"   parse_string        @@ fun msg h_begin_string                ->
     req msg "9"   parse_int           @@ fun msg h_body_length                 ->
@@ -33,18 +32,18 @@ let parse_header msg =
     req msg "56"  parse_string        @@ fun msg h_target_comp_id              ->
     req msg "34"  parse_int           @@ fun msg h_msg_seq_num                 ->
     req msg "52"  parse_UTCTimestamp  @@ fun msg h_sending_time                ->   
-    opt msg "115" parse_int           @@ fun msg h_on_behalf_of_comp_id        -> 
-    opt msg "128" parse_int           @@ fun msg h_deliver_to_comp_id          ->  
+    opt msg "115" parse_string        @@ fun msg h_on_behalf_of_comp_id        -> 
+    opt msg "128" parse_string        @@ fun msg h_deliver_to_comp_id          ->  
     opt msg "90"  parse_int           @@ fun msg h_secure_data_len             ->   
     opt msg "91"  parse_int           @@ fun msg h_secure_data                 ->   
-    opt msg "50"  parse_int           @@ fun msg h_sender_sub_id               ->   
-    opt msg "142" parse_int           @@ fun msg h_sender_location_id          ->  
-    opt msg "57"  parse_int           @@ fun msg h_target_sub_id               ->   
-    opt msg "143" parse_int           @@ fun msg h_target_location_id          ->  
-    opt msg "116" parse_int           @@ fun msg h_on_behalf_of_sub_id         ->  
-    opt msg "114" parse_int           @@ fun msg h_on_behalf_of_location_id    ->  
-    opt msg "129" parse_int           @@ fun msg h_deliver_to_sub_id           ->  
-    opt msg "145" parse_int           @@ fun msg h_deliver_to_location_id      ->  
+    opt msg "50"  parse_string        @@ fun msg h_sender_sub_id               ->   
+    opt msg "142" parse_string        @@ fun msg h_sender_location_id          ->  
+    opt msg "57"  parse_string        @@ fun msg h_target_sub_id               ->   
+    opt msg "143" parse_string        @@ fun msg h_target_location_id          ->  
+    opt msg "116" parse_string        @@ fun msg h_on_behalf_of_sub_id         ->  
+    opt msg "114" parse_string        @@ fun msg h_on_behalf_of_location_id    ->  
+    opt msg "129" parse_string        @@ fun msg h_deliver_to_sub_id           ->  
+    opt msg "145" parse_string        @@ fun msg h_deliver_to_location_id      ->  
     opt msg "43"  parse_bool          @@ fun msg h_poss_dup_flag               ->    
     opt msg "97"  parse_bool          @@ fun msg h_poss_resend                 ->    
     opt msg "122" parse_UTCTimestamp  @@ fun msg h_orig_sending_time           ->  
@@ -82,7 +81,6 @@ let parse_header msg =
     ; h_no_hops                         
     } , msg
 ;;
-
 
 let parse_trailer msg =  
     opt msg "93" parse_int  @@ fun msg signature_length ->
@@ -206,7 +204,7 @@ let parse_top_level_msg msg =
         | RequiredTagMissing       tagstr -> make_session_reject Full_admin_enums.RequiredTagMissing tagstr msg
         | DuplicateTag             tagstr -> make_session_reject Full_admin_enums.TagAppearsMoreThanOnce tagstr msg
         | WrongValueFormat         tagstr -> make_session_reject Full_admin_enums.IncorrectDataFormatForValue tagstr msg
-        | UndefinedTag             tagstr -> make_session_reject Full_admin_enums.UndefinedTag tagstr msg
+        | UndefinedTag             tagstr -> make_session_reject Full_admin_enums.TagNotDefinedForThisMessageType tagstr msg
         | IncorrectNumInGroupCount tagstr -> make_session_reject Full_admin_enums.IncorrectNumInGroupCountForRepeatingGroup tagstr msg
         | RepeatingGroupOutOfOrder tagstr -> make_session_reject Full_admin_enums.RepeatingGroupFieldsOutOfOrder tagstr msg
         | EmptyValue         tag -> make_session_reject Full_admin_enums.TagSecifiedWithoutAValue tag msg

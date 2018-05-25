@@ -1,12 +1,10 @@
-imandramarkets : 0.0.0
-
 import FIX_4_4
 
 outbound message ExecutionReport {
     req ClOrdID
     req OrderID
     req ExecID
-    req ExecType    
+    req ExecType
     req AvgPx
     req Side
     req LeavesQty

@@ -2,20 +2,17 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     full_messages.ml
 
 *)
 
-(* @meta[imandra_ignore] on @end *)
-open Base_types;;
 open Datetime;;
 open Full_message_tags;;
 open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_app_messages;;
-(* @meta[imandra_ignore] off @end *)
 
 
 (** 
@@ -55,9 +52,9 @@ type session_rejected_msg_data = {
     srej_msg_field_tag                              : full_field_tag option;
     srej_msg_msg_type                               : full_msg_tag option;
     srej_msg_reject_reason                          : fix_session_reject_reason option;
-    srej_text                                       : fix_string option;
+    srej_text                                       : string option;
     srej_encoded_text_len                           : int option;
-    srej_encoded_text                               : fix_string option;
+    srej_encoded_text                               : string option;
 }
 ;;
 
@@ -78,8 +75,8 @@ type biz_rejected_msg_data = {
     brej_msg_msg_tag                                : full_msg_tag;
     brej_msg_reject_reason                          : fix_business_reject_reason;
     brej_msg_field_tag                              : full_field_tag option;
-    brej_msg_text                                   : fix_string option;
-    brej_msg_encoded_text                           : fix_string option;
+    brej_msg_text                                   : string option;
+    brej_msg_encoded_text                           : string option;
 }
 ;;
 
@@ -88,24 +85,24 @@ type biz_rejected_msg_data = {
     message type. We do not need this tag as message type is 
     explicit. *)
 type fix_header = {
-    h_begin_string                    : fix_string;   (* Tag 8    *)
+    h_begin_string                    : string;   (* Tag 8    *)
     h_body_length                     : int;          (* Tag 9    *)
-    h_sender_comp_id                  : fix_string;   (* Tag 49   *)
-    h_target_comp_id                  : fix_string;   (* Tag 56   *)
+    h_sender_comp_id                  : string;   (* Tag 49   *)
+    h_target_comp_id                  : string;   (* Tag 56   *)
     h_msg_seq_num                     : int;          (* Tag 34   *)
 
-    h_on_behalf_of_comp_id            : int option;   (* Tag 115  *)
-    h_deliver_to_comp_id              : int option;   (* Tag 128  *)
+    h_on_behalf_of_comp_id            : string option;   (* Tag 115  *)
+    h_deliver_to_comp_id              : string option;   (* Tag 128  *)
     h_secure_data_len                 : int option;   (* Tag 90   *)
     h_secure_data                     : int option;   (* Tag 91   *)
-    h_sender_sub_id                   : int option;   (* Tag 50   *)
-    h_sender_location_id              : int option;   (* Tag 142  *)
-    h_target_sub_id                   : int option;   (* Tag 57   *)
-    h_target_location_id              : int option;   (* Tag 143  *)
-    h_on_behalf_of_sub_id             : int option;   (* Tag 116  *)
-    h_on_behalf_of_location_id        : int option;   (* Tag 114  *)
-    h_deliver_to_sub_id               : int option;   (* Tag 129  *)
-    h_deliver_to_location_id          : int option;   (* Tag 145  *)
+    h_sender_sub_id                   : string option;   (* Tag 50   *)
+    h_sender_location_id              : string option;   (* Tag 142  *)
+    h_target_sub_id                   : string option;   (* Tag 57   *)
+    h_target_location_id              : string option;   (* Tag 143  *)
+    h_on_behalf_of_sub_id             : string option;   (* Tag 116  *)
+    h_on_behalf_of_location_id        : string option;   (* Tag 114  *)
+    h_deliver_to_sub_id               : string option;   (* Tag 129  *)
+    h_deliver_to_location_id          : string option;   (* Tag 145  *)
     h_poss_dup_flag                   : bool option;  (* Tag 43   *)
     
     h_poss_resend                     : bool option;  (* Tag 97   *)
@@ -116,7 +113,7 @@ type fix_header = {
     h_message_enconding               : int option;   (* Tag 347  *)
     h_last_msg_seq_num_processed      : int option;   (* Tag 369  *)
     h_no_hops                         : int option;   (* Tag 627  *)
-}
+} 
 ;;
 
 (** Standard FIX trailer *)

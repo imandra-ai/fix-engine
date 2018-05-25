@@ -2,21 +2,18 @@
 (***
     
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     fix_engine_state.ml
     
 *)
 
 
-(* @meta[imandra_ignore] on @end *)
 open Datetime;;
-open Base_types;;
 open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_app_messages;;
 open Full_messages;;
-(* @meta[imandra_ignore] off @end *)
 
 (** Define set of actions + data for manual intervention by the user. *)
 type manual_int_data = {
@@ -26,7 +23,8 @@ type manual_int_data = {
 
 (** Request to initiate a new session. *)
 type session_data = {
-    dest_comp_id            : fix_string; (** Destination company ID. *)
+    dest_comp_id            : string; (** Destination company ID. *)
+    reset_seq_num           : bool;       (** Shall we reset sequence numbers? *)
 }
 ;;
 
@@ -82,8 +80,10 @@ type fix_engine_state = {
 
     fe_curr_time            : fix_utctimestamp;             (** Need to define time so we're aware of heartbeat status. *)
 
-    fe_comp_id              : fix_string;                   (** Our company ID *)
-    fe_target_comp_id       : fix_string;                   (** Target company ID *)
+    fe_comp_id              : string;                   (** Our company ID *)
+    fe_target_comp_id       : string;                   (** Target company ID *)
+    fe_sender_location_id   : string option;            (** On behalf of string *)
+
 
     incoming_int_msg        : fix_engine_int_inc_msg option;(** Incoming internal messages (application). *)
     outgoing_int_msg        : fix_engine_int_out_msg option;(** These are messages we send back to our owner *)
@@ -112,7 +112,7 @@ type fix_engine_state = {
     fe_application_up       : bool;                         (** Is the application that's receiving messages up and running?
                                                                 TODO: we might need to constitute a heartbeat to enforce this. *)
 
-    last_test_req_id        : int;                          (** These are used to send out TestRequest messages that should be replied 
+    last_test_req_id        : string;                          (** These are used to send out TestRequest messages that should be replied 
                                                                 with Heartbeat messages containing the testrequest ID. Any string
                                                                 may be used, we use int's for now. *) 
 
@@ -128,10 +128,11 @@ let init_fix_engine_state = {
     fe_curr_status          = Normal;
     fe_initiator            = None;                         
     fe_curr_mode            = NoActiveSession;              
-    fe_curr_time            = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
+    fe_curr_time            = make_utctimestamp 2017 1 1 0 1 0 None;
 
-    fe_comp_id              = Admin_string 183924456; (* Hash of "IMANDRA" *)
-    fe_target_comp_id       = Admin_string 780720412; (* Hash of "TARGET"  *)
+    fe_comp_id              = "IMANDRA"; 
+    fe_target_comp_id       = "TARGET";
+    fe_sender_location_id   = None;
 
     incoming_int_msg        = None;                           
     outgoing_int_msg        = None;
@@ -145,10 +146,10 @@ let init_fix_engine_state = {
     fe_cache                = [];
     fe_history              = [];
 
-    fe_last_data_received   = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
-    fe_heartbeat_interval   = make_duration ( None, None, None, None, None, Some 30 ); (* 30 seconds *)
-    fe_last_time_data_sent  = make_utctimestamp ( 2017, 1, 1, 0, 1, 0, None );
-    fe_testreq_interval     = make_duration ( None, None, None, None, None, Some 30 );
+    fe_last_data_received   = make_utctimestamp 2017 1 1 0 1 0 None;
+    fe_heartbeat_interval   = make_duration None None None None None (Some 30 ); (* 30 seconds *)
+    fe_last_time_data_sent  = make_utctimestamp 2017 1 1 0 1 0 None;
+    fe_testreq_interval     = make_duration None None None None None (Some 30 );
 
     fe_history_to_send      = [];
     fe_retransmit_start_idx = 0;
@@ -157,7 +158,7 @@ let init_fix_engine_state = {
 
     fe_application_up       = true;
 
-    last_test_req_id        = 0;
+    last_test_req_id        = "fix-engine";
 
     fe_num_logons_sent      = 0;
     fe_max_num_logons_sent  = 0;
@@ -167,10 +168,10 @@ let init_fix_engine_state = {
 
 (** THEOREM: one_step calls on busy state eventually terminate *)
 let engine_state_busy engine = 
-   ( engine.incoming_fix_msg != None ) ||
-   ( engine.incoming_int_msg != None ) ||
-   ( engine.outgoing_fix_msg != None ) ||
-   ( engine.outgoing_int_msg != None ) ||
+   ( engine.incoming_fix_msg <> None ) ||
+   ( engine.incoming_int_msg <> None ) ||
+   ( engine.outgoing_fix_msg <> None ) ||
+   ( engine.outgoing_int_msg <> None ) ||
    ( match engine.fe_curr_mode with
         | GapDetected | CacheReplay | Retransmit | ShuttingDown -> true
         | _ -> false
@@ -186,8 +187,8 @@ let engine_state_busy engine =
     we need to maintain that every state transition from a valid state 
     would result in another valid state. *)
 let is_state_valid ( engine : fix_engine_state ) =
-    utctimestamp_LessThanEqual ( engine.fe_last_data_received, engine.fe_curr_time ) &&
-    utctimestamp_LessThanEqual ( engine.fe_last_time_data_sent, engine.fe_curr_time ) &&
+    utctimestamp_LessThanEqual engine.fe_last_data_received engine.fe_curr_time &&
+    utctimestamp_LessThanEqual engine.fe_last_time_data_sent engine.fe_curr_time  &&
     is_valid_utctimestamp ( engine.fe_curr_time ) && 
     is_valid_utctimestamp ( engine.fe_last_time_data_sent ) && 
     is_valid_utctimestamp ( engine.fe_last_data_received ) &&

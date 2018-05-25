@@ -1,8 +1,6 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
- open Actions;;
- open Model_messages;;
-(* @meta[imandra_ignore] off @end *)
+(* Aesthetic Integration copyright 2018 *)
+open Actions;;
+open Model_messages;;
 
 type model_state = {
     incoming_action : fix_action option;
@@ -17,7 +15,7 @@ let init_model_state = {
     incoming_msg = FIX_TL_None
 };;
 
-let send_msg ( msg , m_state : model_msg * model_state ) =
+let send_msg (msg : model_msg) (m_state : model_state)  =
     { m_state with
         outgoing_msgs = msg :: m_state.outgoing_msgs
     }
@@ -26,6 +24,6 @@ let send_msg ( msg , m_state : model_msg * model_state ) =
 type internal_states_types = int list
 ;;
 
-let get_internal_states_types ( m_state : model_state ) : internal_states_types =
+let get_internal_states_types (m_state : model_state)  : internal_states_types =
     []
 ;;

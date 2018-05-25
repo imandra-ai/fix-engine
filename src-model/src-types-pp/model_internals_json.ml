@@ -1,8 +1,6 @@
-(* Aesthetic Integration copyright 2017 *)
-(* @meta[imandra_ignore] on @end *)
- open State;;
-(* @meta[imandra_ignore] off @end *)
+(* Aesthetic Integration copyright 2018 *)
+open State;;
 
-let json_of_fix_internals ( x : internal_states_types ) =
+let json_of_fix_internals (x : internal_states_types)  =
     `Assoc []
 ;;
