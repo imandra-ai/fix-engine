@@ -4,6 +4,6 @@
   ( (name conversions)
     (public_name conversions)
     (wrapped false)
-    (libraries (core venue_types protocol_exts))
+    (libraries (core protocol_exts venue_types))
   )
 )

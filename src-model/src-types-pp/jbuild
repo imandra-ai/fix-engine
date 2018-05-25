@@ -1,0 +1,9 @@
+(jbuild_version 1)
+
+(library
+  ( (name types_pp)
+    (public_name types_pp)
+    (wrapped false)
+    (libraries (core_pp protocol_exts_pp string_factory venue_types yojson))
+  )
+)

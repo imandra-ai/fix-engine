@@ -1,6 +1,5 @@
 (* Aesthetic Integration copyright 2018 *)
 
-
 type field_state = {
     is_invalid : bool;
     field_text : string
@@ -12,7 +11,7 @@ let fields_are_good = {
     field_text = ""
 };;
 
-let field_invalid ( text : string ) =
+let field_invalid (text : string)  =
     {
         is_invalid = true;
         field_text = text
@@ -30,7 +29,7 @@ let no_invalid_validates = {
     validate_text = ""
 };;
 
-let make_cond ( cond_result , text : bool * string ) =
+let make_cond (cond_result : bool) (text : string)  =
     {
         validate_invalid = not cond_result;
         validate_text = text

@@ -9,7 +9,7 @@
       ( lwt.unix
         venue
         fix_engine
-        string_constant_factory
+        conversions
       )
     )
   )
@@ -23,7 +23,6 @@
         venue
         fix_engine
         fix_simulation
-        string_constant_factory
         protocol_pp
       )
     )
