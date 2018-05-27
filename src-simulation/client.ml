@@ -7,9 +7,6 @@
     client.ml
     
 *)
-module Json_to_action = struct
-  let json_to_fix_action x = None 
-end;;
 
 let (>>=) = Lwt.(>>=);;
 
