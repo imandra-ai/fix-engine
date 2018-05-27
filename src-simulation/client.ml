@@ -110,6 +110,7 @@ let mkconfig compid hostid targetid reset =
     Fix_connection.{
         comp_id = compid;
         host_id = Some hostid;
+        on_behalf_id = Some hostid; 
         target_id = targetid;
         pub_callback = None;
         reset_seq = reset;

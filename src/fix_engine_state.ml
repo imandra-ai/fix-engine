@@ -23,7 +23,7 @@ type manual_int_data = {
 
 (** Request to initiate a new session. *)
 type session_data = {
-    dest_comp_id            : string; (** Destination company ID. *)
+    dest_comp_id            : string;     (** Destination company ID. *)
     reset_seq_num           : bool;       (** Shall we reset sequence numbers? *)
 }
 ;;
@@ -80,9 +80,10 @@ type fix_engine_state = {
 
     fe_curr_time            : fix_utctimestamp;             (** Need to define time so we're aware of heartbeat status. *)
 
-    fe_comp_id              : string;                   (** Our company ID *)
-    fe_target_comp_id       : string;                   (** Target company ID *)
-    fe_sender_location_id   : string option;            (** On behalf of string *)
+    fe_comp_id              : string;                       (** Our company ID *)
+    fe_target_comp_id       : string;                       (** Target company ID *)
+    fe_sender_location_id   : string option;                (** Location id string *)
+    fe_on_behalf_of_comp_id : string option;                (** On behalf of string *)
 
 
     incoming_int_msg        : fix_engine_int_inc_msg option;(** Incoming internal messages (application). *)
@@ -133,6 +134,7 @@ let init_fix_engine_state = {
     fe_comp_id              = "IMANDRA"; 
     fe_target_comp_id       = "TARGET";
     fe_sender_location_id   = None;
+    fe_on_behalf_of_comp_id = None;
 
     incoming_int_msg        = None;                           
     outgoing_int_msg        = None;

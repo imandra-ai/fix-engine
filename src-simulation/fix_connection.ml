@@ -1,6 +1,7 @@
 type config = {
   comp_id        : string;
   host_id        : string option;
+  on_behalf_id   : string option;
   target_id      : string;
   timer          : float;
   reset_seq      : bool;  
@@ -60,21 +61,19 @@ let read_seqns dir =
 ;;
 
 let make_engine_state session_dir config =
-  let fe_comp_id            = config.comp_id in 
-  let fe_target_comp_id     = config.target_id in    
-  let fe_sender_location_id = config.host_id in    
   let open Fix_engine_state in
   let inseq,outseq = read_seqns session_dir in
   { init_fix_engine_state with
-    fe_comp_id;
-    fe_sender_location_id;
-    fe_target_comp_id;
-    fe_curr_time = get_current_utctimstamp ();
-    fe_max_num_logons_sent = 10;
-    fe_application_up = true;
-    incoming_seq_num = inseq;
-    outgoing_seq_num = outseq;    
-}
+    fe_comp_id = config.comp_id
+  ; fe_sender_location_id = config.host_id
+  ; fe_on_behalf_of_comp_id = config.on_behalf_id
+  ; fe_target_comp_id = config.target_id
+  ; fe_curr_time = get_current_utctimstamp ()
+  ; fe_max_num_logons_sent = 10
+  ; fe_application_up = true
+  ; incoming_seq_num = inseq
+  ; outgoing_seq_num = outseq    
+  }
  
 let (>>=) = Lwt.(>>=)
 
