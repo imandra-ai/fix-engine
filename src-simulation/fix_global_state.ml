@@ -119,7 +119,6 @@ let rec main_loop state =
                 engine_state = engine_state ;
                 model_state  = { model_state  with State.outgoing_msgs = [] } } >>= fun state ->
             main_loop state
-        | _ -> main_loop state
 ;;
 
 let start ?pub:(pub_callback=None) init_engine init_model fix_callback =

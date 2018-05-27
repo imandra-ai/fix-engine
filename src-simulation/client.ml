@@ -2,7 +2,7 @@
 (***
     
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Copyright (c) 2014 - 2018
 
     client.ml
     
@@ -95,7 +95,7 @@ let run_client fixhost fixport config zmqpub zmqrep =
     (**)
     let () = [
         "(*********                   FIX Engine Client                           *********)";
-        "(*********  (c)Copyright Aesthetic Integration Limited., 2014 - 2017     *********)\n";
+        "(*********  (c)Copyright Aesthetic Integration Limited., 2014 - 2018     *********)\n";
         Printf.sprintf " - FIX client connecting to %s:%d" fixhost fixport;
         Printf.sprintf " - FIX session %s -> %s" config.Fix_connection.comp_id config.Fix_connection.target_id;
         Printf.sprintf " - Internal messages are published on ZMQ socket %s" zmqpub;
@@ -110,6 +110,7 @@ let mkconfig compid hostid targetid reset =
     Fix_connection.{
         comp_id = compid;
         host_id = Some hostid;
+        on_behalf_id = Some hostid; 
         target_id = targetid;
         pub_callback = None;
         reset_seq = reset;

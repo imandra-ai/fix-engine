@@ -1,11 +1,12 @@
-type config = {
-  comp_id        : string;
-  host_id        : string option;
-  target_id      : string;
-  timer          : float;
-  reset_seq      : bool;
-  pub_callback   : (Model_messages.model_msg -> unit Lwt.t) option;  
-}
+type config = 
+  { comp_id        : string
+  ; host_id        : string option
+  ; on_behalf_id   : string option
+  ; target_id      : string
+  ; timer          : float
+  ; reset_seq      : bool
+  ; pub_callback   : (Model_messages.model_msg -> unit Lwt.t) option  
+  }
 
 val get_current_utctimstamp : unit -> Datetime.fix_utctimestamp
 val get_last_received_utctimestamp : unit -> Datetime.fix_utctimestamp

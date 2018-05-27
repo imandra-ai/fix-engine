@@ -23,7 +23,7 @@ type session_details = {
 };;
 
 let default_session_details = {
-    constant_begin_string = "FIX.4.2" (* Hash of "FIX.4.4" *)
+    constant_begin_string = "FIX.4.2" 
 };;
 
 
@@ -190,7 +190,7 @@ let create_logon_msg ( engine, reset_seq_num : fix_engine_state * bool ) =
     ) in
     { msg with full_msg_header = { 
         msg.full_msg_header with 
-            h_on_behalf_of_comp_id  = Some engine.fe_comp_id;
+            h_on_behalf_of_comp_id  = engine.fe_on_behalf_of_comp_id; 
             h_sender_location_id    = engine.fe_sender_location_id
         } 
     } 
