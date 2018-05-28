@@ -374,7 +374,11 @@ let encode_InstrumentLeg (msg)  =
 ;;
 
 let encode_Parties (msg)  =
-    (@) (("447",enc_opt encode_PartyIDSource msg.f_Parties_PartyIDSource) :: (("2376",enc_opt encode_PartyRoleQualifier msg.f_Parties_PartyRoleQualifier) :: (("448",enc_opt encode_string msg.f_Parties_PartyID) :: (("452",enc_opt encode_PartyRole msg.f_Parties_PartyRole) :: [])))) ((@) (enc_repeat encode_PtysSubGrp "802" msg.f_Parties_PtysSubGrp) [])
+    (@) (("448",enc_opt encode_string msg.f_Parties_PartyID) 
+    ::  (("447",enc_opt encode_PartyIDSource msg.f_Parties_PartyIDSource) 
+    ::  (("452",enc_opt encode_PartyRole msg.f_Parties_PartyRole) 
+    ::  (("2376",enc_opt encode_PartyRoleQualifier msg.f_Parties_PartyRoleQualifier) 
+    :: [])))) ((@) (enc_repeat encode_PtysSubGrp "802" msg.f_Parties_PtysSubGrp) [])
 ;;
 
 let encode_NestedParties (msg)  =
