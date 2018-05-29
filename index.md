@@ -17,7 +17,7 @@ Having a complete formal model of the FIX protocol brings many benefits. To name
 
 - Queryable: A formal verification engine like Imandra can be used to ask and answer deep questions about the behaviour of the model automatically.
 
-- Testing: Powerful model-based testing techniques can be used to automatically generate high coverage test suites (see [Test Suite]({{ site.baseurl }}{% link _tsTopic/current-test-pack.md %}) section below).
+- Testing: Powerful model-based testing techniques can be used to automatically generate high coverage test suites (see [Test Suite]({{ site.baseurl }}/testSuite/#currentTestPack) section below).
 
 - Executable: Outside of the Imandra-specific commands used in verification, the model itself is all valid OCaml code. You may use the full OCaml stack to compile and run the engine.
 
