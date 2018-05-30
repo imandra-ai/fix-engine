@@ -43,10 +43,10 @@ let encode_AttrbGrp msg =
 let encode_YieldData msg =
     [
     ( "235" , opt encode_YieldType msg.f_YieldData_YieldType );
-    ( "236" , opt encode_float_4 msg.f_YieldData_Yield );
+    ( "236" , opt encode_float_6 msg.f_YieldData_Yield );
     ( "701" , opt encode_LocalMktDate msg.f_YieldData_YieldCalcDate );
     ( "696" , opt encode_LocalMktDate msg.f_YieldData_YieldRedemptionDate );
-    ( "697" , opt encode_float_4 msg.f_YieldData_YieldRedemptionPrice );
+    ( "697" , opt encode_float_6 msg.f_YieldData_YieldRedemptionPrice );
     ( "698" , opt encode_int msg.f_YieldData_YieldRedemptionPriceType );
     ]
 ;;
@@ -56,7 +56,7 @@ let encode_CpctyConfGrp msg =
     ( "862" , req encode_int msg.f_CpctyConfGrp_NoCapacities );
     ( "528" , req encode_OrderCapacity msg.f_CpctyConfGrp_OrderCapacity );
     ( "529" , opt encode_OrderRestrictions msg.f_CpctyConfGrp_OrderRestrictions );
-    ( "863" , req encode_float_4 msg.f_CpctyConfGrp_OrderCapacityQty );
+    ( "863" , req encode_float_6 msg.f_CpctyConfGrp_OrderCapacityQty );
     ]
 ;;
 
@@ -97,7 +97,7 @@ let encode_AllocAckGrp msg =
     ( "78" , opt encode_int msg.f_AllocAckGrp_NoAllocs );
     ( "79" , opt encode_string msg.f_AllocAckGrp_AllocAccount );
     ( "661" , opt encode_int msg.f_AllocAckGrp_AllocAcctIDSource );
-    ( "366" , opt encode_float_4 msg.f_AllocAckGrp_AllocPrice );
+    ( "366" , opt encode_float_6 msg.f_AllocAckGrp_AllocPrice );
     ( "467" , opt encode_string msg.f_AllocAckGrp_IndividualAllocID );
     ( "776" , opt encode_int msg.f_AllocAckGrp_IndividualAllocRejCode );
     ( "161" , opt encode_string msg.f_AllocAckGrp_AllocText );
@@ -143,7 +143,7 @@ let encode_ContAmtGrp msg =
     [
     ( "518" , opt encode_int msg.f_ContAmtGrp_NoContAmts );
     ( "519" , opt encode_ContAmtType msg.f_ContAmtGrp_ContAmtType );
-    ( "520" , opt encode_float_4 msg.f_ContAmtGrp_ContAmtValue );
+    ( "520" , opt encode_float_6 msg.f_ContAmtGrp_ContAmtValue );
     ( "521" , opt encode_Currency msg.f_ContAmtGrp_ContAmtCurr );
     ]
 ;;
@@ -185,7 +185,7 @@ let encode_LogonMsgTypes msg =
 
 let encode_PegInstructions msg =
     [
-    ( "211" , opt encode_float_4 msg.f_PegInstructions_PegOffsetValue );
+    ( "211" , opt encode_float_6 msg.f_PegInstructions_PegOffsetValue );
     ( "835" , opt encode_PegMoveType msg.f_PegInstructions_PegMoveType );
     ( "836" , opt encode_PegOffsetType msg.f_PegInstructions_PegOffsetType );
     ( "837" , opt encode_PegLimitType msg.f_PegInstructions_PegLimitType );
@@ -215,7 +215,7 @@ let encode_PositionAmountData msg =
     [
     ( "753" , opt encode_int msg.f_PositionAmountData_NoPosAmt );
     ( "707" , opt encode_PosAmtType msg.f_PositionAmountData_PosAmtType );
-    ( "708" , opt encode_float_4 msg.f_PositionAmountData_PosAmt );
+    ( "708" , opt encode_float_6 msg.f_PositionAmountData_PosAmt );
     ]
 ;;
 
@@ -225,14 +225,14 @@ let encode_BidDescReqGrp msg =
     ( "399" , opt encode_BidDescriptorType msg.f_BidDescReqGrp_BidDescriptorType );
     ( "400" , opt encode_string msg.f_BidDescReqGrp_BidDescriptor );
     ( "401" , opt encode_SideValueInd msg.f_BidDescReqGrp_SideValueInd );
-    ( "404" , opt encode_float_4 msg.f_BidDescReqGrp_LiquidityValue );
+    ( "404" , opt encode_float_6 msg.f_BidDescReqGrp_LiquidityValue );
     ( "441" , opt encode_int msg.f_BidDescReqGrp_LiquidityNumSecurities );
-    ( "402" , opt encode_float_4 msg.f_BidDescReqGrp_LiquidityPctLow );
-    ( "403" , opt encode_float_4 msg.f_BidDescReqGrp_LiquidityPctHigh );
-    ( "405" , opt encode_float_4 msg.f_BidDescReqGrp_EFPTrackingError );
-    ( "406" , opt encode_float_4 msg.f_BidDescReqGrp_FairValue );
-    ( "407" , opt encode_float_4 msg.f_BidDescReqGrp_OutsideIndexPct );
-    ( "408" , opt encode_float_4 msg.f_BidDescReqGrp_ValueOfFutures );
+    ( "402" , opt encode_float_6 msg.f_BidDescReqGrp_LiquidityPctLow );
+    ( "403" , opt encode_float_6 msg.f_BidDescReqGrp_LiquidityPctHigh );
+    ( "405" , opt encode_float_6 msg.f_BidDescReqGrp_EFPTrackingError );
+    ( "406" , opt encode_float_6 msg.f_BidDescReqGrp_FairValue );
+    ( "407" , opt encode_float_6 msg.f_BidDescReqGrp_OutsideIndexPct );
+    ( "408" , opt encode_float_6 msg.f_BidDescReqGrp_ValueOfFutures );
     ]
 ;;
 
@@ -276,11 +276,11 @@ let encode_ExecCollGrp msg =
 
 let encode_SpreadOrBenchmarkCurveData msg =
     [
-    ( "218" , opt encode_float_4 msg.f_SpreadOrBenchmarkCurveData_Spread );
+    ( "218" , opt encode_float_6 msg.f_SpreadOrBenchmarkCurveData_Spread );
     ( "220" , opt encode_Currency msg.f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency );
     ( "221" , opt encode_string msg.f_SpreadOrBenchmarkCurveData_BenchmarkCurveName );
     ( "222" , opt encode_string msg.f_SpreadOrBenchmarkCurveData_BenchmarkCurvePoint );
-    ( "662" , opt encode_float_4 msg.f_SpreadOrBenchmarkCurveData_BenchmarkPrice );
+    ( "662" , opt encode_float_6 msg.f_SpreadOrBenchmarkCurveData_BenchmarkPrice );
     ( "663" , opt encode_int msg.f_SpreadOrBenchmarkCurveData_BenchmarkPriceType );
     ( "699" , opt encode_string msg.f_SpreadOrBenchmarkCurveData_BenchmarkSecurityID );
     ( "761" , opt encode_string msg.f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource );
@@ -329,7 +329,7 @@ let encode_SettlPtysSubGrp msg =
 
 let encode_CommissionData msg =
     [
-    ( "12" , opt encode_float_4 msg.f_CommissionData_Commission );
+    ( "12" , opt encode_float_6 msg.f_CommissionData_Commission );
     ( "13" , opt encode_CommType msg.f_CommissionData_CommType );
     ( "479" , opt encode_Currency msg.f_CommissionData_CommCurrency );
     ( "497" , opt encode_FundRenewWaiv msg.f_CommissionData_FundRenewWaiv );
@@ -347,7 +347,7 @@ let encode_RgstDistInstGrp msg =
     [
     ( "510" , opt encode_int msg.f_RgstDistInstGrp_NoDistribInsts );
     ( "477" , opt encode_DistribPaymentMethod msg.f_RgstDistInstGrp_DistribPaymentMethod );
-    ( "512" , opt encode_float_4 msg.f_RgstDistInstGrp_DistribPercentage );
+    ( "512" , opt encode_float_6 msg.f_RgstDistInstGrp_DistribPercentage );
     ( "478" , opt encode_Currency msg.f_RgstDistInstGrp_CashDistribCurr );
     ( "498" , opt encode_string msg.f_RgstDistInstGrp_CashDistribAgentName );
     ( "499" , opt encode_string msg.f_RgstDistInstGrp_CashDistribAgentCode );
@@ -360,11 +360,11 @@ let encode_RgstDistInstGrp msg =
 let encode_ExecAllocGrp msg =
     [
     ( "124" , opt encode_int msg.f_ExecAllocGrp_NoExecs );
-    ( "32" , opt encode_float_4 msg.f_ExecAllocGrp_LastQty );
+    ( "32" , opt encode_float_6 msg.f_ExecAllocGrp_LastQty );
     ( "17" , opt encode_string msg.f_ExecAllocGrp_ExecID );
     ( "527" , opt encode_string msg.f_ExecAllocGrp_SecondaryExecID );
-    ( "31" , opt encode_float_4 msg.f_ExecAllocGrp_LastPx );
-    ( "669" , opt encode_float_4 msg.f_ExecAllocGrp_LastParPx );
+    ( "31" , opt encode_float_6 msg.f_ExecAllocGrp_LastPx );
+    ( "669" , opt encode_float_6 msg.f_ExecAllocGrp_LastParPx );
     ( "29" , opt encode_LastCapacity msg.f_ExecAllocGrp_LastCapacity );
     ]
 ;;
@@ -374,7 +374,7 @@ let encode_LegBenchmarkCurveData msg =
     ( "676" , opt encode_Currency msg.f_LegBenchmarkCurveData_LegBenchmarkCurveCurrency );
     ( "677" , opt encode_string msg.f_LegBenchmarkCurveData_LegBenchmarkCurveName );
     ( "678" , opt encode_string msg.f_LegBenchmarkCurveData_LegBenchmarkCurvePoint );
-    ( "679" , opt encode_float_4 msg.f_LegBenchmarkCurveData_LegBenchmarkPrice );
+    ( "679" , opt encode_float_6 msg.f_LegBenchmarkCurveData_LegBenchmarkPrice );
     ( "680" , opt encode_int msg.f_LegBenchmarkCurveData_LegBenchmarkPriceType );
     ]
 ;;
@@ -384,12 +384,12 @@ let encode_OrdListStatGrp msg =
     ( "73" , req encode_int msg.f_OrdListStatGrp_NoOrders );
     ( "11" , req encode_string msg.f_OrdListStatGrp_ClOrdID );
     ( "526" , opt encode_string msg.f_OrdListStatGrp_SecondaryClOrdID );
-    ( "14" , req encode_float_4 msg.f_OrdListStatGrp_CumQty );
+    ( "14" , req encode_float_6 msg.f_OrdListStatGrp_CumQty );
     ( "39" , req encode_OrdStatus msg.f_OrdListStatGrp_OrdStatus );
     ( "636" , opt encode_WorkingIndicator msg.f_OrdListStatGrp_WorkingIndicator );
-    ( "151" , req encode_float_4 msg.f_OrdListStatGrp_LeavesQty );
-    ( "84" , req encode_float_4 msg.f_OrdListStatGrp_CxlQty );
-    ( "6" , req encode_float_4 msg.f_OrdListStatGrp_AvgPx );
+    ( "151" , req encode_float_6 msg.f_OrdListStatGrp_LeavesQty );
+    ( "84" , req encode_float_6 msg.f_OrdListStatGrp_CxlQty );
+    ( "6" , req encode_float_6 msg.f_OrdListStatGrp_AvgPx );
     ( "103" , opt encode_OrdRejReason msg.f_OrdListStatGrp_OrdRejReason );
     ( "58" , opt encode_string msg.f_OrdListStatGrp_Text );
     ( "354" , opt encode_int msg.f_OrdListStatGrp_EncodedTextLen );
@@ -406,11 +406,11 @@ let encode_ClrInstGrp msg =
 
 let encode_OrderQtyData msg =
     [
-    ( "38" , opt encode_float_4 msg.f_OrderQtyData_OrderQty );
-    ( "152" , opt encode_float_4 msg.f_OrderQtyData_CashOrderQty );
-    ( "516" , opt encode_float_4 msg.f_OrderQtyData_OrderPercent );
+    ( "38" , opt encode_float_6 msg.f_OrderQtyData_OrderQty );
+    ( "152" , opt encode_float_6 msg.f_OrderQtyData_CashOrderQty );
+    ( "516" , opt encode_float_6 msg.f_OrderQtyData_OrderPercent );
     ( "468" , opt encode_RoundingDirection msg.f_OrderQtyData_RoundingDirection );
-    ( "469" , opt encode_float_4 msg.f_OrderQtyData_RoundingModulus );
+    ( "469" , opt encode_float_6 msg.f_OrderQtyData_RoundingModulus );
     ]
 ;;
 
@@ -425,7 +425,7 @@ let encode_RoutingGrp msg =
 let encode_MiscFeesGrp msg =
     [
     ( "136" , opt encode_int msg.f_MiscFeesGrp_NoMiscFees );
-    ( "137" , opt encode_float_4 msg.f_MiscFeesGrp_MiscFeeAmt );
+    ( "137" , opt encode_float_6 msg.f_MiscFeesGrp_MiscFeeAmt );
     ( "138" , opt encode_Currency msg.f_MiscFeesGrp_MiscFeeCurr );
     ( "139" , opt encode_MiscFeeType msg.f_MiscFeesGrp_MiscFeeType );
     ( "891" , opt encode_MiscFeeBasis msg.f_MiscFeesGrp_MiscFeeBasis );
@@ -436,9 +436,9 @@ let encode_MDFullGrp msg =
     [
     ( "268" , req encode_int msg.f_MDFullGrp_NoMDEntries );
     ( "269" , req encode_MDEntryType msg.f_MDFullGrp_MDEntryType );
-    ( "270" , opt encode_float_4 msg.f_MDFullGrp_MDEntryPx );
+    ( "270" , opt encode_float_6 msg.f_MDFullGrp_MDEntryPx );
     ( "15" , opt encode_Currency msg.f_MDFullGrp_Currency );
-    ( "271" , opt encode_float_4 msg.f_MDFullGrp_MDEntrySize );
+    ( "271" , opt encode_float_6 msg.f_MDFullGrp_MDEntrySize );
     ( "272" , opt encode_UTCDateOnly msg.f_MDFullGrp_MDEntryDate );
     ( "273" , opt encode_UTCTimeOnly msg.f_MDFullGrp_MDEntryTime );
     ( "274" , opt encode_TickDirection msg.f_MDFullGrp_TickDirection );
@@ -454,7 +454,7 @@ let encode_MDFullGrp msg =
     ( "59" , opt encode_TimeInForce msg.f_MDFullGrp_TimeInForce );
     ( "432" , opt encode_LocalMktDate msg.f_MDFullGrp_ExpireDate );
     ( "126" , opt encode_UTCTimestamp msg.f_MDFullGrp_ExpireTime );
-    ( "110" , opt encode_float_4 msg.f_MDFullGrp_MinQty );
+    ( "110" , opt encode_float_6 msg.f_MDFullGrp_MinQty );
     ( "18" , opt encode_ExecInst msg.f_MDFullGrp_ExecInst );
     ( "287" , opt encode_int msg.f_MDFullGrp_SellerDays );
     ( "37" , opt encode_string msg.f_MDFullGrp_OrderID );
@@ -464,7 +464,7 @@ let encode_MDFullGrp msg =
     ( "346" , opt encode_int msg.f_MDFullGrp_NumberOfOrders );
     ( "290" , opt encode_int msg.f_MDFullGrp_MDEntryPositionNo );
     ( "546" , opt encode_Scope msg.f_MDFullGrp_Scope );
-    ( "811" , opt encode_float_4 msg.f_MDFullGrp_PriceDelta );
+    ( "811" , opt encode_float_6 msg.f_MDFullGrp_PriceDelta );
     ( "58" , opt encode_string msg.f_MDFullGrp_Text );
     ( "354" , opt encode_int msg.f_MDFullGrp_EncodedTextLen );
     ( "355" , opt encode_string msg.f_MDFullGrp_EncodedText );
@@ -498,7 +498,7 @@ let encode_FinancingDetails msg =
     ( "916" , opt encode_LocalMktDate msg.f_FinancingDetails_StartDate );
     ( "917" , opt encode_LocalMktDate msg.f_FinancingDetails_EndDate );
     ( "919" , opt encode_DeliveryType msg.f_FinancingDetails_DeliveryType );
-    ( "898" , opt encode_float_4 msg.f_FinancingDetails_MarginRatio );
+    ( "898" , opt encode_float_6 msg.f_FinancingDetails_MarginRatio );
     ]
 ;;
 
@@ -507,7 +507,7 @@ let encode_ContraGrp msg =
     ( "382" , opt encode_int msg.f_ContraGrp_NoContraBrokers );
     ( "375" , opt encode_string msg.f_ContraGrp_ContraBroker );
     ( "337" , opt encode_string msg.f_ContraGrp_ContraTrader );
-    ( "437" , opt encode_float_4 msg.f_ContraGrp_ContraTradeQty );
+    ( "437" , opt encode_float_6 msg.f_ContraGrp_ContraTradeQty );
     ( "438" , opt encode_UTCTimestamp msg.f_ContraGrp_ContraTradeTime );
     ( "655" , opt encode_string msg.f_ContraGrp_ContraLegRefID );
     ]
@@ -516,7 +516,7 @@ let encode_ContraGrp msg =
 let encode_DiscretionInstructions msg =
     [
     ( "388" , opt encode_DiscretionInst msg.f_DiscretionInstructions_DiscretionInst );
-    ( "389" , opt encode_float_4 msg.f_DiscretionInstructions_DiscretionOffsetValue );
+    ( "389" , opt encode_float_6 msg.f_DiscretionInstructions_DiscretionOffsetValue );
     ( "841" , opt encode_DiscretionMoveType msg.f_DiscretionInstructions_DiscretionMoveType );
     ( "842" , opt encode_DiscretionOffsetType msg.f_DiscretionInstructions_DiscretionOffsetType );
     ( "843" , opt encode_DiscretionLimitType msg.f_DiscretionInstructions_DiscretionLimitType );
@@ -530,7 +530,7 @@ let encode_EvntGrp msg =
     ( "864" , opt encode_int msg.f_EvntGrp_NoEvents );
     ( "865" , opt encode_EventType msg.f_EvntGrp_EventType );
     ( "866" , opt encode_LocalMktDate msg.f_EvntGrp_EventDate );
-    ( "867" , opt encode_float_4 msg.f_EvntGrp_EventPx );
+    ( "867" , opt encode_float_6 msg.f_EvntGrp_EventPx );
     ( "868" , opt encode_string msg.f_EvntGrp_EventText );
     ]
 ;;
@@ -571,19 +571,19 @@ let encode_UnderlyingInstrument msg =
     ( "242" , opt encode_LocalMktDate msg.f_UnderlyingInstrument_UnderlyingIssueDate );
     ( "243" , opt encode_string msg.f_UnderlyingInstrument_UnderlyingRepoCollateralSecurityType );
     ( "244" , opt encode_int msg.f_UnderlyingInstrument_UnderlyingRepurchaseTerm );
-    ( "245" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingRepurchaseRate );
-    ( "246" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingFactor );
+    ( "245" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingRepurchaseRate );
+    ( "246" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingFactor );
     ( "256" , opt encode_string msg.f_UnderlyingInstrument_UnderlyingCreditRating );
     ( "595" , opt encode_string msg.f_UnderlyingInstrument_UnderlyingInstrRegistry );
     ( "592" , opt encode_Country msg.f_UnderlyingInstrument_UnderlyingCountryOfIssue );
     ( "593" , opt encode_string msg.f_UnderlyingInstrument_UnderlyingStateOrProvinceOfIssue );
     ( "594" , opt encode_string msg.f_UnderlyingInstrument_UnderlyingLocaleOfIssue );
     ( "247" , opt encode_LocalMktDate msg.f_UnderlyingInstrument_UnderlyingRedemptionDate );
-    ( "316" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingStrikePrice );
+    ( "316" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingStrikePrice );
     ( "941" , opt encode_Currency msg.f_UnderlyingInstrument_UnderlyingStrikeCurrency );
     ( "317" , opt encode_char msg.f_UnderlyingInstrument_UnderlyingOptAttribute );
-    ( "436" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingContractMultiplier );
-    ( "435" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingCouponRate );
+    ( "436" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingContractMultiplier );
+    ( "435" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingCouponRate );
     ( "308" , opt encode_Exchange msg.f_UnderlyingInstrument_UnderlyingSecurityExchange );
     ( "306" , opt encode_string msg.f_UnderlyingInstrument_UnderlyingIssuer );
     ( "362" , opt encode_int msg.f_UnderlyingInstrument_EncodedUnderlyingIssuerLen );
@@ -594,13 +594,13 @@ let encode_UnderlyingInstrument msg =
     ( "877" , opt encode_string msg.f_UnderlyingInstrument_UnderlyingCPProgram );
     ( "878" , opt encode_string msg.f_UnderlyingInstrument_UnderlyingCPRegType );
     ( "318" , opt encode_Currency msg.f_UnderlyingInstrument_UnderlyingCurrency );
-    ( "879" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingQty );
-    ( "810" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingPx );
-    ( "882" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingDirtyPrice );
-    ( "883" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingEndPrice );
-    ( "884" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingStartValue );
-    ( "885" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingCurrentValue );
-    ( "886" , opt encode_float_4 msg.f_UnderlyingInstrument_UnderlyingEndValue );
+    ( "879" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingQty );
+    ( "810" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingPx );
+    ( "882" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingDirtyPrice );
+    ( "883" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingEndPrice );
+    ( "884" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingStartValue );
+    ( "885" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingCurrentValue );
+    ( "886" , opt encode_float_6 msg.f_UnderlyingInstrument_UnderlyingEndValue );
     ]
     @ repeat encode_UndSecAltIDGrp "457" msg.f_UnderlyingInstrument_UndSecAltIDGrp
     @ repeat encode_UnderlyingStipulations "887" msg.f_UnderlyingInstrument_UnderlyingStipulations
@@ -619,7 +619,7 @@ let encode_NestedParties2 msg =
 let encode_InstrumentExtension msg =
     [
     ( "668" , opt encode_DeliveryForm msg.f_InstrumentExtension_DeliveryForm );
-    ( "869" , opt encode_float_4 msg.f_InstrumentExtension_PctAtRisk );
+    ( "869" , opt encode_float_6 msg.f_InstrumentExtension_PctAtRisk );
     ]
     @ repeat encode_AttrbGrp "870" msg.f_InstrumentExtension_AttrbGrp
 ;;
@@ -651,9 +651,9 @@ let encode_BidCompRspGrp msg =
     ( "66" , opt encode_string msg.f_BidCompRspGrp_ListID );
     ( "421" , opt encode_Country msg.f_BidCompRspGrp_Country );
     ( "54" , opt encode_Side msg.f_BidCompRspGrp_Side );
-    ( "44" , opt encode_float_4 msg.f_BidCompRspGrp_Price );
+    ( "44" , opt encode_float_6 msg.f_BidCompRspGrp_Price );
     ( "423" , opt encode_PriceType msg.f_BidCompRspGrp_PriceType );
-    ( "406" , opt encode_float_4 msg.f_BidCompRspGrp_FairValue );
+    ( "406" , opt encode_float_6 msg.f_BidCompRspGrp_FairValue );
     ( "430" , opt encode_NetGrossInd msg.f_BidCompRspGrp_NetGrossInd );
     ( "63" , opt encode_SettlType msg.f_BidCompRspGrp_SettlType );
     ( "64" , opt encode_LocalMktDate msg.f_BidCompRspGrp_SettlDate );
@@ -681,19 +681,19 @@ let encode_Instrument msg =
     ( "225" , opt encode_LocalMktDate msg.f_Instrument_IssueDate );
     ( "239" , opt encode_string msg.f_Instrument_RepoCollateralSecurityType );
     ( "226" , opt encode_int msg.f_Instrument_RepurchaseTerm );
-    ( "227" , opt encode_float_4 msg.f_Instrument_RepurchaseRate );
-    ( "228" , opt encode_float_4 msg.f_Instrument_Factor );
+    ( "227" , opt encode_float_6 msg.f_Instrument_RepurchaseRate );
+    ( "228" , opt encode_float_6 msg.f_Instrument_Factor );
     ( "255" , opt encode_string msg.f_Instrument_CreditRating );
     ( "543" , opt encode_string msg.f_Instrument_InstrRegistry );
     ( "470" , opt encode_Country msg.f_Instrument_CountryOfIssue );
     ( "471" , opt encode_string msg.f_Instrument_StateOrProvinceOfIssue );
     ( "472" , opt encode_string msg.f_Instrument_LocaleOfIssue );
     ( "240" , opt encode_LocalMktDate msg.f_Instrument_RedemptionDate );
-    ( "202" , opt encode_float_4 msg.f_Instrument_StrikePrice );
+    ( "202" , opt encode_float_6 msg.f_Instrument_StrikePrice );
     ( "947" , opt encode_Currency msg.f_Instrument_StrikeCurrency );
     ( "206" , opt encode_char msg.f_Instrument_OptAttribute );
-    ( "231" , opt encode_float_4 msg.f_Instrument_ContractMultiplier );
-    ( "223" , opt encode_float_4 msg.f_Instrument_CouponRate );
+    ( "231" , opt encode_float_6 msg.f_Instrument_ContractMultiplier );
+    ( "223" , opt encode_float_6 msg.f_Instrument_CouponRate );
     ( "207" , opt encode_Exchange msg.f_Instrument_SecurityExchange );
     ( "106" , opt encode_string msg.f_Instrument_Issuer );
     ( "348" , opt encode_int msg.f_Instrument_EncodedIssuerLen );
@@ -738,19 +738,19 @@ let encode_InstrumentLeg msg =
     ( "249" , opt encode_LocalMktDate msg.f_InstrumentLeg_LegIssueDate );
     ( "250" , opt encode_string msg.f_InstrumentLeg_LegRepoCollateralSecurityType );
     ( "251" , opt encode_int msg.f_InstrumentLeg_LegRepurchaseTerm );
-    ( "252" , opt encode_float_4 msg.f_InstrumentLeg_LegRepurchaseRate );
-    ( "253" , opt encode_float_4 msg.f_InstrumentLeg_LegFactor );
+    ( "252" , opt encode_float_6 msg.f_InstrumentLeg_LegRepurchaseRate );
+    ( "253" , opt encode_float_6 msg.f_InstrumentLeg_LegFactor );
     ( "257" , opt encode_string msg.f_InstrumentLeg_LegCreditRating );
     ( "599" , opt encode_string msg.f_InstrumentLeg_LegInstrRegistry );
     ( "596" , opt encode_Country msg.f_InstrumentLeg_LegCountryOfIssue );
     ( "597" , opt encode_string msg.f_InstrumentLeg_LegStateOrProvinceOfIssue );
     ( "598" , opt encode_string msg.f_InstrumentLeg_LegLocaleOfIssue );
     ( "254" , opt encode_LocalMktDate msg.f_InstrumentLeg_LegRedemptionDate );
-    ( "612" , opt encode_float_4 msg.f_InstrumentLeg_LegStrikePrice );
+    ( "612" , opt encode_float_6 msg.f_InstrumentLeg_LegStrikePrice );
     ( "942" , opt encode_Currency msg.f_InstrumentLeg_LegStrikeCurrency );
     ( "613" , opt encode_char msg.f_InstrumentLeg_LegOptAttribute );
-    ( "614" , opt encode_float_4 msg.f_InstrumentLeg_LegContractMultiplier );
-    ( "615" , opt encode_float_4 msg.f_InstrumentLeg_LegCouponRate );
+    ( "614" , opt encode_float_6 msg.f_InstrumentLeg_LegContractMultiplier );
+    ( "615" , opt encode_float_6 msg.f_InstrumentLeg_LegCouponRate );
     ( "616" , opt encode_Exchange msg.f_InstrumentLeg_LegSecurityExchange );
     ( "617" , opt encode_string msg.f_InstrumentLeg_LegIssuer );
     ( "618" , opt encode_int msg.f_InstrumentLeg_EncodedLegIssuerLen );
@@ -758,7 +758,7 @@ let encode_InstrumentLeg msg =
     ( "620" , opt encode_string msg.f_InstrumentLeg_LegSecurityDesc );
     ( "621" , opt encode_int msg.f_InstrumentLeg_EncodedLegSecurityDescLen );
     ( "622" , opt encode_string msg.f_InstrumentLeg_EncodedLegSecurityDesc );
-    ( "623" , opt encode_float_4 msg.f_InstrumentLeg_LegRatioQty );
+    ( "623" , opt encode_float_6 msg.f_InstrumentLeg_LegRatioQty );
     ( "624" , opt encode_char msg.f_InstrumentLeg_LegSide );
     ( "556" , opt encode_Currency msg.f_InstrumentLeg_LegCurrency );
     ( "740" , opt encode_string msg.f_InstrumentLeg_LegPool );
@@ -773,15 +773,15 @@ let encode_InstrmtLegExecGrp msg =
     encode_InstrumentLeg msg.f_InstrmtLegExecGrp_InstrumentLeg @
     [
     ( "555" , opt encode_int msg.f_InstrmtLegExecGrp_NoLegs );
-    ( "687" , opt encode_float_4 msg.f_InstrmtLegExecGrp_LegQty );
+    ( "687" , opt encode_float_6 msg.f_InstrmtLegExecGrp_LegQty );
     ( "690" , opt encode_LegSwapType msg.f_InstrmtLegExecGrp_LegSwapType );
     ( "564" , opt encode_char msg.f_InstrmtLegExecGrp_LegPositionEffect );
     ( "565" , opt encode_int msg.f_InstrmtLegExecGrp_LegCoveredOrUncovered );
     ( "654" , opt encode_string msg.f_InstrmtLegExecGrp_LegRefID );
-    ( "566" , opt encode_float_4 msg.f_InstrmtLegExecGrp_LegPrice );
+    ( "566" , opt encode_float_6 msg.f_InstrmtLegExecGrp_LegPrice );
     ( "587" , opt encode_char msg.f_InstrmtLegExecGrp_LegSettlType );
     ( "588" , opt encode_LocalMktDate msg.f_InstrmtLegExecGrp_LegSettlDate );
-    ( "637" , opt encode_float_4 msg.f_InstrmtLegExecGrp_LegLastPx );
+    ( "637" , opt encode_float_6 msg.f_InstrmtLegExecGrp_LegLastPx );
     ]
     @ repeat encode_LegStipulations "683" msg.f_InstrmtLegExecGrp_LegStipulations
     @ repeat encode_NestedParties "539" msg.f_InstrmtLegExecGrp_NestedParties
@@ -791,11 +791,11 @@ let encode_UndInstrmtStrkPxGrp msg =
     encode_UnderlyingInstrument msg.f_UndInstrmtStrkPxGrp_UnderlyingInstrument @
     [
     ( "711" , opt encode_int msg.f_UndInstrmtStrkPxGrp_NoUnderlyings );
-    ( "140" , opt encode_float_4 msg.f_UndInstrmtStrkPxGrp_PrevClosePx );
+    ( "140" , opt encode_float_6 msg.f_UndInstrmtStrkPxGrp_PrevClosePx );
     ( "11" , opt encode_string msg.f_UndInstrmtStrkPxGrp_ClOrdID );
     ( "526" , opt encode_string msg.f_UndInstrmtStrkPxGrp_SecondaryClOrdID );
     ( "54" , opt encode_Side msg.f_UndInstrmtStrkPxGrp_Side );
-    ( "44" , req encode_float_4 msg.f_UndInstrmtStrkPxGrp_Price );
+    ( "44" , req encode_float_6 msg.f_UndInstrmtStrkPxGrp_Price );
     ( "15" , opt encode_Currency msg.f_UndInstrmtStrkPxGrp_Currency );
     ( "58" , opt encode_string msg.f_UndInstrmtStrkPxGrp_Text );
     ( "354" , opt encode_int msg.f_UndInstrmtStrkPxGrp_EncodedTextLen );
@@ -810,7 +810,7 @@ let encode_PreAllocMlegGrp msg =
     ( "661" , opt encode_int msg.f_PreAllocMlegGrp_AllocAcctIDSource );
     ( "736" , opt encode_Currency msg.f_PreAllocMlegGrp_AllocSettlCurrency );
     ( "467" , opt encode_string msg.f_PreAllocMlegGrp_IndividualAllocID );
-    ( "80" , opt encode_float_4 msg.f_PreAllocMlegGrp_AllocQty );
+    ( "80" , opt encode_float_6 msg.f_PreAllocMlegGrp_AllocQty );
     ]
     @ repeat encode_NestedParties3 "948" msg.f_PreAllocMlegGrp_NestedParties3
 ;;
@@ -820,13 +820,13 @@ let encode_LegQuotGrp msg =
     encode_LegBenchmarkCurveData msg.f_LegQuotGrp_LegBenchmarkCurveData @
     [
     ( "555" , opt encode_int msg.f_LegQuotGrp_NoLegs );
-    ( "687" , opt encode_float_4 msg.f_LegQuotGrp_LegQty );
+    ( "687" , opt encode_float_6 msg.f_LegQuotGrp_LegQty );
     ( "690" , opt encode_LegSwapType msg.f_LegQuotGrp_LegSwapType );
     ( "587" , opt encode_char msg.f_LegQuotGrp_LegSettlType );
     ( "588" , opt encode_LocalMktDate msg.f_LegQuotGrp_LegSettlDate );
     ( "686" , opt encode_int msg.f_LegQuotGrp_LegPriceType );
-    ( "681" , opt encode_float_4 msg.f_LegQuotGrp_LegBidPx );
-    ( "684" , opt encode_float_4 msg.f_LegQuotGrp_LegOfferPx );
+    ( "681" , opt encode_float_6 msg.f_LegQuotGrp_LegBidPx );
+    ( "684" , opt encode_float_6 msg.f_LegQuotGrp_LegOfferPx );
     ]
     @ repeat encode_LegStipulations "683" msg.f_LegQuotGrp_LegStipulations
     @ repeat encode_NestedParties "539" msg.f_LegQuotGrp_NestedParties
@@ -836,7 +836,7 @@ let encode_LegQuotStatGrp msg =
     encode_InstrumentLeg msg.f_LegQuotStatGrp_InstrumentLeg @
     [
     ( "555" , opt encode_int msg.f_LegQuotStatGrp_NoLegs );
-    ( "687" , opt encode_float_4 msg.f_LegQuotStatGrp_LegQty );
+    ( "687" , opt encode_float_6 msg.f_LegQuotStatGrp_LegQty );
     ( "690" , opt encode_LegSwapType msg.f_LegQuotStatGrp_LegSwapType );
     ( "587" , opt encode_char msg.f_LegQuotStatGrp_LegSettlType );
     ( "588" , opt encode_LocalMktDate msg.f_LegQuotStatGrp_LegSettlDate );
@@ -852,7 +852,7 @@ let encode_TrdAllocGrp msg =
     ( "661" , opt encode_int msg.f_TrdAllocGrp_AllocAcctIDSource );
     ( "736" , opt encode_Currency msg.f_TrdAllocGrp_AllocSettlCurrency );
     ( "467" , opt encode_string msg.f_TrdAllocGrp_IndividualAllocID );
-    ( "80" , opt encode_float_4 msg.f_TrdAllocGrp_AllocQty );
+    ( "80" , opt encode_float_6 msg.f_TrdAllocGrp_AllocQty );
     ]
     @ repeat encode_NestedParties2 "756" msg.f_TrdAllocGrp_NestedParties2
 ;;
@@ -892,9 +892,9 @@ let encode_OrdAllocGrp msg =
     ( "198" , opt encode_string msg.f_OrdAllocGrp_SecondaryOrderID );
     ( "526" , opt encode_string msg.f_OrdAllocGrp_SecondaryClOrdID );
     ( "66" , opt encode_string msg.f_OrdAllocGrp_ListID );
-    ( "38" , opt encode_float_4 msg.f_OrdAllocGrp_OrderQty );
-    ( "799" , opt encode_float_4 msg.f_OrdAllocGrp_OrderAvgPx );
-    ( "800" , opt encode_float_4 msg.f_OrdAllocGrp_OrderBookingQty );
+    ( "38" , opt encode_float_6 msg.f_OrdAllocGrp_OrderQty );
+    ( "799" , opt encode_float_6 msg.f_OrdAllocGrp_OrderAvgPx );
+    ( "800" , opt encode_float_6 msg.f_OrdAllocGrp_OrderBookingQty );
     ]
     @ repeat encode_NestedParties2 "756" msg.f_OrdAllocGrp_NestedParties2
 ;;
@@ -912,7 +912,7 @@ let encode_PosUndInstrmtGrp msg =
     encode_UnderlyingInstrument msg.f_PosUndInstrmtGrp_UnderlyingInstrument @
     [
     ( "711" , opt encode_int msg.f_PosUndInstrmtGrp_NoUnderlyings );
-    ( "732" , req encode_float_4 msg.f_PosUndInstrmtGrp_UnderlyingSettlPrice );
+    ( "732" , req encode_float_6 msg.f_PosUndInstrmtGrp_UnderlyingSettlPrice );
     ( "733" , req encode_int msg.f_PosUndInstrmtGrp_UnderlyingSettlPriceType );
     ]
 ;;
@@ -928,8 +928,8 @@ let encode_PositionQty msg =
     [
     ( "702" , opt encode_int msg.f_PositionQty_NoPositions );
     ( "703" , opt encode_PosType msg.f_PositionQty_PosType );
-    ( "704" , opt encode_float_4 msg.f_PositionQty_LongQty );
-    ( "705" , opt encode_float_4 msg.f_PositionQty_ShortQty );
+    ( "704" , opt encode_float_6 msg.f_PositionQty_LongQty );
+    ( "705" , opt encode_float_6 msg.f_PositionQty_ShortQty );
     ( "706" , opt encode_PosQtyStatus msg.f_PositionQty_PosQtyStatus );
     ]
     @ repeat encode_NestedParties "539" msg.f_PositionQty_NestedParties
@@ -958,7 +958,7 @@ let encode_QuotReqLegsGrp msg =
     encode_LegBenchmarkCurveData msg.f_QuotReqLegsGrp_LegBenchmarkCurveData @
     [
     ( "555" , opt encode_int msg.f_QuotReqLegsGrp_NoLegs );
-    ( "687" , opt encode_float_4 msg.f_QuotReqLegsGrp_LegQty );
+    ( "687" , opt encode_float_6 msg.f_QuotReqLegsGrp_LegQty );
     ( "690" , opt encode_LegSwapType msg.f_QuotReqLegsGrp_LegSwapType );
     ( "587" , opt encode_char msg.f_QuotReqLegsGrp_LegSettlType );
     ( "588" , opt encode_LocalMktDate msg.f_QuotReqLegsGrp_LegSettlDate );
@@ -985,15 +985,15 @@ let encode_TrdInstrmtLegGrp msg =
     encode_InstrumentLeg msg.f_TrdInstrmtLegGrp_InstrumentLeg @
     [
     ( "555" , opt encode_int msg.f_TrdInstrmtLegGrp_NoLegs );
-    ( "687" , opt encode_float_4 msg.f_TrdInstrmtLegGrp_LegQty );
+    ( "687" , opt encode_float_6 msg.f_TrdInstrmtLegGrp_LegQty );
     ( "690" , opt encode_LegSwapType msg.f_TrdInstrmtLegGrp_LegSwapType );
     ( "564" , opt encode_char msg.f_TrdInstrmtLegGrp_LegPositionEffect );
     ( "565" , opt encode_int msg.f_TrdInstrmtLegGrp_LegCoveredOrUncovered );
     ( "654" , opt encode_string msg.f_TrdInstrmtLegGrp_LegRefID );
-    ( "566" , opt encode_float_4 msg.f_TrdInstrmtLegGrp_LegPrice );
+    ( "566" , opt encode_float_6 msg.f_TrdInstrmtLegGrp_LegPrice );
     ( "587" , opt encode_char msg.f_TrdInstrmtLegGrp_LegSettlType );
     ( "588" , opt encode_LocalMktDate msg.f_TrdInstrmtLegGrp_LegSettlDate );
-    ( "637" , opt encode_float_4 msg.f_TrdInstrmtLegGrp_LegLastPx );
+    ( "637" , opt encode_float_6 msg.f_TrdInstrmtLegGrp_LegLastPx );
     ]
     @ repeat encode_LegStipulations "683" msg.f_TrdInstrmtLegGrp_LegStipulations
     @ repeat encode_NestedParties "539" msg.f_TrdInstrmtLegGrp_NestedParties
@@ -1021,7 +1021,7 @@ let encode_LegPreAllocGrp msg =
     ( "670" , opt encode_int msg.f_LegPreAllocGrp_NoLegAllocs );
     ( "671" , opt encode_string msg.f_LegPreAllocGrp_LegAllocAccount );
     ( "672" , opt encode_string msg.f_LegPreAllocGrp_LegIndividualAllocID );
-    ( "673" , opt encode_float_4 msg.f_LegPreAllocGrp_LegAllocQty );
+    ( "673" , opt encode_float_6 msg.f_LegPreAllocGrp_LegAllocQty );
     ( "674" , opt encode_string msg.f_LegPreAllocGrp_LegAllocAcctIDSource );
     ( "675" , opt encode_Currency msg.f_LegPreAllocGrp_LegSettlCurrency );
     ]
@@ -1035,7 +1035,7 @@ let encode_PreAllocGrp msg =
     ( "661" , opt encode_int msg.f_PreAllocGrp_AllocAcctIDSource );
     ( "736" , opt encode_Currency msg.f_PreAllocGrp_AllocSettlCurrency );
     ( "467" , opt encode_string msg.f_PreAllocGrp_IndividualAllocID );
-    ( "80" , opt encode_float_4 msg.f_PreAllocGrp_AllocQty );
+    ( "80" , opt encode_float_6 msg.f_PreAllocGrp_AllocQty );
     ]
     @ repeat encode_NestedParties "539" msg.f_PreAllocGrp_NestedParties
 ;;
@@ -1051,7 +1051,7 @@ let encode_RFQReqGrp msg =
     encode_Instrument msg.f_RFQReqGrp_Instrument @
     [
     ( "146" , req encode_int msg.f_RFQReqGrp_NoRelatedSym );
-    ( "140" , opt encode_float_4 msg.f_RFQReqGrp_PrevClosePx );
+    ( "140" , opt encode_float_6 msg.f_RFQReqGrp_PrevClosePx );
     ( "303" , opt encode_QuoteRequestType msg.f_RFQReqGrp_QuoteRequestType );
     ( "537" , opt encode_QuoteType msg.f_RFQReqGrp_QuoteType );
     ( "336" , opt encode_string msg.f_RFQReqGrp_TradingSessionID );
@@ -1072,9 +1072,9 @@ let encode_MDIncGrp msg =
     ( "280" , opt encode_string msg.f_MDIncGrp_MDEntryRefID );
     ( "291" , opt encode_FinancialStatus msg.f_MDIncGrp_FinancialStatus );
     ( "292" , opt encode_CorporateAction msg.f_MDIncGrp_CorporateAction );
-    ( "270" , opt encode_float_4 msg.f_MDIncGrp_MDEntryPx );
+    ( "270" , opt encode_float_6 msg.f_MDIncGrp_MDEntryPx );
     ( "15" , opt encode_Currency msg.f_MDIncGrp_Currency );
-    ( "271" , opt encode_float_4 msg.f_MDIncGrp_MDEntrySize );
+    ( "271" , opt encode_float_6 msg.f_MDIncGrp_MDEntrySize );
     ( "272" , opt encode_UTCDateOnly msg.f_MDIncGrp_MDEntryDate );
     ( "273" , opt encode_UTCTimeOnly msg.f_MDIncGrp_MDEntryTime );
     ( "274" , opt encode_TickDirection msg.f_MDIncGrp_TickDirection );
@@ -1090,7 +1090,7 @@ let encode_MDIncGrp msg =
     ( "59" , opt encode_TimeInForce msg.f_MDIncGrp_TimeInForce );
     ( "432" , opt encode_LocalMktDate msg.f_MDIncGrp_ExpireDate );
     ( "126" , opt encode_UTCTimestamp msg.f_MDIncGrp_ExpireTime );
-    ( "110" , opt encode_float_4 msg.f_MDIncGrp_MinQty );
+    ( "110" , opt encode_float_6 msg.f_MDIncGrp_MinQty );
     ( "18" , opt encode_ExecInst msg.f_MDIncGrp_ExecInst );
     ( "287" , opt encode_int msg.f_MDIncGrp_SellerDays );
     ( "37" , opt encode_string msg.f_MDIncGrp_OrderID );
@@ -1100,8 +1100,8 @@ let encode_MDIncGrp msg =
     ( "346" , opt encode_int msg.f_MDIncGrp_NumberOfOrders );
     ( "290" , opt encode_int msg.f_MDIncGrp_MDEntryPositionNo );
     ( "546" , opt encode_Scope msg.f_MDIncGrp_Scope );
-    ( "811" , opt encode_float_4 msg.f_MDIncGrp_PriceDelta );
-    ( "451" , opt encode_float_4 msg.f_MDIncGrp_NetChgPrevDay );
+    ( "811" , opt encode_float_6 msg.f_MDIncGrp_PriceDelta );
+    ( "451" , opt encode_float_6 msg.f_MDIncGrp_NetChgPrevDay );
     ( "58" , opt encode_string msg.f_MDIncGrp_Text );
     ( "354" , opt encode_int msg.f_MDIncGrp_EncodedTextLen );
     ( "355" , opt encode_string msg.f_MDIncGrp_EncodedText );
@@ -1115,28 +1115,28 @@ let encode_QuotEntryGrp msg =
     [
     ( "295" , req encode_int msg.f_QuotEntryGrp_NoQuoteEntries );
     ( "299" , req encode_string msg.f_QuotEntryGrp_QuoteEntryID );
-    ( "132" , opt encode_float_4 msg.f_QuotEntryGrp_BidPx );
-    ( "133" , opt encode_float_4 msg.f_QuotEntryGrp_OfferPx );
-    ( "134" , opt encode_float_4 msg.f_QuotEntryGrp_BidSize );
-    ( "135" , opt encode_float_4 msg.f_QuotEntryGrp_OfferSize );
+    ( "132" , opt encode_float_6 msg.f_QuotEntryGrp_BidPx );
+    ( "133" , opt encode_float_6 msg.f_QuotEntryGrp_OfferPx );
+    ( "134" , opt encode_float_6 msg.f_QuotEntryGrp_BidSize );
+    ( "135" , opt encode_float_6 msg.f_QuotEntryGrp_OfferSize );
     ( "62" , opt encode_UTCTimestamp msg.f_QuotEntryGrp_ValidUntilTime );
-    ( "188" , opt encode_float_4 msg.f_QuotEntryGrp_BidSpotRate );
-    ( "190" , opt encode_float_4 msg.f_QuotEntryGrp_OfferSpotRate );
-    ( "189" , opt encode_float_4 msg.f_QuotEntryGrp_BidForwardPoints );
-    ( "191" , opt encode_float_4 msg.f_QuotEntryGrp_OfferForwardPoints );
-    ( "631" , opt encode_float_4 msg.f_QuotEntryGrp_MidPx );
-    ( "632" , opt encode_float_4 msg.f_QuotEntryGrp_BidYield );
-    ( "633" , opt encode_float_4 msg.f_QuotEntryGrp_MidYield );
-    ( "634" , opt encode_float_4 msg.f_QuotEntryGrp_OfferYield );
+    ( "188" , opt encode_float_6 msg.f_QuotEntryGrp_BidSpotRate );
+    ( "190" , opt encode_float_6 msg.f_QuotEntryGrp_OfferSpotRate );
+    ( "189" , opt encode_float_6 msg.f_QuotEntryGrp_BidForwardPoints );
+    ( "191" , opt encode_float_6 msg.f_QuotEntryGrp_OfferForwardPoints );
+    ( "631" , opt encode_float_6 msg.f_QuotEntryGrp_MidPx );
+    ( "632" , opt encode_float_6 msg.f_QuotEntryGrp_BidYield );
+    ( "633" , opt encode_float_6 msg.f_QuotEntryGrp_MidYield );
+    ( "634" , opt encode_float_6 msg.f_QuotEntryGrp_OfferYield );
     ( "60" , opt encode_UTCTimestamp msg.f_QuotEntryGrp_TransactTime );
     ( "336" , opt encode_string msg.f_QuotEntryGrp_TradingSessionID );
     ( "625" , opt encode_string msg.f_QuotEntryGrp_TradingSessionSubID );
     ( "64" , opt encode_LocalMktDate msg.f_QuotEntryGrp_SettlDate );
     ( "40" , opt encode_OrdType msg.f_QuotEntryGrp_OrdType );
     ( "193" , opt encode_LocalMktDate msg.f_QuotEntryGrp_SettlDate2 );
-    ( "192" , opt encode_float_4 msg.f_QuotEntryGrp_OrderQty2 );
-    ( "642" , opt encode_float_4 msg.f_QuotEntryGrp_BidForwardPoints2 );
-    ( "643" , opt encode_float_4 msg.f_QuotEntryGrp_OfferForwardPoints2 );
+    ( "192" , opt encode_float_6 msg.f_QuotEntryGrp_OrderQty2 );
+    ( "642" , opt encode_float_6 msg.f_QuotEntryGrp_BidForwardPoints2 );
+    ( "643" , opt encode_float_6 msg.f_QuotEntryGrp_OfferForwardPoints2 );
     ( "15" , opt encode_Currency msg.f_QuotEntryGrp_Currency );
     ]
     @ repeat encode_InstrmtLegGrp "555" msg.f_QuotEntryGrp_InstrmtLegGrp
@@ -1156,12 +1156,12 @@ let encode_LegOrdGrp msg =
     encode_InstrumentLeg msg.f_LegOrdGrp_InstrumentLeg @
     [
     ( "555" , req encode_int msg.f_LegOrdGrp_NoLegs );
-    ( "687" , opt encode_float_4 msg.f_LegOrdGrp_LegQty );
+    ( "687" , opt encode_float_6 msg.f_LegOrdGrp_LegQty );
     ( "690" , opt encode_LegSwapType msg.f_LegOrdGrp_LegSwapType );
     ( "564" , opt encode_char msg.f_LegOrdGrp_LegPositionEffect );
     ( "565" , opt encode_int msg.f_LegOrdGrp_LegCoveredOrUncovered );
     ( "654" , opt encode_string msg.f_LegOrdGrp_LegRefID );
-    ( "566" , opt encode_float_4 msg.f_LegOrdGrp_LegPrice );
+    ( "566" , opt encode_float_6 msg.f_LegOrdGrp_LegPrice );
     ( "587" , opt encode_char msg.f_LegOrdGrp_LegSettlType );
     ( "588" , opt encode_LocalMktDate msg.f_LegOrdGrp_LegSettlDate );
     ]
@@ -1248,11 +1248,11 @@ let encode_ListOrdGrp msg =
     ( "635" , opt encode_ClearingFeeIndicator msg.f_ListOrdGrp_ClearingFeeIndicator );
     ( "21" , opt encode_HandlInst msg.f_ListOrdGrp_HandlInst );
     ( "18" , opt encode_ExecInst msg.f_ListOrdGrp_ExecInst );
-    ( "110" , opt encode_float_4 msg.f_ListOrdGrp_MinQty );
-    ( "111" , opt encode_float_4 msg.f_ListOrdGrp_MaxFloor );
+    ( "110" , opt encode_float_6 msg.f_ListOrdGrp_MinQty );
+    ( "111" , opt encode_float_6 msg.f_ListOrdGrp_MaxFloor );
     ( "100" , opt encode_Exchange msg.f_ListOrdGrp_ExDestination );
     ( "81" , opt encode_ProcessCode msg.f_ListOrdGrp_ProcessCode );
-    ( "140" , opt encode_float_4 msg.f_ListOrdGrp_PrevClosePx );
+    ( "140" , opt encode_float_6 msg.f_ListOrdGrp_PrevClosePx );
     ( "54" , req encode_Side msg.f_ListOrdGrp_Side );
     ( "401" , opt encode_SideValueInd msg.f_ListOrdGrp_SideValueInd );
     ( "114" , opt encode_LocateReqd msg.f_ListOrdGrp_LocateReqd );
@@ -1260,8 +1260,8 @@ let encode_ListOrdGrp msg =
     ( "854" , opt encode_QtyType msg.f_ListOrdGrp_QtyType );
     ( "40" , opt encode_OrdType msg.f_ListOrdGrp_OrdType );
     ( "423" , opt encode_PriceType msg.f_ListOrdGrp_PriceType );
-    ( "44" , opt encode_float_4 msg.f_ListOrdGrp_Price );
-    ( "99" , opt encode_float_4 msg.f_ListOrdGrp_StopPx );
+    ( "44" , opt encode_float_6 msg.f_ListOrdGrp_Price );
+    ( "99" , opt encode_float_6 msg.f_ListOrdGrp_StopPx );
     ( "15" , opt encode_Currency msg.f_ListOrdGrp_Currency );
     ( "376" , opt encode_string msg.f_ListOrdGrp_ComplianceID );
     ( "377" , opt encode_SolicitedFlag msg.f_ListOrdGrp_SolicitedFlag );
@@ -1282,14 +1282,14 @@ let encode_ListOrdGrp msg =
     ( "354" , opt encode_int msg.f_ListOrdGrp_EncodedTextLen );
     ( "355" , opt encode_string msg.f_ListOrdGrp_EncodedText );
     ( "193" , opt encode_LocalMktDate msg.f_ListOrdGrp_SettlDate2 );
-    ( "192" , opt encode_float_4 msg.f_ListOrdGrp_OrderQty2 );
-    ( "640" , opt encode_float_4 msg.f_ListOrdGrp_Price2 );
+    ( "192" , opt encode_float_6 msg.f_ListOrdGrp_OrderQty2 );
+    ( "640" , opt encode_float_6 msg.f_ListOrdGrp_Price2 );
     ( "77" , opt encode_PositionEffect msg.f_ListOrdGrp_PositionEffect );
     ( "203" , opt encode_CoveredOrUncovered msg.f_ListOrdGrp_CoveredOrUncovered );
-    ( "210" , opt encode_float_4 msg.f_ListOrdGrp_MaxShow );
+    ( "210" , opt encode_float_6 msg.f_ListOrdGrp_MaxShow );
     ( "847" , opt encode_TargetStrategy msg.f_ListOrdGrp_TargetStrategy );
     ( "848" , opt encode_string msg.f_ListOrdGrp_TargetStrategyParameters );
-    ( "849" , opt encode_float_4 msg.f_ListOrdGrp_ParticipationRate );
+    ( "849" , opt encode_float_6 msg.f_ListOrdGrp_ParticipationRate );
     ( "494" , opt encode_string msg.f_ListOrdGrp_Designation );
     ]
     @ repeat encode_Parties "453" msg.f_ListOrdGrp_Parties
@@ -1323,7 +1323,7 @@ let encode_QuotReqGrp msg =
     encode_YieldData msg.f_QuotReqGrp_YieldData @
     [
     ( "146" , req encode_int msg.f_QuotReqGrp_NoRelatedSym );
-    ( "140" , opt encode_float_4 msg.f_QuotReqGrp_PrevClosePx );
+    ( "140" , opt encode_float_6 msg.f_QuotReqGrp_PrevClosePx );
     ( "303" , opt encode_QuoteRequestType msg.f_QuotReqGrp_QuoteRequestType );
     ( "537" , opt encode_QuoteType msg.f_QuotReqGrp_QuoteType );
     ( "336" , opt encode_string msg.f_QuotReqGrp_TradingSessionID );
@@ -1334,7 +1334,7 @@ let encode_QuotReqGrp msg =
     ( "63" , opt encode_SettlType msg.f_QuotReqGrp_SettlType );
     ( "64" , opt encode_LocalMktDate msg.f_QuotReqGrp_SettlDate );
     ( "193" , opt encode_LocalMktDate msg.f_QuotReqGrp_SettlDate2 );
-    ( "192" , opt encode_float_4 msg.f_QuotReqGrp_OrderQty2 );
+    ( "192" , opt encode_float_6 msg.f_QuotReqGrp_OrderQty2 );
     ( "15" , opt encode_Currency msg.f_QuotReqGrp_Currency );
     ( "1" , opt encode_string msg.f_QuotReqGrp_Account );
     ( "660" , opt encode_AcctIDSource msg.f_QuotReqGrp_AcctIDSource );
@@ -1345,8 +1345,8 @@ let encode_QuotReqGrp msg =
     ( "126" , opt encode_UTCTimestamp msg.f_QuotReqGrp_ExpireTime );
     ( "60" , opt encode_UTCTimestamp msg.f_QuotReqGrp_TransactTime );
     ( "423" , opt encode_PriceType msg.f_QuotReqGrp_PriceType );
-    ( "44" , opt encode_float_4 msg.f_QuotReqGrp_Price );
-    ( "640" , opt encode_float_4 msg.f_QuotReqGrp_Price2 );
+    ( "44" , opt encode_float_6 msg.f_QuotReqGrp_Price );
+    ( "640" , opt encode_float_6 msg.f_QuotReqGrp_Price2 );
     ]
     @ repeat encode_UndInstrmtGrp "711" msg.f_QuotReqGrp_UndInstrmtGrp
     @ repeat encode_Stipulations "232" msg.f_QuotReqGrp_Stipulations
@@ -1360,28 +1360,28 @@ let encode_QuotEntryAckGrp msg =
     [
     ( "295" , opt encode_int msg.f_QuotEntryAckGrp_NoQuoteEntries );
     ( "299" , opt encode_string msg.f_QuotEntryAckGrp_QuoteEntryID );
-    ( "132" , opt encode_float_4 msg.f_QuotEntryAckGrp_BidPx );
-    ( "133" , opt encode_float_4 msg.f_QuotEntryAckGrp_OfferPx );
-    ( "134" , opt encode_float_4 msg.f_QuotEntryAckGrp_BidSize );
-    ( "135" , opt encode_float_4 msg.f_QuotEntryAckGrp_OfferSize );
+    ( "132" , opt encode_float_6 msg.f_QuotEntryAckGrp_BidPx );
+    ( "133" , opt encode_float_6 msg.f_QuotEntryAckGrp_OfferPx );
+    ( "134" , opt encode_float_6 msg.f_QuotEntryAckGrp_BidSize );
+    ( "135" , opt encode_float_6 msg.f_QuotEntryAckGrp_OfferSize );
     ( "62" , opt encode_UTCTimestamp msg.f_QuotEntryAckGrp_ValidUntilTime );
-    ( "188" , opt encode_float_4 msg.f_QuotEntryAckGrp_BidSpotRate );
-    ( "190" , opt encode_float_4 msg.f_QuotEntryAckGrp_OfferSpotRate );
-    ( "189" , opt encode_float_4 msg.f_QuotEntryAckGrp_BidForwardPoints );
-    ( "191" , opt encode_float_4 msg.f_QuotEntryAckGrp_OfferForwardPoints );
-    ( "631" , opt encode_float_4 msg.f_QuotEntryAckGrp_MidPx );
-    ( "632" , opt encode_float_4 msg.f_QuotEntryAckGrp_BidYield );
-    ( "633" , opt encode_float_4 msg.f_QuotEntryAckGrp_MidYield );
-    ( "634" , opt encode_float_4 msg.f_QuotEntryAckGrp_OfferYield );
+    ( "188" , opt encode_float_6 msg.f_QuotEntryAckGrp_BidSpotRate );
+    ( "190" , opt encode_float_6 msg.f_QuotEntryAckGrp_OfferSpotRate );
+    ( "189" , opt encode_float_6 msg.f_QuotEntryAckGrp_BidForwardPoints );
+    ( "191" , opt encode_float_6 msg.f_QuotEntryAckGrp_OfferForwardPoints );
+    ( "631" , opt encode_float_6 msg.f_QuotEntryAckGrp_MidPx );
+    ( "632" , opt encode_float_6 msg.f_QuotEntryAckGrp_BidYield );
+    ( "633" , opt encode_float_6 msg.f_QuotEntryAckGrp_MidYield );
+    ( "634" , opt encode_float_6 msg.f_QuotEntryAckGrp_OfferYield );
     ( "60" , opt encode_UTCTimestamp msg.f_QuotEntryAckGrp_TransactTime );
     ( "336" , opt encode_string msg.f_QuotEntryAckGrp_TradingSessionID );
     ( "625" , opt encode_string msg.f_QuotEntryAckGrp_TradingSessionSubID );
     ( "64" , opt encode_LocalMktDate msg.f_QuotEntryAckGrp_SettlDate );
     ( "40" , opt encode_OrdType msg.f_QuotEntryAckGrp_OrdType );
     ( "193" , opt encode_LocalMktDate msg.f_QuotEntryAckGrp_SettlDate2 );
-    ( "192" , opt encode_float_4 msg.f_QuotEntryAckGrp_OrderQty2 );
-    ( "642" , opt encode_float_4 msg.f_QuotEntryAckGrp_BidForwardPoints2 );
-    ( "643" , opt encode_float_4 msg.f_QuotEntryAckGrp_OfferForwardPoints2 );
+    ( "192" , opt encode_float_6 msg.f_QuotEntryAckGrp_OrderQty2 );
+    ( "642" , opt encode_float_6 msg.f_QuotEntryAckGrp_BidForwardPoints2 );
+    ( "643" , opt encode_float_6 msg.f_QuotEntryAckGrp_OfferForwardPoints2 );
     ( "15" , opt encode_Currency msg.f_QuotEntryAckGrp_Currency );
     ( "368" , opt encode_int msg.f_QuotEntryAckGrp_QuoteEntryRejectReason );
     ]
@@ -1406,7 +1406,7 @@ let encode_QuotReqRjctGrp msg =
     encode_YieldData msg.f_QuotReqRjctGrp_YieldData @
     [
     ( "146" , req encode_int msg.f_QuotReqRjctGrp_NoRelatedSym );
-    ( "140" , opt encode_float_4 msg.f_QuotReqRjctGrp_PrevClosePx );
+    ( "140" , opt encode_float_6 msg.f_QuotReqRjctGrp_PrevClosePx );
     ( "303" , opt encode_QuoteRequestType msg.f_QuotReqRjctGrp_QuoteRequestType );
     ( "537" , opt encode_QuoteType msg.f_QuotReqRjctGrp_QuoteType );
     ( "336" , opt encode_string msg.f_QuotReqRjctGrp_TradingSessionID );
@@ -1417,7 +1417,7 @@ let encode_QuotReqRjctGrp msg =
     ( "63" , opt encode_SettlType msg.f_QuotReqRjctGrp_SettlType );
     ( "64" , opt encode_LocalMktDate msg.f_QuotReqRjctGrp_SettlDate );
     ( "193" , opt encode_LocalMktDate msg.f_QuotReqRjctGrp_SettlDate2 );
-    ( "192" , opt encode_float_4 msg.f_QuotReqRjctGrp_OrderQty2 );
+    ( "192" , opt encode_float_6 msg.f_QuotReqRjctGrp_OrderQty2 );
     ( "15" , opt encode_Currency msg.f_QuotReqRjctGrp_Currency );
     ( "1" , opt encode_string msg.f_QuotReqRjctGrp_Account );
     ( "660" , opt encode_AcctIDSource msg.f_QuotReqRjctGrp_AcctIDSource );
@@ -1427,8 +1427,8 @@ let encode_QuotReqRjctGrp msg =
     ( "126" , opt encode_UTCTimestamp msg.f_QuotReqRjctGrp_ExpireTime );
     ( "60" , opt encode_UTCTimestamp msg.f_QuotReqRjctGrp_TransactTime );
     ( "423" , opt encode_PriceType msg.f_QuotReqRjctGrp_PriceType );
-    ( "44" , opt encode_float_4 msg.f_QuotReqRjctGrp_Price );
-    ( "640" , opt encode_float_4 msg.f_QuotReqRjctGrp_Price2 );
+    ( "44" , opt encode_float_6 msg.f_QuotReqRjctGrp_Price );
+    ( "640" , opt encode_float_6 msg.f_QuotReqRjctGrp_Price2 );
     ]
     @ repeat encode_UndInstrmtGrp "711" msg.f_QuotReqRjctGrp_UndInstrmtGrp
     @ repeat encode_Stipulations "232" msg.f_QuotReqRjctGrp_Stipulations
@@ -1446,8 +1446,8 @@ let encode_SecListGrp msg =
     [
     ( "146" , opt encode_int msg.f_SecListGrp_NoRelatedSym );
     ( "15" , opt encode_Currency msg.f_SecListGrp_Currency );
-    ( "561" , opt encode_float_4 msg.f_SecListGrp_RoundLot );
-    ( "562" , opt encode_float_4 msg.f_SecListGrp_MinTradeVol );
+    ( "561" , opt encode_float_6 msg.f_SecListGrp_RoundLot );
+    ( "562" , opt encode_float_6 msg.f_SecListGrp_MinTradeVol );
     ( "336" , opt encode_string msg.f_SecListGrp_TradingSessionID );
     ( "625" , opt encode_string msg.f_SecListGrp_TradingSessionSubID );
     ( "827" , opt encode_ExpirationCycle msg.f_SecListGrp_ExpirationCycle );
@@ -1490,21 +1490,21 @@ let encode_TrdCapRptSideGrp msg =
     ( "336" , opt encode_string msg.f_TrdCapRptSideGrp_TradingSessionID );
     ( "625" , opt encode_string msg.f_TrdCapRptSideGrp_TradingSessionSubID );
     ( "943" , opt encode_string msg.f_TrdCapRptSideGrp_TimeBracket );
-    ( "381" , opt encode_float_4 msg.f_TrdCapRptSideGrp_GrossTradeAmt );
+    ( "381" , opt encode_float_6 msg.f_TrdCapRptSideGrp_GrossTradeAmt );
     ( "157" , opt encode_int msg.f_TrdCapRptSideGrp_NumDaysInterest );
     ( "230" , opt encode_LocalMktDate msg.f_TrdCapRptSideGrp_ExDate );
-    ( "158" , opt encode_float_4 msg.f_TrdCapRptSideGrp_AccruedInterestRate );
-    ( "159" , opt encode_float_4 msg.f_TrdCapRptSideGrp_AccruedInterestAmt );
-    ( "738" , opt encode_float_4 msg.f_TrdCapRptSideGrp_InterestAtMaturity );
-    ( "920" , opt encode_float_4 msg.f_TrdCapRptSideGrp_EndAccruedInterestAmt );
-    ( "921" , opt encode_float_4 msg.f_TrdCapRptSideGrp_StartCash );
-    ( "922" , opt encode_float_4 msg.f_TrdCapRptSideGrp_EndCash );
-    ( "238" , opt encode_float_4 msg.f_TrdCapRptSideGrp_Concession );
-    ( "237" , opt encode_float_4 msg.f_TrdCapRptSideGrp_TotalTakedown );
-    ( "118" , opt encode_float_4 msg.f_TrdCapRptSideGrp_NetMoney );
-    ( "119" , opt encode_float_4 msg.f_TrdCapRptSideGrp_SettlCurrAmt );
+    ( "158" , opt encode_float_6 msg.f_TrdCapRptSideGrp_AccruedInterestRate );
+    ( "159" , opt encode_float_6 msg.f_TrdCapRptSideGrp_AccruedInterestAmt );
+    ( "738" , opt encode_float_6 msg.f_TrdCapRptSideGrp_InterestAtMaturity );
+    ( "920" , opt encode_float_6 msg.f_TrdCapRptSideGrp_EndAccruedInterestAmt );
+    ( "921" , opt encode_float_6 msg.f_TrdCapRptSideGrp_StartCash );
+    ( "922" , opt encode_float_6 msg.f_TrdCapRptSideGrp_EndCash );
+    ( "238" , opt encode_float_6 msg.f_TrdCapRptSideGrp_Concession );
+    ( "237" , opt encode_float_6 msg.f_TrdCapRptSideGrp_TotalTakedown );
+    ( "118" , opt encode_float_6 msg.f_TrdCapRptSideGrp_NetMoney );
+    ( "119" , opt encode_float_6 msg.f_TrdCapRptSideGrp_SettlCurrAmt );
     ( "120" , opt encode_Currency msg.f_TrdCapRptSideGrp_SettlCurrency );
-    ( "155" , opt encode_float_4 msg.f_TrdCapRptSideGrp_SettlCurrFxRate );
+    ( "155" , opt encode_float_6 msg.f_TrdCapRptSideGrp_SettlCurrFxRate );
     ( "156" , opt encode_SettlCurrFxRateCalc msg.f_TrdCapRptSideGrp_SettlCurrFxRateCalc );
     ( "77" , opt encode_PositionEffect msg.f_TrdCapRptSideGrp_PositionEffect );
     ( "58" , opt encode_string msg.f_TrdCapRptSideGrp_Text );
@@ -1582,8 +1582,8 @@ let encode_AllocGrp msg =
     ( "79" , opt encode_string msg.f_AllocGrp_AllocAccount );
     ( "661" , opt encode_int msg.f_AllocGrp_AllocAcctIDSource );
     ( "573" , opt encode_MatchStatus msg.f_AllocGrp_MatchStatus );
-    ( "366" , opt encode_float_4 msg.f_AllocGrp_AllocPrice );
-    ( "80" , opt encode_float_4 msg.f_AllocGrp_AllocQty );
+    ( "366" , opt encode_float_6 msg.f_AllocGrp_AllocPrice );
+    ( "80" , opt encode_float_6 msg.f_AllocGrp_AllocQty );
     ( "467" , opt encode_string msg.f_AllocGrp_IndividualAllocID );
     ( "81" , opt encode_ProcessCode msg.f_AllocGrp_ProcessCode );
     ( "208" , opt encode_NotifyBrokerOfCredit msg.f_AllocGrp_NotifyBrokerOfCredit );
@@ -1591,16 +1591,16 @@ let encode_AllocGrp msg =
     ( "161" , opt encode_string msg.f_AllocGrp_AllocText );
     ( "360" , opt encode_int msg.f_AllocGrp_EncodedAllocTextLen );
     ( "361" , opt encode_string msg.f_AllocGrp_EncodedAllocText );
-    ( "153" , opt encode_float_4 msg.f_AllocGrp_AllocAvgPx );
-    ( "154" , opt encode_float_4 msg.f_AllocGrp_AllocNetMoney );
-    ( "119" , opt encode_float_4 msg.f_AllocGrp_SettlCurrAmt );
-    ( "737" , opt encode_float_4 msg.f_AllocGrp_AllocSettlCurrAmt );
+    ( "153" , opt encode_float_6 msg.f_AllocGrp_AllocAvgPx );
+    ( "154" , opt encode_float_6 msg.f_AllocGrp_AllocNetMoney );
+    ( "119" , opt encode_float_6 msg.f_AllocGrp_SettlCurrAmt );
+    ( "737" , opt encode_float_6 msg.f_AllocGrp_AllocSettlCurrAmt );
     ( "120" , opt encode_Currency msg.f_AllocGrp_SettlCurrency );
     ( "736" , opt encode_Currency msg.f_AllocGrp_AllocSettlCurrency );
-    ( "155" , opt encode_float_4 msg.f_AllocGrp_SettlCurrFxRate );
+    ( "155" , opt encode_float_6 msg.f_AllocGrp_SettlCurrFxRate );
     ( "156" , opt encode_SettlCurrFxRateCalc msg.f_AllocGrp_SettlCurrFxRateCalc );
-    ( "742" , opt encode_float_4 msg.f_AllocGrp_AllocAccruedInterestAmt );
-    ( "741" , opt encode_float_4 msg.f_AllocGrp_AllocInterestAtMaturity );
+    ( "742" , opt encode_float_6 msg.f_AllocGrp_AllocAccruedInterestAmt );
+    ( "741" , opt encode_float_6 msg.f_AllocGrp_AllocInterestAtMaturity );
     ( "780" , opt encode_AllocSettlInstType msg.f_AllocGrp_AllocSettlInstType );
     ]
     @ repeat encode_NestedParties "539" msg.f_AllocGrp_NestedParties

@@ -31,6 +31,14 @@ let fix_float_4_to_string x =
   encode_float_4 x
 ;;
 
+let fix_float_5_to_string x = 
+  encode_float_5 x
+;;
+
+let fix_float_6_to_string x = 
+  encode_float_6 x
+;;
+
 let fix_float_to_string x = 
   fix_float_4_to_string x
 ;;

@@ -7,16 +7,16 @@ open Model_messages;;
 
 let reject_NewOrderSingle_missingfield ( m_state , reject_text : model_state * string ) =
     let msg_data_inner = {
-        f_ExecutionReport_LeavesQty = Float_4 0;
+        f_ExecutionReport_LeavesQty = Float_6 0;
         f_ExecutionReport_ExecID = "a";
         f_ExecutionReport_ExecType = MOD_FIX_ExecType_Calculated;
         f_ExecutionReport_OrderID = "b";
         f_ExecutionReport_OrdStatus = MOD_FIX_OrdStatus_New;
         f_ExecutionReport_Text = Some reject_text;
-        f_ExecutionReport_AvgPx = Float_4 0;
+        f_ExecutionReport_AvgPx = Float_6 0;
         f_ExecutionReport_Side = MOD_FIX_Side_Buy;
         f_ExecutionReport_Instrument_Symbol = "b";
-        f_ExecutionReport_CumQty = Float_4 0;
+        f_ExecutionReport_CumQty = Float_6 0;
         f_ExecutionReport_ClOrdID = "b"
     } in
     let m_state = send_msg (FIX_Msg_ExecutionReport msg_data_inner,m_state) in
@@ -28,12 +28,12 @@ let reject_NewOrderSingle_invalidfield ( m_state , msg_data , reject_text : mode
         f_ExecutionReport_OrderID = "b";
         f_ExecutionReport_Side = MOD_FIX_Side_Buy;
         f_ExecutionReport_Text = Some reject_text;
-        f_ExecutionReport_AvgPx = Float_4 0;
-        f_ExecutionReport_LeavesQty = Float_4 0;
+        f_ExecutionReport_AvgPx = Float_6 0;
+        f_ExecutionReport_LeavesQty = Float_6 0;
         f_ExecutionReport_ExecType = MOD_FIX_ExecType_Calculated;
         f_ExecutionReport_OrdStatus = MOD_FIX_OrdStatus_New;
         f_ExecutionReport_ClOrdID = "b";
-        f_ExecutionReport_CumQty = Float_4 0;
+        f_ExecutionReport_CumQty = Float_6 0;
         f_ExecutionReport_Instrument_Symbol = "b";
         f_ExecutionReport_ExecID = "a"
     } in
@@ -43,13 +43,13 @@ let reject_NewOrderSingle_invalidfield ( m_state , msg_data , reject_text : mode
 
 let reject_NewOrderSingle_invalid ( m_state , msg_data , reject_text : model_state * mod_newordersingle_data * string ) =
     let msg_data_inner = {
-        f_ExecutionReport_LeavesQty = Float_4 0;
+        f_ExecutionReport_LeavesQty = Float_6 0;
         f_ExecutionReport_Side = MOD_FIX_Side_Buy;
-        f_ExecutionReport_AvgPx = Float_4 0;
+        f_ExecutionReport_AvgPx = Float_6 0;
         f_ExecutionReport_OrderID = "b";
         f_ExecutionReport_ExecID = "a";
         f_ExecutionReport_OrdStatus = MOD_FIX_OrdStatus_New;
-        f_ExecutionReport_CumQty = Float_4 0;
+        f_ExecutionReport_CumQty = Float_6 0;
         f_ExecutionReport_Instrument_Symbol = "b";
         f_ExecutionReport_ExecType = MOD_FIX_ExecType_Calculated;
         f_ExecutionReport_Text = Some reject_text;

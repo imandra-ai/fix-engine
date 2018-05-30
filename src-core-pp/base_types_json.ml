@@ -100,9 +100,35 @@ let float_4_opt_to_json = function
     | Some x -> float_4_to_json x
 ;;
 
-let float_to_json x = float_4_to_json x;;
+let float_5_to_json : fix_float_5-> json = function
+  | Float_5 x ->
+    `Assoc
+    [ ( "Precision", `Int 5)
+    ; ( "Number"   , `Int x      )
+    ]
+;;
 
-let float_opt_to_json x = float_4_opt_to_json x;;
+let float_5_opt_to_json = function 
+    | None -> `Null
+    | Some x -> float_5_to_json x
+;;
+
+let float_6_to_json : fix_float_6 -> json = function
+  | Float_6 x ->
+    `Assoc
+    [ ( "Precision", `Int 6)
+    ; ( "Number"   , `Int x      )
+    ]
+;;
+
+let float_6_opt_to_json = function 
+    | None -> `Null
+    | Some x -> float_6_to_json x
+;;
+
+let float_to_json x = float_6_to_json x;;
+
+let float_opt_to_json x = float_6_opt_to_json x;;
 
 (**
   *  FIX_String
