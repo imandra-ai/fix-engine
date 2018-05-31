@@ -9,10 +9,10 @@ type mod_executionreport_data = {
     f_ExecutionReport_OrderID : string;
     f_ExecutionReport_ExecID : string;
     f_ExecutionReport_ExecType : model_fix_exectype;
-    f_ExecutionReport_AvgPx : fix_float_4;
+    f_ExecutionReport_AvgPx : fix_float_6;
     f_ExecutionReport_Side : model_fix_side;
-    f_ExecutionReport_LeavesQty : fix_float_4;
-    f_ExecutionReport_CumQty : fix_float_4;
+    f_ExecutionReport_LeavesQty : fix_float_6;
+    f_ExecutionReport_CumQty : fix_float_6;
     f_ExecutionReport_OrdStatus : model_fix_ordstatus;
     f_ExecutionReport_Instrument_Symbol : string;
     f_ExecutionReport_Text : string option
