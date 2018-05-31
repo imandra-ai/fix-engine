@@ -22,7 +22,7 @@ type model_fix_rec_ptyssubgrp = {
 type model_fix_inner_contragrp = {
     mod_f_ContraGrp_ContraBroker : string option;
     mod_f_ContraGrp_ContraTrader : string option;
-    mod_f_ContraGrp_ContraTradeQty : fix_float_4 option;
+    mod_f_ContraGrp_ContraTradeQty : fix_float_6 option;
     mod_f_ContraGrp_ContraTradeTime : fix_utctimestamp option;
     mod_f_ContraGrp_ContraLegRefID : string option
 }

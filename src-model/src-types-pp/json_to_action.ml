@@ -23,8 +23,21 @@ let jopt json key parser f =
 
 let json_to_model_string_opt = JU.to_string_option
 
+let json_to_float_6_opt json =
+  match JU.(json |> member "Precision" |> to_int_option ) with None -> None | Some precision ->
+  match JU.(json |> member "Number"    |> to_int_option ) with None -> None | Some number ->
+  match precision with
+    | 6 -> Some ( Numeric.float_Create_6 (number * 1      ) )  
+    | 5 -> Some ( Numeric.float_Create_6 (number * 10     ) )  
+    | 4 -> Some ( Numeric.float_Create_6 (number * 100    ) )  
+    | 3 -> Some ( Numeric.float_Create_6 (number * 1000   ) )  
+    | 2 -> Some ( Numeric.float_Create_6 (number * 10000  ) )  
+    | 1 -> Some ( Numeric.float_Create_6 (number * 100000 ) )  
+    | 0 -> Some ( Numeric.float_Create_6 (number * 1000000) )  
+    | _ -> None
+;;
 
-let json_to_float_opt json =
+let json_to_float_4_opt json =
   match JU.(json |> member "Precision" |> to_int_option ) with None -> None | Some precision ->
   match JU.(json |> member "Number"    |> to_int_option ) with None -> None | Some number ->
   match precision with
@@ -63,15 +76,15 @@ let json_to_mod_act_neworder_option json =
   jreq json "ClOrdID"               json_to_model_string_opt                      @@ fun mod_f_neworder_ClOrdID              ->
   jreq json "Symbol"                json_to_model_string_opt                      @@ fun mod_f_neworder_Symbol               ->
   jreq json "Side"                  ( js string_to_mod_side_opt )                 @@ fun mod_f_neworder_Side                 ->
-  jopt json "Price"                 json_to_float_opt                             @@ fun mod_f_neworder_Price                ->
-  jreq json "OrderQty"              json_to_float_opt                             @@ fun mod_f_neworder_OrderQty             ->
+  jopt json "Price"                 json_to_float_4_opt                           @@ fun mod_f_neworder_Price                ->
+  jreq json "OrderQty"              json_to_float_6_opt                           @@ fun mod_f_neworder_OrderQty             ->
   jreq json "OrdType"               ( js string_to_mod_ordtype_opt       )        @@ fun mod_f_neworder_OrdType              ->
   jopt json "TimeInForce"           ( js string_to_mod_timeinforce_opt   )        @@ fun mod_f_neworder_TimeInForce          ->
   jopt json "ExecInst"              ( js string_to_mod_execinst_opt      )        @@ fun mod_f_neworder_ExecInst             ->
   jopt json "BookIndicator"         ( js string_to_mod_bookindicator_opt )        @@ fun mod_f_neworder_BookIndicator        ->
-  jopt json "MinQty"                json_to_float_opt                             @@ fun mod_f_neworder_MinQty               ->
+  jopt json "MinQty"                json_to_float_6_opt                           @@ fun mod_f_neworder_MinQty               ->
   jreq json "TransactTime"          json_to_utctimestamp_opt                      @@ fun mod_f_neworder_TransactTime         -> 
-  jopt json "PegDifference"         json_to_float_opt                             @@ fun mod_f_neworder_PegDifference        -> 
+  jopt json "PegDifference"         json_to_float_6_opt                           @@ fun mod_f_neworder_PegDifference        -> 
   jopt json "Currency"              ( js string_to_mod_currency_opt             ) @@ fun mod_f_neworder_Currency             -> 
   jreq json "HandlInst"             ( js string_to_mod_handlinst_opt            ) @@ fun mod_f_neworder_HandlInst            -> 
   jreq json "TechnicalOrdType"      ( js string_to_mod_technicalordtype_opt     ) @@ fun mod_f_neworder_TechnicalOrdType     -> 
@@ -144,7 +157,7 @@ let json_to_mod_act_cancel_option json =
   jreq json "ClOrdID"      json_to_model_string_opt          @@ fun mod_f_cancel_ClOrdID       ->
   jreq json "OrigClOrdID"  json_to_model_string_opt          @@ fun mod_f_cancel_OrigClOrdID   ->
   jreq json "Symbol"       json_to_model_string_opt          @@ fun mod_f_cancel_Symbol        ->
-  jopt json "OrderQty"     json_to_float_opt                 @@ fun mod_f_cancel_OrderQty      ->
+  jopt json "OrderQty"     json_to_float_6_opt               @@ fun mod_f_cancel_OrderQty      ->
   jopt json "TransactTime" json_to_utctimestamp_opt          @@ fun mod_f_cancel_TransactTime  ->
   jopt json "MIC"          json_to_model_string_opt          @@ fun mod_f_cancel_MIC           ->
   jopt json "Currency"     ( js string_to_mod_currency_opt ) @@ fun mod_f_cancel_Currency      ->
@@ -169,9 +182,9 @@ let json_to_mod_act_cancelreplace_option json =
   jreq json "OrdType"              ( js string_to_mod_ordtype_opt              ) @@ fun mod_f_cancelreplace_OrdType              ->
   jopt json "TimeInForce"          ( js string_to_mod_timeinforce_opt          ) @@ fun mod_f_cancelreplace_TimeInForce          ->
   jopt json "ExecInst"             ( js string_to_mod_execinst_opt             ) @@ fun mod_f_cancelreplace_ExecInst             ->
-  jopt json "Price"                json_to_float_opt                             @@ fun mod_f_cancelreplace_Price                ->
-  jreq json "OrderQty"             json_to_float_opt                             @@ fun mod_f_cancelreplace_OrderQty             ->
-  jopt json "PegDifference"        json_to_float_opt                             @@ fun mod_f_cancelreplace_PegDifference        ->
+  jopt json "Price"                json_to_float_4_opt                           @@ fun mod_f_cancelreplace_Price                ->
+  jreq json "OrderQty"             json_to_float_6_opt                           @@ fun mod_f_cancelreplace_OrderQty             ->
+  jopt json "PegDifference"        json_to_float_6_opt                           @@ fun mod_f_cancelreplace_PegDifference        ->
   jopt json "TechnicalOrdType"     ( js string_to_mod_technicalordtype_opt     ) @@ fun mod_f_cancelreplace_TechnicalOrdType     ->
   jreq json "Rule80A"              ( js string_to_mod_rule80a_opt              ) @@ fun mod_f_cancelreplace_Rule80A              ->
   jopt json "Account"              json_to_model_string_opt                      @@ fun mod_f_cancelreplace_Account              ->

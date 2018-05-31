@@ -20,7 +20,7 @@ let mod_ptyssubgrp_to_json (d)  =
 let model_ContraGrp_rg_to_json (y)  : json =
     (match y with
         | None -> `Null
-        | Some x -> (assoc_filter_nulls (("ContraBroker",string_opt_to_json x.mod_f_ContraGrp_ContraBroker) :: (("ContraTrader",string_opt_to_json x.mod_f_ContraGrp_ContraTrader) :: (("ContraTradeQty",float_4_opt_to_json x.mod_f_ContraGrp_ContraTradeQty) :: (("ContraTradeTime",utctimestamp_opt_to_json x.mod_f_ContraGrp_ContraTradeTime) :: (("ContraLegRefID",string_opt_to_json x.mod_f_ContraGrp_ContraLegRefID) :: []))))))
+        | Some x -> (assoc_filter_nulls (("ContraBroker",string_opt_to_json x.mod_f_ContraGrp_ContraBroker) :: (("ContraTrader",string_opt_to_json x.mod_f_ContraGrp_ContraTrader) :: (("ContraTradeQty",float_6_opt_to_json x.mod_f_ContraGrp_ContraTradeQty) :: (("ContraTradeTime",utctimestamp_opt_to_json x.mod_f_ContraGrp_ContraTradeTime) :: (("ContraLegRefID",string_opt_to_json x.mod_f_ContraGrp_ContraLegRefID) :: []))))))
     )
 ;;
 

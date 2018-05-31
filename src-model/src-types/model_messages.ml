@@ -13,10 +13,10 @@ type mod_ordersingle_data = {
     mod_f_OrderSingle_TimeInForce : model_fix_timeinforce option;
     mod_f_OrderSingle_ExecInst : model_fix_execinst option;
     mod_f_OrderSingle_Price : fix_float_4 option;
-    mod_f_OrderSingle_OrderQty : fix_float_4;
+    mod_f_OrderSingle_OrderQty : fix_float_6;
     mod_f_OrderSingle_BookIndicator : model_fix_bookindicator option;
-    mod_f_OrderSingle_MinQty : fix_float_4 option;
-    mod_f_OrderSingle_PegDifference : fix_float_4 option;
+    mod_f_OrderSingle_MinQty : fix_float_6 option;
+    mod_f_OrderSingle_PegDifference : fix_float_6 option;
     mod_f_OrderSingle_TransactTime : fix_utctimestamp;
     mod_f_OrderSingle_Currency : model_fix_currency option;
     mod_f_OrderSingle_HandlInst : model_fix_handlinst;
@@ -40,8 +40,8 @@ type mod_ordercancelreplacerequest_data = {
     mod_f_OrderCancelReplaceRequest_TimeInForce : model_fix_timeinforce option;
     mod_f_OrderCancelReplaceRequest_ExecInst : model_fix_execinst option;
     mod_f_OrderCancelReplaceRequest_Price : fix_float_4 option;
-    mod_f_OrderCancelReplaceRequest_OrderQty : fix_float_4;
-    mod_f_OrderCancelReplaceRequest_PegDifference : fix_float_4 option;
+    mod_f_OrderCancelReplaceRequest_OrderQty : fix_float_6;
+    mod_f_OrderCancelReplaceRequest_PegDifference : fix_float_6 option;
     mod_f_OrderCancelReplaceRequest_TechnicalOrdType : model_fix_technicalordtype option;
     mod_f_OrderCancelReplaceRequest_Rule80A : model_fix_rule80a;
     mod_f_OrderCancelReplaceRequest_Account : string option;
@@ -60,7 +60,7 @@ type mod_ordercancelrequest_data = {
     mod_f_OrderCancelRequest_ClOrdID : string;
     mod_f_OrderCancelRequest_OrigClOrdID : string;
     mod_f_OrderCancelRequest_Symbol : string;
-    mod_f_OrderCancelRequest_OrderQty : fix_float_4 option;
+    mod_f_OrderCancelRequest_OrderQty : fix_float_6 option;
     mod_f_OrderCancelRequest_TransactTime : fix_utctimestamp option;
     mod_f_OrderCancelRequest_MIC : string option;
     mod_f_OrderCancelRequest_Currency : model_fix_currency option
@@ -90,8 +90,8 @@ type mod_executionreport_data = {
     mod_f_ExecutionReport_ExecType : model_fix_exectype;
     mod_f_ExecutionReport_AvgPx : fix_float_4;
     mod_f_ExecutionReport_Side : model_fix_side;
-    mod_f_ExecutionReport_LeavesQty : fix_float_4;
-    mod_f_ExecutionReport_CumQty : fix_float_4;
+    mod_f_ExecutionReport_LeavesQty : fix_float_6;
+    mod_f_ExecutionReport_CumQty : fix_float_6;
     mod_f_ExecutionReport_Text : string;
     mod_f_ExecutionReport_FreeText : string option;
     mod_f_ExecutionReport_ClearingHandlingType : model_fix_clearinghandlingtype option;
@@ -109,13 +109,13 @@ type mod_executionreport_data = {
     mod_f_ExecutionReport_OrdRejReason : model_fix_ordrejreason option;
     mod_f_ExecutionReport_ExecRefID : string option;
     mod_f_ExecutionReport_LastPx : fix_float_4 option;
-    mod_f_ExecutionReport_LastShares : fix_float_4 option;
+    mod_f_ExecutionReport_LastShares : fix_float_6 option;
     mod_f_ExecutionReport_OrdType : model_fix_ordtype option;
     mod_f_ExecutionReport_TimeInForce : model_fix_timeinforce option;
     mod_f_ExecutionReport_ExecInst : model_fix_execinst option;
     mod_f_ExecutionReport_Price : fix_float_4 option;
-    mod_f_ExecutionReport_OrderQty : fix_float_4 option;
-    mod_f_ExecutionReport_PegDifference : fix_float_4 option;
+    mod_f_ExecutionReport_OrderQty : fix_float_6 option;
+    mod_f_ExecutionReport_PegDifference : fix_float_6 option;
     mod_f_ExecutionReport_Account : string option;
     mod_f_ExecutionReport_ClientID : string option;
     mod_f_ExecutionReport_ClearingFirm : string option;

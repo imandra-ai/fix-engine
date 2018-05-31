@@ -35,14 +35,14 @@ let parse_bool ( str : string) : bool option =
 ;;
 
 (** Convert string to fix_float type. *)
-let parse_float (str: string) : fix_float_4 option =
+let parse_float (str: string) : fix_float_6 option =
     if String.get str 0 = '+' then None else
     let whole, tail = Scanf.sscanf str "%d%s" (fun w f -> (w,f)) in
-    if (tail = "") || (tail = ".") then Some (Float_4 ( whole * 10000 )) else
+    if (tail = "") || (tail = ".") then Some (Float_6 ( whole * 1000000 )) else
     if String.get tail 0 != '.' then None else
     let fraction = Scanf.sscanf tail ".%d" (fun t -> t) in
-    if (String.length tail - 1) <= 4 then
-    Some (Float_4 (whole * 10000 + fraction))
+    if (String.length tail - 1) <= 6 then
+    Some (Float_6 (whole * 10000 + fraction))
     else None
 ;;
 

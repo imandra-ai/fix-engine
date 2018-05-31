@@ -12,9 +12,9 @@ type m_action_fix_neworder = {
     mod_f_neworder_TimeInForce : model_fix_timeinforce option;
     mod_f_neworder_ExecInst : model_fix_execinst option;
     mod_f_neworder_Price : fix_float_4 option;
-    mod_f_neworder_OrderQty : fix_float_4;
+    mod_f_neworder_OrderQty : fix_float_6;
     mod_f_neworder_BookIndicator : model_fix_bookindicator option;
-    mod_f_neworder_MinQty : fix_float_4 option;
+    mod_f_neworder_MinQty : fix_float_6 option;
     mod_f_neworder_PegDifference : fix_float option;
     mod_f_neworder_TransactTime : fix_utctimestamp;
     mod_f_neworder_Currency : model_fix_currency option;
@@ -39,7 +39,7 @@ type m_action_fix_cancelreplace = {
     mod_f_cancelreplace_TimeInForce : model_fix_timeinforce option;
     mod_f_cancelreplace_ExecInst : model_fix_execinst option;
     mod_f_cancelreplace_Price : fix_float_4 option;
-    mod_f_cancelreplace_OrderQty : fix_float_4;
+    mod_f_cancelreplace_OrderQty : fix_float_6;
     mod_f_cancelreplace_PegDifference : fix_float option;
     mod_f_cancelreplace_TechnicalOrdType : model_fix_technicalordtype option;
     mod_f_cancelreplace_Rule80A : model_fix_rule80a;
@@ -59,7 +59,7 @@ type m_action_fix_cancel = {
     mod_f_cancel_ClOrdID : string;
     mod_f_cancel_OrigClOrdID : string;
     mod_f_cancel_Symbol : string;
-    mod_f_cancel_OrderQty : fix_float_4 option;
+    mod_f_cancel_OrderQty : fix_float_6 option;
     mod_f_cancel_TransactTime : fix_utctimestamp option;
     mod_f_cancel_MIC : string option;
     mod_f_cancel_Currency : model_fix_currency option

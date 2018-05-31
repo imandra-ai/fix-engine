@@ -4,6 +4,6 @@
   ( (name protocol_exts_pp)
     (public_name protocol_exts_pp)
     (wrapped false)
-    (libraries (core_pp protocol_exts yojson))
+    (libraries (core core_pp protocol_exts yojson))
   )
 )

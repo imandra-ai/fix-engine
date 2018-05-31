@@ -21,8 +21,8 @@ type full_fix_ordersingle_data = {
     f_OrderSingle_HandlInst : fix_handlinst option;
     (** Can contain multiple instructions, space delimited. If OrdType=P, exactly one of the following values (ExecInst = L, R, M, P, O, T, or W) must be specified.*)
     f_OrderSingle_ExecInst : fix_execinst option;
-    f_OrderSingle_MinQty : fix_float_4 option;
-    f_OrderSingle_MaxFloor : fix_float_4 option;
+    f_OrderSingle_MinQty : fix_float_6 option;
+    f_OrderSingle_MaxFloor : fix_float_6 option;
     f_OrderSingle_ExDestination : fix_exchange option;
     (** Used to identify soft trades at order entry.*)
     f_OrderSingle_ProcessCode : fix_processcode option;
@@ -66,9 +66,9 @@ type full_fix_ordersingle_data = {
     (** Time this order request was initiated/released by the trader or trading system.*)
     f_OrderSingle_TransactTime : fix_utctimestamp option;
     (** Either CashOrderQty or OrderQty is required. Note that either, but not both, CashOrderQty or OrderQty should be specified.*)
-    f_OrderSingle_OrderQty : fix_float_4 option;
+    f_OrderSingle_OrderQty : fix_float_6 option;
     (** Either CashOrderQty or OrderQty is required. Note that either, but not both, CashOrderQty or OrderQty should be specified. Specifies the approximate "monetary quantity" for the order. Broker is responsible for converting and calculating OrderQty in shares for subsequent messages.*)
-    f_OrderSingle_CashOrderQty : fix_float_4 option;
+    f_OrderSingle_CashOrderQty : fix_float_6 option;
     f_OrderSingle_OrdType : fix_ordtype option;
     (** Required for limit OrdTypes. For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points). Can be used to specify a limit price for a pegged order, previously indicated, etc.*)
     f_OrderSingle_Price : fix_float_4 option;
@@ -91,7 +91,7 @@ type full_fix_ordersingle_data = {
     f_OrderSingle_ExpireTime : fix_utctimestamp option;
     (** States whether executions are booked out or accumulated on a partially filled GT order*)
     f_OrderSingle_GTBookingInst : fix_gtbookinginst option;
-    f_OrderSingle_Commission : fix_float_4 option;
+    f_OrderSingle_Commission : fix_float_6 option;
     f_OrderSingle_CommType : fix_commtype option;
     f_OrderSingle_Rule80A : fix_rule80a option;
     (** Indicates that broker is requested to execute a Forex accommodation trade in conjunction with the security trade.*)
@@ -106,20 +106,20 @@ type full_fix_ordersingle_data = {
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_OrderSingle_FutSettDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
-    f_OrderSingle_OrderQty2 : fix_float_4 option;
+    f_OrderSingle_OrderQty2 : fix_float_6 option;
     (** For options*)
     f_OrderSingle_OpenClose : fix_openclose option;
     (** For options*)
     f_OrderSingle_CoveredOrUncovered : fix_coveredoruncovered option;
     (** For options when delivering the order to execution system/exchange.*)
     f_OrderSingle_CustomerOrFirm : fix_customerorfirm option;
-    f_OrderSingle_MaxShow : fix_float_4 option;
+    f_OrderSingle_MaxShow : fix_float_6 option;
     (** Amount (signed) added to the price of the peg*)
-    f_OrderSingle_PegDifference : fix_float_4 option;
+    f_OrderSingle_PegDifference : fix_float_6 option;
     (** Code to identify the price a DiscretionOffset is related to and should be mathematically added to. Required if DiscretionOffset is specified.*)
     f_OrderSingle_DiscretionInst : fix_discretioninst option;
     (** Amount (signed) added to the "related to" price specified via DiscretionInst.*)
-    f_OrderSingle_DiscretionOffset : fix_float_4 option;
+    f_OrderSingle_DiscretionOffset : fix_float_6 option;
     f_OrderSingle_ClearingFirm : string option;
     f_OrderSingle_ClearingAccount : string option;
     f_OrderSingle_OrderSingleAllocs : fix_rg_ordersingleallocs;
@@ -157,8 +157,8 @@ type full_fix_ordercancelreplacerequest_data = {
     f_OrderCancelReplaceRequest_HandlInst : fix_handlinst option;
     (** Can contain multiple instructions, space delimited. Replacement order must be created with new parameters (i.e. original order values will not be brought forward to replacement order unless redefined within this message).*)
     f_OrderCancelReplaceRequest_ExecInst : fix_execinst option;
-    f_OrderCancelReplaceRequest_MinQty : fix_float_4 option;
-    f_OrderCancelReplaceRequest_MaxFloor : fix_float_4 option;
+    f_OrderCancelReplaceRequest_MinQty : fix_float_6 option;
+    f_OrderCancelReplaceRequest_MaxFloor : fix_float_6 option;
     f_OrderCancelReplaceRequest_ExDestination : fix_exchange option;
     (** Must match original order*)
     f_OrderCancelReplaceRequest_Symbol : string option;
@@ -200,20 +200,20 @@ type full_fix_ordercancelreplacerequest_data = {
     (** Time this order request was initiated/released by the trader or trading system.*)
     f_OrderCancelReplaceRequest_TransactTime : fix_utctimestamp option;
     (** Either CashOrderQty or OrderQty is required. Note that either, but not both, CashOrderQty or OrderQty should be specified. Should be the "Total Intended Order Quantity" (including the amount already executed for this chain of orders)*)
-    f_OrderCancelReplaceRequest_OrderQty : fix_float_4 option;
+    f_OrderCancelReplaceRequest_OrderQty : fix_float_6 option;
     (** Either CashOrderQty or OrderQty is required. Note that either, but not both, CashOrderQty or OrderQty should be specified. Specifies the approximate "monetary quantity" for the order. Broker is responsible for converting and calculating OrderQty in shares for subsequent messages.*)
-    f_OrderCancelReplaceRequest_CashOrderQty : fix_float_4 option;
+    f_OrderCancelReplaceRequest_CashOrderQty : fix_float_6 option;
     f_OrderCancelReplaceRequest_OrdType : fix_ordtype option;
     (** Required for limit OrdTypes. For F/X orders, should be the "all-in" rate (spot rate adjusted for forward points). Can be used to specify a limit price for a pegged order, previously indicated, etc.*)
     f_OrderCancelReplaceRequest_Price : fix_float_4 option;
     (** Required for OrdType = "Stop" or OrdType = "Stop limit".*)
     f_OrderCancelReplaceRequest_StopPx : fix_float_4 option;
     (** Amount (signed) added to the price of the peg*)
-    f_OrderCancelReplaceRequest_PegDifference : fix_float_4 option;
+    f_OrderCancelReplaceRequest_PegDifference : fix_float_6 option;
     (** Code to identify the price a DiscretionOffset is related to and should be mathematically added to. Required if DiscretionOffset is specified.*)
     f_OrderCancelReplaceRequest_DiscretionInst : fix_discretioninst option;
     (** Amount (signed) added to the "related to" price specified via DiscretionInst.*)
-    f_OrderCancelReplaceRequest_DiscretionOffset : fix_float_4 option;
+    f_OrderCancelReplaceRequest_DiscretionOffset : fix_float_6 option;
     f_OrderCancelReplaceRequest_ComplianceID : string option;
     f_OrderCancelReplaceRequest_SolicitedFlag : fix_solicitedflag option;
     (** Must match original order.*)
@@ -228,7 +228,7 @@ type full_fix_ordercancelreplacerequest_data = {
     f_OrderCancelReplaceRequest_ExpireTime : fix_utctimestamp option;
     (** States whether executions are booked out or accumulated on a partially filled GT order*)
     f_OrderCancelReplaceRequest_GTBookingInst : fix_gtbookinginst option;
-    f_OrderCancelReplaceRequest_Commission : fix_float_4 option;
+    f_OrderCancelReplaceRequest_Commission : fix_float_6 option;
     f_OrderCancelReplaceRequest_CommType : fix_commtype option;
     (** Must match original order*)
     f_OrderCancelReplaceRequest_Rule80A : fix_rule80a option;
@@ -244,14 +244,14 @@ type full_fix_ordercancelreplacerequest_data = {
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_OrderCancelReplaceRequest_FutSettDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
-    f_OrderCancelReplaceRequest_OrderQty2 : fix_float_4 option;
+    f_OrderCancelReplaceRequest_OrderQty2 : fix_float_6 option;
     (** For options*)
     f_OrderCancelReplaceRequest_OpenClose : fix_openclose option;
     (** For options*)
     f_OrderCancelReplaceRequest_CoveredOrUncovered : fix_coveredoruncovered option;
     (** For options when delivering the order to execution system/exchange.*)
     f_OrderCancelReplaceRequest_CustomerOrFirm : fix_customerorfirm option;
-    f_OrderCancelReplaceRequest_MaxShow : fix_float_4 option;
+    f_OrderCancelReplaceRequest_MaxShow : fix_float_6 option;
     f_OrderCancelReplaceRequest_LocateReqd : fix_locatereqd option;
     f_OrderCancelReplaceRequest_ClearingFirm : string option;
     f_OrderCancelReplaceRequest_ClearingAccount : string option;
@@ -317,9 +317,9 @@ type full_fix_ordercancelrequest_data = {
     (** Time this order request was initiated/released by the trader or trading system.*)
     f_OrderCancelRequest_TransactTime : fix_utctimestamp option;
     (** Either CashOrderQty or OrderQty is required. OrderQty = CumQty + LeavesQty (see exceptions above)*)
-    f_OrderCancelRequest_OrderQty : fix_float_4 option;
+    f_OrderCancelRequest_OrderQty : fix_float_6 option;
     (** Either CashOrderQty or OrderQty is required. Specifies the approximate "monetary quantity" for the order. Broker is responsible for converting and calculating OrderQty in shares for subsequent messages.*)
-    f_OrderCancelRequest_CashOrderQty : fix_float_4 option;
+    f_OrderCancelRequest_CashOrderQty : fix_float_6 option;
     f_OrderCancelRequest_ComplianceID : string option;
     f_OrderCancelRequest_SolicitedFlag : fix_solicitedflag option;
     f_OrderCancelRequest_Text : string option;
@@ -439,20 +439,20 @@ type full_fix_executionreport_data = {
     f_ExecutionReport_EncodedSecurityDesc : string option;
     f_ExecutionReport_Side : fix_side option;
     (** Either CashOrderQty or OrderQty is required. Not required for a rejected cash order or an order ack for a cash order.*)
-    f_ExecutionReport_OrderQty : fix_float_4 option;
+    f_ExecutionReport_OrderQty : fix_float_6 option;
     (** Either CashOrderQty or OrderQty is required. Specifies the approximate "monetary quantity" conveyed on the order. Broker is responsible for converting and calculating OrderQty in shares for subsequent messages involving fills.*)
-    f_ExecutionReport_CashOrderQty : fix_float_4 option;
+    f_ExecutionReport_CashOrderQty : fix_float_6 option;
     f_ExecutionReport_OrdType : fix_ordtype option;
     (** Required if specified on the order*)
     f_ExecutionReport_Price : fix_float_4 option;
     (** Required if specified on the order*)
     f_ExecutionReport_StopPx : fix_float_4 option;
     (** Required if specified on the order*)
-    f_ExecutionReport_PegDifference : fix_float_4 option;
+    f_ExecutionReport_PegDifference : fix_float_6 option;
     (** Code to identify the price a DiscretionOffset is related to and should be mathematically added to. Required if DiscretionOffset is specified.*)
     f_ExecutionReport_DiscretionInst : fix_discretioninst option;
     (** Amount (signed) added to the "related to" price specified via DiscretionInst.*)
-    f_ExecutionReport_DiscretionOffset : fix_float_4 option;
+    f_ExecutionReport_DiscretionOffset : fix_float_6 option;
     f_ExecutionReport_Currency : fix_currency option;
     f_ExecutionReport_ComplianceID : string option;
     f_ExecutionReport_SolicitedFlag : fix_solicitedflag option;
@@ -469,26 +469,26 @@ type full_fix_executionreport_data = {
     f_ExecutionReport_Rule80A : fix_rule80a option;
     (** Quantity of shares bought/sold on this (last) fill. Not required ExecTransType = 3 (Status). When required, should be "0" for non-fills ("fill" defined as ExecTransType=New and ExecType=Partial Fill or Fill) unless noted below.
      If ExecType=Stopped, represents the quantity stopped/guaranteed/protected for.*)
-    f_ExecutionReport_LastShares : fix_float_4 option;
+    f_ExecutionReport_LastShares : fix_float_6 option;
     (** Price of this (last) fill. Not required for ExecTransType = 3 (Status), Should represent the "all-in" (LastSpotRate + LastForwardPoints) rate for F/X orders. ). When required, should be "0" for non-fills ("fill" defined as ExecTransType=New and ExecType=Partial Fill or Fill) unless noted below.
      If ExecType=Stopped, represents the price stopped/guaranteed/protected at.*)
     f_ExecutionReport_LastPx : fix_float_4 option;
     (** Applicable for F/X orders*)
     f_ExecutionReport_LastSpotRate : fix_float_4 option;
     (** Applicable for F/X orders*)
-    f_ExecutionReport_LastForwardPoints : fix_float_4 option;
+    f_ExecutionReport_LastForwardPoints : fix_float_6 option;
     f_ExecutionReport_LastMkt : fix_exchange option;
     f_ExecutionReport_TradingSessionID : string option;
     f_ExecutionReport_LastCapacity : fix_lastcapacity option;
     (** Amount of shares open for further execution. If the OrdStatus is Canceled, DoneForTheDay, Expired, Calculated, or Rejected (in which case the order is no longer active) then LeavesQty could be 0, otherwise LeavesQty = OrderQty - CumQty.*)
-    f_ExecutionReport_LeavesQty : fix_float_4 option;
+    f_ExecutionReport_LeavesQty : fix_float_6 option;
     (** Currently executed shares for chain of orders.*)
-    f_ExecutionReport_CumQty : fix_float_4 option;
+    f_ExecutionReport_CumQty : fix_float_6 option;
     f_ExecutionReport_AvgPx : fix_float_4 option;
     (** For GT orders on days following the day of the first trade.*)
-    f_ExecutionReport_DayOrderQty : fix_float_4 option;
+    f_ExecutionReport_DayOrderQty : fix_float_6 option;
     (** For GT orders on days following the day of the first trade.*)
-    f_ExecutionReport_DayCumQty : fix_float_4 option;
+    f_ExecutionReport_DayCumQty : fix_float_6 option;
     (** For GT orders on days following the day of the first trade.*)
     f_ExecutionReport_DayAvgPx : fix_float_4 option;
     (** States whether executions are booked out or accumulated on a partially filled GT order*)
@@ -499,11 +499,11 @@ type full_fix_executionreport_data = {
     f_ExecutionReport_TransactTime : fix_utctimestamp option;
     f_ExecutionReport_ReportToExch : fix_reporttoexch option;
     (** On a fill/partial fill messages, it represents value for that fill/partial fill, on ExecType=Calculated, it represents cumulative value for the order. Monetary commission values are expressed in the currency reflected by the Currency field.*)
-    f_ExecutionReport_Commission : fix_float_4 option;
+    f_ExecutionReport_Commission : fix_float_6 option;
     f_ExecutionReport_CommType : fix_commtype option;
-    f_ExecutionReport_GrossTradeAmt : fix_float_4 option;
+    f_ExecutionReport_GrossTradeAmt : fix_float_6 option;
     (** Used to report results of forex accommodation trade*)
-    f_ExecutionReport_SettlCurrAmt : fix_float_4 option;
+    f_ExecutionReport_SettlCurrAmt : fix_float_6 option;
     (** Used to report results of forex accommodation trade*)
     f_ExecutionReport_SettlCurrency : fix_currency option;
     (** Foreign exchange rate used to compute SettlCurrAmt from Currency to SettlCurrency*)
@@ -511,11 +511,11 @@ type full_fix_executionreport_data = {
     (** Specifies whether the SettlCurrFxRate should be multiplied or divided*)
     f_ExecutionReport_SettlCurrFxRateCalc : string option;
     f_ExecutionReport_HandlInst : fix_handlinst option;
-    f_ExecutionReport_MinQty : fix_float_4 option;
-    f_ExecutionReport_MaxFloor : fix_float_4 option;
+    f_ExecutionReport_MinQty : fix_float_6 option;
+    f_ExecutionReport_MaxFloor : fix_float_6 option;
     (** For options*)
     f_ExecutionReport_OpenClose : fix_openclose option;
-    f_ExecutionReport_MaxShow : fix_float_4 option;
+    f_ExecutionReport_MaxShow : fix_float_6 option;
     f_ExecutionReport_Text : string option;
     (** Must be set if EncodedText field is specified and must immediately precede it.*)
     f_ExecutionReport_EncodedTextLen : int option;
@@ -524,7 +524,7 @@ type full_fix_executionreport_data = {
     (** Can be used with OrdType = "Forex - Swap" to specify the "value date" for the future portion of a F/X swap.*)
     f_ExecutionReport_FutSettDate2 : fix_localmktdate option;
     (** Can be used with OrdType = "Forex - Swap" to specify the order quantity for the future portion of a F/X swap.*)
-    f_ExecutionReport_OrderQty2 : fix_float_4 option;
+    f_ExecutionReport_OrderQty2 : fix_float_6 option;
     f_ExecutionReport_ClearingFirm : string option;
     f_ExecutionReport_ClearingAccount : string option;
     (** Default is a single security if not specified.*)
