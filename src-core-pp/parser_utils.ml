@@ -263,5 +263,10 @@ module Parser = struct
             | [] -> result 
             | (tag,v)::tl -> UndefinedTag tag )
         | _ -> result
+
+    let list_to_split_spaces a = ""
+    
+    let split_spaces_to_list a = []
+
 end
 
