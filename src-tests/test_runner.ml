@@ -127,14 +127,14 @@ let perform_action  (instream, outch) act =
     match act with 
     | InitiateMessage msg -> begin
             let msgtype, seqnum = get_type_and_seqnum msg in
-            let msg = prepare_message msg ("BANZAI", "IMANDRA") in
+            let msg = prepare_message msg ("00099089", "EURONEXT") in
             Lwt_io.write outch msg >>= fun () ->
             Lwt_io.flush outch >>= fun () ->
             let logstring = ("Initiated #" ^ seqnum ^ " \"" ^ msgtype ^ "\"  (" ^ msg ^ ")" ) in
             Lwt_io.printl logstring
         end
     | ExpectMessage msg -> begin 
-            let msg = prepare_message msg ("IMANDRA", "BANZAI") in
+            let msg = prepare_message msg ("EURONEXT", "00099089") in
             Lwt_io.printl ( "Expecting: " ^ msg) >>= fun () ->
             Lwt_stream.next instream >>= fun rmsg ->
             Lwt_io.printl ( "Received: " ^ msg_to_string rmsg) >>= fun () ->
@@ -157,12 +157,13 @@ let perform_action  (instream, outch) act =
     end >>= fun () -> Lwt_unix.sleep 0.1
 
 let setup_client msgs =
-    let addr = Unix.( ADDR_INET( inet_addr_loopback , 9880 ) ) in
+    let addr = Unix.inet_addr_of_string "156.48.44.6" in
+    let addr = Unix.( ADDR_INET( addr , 14238 ) ) in
     Lwt.catch begin fun () ->
         Lwt_io.printl "Starting connection" >>= fun () -> 
         let fd = Lwt_unix.(socket PF_INET SOCK_STREAM 0 ) in
         Lwt_io.with_connection ~fd:fd addr begin fun (inch, outch) ->
-            Lwt_io.printl "Connnected to localhost:9880 ..." >>= fun() ->
+            Lwt_io.printl "Connnected ..." >>= fun() ->
             let instream = Message_stream.from_channel inch in
             let perform_action = perform_action (instream, outch) in
             Lwt_list.iter_s perform_action msgs        
