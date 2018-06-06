@@ -264,9 +264,34 @@ module Parser = struct
             | (tag,v)::tl -> UndefinedTag tag )
         | _ -> result
 
-    let list_to_split_spaces a = ""
+    let rec get_top_and_last (l:'a list): ('a list * 'a option) = 
+        match l with
+        | [] -> ([],None)
+        | [h] -> ([],Some h)
+        | h::t -> 
+            let ans = get_top_and_last t in
+            (h::(fst ans),snd ans)
+    ;;
     
-    let split_spaces_to_list a = []
-
+    let list_to_split (a:string list) (c:char) : string = 
+        match a with
+        | [] -> "" 
+        | _ -> 
+            let (t,l) = get_top_and_last a in
+            (List.fold_left (fun x y -> x^y^(Char.escaped c)) "" t) ^ 
+            match l with 
+            | None -> ""
+            | Some x -> x
+    ;; 
+    
+    let rec split_to_list (a:string) (c:char) : string list = 
+        try
+          let index = String.index a c in
+          let sub = String.sub a 0 index in
+          let rest = String.sub a (index+1) ((String.length a)-(index+1)) in
+          sub :: (split_to_list rest c)
+        with Not_found -> [a]
+       ;;
+   
 end
 
