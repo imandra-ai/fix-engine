@@ -26,7 +26,7 @@ type mod_ordersingle_data = {
     mod_f_OrderSingle_DEAIndicator : int;
     mod_f_OrderSingle_Parties : model_fix_rec_parties;
     mod_f_OrderSingle_ClearingEntries : model_fix_rec_clearingentries;
-    mod_f_OrderSingle_OrderAttributeTypes : model_fix_orderattributetypes option
+    mod_f_OrderSingle_OrderAttributeTypes : (model_fix_orderattributetypes,bool) Map.t option
 }
 ;;
 
@@ -102,7 +102,7 @@ type mod_executionreport_data = {
     mod_f_ExecutionReport_BookIndicator : model_fix_bookindicator option;
     mod_f_ExecutionReport_BrokerPrioritization : model_fix_brokerprioritization option;
     mod_f_ExecutionReport_DEAIndicator : int option;
-    mod_f_ExecutionReport_OrderAttributeTypes : model_fix_orderattributetypes option;
+    mod_f_ExecutionReport_OrderAttributeTypes : (model_fix_orderattributetypes,bool) Map.t option;
     mod_f_ExecutionReport_ClOrdID : string option;
     mod_f_ExecutionReport_OrigClOrdID : string option;
     mod_f_ExecutionReport_TransactTime : fix_utctimestamp option;

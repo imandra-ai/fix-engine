@@ -129,7 +129,7 @@ type full_fix_ordersingle_data = {
     f_OrderSingle_MIC : string option;
     f_OrderSingle_BrokerPrioritization : fix_brokerprioritization option;
     f_OrderSingle_DEAIndicator : int option;
-    f_OrderSingle_OrderAttributeTypes : fix_orderattributetypes option;
+    f_OrderSingle_OrderAttributeTypes : fix_orderattributetypes list option;
     f_OrderSingle_Parties : fix_rg_parties;
     f_OrderSingle_ClearingEntries : fix_rg_clearingentries
 }
@@ -542,7 +542,7 @@ type full_fix_executionreport_data = {
     f_ExecutionReport_BrokerPrioritization : fix_brokerprioritization option;
     f_ExecutionReport_IMPTimestamp : fix_utctimeonly option;
     f_ExecutionReport_DEAIndicator : int option;
-    f_ExecutionReport_OrderAttributeTypes : fix_orderattributetypes option;
+    f_ExecutionReport_OrderAttributeTypes : fix_orderattributetypes list option;
     f_ExecutionReport_Parties : fix_rg_parties;
     f_ExecutionReport_ContraGrp : fix_rg_contragrp
 }

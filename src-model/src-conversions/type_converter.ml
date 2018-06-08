@@ -2,6 +2,7 @@
 open Enum_converter;;
 open Full_app_messages;;
 open Full_app_records;;
+open Model_enum_names;;
 open Model_messages;;
 open Model_tags;;
 open Repeating_groups_converter;;
@@ -686,7 +687,7 @@ let convert__model_to_full_OrderSingle (msg : mod_ordersingle_data)  =
         f_OrderSingle_DEAIndicator = Some msg.mod_f_OrderSingle_DEAIndicator;
         f_OrderSingle_OrderAttributeTypes = (match msg.mod_f_OrderSingle_OrderAttributeTypes with
             | None -> None
-            | Some d -> (Some (convert__model_to_full_OrderAttributeTypes d))
+            | Some d -> (Some (convert__model_to_full_OrderAttributeTypes d list_model_vals_OrderAttributeTypes))
         );
         f_OrderSingle_Parties = convert__model_to_full_Parties msg.mod_f_OrderSingle_Parties;
         f_OrderSingle_ClearingEntries = convert__model_to_full_ClearingEntries msg.mod_f_OrderSingle_ClearingEntries
@@ -1106,7 +1107,7 @@ let convert__model_to_full_ExecutionReport (msg : mod_executionreport_data)  =
         f_ExecutionReport_DEAIndicator = msg.mod_f_ExecutionReport_DEAIndicator;
         f_ExecutionReport_OrderAttributeTypes = (match msg.mod_f_ExecutionReport_OrderAttributeTypes with
             | None -> None
-            | Some d -> (Some (convert__model_to_full_OrderAttributeTypes d))
+            | Some d -> (Some (convert__model_to_full_OrderAttributeTypes d list_model_vals_OrderAttributeTypes))
         );
         f_ExecutionReport_Parties = convert__model_to_full_Parties msg.mod_f_ExecutionReport_Parties;
         f_ExecutionReport_ContraGrp = convert__model_to_full_ContraGrp msg.mod_f_ExecutionReport_ContraGrp

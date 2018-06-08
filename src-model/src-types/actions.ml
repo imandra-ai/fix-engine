@@ -25,7 +25,7 @@ type m_action_fix_neworder = {
     mod_f_neworder_DEAIndicator : int;
     mod_f_neworder_Parties : model_fix_rec_parties;
     mod_f_neworder_ClearingEntries : model_fix_rec_clearingentries;
-    mod_f_neworder_OrderAttributeTypes : model_fix_orderattributetypes option
+    mod_f_neworder_OrderAttributeTypes : (model_fix_orderattributetypes,bool) Map.t option
 }
 ;;
 

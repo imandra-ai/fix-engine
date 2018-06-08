@@ -108,7 +108,7 @@ let json_to_mod_act_neworder_option json =
   ; mod_f_neworder_Currency
   ; mod_f_neworder_HandlInst
   ; mod_f_neworder_TechnicalOrdType
-  ; mod_f_neworder_OrderAttributeTypes  
+  ; mod_f_neworder_OrderAttributeTypes = Some(Map.const false) 
   ; mod_f_neworder_BrokerPrioritization 
   ; mod_f_neworder_MIC                  
   ; mod_f_neworder_Parties = 

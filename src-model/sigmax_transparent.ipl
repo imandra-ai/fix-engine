@@ -18,16 +18,16 @@ precision (Price, 4)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // Execution instruction field
 
-@encoding: char
 extend enum ExecInst {
+@encoding: char
     BestBidPeg "x"
     BestOfferPeg "z"
     HalfSweep "h"
     FullSweep "f"
 }
 
-@encoding: char
 extend enum OrdRejReason {
+@encoding: char
     DVC_ProactivelyHaltedInstrument "P"
     DVC_ThresholdBreached "T"
     OtherRejectReason "O"
@@ -71,7 +71,7 @@ declare enum TechnicalOrdType {
 }
     
 // The presence of a supported value indicates that condition applies to the order.
-@encoding: int 
+@encoding: MultipleValueString separator: "|"
 declare enum OrderAttributeTypes {
     LiquidityProvisionActivity "2"
     AlgorithmicOrder "4"
@@ -126,13 +126,13 @@ declare enum ClassStatus {
 }
 
 // Extending TimeInForce Enum
-@encoding: char 
 extend enum TimeInForce {
+@encoding: char 
     GoodForAuction "B"
 }
 
-@encoding: char 
 extend enum CrossType {
+@encoding: char 
     NotSignificant "0"
     StandardCross "P" 
 }
