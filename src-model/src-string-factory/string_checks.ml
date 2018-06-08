@@ -339,40 +339,62 @@ let isAssignableField (str : string)  =
 
 let isEnum (str : string)  =
     (match str with
-        | "Model_app_enums.model_fix_cxlrejresponseto" -> true
-        | "Model_app_enums.model_fix_ordstatus" -> true
-        | "Model_app_enums.model_fix_bookindicator" -> true
-        | "Model_app_enums.model_fix_crosstype" -> true
-        | "Model_app_enums.model_fix_liquidityindicator" -> true
         | "Model_app_enums.model_fix_cxlrejreason" -> true
-        | "Model_app_enums.model_fix_exectranstype" -> true
-        | "Model_app_enums.model_fix_rule80a" -> true
-        | "Model_app_enums.model_fix_execinst" -> true
-        | "Model_app_enums.model_fix_masscancelrequesttype" -> true
-        | "Model_app_enums.model_fix_openclose" -> true
         | "Model_app_enums.model_fix_technicalordtype" -> true
-        | "Model_app_enums.model_fix_timeinforce" -> true
-        | "Model_app_enums.model_fix_exectype" -> true
-        | "Model_app_enums.model_fix_clearinghandlingtype" -> true
-        | "Model_app_enums.model_fix_partyrolequalifier" -> true
-        | "Model_app_enums.model_fix_partysubidtype" -> true
+        | "Model_app_enums.model_fix_masscancelrequesttype" -> true
+        | "Model_app_enums.model_fix_exectranstype" -> true
+        | "Model_app_enums.model_fix_ordstatus" -> true
+        | "Model_app_enums.model_fix_crosstype" -> true
         | "Model_app_enums.model_fix_partyidsource" -> true
-        | "Model_app_enums.model_fix_ordrejreason" -> true
-        | "Model_app_enums.model_fix_currency" -> true
-        | "Model_app_enums.model_fix_brokerprioritization" -> true
         | "Model_app_enums.model_fix_side" -> true
+        | "Model_app_enums.model_fix_exectype" -> true
+        | "Model_app_enums.model_fix_bookindicator" -> true
+        | "Model_app_enums.model_fix_execinst" -> true
         | "Model_app_enums.model_fix_handlinst" -> true
-        | "Model_app_enums.model_fix_ordtype" -> true
-        | "Model_app_enums.model_fix_orderattributetypes" -> true
+        | "Model_app_enums.model_fix_clearinghandlingtype" -> true
+        | "Model_app_enums.model_fix_ordrejreason" -> true
         | "Model_app_enums.model_fix_partyrole" -> true
+        | "Model_app_enums.model_fix_currency" -> true
+        | "Model_app_enums.model_fix_ordtype" -> true
+        | "Model_app_enums.model_fix_partyrolequalifier" -> true
+        | "Model_app_enums.model_fix_openclose" -> true
+        | "Model_app_enums.model_fix_liquidityindicator" -> true
+        | "Model_app_enums.model_fix_orderattributetypes" -> true
+        | "Model_app_enums.model_fix_cxlrejresponseto" -> true
+        | "Model_app_enums.model_fix_timeinforce" -> true
+        | "Model_app_enums.model_fix_partysubidtype" -> true
+        | "Model_app_enums.model_fix_brokerprioritization" -> true
+        | "Model_app_enums.model_fix_rule80a" -> true
         | _ -> false
     )
 ;;
 
 let isEnumCase (str : string)  =
     (match str with
-        | "Model_app_enums.MOD_FIX_CxlRejResponseTo_OrderCancelRequest" -> true
-        | "Model_app_enums.MOD_FIX_CxlRejResponseTo_OrderCancel" -> true
+        | "Model_app_enums.MOD_FIX_CxlRejReason_Other" -> true
+        | "Model_app_enums.MOD_FIX_CxlRejReason_OrderAlreadyInPendingStatus" -> true
+        | "Model_app_enums.MOD_FIX_CxlRejReason_TooLateToCancel" -> true
+        | "Model_app_enums.MOD_FIX_CxlRejReason_UnknownOrder" -> true
+        | "Model_app_enums.MOD_FIX_CxlRejReason_UnableToProcessOrderMassCancelRequest" -> true
+        | "Model_app_enums.MOD_FIX_CxlRejReason_OrigOrdModTime" -> true
+        | "Model_app_enums.MOD_FIX_CxlRejReason_DuplicateClOrdID" -> true
+        | "Model_app_enums.MOD_FIX_CxlRejReason_BrokerCredit" -> true
+        | "Model_app_enums.MOD_FIX_TechnicalOrdType_CrossMargining" -> true
+        | "Model_app_enums.MOD_FIX_TechnicalOrdType_IndexArbitrage" -> true
+        | "Model_app_enums.MOD_FIX_TechnicalOrdType_UnwindOrder" -> true
+        | "Model_app_enums.MOD_FIX_TechnicalOrdType_OtherOrders" -> true
+        | "Model_app_enums.MOD_FIX_TechnicalOrdType_PortfolioStrategy" -> true
+        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForASecurityType" -> true
+        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForAProduct" -> true
+        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForASecurity" -> true
+        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForAnUnderlyingSecurity" -> true
+        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelAllOrders" -> true
+        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForACFICode" -> true
+        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForATradingSession" -> true
+        | "Model_app_enums.MOD_FIX_ExecTransType_Status" -> true
+        | "Model_app_enums.MOD_FIX_ExecTransType_Cancel" -> true
+        | "Model_app_enums.MOD_FIX_ExecTransType_New" -> true
+        | "Model_app_enums.MOD_FIX_ExecTransType_Correct" -> true
         | "Model_app_enums.MOD_FIX_OrdStatus_PendingCancel" -> true
         | "Model_app_enums.MOD_FIX_OrdStatus_Stopped" -> true
         | "Model_app_enums.MOD_FIX_OrdStatus_PendingNew" -> true
@@ -388,55 +410,68 @@ let isEnumCase (str : string)  =
         | "Model_app_enums.MOD_FIX_OrdStatus_New" -> true
         | "Model_app_enums.MOD_FIX_OrdStatus_PartiallyFilled" -> true
         | "Model_app_enums.MOD_FIX_OrdStatus_AcceptedForBidding" -> true
-        | "Model_app_enums.MOD_FIX_BookIndicator_Auction" -> true
-        | "Model_app_enums.MOD_FIX_BookIndicator_RPW" -> true
         | "Model_app_enums.MOD_FIX_CrossType_CrossIOC" -> true
         | "Model_app_enums.MOD_FIX_CrossType_CrossOneSide" -> true
         | "Model_app_enums.MOD_FIX_CrossType_CrossSamePrice" -> true
         | "Model_app_enums.MOD_FIX_CrossType_CrossAON" -> true
         | "Model_app_enums.MOD_FIX_CrossType_NotSignificant" -> true
         | "Model_app_enums.MOD_FIX_CrossType_StandardCross" -> true
-        | "Model_app_enums.MOD_FIX_LiquidityIndicator_RemoveLiquidity" -> true
-        | "Model_app_enums.MOD_FIX_LiquidityIndicator_AddLiquidity" -> true
-        | "Model_app_enums.MOD_FIX_LiquidityIndicator_PeriodicAuction" -> true
-        | "Model_app_enums.MOD_FIX_CxlRejReason_Other" -> true
-        | "Model_app_enums.MOD_FIX_CxlRejReason_OrderAlreadyInPendingStatus" -> true
-        | "Model_app_enums.MOD_FIX_CxlRejReason_TooLateToCancel" -> true
-        | "Model_app_enums.MOD_FIX_CxlRejReason_UnknownOrder" -> true
-        | "Model_app_enums.MOD_FIX_CxlRejReason_UnableToProcessOrderMassCancelRequest" -> true
-        | "Model_app_enums.MOD_FIX_CxlRejReason_OrigOrdModTime" -> true
-        | "Model_app_enums.MOD_FIX_CxlRejReason_DuplicateClOrdID" -> true
-        | "Model_app_enums.MOD_FIX_CxlRejReason_BrokerCredit" -> true
-        | "Model_app_enums.MOD_FIX_ExecTransType_Status" -> true
-        | "Model_app_enums.MOD_FIX_ExecTransType_Cancel" -> true
-        | "Model_app_enums.MOD_FIX_ExecTransType_New" -> true
-        | "Model_app_enums.MOD_FIX_ExecTransType_Correct" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_AgencySingleOrder" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionForPrincipal" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionAType" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_SpecialistTrades" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_AgencyNonAlgo" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_TransactionUnaffiliatedMember" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionWType" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ProprietaryAlgo" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ProprietaryTransactionAffiliated" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_AgencyAlgo" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_Principal" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_AllOtherOrdersAsAgentForOtherMember" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ProprietaryNonAlgo" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionIType" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_AgentForOtherMember" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionNonMember" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_RisklessPrincipal" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_AgencyIndexArb" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ProgramOrderOtherMember" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionMemberNotAffliated" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ProgramOrderMember" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_House" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_TransactionNonMember" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_IndividualInvestor" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionMemberAffliated" -> true
-        | "Model_app_enums.MOD_FIX_Rule80A_Client" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_CSDParticipant" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_KoreanInvestorID" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_USEmployerOrTaxIDNumber" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_TaiwaneseForeignInvestorID" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_TaiwaneseTradingAcct" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_UKNationalInsuranceOrPensionNumber" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_MIC" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_USSocialSecurityNumber" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_Proprietary" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_AustralianTaxFileNumber" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_ShortCodeIdentifier" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_MalaysianCentralDepository" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_ISITCAcronym" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_ISOCountryCode" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_ChineseInvestorID" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_AustralianBusinessNumber" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_BIC" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_GeneralIdentifier" -> true
+        | "Model_app_enums.MOD_FIX_PartyIDSource_SettlementEntityLocation" -> true
+        | "Model_app_enums.MOD_FIX_Side_AsDefined" -> true
+        | "Model_app_enums.MOD_FIX_Side_Opposite" -> true
+        | "Model_app_enums.MOD_FIX_Side_Buy" -> true
+        | "Model_app_enums.MOD_FIX_Side_CrossShortExempt" -> true
+        | "Model_app_enums.MOD_FIX_Side_Borrow" -> true
+        | "Model_app_enums.MOD_FIX_Side_BuyMinus" -> true
+        | "Model_app_enums.MOD_FIX_Side_Subscribe" -> true
+        | "Model_app_enums.MOD_FIX_Side_Lend" -> true
+        | "Model_app_enums.MOD_FIX_Side_SellShortExempt" -> true
+        | "Model_app_enums.MOD_FIX_Side_Redeem" -> true
+        | "Model_app_enums.MOD_FIX_Side_SellPlus" -> true
+        | "Model_app_enums.MOD_FIX_Side_Sell" -> true
+        | "Model_app_enums.MOD_FIX_Side_Undisclosed" -> true
+        | "Model_app_enums.MOD_FIX_Side_Cross" -> true
+        | "Model_app_enums.MOD_FIX_Side_CrossShort" -> true
+        | "Model_app_enums.MOD_FIX_Side_SellShort" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_PendingCancel" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_Fill" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_Stopped" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_PendingNew" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_Restated" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_Rejected" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_Calculated" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_TradeCorrect" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_TradeCancel" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_Expired" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_OrderStatus" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_PartialFill" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_Trade" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_Canceled" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_Replaced" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_PendingReplace" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_DoneForDay" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_Suspended" -> true
+        | "Model_app_enums.MOD_FIX_ExecType_New" -> true
+        | "Model_app_enums.MOD_FIX_BookIndicator_Auction" -> true
+        | "Model_app_enums.MOD_FIX_BookIndicator_RPW" -> true
         | "Model_app_enums.MOD_FIX_ExecInst_ParticipateDoNotInitiate" -> true
         | "Model_app_enums.MOD_FIX_ExecInst_AllOrNone" -> true
         | "Model_app_enums.MOD_FIX_ExecInst_CallFirst" -> true
@@ -482,99 +517,12 @@ let isEnumCase (str : string)  =
         | "Model_app_enums.MOD_FIX_ExecInst_TrailingStopPeg" -> true
         | "Model_app_enums.MOD_FIX_ExecInst_MarketPeg" -> true
         | "Model_app_enums.MOD_FIX_ExecInst_StrictScale" -> true
-        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForASecurityType" -> true
-        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForAProduct" -> true
-        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForASecurity" -> true
-        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForAnUnderlyingSecurity" -> true
-        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelAllOrders" -> true
-        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForACFICode" -> true
-        | "Model_app_enums.MOD_FIX_MassCancelRequestType_CancelOrdersForATradingSession" -> true
-        | "Model_app_enums.MOD_FIX_OpenClose_Close" -> true
-        | "Model_app_enums.MOD_FIX_OpenClose_Open" -> true
-        | "Model_app_enums.MOD_FIX_TechnicalOrdType_CrossMargining" -> true
-        | "Model_app_enums.MOD_FIX_TechnicalOrdType_IndexArbitrage" -> true
-        | "Model_app_enums.MOD_FIX_TechnicalOrdType_UnwindOrder" -> true
-        | "Model_app_enums.MOD_FIX_TechnicalOrdType_OtherOrders" -> true
-        | "Model_app_enums.MOD_FIX_TechnicalOrdType_PortfolioStrategy" -> true
-        | "Model_app_enums.MOD_FIX_TimeInForce_GoodTillCancel" -> true
-        | "Model_app_enums.MOD_FIX_TimeInForce_AtTheClose" -> true
-        | "Model_app_enums.MOD_FIX_TimeInForce_ImmediateOrCancel" -> true
-        | "Model_app_enums.MOD_FIX_TimeInForce_Day" -> true
-        | "Model_app_enums.MOD_FIX_TimeInForce_FillOrKill" -> true
-        | "Model_app_enums.MOD_FIX_TimeInForce_GoodForAuction" -> true
-        | "Model_app_enums.MOD_FIX_TimeInForce_AtTheOpening" -> true
-        | "Model_app_enums.MOD_FIX_TimeInForce_GoodTillCrossing" -> true
-        | "Model_app_enums.MOD_FIX_TimeInForce_GoodTillDate" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_PendingCancel" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_Fill" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_Stopped" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_PendingNew" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_Restated" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_Rejected" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_Calculated" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_TradeCorrect" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_TradeCancel" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_Expired" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_OrderStatus" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_PartialFill" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_Trade" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_Canceled" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_Replaced" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_PendingReplace" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_DoneForDay" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_Suspended" -> true
-        | "Model_app_enums.MOD_FIX_ExecType_New" -> true
+        | "Model_app_enums.MOD_FIX_HandlInst_ManualOrder" -> true
+        | "Model_app_enums.MOD_FIX_HandlInst_AutomatedExecutionInterventionOK" -> true
+        | "Model_app_enums.MOD_FIX_HandlInst_AutomatedExecutionNoIntervention" -> true
         | "Model_app_enums.MOD_FIX_ClearingHandlingType_ManualMode" -> true
         | "Model_app_enums.MOD_FIX_ClearingHandlingType_AutomaticExtraction" -> true
         | "Model_app_enums.MOD_FIX_ClearingHandlingType_AutomaticAllocation" -> true
-        | "Model_app_enums.MOD_FIX_PartyRoleQualifier_FirmOrLegalEntity" -> true
-        | "Model_app_enums.MOD_FIX_PartyRoleQualifier_Algorithm" -> true
-        | "Model_app_enums.MOD_FIX_PartyRoleQualifier_NaturalPerson" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_EmailAddress" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_Application" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_FundAccountName" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_FullLegalNameOfFirm" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_CSDParticipantMemberCode" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_RegistrationName" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_PostalAddress" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_SecuritiesAccountNumber" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_RegisteredAddress" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_TelexNumber" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_RegulatoryStatus" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_PhoneNumber" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_Firm" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_Person" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_ContactName" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_CashAccountNumber" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_CashAccountName" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_LocationDesk" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_RegisteredAddressForConfirmation" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_PositionAccountType" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_System" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_Department" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_FaxNumber" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_RegistrationNumber" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_BIC" -> true
-        | "Model_app_enums.MOD_FIX_PartySubIDType_SecuritiesAccountName" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_CSDParticipant" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_KoreanInvestorID" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_USEmployerOrTaxIDNumber" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_TaiwaneseForeignInvestorID" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_TaiwaneseTradingAcct" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_UKNationalInsuranceOrPensionNumber" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_MIC" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_USSocialSecurityNumber" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_Proprietary" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_AustralianTaxFileNumber" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_ShortCodeIdentifier" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_MalaysianCentralDepository" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_ISITCAcronym" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_ISOCountryCode" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_ChineseInvestorID" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_AustralianBusinessNumber" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_BIC" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_GeneralIdentifier" -> true
-        | "Model_app_enums.MOD_FIX_PartyIDSource_SettlementEntityLocation" -> true
         | "Model_app_enums.MOD_FIX_OrdRejReason_DuplicateOrder" -> true
         | "Model_app_enums.MOD_FIX_OrdRejReason_Other" -> true
         | "Model_app_enums.MOD_FIX_OrdRejReason_UnknownOrder" -> true
@@ -594,56 +542,6 @@ let isEnumCase (str : string)  =
         | "Model_app_enums.MOD_FIX_OrdRejReason_IncorrectAllocatedQuantity" -> true
         | "Model_app_enums.MOD_FIX_OrdRejReason_DVC_ProactivelyHaltedInstrument" -> true
         | "Model_app_enums.MOD_FIX_OrdRejReason_UnknownSymbol" -> true
-        | "Model_app_enums.MOD_FIX_Currency_EUR" -> true
-        | "Model_app_enums.MOD_FIX_Currency_CHF" -> true
-        | "Model_app_enums.MOD_FIX_Currency_USD" -> true
-        | "Model_app_enums.MOD_FIX_Currency_GBP" -> true
-        | "Model_app_enums.MOD_FIX_BrokerPrioritization_WithBrokerPrioritization" -> true
-        | "Model_app_enums.MOD_FIX_BrokerPrioritization_WithoutBrokerPriotization" -> true
-        | "Model_app_enums.MOD_FIX_Side_AsDefined" -> true
-        | "Model_app_enums.MOD_FIX_Side_Opposite" -> true
-        | "Model_app_enums.MOD_FIX_Side_Buy" -> true
-        | "Model_app_enums.MOD_FIX_Side_CrossShortExempt" -> true
-        | "Model_app_enums.MOD_FIX_Side_Borrow" -> true
-        | "Model_app_enums.MOD_FIX_Side_BuyMinus" -> true
-        | "Model_app_enums.MOD_FIX_Side_Subscribe" -> true
-        | "Model_app_enums.MOD_FIX_Side_Lend" -> true
-        | "Model_app_enums.MOD_FIX_Side_SellShortExempt" -> true
-        | "Model_app_enums.MOD_FIX_Side_Redeem" -> true
-        | "Model_app_enums.MOD_FIX_Side_SellPlus" -> true
-        | "Model_app_enums.MOD_FIX_Side_Sell" -> true
-        | "Model_app_enums.MOD_FIX_Side_Undisclosed" -> true
-        | "Model_app_enums.MOD_FIX_Side_Cross" -> true
-        | "Model_app_enums.MOD_FIX_Side_CrossShort" -> true
-        | "Model_app_enums.MOD_FIX_Side_SellShort" -> true
-        | "Model_app_enums.MOD_FIX_HandlInst_ManualOrder" -> true
-        | "Model_app_enums.MOD_FIX_HandlInst_AutomatedExecutionInterventionOK" -> true
-        | "Model_app_enums.MOD_FIX_HandlInst_AutomatedExecutionNoIntervention" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_LimitOrBetter" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_NextFundValuationPoint" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_WithOrWithout" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_PreviouslyIndicated" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_Stop" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_ForexPreviouslyQuoted" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_Market" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_OnBasis" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_Funari" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_LimitOnClose" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_Pegged" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_LimitWithOrWithout" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_MarketOnClose" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_StopLimit" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_ForexSwap" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_MarketIfTouched" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_MarketWithLeftOverAsLimit" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_PreviouslyQuoted" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_ForexMarket" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_Limit" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_PreviousFundValuationPoint" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_OnClose" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_ForexLimit" -> true
-        | "Model_app_enums.MOD_FIX_OrderAttributeTypes_AlgorithmicOrder" -> true
-        | "Model_app_enums.MOD_FIX_OrderAttributeTypes_LiquidityProvisionActivity" -> true
         | "Model_app_enums.MOD_FIX_PartyRole_CorrespondantClearingFirm" -> true
         | "Model_app_enums.MOD_FIX_PartyRole_Agent" -> true
         | "Model_app_enums.MOD_FIX_PartyRole_ExecutingSystem" -> true
@@ -682,15 +580,117 @@ let isEnumCase (str : string)  =
         | "Model_app_enums.MOD_FIX_PartyRole_FundManagerClientID" -> true
         | "Model_app_enums.MOD_FIX_PartyRole_ContraClearingFirm" -> true
         | "Model_app_enums.MOD_FIX_PartyRole_InvestorID" -> true
+        | "Model_app_enums.MOD_FIX_Currency_EUR" -> true
+        | "Model_app_enums.MOD_FIX_Currency_CHF" -> true
+        | "Model_app_enums.MOD_FIX_Currency_USD" -> true
+        | "Model_app_enums.MOD_FIX_Currency_GBP" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_LimitOrBetter" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_NextFundValuationPoint" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_WithOrWithout" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_PreviouslyIndicated" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_Stop" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_ForexPreviouslyQuoted" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_Market" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_OnBasis" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_Funari" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_LimitOnClose" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_Pegged" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_LimitWithOrWithout" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_MarketOnClose" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_StopLimit" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_ForexSwap" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_MarketIfTouched" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_MarketWithLeftOverAsLimit" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_PreviouslyQuoted" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_ForexMarket" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_Limit" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_PreviousFundValuationPoint" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_OnClose" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_ForexLimit" -> true
+        | "Model_app_enums.MOD_FIX_PartyRoleQualifier_FirmOrLegalEntity" -> true
+        | "Model_app_enums.MOD_FIX_PartyRoleQualifier_Algorithm" -> true
+        | "Model_app_enums.MOD_FIX_PartyRoleQualifier_NaturalPerson" -> true
+        | "Model_app_enums.MOD_FIX_OpenClose_Close" -> true
+        | "Model_app_enums.MOD_FIX_OpenClose_Open" -> true
+        | "Model_app_enums.MOD_FIX_LiquidityIndicator_RemoveLiquidity" -> true
+        | "Model_app_enums.MOD_FIX_LiquidityIndicator_AddLiquidity" -> true
+        | "Model_app_enums.MOD_FIX_LiquidityIndicator_PeriodicAuction" -> true
+        | "Model_app_enums.MOD_FIX_OrderAttributeTypes_AlgorithmicOrder" -> true
+        | "Model_app_enums.MOD_FIX_OrderAttributeTypes_LiquidityProvisionActivity" -> true
+        | "Model_app_enums.MOD_FIX_CxlRejResponseTo_OrderCancelRequest" -> true
+        | "Model_app_enums.MOD_FIX_CxlRejResponseTo_OrderCancel" -> true
+        | "Model_app_enums.MOD_FIX_TimeInForce_GoodTillCancel" -> true
+        | "Model_app_enums.MOD_FIX_TimeInForce_AtTheClose" -> true
+        | "Model_app_enums.MOD_FIX_TimeInForce_ImmediateOrCancel" -> true
+        | "Model_app_enums.MOD_FIX_TimeInForce_Day" -> true
+        | "Model_app_enums.MOD_FIX_TimeInForce_FillOrKill" -> true
+        | "Model_app_enums.MOD_FIX_TimeInForce_GoodForAuction" -> true
+        | "Model_app_enums.MOD_FIX_TimeInForce_AtTheOpening" -> true
+        | "Model_app_enums.MOD_FIX_TimeInForce_GoodTillCrossing" -> true
+        | "Model_app_enums.MOD_FIX_TimeInForce_GoodTillDate" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_EmailAddress" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_Application" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_FundAccountName" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_FullLegalNameOfFirm" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_CSDParticipantMemberCode" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_RegistrationName" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_PostalAddress" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_SecuritiesAccountNumber" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_RegisteredAddress" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_TelexNumber" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_RegulatoryStatus" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_PhoneNumber" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_Firm" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_Person" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_ContactName" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_CashAccountNumber" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_CashAccountName" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_LocationDesk" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_RegisteredAddressForConfirmation" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_PositionAccountType" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_System" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_Department" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_FaxNumber" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_RegistrationNumber" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_BIC" -> true
+        | "Model_app_enums.MOD_FIX_PartySubIDType_SecuritiesAccountName" -> true
+        | "Model_app_enums.MOD_FIX_BrokerPrioritization_WithBrokerPrioritization" -> true
+        | "Model_app_enums.MOD_FIX_BrokerPrioritization_WithoutBrokerPriotization" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_AgencySingleOrder" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionForPrincipal" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionAType" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_SpecialistTrades" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_AgencyNonAlgo" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_TransactionUnaffiliatedMember" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionWType" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ProprietaryAlgo" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ProprietaryTransactionAffiliated" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_AgencyAlgo" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_Principal" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_AllOtherOrdersAsAgentForOtherMember" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ProprietaryNonAlgo" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionIType" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_AgentForOtherMember" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionNonMember" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_RisklessPrincipal" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_AgencyIndexArb" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ProgramOrderOtherMember" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionMemberNotAffliated" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ProgramOrderMember" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_House" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_TransactionNonMember" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_IndividualInvestor" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_ShortExemptTransactionMemberAffliated" -> true
+        | "Model_app_enums.MOD_FIX_Rule80A_Client" -> true
         | _ -> false
     )
 ;;
 
 let isRepeatingGroup (str : string)  =
     (match str with
-        | "Model_repeating_groups.model_fix_rec_clearingentries" -> true
-        | "Model_repeating_groups.model_fix_rec_ptyssubgrp" -> true
         | "Model_repeating_groups.model_fix_rec_contragrp" -> true
+        | "Model_repeating_groups.model_fix_rec_ptyssubgrp" -> true
+        | "Model_repeating_groups.model_fix_rec_clearingentries" -> true
         | "Model_repeating_groups.model_fix_rec_parties" -> true
         | _ -> false
     )

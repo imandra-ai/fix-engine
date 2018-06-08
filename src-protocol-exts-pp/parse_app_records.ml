@@ -6,30 +6,19 @@ open Parse_base_types;;
 open Parse_datetime;;
 open Parser_utils.Parser;;
 
-let parse_Hop (msg)  =
-    opt msg "630" parse_int (fun msg f_Hop_HopRefID -> opt msg "628" parse_string (fun msg f_Hop_HopCompID -> opt msg "627" parse_int (fun msg f_Hop_NoHops -> opt msg "629" parse_UTCTimestamp (fun msg f_Hop_HopSendingTime -> (ParseSuccess {
-        f_Hop_HopSendingTime = f_Hop_HopSendingTime;
-        f_Hop_NoHops = f_Hop_NoHops;
-        f_Hop_HopCompID = f_Hop_HopCompID;
-        f_Hop_HopRefID = f_Hop_HopRefID
+let parse_RgstDistInstGrp (msg)  =
+    opt msg "502" parse_string (fun msg f_RgstDistInstGrp_CashDistribAgentAcctName -> opt msg "512" parse_float (fun msg f_RgstDistInstGrp_DistribPercentage -> opt msg "498" parse_string (fun msg f_RgstDistInstGrp_CashDistribAgentName -> opt msg "478" parse_Currency (fun msg f_RgstDistInstGrp_CashDistribCurr -> opt msg "477" parse_DistribPaymentMethod (fun msg f_RgstDistInstGrp_DistribPaymentMethod -> opt msg "500" parse_string (fun msg f_RgstDistInstGrp_CashDistribAgentAcctNumber -> opt msg "501" parse_string (fun msg f_RgstDistInstGrp_CashDistribPayRef -> opt msg "499" parse_string (fun msg f_RgstDistInstGrp_CashDistribAgentCode -> opt msg "510" parse_int (fun msg f_RgstDistInstGrp_NoDistribInsts -> (ParseSuccess {
+        f_RgstDistInstGrp_NoDistribInsts = f_RgstDistInstGrp_NoDistribInsts;
+        f_RgstDistInstGrp_CashDistribAgentCode = f_RgstDistInstGrp_CashDistribAgentCode;
+        f_RgstDistInstGrp_CashDistribPayRef = f_RgstDistInstGrp_CashDistribPayRef;
+        f_RgstDistInstGrp_CashDistribAgentAcctNumber = f_RgstDistInstGrp_CashDistribAgentAcctNumber;
+        f_RgstDistInstGrp_DistribPaymentMethod = f_RgstDistInstGrp_DistribPaymentMethod;
+        f_RgstDistInstGrp_CashDistribCurr = f_RgstDistInstGrp_CashDistribCurr;
+        f_RgstDistInstGrp_CashDistribAgentName = f_RgstDistInstGrp_CashDistribAgentName;
+        f_RgstDistInstGrp_DistribPercentage = f_RgstDistInstGrp_DistribPercentage;
+        f_RgstDistInstGrp_CashDistribAgentAcctName = f_RgstDistInstGrp_CashDistribAgentAcctName
     },msg)
     )
-    )
-    )
-    )
-;;
-
-let parse_ClearingEntries (msg)  =
-    opt msg "9938" parse_ClearingHandlingType (fun msg f_ClearingEntries_ClearingHandlingType -> opt msg "9933" parse_int (fun msg f_ClearingEntries_NoClearingEntries -> opt msg "109" parse_string (fun msg f_ClearingEntries_ClientID -> opt msg "47" parse_Rule80A (fun msg f_ClearingEntries_Rule80A -> opt msg "439" parse_string (fun msg f_ClearingEntries_ClearingFirm -> opt msg "77" parse_OpenClose (fun msg f_ClearingEntries_OpenClose -> opt msg "9952" parse_string (fun msg f_ClearingEntries_FreeText -> opt msg "1" parse_string (fun msg f_ClearingEntries_Account -> (ParseSuccess {
-        f_ClearingEntries_Account = f_ClearingEntries_Account;
-        f_ClearingEntries_FreeText = f_ClearingEntries_FreeText;
-        f_ClearingEntries_OpenClose = f_ClearingEntries_OpenClose;
-        f_ClearingEntries_ClearingFirm = f_ClearingEntries_ClearingFirm;
-        f_ClearingEntries_Rule80A = f_ClearingEntries_Rule80A;
-        f_ClearingEntries_ClientID = f_ClearingEntries_ClientID;
-        f_ClearingEntries_NoClearingEntries = f_ClearingEntries_NoClearingEntries;
-        f_ClearingEntries_ClearingHandlingType = f_ClearingEntries_ClearingHandlingType
-    },msg)
     )
     )
     )
@@ -40,80 +29,36 @@ let parse_ClearingEntries (msg)  =
     )
 ;;
 
-let parse_CommissionData (msg)  =
-    opt msg "13" parse_CommType (fun msg f_CommissionData_CommType -> opt msg "479" parse_Currency (fun msg f_CommissionData_CommCurrency -> opt msg "12" parse_float (fun msg f_CommissionData_Commission -> opt msg "497" parse_FundRenewWaiv (fun msg f_CommissionData_FundRenewWaiv -> (ParseSuccess {
-        f_CommissionData_FundRenewWaiv = f_CommissionData_FundRenewWaiv;
-        f_CommissionData_Commission = f_CommissionData_Commission;
-        f_CommissionData_CommCurrency = f_CommissionData_CommCurrency;
-        f_CommissionData_CommType = f_CommissionData_CommType
-    },msg)
-    )
-    )
-    )
-    )
-;;
-
-let parse_OrderListTradingSessions (msg)  =
-    opt msg "336" parse_string (fun msg f_OrderListTradingSessions_TradingSessionID -> opt msg "386" parse_int (fun msg f_OrderListTradingSessions_NoTradingSessions -> (ParseSuccess {
-        f_OrderListTradingSessions_NoTradingSessions = f_OrderListTradingSessions_NoTradingSessions;
-        f_OrderListTradingSessions_TradingSessionID = f_OrderListTradingSessions_TradingSessionID
-    },msg)
-    )
-    )
-;;
-
-let parse_QuoteRequestRelatedSym (msg)  =
-    opt msg "351" parse_string (fun msg f_QuoteRequestRelatedSym_EncodedSecurityDesc -> opt msg "207" parse_Exchange (fun msg f_QuoteRequestRelatedSym_SecurityExchange -> opt msg "140" (fun x -> (match parse_float x with
+let parse_MassQuoteQuoteSets (msg)  =
+    opt msg "311" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingSymbol -> opt msg "316" (fun x -> (match parse_float x with
         | None -> None
         | Some d -> (Some (float_Convert_6_4 d))
     )
-    ) (fun msg f_QuoteRequestRelatedSym_PrevClosePx -> opt msg "48" parse_string (fun msg f_QuoteRequestRelatedSym_SecurityID -> opt msg "15" parse_Currency (fun msg f_QuoteRequestRelatedSym_Currency -> opt msg "54" parse_Side (fun msg f_QuoteRequestRelatedSym_Side -> opt msg "192" parse_float (fun msg f_QuoteRequestRelatedSym_OrderQty2 -> opt msg "60" parse_UTCTimestamp (fun msg f_QuoteRequestRelatedSym_TransactTime -> opt msg "38" parse_float (fun msg f_QuoteRequestRelatedSym_OrderQty -> opt msg "336" parse_string (fun msg f_QuoteRequestRelatedSym_TradingSessionID -> opt msg "349" parse_string (fun msg f_QuoteRequestRelatedSym_EncodedIssuer -> opt msg "55" parse_string (fun msg f_QuoteRequestRelatedSym_Symbol -> opt msg "22" parse_IDSource (fun msg f_QuoteRequestRelatedSym_IDSource -> opt msg "200" parse_MonthYear (fun msg f_QuoteRequestRelatedSym_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_QuoteRequestRelatedSym_Issuer -> opt msg "64" parse_LocalMktDate (fun msg f_QuoteRequestRelatedSym_FutSettDate -> opt msg "65" parse_string (fun msg f_QuoteRequestRelatedSym_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_QuoteRequestRelatedSym_SecurityType -> opt msg "205" parse_int (fun msg f_QuoteRequestRelatedSym_MaturityDay -> opt msg "126" parse_UTCTimestamp (fun msg f_QuoteRequestRelatedSym_ExpireTime -> opt msg "193" parse_LocalMktDate (fun msg f_QuoteRequestRelatedSym_FutSettDate2 -> opt msg "201" parse_PutOrCall (fun msg f_QuoteRequestRelatedSym_PutOrCall -> opt msg "350" parse_int (fun msg f_QuoteRequestRelatedSym_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_QuoteRequestRelatedSym_ContractMultiplier -> opt msg "348" parse_int (fun msg f_QuoteRequestRelatedSym_EncodedIssuerLen -> opt msg "303" parse_QuoteRequestType (fun msg f_QuoteRequestRelatedSym_QuoteRequestType -> opt msg "206" parse_char (fun msg f_QuoteRequestRelatedSym_OptAttribute -> opt msg "40" parse_OrdType (fun msg f_QuoteRequestRelatedSym_OrdType -> opt msg "146" parse_int (fun msg f_QuoteRequestRelatedSym_NoRelatedSym -> opt msg "202" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_QuoteRequestRelatedSym_StrikePrice -> opt msg "223" parse_float (fun msg f_QuoteRequestRelatedSym_CouponRate -> opt msg "107" parse_string (fun msg f_QuoteRequestRelatedSym_SecurityDesc -> (ParseSuccess {
-        f_QuoteRequestRelatedSym_SecurityDesc = f_QuoteRequestRelatedSym_SecurityDesc;
-        f_QuoteRequestRelatedSym_CouponRate = f_QuoteRequestRelatedSym_CouponRate;
-        f_QuoteRequestRelatedSym_StrikePrice = f_QuoteRequestRelatedSym_StrikePrice;
-        f_QuoteRequestRelatedSym_NoRelatedSym = f_QuoteRequestRelatedSym_NoRelatedSym;
-        f_QuoteRequestRelatedSym_OrdType = f_QuoteRequestRelatedSym_OrdType;
-        f_QuoteRequestRelatedSym_OptAttribute = f_QuoteRequestRelatedSym_OptAttribute;
-        f_QuoteRequestRelatedSym_QuoteRequestType = f_QuoteRequestRelatedSym_QuoteRequestType;
-        f_QuoteRequestRelatedSym_EncodedIssuerLen = f_QuoteRequestRelatedSym_EncodedIssuerLen;
-        f_QuoteRequestRelatedSym_ContractMultiplier = f_QuoteRequestRelatedSym_ContractMultiplier;
-        f_QuoteRequestRelatedSym_EncodedSecurityDescLen = f_QuoteRequestRelatedSym_EncodedSecurityDescLen;
-        f_QuoteRequestRelatedSym_PutOrCall = f_QuoteRequestRelatedSym_PutOrCall;
-        f_QuoteRequestRelatedSym_FutSettDate2 = f_QuoteRequestRelatedSym_FutSettDate2;
-        f_QuoteRequestRelatedSym_ExpireTime = f_QuoteRequestRelatedSym_ExpireTime;
-        f_QuoteRequestRelatedSym_MaturityDay = f_QuoteRequestRelatedSym_MaturityDay;
-        f_QuoteRequestRelatedSym_SecurityType = f_QuoteRequestRelatedSym_SecurityType;
-        f_QuoteRequestRelatedSym_SymbolSfx = f_QuoteRequestRelatedSym_SymbolSfx;
-        f_QuoteRequestRelatedSym_FutSettDate = f_QuoteRequestRelatedSym_FutSettDate;
-        f_QuoteRequestRelatedSym_Issuer = f_QuoteRequestRelatedSym_Issuer;
-        f_QuoteRequestRelatedSym_MaturityMonthYear = f_QuoteRequestRelatedSym_MaturityMonthYear;
-        f_QuoteRequestRelatedSym_IDSource = f_QuoteRequestRelatedSym_IDSource;
-        f_QuoteRequestRelatedSym_Symbol = f_QuoteRequestRelatedSym_Symbol;
-        f_QuoteRequestRelatedSym_EncodedIssuer = f_QuoteRequestRelatedSym_EncodedIssuer;
-        f_QuoteRequestRelatedSym_TradingSessionID = f_QuoteRequestRelatedSym_TradingSessionID;
-        f_QuoteRequestRelatedSym_OrderQty = f_QuoteRequestRelatedSym_OrderQty;
-        f_QuoteRequestRelatedSym_TransactTime = f_QuoteRequestRelatedSym_TransactTime;
-        f_QuoteRequestRelatedSym_OrderQty2 = f_QuoteRequestRelatedSym_OrderQty2;
-        f_QuoteRequestRelatedSym_Side = f_QuoteRequestRelatedSym_Side;
-        f_QuoteRequestRelatedSym_Currency = f_QuoteRequestRelatedSym_Currency;
-        f_QuoteRequestRelatedSym_SecurityID = f_QuoteRequestRelatedSym_SecurityID;
-        f_QuoteRequestRelatedSym_PrevClosePx = f_QuoteRequestRelatedSym_PrevClosePx;
-        f_QuoteRequestRelatedSym_SecurityExchange = f_QuoteRequestRelatedSym_SecurityExchange;
-        f_QuoteRequestRelatedSym_EncodedSecurityDesc = f_QuoteRequestRelatedSym_EncodedSecurityDesc
+    ) (fun msg f_MassQuoteQuoteSets_UnderlyingStrikePrice -> opt msg "306" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingIssuer -> opt msg "365" parse_string (fun msg f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDesc -> opt msg "307" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingSecurityDesc -> opt msg "362" parse_int (fun msg f_MassQuoteQuoteSets_EncodedUnderlyingIssuerLen -> opt msg "296" parse_int (fun msg f_MassQuoteQuoteSets_NoQuoteSets -> opt msg "312" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingSymbolSfx -> opt msg "364" parse_int (fun msg f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDescLen -> opt msg "436" parse_float (fun msg f_MassQuoteQuoteSets_UnderlyingContractMultiplier -> opt msg "302" parse_string (fun msg f_MassQuoteQuoteSets_QuoteSetID -> opt msg "309" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingSecurityID -> opt msg "308" parse_Exchange (fun msg f_MassQuoteQuoteSets_UnderlyingSecurityExchange -> opt msg "315" parse_int (fun msg f_MassQuoteQuoteSets_UnderlyingPutOrCall -> opt msg "310" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingSecurityType -> opt msg "367" parse_UTCTimestamp (fun msg f_MassQuoteQuoteSets_QuoteSetValidUntilTime -> opt msg "435" parse_float (fun msg f_MassQuoteQuoteSets_UnderlyingCouponRate -> opt msg "313" parse_MonthYear (fun msg f_MassQuoteQuoteSets_UnderlyingMaturityMonthYear -> opt msg "363" parse_string (fun msg f_MassQuoteQuoteSets_EncodedUnderlyingIssuer -> opt msg "314" parse_int (fun msg f_MassQuoteQuoteSets_UnderlyingMaturityDay -> opt msg "304" parse_int (fun msg f_MassQuoteQuoteSets_TotQuoteEntries -> opt msg "317" parse_char (fun msg f_MassQuoteQuoteSets_UnderlyingOptAttribute -> opt msg "305" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingIDSource -> (ParseSuccess {
+        f_MassQuoteQuoteSets_UnderlyingIDSource = f_MassQuoteQuoteSets_UnderlyingIDSource;
+        f_MassQuoteQuoteSets_UnderlyingOptAttribute = f_MassQuoteQuoteSets_UnderlyingOptAttribute;
+        f_MassQuoteQuoteSets_TotQuoteEntries = f_MassQuoteQuoteSets_TotQuoteEntries;
+        f_MassQuoteQuoteSets_UnderlyingMaturityDay = f_MassQuoteQuoteSets_UnderlyingMaturityDay;
+        f_MassQuoteQuoteSets_EncodedUnderlyingIssuer = f_MassQuoteQuoteSets_EncodedUnderlyingIssuer;
+        f_MassQuoteQuoteSets_UnderlyingMaturityMonthYear = f_MassQuoteQuoteSets_UnderlyingMaturityMonthYear;
+        f_MassQuoteQuoteSets_UnderlyingCouponRate = f_MassQuoteQuoteSets_UnderlyingCouponRate;
+        f_MassQuoteQuoteSets_QuoteSetValidUntilTime = f_MassQuoteQuoteSets_QuoteSetValidUntilTime;
+        f_MassQuoteQuoteSets_UnderlyingSecurityType = f_MassQuoteQuoteSets_UnderlyingSecurityType;
+        f_MassQuoteQuoteSets_UnderlyingPutOrCall = f_MassQuoteQuoteSets_UnderlyingPutOrCall;
+        f_MassQuoteQuoteSets_UnderlyingSecurityExchange = f_MassQuoteQuoteSets_UnderlyingSecurityExchange;
+        f_MassQuoteQuoteSets_UnderlyingSecurityID = f_MassQuoteQuoteSets_UnderlyingSecurityID;
+        f_MassQuoteQuoteSets_QuoteSetID = f_MassQuoteQuoteSets_QuoteSetID;
+        f_MassQuoteQuoteSets_UnderlyingContractMultiplier = f_MassQuoteQuoteSets_UnderlyingContractMultiplier;
+        f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDescLen = f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDescLen;
+        f_MassQuoteQuoteSets_UnderlyingSymbolSfx = f_MassQuoteQuoteSets_UnderlyingSymbolSfx;
+        f_MassQuoteQuoteSets_NoQuoteSets = f_MassQuoteQuoteSets_NoQuoteSets;
+        f_MassQuoteQuoteSets_EncodedUnderlyingIssuerLen = f_MassQuoteQuoteSets_EncodedUnderlyingIssuerLen;
+        f_MassQuoteQuoteSets_UnderlyingSecurityDesc = f_MassQuoteQuoteSets_UnderlyingSecurityDesc;
+        f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDesc = f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDesc;
+        f_MassQuoteQuoteSets_UnderlyingIssuer = f_MassQuoteQuoteSets_UnderlyingIssuer;
+        f_MassQuoteQuoteSets_UnderlyingStrikePrice = f_MassQuoteQuoteSets_UnderlyingStrikePrice;
+        f_MassQuoteQuoteSets_UnderlyingSymbol = f_MassQuoteQuoteSets_UnderlyingSymbol
     },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
     )
     )
     )
@@ -139,24 +84,13 @@ let parse_QuoteRequestRelatedSym (msg)  =
     )
 ;;
 
-let parse_TrdCollGrp (msg)  =
-    opt msg "571" parse_string (fun msg f_TrdCollGrp_TradeReportID -> opt msg "897" parse_int (fun msg f_TrdCollGrp_NoTrades -> opt msg "818" parse_string (fun msg f_TrdCollGrp_SecondaryTradeReportID -> (ParseSuccess {
-        f_TrdCollGrp_SecondaryTradeReportID = f_TrdCollGrp_SecondaryTradeReportID;
-        f_TrdCollGrp_NoTrades = f_TrdCollGrp_NoTrades;
-        f_TrdCollGrp_TradeReportID = f_TrdCollGrp_TradeReportID
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_SecTypesGrp (msg)  =
-    opt msg "461" parse_string (fun msg f_SecTypesGrp_CFICode -> opt msg "762" parse_string (fun msg f_SecTypesGrp_SecuritySubType -> opt msg "460" parse_Product (fun msg f_SecTypesGrp_Product -> opt msg "558" parse_int (fun msg f_SecTypesGrp_NoSecurityTypes -> opt msg "167" parse_SecurityType (fun msg f_SecTypesGrp_SecurityType -> (ParseSuccess {
-        f_SecTypesGrp_SecurityType = f_SecTypesGrp_SecurityType;
-        f_SecTypesGrp_NoSecurityTypes = f_SecTypesGrp_NoSecurityTypes;
-        f_SecTypesGrp_Product = f_SecTypesGrp_Product;
-        f_SecTypesGrp_SecuritySubType = f_SecTypesGrp_SecuritySubType;
-        f_SecTypesGrp_CFICode = f_SecTypesGrp_CFICode
+let parse_OrderQtyData (msg)  =
+    opt msg "38" parse_float (fun msg f_OrderQtyData_OrderQty -> opt msg "152" parse_float (fun msg f_OrderQtyData_CashOrderQty -> opt msg "516" parse_float (fun msg f_OrderQtyData_OrderPercent -> opt msg "469" parse_float (fun msg f_OrderQtyData_RoundingModulus -> opt msg "468" parse_RoundingDirection (fun msg f_OrderQtyData_RoundingDirection -> (ParseSuccess {
+        f_OrderQtyData_RoundingDirection = f_OrderQtyData_RoundingDirection;
+        f_OrderQtyData_RoundingModulus = f_OrderQtyData_RoundingModulus;
+        f_OrderQtyData_OrderPercent = f_OrderQtyData_OrderPercent;
+        f_OrderQtyData_CashOrderQty = f_OrderQtyData_CashOrderQty;
+        f_OrderQtyData_OrderQty = f_OrderQtyData_OrderQty
     },msg)
     )
     )
@@ -165,150 +99,12 @@ let parse_SecTypesGrp (msg)  =
     )
 ;;
 
-let parse_CompIDStatGrp (msg)  =
-    opt msg "928" parse_StatusValue (fun msg f_CompIDStatGrp_StatusValue -> opt msg "284" parse_string (fun msg f_CompIDStatGrp_DeskID -> opt msg "930" parse_string (fun msg f_CompIDStatGrp_RefCompID -> opt msg "936" parse_int (fun msg f_CompIDStatGrp_NoCompIDs -> opt msg "931" parse_string (fun msg f_CompIDStatGrp_RefSubID -> opt msg "283" parse_string (fun msg f_CompIDStatGrp_LocationID -> opt msg "929" parse_string (fun msg f_CompIDStatGrp_StatusText -> (ParseSuccess {
-        f_CompIDStatGrp_StatusText = f_CompIDStatGrp_StatusText;
-        f_CompIDStatGrp_LocationID = f_CompIDStatGrp_LocationID;
-        f_CompIDStatGrp_RefSubID = f_CompIDStatGrp_RefSubID;
-        f_CompIDStatGrp_NoCompIDs = f_CompIDStatGrp_NoCompIDs;
-        f_CompIDStatGrp_RefCompID = f_CompIDStatGrp_RefCompID;
-        f_CompIDStatGrp_DeskID = f_CompIDStatGrp_DeskID;
-        f_CompIDStatGrp_StatusValue = f_CompIDStatGrp_StatusValue
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_MassQuoteQuoteEntries (msg)  =
-    opt msg "351" parse_string (fun msg f_MassQuoteQuoteEntries_EncodedSecurityDesc -> opt msg "295" parse_int (fun msg f_MassQuoteQuoteEntries_NoQuoteEntries -> opt msg "207" parse_Exchange (fun msg f_MassQuoteQuoteEntries_SecurityExchange -> opt msg "191" parse_float (fun msg f_MassQuoteQuoteEntries_OfferForwardPoints -> opt msg "48" parse_string (fun msg f_MassQuoteQuoteEntries_SecurityID -> opt msg "132" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_MassQuoteQuoteEntries_BidPx -> opt msg "299" parse_string (fun msg f_MassQuoteQuoteEntries_QuoteEntryID -> opt msg "15" parse_Currency (fun msg f_MassQuoteQuoteEntries_Currency -> opt msg "192" parse_float (fun msg f_MassQuoteQuoteEntries_OrderQty2 -> opt msg "60" parse_UTCTimestamp (fun msg f_MassQuoteQuoteEntries_TransactTime -> opt msg "134" parse_float (fun msg f_MassQuoteQuoteEntries_BidSize -> opt msg "336" parse_string (fun msg f_MassQuoteQuoteEntries_TradingSessionID -> opt msg "349" parse_string (fun msg f_MassQuoteQuoteEntries_EncodedIssuer -> opt msg "55" parse_string (fun msg f_MassQuoteQuoteEntries_Symbol -> opt msg "22" parse_IDSource (fun msg f_MassQuoteQuoteEntries_IDSource -> opt msg "135" parse_float (fun msg f_MassQuoteQuoteEntries_OfferSize -> opt msg "200" parse_MonthYear (fun msg f_MassQuoteQuoteEntries_MaturityMonthYear -> opt msg "133" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_MassQuoteQuoteEntries_OfferPx -> opt msg "106" parse_string (fun msg f_MassQuoteQuoteEntries_Issuer -> opt msg "64" parse_LocalMktDate (fun msg f_MassQuoteQuoteEntries_FutSettDate -> opt msg "65" parse_string (fun msg f_MassQuoteQuoteEntries_SymbolSfx -> opt msg "188" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_MassQuoteQuoteEntries_BidSpotRate -> opt msg "167" parse_SecurityType (fun msg f_MassQuoteQuoteEntries_SecurityType -> opt msg "205" parse_int (fun msg f_MassQuoteQuoteEntries_MaturityDay -> opt msg "193" parse_LocalMktDate (fun msg f_MassQuoteQuoteEntries_FutSettDate2 -> opt msg "201" parse_PutOrCall (fun msg f_MassQuoteQuoteEntries_PutOrCall -> opt msg "350" parse_int (fun msg f_MassQuoteQuoteEntries_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_MassQuoteQuoteEntries_ContractMultiplier -> opt msg "348" parse_int (fun msg f_MassQuoteQuoteEntries_EncodedIssuerLen -> opt msg "189" parse_float (fun msg f_MassQuoteQuoteEntries_BidForwardPoints -> opt msg "190" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_MassQuoteQuoteEntries_OfferSpotRate -> opt msg "206" parse_char (fun msg f_MassQuoteQuoteEntries_OptAttribute -> opt msg "40" parse_OrdType (fun msg f_MassQuoteQuoteEntries_OrdType -> opt msg "62" parse_UTCTimestamp (fun msg f_MassQuoteQuoteEntries_ValidUntilTime -> opt msg "202" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_MassQuoteQuoteEntries_StrikePrice -> opt msg "223" parse_float (fun msg f_MassQuoteQuoteEntries_CouponRate -> opt msg "107" parse_string (fun msg f_MassQuoteQuoteEntries_SecurityDesc -> (ParseSuccess {
-        f_MassQuoteQuoteEntries_SecurityDesc = f_MassQuoteQuoteEntries_SecurityDesc;
-        f_MassQuoteQuoteEntries_CouponRate = f_MassQuoteQuoteEntries_CouponRate;
-        f_MassQuoteQuoteEntries_StrikePrice = f_MassQuoteQuoteEntries_StrikePrice;
-        f_MassQuoteQuoteEntries_ValidUntilTime = f_MassQuoteQuoteEntries_ValidUntilTime;
-        f_MassQuoteQuoteEntries_OrdType = f_MassQuoteQuoteEntries_OrdType;
-        f_MassQuoteQuoteEntries_OptAttribute = f_MassQuoteQuoteEntries_OptAttribute;
-        f_MassQuoteQuoteEntries_OfferSpotRate = f_MassQuoteQuoteEntries_OfferSpotRate;
-        f_MassQuoteQuoteEntries_BidForwardPoints = f_MassQuoteQuoteEntries_BidForwardPoints;
-        f_MassQuoteQuoteEntries_EncodedIssuerLen = f_MassQuoteQuoteEntries_EncodedIssuerLen;
-        f_MassQuoteQuoteEntries_ContractMultiplier = f_MassQuoteQuoteEntries_ContractMultiplier;
-        f_MassQuoteQuoteEntries_EncodedSecurityDescLen = f_MassQuoteQuoteEntries_EncodedSecurityDescLen;
-        f_MassQuoteQuoteEntries_PutOrCall = f_MassQuoteQuoteEntries_PutOrCall;
-        f_MassQuoteQuoteEntries_FutSettDate2 = f_MassQuoteQuoteEntries_FutSettDate2;
-        f_MassQuoteQuoteEntries_MaturityDay = f_MassQuoteQuoteEntries_MaturityDay;
-        f_MassQuoteQuoteEntries_SecurityType = f_MassQuoteQuoteEntries_SecurityType;
-        f_MassQuoteQuoteEntries_BidSpotRate = f_MassQuoteQuoteEntries_BidSpotRate;
-        f_MassQuoteQuoteEntries_SymbolSfx = f_MassQuoteQuoteEntries_SymbolSfx;
-        f_MassQuoteQuoteEntries_FutSettDate = f_MassQuoteQuoteEntries_FutSettDate;
-        f_MassQuoteQuoteEntries_Issuer = f_MassQuoteQuoteEntries_Issuer;
-        f_MassQuoteQuoteEntries_OfferPx = f_MassQuoteQuoteEntries_OfferPx;
-        f_MassQuoteQuoteEntries_MaturityMonthYear = f_MassQuoteQuoteEntries_MaturityMonthYear;
-        f_MassQuoteQuoteEntries_OfferSize = f_MassQuoteQuoteEntries_OfferSize;
-        f_MassQuoteQuoteEntries_IDSource = f_MassQuoteQuoteEntries_IDSource;
-        f_MassQuoteQuoteEntries_Symbol = f_MassQuoteQuoteEntries_Symbol;
-        f_MassQuoteQuoteEntries_EncodedIssuer = f_MassQuoteQuoteEntries_EncodedIssuer;
-        f_MassQuoteQuoteEntries_TradingSessionID = f_MassQuoteQuoteEntries_TradingSessionID;
-        f_MassQuoteQuoteEntries_BidSize = f_MassQuoteQuoteEntries_BidSize;
-        f_MassQuoteQuoteEntries_TransactTime = f_MassQuoteQuoteEntries_TransactTime;
-        f_MassQuoteQuoteEntries_OrderQty2 = f_MassQuoteQuoteEntries_OrderQty2;
-        f_MassQuoteQuoteEntries_Currency = f_MassQuoteQuoteEntries_Currency;
-        f_MassQuoteQuoteEntries_QuoteEntryID = f_MassQuoteQuoteEntries_QuoteEntryID;
-        f_MassQuoteQuoteEntries_BidPx = f_MassQuoteQuoteEntries_BidPx;
-        f_MassQuoteQuoteEntries_SecurityID = f_MassQuoteQuoteEntries_SecurityID;
-        f_MassQuoteQuoteEntries_OfferForwardPoints = f_MassQuoteQuoteEntries_OfferForwardPoints;
-        f_MassQuoteQuoteEntries_SecurityExchange = f_MassQuoteQuoteEntries_SecurityExchange;
-        f_MassQuoteQuoteEntries_NoQuoteEntries = f_MassQuoteQuoteEntries_NoQuoteEntries;
-        f_MassQuoteQuoteEntries_EncodedSecurityDesc = f_MassQuoteQuoteEntries_EncodedSecurityDesc
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_OrderCancelReplaceRequestTradingSessions (msg)  =
-    opt msg "336" parse_string (fun msg f_OrderCancelReplaceRequestTradingSessions_TradingSessionID -> opt msg "386" parse_int (fun msg f_OrderCancelReplaceRequestTradingSessions_NoTradingSessions -> (ParseSuccess {
-        f_OrderCancelReplaceRequestTradingSessions_NoTradingSessions = f_OrderCancelReplaceRequestTradingSessions_NoTradingSessions;
-        f_OrderCancelReplaceRequestTradingSessions_TradingSessionID = f_OrderCancelReplaceRequestTradingSessions_TradingSessionID
-    },msg)
-    )
-    )
-;;
-
-let parse_Stipulations (msg)  =
-    opt msg "232" parse_int (fun msg f_Stipulations_NoStipulations -> opt msg "234" parse_string (fun msg f_Stipulations_StipulationValue -> opt msg "233" parse_StipulationType (fun msg f_Stipulations_StipulationType -> (ParseSuccess {
-        f_Stipulations_StipulationType = f_Stipulations_StipulationType;
-        f_Stipulations_StipulationValue = f_Stipulations_StipulationValue;
-        f_Stipulations_NoStipulations = f_Stipulations_NoStipulations
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_ContAmtGrp (msg)  =
-    opt msg "519" parse_ContAmtType (fun msg f_ContAmtGrp_ContAmtType -> opt msg "521" parse_Currency (fun msg f_ContAmtGrp_ContAmtCurr -> opt msg "518" parse_int (fun msg f_ContAmtGrp_NoContAmts -> opt msg "520" parse_float (fun msg f_ContAmtGrp_ContAmtValue -> (ParseSuccess {
-        f_ContAmtGrp_ContAmtValue = f_ContAmtGrp_ContAmtValue;
-        f_ContAmtGrp_NoContAmts = f_ContAmtGrp_NoContAmts;
-        f_ContAmtGrp_ContAmtCurr = f_ContAmtGrp_ContAmtCurr;
-        f_ContAmtGrp_ContAmtType = f_ContAmtGrp_ContAmtType
+let parse_AffectedOrdGrp (msg)  =
+    opt msg "41" parse_string (fun msg f_AffectedOrdGrp_OrigClOrdID -> opt msg "535" parse_string (fun msg f_AffectedOrdGrp_AffectedOrderID -> opt msg "534" parse_int (fun msg f_AffectedOrdGrp_NoAffectedOrders -> opt msg "536" parse_string (fun msg f_AffectedOrdGrp_AffectedSecondaryOrderID -> (ParseSuccess {
+        f_AffectedOrdGrp_AffectedSecondaryOrderID = f_AffectedOrdGrp_AffectedSecondaryOrderID;
+        f_AffectedOrdGrp_NoAffectedOrders = f_AffectedOrdGrp_NoAffectedOrders;
+        f_AffectedOrdGrp_AffectedOrderID = f_AffectedOrdGrp_AffectedOrderID;
+        f_AffectedOrdGrp_OrigClOrdID = f_AffectedOrdGrp_OrigClOrdID
     },msg)
     )
     )
@@ -316,37 +112,27 @@ let parse_ContAmtGrp (msg)  =
     )
 ;;
 
-let parse_SpreadOrBenchmarkCurveData (msg)  =
-    opt msg "220" parse_Currency (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency -> opt msg "761" parse_string (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource -> opt msg "699" parse_string (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkSecurityID -> opt msg "222" parse_string (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkCurvePoint -> opt msg "663" parse_int (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkPriceType -> opt msg "218" parse_float (fun msg f_SpreadOrBenchmarkCurveData_Spread -> opt msg "221" parse_string (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkCurveName -> opt msg "662" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkPrice -> (ParseSuccess {
-        f_SpreadOrBenchmarkCurveData_BenchmarkPrice = f_SpreadOrBenchmarkCurveData_BenchmarkPrice;
-        f_SpreadOrBenchmarkCurveData_BenchmarkCurveName = f_SpreadOrBenchmarkCurveData_BenchmarkCurveName;
-        f_SpreadOrBenchmarkCurveData_Spread = f_SpreadOrBenchmarkCurveData_Spread;
-        f_SpreadOrBenchmarkCurveData_BenchmarkPriceType = f_SpreadOrBenchmarkCurveData_BenchmarkPriceType;
-        f_SpreadOrBenchmarkCurveData_BenchmarkCurvePoint = f_SpreadOrBenchmarkCurveData_BenchmarkCurvePoint;
-        f_SpreadOrBenchmarkCurveData_BenchmarkSecurityID = f_SpreadOrBenchmarkCurveData_BenchmarkSecurityID;
-        f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource = f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource;
-        f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency = f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency
+let parse_MDRjctGrp (msg)  =
+    opt msg "817" parse_string (fun msg f_MDRjctGrp_AltMDSourceID -> opt msg "816" parse_int (fun msg f_MDRjctGrp_NoAltMDSource -> (ParseSuccess {
+        f_MDRjctGrp_NoAltMDSource = f_MDRjctGrp_NoAltMDSource;
+        f_MDRjctGrp_AltMDSourceID = f_MDRjctGrp_AltMDSourceID
     },msg)
-    )
-    )
-    )
-    )
-    )
-    )
     )
     )
 ;;
 
-let parse_PositionAmountData (msg)  =
-    opt msg "707" parse_PosAmtType (fun msg f_PositionAmountData_PosAmtType -> opt msg "708" parse_float (fun msg f_PositionAmountData_PosAmt -> opt msg "753" parse_int (fun msg f_PositionAmountData_NoPosAmt -> (ParseSuccess {
-        f_PositionAmountData_NoPosAmt = f_PositionAmountData_NoPosAmt;
-        f_PositionAmountData_PosAmt = f_PositionAmountData_PosAmt;
-        f_PositionAmountData_PosAmtType = f_PositionAmountData_PosAmtType
+let parse_AllocationOrders (msg)  =
+    opt msg "37" parse_string (fun msg f_AllocationOrders_OrderID -> opt msg "105" parse_string (fun msg f_AllocationOrders_WaveNo -> opt msg "11" parse_string (fun msg f_AllocationOrders_ClOrdID -> opt msg "198" parse_string (fun msg f_AllocationOrders_SecondaryOrderID -> opt msg "73" parse_int (fun msg f_AllocationOrders_NoOrders -> opt msg "66" parse_string (fun msg f_AllocationOrders_ListID -> (ParseSuccess {
+        f_AllocationOrders_ListID = f_AllocationOrders_ListID;
+        f_AllocationOrders_NoOrders = f_AllocationOrders_NoOrders;
+        f_AllocationOrders_SecondaryOrderID = f_AllocationOrders_SecondaryOrderID;
+        f_AllocationOrders_ClOrdID = f_AllocationOrders_ClOrdID;
+        f_AllocationOrders_WaveNo = f_AllocationOrders_WaveNo;
+        f_AllocationOrders_OrderID = f_AllocationOrders_OrderID
     },msg)
+    )
+    )
+    )
     )
     )
     )
@@ -363,20 +149,48 @@ let parse_LogonMsgTypes (msg)  =
     )
 ;;
 
-let parse_CollInqQualGrp (msg)  =
-    opt msg "896" parse_CollInquiryQualifier (fun msg f_CollInqQualGrp_CollInquiryQualifier -> opt msg "938" parse_int (fun msg f_CollInqQualGrp_NoCollInquiryQualifier -> (ParseSuccess {
-        f_CollInqQualGrp_NoCollInquiryQualifier = f_CollInqQualGrp_NoCollInquiryQualifier;
-        f_CollInqQualGrp_CollInquiryQualifier = f_CollInqQualGrp_CollInquiryQualifier
+let parse_TrdRegTimestamps (msg)  =
+    opt msg "769" parse_UTCTimestamp (fun msg f_TrdRegTimestamps_TrdRegTimestamp -> opt msg "770" parse_TrdRegTimestampType (fun msg f_TrdRegTimestamps_TrdRegTimestampType -> opt msg "771" parse_string (fun msg f_TrdRegTimestamps_TrdRegTimestampOrigin -> opt msg "768" parse_int (fun msg f_TrdRegTimestamps_NoTrdRegTimestamps -> (ParseSuccess {
+        f_TrdRegTimestamps_NoTrdRegTimestamps = f_TrdRegTimestamps_NoTrdRegTimestamps;
+        f_TrdRegTimestamps_TrdRegTimestampOrigin = f_TrdRegTimestamps_TrdRegTimestampOrigin;
+        f_TrdRegTimestamps_TrdRegTimestampType = f_TrdRegTimestamps_TrdRegTimestampType;
+        f_TrdRegTimestamps_TrdRegTimestamp = f_TrdRegTimestamps_TrdRegTimestamp
     },msg)
+    )
+    )
     )
     )
 ;;
 
-let parse_SecAltIDGrp (msg)  =
-    opt msg "455" parse_string (fun msg f_SecAltIDGrp_SecurityAltID -> opt msg "456" parse_string (fun msg f_SecAltIDGrp_SecurityAltIDSource -> opt msg "454" parse_int (fun msg f_SecAltIDGrp_NoSecurityAltID -> (ParseSuccess {
-        f_SecAltIDGrp_NoSecurityAltID = f_SecAltIDGrp_NoSecurityAltID;
-        f_SecAltIDGrp_SecurityAltIDSource = f_SecAltIDGrp_SecurityAltIDSource;
-        f_SecAltIDGrp_SecurityAltID = f_SecAltIDGrp_SecurityAltID
+let parse_IOIRoutingIDs (msg)  =
+    opt msg "217" parse_string (fun msg f_IOIRoutingIDs_RoutingID -> opt msg "215" parse_int (fun msg f_IOIRoutingIDs_NoRoutingIDs -> opt msg "216" parse_RoutingType (fun msg f_IOIRoutingIDs_RoutingType -> (ParseSuccess {
+        f_IOIRoutingIDs_RoutingType = f_IOIRoutingIDs_RoutingType;
+        f_IOIRoutingIDs_NoRoutingIDs = f_IOIRoutingIDs_NoRoutingIDs;
+        f_IOIRoutingIDs_RoutingID = f_IOIRoutingIDs_RoutingID
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_CpctyConfGrp (msg)  =
+    opt msg "529" parse_OrderRestrictions (fun msg f_CpctyConfGrp_OrderRestrictions -> opt msg "863" parse_float (fun msg f_CpctyConfGrp_OrderCapacityQty -> opt msg "862" parse_int (fun msg f_CpctyConfGrp_NoCapacities -> opt msg "528" parse_OrderCapacity (fun msg f_CpctyConfGrp_OrderCapacity -> (ParseSuccess {
+        f_CpctyConfGrp_OrderCapacity = f_CpctyConfGrp_OrderCapacity;
+        f_CpctyConfGrp_NoCapacities = f_CpctyConfGrp_NoCapacities;
+        f_CpctyConfGrp_OrderCapacityQty = f_CpctyConfGrp_OrderCapacityQty;
+        f_CpctyConfGrp_OrderRestrictions = f_CpctyConfGrp_OrderRestrictions
+    },msg)
+    )
+    )
+    )
+    )
+;;
+
+let parse_OrderCancelReplaceRequestAllocs (msg)  =
+    opt msg "79" parse_string (fun msg f_OrderCancelReplaceRequestAllocs_AllocAccount -> opt msg "80" parse_float (fun msg f_OrderCancelReplaceRequestAllocs_AllocShares -> opt msg "78" parse_int (fun msg f_OrderCancelReplaceRequestAllocs_NoAllocs -> (ParseSuccess {
+        f_OrderCancelReplaceRequestAllocs_NoAllocs = f_OrderCancelReplaceRequestAllocs_NoAllocs;
+        f_OrderCancelReplaceRequestAllocs_AllocShares = f_OrderCancelReplaceRequestAllocs_AllocShares;
+        f_OrderCancelReplaceRequestAllocs_AllocAccount = f_OrderCancelReplaceRequestAllocs_AllocAccount
     },msg)
     )
     )
@@ -456,1077 +270,12 @@ let parse_ListStrikePriceStrikes (msg)  =
     )
 ;;
 
-let parse_EvntGrp (msg)  =
-    opt msg "867" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_EvntGrp_EventPx -> opt msg "866" parse_LocalMktDate (fun msg f_EvntGrp_EventDate -> opt msg "868" parse_string (fun msg f_EvntGrp_EventText -> opt msg "864" parse_int (fun msg f_EvntGrp_NoEvents -> opt msg "865" parse_EventType (fun msg f_EvntGrp_EventType -> (ParseSuccess {
-        f_EvntGrp_EventType = f_EvntGrp_EventType;
-        f_EvntGrp_NoEvents = f_EvntGrp_NoEvents;
-        f_EvntGrp_EventText = f_EvntGrp_EventText;
-        f_EvntGrp_EventDate = f_EvntGrp_EventDate;
-        f_EvntGrp_EventPx = f_EvntGrp_EventPx
+let parse_AttrbGrp (msg)  =
+    opt msg "871" parse_InstrAttribType (fun msg f_AttrbGrp_InstrAttribType -> opt msg "870" parse_int (fun msg f_AttrbGrp_NoInstrAttrib -> opt msg "872" parse_string (fun msg f_AttrbGrp_InstrAttribValue -> (ParseSuccess {
+        f_AttrbGrp_InstrAttribValue = f_AttrbGrp_InstrAttribValue;
+        f_AttrbGrp_NoInstrAttrib = f_AttrbGrp_NoInstrAttrib;
+        f_AttrbGrp_InstrAttribType = f_AttrbGrp_InstrAttribType
     },msg)
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_IOIRoutingIDs (msg)  =
-    opt msg "217" parse_string (fun msg f_IOIRoutingIDs_RoutingID -> opt msg "215" parse_int (fun msg f_IOIRoutingIDs_NoRoutingIDs -> opt msg "216" parse_RoutingType (fun msg f_IOIRoutingIDs_RoutingType -> (ParseSuccess {
-        f_IOIRoutingIDs_RoutingType = f_IOIRoutingIDs_RoutingType;
-        f_IOIRoutingIDs_NoRoutingIDs = f_IOIRoutingIDs_NoRoutingIDs;
-        f_IOIRoutingIDs_RoutingID = f_IOIRoutingIDs_RoutingID
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_ListStatusOrders (msg)  =
-    opt msg "151" parse_float (fun msg f_ListStatusOrders_LeavesQty -> opt msg "84" parse_float (fun msg f_ListStatusOrders_CxlQty -> opt msg "58" parse_string (fun msg f_ListStatusOrders_Text -> opt msg "11" parse_string (fun msg f_ListStatusOrders_ClOrdID -> opt msg "355" parse_string (fun msg f_ListStatusOrders_EncodedText -> opt msg "73" parse_int (fun msg f_ListStatusOrders_NoOrders -> opt msg "39" parse_OrdStatus (fun msg f_ListStatusOrders_OrdStatus -> opt msg "354" parse_int (fun msg f_ListStatusOrders_EncodedTextLen -> opt msg "103" parse_OrdRejReason (fun msg f_ListStatusOrders_OrdRejReason -> opt msg "6" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_ListStatusOrders_AvgPx -> opt msg "14" parse_float (fun msg f_ListStatusOrders_CumQty -> (ParseSuccess {
-        f_ListStatusOrders_CumQty = f_ListStatusOrders_CumQty;
-        f_ListStatusOrders_AvgPx = f_ListStatusOrders_AvgPx;
-        f_ListStatusOrders_OrdRejReason = f_ListStatusOrders_OrdRejReason;
-        f_ListStatusOrders_EncodedTextLen = f_ListStatusOrders_EncodedTextLen;
-        f_ListStatusOrders_OrdStatus = f_ListStatusOrders_OrdStatus;
-        f_ListStatusOrders_NoOrders = f_ListStatusOrders_NoOrders;
-        f_ListStatusOrders_EncodedText = f_ListStatusOrders_EncodedText;
-        f_ListStatusOrders_ClOrdID = f_ListStatusOrders_ClOrdID;
-        f_ListStatusOrders_Text = f_ListStatusOrders_Text;
-        f_ListStatusOrders_CxlQty = f_ListStatusOrders_CxlQty;
-        f_ListStatusOrders_LeavesQty = f_ListStatusOrders_LeavesQty
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_LinesOfTextGrp (msg)  =
-    opt msg "58" parse_string (fun msg f_LinesOfTextGrp_Text -> opt msg "355" parse_string (fun msg f_LinesOfTextGrp_EncodedText -> opt msg "33" parse_int (fun msg f_LinesOfTextGrp_NoLinesOfText -> opt msg "354" parse_int (fun msg f_LinesOfTextGrp_EncodedTextLen -> (ParseSuccess {
-        f_LinesOfTextGrp_EncodedTextLen = f_LinesOfTextGrp_EncodedTextLen;
-        f_LinesOfTextGrp_NoLinesOfText = f_LinesOfTextGrp_NoLinesOfText;
-        f_LinesOfTextGrp_EncodedText = f_LinesOfTextGrp_EncodedText;
-        f_LinesOfTextGrp_Text = f_LinesOfTextGrp_Text
-    },msg)
-    )
-    )
-    )
-    )
-;;
-
-let parse_NewsLinesOfText (msg)  =
-    opt msg "58" parse_string (fun msg f_NewsLinesOfText_Text -> opt msg "355" parse_string (fun msg f_NewsLinesOfText_EncodedText -> opt msg "354" parse_int (fun msg f_NewsLinesOfText_EncodedTextLen -> opt msg "33" parse_int (fun msg f_NewsLinesOfText_LinesOfText -> (ParseSuccess {
-        f_NewsLinesOfText_LinesOfText = f_NewsLinesOfText_LinesOfText;
-        f_NewsLinesOfText_EncodedTextLen = f_NewsLinesOfText_EncodedTextLen;
-        f_NewsLinesOfText_EncodedText = f_NewsLinesOfText_EncodedText;
-        f_NewsLinesOfText_Text = f_NewsLinesOfText_Text
-    },msg)
-    )
-    )
-    )
-    )
-;;
-
-let parse_UnderlyingStipulations (msg)  =
-    opt msg "888" parse_string (fun msg f_UnderlyingStipulations_UnderlyingStipType -> opt msg "889" parse_string (fun msg f_UnderlyingStipulations_UnderlyingStipValue -> opt msg "887" parse_int (fun msg f_UnderlyingStipulations_NoUnderlyingStips -> (ParseSuccess {
-        f_UnderlyingStipulations_NoUnderlyingStips = f_UnderlyingStipulations_NoUnderlyingStips;
-        f_UnderlyingStipulations_UnderlyingStipValue = f_UnderlyingStipulations_UnderlyingStipValue;
-        f_UnderlyingStipulations_UnderlyingStipType = f_UnderlyingStipulations_UnderlyingStipType
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_OrderQtyData (msg)  =
-    opt msg "38" parse_float (fun msg f_OrderQtyData_OrderQty -> opt msg "152" parse_float (fun msg f_OrderQtyData_CashOrderQty -> opt msg "516" parse_float (fun msg f_OrderQtyData_OrderPercent -> opt msg "469" parse_float (fun msg f_OrderQtyData_RoundingModulus -> opt msg "468" parse_RoundingDirection (fun msg f_OrderQtyData_RoundingDirection -> (ParseSuccess {
-        f_OrderQtyData_RoundingDirection = f_OrderQtyData_RoundingDirection;
-        f_OrderQtyData_RoundingModulus = f_OrderQtyData_RoundingModulus;
-        f_OrderQtyData_OrderPercent = f_OrderQtyData_OrderPercent;
-        f_OrderQtyData_CashOrderQty = f_OrderQtyData_CashOrderQty;
-        f_OrderQtyData_OrderQty = f_OrderQtyData_OrderQty
-    },msg)
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_ContraGrp (msg)  =
-    opt msg "438" parse_UTCTimestamp (fun msg f_ContraGrp_ContraTradeTime -> opt msg "375" parse_string (fun msg f_ContraGrp_ContraBroker -> opt msg "655" parse_string (fun msg f_ContraGrp_ContraLegRefID -> opt msg "337" parse_string (fun msg f_ContraGrp_ContraTrader -> opt msg "382" parse_int (fun msg f_ContraGrp_NoContraBrokers -> opt msg "437" parse_float (fun msg f_ContraGrp_ContraTradeQty -> (ParseSuccess {
-        f_ContraGrp_ContraTradeQty = f_ContraGrp_ContraTradeQty;
-        f_ContraGrp_NoContraBrokers = f_ContraGrp_NoContraBrokers;
-        f_ContraGrp_ContraTrader = f_ContraGrp_ContraTrader;
-        f_ContraGrp_ContraLegRefID = f_ContraGrp_ContraLegRefID;
-        f_ContraGrp_ContraBroker = f_ContraGrp_ContraBroker;
-        f_ContraGrp_ContraTradeTime = f_ContraGrp_ContraTradeTime
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_IOIIOIQualifiers (msg)  =
-    opt msg "104" parse_IOIQualifier (fun msg f_IOIIOIQualifiers_IOIQualifier -> opt msg "199" parse_int (fun msg f_IOIIOIQualifiers_NoIOIQualifiers -> (ParseSuccess {
-        f_IOIIOIQualifiers_NoIOIQualifiers = f_IOIIOIQualifiers_NoIOIQualifiers;
-        f_IOIIOIQualifiers_IOIQualifier = f_IOIIOIQualifiers_IOIQualifier
-    },msg)
-    )
-    )
-;;
-
-let parse_YieldData (msg)  =
-    opt msg "236" parse_float (fun msg f_YieldData_Yield -> opt msg "697" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_YieldData_YieldRedemptionPrice -> opt msg "701" parse_LocalMktDate (fun msg f_YieldData_YieldCalcDate -> opt msg "698" parse_int (fun msg f_YieldData_YieldRedemptionPriceType -> opt msg "235" parse_YieldType (fun msg f_YieldData_YieldType -> opt msg "696" parse_LocalMktDate (fun msg f_YieldData_YieldRedemptionDate -> (ParseSuccess {
-        f_YieldData_YieldRedemptionDate = f_YieldData_YieldRedemptionDate;
-        f_YieldData_YieldType = f_YieldData_YieldType;
-        f_YieldData_YieldRedemptionPriceType = f_YieldData_YieldRedemptionPriceType;
-        f_YieldData_YieldCalcDate = f_YieldData_YieldCalcDate;
-        f_YieldData_YieldRedemptionPrice = f_YieldData_YieldRedemptionPrice;
-        f_YieldData_Yield = f_YieldData_Yield
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_OrderSingleAllocs (msg)  =
-    opt msg "79" parse_string (fun msg f_OrderSingleAllocs_AllocAccount -> opt msg "80" parse_float (fun msg f_OrderSingleAllocs_AllocShares -> opt msg "78" parse_int (fun msg f_OrderSingleAllocs_NoAllocs -> (ParseSuccess {
-        f_OrderSingleAllocs_NoAllocs = f_OrderSingleAllocs_NoAllocs;
-        f_OrderSingleAllocs_AllocShares = f_OrderSingleAllocs_AllocShares;
-        f_OrderSingleAllocs_AllocAccount = f_OrderSingleAllocs_AllocAccount
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_MarketDataRequestRelatedSym (msg)  =
-    opt msg "351" parse_string (fun msg f_MarketDataRequestRelatedSym_EncodedSecurityDesc -> opt msg "207" parse_Exchange (fun msg f_MarketDataRequestRelatedSym_SecurityExchange -> opt msg "205" parse_int (fun msg f_MarketDataRequestRelatedSym_MaturityDay -> opt msg "201" parse_PutOrCall (fun msg f_MarketDataRequestRelatedSym_PutOrCall -> opt msg "48" parse_string (fun msg f_MarketDataRequestRelatedSym_SecurityID -> opt msg "350" parse_int (fun msg f_MarketDataRequestRelatedSym_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_MarketDataRequestRelatedSym_ContractMultiplier -> opt msg "348" parse_int (fun msg f_MarketDataRequestRelatedSym_EncodedIssuerLen -> opt msg "336" parse_string (fun msg f_MarketDataRequestRelatedSym_TradingSessionID -> opt msg "349" parse_string (fun msg f_MarketDataRequestRelatedSym_EncodedIssuer -> opt msg "206" parse_char (fun msg f_MarketDataRequestRelatedSym_OptAttribute -> opt msg "55" parse_string (fun msg f_MarketDataRequestRelatedSym_Symbol -> opt msg "22" parse_IDSource (fun msg f_MarketDataRequestRelatedSym_IDSource -> opt msg "146" parse_int (fun msg f_MarketDataRequestRelatedSym_NoRelatedSym -> opt msg "202" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_MarketDataRequestRelatedSym_StrikePrice -> opt msg "200" parse_MonthYear (fun msg f_MarketDataRequestRelatedSym_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_MarketDataRequestRelatedSym_Issuer -> opt msg "223" parse_float (fun msg f_MarketDataRequestRelatedSym_CouponRate -> opt msg "65" parse_string (fun msg f_MarketDataRequestRelatedSym_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_MarketDataRequestRelatedSym_SecurityType -> opt msg "107" parse_string (fun msg f_MarketDataRequestRelatedSym_SecurityDesc -> (ParseSuccess {
-        f_MarketDataRequestRelatedSym_SecurityDesc = f_MarketDataRequestRelatedSym_SecurityDesc;
-        f_MarketDataRequestRelatedSym_SecurityType = f_MarketDataRequestRelatedSym_SecurityType;
-        f_MarketDataRequestRelatedSym_SymbolSfx = f_MarketDataRequestRelatedSym_SymbolSfx;
-        f_MarketDataRequestRelatedSym_CouponRate = f_MarketDataRequestRelatedSym_CouponRate;
-        f_MarketDataRequestRelatedSym_Issuer = f_MarketDataRequestRelatedSym_Issuer;
-        f_MarketDataRequestRelatedSym_MaturityMonthYear = f_MarketDataRequestRelatedSym_MaturityMonthYear;
-        f_MarketDataRequestRelatedSym_StrikePrice = f_MarketDataRequestRelatedSym_StrikePrice;
-        f_MarketDataRequestRelatedSym_NoRelatedSym = f_MarketDataRequestRelatedSym_NoRelatedSym;
-        f_MarketDataRequestRelatedSym_IDSource = f_MarketDataRequestRelatedSym_IDSource;
-        f_MarketDataRequestRelatedSym_Symbol = f_MarketDataRequestRelatedSym_Symbol;
-        f_MarketDataRequestRelatedSym_OptAttribute = f_MarketDataRequestRelatedSym_OptAttribute;
-        f_MarketDataRequestRelatedSym_EncodedIssuer = f_MarketDataRequestRelatedSym_EncodedIssuer;
-        f_MarketDataRequestRelatedSym_TradingSessionID = f_MarketDataRequestRelatedSym_TradingSessionID;
-        f_MarketDataRequestRelatedSym_EncodedIssuerLen = f_MarketDataRequestRelatedSym_EncodedIssuerLen;
-        f_MarketDataRequestRelatedSym_ContractMultiplier = f_MarketDataRequestRelatedSym_ContractMultiplier;
-        f_MarketDataRequestRelatedSym_EncodedSecurityDescLen = f_MarketDataRequestRelatedSym_EncodedSecurityDescLen;
-        f_MarketDataRequestRelatedSym_SecurityID = f_MarketDataRequestRelatedSym_SecurityID;
-        f_MarketDataRequestRelatedSym_PutOrCall = f_MarketDataRequestRelatedSym_PutOrCall;
-        f_MarketDataRequestRelatedSym_MaturityDay = f_MarketDataRequestRelatedSym_MaturityDay;
-        f_MarketDataRequestRelatedSym_SecurityExchange = f_MarketDataRequestRelatedSym_SecurityExchange;
-        f_MarketDataRequestRelatedSym_EncodedSecurityDesc = f_MarketDataRequestRelatedSym_EncodedSecurityDesc
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_ExecutionReportContraBrokers (msg)  =
-    opt msg "438" parse_UTCTimestamp (fun msg f_ExecutionReportContraBrokers_ContraTradeTime -> opt msg "375" parse_string (fun msg f_ExecutionReportContraBrokers_ContraBroker -> opt msg "337" parse_string (fun msg f_ExecutionReportContraBrokers_ContraTrader -> opt msg "382" parse_int (fun msg f_ExecutionReportContraBrokers_NoContraBrokers -> opt msg "437" parse_float (fun msg f_ExecutionReportContraBrokers_ContraTradeQty -> (ParseSuccess {
-        f_ExecutionReportContraBrokers_ContraTradeQty = f_ExecutionReportContraBrokers_ContraTradeQty;
-        f_ExecutionReportContraBrokers_NoContraBrokers = f_ExecutionReportContraBrokers_NoContraBrokers;
-        f_ExecutionReportContraBrokers_ContraTrader = f_ExecutionReportContraBrokers_ContraTrader;
-        f_ExecutionReportContraBrokers_ContraBroker = f_ExecutionReportContraBrokers_ContraBroker;
-        f_ExecutionReportContraBrokers_ContraTradeTime = f_ExecutionReportContraBrokers_ContraTradeTime
-    },msg)
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_RgstDistInstGrp (msg)  =
-    opt msg "502" parse_string (fun msg f_RgstDistInstGrp_CashDistribAgentAcctName -> opt msg "512" parse_float (fun msg f_RgstDistInstGrp_DistribPercentage -> opt msg "498" parse_string (fun msg f_RgstDistInstGrp_CashDistribAgentName -> opt msg "478" parse_Currency (fun msg f_RgstDistInstGrp_CashDistribCurr -> opt msg "477" parse_DistribPaymentMethod (fun msg f_RgstDistInstGrp_DistribPaymentMethod -> opt msg "500" parse_string (fun msg f_RgstDistInstGrp_CashDistribAgentAcctNumber -> opt msg "501" parse_string (fun msg f_RgstDistInstGrp_CashDistribPayRef -> opt msg "499" parse_string (fun msg f_RgstDistInstGrp_CashDistribAgentCode -> opt msg "510" parse_int (fun msg f_RgstDistInstGrp_NoDistribInsts -> (ParseSuccess {
-        f_RgstDistInstGrp_NoDistribInsts = f_RgstDistInstGrp_NoDistribInsts;
-        f_RgstDistInstGrp_CashDistribAgentCode = f_RgstDistInstGrp_CashDistribAgentCode;
-        f_RgstDistInstGrp_CashDistribPayRef = f_RgstDistInstGrp_CashDistribPayRef;
-        f_RgstDistInstGrp_CashDistribAgentAcctNumber = f_RgstDistInstGrp_CashDistribAgentAcctNumber;
-        f_RgstDistInstGrp_DistribPaymentMethod = f_RgstDistInstGrp_DistribPaymentMethod;
-        f_RgstDistInstGrp_CashDistribCurr = f_RgstDistInstGrp_CashDistribCurr;
-        f_RgstDistInstGrp_CashDistribAgentName = f_RgstDistInstGrp_CashDistribAgentName;
-        f_RgstDistInstGrp_DistribPercentage = f_RgstDistInstGrp_DistribPercentage;
-        f_RgstDistInstGrp_CashDistribAgentAcctName = f_RgstDistInstGrp_CashDistribAgentAcctName
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_AllocationOrders (msg)  =
-    opt msg "37" parse_string (fun msg f_AllocationOrders_OrderID -> opt msg "105" parse_string (fun msg f_AllocationOrders_WaveNo -> opt msg "11" parse_string (fun msg f_AllocationOrders_ClOrdID -> opt msg "198" parse_string (fun msg f_AllocationOrders_SecondaryOrderID -> opt msg "73" parse_int (fun msg f_AllocationOrders_NoOrders -> opt msg "66" parse_string (fun msg f_AllocationOrders_ListID -> (ParseSuccess {
-        f_AllocationOrders_ListID = f_AllocationOrders_ListID;
-        f_AllocationOrders_NoOrders = f_AllocationOrders_NoOrders;
-        f_AllocationOrders_SecondaryOrderID = f_AllocationOrders_SecondaryOrderID;
-        f_AllocationOrders_ClOrdID = f_AllocationOrders_ClOrdID;
-        f_AllocationOrders_WaveNo = f_AllocationOrders_WaveNo;
-        f_AllocationOrders_OrderID = f_AllocationOrders_OrderID
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_SecurityDefinitionRelatedSym (msg)  =
-    opt msg "311" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSymbol -> opt msg "316" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_SecurityDefinitionRelatedSym_UnderlyingStrikePrice -> opt msg "306" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingIssuer -> opt msg "365" parse_string (fun msg f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDesc -> opt msg "307" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSecurityDesc -> opt msg "362" parse_int (fun msg f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuerLen -> opt msg "312" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSymbolSfx -> opt msg "364" parse_int (fun msg f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDescLen -> opt msg "436" parse_float (fun msg f_SecurityDefinitionRelatedSym_UnderlyingContractMultiplier -> opt msg "54" parse_Side (fun msg f_SecurityDefinitionRelatedSym_Side -> opt msg "309" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSecurityID -> opt msg "308" parse_Exchange (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSecurityExchange -> opt msg "315" parse_int (fun msg f_SecurityDefinitionRelatedSym_UnderlyingPutOrCall -> opt msg "310" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSecurityType -> opt msg "318" parse_Currency (fun msg f_SecurityDefinitionRelatedSym_UnderlyingCurrency -> opt msg "435" parse_float (fun msg f_SecurityDefinitionRelatedSym_UnderlyingCouponRate -> opt msg "146" parse_int (fun msg f_SecurityDefinitionRelatedSym_NoRelatedSym -> opt msg "313" parse_MonthYear (fun msg f_SecurityDefinitionRelatedSym_UnderlyingMaturityMonthYear -> opt msg "363" parse_string (fun msg f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuer -> opt msg "314" parse_int (fun msg f_SecurityDefinitionRelatedSym_UnderlyingMaturityDay -> opt msg "317" parse_char (fun msg f_SecurityDefinitionRelatedSym_UnderlyingOptAttribute -> opt msg "319" parse_float (fun msg f_SecurityDefinitionRelatedSym_RatioQty -> opt msg "305" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingIDSource -> (ParseSuccess {
-        f_SecurityDefinitionRelatedSym_UnderlyingIDSource = f_SecurityDefinitionRelatedSym_UnderlyingIDSource;
-        f_SecurityDefinitionRelatedSym_RatioQty = f_SecurityDefinitionRelatedSym_RatioQty;
-        f_SecurityDefinitionRelatedSym_UnderlyingOptAttribute = f_SecurityDefinitionRelatedSym_UnderlyingOptAttribute;
-        f_SecurityDefinitionRelatedSym_UnderlyingMaturityDay = f_SecurityDefinitionRelatedSym_UnderlyingMaturityDay;
-        f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuer = f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuer;
-        f_SecurityDefinitionRelatedSym_UnderlyingMaturityMonthYear = f_SecurityDefinitionRelatedSym_UnderlyingMaturityMonthYear;
-        f_SecurityDefinitionRelatedSym_NoRelatedSym = f_SecurityDefinitionRelatedSym_NoRelatedSym;
-        f_SecurityDefinitionRelatedSym_UnderlyingCouponRate = f_SecurityDefinitionRelatedSym_UnderlyingCouponRate;
-        f_SecurityDefinitionRelatedSym_UnderlyingCurrency = f_SecurityDefinitionRelatedSym_UnderlyingCurrency;
-        f_SecurityDefinitionRelatedSym_UnderlyingSecurityType = f_SecurityDefinitionRelatedSym_UnderlyingSecurityType;
-        f_SecurityDefinitionRelatedSym_UnderlyingPutOrCall = f_SecurityDefinitionRelatedSym_UnderlyingPutOrCall;
-        f_SecurityDefinitionRelatedSym_UnderlyingSecurityExchange = f_SecurityDefinitionRelatedSym_UnderlyingSecurityExchange;
-        f_SecurityDefinitionRelatedSym_UnderlyingSecurityID = f_SecurityDefinitionRelatedSym_UnderlyingSecurityID;
-        f_SecurityDefinitionRelatedSym_Side = f_SecurityDefinitionRelatedSym_Side;
-        f_SecurityDefinitionRelatedSym_UnderlyingContractMultiplier = f_SecurityDefinitionRelatedSym_UnderlyingContractMultiplier;
-        f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDescLen = f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDescLen;
-        f_SecurityDefinitionRelatedSym_UnderlyingSymbolSfx = f_SecurityDefinitionRelatedSym_UnderlyingSymbolSfx;
-        f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuerLen = f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuerLen;
-        f_SecurityDefinitionRelatedSym_UnderlyingSecurityDesc = f_SecurityDefinitionRelatedSym_UnderlyingSecurityDesc;
-        f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDesc = f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDesc;
-        f_SecurityDefinitionRelatedSym_UnderlyingIssuer = f_SecurityDefinitionRelatedSym_UnderlyingIssuer;
-        f_SecurityDefinitionRelatedSym_UnderlyingStrikePrice = f_SecurityDefinitionRelatedSym_UnderlyingStrikePrice;
-        f_SecurityDefinitionRelatedSym_UnderlyingSymbol = f_SecurityDefinitionRelatedSym_UnderlyingSymbol
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_OrdListStatGrp (msg)  =
-    opt msg "151" parse_float (fun msg f_OrdListStatGrp_LeavesQty -> opt msg "84" parse_float (fun msg f_OrdListStatGrp_CxlQty -> opt msg "73" parse_int (fun msg f_OrdListStatGrp_NoOrders -> opt msg "39" parse_OrdStatus (fun msg f_OrdListStatGrp_OrdStatus -> opt msg "354" parse_int (fun msg f_OrdListStatGrp_EncodedTextLen -> opt msg "6" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_OrdListStatGrp_AvgPx -> opt msg "636" parse_WorkingIndicator (fun msg f_OrdListStatGrp_WorkingIndicator -> opt msg "526" parse_string (fun msg f_OrdListStatGrp_SecondaryClOrdID -> opt msg "58" parse_string (fun msg f_OrdListStatGrp_Text -> opt msg "11" parse_string (fun msg f_OrdListStatGrp_ClOrdID -> opt msg "355" parse_string (fun msg f_OrdListStatGrp_EncodedText -> opt msg "103" parse_OrdRejReason (fun msg f_OrdListStatGrp_OrdRejReason -> opt msg "14" parse_float (fun msg f_OrdListStatGrp_CumQty -> (ParseSuccess {
-        f_OrdListStatGrp_CumQty = f_OrdListStatGrp_CumQty;
-        f_OrdListStatGrp_OrdRejReason = f_OrdListStatGrp_OrdRejReason;
-        f_OrdListStatGrp_EncodedText = f_OrdListStatGrp_EncodedText;
-        f_OrdListStatGrp_ClOrdID = f_OrdListStatGrp_ClOrdID;
-        f_OrdListStatGrp_Text = f_OrdListStatGrp_Text;
-        f_OrdListStatGrp_SecondaryClOrdID = f_OrdListStatGrp_SecondaryClOrdID;
-        f_OrdListStatGrp_WorkingIndicator = f_OrdListStatGrp_WorkingIndicator;
-        f_OrdListStatGrp_AvgPx = f_OrdListStatGrp_AvgPx;
-        f_OrdListStatGrp_EncodedTextLen = f_OrdListStatGrp_EncodedTextLen;
-        f_OrdListStatGrp_OrdStatus = f_OrdListStatGrp_OrdStatus;
-        f_OrdListStatGrp_NoOrders = f_OrdListStatGrp_NoOrders;
-        f_OrdListStatGrp_CxlQty = f_OrdListStatGrp_CxlQty;
-        f_OrdListStatGrp_LeavesQty = f_OrdListStatGrp_LeavesQty
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_NewsRoutingIDs (msg)  =
-    opt msg "217" parse_string (fun msg f_NewsRoutingIDs_RoutingID -> opt msg "215" parse_int (fun msg f_NewsRoutingIDs_NoRoutingIDs -> opt msg "216" parse_RoutingType (fun msg f_NewsRoutingIDs_RoutingType -> (ParseSuccess {
-        f_NewsRoutingIDs_RoutingType = f_NewsRoutingIDs_RoutingType;
-        f_NewsRoutingIDs_NoRoutingIDs = f_NewsRoutingIDs_NoRoutingIDs;
-        f_NewsRoutingIDs_RoutingID = f_NewsRoutingIDs_RoutingID
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_ExecCollGrp (msg)  =
-    opt msg "124" parse_int (fun msg f_ExecCollGrp_NoExecs -> opt msg "17" parse_string (fun msg f_ExecCollGrp_ExecID -> (ParseSuccess {
-        f_ExecCollGrp_ExecID = f_ExecCollGrp_ExecID;
-        f_ExecCollGrp_NoExecs = f_ExecCollGrp_NoExecs
-    },msg)
-    )
-    )
-;;
-
-let parse_LegBenchmarkCurveData (msg)  =
-    opt msg "679" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_LegBenchmarkCurveData_LegBenchmarkPrice -> opt msg "677" parse_string (fun msg f_LegBenchmarkCurveData_LegBenchmarkCurveName -> opt msg "678" parse_string (fun msg f_LegBenchmarkCurveData_LegBenchmarkCurvePoint -> opt msg "676" parse_Currency (fun msg f_LegBenchmarkCurveData_LegBenchmarkCurveCurrency -> opt msg "680" parse_int (fun msg f_LegBenchmarkCurveData_LegBenchmarkPriceType -> (ParseSuccess {
-        f_LegBenchmarkCurveData_LegBenchmarkPriceType = f_LegBenchmarkCurveData_LegBenchmarkPriceType;
-        f_LegBenchmarkCurveData_LegBenchmarkCurveCurrency = f_LegBenchmarkCurveData_LegBenchmarkCurveCurrency;
-        f_LegBenchmarkCurveData_LegBenchmarkCurvePoint = f_LegBenchmarkCurveData_LegBenchmarkCurvePoint;
-        f_LegBenchmarkCurveData_LegBenchmarkCurveName = f_LegBenchmarkCurveData_LegBenchmarkCurveName;
-        f_LegBenchmarkCurveData_LegBenchmarkPrice = f_LegBenchmarkCurveData_LegBenchmarkPrice
-    },msg)
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_BidCompReqGrp (msg)  =
-    opt msg "430" parse_NetGrossInd (fun msg f_BidCompReqGrp_NetGrossInd -> opt msg "336" parse_string (fun msg f_BidCompReqGrp_TradingSessionID -> opt msg "64" parse_LocalMktDate (fun msg f_BidCompReqGrp_SettlDate -> opt msg "63" parse_SettlType (fun msg f_BidCompReqGrp_SettlType -> opt msg "66" parse_string (fun msg f_BidCompReqGrp_ListID -> opt msg "420" parse_int (fun msg f_BidCompReqGrp_NoBidComponents -> opt msg "625" parse_string (fun msg f_BidCompReqGrp_TradingSessionSubID -> opt msg "54" parse_Side (fun msg f_BidCompReqGrp_Side -> opt msg "660" parse_AcctIDSource (fun msg f_BidCompReqGrp_AcctIDSource -> opt msg "1" parse_string (fun msg f_BidCompReqGrp_Account -> (ParseSuccess {
-        f_BidCompReqGrp_Account = f_BidCompReqGrp_Account;
-        f_BidCompReqGrp_AcctIDSource = f_BidCompReqGrp_AcctIDSource;
-        f_BidCompReqGrp_Side = f_BidCompReqGrp_Side;
-        f_BidCompReqGrp_TradingSessionSubID = f_BidCompReqGrp_TradingSessionSubID;
-        f_BidCompReqGrp_NoBidComponents = f_BidCompReqGrp_NoBidComponents;
-        f_BidCompReqGrp_ListID = f_BidCompReqGrp_ListID;
-        f_BidCompReqGrp_SettlType = f_BidCompReqGrp_SettlType;
-        f_BidCompReqGrp_SettlDate = f_BidCompReqGrp_SettlDate;
-        f_BidCompReqGrp_TradingSessionID = f_BidCompReqGrp_TradingSessionID;
-        f_BidCompReqGrp_NetGrossInd = f_BidCompReqGrp_NetGrossInd
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_LegSecAltIDGrp (msg)  =
-    opt msg "604" parse_int (fun msg f_LegSecAltIDGrp_NoLegSecurityAltID -> opt msg "606" parse_string (fun msg f_LegSecAltIDGrp_LegSecurityAltIDSource -> opt msg "605" parse_string (fun msg f_LegSecAltIDGrp_LegSecurityAltID -> (ParseSuccess {
-        f_LegSecAltIDGrp_LegSecurityAltID = f_LegSecAltIDGrp_LegSecurityAltID;
-        f_LegSecAltIDGrp_LegSecurityAltIDSource = f_LegSecAltIDGrp_LegSecurityAltIDSource;
-        f_LegSecAltIDGrp_NoLegSecurityAltID = f_LegSecAltIDGrp_NoLegSecurityAltID
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_IOIQualGrp (msg)  =
-    opt msg "104" parse_IOIQualifier (fun msg f_IOIQualGrp_IOIQualifier -> opt msg "199" parse_int (fun msg f_IOIQualGrp_NoIOIQualifiers -> (ParseSuccess {
-        f_IOIQualGrp_NoIOIQualifiers = f_IOIQualGrp_NoIOIQualifiers;
-        f_IOIQualGrp_IOIQualifier = f_IOIQualGrp_IOIQualifier
-    },msg)
-    )
-    )
-;;
-
-let parse_QuoteAcknowledgementQuoteEntries (msg)  =
-    opt msg "351" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDesc -> opt msg "295" parse_int (fun msg f_QuoteAcknowledgementQuoteEntries_NoQuoteEntries -> opt msg "207" parse_Exchange (fun msg f_QuoteAcknowledgementQuoteEntries_SecurityExchange -> opt msg "205" parse_int (fun msg f_QuoteAcknowledgementQuoteEntries_MaturityDay -> opt msg "201" parse_PutOrCall (fun msg f_QuoteAcknowledgementQuoteEntries_PutOrCall -> opt msg "48" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_SecurityID -> opt msg "350" parse_int (fun msg f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_QuoteAcknowledgementQuoteEntries_ContractMultiplier -> opt msg "299" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_QuoteEntryID -> opt msg "348" parse_int (fun msg f_QuoteAcknowledgementQuoteEntries_EncodedIssuerLen -> opt msg "368" parse_QuoteEntryRejectReason (fun msg f_QuoteAcknowledgementQuoteEntries_QuoteEntryRejectReason -> opt msg "349" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_EncodedIssuer -> opt msg "206" parse_char (fun msg f_QuoteAcknowledgementQuoteEntries_OptAttribute -> opt msg "55" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_Symbol -> opt msg "22" parse_IDSource (fun msg f_QuoteAcknowledgementQuoteEntries_IDSource -> opt msg "202" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_QuoteAcknowledgementQuoteEntries_StrikePrice -> opt msg "200" parse_MonthYear (fun msg f_QuoteAcknowledgementQuoteEntries_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_Issuer -> opt msg "223" parse_float (fun msg f_QuoteAcknowledgementQuoteEntries_CouponRate -> opt msg "65" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_QuoteAcknowledgementQuoteEntries_SecurityType -> opt msg "107" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_SecurityDesc -> (ParseSuccess {
-        f_QuoteAcknowledgementQuoteEntries_SecurityDesc = f_QuoteAcknowledgementQuoteEntries_SecurityDesc;
-        f_QuoteAcknowledgementQuoteEntries_SecurityType = f_QuoteAcknowledgementQuoteEntries_SecurityType;
-        f_QuoteAcknowledgementQuoteEntries_SymbolSfx = f_QuoteAcknowledgementQuoteEntries_SymbolSfx;
-        f_QuoteAcknowledgementQuoteEntries_CouponRate = f_QuoteAcknowledgementQuoteEntries_CouponRate;
-        f_QuoteAcknowledgementQuoteEntries_Issuer = f_QuoteAcknowledgementQuoteEntries_Issuer;
-        f_QuoteAcknowledgementQuoteEntries_MaturityMonthYear = f_QuoteAcknowledgementQuoteEntries_MaturityMonthYear;
-        f_QuoteAcknowledgementQuoteEntries_StrikePrice = f_QuoteAcknowledgementQuoteEntries_StrikePrice;
-        f_QuoteAcknowledgementQuoteEntries_IDSource = f_QuoteAcknowledgementQuoteEntries_IDSource;
-        f_QuoteAcknowledgementQuoteEntries_Symbol = f_QuoteAcknowledgementQuoteEntries_Symbol;
-        f_QuoteAcknowledgementQuoteEntries_OptAttribute = f_QuoteAcknowledgementQuoteEntries_OptAttribute;
-        f_QuoteAcknowledgementQuoteEntries_EncodedIssuer = f_QuoteAcknowledgementQuoteEntries_EncodedIssuer;
-        f_QuoteAcknowledgementQuoteEntries_QuoteEntryRejectReason = f_QuoteAcknowledgementQuoteEntries_QuoteEntryRejectReason;
-        f_QuoteAcknowledgementQuoteEntries_EncodedIssuerLen = f_QuoteAcknowledgementQuoteEntries_EncodedIssuerLen;
-        f_QuoteAcknowledgementQuoteEntries_QuoteEntryID = f_QuoteAcknowledgementQuoteEntries_QuoteEntryID;
-        f_QuoteAcknowledgementQuoteEntries_ContractMultiplier = f_QuoteAcknowledgementQuoteEntries_ContractMultiplier;
-        f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDescLen = f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDescLen;
-        f_QuoteAcknowledgementQuoteEntries_SecurityID = f_QuoteAcknowledgementQuoteEntries_SecurityID;
-        f_QuoteAcknowledgementQuoteEntries_PutOrCall = f_QuoteAcknowledgementQuoteEntries_PutOrCall;
-        f_QuoteAcknowledgementQuoteEntries_MaturityDay = f_QuoteAcknowledgementQuoteEntries_MaturityDay;
-        f_QuoteAcknowledgementQuoteEntries_SecurityExchange = f_QuoteAcknowledgementQuoteEntries_SecurityExchange;
-        f_QuoteAcknowledgementQuoteEntries_NoQuoteEntries = f_QuoteAcknowledgementQuoteEntries_NoQuoteEntries;
-        f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDesc = f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDesc
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_DiscretionInstructions (msg)  =
-    opt msg "843" parse_DiscretionLimitType (fun msg f_DiscretionInstructions_DiscretionLimitType -> opt msg "388" parse_DiscretionInst (fun msg f_DiscretionInstructions_DiscretionInst -> opt msg "844" parse_DiscretionRoundDirection (fun msg f_DiscretionInstructions_DiscretionRoundDirection -> opt msg "841" parse_DiscretionMoveType (fun msg f_DiscretionInstructions_DiscretionMoveType -> opt msg "842" parse_DiscretionOffsetType (fun msg f_DiscretionInstructions_DiscretionOffsetType -> opt msg "389" parse_float (fun msg f_DiscretionInstructions_DiscretionOffsetValue -> opt msg "846" parse_DiscretionScope (fun msg f_DiscretionInstructions_DiscretionScope -> (ParseSuccess {
-        f_DiscretionInstructions_DiscretionScope = f_DiscretionInstructions_DiscretionScope;
-        f_DiscretionInstructions_DiscretionOffsetValue = f_DiscretionInstructions_DiscretionOffsetValue;
-        f_DiscretionInstructions_DiscretionOffsetType = f_DiscretionInstructions_DiscretionOffsetType;
-        f_DiscretionInstructions_DiscretionMoveType = f_DiscretionInstructions_DiscretionMoveType;
-        f_DiscretionInstructions_DiscretionRoundDirection = f_DiscretionInstructions_DiscretionRoundDirection;
-        f_DiscretionInstructions_DiscretionInst = f_DiscretionInstructions_DiscretionInst;
-        f_DiscretionInstructions_DiscretionLimitType = f_DiscretionInstructions_DiscretionLimitType
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_AllocAckGrp (msg)  =
-    opt msg "79" parse_string (fun msg f_AllocAckGrp_AllocAccount -> opt msg "360" parse_int (fun msg f_AllocAckGrp_EncodedAllocTextLen -> opt msg "161" parse_string (fun msg f_AllocAckGrp_AllocText -> opt msg "776" parse_int (fun msg f_AllocAckGrp_IndividualAllocRejCode -> opt msg "661" parse_int (fun msg f_AllocAckGrp_AllocAcctIDSource -> opt msg "361" parse_string (fun msg f_AllocAckGrp_EncodedAllocText -> opt msg "78" parse_int (fun msg f_AllocAckGrp_NoAllocs -> opt msg "467" parse_string (fun msg f_AllocAckGrp_IndividualAllocID -> opt msg "366" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_AllocAckGrp_AllocPrice -> (ParseSuccess {
-        f_AllocAckGrp_AllocPrice = f_AllocAckGrp_AllocPrice;
-        f_AllocAckGrp_IndividualAllocID = f_AllocAckGrp_IndividualAllocID;
-        f_AllocAckGrp_NoAllocs = f_AllocAckGrp_NoAllocs;
-        f_AllocAckGrp_EncodedAllocText = f_AllocAckGrp_EncodedAllocText;
-        f_AllocAckGrp_AllocAcctIDSource = f_AllocAckGrp_AllocAcctIDSource;
-        f_AllocAckGrp_IndividualAllocRejCode = f_AllocAckGrp_IndividualAllocRejCode;
-        f_AllocAckGrp_AllocText = f_AllocAckGrp_AllocText;
-        f_AllocAckGrp_EncodedAllocTextLen = f_AllocAckGrp_EncodedAllocTextLen;
-        f_AllocAckGrp_AllocAccount = f_AllocAckGrp_AllocAccount
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_MarketDataIncrementalRefreshMDEntries (msg)  =
-    opt msg "351" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDesc -> opt msg "284" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_DeskID -> opt msg "299" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_QuoteEntryID -> opt msg "283" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_LocationID -> opt msg "15" parse_Currency (fun msg f_MarketDataIncrementalRefreshMDEntries_Currency -> opt msg "282" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryOriginator -> opt msg "276" parse_QuoteCondition (fun msg f_MarketDataIncrementalRefreshMDEntries_QuoteCondition -> opt msg "274" parse_TickDirection (fun msg f_MarketDataIncrementalRefreshMDEntries_TickDirection -> opt msg "271" parse_float (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntrySize -> opt msg "336" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_TradingSessionID -> opt msg "349" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedIssuer -> opt msg "355" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedText -> opt msg "22" parse_IDSource (fun msg f_MarketDataIncrementalRefreshMDEntries_IDSource -> opt msg "200" parse_MonthYear (fun msg f_MarketDataIncrementalRefreshMDEntries_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_Issuer -> opt msg "270" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryPx -> opt msg "65" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_SymbolSfx -> opt msg "285" parse_DeleteReason (fun msg f_MarketDataIncrementalRefreshMDEntries_DeleteReason -> opt msg "126" parse_UTCTimestamp (fun msg f_MarketDataIncrementalRefreshMDEntries_ExpireTime -> opt msg "231" parse_float (fun msg f_MarketDataIncrementalRefreshMDEntries_ContractMultiplier -> opt msg "278" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryID -> opt msg "289" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntrySeller -> opt msg "346" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_NumberOfOrders -> opt msg "286" parse_OpenCloseSettleFlag (fun msg f_MarketDataIncrementalRefreshMDEntries_OpenCloseSettleFlag -> opt msg "387" parse_float (fun msg f_MarketDataIncrementalRefreshMDEntries_TotalVolumeTraded -> opt msg "58" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_Text -> opt msg "202" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_MarketDataIncrementalRefreshMDEntries_StrikePrice -> opt msg "275" parse_Exchange (fun msg f_MarketDataIncrementalRefreshMDEntries_MDMkt -> opt msg "223" parse_float (fun msg f_MarketDataIncrementalRefreshMDEntries_CouponRate -> opt msg "107" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_SecurityDesc -> opt msg "269" parse_MDEntryType (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryType -> opt msg "207" parse_Exchange (fun msg f_MarketDataIncrementalRefreshMDEntries_SecurityExchange -> opt msg "18" parse_ExecInst (fun msg f_MarketDataIncrementalRefreshMDEntries_ExecInst -> opt msg "48" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_SecurityID -> opt msg "59" parse_TimeInForce (fun msg f_MarketDataIncrementalRefreshMDEntries_TimeInForce -> opt msg "288" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryBuyer -> opt msg "354" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedTextLen -> opt msg "280" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryRefID -> opt msg "37" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_OrderID -> opt msg "291" parse_FinancialStatus (fun msg f_MarketDataIncrementalRefreshMDEntries_FinancialStatus -> opt msg "272" parse_UTCDateOnly (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryDate -> opt msg "55" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_Symbol -> opt msg "279" parse_MDUpdateAction (fun msg f_MarketDataIncrementalRefreshMDEntries_MDUpdateAction -> opt msg "432" parse_LocalMktDate (fun msg f_MarketDataIncrementalRefreshMDEntries_ExpireDate -> opt msg "110" parse_float (fun msg f_MarketDataIncrementalRefreshMDEntries_MinQty -> opt msg "167" parse_SecurityType (fun msg f_MarketDataIncrementalRefreshMDEntries_SecurityType -> opt msg "205" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_MaturityDay -> opt msg "292" parse_CorporateAction (fun msg f_MarketDataIncrementalRefreshMDEntries_CorporateAction -> opt msg "201" parse_PutOrCall (fun msg f_MarketDataIncrementalRefreshMDEntries_PutOrCall -> opt msg "287" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_SellerDays -> opt msg "290" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryPositionNo -> opt msg "350" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDescLen -> opt msg "348" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedIssuerLen -> opt msg "268" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_NoMDEntries -> opt msg "277" parse_TradeCondition (fun msg f_MarketDataIncrementalRefreshMDEntries_TradeCondition -> opt msg "273" parse_UTCTimeOnly (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryTime -> opt msg "206" parse_char (fun msg f_MarketDataIncrementalRefreshMDEntries_OptAttribute -> (ParseSuccess {
-        f_MarketDataIncrementalRefreshMDEntries_OptAttribute = f_MarketDataIncrementalRefreshMDEntries_OptAttribute;
-        f_MarketDataIncrementalRefreshMDEntries_MDEntryTime = f_MarketDataIncrementalRefreshMDEntries_MDEntryTime;
-        f_MarketDataIncrementalRefreshMDEntries_TradeCondition = f_MarketDataIncrementalRefreshMDEntries_TradeCondition;
-        f_MarketDataIncrementalRefreshMDEntries_NoMDEntries = f_MarketDataIncrementalRefreshMDEntries_NoMDEntries;
-        f_MarketDataIncrementalRefreshMDEntries_EncodedIssuerLen = f_MarketDataIncrementalRefreshMDEntries_EncodedIssuerLen;
-        f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDescLen = f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDescLen;
-        f_MarketDataIncrementalRefreshMDEntries_MDEntryPositionNo = f_MarketDataIncrementalRefreshMDEntries_MDEntryPositionNo;
-        f_MarketDataIncrementalRefreshMDEntries_SellerDays = f_MarketDataIncrementalRefreshMDEntries_SellerDays;
-        f_MarketDataIncrementalRefreshMDEntries_PutOrCall = f_MarketDataIncrementalRefreshMDEntries_PutOrCall;
-        f_MarketDataIncrementalRefreshMDEntries_CorporateAction = f_MarketDataIncrementalRefreshMDEntries_CorporateAction;
-        f_MarketDataIncrementalRefreshMDEntries_MaturityDay = f_MarketDataIncrementalRefreshMDEntries_MaturityDay;
-        f_MarketDataIncrementalRefreshMDEntries_SecurityType = f_MarketDataIncrementalRefreshMDEntries_SecurityType;
-        f_MarketDataIncrementalRefreshMDEntries_MinQty = f_MarketDataIncrementalRefreshMDEntries_MinQty;
-        f_MarketDataIncrementalRefreshMDEntries_ExpireDate = f_MarketDataIncrementalRefreshMDEntries_ExpireDate;
-        f_MarketDataIncrementalRefreshMDEntries_MDUpdateAction = f_MarketDataIncrementalRefreshMDEntries_MDUpdateAction;
-        f_MarketDataIncrementalRefreshMDEntries_Symbol = f_MarketDataIncrementalRefreshMDEntries_Symbol;
-        f_MarketDataIncrementalRefreshMDEntries_MDEntryDate = f_MarketDataIncrementalRefreshMDEntries_MDEntryDate;
-        f_MarketDataIncrementalRefreshMDEntries_FinancialStatus = f_MarketDataIncrementalRefreshMDEntries_FinancialStatus;
-        f_MarketDataIncrementalRefreshMDEntries_OrderID = f_MarketDataIncrementalRefreshMDEntries_OrderID;
-        f_MarketDataIncrementalRefreshMDEntries_MDEntryRefID = f_MarketDataIncrementalRefreshMDEntries_MDEntryRefID;
-        f_MarketDataIncrementalRefreshMDEntries_EncodedTextLen = f_MarketDataIncrementalRefreshMDEntries_EncodedTextLen;
-        f_MarketDataIncrementalRefreshMDEntries_MDEntryBuyer = f_MarketDataIncrementalRefreshMDEntries_MDEntryBuyer;
-        f_MarketDataIncrementalRefreshMDEntries_TimeInForce = f_MarketDataIncrementalRefreshMDEntries_TimeInForce;
-        f_MarketDataIncrementalRefreshMDEntries_SecurityID = f_MarketDataIncrementalRefreshMDEntries_SecurityID;
-        f_MarketDataIncrementalRefreshMDEntries_ExecInst = f_MarketDataIncrementalRefreshMDEntries_ExecInst;
-        f_MarketDataIncrementalRefreshMDEntries_SecurityExchange = f_MarketDataIncrementalRefreshMDEntries_SecurityExchange;
-        f_MarketDataIncrementalRefreshMDEntries_MDEntryType = f_MarketDataIncrementalRefreshMDEntries_MDEntryType;
-        f_MarketDataIncrementalRefreshMDEntries_SecurityDesc = f_MarketDataIncrementalRefreshMDEntries_SecurityDesc;
-        f_MarketDataIncrementalRefreshMDEntries_CouponRate = f_MarketDataIncrementalRefreshMDEntries_CouponRate;
-        f_MarketDataIncrementalRefreshMDEntries_MDMkt = f_MarketDataIncrementalRefreshMDEntries_MDMkt;
-        f_MarketDataIncrementalRefreshMDEntries_StrikePrice = f_MarketDataIncrementalRefreshMDEntries_StrikePrice;
-        f_MarketDataIncrementalRefreshMDEntries_Text = f_MarketDataIncrementalRefreshMDEntries_Text;
-        f_MarketDataIncrementalRefreshMDEntries_TotalVolumeTraded = f_MarketDataIncrementalRefreshMDEntries_TotalVolumeTraded;
-        f_MarketDataIncrementalRefreshMDEntries_OpenCloseSettleFlag = f_MarketDataIncrementalRefreshMDEntries_OpenCloseSettleFlag;
-        f_MarketDataIncrementalRefreshMDEntries_NumberOfOrders = f_MarketDataIncrementalRefreshMDEntries_NumberOfOrders;
-        f_MarketDataIncrementalRefreshMDEntries_MDEntrySeller = f_MarketDataIncrementalRefreshMDEntries_MDEntrySeller;
-        f_MarketDataIncrementalRefreshMDEntries_MDEntryID = f_MarketDataIncrementalRefreshMDEntries_MDEntryID;
-        f_MarketDataIncrementalRefreshMDEntries_ContractMultiplier = f_MarketDataIncrementalRefreshMDEntries_ContractMultiplier;
-        f_MarketDataIncrementalRefreshMDEntries_ExpireTime = f_MarketDataIncrementalRefreshMDEntries_ExpireTime;
-        f_MarketDataIncrementalRefreshMDEntries_DeleteReason = f_MarketDataIncrementalRefreshMDEntries_DeleteReason;
-        f_MarketDataIncrementalRefreshMDEntries_SymbolSfx = f_MarketDataIncrementalRefreshMDEntries_SymbolSfx;
-        f_MarketDataIncrementalRefreshMDEntries_MDEntryPx = f_MarketDataIncrementalRefreshMDEntries_MDEntryPx;
-        f_MarketDataIncrementalRefreshMDEntries_Issuer = f_MarketDataIncrementalRefreshMDEntries_Issuer;
-        f_MarketDataIncrementalRefreshMDEntries_MaturityMonthYear = f_MarketDataIncrementalRefreshMDEntries_MaturityMonthYear;
-        f_MarketDataIncrementalRefreshMDEntries_IDSource = f_MarketDataIncrementalRefreshMDEntries_IDSource;
-        f_MarketDataIncrementalRefreshMDEntries_EncodedText = f_MarketDataIncrementalRefreshMDEntries_EncodedText;
-        f_MarketDataIncrementalRefreshMDEntries_EncodedIssuer = f_MarketDataIncrementalRefreshMDEntries_EncodedIssuer;
-        f_MarketDataIncrementalRefreshMDEntries_TradingSessionID = f_MarketDataIncrementalRefreshMDEntries_TradingSessionID;
-        f_MarketDataIncrementalRefreshMDEntries_MDEntrySize = f_MarketDataIncrementalRefreshMDEntries_MDEntrySize;
-        f_MarketDataIncrementalRefreshMDEntries_TickDirection = f_MarketDataIncrementalRefreshMDEntries_TickDirection;
-        f_MarketDataIncrementalRefreshMDEntries_QuoteCondition = f_MarketDataIncrementalRefreshMDEntries_QuoteCondition;
-        f_MarketDataIncrementalRefreshMDEntries_MDEntryOriginator = f_MarketDataIncrementalRefreshMDEntries_MDEntryOriginator;
-        f_MarketDataIncrementalRefreshMDEntries_Currency = f_MarketDataIncrementalRefreshMDEntries_Currency;
-        f_MarketDataIncrementalRefreshMDEntries_LocationID = f_MarketDataIncrementalRefreshMDEntries_LocationID;
-        f_MarketDataIncrementalRefreshMDEntries_QuoteEntryID = f_MarketDataIncrementalRefreshMDEntries_QuoteEntryID;
-        f_MarketDataIncrementalRefreshMDEntries_DeskID = f_MarketDataIncrementalRefreshMDEntries_DeskID;
-        f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDesc = f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDesc
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_OrderCancelReplaceRequestAllocs (msg)  =
-    opt msg "79" parse_string (fun msg f_OrderCancelReplaceRequestAllocs_AllocAccount -> opt msg "80" parse_float (fun msg f_OrderCancelReplaceRequestAllocs_AllocShares -> opt msg "78" parse_int (fun msg f_OrderCancelReplaceRequestAllocs_NoAllocs -> (ParseSuccess {
-        f_OrderCancelReplaceRequestAllocs_NoAllocs = f_OrderCancelReplaceRequestAllocs_NoAllocs;
-        f_OrderCancelReplaceRequestAllocs_AllocShares = f_OrderCancelReplaceRequestAllocs_AllocShares;
-        f_OrderCancelReplaceRequestAllocs_AllocAccount = f_OrderCancelReplaceRequestAllocs_AllocAccount
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_LegStipulations (msg)  =
-    opt msg "689" parse_string (fun msg f_LegStipulations_LegStipulationValue -> opt msg "688" parse_string (fun msg f_LegStipulations_LegStipulationType -> opt msg "683" parse_int (fun msg f_LegStipulations_NoLegStipulations -> (ParseSuccess {
-        f_LegStipulations_NoLegStipulations = f_LegStipulations_NoLegStipulations;
-        f_LegStipulations_LegStipulationType = f_LegStipulations_LegStipulationType;
-        f_LegStipulations_LegStipulationValue = f_LegStipulations_LegStipulationValue
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_OrderSingleTradingSessions (msg)  =
-    opt msg "336" parse_string (fun msg f_OrderSingleTradingSessions_TradingSessionID -> opt msg "386" parse_int (fun msg f_OrderSingleTradingSessions_NoTradingSessions -> (ParseSuccess {
-        f_OrderSingleTradingSessions_NoTradingSessions = f_OrderSingleTradingSessions_NoTradingSessions;
-        f_OrderSingleTradingSessions_TradingSessionID = f_OrderSingleTradingSessions_TradingSessionID
-    },msg)
-    )
-    )
-;;
-
-let parse_CompIDReqGrp (msg)  =
-    opt msg "284" parse_string (fun msg f_CompIDReqGrp_DeskID -> opt msg "930" parse_string (fun msg f_CompIDReqGrp_RefCompID -> opt msg "936" parse_int (fun msg f_CompIDReqGrp_NoCompIDs -> opt msg "931" parse_string (fun msg f_CompIDReqGrp_RefSubID -> opt msg "283" parse_string (fun msg f_CompIDReqGrp_LocationID -> (ParseSuccess {
-        f_CompIDReqGrp_LocationID = f_CompIDReqGrp_LocationID;
-        f_CompIDReqGrp_RefSubID = f_CompIDReqGrp_RefSubID;
-        f_CompIDReqGrp_NoCompIDs = f_CompIDReqGrp_NoCompIDs;
-        f_CompIDReqGrp_RefCompID = f_CompIDReqGrp_RefCompID;
-        f_CompIDReqGrp_DeskID = f_CompIDReqGrp_DeskID
-    },msg)
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_OrderListAllocs (msg)  =
-    opt msg "79" parse_string (fun msg f_OrderListAllocs_AllocAccount -> opt msg "80" parse_float (fun msg f_OrderListAllocs_AllocShares -> opt msg "78" parse_int (fun msg f_OrderListAllocs_NoAllocs -> (ParseSuccess {
-        f_OrderListAllocs_NoAllocs = f_OrderListAllocs_NoAllocs;
-        f_OrderListAllocs_AllocShares = f_OrderListAllocs_AllocShares;
-        f_OrderListAllocs_AllocAccount = f_OrderListAllocs_AllocAccount
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_MarketDataRequestMDEntryTypes (msg)  =
-    opt msg "269" parse_MDEntryType (fun msg f_MarketDataRequestMDEntryTypes_MDEntryType -> opt msg "267" parse_int (fun msg f_MarketDataRequestMDEntryTypes_NoMDEntryTypes -> (ParseSuccess {
-        f_MarketDataRequestMDEntryTypes_NoMDEntryTypes = f_MarketDataRequestMDEntryTypes_NoMDEntryTypes;
-        f_MarketDataRequestMDEntryTypes_MDEntryType = f_MarketDataRequestMDEntryTypes_MDEntryType
-    },msg)
-    )
-    )
-;;
-
-let parse_BidRequestBidComponents (msg)  =
-    opt msg "430" parse_NetGrossInd (fun msg f_BidRequestBidComponents_NetGrossInd -> opt msg "63" parse_SettlmntTyp (fun msg f_BidRequestBidComponents_SettlmntTyp -> opt msg "336" parse_string (fun msg f_BidRequestBidComponents_TradingSessionID -> opt msg "66" parse_string (fun msg f_BidRequestBidComponents_ListID -> opt msg "420" parse_int (fun msg f_BidRequestBidComponents_NoBidComponents -> opt msg "64" parse_LocalMktDate (fun msg f_BidRequestBidComponents_FutSettDate -> opt msg "54" parse_Side (fun msg f_BidRequestBidComponents_Side -> opt msg "1" parse_string (fun msg f_BidRequestBidComponents_Account -> (ParseSuccess {
-        f_BidRequestBidComponents_Account = f_BidRequestBidComponents_Account;
-        f_BidRequestBidComponents_Side = f_BidRequestBidComponents_Side;
-        f_BidRequestBidComponents_FutSettDate = f_BidRequestBidComponents_FutSettDate;
-        f_BidRequestBidComponents_NoBidComponents = f_BidRequestBidComponents_NoBidComponents;
-        f_BidRequestBidComponents_ListID = f_BidRequestBidComponents_ListID;
-        f_BidRequestBidComponents_TradingSessionID = f_BidRequestBidComponents_TradingSessionID;
-        f_BidRequestBidComponents_SettlmntTyp = f_BidRequestBidComponents_SettlmntTyp;
-        f_BidRequestBidComponents_NetGrossInd = f_BidRequestBidComponents_NetGrossInd
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_BidRequestBidDescriptors (msg)  =
-    opt msg "405" parse_float (fun msg f_BidRequestBidDescriptors_EFPTrackingError -> opt msg "403" parse_float (fun msg f_BidRequestBidDescriptors_LiquidityPctHigh -> opt msg "404" parse_float (fun msg f_BidRequestBidDescriptors_LiquidityValue -> opt msg "400" parse_string (fun msg f_BidRequestBidDescriptors_BidDescriptor -> opt msg "407" parse_float (fun msg f_BidRequestBidDescriptors_OutsideIndexPct -> opt msg "401" parse_int (fun msg f_BidRequestBidDescriptors_SideValueInd -> opt msg "399" parse_int (fun msg f_BidRequestBidDescriptors_BidDescriptorType -> opt msg "408" parse_float (fun msg f_BidRequestBidDescriptors_ValueOfFutures -> opt msg "406" parse_float (fun msg f_BidRequestBidDescriptors_FairValue -> opt msg "402" parse_float (fun msg f_BidRequestBidDescriptors_LiquidityPctLow -> opt msg "398" parse_int (fun msg f_BidRequestBidDescriptors_NoBidDescriptors -> opt msg "441" parse_int (fun msg f_BidRequestBidDescriptors_LiquidityNumSecurities -> (ParseSuccess {
-        f_BidRequestBidDescriptors_LiquidityNumSecurities = f_BidRequestBidDescriptors_LiquidityNumSecurities;
-        f_BidRequestBidDescriptors_NoBidDescriptors = f_BidRequestBidDescriptors_NoBidDescriptors;
-        f_BidRequestBidDescriptors_LiquidityPctLow = f_BidRequestBidDescriptors_LiquidityPctLow;
-        f_BidRequestBidDescriptors_FairValue = f_BidRequestBidDescriptors_FairValue;
-        f_BidRequestBidDescriptors_ValueOfFutures = f_BidRequestBidDescriptors_ValueOfFutures;
-        f_BidRequestBidDescriptors_BidDescriptorType = f_BidRequestBidDescriptors_BidDescriptorType;
-        f_BidRequestBidDescriptors_SideValueInd = f_BidRequestBidDescriptors_SideValueInd;
-        f_BidRequestBidDescriptors_OutsideIndexPct = f_BidRequestBidDescriptors_OutsideIndexPct;
-        f_BidRequestBidDescriptors_BidDescriptor = f_BidRequestBidDescriptors_BidDescriptor;
-        f_BidRequestBidDescriptors_LiquidityValue = f_BidRequestBidDescriptors_LiquidityValue;
-        f_BidRequestBidDescriptors_LiquidityPctHigh = f_BidRequestBidDescriptors_LiquidityPctHigh;
-        f_BidRequestBidDescriptors_EFPTrackingError = f_BidRequestBidDescriptors_EFPTrackingError
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_CpctyConfGrp (msg)  =
-    opt msg "529" parse_OrderRestrictions (fun msg f_CpctyConfGrp_OrderRestrictions -> opt msg "863" parse_float (fun msg f_CpctyConfGrp_OrderCapacityQty -> opt msg "862" parse_int (fun msg f_CpctyConfGrp_NoCapacities -> opt msg "528" parse_OrderCapacity (fun msg f_CpctyConfGrp_OrderCapacity -> (ParseSuccess {
-        f_CpctyConfGrp_OrderCapacity = f_CpctyConfGrp_OrderCapacity;
-        f_CpctyConfGrp_NoCapacities = f_CpctyConfGrp_NoCapacities;
-        f_CpctyConfGrp_OrderCapacityQty = f_CpctyConfGrp_OrderCapacityQty;
-        f_CpctyConfGrp_OrderRestrictions = f_CpctyConfGrp_OrderRestrictions
-    },msg)
-    )
-    )
-    )
-    )
-;;
-
-let parse_FinancingDetails (msg)  =
-    opt msg "916" parse_LocalMktDate (fun msg f_FinancingDetails_StartDate -> opt msg "919" parse_DeliveryType (fun msg f_FinancingDetails_DeliveryType -> opt msg "917" parse_LocalMktDate (fun msg f_FinancingDetails_EndDate -> opt msg "915" parse_LocalMktDate (fun msg f_FinancingDetails_AgreementDate -> opt msg "898" parse_float (fun msg f_FinancingDetails_MarginRatio -> opt msg "913" parse_string (fun msg f_FinancingDetails_AgreementDesc -> opt msg "918" parse_Currency (fun msg f_FinancingDetails_AgreementCurrency -> opt msg "914" parse_string (fun msg f_FinancingDetails_AgreementID -> opt msg "788" parse_TerminationType (fun msg f_FinancingDetails_TerminationType -> (ParseSuccess {
-        f_FinancingDetails_TerminationType = f_FinancingDetails_TerminationType;
-        f_FinancingDetails_AgreementID = f_FinancingDetails_AgreementID;
-        f_FinancingDetails_AgreementCurrency = f_FinancingDetails_AgreementCurrency;
-        f_FinancingDetails_AgreementDesc = f_FinancingDetails_AgreementDesc;
-        f_FinancingDetails_MarginRatio = f_FinancingDetails_MarginRatio;
-        f_FinancingDetails_AgreementDate = f_FinancingDetails_AgreementDate;
-        f_FinancingDetails_EndDate = f_FinancingDetails_EndDate;
-        f_FinancingDetails_DeliveryType = f_FinancingDetails_DeliveryType;
-        f_FinancingDetails_StartDate = f_FinancingDetails_StartDate
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_RoutingGrp (msg)  =
-    opt msg "217" parse_string (fun msg f_RoutingGrp_RoutingID -> opt msg "215" parse_int (fun msg f_RoutingGrp_NoRoutingIDs -> opt msg "216" parse_RoutingType (fun msg f_RoutingGrp_RoutingType -> (ParseSuccess {
-        f_RoutingGrp_RoutingType = f_RoutingGrp_RoutingType;
-        f_RoutingGrp_NoRoutingIDs = f_RoutingGrp_NoRoutingIDs;
-        f_RoutingGrp_RoutingID = f_RoutingGrp_RoutingID
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_QuoteAcknowledgementQuoteSets (msg)  =
-    opt msg "311" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSymbol -> opt msg "316" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingStrikePrice -> opt msg "306" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingIssuer -> opt msg "365" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDesc -> opt msg "307" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityDesc -> opt msg "362" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuerLen -> opt msg "296" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_NoQuoteSets -> opt msg "312" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSymbolSfx -> opt msg "364" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDescLen -> opt msg "436" parse_float (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingContractMultiplier -> opt msg "302" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_QuoteSetID -> opt msg "309" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityID -> opt msg "308" parse_Exchange (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityExchange -> opt msg "315" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingPutOrCall -> opt msg "310" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityType -> opt msg "435" parse_float (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingCouponRate -> opt msg "313" parse_MonthYear (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityMonthYear -> opt msg "363" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuer -> opt msg "314" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityDay -> opt msg "304" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_TotQuoteEntries -> opt msg "317" parse_char (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingOptAttribute -> opt msg "305" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingIDSource -> (ParseSuccess {
-        f_QuoteAcknowledgementQuoteSets_UnderlyingIDSource = f_QuoteAcknowledgementQuoteSets_UnderlyingIDSource;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingOptAttribute = f_QuoteAcknowledgementQuoteSets_UnderlyingOptAttribute;
-        f_QuoteAcknowledgementQuoteSets_TotQuoteEntries = f_QuoteAcknowledgementQuoteSets_TotQuoteEntries;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityDay = f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityDay;
-        f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuer = f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuer;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityMonthYear = f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityMonthYear;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingCouponRate = f_QuoteAcknowledgementQuoteSets_UnderlyingCouponRate;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityType = f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityType;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingPutOrCall = f_QuoteAcknowledgementQuoteSets_UnderlyingPutOrCall;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityExchange = f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityExchange;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityID = f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityID;
-        f_QuoteAcknowledgementQuoteSets_QuoteSetID = f_QuoteAcknowledgementQuoteSets_QuoteSetID;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingContractMultiplier = f_QuoteAcknowledgementQuoteSets_UnderlyingContractMultiplier;
-        f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDescLen = f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDescLen;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingSymbolSfx = f_QuoteAcknowledgementQuoteSets_UnderlyingSymbolSfx;
-        f_QuoteAcknowledgementQuoteSets_NoQuoteSets = f_QuoteAcknowledgementQuoteSets_NoQuoteSets;
-        f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuerLen = f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuerLen;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityDesc = f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityDesc;
-        f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDesc = f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDesc;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingIssuer = f_QuoteAcknowledgementQuoteSets_UnderlyingIssuer;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingStrikePrice = f_QuoteAcknowledgementQuoteSets_UnderlyingStrikePrice;
-        f_QuoteAcknowledgementQuoteSets_UnderlyingSymbol = f_QuoteAcknowledgementQuoteSets_UnderlyingSymbol
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_ClrInstGrp (msg)  =
-    opt msg "577" parse_ClearingInstruction (fun msg f_ClrInstGrp_ClearingInstruction -> opt msg "576" parse_int (fun msg f_ClrInstGrp_NoClearingInstructions -> (ParseSuccess {
-        f_ClrInstGrp_NoClearingInstructions = f_ClrInstGrp_NoClearingInstructions;
-        f_ClrInstGrp_ClearingInstruction = f_ClrInstGrp_ClearingInstruction
-    },msg)
-    )
-    )
-;;
-
-let parse_TrdgSesGrp (msg)  =
-    opt msg "336" parse_string (fun msg f_TrdgSesGrp_TradingSessionID -> opt msg "625" parse_string (fun msg f_TrdgSesGrp_TradingSessionSubID -> opt msg "386" parse_int (fun msg f_TrdgSesGrp_NoTradingSessions -> (ParseSuccess {
-        f_TrdgSesGrp_NoTradingSessions = f_TrdgSesGrp_NoTradingSessions;
-        f_TrdgSesGrp_TradingSessionSubID = f_TrdgSesGrp_TradingSessionSubID;
-        f_TrdgSesGrp_TradingSessionID = f_TrdgSesGrp_TradingSessionID
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_SecurityDefinitionRequestRelatedSym (msg)  =
-    opt msg "311" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbol -> opt msg "316" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingStrikePrice -> opt msg "306" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingIssuer -> opt msg "365" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDesc -> opt msg "307" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityDesc -> opt msg "362" parse_int (fun msg f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuerLen -> opt msg "312" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbolSfx -> opt msg "364" parse_int (fun msg f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDescLen -> opt msg "436" parse_float (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingContractMultiplier -> opt msg "54" parse_Side (fun msg f_SecurityDefinitionRequestRelatedSym_Side -> opt msg "309" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityID -> opt msg "308" parse_Exchange (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityExchange -> opt msg "315" parse_int (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingPutOrCall -> opt msg "310" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityType -> opt msg "318" parse_Currency (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingCurrency -> opt msg "435" parse_float (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingCouponRate -> opt msg "146" parse_int (fun msg f_SecurityDefinitionRequestRelatedSym_NoRelatedSym -> opt msg "313" parse_MonthYear (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityMonthYear -> opt msg "363" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuer -> opt msg "314" parse_int (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityDay -> opt msg "317" parse_char (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingOptAttribute -> opt msg "319" parse_float (fun msg f_SecurityDefinitionRequestRelatedSym_RatioQty -> opt msg "305" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingIDSource -> (ParseSuccess {
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingIDSource = f_SecurityDefinitionRequestRelatedSym_UnderlyingIDSource;
-        f_SecurityDefinitionRequestRelatedSym_RatioQty = f_SecurityDefinitionRequestRelatedSym_RatioQty;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingOptAttribute = f_SecurityDefinitionRequestRelatedSym_UnderlyingOptAttribute;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityDay = f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityDay;
-        f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuer = f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuer;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityMonthYear = f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityMonthYear;
-        f_SecurityDefinitionRequestRelatedSym_NoRelatedSym = f_SecurityDefinitionRequestRelatedSym_NoRelatedSym;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingCouponRate = f_SecurityDefinitionRequestRelatedSym_UnderlyingCouponRate;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingCurrency = f_SecurityDefinitionRequestRelatedSym_UnderlyingCurrency;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityType = f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityType;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingPutOrCall = f_SecurityDefinitionRequestRelatedSym_UnderlyingPutOrCall;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityExchange = f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityExchange;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityID = f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityID;
-        f_SecurityDefinitionRequestRelatedSym_Side = f_SecurityDefinitionRequestRelatedSym_Side;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingContractMultiplier = f_SecurityDefinitionRequestRelatedSym_UnderlyingContractMultiplier;
-        f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDescLen = f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDescLen;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbolSfx = f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbolSfx;
-        f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuerLen = f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuerLen;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityDesc = f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityDesc;
-        f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDesc = f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDesc;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingIssuer = f_SecurityDefinitionRequestRelatedSym_UnderlyingIssuer;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingStrikePrice = f_SecurityDefinitionRequestRelatedSym_UnderlyingStrikePrice;
-        f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbol = f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbol
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_NstdPtys2SubGrp (msg)  =
-    opt msg "806" parse_int (fun msg f_NstdPtys2SubGrp_NoNested2PartySubIDs -> opt msg "807" parse_int (fun msg f_NstdPtys2SubGrp_Nested2PartySubIDType -> opt msg "760" parse_string (fun msg f_NstdPtys2SubGrp_Nested2PartySubID -> (ParseSuccess {
-        f_NstdPtys2SubGrp_Nested2PartySubID = f_NstdPtys2SubGrp_Nested2PartySubID;
-        f_NstdPtys2SubGrp_Nested2PartySubIDType = f_NstdPtys2SubGrp_Nested2PartySubIDType;
-        f_NstdPtys2SubGrp_NoNested2PartySubIDs = f_NstdPtys2SubGrp_NoNested2PartySubIDs
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_QuotQualGrp (msg)  =
-    opt msg "695" parse_char (fun msg f_QuotQualGrp_QuoteQualifier -> opt msg "735" parse_int (fun msg f_QuotQualGrp_NoQuoteQualifiers -> (ParseSuccess {
-        f_QuotQualGrp_NoQuoteQualifiers = f_QuotQualGrp_NoQuoteQualifiers;
-        f_QuotQualGrp_QuoteQualifier = f_QuotQualGrp_QuoteQualifier
-    },msg)
-    )
-    )
-;;
-
-let parse_NstdPtysSubGrp (msg)  =
-    opt msg "804" parse_int (fun msg f_NstdPtysSubGrp_NoNestedPartySubIDs -> opt msg "545" parse_string (fun msg f_NstdPtysSubGrp_NestedPartySubID -> opt msg "805" parse_int (fun msg f_NstdPtysSubGrp_NestedPartySubIDType -> (ParseSuccess {
-        f_NstdPtysSubGrp_NestedPartySubIDType = f_NstdPtysSubGrp_NestedPartySubIDType;
-        f_NstdPtysSubGrp_NestedPartySubID = f_NstdPtysSubGrp_NestedPartySubID;
-        f_NstdPtysSubGrp_NoNestedPartySubIDs = f_NstdPtysSubGrp_NoNestedPartySubIDs
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_MDFullGrp (msg)  =
-    opt msg "269" parse_MDEntryType (fun msg f_MDFullGrp_MDEntryType -> opt msg "284" parse_string (fun msg f_MDFullGrp_DeskID -> opt msg "18" parse_ExecInst (fun msg f_MDFullGrp_ExecInst -> opt msg "299" parse_string (fun msg f_MDFullGrp_QuoteEntryID -> opt msg "283" parse_string (fun msg f_MDFullGrp_LocationID -> opt msg "811" parse_float (fun msg f_MDFullGrp_PriceDelta -> opt msg "59" parse_TimeInForce (fun msg f_MDFullGrp_TimeInForce -> opt msg "15" parse_Currency (fun msg f_MDFullGrp_Currency -> opt msg "282" parse_string (fun msg f_MDFullGrp_MDEntryOriginator -> opt msg "276" parse_QuoteCondition (fun msg f_MDFullGrp_QuoteCondition -> opt msg "288" parse_string (fun msg f_MDFullGrp_MDEntryBuyer -> opt msg "354" parse_int (fun msg f_MDFullGrp_EncodedTextLen -> opt msg "274" parse_TickDirection (fun msg f_MDFullGrp_TickDirection -> opt msg "271" parse_float (fun msg f_MDFullGrp_MDEntrySize -> opt msg "286" parse_OpenCloseSettlFlag (fun msg f_MDFullGrp_OpenCloseSettlFlag -> opt msg "37" parse_string (fun msg f_MDFullGrp_OrderID -> opt msg "336" parse_string (fun msg f_MDFullGrp_TradingSessionID -> opt msg "272" parse_UTCDateOnly (fun msg f_MDFullGrp_MDEntryDate -> opt msg "355" parse_string (fun msg f_MDFullGrp_EncodedText -> opt msg "432" parse_LocalMktDate (fun msg f_MDFullGrp_ExpireDate -> opt msg "110" parse_float (fun msg f_MDFullGrp_MinQty -> opt msg "270" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_MDFullGrp_MDEntryPx -> opt msg "126" parse_UTCTimestamp (fun msg f_MDFullGrp_ExpireTime -> opt msg "287" parse_int (fun msg f_MDFullGrp_SellerDays -> opt msg "290" parse_int (fun msg f_MDFullGrp_MDEntryPositionNo -> opt msg "546" parse_Scope (fun msg f_MDFullGrp_Scope -> opt msg "289" parse_string (fun msg f_MDFullGrp_MDEntrySeller -> opt msg "346" parse_int (fun msg f_MDFullGrp_NumberOfOrders -> opt msg "625" parse_string (fun msg f_MDFullGrp_TradingSessionSubID -> opt msg "268" parse_int (fun msg f_MDFullGrp_NoMDEntries -> opt msg "277" parse_TradeCondition (fun msg f_MDFullGrp_TradeCondition -> opt msg "273" parse_UTCTimeOnly (fun msg f_MDFullGrp_MDEntryTime -> opt msg "58" parse_string (fun msg f_MDFullGrp_Text -> opt msg "275" parse_Exchange (fun msg f_MDFullGrp_MDMkt -> (ParseSuccess {
-        f_MDFullGrp_MDMkt = f_MDFullGrp_MDMkt;
-        f_MDFullGrp_Text = f_MDFullGrp_Text;
-        f_MDFullGrp_MDEntryTime = f_MDFullGrp_MDEntryTime;
-        f_MDFullGrp_TradeCondition = f_MDFullGrp_TradeCondition;
-        f_MDFullGrp_NoMDEntries = f_MDFullGrp_NoMDEntries;
-        f_MDFullGrp_TradingSessionSubID = f_MDFullGrp_TradingSessionSubID;
-        f_MDFullGrp_NumberOfOrders = f_MDFullGrp_NumberOfOrders;
-        f_MDFullGrp_MDEntrySeller = f_MDFullGrp_MDEntrySeller;
-        f_MDFullGrp_Scope = f_MDFullGrp_Scope;
-        f_MDFullGrp_MDEntryPositionNo = f_MDFullGrp_MDEntryPositionNo;
-        f_MDFullGrp_SellerDays = f_MDFullGrp_SellerDays;
-        f_MDFullGrp_ExpireTime = f_MDFullGrp_ExpireTime;
-        f_MDFullGrp_MDEntryPx = f_MDFullGrp_MDEntryPx;
-        f_MDFullGrp_MinQty = f_MDFullGrp_MinQty;
-        f_MDFullGrp_ExpireDate = f_MDFullGrp_ExpireDate;
-        f_MDFullGrp_EncodedText = f_MDFullGrp_EncodedText;
-        f_MDFullGrp_MDEntryDate = f_MDFullGrp_MDEntryDate;
-        f_MDFullGrp_TradingSessionID = f_MDFullGrp_TradingSessionID;
-        f_MDFullGrp_OrderID = f_MDFullGrp_OrderID;
-        f_MDFullGrp_OpenCloseSettlFlag = f_MDFullGrp_OpenCloseSettlFlag;
-        f_MDFullGrp_MDEntrySize = f_MDFullGrp_MDEntrySize;
-        f_MDFullGrp_TickDirection = f_MDFullGrp_TickDirection;
-        f_MDFullGrp_EncodedTextLen = f_MDFullGrp_EncodedTextLen;
-        f_MDFullGrp_MDEntryBuyer = f_MDFullGrp_MDEntryBuyer;
-        f_MDFullGrp_QuoteCondition = f_MDFullGrp_QuoteCondition;
-        f_MDFullGrp_MDEntryOriginator = f_MDFullGrp_MDEntryOriginator;
-        f_MDFullGrp_Currency = f_MDFullGrp_Currency;
-        f_MDFullGrp_TimeInForce = f_MDFullGrp_TimeInForce;
-        f_MDFullGrp_PriceDelta = f_MDFullGrp_PriceDelta;
-        f_MDFullGrp_LocationID = f_MDFullGrp_LocationID;
-        f_MDFullGrp_QuoteEntryID = f_MDFullGrp_QuoteEntryID;
-        f_MDFullGrp_ExecInst = f_MDFullGrp_ExecInst;
-        f_MDFullGrp_DeskID = f_MDFullGrp_DeskID;
-        f_MDFullGrp_MDEntryType = f_MDFullGrp_MDEntryType
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
     )
     )
     )
@@ -1554,324 +303,6 @@ let parse_ExecAllocGrp (msg)  =
     )
     )
     )
-    )
-    )
-    )
-;;
-
-let parse_BidDescReqGrp (msg)  =
-    opt msg "405" parse_float (fun msg f_BidDescReqGrp_EFPTrackingError -> opt msg "403" parse_float (fun msg f_BidDescReqGrp_LiquidityPctHigh -> opt msg "404" parse_float (fun msg f_BidDescReqGrp_LiquidityValue -> opt msg "400" parse_string (fun msg f_BidDescReqGrp_BidDescriptor -> opt msg "407" parse_float (fun msg f_BidDescReqGrp_OutsideIndexPct -> opt msg "401" parse_SideValueInd (fun msg f_BidDescReqGrp_SideValueInd -> opt msg "399" parse_BidDescriptorType (fun msg f_BidDescReqGrp_BidDescriptorType -> opt msg "408" parse_float (fun msg f_BidDescReqGrp_ValueOfFutures -> opt msg "406" parse_float (fun msg f_BidDescReqGrp_FairValue -> opt msg "402" parse_float (fun msg f_BidDescReqGrp_LiquidityPctLow -> opt msg "398" parse_int (fun msg f_BidDescReqGrp_NoBidDescriptors -> opt msg "441" parse_int (fun msg f_BidDescReqGrp_LiquidityNumSecurities -> (ParseSuccess {
-        f_BidDescReqGrp_LiquidityNumSecurities = f_BidDescReqGrp_LiquidityNumSecurities;
-        f_BidDescReqGrp_NoBidDescriptors = f_BidDescReqGrp_NoBidDescriptors;
-        f_BidDescReqGrp_LiquidityPctLow = f_BidDescReqGrp_LiquidityPctLow;
-        f_BidDescReqGrp_FairValue = f_BidDescReqGrp_FairValue;
-        f_BidDescReqGrp_ValueOfFutures = f_BidDescReqGrp_ValueOfFutures;
-        f_BidDescReqGrp_BidDescriptorType = f_BidDescReqGrp_BidDescriptorType;
-        f_BidDescReqGrp_SideValueInd = f_BidDescReqGrp_SideValueInd;
-        f_BidDescReqGrp_OutsideIndexPct = f_BidDescReqGrp_OutsideIndexPct;
-        f_BidDescReqGrp_BidDescriptor = f_BidDescReqGrp_BidDescriptor;
-        f_BidDescReqGrp_LiquidityValue = f_BidDescReqGrp_LiquidityValue;
-        f_BidDescReqGrp_LiquidityPctHigh = f_BidDescReqGrp_LiquidityPctHigh;
-        f_BidDescReqGrp_EFPTrackingError = f_BidDescReqGrp_EFPTrackingError
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_ExecsGrp (msg)  =
-    opt msg "124" parse_int (fun msg f_ExecsGrp_NoExecs -> opt msg "17" parse_string (fun msg f_ExecsGrp_ExecID -> (ParseSuccess {
-        f_ExecsGrp_ExecID = f_ExecsGrp_ExecID;
-        f_ExecsGrp_NoExecs = f_ExecsGrp_NoExecs
-    },msg)
-    )
-    )
-;;
-
-let parse_MDRjctGrp (msg)  =
-    opt msg "817" parse_string (fun msg f_MDRjctGrp_AltMDSourceID -> opt msg "816" parse_int (fun msg f_MDRjctGrp_NoAltMDSource -> (ParseSuccess {
-        f_MDRjctGrp_NoAltMDSource = f_MDRjctGrp_NoAltMDSource;
-        f_MDRjctGrp_AltMDSourceID = f_MDRjctGrp_AltMDSourceID
-    },msg)
-    )
-    )
-;;
-
-let parse_SettlPtysSubGrp (msg)  =
-    opt msg "785" parse_string (fun msg f_SettlPtysSubGrp_SettlPartySubID -> opt msg "801" parse_int (fun msg f_SettlPtysSubGrp_NoSettlPartySubIDs -> opt msg "786" parse_int (fun msg f_SettlPtysSubGrp_SettlPartySubIDType -> (ParseSuccess {
-        f_SettlPtysSubGrp_SettlPartySubIDType = f_SettlPtysSubGrp_SettlPartySubIDType;
-        f_SettlPtysSubGrp_NoSettlPartySubIDs = f_SettlPtysSubGrp_NoSettlPartySubIDs;
-        f_SettlPtysSubGrp_SettlPartySubID = f_SettlPtysSubGrp_SettlPartySubID
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_MarketDataSnapshotFullRefreshMDEntries (msg)  =
-    opt msg "269" parse_MDEntryType (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryType -> opt msg "284" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_DeskID -> opt msg "18" parse_ExecInst (fun msg f_MarketDataSnapshotFullRefreshMDEntries_ExecInst -> opt msg "299" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_QuoteEntryID -> opt msg "283" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_LocationID -> opt msg "59" parse_TimeInForce (fun msg f_MarketDataSnapshotFullRefreshMDEntries_TimeInForce -> opt msg "15" parse_Currency (fun msg f_MarketDataSnapshotFullRefreshMDEntries_Currency -> opt msg "282" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryOriginator -> opt msg "276" parse_QuoteCondition (fun msg f_MarketDataSnapshotFullRefreshMDEntries_QuoteCondition -> opt msg "288" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryBuyer -> opt msg "354" parse_int (fun msg f_MarketDataSnapshotFullRefreshMDEntries_EncodedTextLen -> opt msg "274" parse_TickDirection (fun msg f_MarketDataSnapshotFullRefreshMDEntries_TickDirection -> opt msg "271" parse_float (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySize -> opt msg "37" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_OrderID -> opt msg "336" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_TradingSessionID -> opt msg "272" parse_UTCDateOnly (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryDate -> opt msg "355" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_EncodedText -> opt msg "432" parse_LocalMktDate (fun msg f_MarketDataSnapshotFullRefreshMDEntries_ExpireDate -> opt msg "110" parse_float (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MinQty -> opt msg "270" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPx -> opt msg "126" parse_UTCTimestamp (fun msg f_MarketDataSnapshotFullRefreshMDEntries_ExpireTime -> opt msg "287" parse_int (fun msg f_MarketDataSnapshotFullRefreshMDEntries_SellerDays -> opt msg "290" parse_int (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPositionNo -> opt msg "289" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySeller -> opt msg "346" parse_int (fun msg f_MarketDataSnapshotFullRefreshMDEntries_NumberOfOrders -> opt msg "286" parse_OpenCloseSettleFlag (fun msg f_MarketDataSnapshotFullRefreshMDEntries_OpenCloseSettleFlag -> opt msg "268" parse_int (fun msg f_MarketDataSnapshotFullRefreshMDEntries_NoMDEntries -> opt msg "277" parse_TradeCondition (fun msg f_MarketDataSnapshotFullRefreshMDEntries_TradeCondition -> opt msg "273" parse_UTCTimeOnly (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryTime -> opt msg "58" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_Text -> opt msg "275" parse_Exchange (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDMkt -> (ParseSuccess {
-        f_MarketDataSnapshotFullRefreshMDEntries_MDMkt = f_MarketDataSnapshotFullRefreshMDEntries_MDMkt;
-        f_MarketDataSnapshotFullRefreshMDEntries_Text = f_MarketDataSnapshotFullRefreshMDEntries_Text;
-        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryTime = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryTime;
-        f_MarketDataSnapshotFullRefreshMDEntries_TradeCondition = f_MarketDataSnapshotFullRefreshMDEntries_TradeCondition;
-        f_MarketDataSnapshotFullRefreshMDEntries_NoMDEntries = f_MarketDataSnapshotFullRefreshMDEntries_NoMDEntries;
-        f_MarketDataSnapshotFullRefreshMDEntries_OpenCloseSettleFlag = f_MarketDataSnapshotFullRefreshMDEntries_OpenCloseSettleFlag;
-        f_MarketDataSnapshotFullRefreshMDEntries_NumberOfOrders = f_MarketDataSnapshotFullRefreshMDEntries_NumberOfOrders;
-        f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySeller = f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySeller;
-        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPositionNo = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPositionNo;
-        f_MarketDataSnapshotFullRefreshMDEntries_SellerDays = f_MarketDataSnapshotFullRefreshMDEntries_SellerDays;
-        f_MarketDataSnapshotFullRefreshMDEntries_ExpireTime = f_MarketDataSnapshotFullRefreshMDEntries_ExpireTime;
-        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPx = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPx;
-        f_MarketDataSnapshotFullRefreshMDEntries_MinQty = f_MarketDataSnapshotFullRefreshMDEntries_MinQty;
-        f_MarketDataSnapshotFullRefreshMDEntries_ExpireDate = f_MarketDataSnapshotFullRefreshMDEntries_ExpireDate;
-        f_MarketDataSnapshotFullRefreshMDEntries_EncodedText = f_MarketDataSnapshotFullRefreshMDEntries_EncodedText;
-        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryDate = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryDate;
-        f_MarketDataSnapshotFullRefreshMDEntries_TradingSessionID = f_MarketDataSnapshotFullRefreshMDEntries_TradingSessionID;
-        f_MarketDataSnapshotFullRefreshMDEntries_OrderID = f_MarketDataSnapshotFullRefreshMDEntries_OrderID;
-        f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySize = f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySize;
-        f_MarketDataSnapshotFullRefreshMDEntries_TickDirection = f_MarketDataSnapshotFullRefreshMDEntries_TickDirection;
-        f_MarketDataSnapshotFullRefreshMDEntries_EncodedTextLen = f_MarketDataSnapshotFullRefreshMDEntries_EncodedTextLen;
-        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryBuyer = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryBuyer;
-        f_MarketDataSnapshotFullRefreshMDEntries_QuoteCondition = f_MarketDataSnapshotFullRefreshMDEntries_QuoteCondition;
-        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryOriginator = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryOriginator;
-        f_MarketDataSnapshotFullRefreshMDEntries_Currency = f_MarketDataSnapshotFullRefreshMDEntries_Currency;
-        f_MarketDataSnapshotFullRefreshMDEntries_TimeInForce = f_MarketDataSnapshotFullRefreshMDEntries_TimeInForce;
-        f_MarketDataSnapshotFullRefreshMDEntries_LocationID = f_MarketDataSnapshotFullRefreshMDEntries_LocationID;
-        f_MarketDataSnapshotFullRefreshMDEntries_QuoteEntryID = f_MarketDataSnapshotFullRefreshMDEntries_QuoteEntryID;
-        f_MarketDataSnapshotFullRefreshMDEntries_ExecInst = f_MarketDataSnapshotFullRefreshMDEntries_ExecInst;
-        f_MarketDataSnapshotFullRefreshMDEntries_DeskID = f_MarketDataSnapshotFullRefreshMDEntries_DeskID;
-        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryType = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryType
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_EmailRoutingIDs (msg)  =
-    opt msg "217" parse_string (fun msg f_EmailRoutingIDs_RoutingID -> opt msg "215" parse_int (fun msg f_EmailRoutingIDs_NoRoutingIDs -> opt msg "216" parse_RoutingType (fun msg f_EmailRoutingIDs_RoutingType -> (ParseSuccess {
-        f_EmailRoutingIDs_RoutingType = f_EmailRoutingIDs_RoutingType;
-        f_EmailRoutingIDs_NoRoutingIDs = f_EmailRoutingIDs_NoRoutingIDs;
-        f_EmailRoutingIDs_RoutingID = f_EmailRoutingIDs_RoutingID
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_BidResponseBidComponents (msg)  =
-    opt msg "63" parse_SettlmntTyp (fun msg f_BidResponseBidComponents_SettlmntTyp -> opt msg "423" parse_PriceType (fun msg f_BidResponseBidComponents_PriceType -> opt msg "421" parse_string (fun msg f_BidResponseBidComponents_Country -> opt msg "66" parse_string (fun msg f_BidResponseBidComponents_ListID -> opt msg "44" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_BidResponseBidComponents_Price -> opt msg "420" parse_int (fun msg f_BidResponseBidComponents_NoBidComponents -> opt msg "354" parse_int (fun msg f_BidResponseBidComponents_EncodedTextLen -> opt msg "54" parse_Side (fun msg f_BidResponseBidComponents_Side -> opt msg "430" parse_NetGrossInd (fun msg f_BidResponseBidComponents_NetGrossInd -> opt msg "13" parse_CommType (fun msg f_BidResponseBidComponents_CommType -> opt msg "58" parse_string (fun msg f_BidResponseBidComponents_Text -> opt msg "336" parse_string (fun msg f_BidResponseBidComponents_TradingSessionID -> opt msg "12" parse_float (fun msg f_BidResponseBidComponents_Commission -> opt msg "355" parse_string (fun msg f_BidResponseBidComponents_EncodedText -> opt msg "406" parse_float (fun msg f_BidResponseBidComponents_FairValue -> opt msg "64" parse_LocalMktDate (fun msg f_BidResponseBidComponents_FutSettDate -> (ParseSuccess {
-        f_BidResponseBidComponents_FutSettDate = f_BidResponseBidComponents_FutSettDate;
-        f_BidResponseBidComponents_FairValue = f_BidResponseBidComponents_FairValue;
-        f_BidResponseBidComponents_EncodedText = f_BidResponseBidComponents_EncodedText;
-        f_BidResponseBidComponents_Commission = f_BidResponseBidComponents_Commission;
-        f_BidResponseBidComponents_TradingSessionID = f_BidResponseBidComponents_TradingSessionID;
-        f_BidResponseBidComponents_Text = f_BidResponseBidComponents_Text;
-        f_BidResponseBidComponents_CommType = f_BidResponseBidComponents_CommType;
-        f_BidResponseBidComponents_NetGrossInd = f_BidResponseBidComponents_NetGrossInd;
-        f_BidResponseBidComponents_Side = f_BidResponseBidComponents_Side;
-        f_BidResponseBidComponents_EncodedTextLen = f_BidResponseBidComponents_EncodedTextLen;
-        f_BidResponseBidComponents_NoBidComponents = f_BidResponseBidComponents_NoBidComponents;
-        f_BidResponseBidComponents_Price = f_BidResponseBidComponents_Price;
-        f_BidResponseBidComponents_ListID = f_BidResponseBidComponents_ListID;
-        f_BidResponseBidComponents_Country = f_BidResponseBidComponents_Country;
-        f_BidResponseBidComponents_PriceType = f_BidResponseBidComponents_PriceType;
-        f_BidResponseBidComponents_SettlmntTyp = f_BidResponseBidComponents_SettlmntTyp
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_MassQuoteQuoteSets (msg)  =
-    opt msg "311" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingSymbol -> opt msg "316" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_MassQuoteQuoteSets_UnderlyingStrikePrice -> opt msg "306" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingIssuer -> opt msg "365" parse_string (fun msg f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDesc -> opt msg "307" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingSecurityDesc -> opt msg "362" parse_int (fun msg f_MassQuoteQuoteSets_EncodedUnderlyingIssuerLen -> opt msg "296" parse_int (fun msg f_MassQuoteQuoteSets_NoQuoteSets -> opt msg "312" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingSymbolSfx -> opt msg "364" parse_int (fun msg f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDescLen -> opt msg "436" parse_float (fun msg f_MassQuoteQuoteSets_UnderlyingContractMultiplier -> opt msg "302" parse_string (fun msg f_MassQuoteQuoteSets_QuoteSetID -> opt msg "309" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingSecurityID -> opt msg "308" parse_Exchange (fun msg f_MassQuoteQuoteSets_UnderlyingSecurityExchange -> opt msg "315" parse_int (fun msg f_MassQuoteQuoteSets_UnderlyingPutOrCall -> opt msg "310" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingSecurityType -> opt msg "367" parse_UTCTimestamp (fun msg f_MassQuoteQuoteSets_QuoteSetValidUntilTime -> opt msg "435" parse_float (fun msg f_MassQuoteQuoteSets_UnderlyingCouponRate -> opt msg "313" parse_MonthYear (fun msg f_MassQuoteQuoteSets_UnderlyingMaturityMonthYear -> opt msg "363" parse_string (fun msg f_MassQuoteQuoteSets_EncodedUnderlyingIssuer -> opt msg "314" parse_int (fun msg f_MassQuoteQuoteSets_UnderlyingMaturityDay -> opt msg "304" parse_int (fun msg f_MassQuoteQuoteSets_TotQuoteEntries -> opt msg "317" parse_char (fun msg f_MassQuoteQuoteSets_UnderlyingOptAttribute -> opt msg "305" parse_string (fun msg f_MassQuoteQuoteSets_UnderlyingIDSource -> (ParseSuccess {
-        f_MassQuoteQuoteSets_UnderlyingIDSource = f_MassQuoteQuoteSets_UnderlyingIDSource;
-        f_MassQuoteQuoteSets_UnderlyingOptAttribute = f_MassQuoteQuoteSets_UnderlyingOptAttribute;
-        f_MassQuoteQuoteSets_TotQuoteEntries = f_MassQuoteQuoteSets_TotQuoteEntries;
-        f_MassQuoteQuoteSets_UnderlyingMaturityDay = f_MassQuoteQuoteSets_UnderlyingMaturityDay;
-        f_MassQuoteQuoteSets_EncodedUnderlyingIssuer = f_MassQuoteQuoteSets_EncodedUnderlyingIssuer;
-        f_MassQuoteQuoteSets_UnderlyingMaturityMonthYear = f_MassQuoteQuoteSets_UnderlyingMaturityMonthYear;
-        f_MassQuoteQuoteSets_UnderlyingCouponRate = f_MassQuoteQuoteSets_UnderlyingCouponRate;
-        f_MassQuoteQuoteSets_QuoteSetValidUntilTime = f_MassQuoteQuoteSets_QuoteSetValidUntilTime;
-        f_MassQuoteQuoteSets_UnderlyingSecurityType = f_MassQuoteQuoteSets_UnderlyingSecurityType;
-        f_MassQuoteQuoteSets_UnderlyingPutOrCall = f_MassQuoteQuoteSets_UnderlyingPutOrCall;
-        f_MassQuoteQuoteSets_UnderlyingSecurityExchange = f_MassQuoteQuoteSets_UnderlyingSecurityExchange;
-        f_MassQuoteQuoteSets_UnderlyingSecurityID = f_MassQuoteQuoteSets_UnderlyingSecurityID;
-        f_MassQuoteQuoteSets_QuoteSetID = f_MassQuoteQuoteSets_QuoteSetID;
-        f_MassQuoteQuoteSets_UnderlyingContractMultiplier = f_MassQuoteQuoteSets_UnderlyingContractMultiplier;
-        f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDescLen = f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDescLen;
-        f_MassQuoteQuoteSets_UnderlyingSymbolSfx = f_MassQuoteQuoteSets_UnderlyingSymbolSfx;
-        f_MassQuoteQuoteSets_NoQuoteSets = f_MassQuoteQuoteSets_NoQuoteSets;
-        f_MassQuoteQuoteSets_EncodedUnderlyingIssuerLen = f_MassQuoteQuoteSets_EncodedUnderlyingIssuerLen;
-        f_MassQuoteQuoteSets_UnderlyingSecurityDesc = f_MassQuoteQuoteSets_UnderlyingSecurityDesc;
-        f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDesc = f_MassQuoteQuoteSets_EncodedUnderlyingSecurityDesc;
-        f_MassQuoteQuoteSets_UnderlyingIssuer = f_MassQuoteQuoteSets_UnderlyingIssuer;
-        f_MassQuoteQuoteSets_UnderlyingStrikePrice = f_MassQuoteQuoteSets_UnderlyingStrikePrice;
-        f_MassQuoteQuoteSets_UnderlyingSymbol = f_MassQuoteQuoteSets_UnderlyingSymbol
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_AllocationExecs (msg)  =
-    opt msg "29" parse_LastCapacity (fun msg f_AllocationExecs_LastCapacity -> opt msg "32" parse_float (fun msg f_AllocationExecs_LastShares -> opt msg "124" parse_int (fun msg f_AllocationExecs_NoExecs -> opt msg "17" parse_string (fun msg f_AllocationExecs_ExecID -> opt msg "31" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_AllocationExecs_LastPx -> (ParseSuccess {
-        f_AllocationExecs_LastPx = f_AllocationExecs_LastPx;
-        f_AllocationExecs_ExecID = f_AllocationExecs_ExecID;
-        f_AllocationExecs_NoExecs = f_AllocationExecs_NoExecs;
-        f_AllocationExecs_LastShares = f_AllocationExecs_LastShares;
-        f_AllocationExecs_LastCapacity = f_AllocationExecs_LastCapacity
-    },msg)
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_TrdCapDtGrp (msg)  =
-    opt msg "580" parse_int (fun msg f_TrdCapDtGrp_NoDates -> opt msg "60" parse_UTCTimestamp (fun msg f_TrdCapDtGrp_TransactTime -> opt msg "75" parse_LocalMktDate (fun msg f_TrdCapDtGrp_TradeDate -> (ParseSuccess {
-        f_TrdCapDtGrp_TradeDate = f_TrdCapDtGrp_TradeDate;
-        f_TrdCapDtGrp_TransactTime = f_TrdCapDtGrp_TransactTime;
-        f_TrdCapDtGrp_NoDates = f_TrdCapDtGrp_NoDates
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_AffectedOrdGrp (msg)  =
-    opt msg "41" parse_string (fun msg f_AffectedOrdGrp_OrigClOrdID -> opt msg "535" parse_string (fun msg f_AffectedOrdGrp_AffectedOrderID -> opt msg "534" parse_int (fun msg f_AffectedOrdGrp_NoAffectedOrders -> opt msg "536" parse_string (fun msg f_AffectedOrdGrp_AffectedSecondaryOrderID -> (ParseSuccess {
-        f_AffectedOrdGrp_AffectedSecondaryOrderID = f_AffectedOrdGrp_AffectedSecondaryOrderID;
-        f_AffectedOrdGrp_NoAffectedOrders = f_AffectedOrdGrp_NoAffectedOrders;
-        f_AffectedOrdGrp_AffectedOrderID = f_AffectedOrdGrp_AffectedOrderID;
-        f_AffectedOrdGrp_OrigClOrdID = f_AffectedOrdGrp_OrigClOrdID
-    },msg)
-    )
-    )
-    )
-    )
-;;
-
-let parse_AttrbGrp (msg)  =
-    opt msg "871" parse_InstrAttribType (fun msg f_AttrbGrp_InstrAttribType -> opt msg "870" parse_int (fun msg f_AttrbGrp_NoInstrAttrib -> opt msg "872" parse_string (fun msg f_AttrbGrp_InstrAttribValue -> (ParseSuccess {
-        f_AttrbGrp_InstrAttribValue = f_AttrbGrp_InstrAttribValue;
-        f_AttrbGrp_NoInstrAttrib = f_AttrbGrp_NoInstrAttrib;
-        f_AttrbGrp_InstrAttribType = f_AttrbGrp_InstrAttribType
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_PegInstructions (msg)  =
-    opt msg "836" parse_PegOffsetType (fun msg f_PegInstructions_PegOffsetType -> opt msg "838" parse_PegRoundDirection (fun msg f_PegInstructions_PegRoundDirection -> opt msg "840" parse_PegScope (fun msg f_PegInstructions_PegScope -> opt msg "837" parse_PegLimitType (fun msg f_PegInstructions_PegLimitType -> opt msg "835" parse_PegMoveType (fun msg f_PegInstructions_PegMoveType -> opt msg "211" parse_float (fun msg f_PegInstructions_PegOffsetValue -> (ParseSuccess {
-        f_PegInstructions_PegOffsetValue = f_PegInstructions_PegOffsetValue;
-        f_PegInstructions_PegMoveType = f_PegInstructions_PegMoveType;
-        f_PegInstructions_PegLimitType = f_PegInstructions_PegLimitType;
-        f_PegInstructions_PegScope = f_PegInstructions_PegScope;
-        f_PegInstructions_PegRoundDirection = f_PegInstructions_PegRoundDirection;
-        f_PegInstructions_PegOffsetType = f_PegInstructions_PegOffsetType
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_UndSecAltIDGrp (msg)  =
-    opt msg "459" parse_string (fun msg f_UndSecAltIDGrp_UnderlyingSecurityAltIDSource -> opt msg "458" parse_string (fun msg f_UndSecAltIDGrp_UnderlyingSecurityAltID -> opt msg "457" parse_int (fun msg f_UndSecAltIDGrp_NoUnderlyingSecurityAltID -> (ParseSuccess {
-        f_UndSecAltIDGrp_NoUnderlyingSecurityAltID = f_UndSecAltIDGrp_NoUnderlyingSecurityAltID;
-        f_UndSecAltIDGrp_UnderlyingSecurityAltID = f_UndSecAltIDGrp_UnderlyingSecurityAltID;
-        f_UndSecAltIDGrp_UnderlyingSecurityAltIDSource = f_UndSecAltIDGrp_UnderlyingSecurityAltIDSource
-    },msg)
     )
     )
     )
@@ -2044,227 +475,6 @@ let parse_OrderListOrders (msg)  =
     )
 ;;
 
-let parse_MiscFeesGrp (msg)  =
-    opt msg "136" parse_int (fun msg f_MiscFeesGrp_NoMiscFees -> opt msg "137" parse_float (fun msg f_MiscFeesGrp_MiscFeeAmt -> opt msg "139" parse_MiscFeeType (fun msg f_MiscFeesGrp_MiscFeeType -> opt msg "138" parse_Currency (fun msg f_MiscFeesGrp_MiscFeeCurr -> opt msg "891" parse_MiscFeeBasis (fun msg f_MiscFeesGrp_MiscFeeBasis -> (ParseSuccess {
-        f_MiscFeesGrp_MiscFeeBasis = f_MiscFeesGrp_MiscFeeBasis;
-        f_MiscFeesGrp_MiscFeeCurr = f_MiscFeesGrp_MiscFeeCurr;
-        f_MiscFeesGrp_MiscFeeType = f_MiscFeesGrp_MiscFeeType;
-        f_MiscFeesGrp_MiscFeeAmt = f_MiscFeesGrp_MiscFeeAmt;
-        f_MiscFeesGrp_NoMiscFees = f_MiscFeesGrp_NoMiscFees
-    },msg)
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_EmailRelatedSym (msg)  =
-    opt msg "351" parse_string (fun msg f_EmailRelatedSym_EncodedSecurityDesc -> opt msg "207" parse_Exchange (fun msg f_EmailRelatedSym_SecurityExchange -> opt msg "205" parse_int (fun msg f_EmailRelatedSym_MaturityDay -> opt msg "201" parse_PutOrCall (fun msg f_EmailRelatedSym_PutOrCall -> opt msg "48" parse_string (fun msg f_EmailRelatedSym_SecurityID -> opt msg "350" parse_int (fun msg f_EmailRelatedSym_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_EmailRelatedSym_ContractMultiplier -> opt msg "46" parse_string (fun msg f_EmailRelatedSym_RelatdSym -> opt msg "348" parse_int (fun msg f_EmailRelatedSym_EncodedIssuerLen -> opt msg "349" parse_string (fun msg f_EmailRelatedSym_EncodedIssuer -> opt msg "206" parse_char (fun msg f_EmailRelatedSym_OptAttribute -> opt msg "22" parse_IDSource (fun msg f_EmailRelatedSym_IDSource -> opt msg "146" parse_int (fun msg f_EmailRelatedSym_NoRelatedSym -> opt msg "202" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_EmailRelatedSym_StrikePrice -> opt msg "200" parse_MonthYear (fun msg f_EmailRelatedSym_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_EmailRelatedSym_Issuer -> opt msg "223" parse_float (fun msg f_EmailRelatedSym_CouponRate -> opt msg "65" parse_string (fun msg f_EmailRelatedSym_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_EmailRelatedSym_SecurityType -> opt msg "107" parse_string (fun msg f_EmailRelatedSym_SecurityDesc -> (ParseSuccess {
-        f_EmailRelatedSym_SecurityDesc = f_EmailRelatedSym_SecurityDesc;
-        f_EmailRelatedSym_SecurityType = f_EmailRelatedSym_SecurityType;
-        f_EmailRelatedSym_SymbolSfx = f_EmailRelatedSym_SymbolSfx;
-        f_EmailRelatedSym_CouponRate = f_EmailRelatedSym_CouponRate;
-        f_EmailRelatedSym_Issuer = f_EmailRelatedSym_Issuer;
-        f_EmailRelatedSym_MaturityMonthYear = f_EmailRelatedSym_MaturityMonthYear;
-        f_EmailRelatedSym_StrikePrice = f_EmailRelatedSym_StrikePrice;
-        f_EmailRelatedSym_NoRelatedSym = f_EmailRelatedSym_NoRelatedSym;
-        f_EmailRelatedSym_IDSource = f_EmailRelatedSym_IDSource;
-        f_EmailRelatedSym_OptAttribute = f_EmailRelatedSym_OptAttribute;
-        f_EmailRelatedSym_EncodedIssuer = f_EmailRelatedSym_EncodedIssuer;
-        f_EmailRelatedSym_EncodedIssuerLen = f_EmailRelatedSym_EncodedIssuerLen;
-        f_EmailRelatedSym_RelatdSym = f_EmailRelatedSym_RelatdSym;
-        f_EmailRelatedSym_ContractMultiplier = f_EmailRelatedSym_ContractMultiplier;
-        f_EmailRelatedSym_EncodedSecurityDescLen = f_EmailRelatedSym_EncodedSecurityDescLen;
-        f_EmailRelatedSym_SecurityID = f_EmailRelatedSym_SecurityID;
-        f_EmailRelatedSym_PutOrCall = f_EmailRelatedSym_PutOrCall;
-        f_EmailRelatedSym_MaturityDay = f_EmailRelatedSym_MaturityDay;
-        f_EmailRelatedSym_SecurityExchange = f_EmailRelatedSym_SecurityExchange;
-        f_EmailRelatedSym_EncodedSecurityDesc = f_EmailRelatedSym_EncodedSecurityDesc
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_TrdRegTimestamps (msg)  =
-    opt msg "769" parse_UTCTimestamp (fun msg f_TrdRegTimestamps_TrdRegTimestamp -> opt msg "770" parse_TrdRegTimestampType (fun msg f_TrdRegTimestamps_TrdRegTimestampType -> opt msg "771" parse_string (fun msg f_TrdRegTimestamps_TrdRegTimestampOrigin -> opt msg "768" parse_int (fun msg f_TrdRegTimestamps_NoTrdRegTimestamps -> (ParseSuccess {
-        f_TrdRegTimestamps_NoTrdRegTimestamps = f_TrdRegTimestamps_NoTrdRegTimestamps;
-        f_TrdRegTimestamps_TrdRegTimestampOrigin = f_TrdRegTimestamps_TrdRegTimestampOrigin;
-        f_TrdRegTimestamps_TrdRegTimestampType = f_TrdRegTimestamps_TrdRegTimestampType;
-        f_TrdRegTimestamps_TrdRegTimestamp = f_TrdRegTimestamps_TrdRegTimestamp
-    },msg)
-    )
-    )
-    )
-    )
-;;
-
-let parse_MDReqGrp (msg)  =
-    opt msg "269" parse_MDEntryType (fun msg f_MDReqGrp_MDEntryType -> opt msg "267" parse_int (fun msg f_MDReqGrp_NoMDEntryTypes -> (ParseSuccess {
-        f_MDReqGrp_NoMDEntryTypes = f_MDReqGrp_NoMDEntryTypes;
-        f_MDReqGrp_MDEntryType = f_MDReqGrp_MDEntryType
-    },msg)
-    )
-    )
-;;
-
-let parse_NstdPtys3SubGrp (msg)  =
-    opt msg "952" parse_int (fun msg f_NstdPtys3SubGrp_NoNested3PartySubIDs -> opt msg "954" parse_int (fun msg f_NstdPtys3SubGrp_Nested3PartySubIDType -> opt msg "953" parse_string (fun msg f_NstdPtys3SubGrp_Nested3PartySubID -> (ParseSuccess {
-        f_NstdPtys3SubGrp_Nested3PartySubID = f_NstdPtys3SubGrp_Nested3PartySubID;
-        f_NstdPtys3SubGrp_Nested3PartySubIDType = f_NstdPtys3SubGrp_Nested3PartySubIDType;
-        f_NstdPtys3SubGrp_NoNested3PartySubIDs = f_NstdPtys3SubGrp_NoNested3PartySubIDs
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_PtysSubGrp (msg)  =
-    opt msg "802" parse_int (fun msg f_PtysSubGrp_NoPartySubIDs -> opt msg "523" parse_string (fun msg f_PtysSubGrp_PartySubID -> opt msg "803" parse_PartySubIDType (fun msg f_PtysSubGrp_PartySubIDType -> (ParseSuccess {
-        f_PtysSubGrp_PartySubIDType = f_PtysSubGrp_PartySubIDType;
-        f_PtysSubGrp_PartySubID = f_PtysSubGrp_PartySubID;
-        f_PtysSubGrp_NoPartySubIDs = f_PtysSubGrp_NoPartySubIDs
-    },msg)
-    )
-    )
-    )
-;;
-
-let parse_QuoteCancelQuoteEntries (msg)  =
-    opt msg "311" parse_string (fun msg f_QuoteCancelQuoteEntries_UnderlyingSymbol -> opt msg "351" parse_string (fun msg f_QuoteCancelQuoteEntries_EncodedSecurityDesc -> opt msg "295" parse_int (fun msg f_QuoteCancelQuoteEntries_NoQuoteEntries -> opt msg "207" parse_Exchange (fun msg f_QuoteCancelQuoteEntries_SecurityExchange -> opt msg "205" parse_int (fun msg f_QuoteCancelQuoteEntries_MaturityDay -> opt msg "201" parse_PutOrCall (fun msg f_QuoteCancelQuoteEntries_PutOrCall -> opt msg "48" parse_string (fun msg f_QuoteCancelQuoteEntries_SecurityID -> opt msg "350" parse_int (fun msg f_QuoteCancelQuoteEntries_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_QuoteCancelQuoteEntries_ContractMultiplier -> opt msg "348" parse_int (fun msg f_QuoteCancelQuoteEntries_EncodedIssuerLen -> opt msg "349" parse_string (fun msg f_QuoteCancelQuoteEntries_EncodedIssuer -> opt msg "206" parse_char (fun msg f_QuoteCancelQuoteEntries_OptAttribute -> opt msg "55" parse_string (fun msg f_QuoteCancelQuoteEntries_Symbol -> opt msg "22" parse_IDSource (fun msg f_QuoteCancelQuoteEntries_IDSource -> opt msg "202" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_QuoteCancelQuoteEntries_StrikePrice -> opt msg "200" parse_MonthYear (fun msg f_QuoteCancelQuoteEntries_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_QuoteCancelQuoteEntries_Issuer -> opt msg "223" parse_float (fun msg f_QuoteCancelQuoteEntries_CouponRate -> opt msg "65" parse_string (fun msg f_QuoteCancelQuoteEntries_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_QuoteCancelQuoteEntries_SecurityType -> opt msg "107" parse_string (fun msg f_QuoteCancelQuoteEntries_SecurityDesc -> (ParseSuccess {
-        f_QuoteCancelQuoteEntries_SecurityDesc = f_QuoteCancelQuoteEntries_SecurityDesc;
-        f_QuoteCancelQuoteEntries_SecurityType = f_QuoteCancelQuoteEntries_SecurityType;
-        f_QuoteCancelQuoteEntries_SymbolSfx = f_QuoteCancelQuoteEntries_SymbolSfx;
-        f_QuoteCancelQuoteEntries_CouponRate = f_QuoteCancelQuoteEntries_CouponRate;
-        f_QuoteCancelQuoteEntries_Issuer = f_QuoteCancelQuoteEntries_Issuer;
-        f_QuoteCancelQuoteEntries_MaturityMonthYear = f_QuoteCancelQuoteEntries_MaturityMonthYear;
-        f_QuoteCancelQuoteEntries_StrikePrice = f_QuoteCancelQuoteEntries_StrikePrice;
-        f_QuoteCancelQuoteEntries_IDSource = f_QuoteCancelQuoteEntries_IDSource;
-        f_QuoteCancelQuoteEntries_Symbol = f_QuoteCancelQuoteEntries_Symbol;
-        f_QuoteCancelQuoteEntries_OptAttribute = f_QuoteCancelQuoteEntries_OptAttribute;
-        f_QuoteCancelQuoteEntries_EncodedIssuer = f_QuoteCancelQuoteEntries_EncodedIssuer;
-        f_QuoteCancelQuoteEntries_EncodedIssuerLen = f_QuoteCancelQuoteEntries_EncodedIssuerLen;
-        f_QuoteCancelQuoteEntries_ContractMultiplier = f_QuoteCancelQuoteEntries_ContractMultiplier;
-        f_QuoteCancelQuoteEntries_EncodedSecurityDescLen = f_QuoteCancelQuoteEntries_EncodedSecurityDescLen;
-        f_QuoteCancelQuoteEntries_SecurityID = f_QuoteCancelQuoteEntries_SecurityID;
-        f_QuoteCancelQuoteEntries_PutOrCall = f_QuoteCancelQuoteEntries_PutOrCall;
-        f_QuoteCancelQuoteEntries_MaturityDay = f_QuoteCancelQuoteEntries_MaturityDay;
-        f_QuoteCancelQuoteEntries_SecurityExchange = f_QuoteCancelQuoteEntries_SecurityExchange;
-        f_QuoteCancelQuoteEntries_NoQuoteEntries = f_QuoteCancelQuoteEntries_NoQuoteEntries;
-        f_QuoteCancelQuoteEntries_EncodedSecurityDesc = f_QuoteCancelQuoteEntries_EncodedSecurityDesc;
-        f_QuoteCancelQuoteEntries_UnderlyingSymbol = f_QuoteCancelQuoteEntries_UnderlyingSymbol
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_NewsRelatedSym (msg)  =
-    opt msg "351" parse_string (fun msg f_NewsRelatedSym_EncodedSecurityDesc -> opt msg "207" parse_Exchange (fun msg f_NewsRelatedSym_SecurityExchange -> opt msg "205" parse_int (fun msg f_NewsRelatedSym_MaturityDay -> opt msg "201" parse_PutOrCall (fun msg f_NewsRelatedSym_PutOrCall -> opt msg "48" parse_string (fun msg f_NewsRelatedSym_SecurityID -> opt msg "350" parse_int (fun msg f_NewsRelatedSym_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_NewsRelatedSym_ContractMultiplier -> opt msg "46" parse_string (fun msg f_NewsRelatedSym_RelatdSym -> opt msg "348" parse_int (fun msg f_NewsRelatedSym_EncodedIssuerLen -> opt msg "349" parse_string (fun msg f_NewsRelatedSym_EncodedIssuer -> opt msg "206" parse_char (fun msg f_NewsRelatedSym_OptAttribute -> opt msg "22" parse_IDSource (fun msg f_NewsRelatedSym_IDSource -> opt msg "146" parse_int (fun msg f_NewsRelatedSym_NoRelatedSym -> opt msg "202" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_NewsRelatedSym_StrikePrice -> opt msg "200" parse_MonthYear (fun msg f_NewsRelatedSym_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_NewsRelatedSym_Issuer -> opt msg "223" parse_float (fun msg f_NewsRelatedSym_CouponRate -> opt msg "65" parse_string (fun msg f_NewsRelatedSym_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_NewsRelatedSym_SecurityType -> opt msg "107" parse_string (fun msg f_NewsRelatedSym_SecurityDesc -> (ParseSuccess {
-        f_NewsRelatedSym_SecurityDesc = f_NewsRelatedSym_SecurityDesc;
-        f_NewsRelatedSym_SecurityType = f_NewsRelatedSym_SecurityType;
-        f_NewsRelatedSym_SymbolSfx = f_NewsRelatedSym_SymbolSfx;
-        f_NewsRelatedSym_CouponRate = f_NewsRelatedSym_CouponRate;
-        f_NewsRelatedSym_Issuer = f_NewsRelatedSym_Issuer;
-        f_NewsRelatedSym_MaturityMonthYear = f_NewsRelatedSym_MaturityMonthYear;
-        f_NewsRelatedSym_StrikePrice = f_NewsRelatedSym_StrikePrice;
-        f_NewsRelatedSym_NoRelatedSym = f_NewsRelatedSym_NoRelatedSym;
-        f_NewsRelatedSym_IDSource = f_NewsRelatedSym_IDSource;
-        f_NewsRelatedSym_OptAttribute = f_NewsRelatedSym_OptAttribute;
-        f_NewsRelatedSym_EncodedIssuer = f_NewsRelatedSym_EncodedIssuer;
-        f_NewsRelatedSym_EncodedIssuerLen = f_NewsRelatedSym_EncodedIssuerLen;
-        f_NewsRelatedSym_RelatdSym = f_NewsRelatedSym_RelatdSym;
-        f_NewsRelatedSym_ContractMultiplier = f_NewsRelatedSym_ContractMultiplier;
-        f_NewsRelatedSym_EncodedSecurityDescLen = f_NewsRelatedSym_EncodedSecurityDescLen;
-        f_NewsRelatedSym_SecurityID = f_NewsRelatedSym_SecurityID;
-        f_NewsRelatedSym_PutOrCall = f_NewsRelatedSym_PutOrCall;
-        f_NewsRelatedSym_MaturityDay = f_NewsRelatedSym_MaturityDay;
-        f_NewsRelatedSym_SecurityExchange = f_NewsRelatedSym_SecurityExchange;
-        f_NewsRelatedSym_EncodedSecurityDesc = f_NewsRelatedSym_EncodedSecurityDesc
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_AllocationMiscFees (msg)  =
-    opt msg "136" parse_int (fun msg f_AllocationMiscFees_NoMiscFees -> opt msg "137" parse_float (fun msg f_AllocationMiscFees_MiscFeeAmt -> opt msg "139" parse_MiscFeeType (fun msg f_AllocationMiscFees_MiscFeeType -> opt msg "138" parse_Currency (fun msg f_AllocationMiscFees_MiscFeeCurr -> (ParseSuccess {
-        f_AllocationMiscFees_MiscFeeCurr = f_AllocationMiscFees_MiscFeeCurr;
-        f_AllocationMiscFees_MiscFeeType = f_AllocationMiscFees_MiscFeeType;
-        f_AllocationMiscFees_MiscFeeAmt = f_AllocationMiscFees_MiscFeeAmt;
-        f_AllocationMiscFees_NoMiscFees = f_AllocationMiscFees_NoMiscFees
-    },msg)
-    )
-    )
-    )
-    )
-;;
-
 let parse_AllocationAllocs (msg)  =
     opt msg "209" parse_AllocHandlInst (fun msg f_AllocationAllocs_AllocHandlInst -> opt msg "109" parse_string (fun msg f_AllocationAllocs_ClientID -> opt msg "360" parse_int (fun msg f_AllocationAllocs_EncodedAllocTextLen -> opt msg "153" (fun x -> (match parse_float x with
         | None -> None
@@ -2324,6 +534,1150 @@ let parse_AllocationAllocs (msg)  =
     )
 ;;
 
+let parse_SecAltIDGrp (msg)  =
+    opt msg "455" parse_string (fun msg f_SecAltIDGrp_SecurityAltID -> opt msg "456" parse_string (fun msg f_SecAltIDGrp_SecurityAltIDSource -> opt msg "454" parse_int (fun msg f_SecAltIDGrp_NoSecurityAltID -> (ParseSuccess {
+        f_SecAltIDGrp_NoSecurityAltID = f_SecAltIDGrp_NoSecurityAltID;
+        f_SecAltIDGrp_SecurityAltIDSource = f_SecAltIDGrp_SecurityAltIDSource;
+        f_SecAltIDGrp_SecurityAltID = f_SecAltIDGrp_SecurityAltID
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_UndSecAltIDGrp (msg)  =
+    opt msg "459" parse_string (fun msg f_UndSecAltIDGrp_UnderlyingSecurityAltIDSource -> opt msg "458" parse_string (fun msg f_UndSecAltIDGrp_UnderlyingSecurityAltID -> opt msg "457" parse_int (fun msg f_UndSecAltIDGrp_NoUnderlyingSecurityAltID -> (ParseSuccess {
+        f_UndSecAltIDGrp_NoUnderlyingSecurityAltID = f_UndSecAltIDGrp_NoUnderlyingSecurityAltID;
+        f_UndSecAltIDGrp_UnderlyingSecurityAltID = f_UndSecAltIDGrp_UnderlyingSecurityAltID;
+        f_UndSecAltIDGrp_UnderlyingSecurityAltIDSource = f_UndSecAltIDGrp_UnderlyingSecurityAltIDSource
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_SecurityDefinitionRequestRelatedSym (msg)  =
+    opt msg "311" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbol -> opt msg "316" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingStrikePrice -> opt msg "306" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingIssuer -> opt msg "365" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDesc -> opt msg "307" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityDesc -> opt msg "362" parse_int (fun msg f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuerLen -> opt msg "312" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbolSfx -> opt msg "364" parse_int (fun msg f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDescLen -> opt msg "436" parse_float (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingContractMultiplier -> opt msg "54" parse_Side (fun msg f_SecurityDefinitionRequestRelatedSym_Side -> opt msg "309" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityID -> opt msg "308" parse_Exchange (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityExchange -> opt msg "315" parse_int (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingPutOrCall -> opt msg "310" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityType -> opt msg "318" parse_Currency (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingCurrency -> opt msg "435" parse_float (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingCouponRate -> opt msg "146" parse_int (fun msg f_SecurityDefinitionRequestRelatedSym_NoRelatedSym -> opt msg "313" parse_MonthYear (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityMonthYear -> opt msg "363" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuer -> opt msg "314" parse_int (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityDay -> opt msg "317" parse_char (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingOptAttribute -> opt msg "319" parse_float (fun msg f_SecurityDefinitionRequestRelatedSym_RatioQty -> opt msg "305" parse_string (fun msg f_SecurityDefinitionRequestRelatedSym_UnderlyingIDSource -> (ParseSuccess {
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingIDSource = f_SecurityDefinitionRequestRelatedSym_UnderlyingIDSource;
+        f_SecurityDefinitionRequestRelatedSym_RatioQty = f_SecurityDefinitionRequestRelatedSym_RatioQty;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingOptAttribute = f_SecurityDefinitionRequestRelatedSym_UnderlyingOptAttribute;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityDay = f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityDay;
+        f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuer = f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuer;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityMonthYear = f_SecurityDefinitionRequestRelatedSym_UnderlyingMaturityMonthYear;
+        f_SecurityDefinitionRequestRelatedSym_NoRelatedSym = f_SecurityDefinitionRequestRelatedSym_NoRelatedSym;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingCouponRate = f_SecurityDefinitionRequestRelatedSym_UnderlyingCouponRate;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingCurrency = f_SecurityDefinitionRequestRelatedSym_UnderlyingCurrency;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityType = f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityType;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingPutOrCall = f_SecurityDefinitionRequestRelatedSym_UnderlyingPutOrCall;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityExchange = f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityExchange;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityID = f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityID;
+        f_SecurityDefinitionRequestRelatedSym_Side = f_SecurityDefinitionRequestRelatedSym_Side;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingContractMultiplier = f_SecurityDefinitionRequestRelatedSym_UnderlyingContractMultiplier;
+        f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDescLen = f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDescLen;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbolSfx = f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbolSfx;
+        f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuerLen = f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingIssuerLen;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityDesc = f_SecurityDefinitionRequestRelatedSym_UnderlyingSecurityDesc;
+        f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDesc = f_SecurityDefinitionRequestRelatedSym_EncodedUnderlyingSecurityDesc;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingIssuer = f_SecurityDefinitionRequestRelatedSym_UnderlyingIssuer;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingStrikePrice = f_SecurityDefinitionRequestRelatedSym_UnderlyingStrikePrice;
+        f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbol = f_SecurityDefinitionRequestRelatedSym_UnderlyingSymbol
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_ListStatusOrders (msg)  =
+    opt msg "151" parse_float (fun msg f_ListStatusOrders_LeavesQty -> opt msg "84" parse_float (fun msg f_ListStatusOrders_CxlQty -> opt msg "58" parse_string (fun msg f_ListStatusOrders_Text -> opt msg "11" parse_string (fun msg f_ListStatusOrders_ClOrdID -> opt msg "355" parse_string (fun msg f_ListStatusOrders_EncodedText -> opt msg "73" parse_int (fun msg f_ListStatusOrders_NoOrders -> opt msg "39" parse_OrdStatus (fun msg f_ListStatusOrders_OrdStatus -> opt msg "354" parse_int (fun msg f_ListStatusOrders_EncodedTextLen -> opt msg "103" parse_OrdRejReason (fun msg f_ListStatusOrders_OrdRejReason -> opt msg "6" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_ListStatusOrders_AvgPx -> opt msg "14" parse_float (fun msg f_ListStatusOrders_CumQty -> (ParseSuccess {
+        f_ListStatusOrders_CumQty = f_ListStatusOrders_CumQty;
+        f_ListStatusOrders_AvgPx = f_ListStatusOrders_AvgPx;
+        f_ListStatusOrders_OrdRejReason = f_ListStatusOrders_OrdRejReason;
+        f_ListStatusOrders_EncodedTextLen = f_ListStatusOrders_EncodedTextLen;
+        f_ListStatusOrders_OrdStatus = f_ListStatusOrders_OrdStatus;
+        f_ListStatusOrders_NoOrders = f_ListStatusOrders_NoOrders;
+        f_ListStatusOrders_EncodedText = f_ListStatusOrders_EncodedText;
+        f_ListStatusOrders_ClOrdID = f_ListStatusOrders_ClOrdID;
+        f_ListStatusOrders_Text = f_ListStatusOrders_Text;
+        f_ListStatusOrders_CxlQty = f_ListStatusOrders_CxlQty;
+        f_ListStatusOrders_LeavesQty = f_ListStatusOrders_LeavesQty
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_IOIQualGrp (msg)  =
+    opt msg "104" parse_IOIQualifier (fun msg f_IOIQualGrp_IOIQualifier -> opt msg "199" parse_int (fun msg f_IOIQualGrp_NoIOIQualifiers -> (ParseSuccess {
+        f_IOIQualGrp_NoIOIQualifiers = f_IOIQualGrp_NoIOIQualifiers;
+        f_IOIQualGrp_IOIQualifier = f_IOIQualGrp_IOIQualifier
+    },msg)
+    )
+    )
+;;
+
+let parse_Stipulations (msg)  =
+    opt msg "232" parse_int (fun msg f_Stipulations_NoStipulations -> opt msg "234" parse_string (fun msg f_Stipulations_StipulationValue -> opt msg "233" parse_StipulationType (fun msg f_Stipulations_StipulationType -> (ParseSuccess {
+        f_Stipulations_StipulationType = f_Stipulations_StipulationType;
+        f_Stipulations_StipulationValue = f_Stipulations_StipulationValue;
+        f_Stipulations_NoStipulations = f_Stipulations_NoStipulations
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_OrderSingleTradingSessions (msg)  =
+    opt msg "336" parse_string (fun msg f_OrderSingleTradingSessions_TradingSessionID -> opt msg "386" parse_int (fun msg f_OrderSingleTradingSessions_NoTradingSessions -> (ParseSuccess {
+        f_OrderSingleTradingSessions_NoTradingSessions = f_OrderSingleTradingSessions_NoTradingSessions;
+        f_OrderSingleTradingSessions_TradingSessionID = f_OrderSingleTradingSessions_TradingSessionID
+    },msg)
+    )
+    )
+;;
+
+let parse_OrderListAllocs (msg)  =
+    opt msg "79" parse_string (fun msg f_OrderListAllocs_AllocAccount -> opt msg "80" parse_float (fun msg f_OrderListAllocs_AllocShares -> opt msg "78" parse_int (fun msg f_OrderListAllocs_NoAllocs -> (ParseSuccess {
+        f_OrderListAllocs_NoAllocs = f_OrderListAllocs_NoAllocs;
+        f_OrderListAllocs_AllocShares = f_OrderListAllocs_AllocShares;
+        f_OrderListAllocs_AllocAccount = f_OrderListAllocs_AllocAccount
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_QuoteCancelQuoteEntries (msg)  =
+    opt msg "311" parse_string (fun msg f_QuoteCancelQuoteEntries_UnderlyingSymbol -> opt msg "351" parse_string (fun msg f_QuoteCancelQuoteEntries_EncodedSecurityDesc -> opt msg "295" parse_int (fun msg f_QuoteCancelQuoteEntries_NoQuoteEntries -> opt msg "207" parse_Exchange (fun msg f_QuoteCancelQuoteEntries_SecurityExchange -> opt msg "205" parse_int (fun msg f_QuoteCancelQuoteEntries_MaturityDay -> opt msg "201" parse_PutOrCall (fun msg f_QuoteCancelQuoteEntries_PutOrCall -> opt msg "48" parse_string (fun msg f_QuoteCancelQuoteEntries_SecurityID -> opt msg "350" parse_int (fun msg f_QuoteCancelQuoteEntries_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_QuoteCancelQuoteEntries_ContractMultiplier -> opt msg "348" parse_int (fun msg f_QuoteCancelQuoteEntries_EncodedIssuerLen -> opt msg "349" parse_string (fun msg f_QuoteCancelQuoteEntries_EncodedIssuer -> opt msg "206" parse_char (fun msg f_QuoteCancelQuoteEntries_OptAttribute -> opt msg "55" parse_string (fun msg f_QuoteCancelQuoteEntries_Symbol -> opt msg "22" parse_IDSource (fun msg f_QuoteCancelQuoteEntries_IDSource -> opt msg "202" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_QuoteCancelQuoteEntries_StrikePrice -> opt msg "200" parse_MonthYear (fun msg f_QuoteCancelQuoteEntries_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_QuoteCancelQuoteEntries_Issuer -> opt msg "223" parse_float (fun msg f_QuoteCancelQuoteEntries_CouponRate -> opt msg "65" parse_string (fun msg f_QuoteCancelQuoteEntries_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_QuoteCancelQuoteEntries_SecurityType -> opt msg "107" parse_string (fun msg f_QuoteCancelQuoteEntries_SecurityDesc -> (ParseSuccess {
+        f_QuoteCancelQuoteEntries_SecurityDesc = f_QuoteCancelQuoteEntries_SecurityDesc;
+        f_QuoteCancelQuoteEntries_SecurityType = f_QuoteCancelQuoteEntries_SecurityType;
+        f_QuoteCancelQuoteEntries_SymbolSfx = f_QuoteCancelQuoteEntries_SymbolSfx;
+        f_QuoteCancelQuoteEntries_CouponRate = f_QuoteCancelQuoteEntries_CouponRate;
+        f_QuoteCancelQuoteEntries_Issuer = f_QuoteCancelQuoteEntries_Issuer;
+        f_QuoteCancelQuoteEntries_MaturityMonthYear = f_QuoteCancelQuoteEntries_MaturityMonthYear;
+        f_QuoteCancelQuoteEntries_StrikePrice = f_QuoteCancelQuoteEntries_StrikePrice;
+        f_QuoteCancelQuoteEntries_IDSource = f_QuoteCancelQuoteEntries_IDSource;
+        f_QuoteCancelQuoteEntries_Symbol = f_QuoteCancelQuoteEntries_Symbol;
+        f_QuoteCancelQuoteEntries_OptAttribute = f_QuoteCancelQuoteEntries_OptAttribute;
+        f_QuoteCancelQuoteEntries_EncodedIssuer = f_QuoteCancelQuoteEntries_EncodedIssuer;
+        f_QuoteCancelQuoteEntries_EncodedIssuerLen = f_QuoteCancelQuoteEntries_EncodedIssuerLen;
+        f_QuoteCancelQuoteEntries_ContractMultiplier = f_QuoteCancelQuoteEntries_ContractMultiplier;
+        f_QuoteCancelQuoteEntries_EncodedSecurityDescLen = f_QuoteCancelQuoteEntries_EncodedSecurityDescLen;
+        f_QuoteCancelQuoteEntries_SecurityID = f_QuoteCancelQuoteEntries_SecurityID;
+        f_QuoteCancelQuoteEntries_PutOrCall = f_QuoteCancelQuoteEntries_PutOrCall;
+        f_QuoteCancelQuoteEntries_MaturityDay = f_QuoteCancelQuoteEntries_MaturityDay;
+        f_QuoteCancelQuoteEntries_SecurityExchange = f_QuoteCancelQuoteEntries_SecurityExchange;
+        f_QuoteCancelQuoteEntries_NoQuoteEntries = f_QuoteCancelQuoteEntries_NoQuoteEntries;
+        f_QuoteCancelQuoteEntries_EncodedSecurityDesc = f_QuoteCancelQuoteEntries_EncodedSecurityDesc;
+        f_QuoteCancelQuoteEntries_UnderlyingSymbol = f_QuoteCancelQuoteEntries_UnderlyingSymbol
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_TrdCapDtGrp (msg)  =
+    opt msg "580" parse_int (fun msg f_TrdCapDtGrp_NoDates -> opt msg "60" parse_UTCTimestamp (fun msg f_TrdCapDtGrp_TransactTime -> opt msg "75" parse_LocalMktDate (fun msg f_TrdCapDtGrp_TradeDate -> (ParseSuccess {
+        f_TrdCapDtGrp_TradeDate = f_TrdCapDtGrp_TradeDate;
+        f_TrdCapDtGrp_TransactTime = f_TrdCapDtGrp_TransactTime;
+        f_TrdCapDtGrp_NoDates = f_TrdCapDtGrp_NoDates
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_NewsRoutingIDs (msg)  =
+    opt msg "217" parse_string (fun msg f_NewsRoutingIDs_RoutingID -> opt msg "215" parse_int (fun msg f_NewsRoutingIDs_NoRoutingIDs -> opt msg "216" parse_RoutingType (fun msg f_NewsRoutingIDs_RoutingType -> (ParseSuccess {
+        f_NewsRoutingIDs_RoutingType = f_NewsRoutingIDs_RoutingType;
+        f_NewsRoutingIDs_NoRoutingIDs = f_NewsRoutingIDs_NoRoutingIDs;
+        f_NewsRoutingIDs_RoutingID = f_NewsRoutingIDs_RoutingID
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_BidResponseBidComponents (msg)  =
+    opt msg "63" parse_SettlmntTyp (fun msg f_BidResponseBidComponents_SettlmntTyp -> opt msg "423" parse_PriceType (fun msg f_BidResponseBidComponents_PriceType -> opt msg "421" parse_string (fun msg f_BidResponseBidComponents_Country -> opt msg "66" parse_string (fun msg f_BidResponseBidComponents_ListID -> opt msg "44" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_BidResponseBidComponents_Price -> opt msg "420" parse_int (fun msg f_BidResponseBidComponents_NoBidComponents -> opt msg "354" parse_int (fun msg f_BidResponseBidComponents_EncodedTextLen -> opt msg "54" parse_Side (fun msg f_BidResponseBidComponents_Side -> opt msg "430" parse_NetGrossInd (fun msg f_BidResponseBidComponents_NetGrossInd -> opt msg "13" parse_CommType (fun msg f_BidResponseBidComponents_CommType -> opt msg "58" parse_string (fun msg f_BidResponseBidComponents_Text -> opt msg "336" parse_string (fun msg f_BidResponseBidComponents_TradingSessionID -> opt msg "12" parse_float (fun msg f_BidResponseBidComponents_Commission -> opt msg "355" parse_string (fun msg f_BidResponseBidComponents_EncodedText -> opt msg "406" parse_float (fun msg f_BidResponseBidComponents_FairValue -> opt msg "64" parse_LocalMktDate (fun msg f_BidResponseBidComponents_FutSettDate -> (ParseSuccess {
+        f_BidResponseBidComponents_FutSettDate = f_BidResponseBidComponents_FutSettDate;
+        f_BidResponseBidComponents_FairValue = f_BidResponseBidComponents_FairValue;
+        f_BidResponseBidComponents_EncodedText = f_BidResponseBidComponents_EncodedText;
+        f_BidResponseBidComponents_Commission = f_BidResponseBidComponents_Commission;
+        f_BidResponseBidComponents_TradingSessionID = f_BidResponseBidComponents_TradingSessionID;
+        f_BidResponseBidComponents_Text = f_BidResponseBidComponents_Text;
+        f_BidResponseBidComponents_CommType = f_BidResponseBidComponents_CommType;
+        f_BidResponseBidComponents_NetGrossInd = f_BidResponseBidComponents_NetGrossInd;
+        f_BidResponseBidComponents_Side = f_BidResponseBidComponents_Side;
+        f_BidResponseBidComponents_EncodedTextLen = f_BidResponseBidComponents_EncodedTextLen;
+        f_BidResponseBidComponents_NoBidComponents = f_BidResponseBidComponents_NoBidComponents;
+        f_BidResponseBidComponents_Price = f_BidResponseBidComponents_Price;
+        f_BidResponseBidComponents_ListID = f_BidResponseBidComponents_ListID;
+        f_BidResponseBidComponents_Country = f_BidResponseBidComponents_Country;
+        f_BidResponseBidComponents_PriceType = f_BidResponseBidComponents_PriceType;
+        f_BidResponseBidComponents_SettlmntTyp = f_BidResponseBidComponents_SettlmntTyp
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_BidDescReqGrp (msg)  =
+    opt msg "405" parse_float (fun msg f_BidDescReqGrp_EFPTrackingError -> opt msg "403" parse_float (fun msg f_BidDescReqGrp_LiquidityPctHigh -> opt msg "404" parse_float (fun msg f_BidDescReqGrp_LiquidityValue -> opt msg "400" parse_string (fun msg f_BidDescReqGrp_BidDescriptor -> opt msg "407" parse_float (fun msg f_BidDescReqGrp_OutsideIndexPct -> opt msg "401" parse_SideValueInd (fun msg f_BidDescReqGrp_SideValueInd -> opt msg "399" parse_BidDescriptorType (fun msg f_BidDescReqGrp_BidDescriptorType -> opt msg "408" parse_float (fun msg f_BidDescReqGrp_ValueOfFutures -> opt msg "406" parse_float (fun msg f_BidDescReqGrp_FairValue -> opt msg "402" parse_float (fun msg f_BidDescReqGrp_LiquidityPctLow -> opt msg "398" parse_int (fun msg f_BidDescReqGrp_NoBidDescriptors -> opt msg "441" parse_int (fun msg f_BidDescReqGrp_LiquidityNumSecurities -> (ParseSuccess {
+        f_BidDescReqGrp_LiquidityNumSecurities = f_BidDescReqGrp_LiquidityNumSecurities;
+        f_BidDescReqGrp_NoBidDescriptors = f_BidDescReqGrp_NoBidDescriptors;
+        f_BidDescReqGrp_LiquidityPctLow = f_BidDescReqGrp_LiquidityPctLow;
+        f_BidDescReqGrp_FairValue = f_BidDescReqGrp_FairValue;
+        f_BidDescReqGrp_ValueOfFutures = f_BidDescReqGrp_ValueOfFutures;
+        f_BidDescReqGrp_BidDescriptorType = f_BidDescReqGrp_BidDescriptorType;
+        f_BidDescReqGrp_SideValueInd = f_BidDescReqGrp_SideValueInd;
+        f_BidDescReqGrp_OutsideIndexPct = f_BidDescReqGrp_OutsideIndexPct;
+        f_BidDescReqGrp_BidDescriptor = f_BidDescReqGrp_BidDescriptor;
+        f_BidDescReqGrp_LiquidityValue = f_BidDescReqGrp_LiquidityValue;
+        f_BidDescReqGrp_LiquidityPctHigh = f_BidDescReqGrp_LiquidityPctHigh;
+        f_BidDescReqGrp_EFPTrackingError = f_BidDescReqGrp_EFPTrackingError
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_EvntGrp (msg)  =
+    opt msg "867" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_EvntGrp_EventPx -> opt msg "866" parse_LocalMktDate (fun msg f_EvntGrp_EventDate -> opt msg "868" parse_string (fun msg f_EvntGrp_EventText -> opt msg "864" parse_int (fun msg f_EvntGrp_NoEvents -> opt msg "865" parse_EventType (fun msg f_EvntGrp_EventType -> (ParseSuccess {
+        f_EvntGrp_EventType = f_EvntGrp_EventType;
+        f_EvntGrp_NoEvents = f_EvntGrp_NoEvents;
+        f_EvntGrp_EventText = f_EvntGrp_EventText;
+        f_EvntGrp_EventDate = f_EvntGrp_EventDate;
+        f_EvntGrp_EventPx = f_EvntGrp_EventPx
+    },msg)
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_CollInqQualGrp (msg)  =
+    opt msg "896" parse_CollInquiryQualifier (fun msg f_CollInqQualGrp_CollInquiryQualifier -> opt msg "938" parse_int (fun msg f_CollInqQualGrp_NoCollInquiryQualifier -> (ParseSuccess {
+        f_CollInqQualGrp_NoCollInquiryQualifier = f_CollInqQualGrp_NoCollInquiryQualifier;
+        f_CollInqQualGrp_CollInquiryQualifier = f_CollInqQualGrp_CollInquiryQualifier
+    },msg)
+    )
+    )
+;;
+
+let parse_ClrInstGrp (msg)  =
+    opt msg "577" parse_ClearingInstruction (fun msg f_ClrInstGrp_ClearingInstruction -> opt msg "576" parse_int (fun msg f_ClrInstGrp_NoClearingInstructions -> (ParseSuccess {
+        f_ClrInstGrp_NoClearingInstructions = f_ClrInstGrp_NoClearingInstructions;
+        f_ClrInstGrp_ClearingInstruction = f_ClrInstGrp_ClearingInstruction
+    },msg)
+    )
+    )
+;;
+
+let parse_NewsLinesOfText (msg)  =
+    opt msg "58" parse_string (fun msg f_NewsLinesOfText_Text -> opt msg "355" parse_string (fun msg f_NewsLinesOfText_EncodedText -> opt msg "354" parse_int (fun msg f_NewsLinesOfText_EncodedTextLen -> opt msg "33" parse_int (fun msg f_NewsLinesOfText_LinesOfText -> (ParseSuccess {
+        f_NewsLinesOfText_LinesOfText = f_NewsLinesOfText_LinesOfText;
+        f_NewsLinesOfText_EncodedTextLen = f_NewsLinesOfText_EncodedTextLen;
+        f_NewsLinesOfText_EncodedText = f_NewsLinesOfText_EncodedText;
+        f_NewsLinesOfText_Text = f_NewsLinesOfText_Text
+    },msg)
+    )
+    )
+    )
+    )
+;;
+
+let parse_ExecutionReportContraBrokers (msg)  =
+    opt msg "438" parse_UTCTimestamp (fun msg f_ExecutionReportContraBrokers_ContraTradeTime -> opt msg "375" parse_string (fun msg f_ExecutionReportContraBrokers_ContraBroker -> opt msg "337" parse_string (fun msg f_ExecutionReportContraBrokers_ContraTrader -> opt msg "382" parse_int (fun msg f_ExecutionReportContraBrokers_NoContraBrokers -> opt msg "437" parse_float (fun msg f_ExecutionReportContraBrokers_ContraTradeQty -> (ParseSuccess {
+        f_ExecutionReportContraBrokers_ContraTradeQty = f_ExecutionReportContraBrokers_ContraTradeQty;
+        f_ExecutionReportContraBrokers_NoContraBrokers = f_ExecutionReportContraBrokers_NoContraBrokers;
+        f_ExecutionReportContraBrokers_ContraTrader = f_ExecutionReportContraBrokers_ContraTrader;
+        f_ExecutionReportContraBrokers_ContraBroker = f_ExecutionReportContraBrokers_ContraBroker;
+        f_ExecutionReportContraBrokers_ContraTradeTime = f_ExecutionReportContraBrokers_ContraTradeTime
+    },msg)
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_AllocationMiscFees (msg)  =
+    opt msg "136" parse_int (fun msg f_AllocationMiscFees_NoMiscFees -> opt msg "137" parse_float (fun msg f_AllocationMiscFees_MiscFeeAmt -> opt msg "139" parse_MiscFeeType (fun msg f_AllocationMiscFees_MiscFeeType -> opt msg "138" parse_Currency (fun msg f_AllocationMiscFees_MiscFeeCurr -> (ParseSuccess {
+        f_AllocationMiscFees_MiscFeeCurr = f_AllocationMiscFees_MiscFeeCurr;
+        f_AllocationMiscFees_MiscFeeType = f_AllocationMiscFees_MiscFeeType;
+        f_AllocationMiscFees_MiscFeeAmt = f_AllocationMiscFees_MiscFeeAmt;
+        f_AllocationMiscFees_NoMiscFees = f_AllocationMiscFees_NoMiscFees
+    },msg)
+    )
+    )
+    )
+    )
+;;
+
+let parse_ClearingEntries (msg)  =
+    opt msg "9938" parse_ClearingHandlingType (fun msg f_ClearingEntries_ClearingHandlingType -> opt msg "9933" parse_int (fun msg f_ClearingEntries_NoClearingEntries -> opt msg "109" parse_string (fun msg f_ClearingEntries_ClientID -> opt msg "47" parse_Rule80A (fun msg f_ClearingEntries_Rule80A -> opt msg "439" parse_string (fun msg f_ClearingEntries_ClearingFirm -> opt msg "77" parse_OpenClose (fun msg f_ClearingEntries_OpenClose -> opt msg "9952" parse_string (fun msg f_ClearingEntries_FreeText -> opt msg "1" parse_string (fun msg f_ClearingEntries_Account -> (ParseSuccess {
+        f_ClearingEntries_Account = f_ClearingEntries_Account;
+        f_ClearingEntries_FreeText = f_ClearingEntries_FreeText;
+        f_ClearingEntries_OpenClose = f_ClearingEntries_OpenClose;
+        f_ClearingEntries_ClearingFirm = f_ClearingEntries_ClearingFirm;
+        f_ClearingEntries_Rule80A = f_ClearingEntries_Rule80A;
+        f_ClearingEntries_ClientID = f_ClearingEntries_ClientID;
+        f_ClearingEntries_NoClearingEntries = f_ClearingEntries_NoClearingEntries;
+        f_ClearingEntries_ClearingHandlingType = f_ClearingEntries_ClearingHandlingType
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_NewsRelatedSym (msg)  =
+    opt msg "351" parse_string (fun msg f_NewsRelatedSym_EncodedSecurityDesc -> opt msg "207" parse_Exchange (fun msg f_NewsRelatedSym_SecurityExchange -> opt msg "205" parse_int (fun msg f_NewsRelatedSym_MaturityDay -> opt msg "201" parse_PutOrCall (fun msg f_NewsRelatedSym_PutOrCall -> opt msg "48" parse_string (fun msg f_NewsRelatedSym_SecurityID -> opt msg "350" parse_int (fun msg f_NewsRelatedSym_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_NewsRelatedSym_ContractMultiplier -> opt msg "46" parse_string (fun msg f_NewsRelatedSym_RelatdSym -> opt msg "348" parse_int (fun msg f_NewsRelatedSym_EncodedIssuerLen -> opt msg "349" parse_string (fun msg f_NewsRelatedSym_EncodedIssuer -> opt msg "206" parse_char (fun msg f_NewsRelatedSym_OptAttribute -> opt msg "22" parse_IDSource (fun msg f_NewsRelatedSym_IDSource -> opt msg "146" parse_int (fun msg f_NewsRelatedSym_NoRelatedSym -> opt msg "202" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_NewsRelatedSym_StrikePrice -> opt msg "200" parse_MonthYear (fun msg f_NewsRelatedSym_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_NewsRelatedSym_Issuer -> opt msg "223" parse_float (fun msg f_NewsRelatedSym_CouponRate -> opt msg "65" parse_string (fun msg f_NewsRelatedSym_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_NewsRelatedSym_SecurityType -> opt msg "107" parse_string (fun msg f_NewsRelatedSym_SecurityDesc -> (ParseSuccess {
+        f_NewsRelatedSym_SecurityDesc = f_NewsRelatedSym_SecurityDesc;
+        f_NewsRelatedSym_SecurityType = f_NewsRelatedSym_SecurityType;
+        f_NewsRelatedSym_SymbolSfx = f_NewsRelatedSym_SymbolSfx;
+        f_NewsRelatedSym_CouponRate = f_NewsRelatedSym_CouponRate;
+        f_NewsRelatedSym_Issuer = f_NewsRelatedSym_Issuer;
+        f_NewsRelatedSym_MaturityMonthYear = f_NewsRelatedSym_MaturityMonthYear;
+        f_NewsRelatedSym_StrikePrice = f_NewsRelatedSym_StrikePrice;
+        f_NewsRelatedSym_NoRelatedSym = f_NewsRelatedSym_NoRelatedSym;
+        f_NewsRelatedSym_IDSource = f_NewsRelatedSym_IDSource;
+        f_NewsRelatedSym_OptAttribute = f_NewsRelatedSym_OptAttribute;
+        f_NewsRelatedSym_EncodedIssuer = f_NewsRelatedSym_EncodedIssuer;
+        f_NewsRelatedSym_EncodedIssuerLen = f_NewsRelatedSym_EncodedIssuerLen;
+        f_NewsRelatedSym_RelatdSym = f_NewsRelatedSym_RelatdSym;
+        f_NewsRelatedSym_ContractMultiplier = f_NewsRelatedSym_ContractMultiplier;
+        f_NewsRelatedSym_EncodedSecurityDescLen = f_NewsRelatedSym_EncodedSecurityDescLen;
+        f_NewsRelatedSym_SecurityID = f_NewsRelatedSym_SecurityID;
+        f_NewsRelatedSym_PutOrCall = f_NewsRelatedSym_PutOrCall;
+        f_NewsRelatedSym_MaturityDay = f_NewsRelatedSym_MaturityDay;
+        f_NewsRelatedSym_SecurityExchange = f_NewsRelatedSym_SecurityExchange;
+        f_NewsRelatedSym_EncodedSecurityDesc = f_NewsRelatedSym_EncodedSecurityDesc
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_YieldData (msg)  =
+    opt msg "236" parse_float (fun msg f_YieldData_Yield -> opt msg "697" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_YieldData_YieldRedemptionPrice -> opt msg "701" parse_LocalMktDate (fun msg f_YieldData_YieldCalcDate -> opt msg "698" parse_int (fun msg f_YieldData_YieldRedemptionPriceType -> opt msg "235" parse_YieldType (fun msg f_YieldData_YieldType -> opt msg "696" parse_LocalMktDate (fun msg f_YieldData_YieldRedemptionDate -> (ParseSuccess {
+        f_YieldData_YieldRedemptionDate = f_YieldData_YieldRedemptionDate;
+        f_YieldData_YieldType = f_YieldData_YieldType;
+        f_YieldData_YieldRedemptionPriceType = f_YieldData_YieldRedemptionPriceType;
+        f_YieldData_YieldCalcDate = f_YieldData_YieldCalcDate;
+        f_YieldData_YieldRedemptionPrice = f_YieldData_YieldRedemptionPrice;
+        f_YieldData_Yield = f_YieldData_Yield
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_OrderSingleAllocs (msg)  =
+    opt msg "79" parse_string (fun msg f_OrderSingleAllocs_AllocAccount -> opt msg "80" parse_float (fun msg f_OrderSingleAllocs_AllocShares -> opt msg "78" parse_int (fun msg f_OrderSingleAllocs_NoAllocs -> (ParseSuccess {
+        f_OrderSingleAllocs_NoAllocs = f_OrderSingleAllocs_NoAllocs;
+        f_OrderSingleAllocs_AllocShares = f_OrderSingleAllocs_AllocShares;
+        f_OrderSingleAllocs_AllocAccount = f_OrderSingleAllocs_AllocAccount
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_EmailRoutingIDs (msg)  =
+    opt msg "217" parse_string (fun msg f_EmailRoutingIDs_RoutingID -> opt msg "215" parse_int (fun msg f_EmailRoutingIDs_NoRoutingIDs -> opt msg "216" parse_RoutingType (fun msg f_EmailRoutingIDs_RoutingType -> (ParseSuccess {
+        f_EmailRoutingIDs_RoutingType = f_EmailRoutingIDs_RoutingType;
+        f_EmailRoutingIDs_NoRoutingIDs = f_EmailRoutingIDs_NoRoutingIDs;
+        f_EmailRoutingIDs_RoutingID = f_EmailRoutingIDs_RoutingID
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_QuoteAcknowledgementQuoteEntries (msg)  =
+    opt msg "351" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDesc -> opt msg "295" parse_int (fun msg f_QuoteAcknowledgementQuoteEntries_NoQuoteEntries -> opt msg "207" parse_Exchange (fun msg f_QuoteAcknowledgementQuoteEntries_SecurityExchange -> opt msg "205" parse_int (fun msg f_QuoteAcknowledgementQuoteEntries_MaturityDay -> opt msg "201" parse_PutOrCall (fun msg f_QuoteAcknowledgementQuoteEntries_PutOrCall -> opt msg "48" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_SecurityID -> opt msg "350" parse_int (fun msg f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_QuoteAcknowledgementQuoteEntries_ContractMultiplier -> opt msg "299" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_QuoteEntryID -> opt msg "348" parse_int (fun msg f_QuoteAcknowledgementQuoteEntries_EncodedIssuerLen -> opt msg "368" parse_QuoteEntryRejectReason (fun msg f_QuoteAcknowledgementQuoteEntries_QuoteEntryRejectReason -> opt msg "349" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_EncodedIssuer -> opt msg "206" parse_char (fun msg f_QuoteAcknowledgementQuoteEntries_OptAttribute -> opt msg "55" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_Symbol -> opt msg "22" parse_IDSource (fun msg f_QuoteAcknowledgementQuoteEntries_IDSource -> opt msg "202" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_QuoteAcknowledgementQuoteEntries_StrikePrice -> opt msg "200" parse_MonthYear (fun msg f_QuoteAcknowledgementQuoteEntries_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_Issuer -> opt msg "223" parse_float (fun msg f_QuoteAcknowledgementQuoteEntries_CouponRate -> opt msg "65" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_QuoteAcknowledgementQuoteEntries_SecurityType -> opt msg "107" parse_string (fun msg f_QuoteAcknowledgementQuoteEntries_SecurityDesc -> (ParseSuccess {
+        f_QuoteAcknowledgementQuoteEntries_SecurityDesc = f_QuoteAcknowledgementQuoteEntries_SecurityDesc;
+        f_QuoteAcknowledgementQuoteEntries_SecurityType = f_QuoteAcknowledgementQuoteEntries_SecurityType;
+        f_QuoteAcknowledgementQuoteEntries_SymbolSfx = f_QuoteAcknowledgementQuoteEntries_SymbolSfx;
+        f_QuoteAcknowledgementQuoteEntries_CouponRate = f_QuoteAcknowledgementQuoteEntries_CouponRate;
+        f_QuoteAcknowledgementQuoteEntries_Issuer = f_QuoteAcknowledgementQuoteEntries_Issuer;
+        f_QuoteAcknowledgementQuoteEntries_MaturityMonthYear = f_QuoteAcknowledgementQuoteEntries_MaturityMonthYear;
+        f_QuoteAcknowledgementQuoteEntries_StrikePrice = f_QuoteAcknowledgementQuoteEntries_StrikePrice;
+        f_QuoteAcknowledgementQuoteEntries_IDSource = f_QuoteAcknowledgementQuoteEntries_IDSource;
+        f_QuoteAcknowledgementQuoteEntries_Symbol = f_QuoteAcknowledgementQuoteEntries_Symbol;
+        f_QuoteAcknowledgementQuoteEntries_OptAttribute = f_QuoteAcknowledgementQuoteEntries_OptAttribute;
+        f_QuoteAcknowledgementQuoteEntries_EncodedIssuer = f_QuoteAcknowledgementQuoteEntries_EncodedIssuer;
+        f_QuoteAcknowledgementQuoteEntries_QuoteEntryRejectReason = f_QuoteAcknowledgementQuoteEntries_QuoteEntryRejectReason;
+        f_QuoteAcknowledgementQuoteEntries_EncodedIssuerLen = f_QuoteAcknowledgementQuoteEntries_EncodedIssuerLen;
+        f_QuoteAcknowledgementQuoteEntries_QuoteEntryID = f_QuoteAcknowledgementQuoteEntries_QuoteEntryID;
+        f_QuoteAcknowledgementQuoteEntries_ContractMultiplier = f_QuoteAcknowledgementQuoteEntries_ContractMultiplier;
+        f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDescLen = f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDescLen;
+        f_QuoteAcknowledgementQuoteEntries_SecurityID = f_QuoteAcknowledgementQuoteEntries_SecurityID;
+        f_QuoteAcknowledgementQuoteEntries_PutOrCall = f_QuoteAcknowledgementQuoteEntries_PutOrCall;
+        f_QuoteAcknowledgementQuoteEntries_MaturityDay = f_QuoteAcknowledgementQuoteEntries_MaturityDay;
+        f_QuoteAcknowledgementQuoteEntries_SecurityExchange = f_QuoteAcknowledgementQuoteEntries_SecurityExchange;
+        f_QuoteAcknowledgementQuoteEntries_NoQuoteEntries = f_QuoteAcknowledgementQuoteEntries_NoQuoteEntries;
+        f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDesc = f_QuoteAcknowledgementQuoteEntries_EncodedSecurityDesc
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_DiscretionInstructions (msg)  =
+    opt msg "843" parse_DiscretionLimitType (fun msg f_DiscretionInstructions_DiscretionLimitType -> opt msg "388" parse_DiscretionInst (fun msg f_DiscretionInstructions_DiscretionInst -> opt msg "844" parse_DiscretionRoundDirection (fun msg f_DiscretionInstructions_DiscretionRoundDirection -> opt msg "841" parse_DiscretionMoveType (fun msg f_DiscretionInstructions_DiscretionMoveType -> opt msg "842" parse_DiscretionOffsetType (fun msg f_DiscretionInstructions_DiscretionOffsetType -> opt msg "389" parse_float (fun msg f_DiscretionInstructions_DiscretionOffsetValue -> opt msg "846" parse_DiscretionScope (fun msg f_DiscretionInstructions_DiscretionScope -> (ParseSuccess {
+        f_DiscretionInstructions_DiscretionScope = f_DiscretionInstructions_DiscretionScope;
+        f_DiscretionInstructions_DiscretionOffsetValue = f_DiscretionInstructions_DiscretionOffsetValue;
+        f_DiscretionInstructions_DiscretionOffsetType = f_DiscretionInstructions_DiscretionOffsetType;
+        f_DiscretionInstructions_DiscretionMoveType = f_DiscretionInstructions_DiscretionMoveType;
+        f_DiscretionInstructions_DiscretionRoundDirection = f_DiscretionInstructions_DiscretionRoundDirection;
+        f_DiscretionInstructions_DiscretionInst = f_DiscretionInstructions_DiscretionInst;
+        f_DiscretionInstructions_DiscretionLimitType = f_DiscretionInstructions_DiscretionLimitType
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_LegStipulations (msg)  =
+    opt msg "689" parse_string (fun msg f_LegStipulations_LegStipulationValue -> opt msg "688" parse_string (fun msg f_LegStipulations_LegStipulationType -> opt msg "683" parse_int (fun msg f_LegStipulations_NoLegStipulations -> (ParseSuccess {
+        f_LegStipulations_NoLegStipulations = f_LegStipulations_NoLegStipulations;
+        f_LegStipulations_LegStipulationType = f_LegStipulations_LegStipulationType;
+        f_LegStipulations_LegStipulationValue = f_LegStipulations_LegStipulationValue
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_QuoteAcknowledgementQuoteSets (msg)  =
+    opt msg "311" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSymbol -> opt msg "316" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingStrikePrice -> opt msg "306" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingIssuer -> opt msg "365" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDesc -> opt msg "307" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityDesc -> opt msg "362" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuerLen -> opt msg "296" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_NoQuoteSets -> opt msg "312" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSymbolSfx -> opt msg "364" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDescLen -> opt msg "436" parse_float (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingContractMultiplier -> opt msg "302" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_QuoteSetID -> opt msg "309" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityID -> opt msg "308" parse_Exchange (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityExchange -> opt msg "315" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingPutOrCall -> opt msg "310" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityType -> opt msg "435" parse_float (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingCouponRate -> opt msg "313" parse_MonthYear (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityMonthYear -> opt msg "363" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuer -> opt msg "314" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityDay -> opt msg "304" parse_int (fun msg f_QuoteAcknowledgementQuoteSets_TotQuoteEntries -> opt msg "317" parse_char (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingOptAttribute -> opt msg "305" parse_string (fun msg f_QuoteAcknowledgementQuoteSets_UnderlyingIDSource -> (ParseSuccess {
+        f_QuoteAcknowledgementQuoteSets_UnderlyingIDSource = f_QuoteAcknowledgementQuoteSets_UnderlyingIDSource;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingOptAttribute = f_QuoteAcknowledgementQuoteSets_UnderlyingOptAttribute;
+        f_QuoteAcknowledgementQuoteSets_TotQuoteEntries = f_QuoteAcknowledgementQuoteSets_TotQuoteEntries;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityDay = f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityDay;
+        f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuer = f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuer;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityMonthYear = f_QuoteAcknowledgementQuoteSets_UnderlyingMaturityMonthYear;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingCouponRate = f_QuoteAcknowledgementQuoteSets_UnderlyingCouponRate;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityType = f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityType;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingPutOrCall = f_QuoteAcknowledgementQuoteSets_UnderlyingPutOrCall;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityExchange = f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityExchange;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityID = f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityID;
+        f_QuoteAcknowledgementQuoteSets_QuoteSetID = f_QuoteAcknowledgementQuoteSets_QuoteSetID;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingContractMultiplier = f_QuoteAcknowledgementQuoteSets_UnderlyingContractMultiplier;
+        f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDescLen = f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDescLen;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingSymbolSfx = f_QuoteAcknowledgementQuoteSets_UnderlyingSymbolSfx;
+        f_QuoteAcknowledgementQuoteSets_NoQuoteSets = f_QuoteAcknowledgementQuoteSets_NoQuoteSets;
+        f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuerLen = f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingIssuerLen;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityDesc = f_QuoteAcknowledgementQuoteSets_UnderlyingSecurityDesc;
+        f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDesc = f_QuoteAcknowledgementQuoteSets_EncodedUnderlyingSecurityDesc;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingIssuer = f_QuoteAcknowledgementQuoteSets_UnderlyingIssuer;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingStrikePrice = f_QuoteAcknowledgementQuoteSets_UnderlyingStrikePrice;
+        f_QuoteAcknowledgementQuoteSets_UnderlyingSymbol = f_QuoteAcknowledgementQuoteSets_UnderlyingSymbol
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_ExecsGrp (msg)  =
+    opt msg "124" parse_int (fun msg f_ExecsGrp_NoExecs -> opt msg "17" parse_string (fun msg f_ExecsGrp_ExecID -> (ParseSuccess {
+        f_ExecsGrp_ExecID = f_ExecsGrp_ExecID;
+        f_ExecsGrp_NoExecs = f_ExecsGrp_NoExecs
+    },msg)
+    )
+    )
+;;
+
+let parse_NstdPtys2SubGrp (msg)  =
+    opt msg "806" parse_int (fun msg f_NstdPtys2SubGrp_NoNested2PartySubIDs -> opt msg "807" parse_int (fun msg f_NstdPtys2SubGrp_Nested2PartySubIDType -> opt msg "760" parse_string (fun msg f_NstdPtys2SubGrp_Nested2PartySubID -> (ParseSuccess {
+        f_NstdPtys2SubGrp_Nested2PartySubID = f_NstdPtys2SubGrp_Nested2PartySubID;
+        f_NstdPtys2SubGrp_Nested2PartySubIDType = f_NstdPtys2SubGrp_Nested2PartySubIDType;
+        f_NstdPtys2SubGrp_NoNested2PartySubIDs = f_NstdPtys2SubGrp_NoNested2PartySubIDs
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_TrdgSesGrp (msg)  =
+    opt msg "336" parse_string (fun msg f_TrdgSesGrp_TradingSessionID -> opt msg "625" parse_string (fun msg f_TrdgSesGrp_TradingSessionSubID -> opt msg "386" parse_int (fun msg f_TrdgSesGrp_NoTradingSessions -> (ParseSuccess {
+        f_TrdgSesGrp_NoTradingSessions = f_TrdgSesGrp_NoTradingSessions;
+        f_TrdgSesGrp_TradingSessionSubID = f_TrdgSesGrp_TradingSessionSubID;
+        f_TrdgSesGrp_TradingSessionID = f_TrdgSesGrp_TradingSessionID
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_LegBenchmarkCurveData (msg)  =
+    opt msg "679" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_LegBenchmarkCurveData_LegBenchmarkPrice -> opt msg "677" parse_string (fun msg f_LegBenchmarkCurveData_LegBenchmarkCurveName -> opt msg "678" parse_string (fun msg f_LegBenchmarkCurveData_LegBenchmarkCurvePoint -> opt msg "676" parse_Currency (fun msg f_LegBenchmarkCurveData_LegBenchmarkCurveCurrency -> opt msg "680" parse_int (fun msg f_LegBenchmarkCurveData_LegBenchmarkPriceType -> (ParseSuccess {
+        f_LegBenchmarkCurveData_LegBenchmarkPriceType = f_LegBenchmarkCurveData_LegBenchmarkPriceType;
+        f_LegBenchmarkCurveData_LegBenchmarkCurveCurrency = f_LegBenchmarkCurveData_LegBenchmarkCurveCurrency;
+        f_LegBenchmarkCurveData_LegBenchmarkCurvePoint = f_LegBenchmarkCurveData_LegBenchmarkCurvePoint;
+        f_LegBenchmarkCurveData_LegBenchmarkCurveName = f_LegBenchmarkCurveData_LegBenchmarkCurveName;
+        f_LegBenchmarkCurveData_LegBenchmarkPrice = f_LegBenchmarkCurveData_LegBenchmarkPrice
+    },msg)
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_BidRequestBidComponents (msg)  =
+    opt msg "430" parse_NetGrossInd (fun msg f_BidRequestBidComponents_NetGrossInd -> opt msg "63" parse_SettlmntTyp (fun msg f_BidRequestBidComponents_SettlmntTyp -> opt msg "336" parse_string (fun msg f_BidRequestBidComponents_TradingSessionID -> opt msg "66" parse_string (fun msg f_BidRequestBidComponents_ListID -> opt msg "420" parse_int (fun msg f_BidRequestBidComponents_NoBidComponents -> opt msg "64" parse_LocalMktDate (fun msg f_BidRequestBidComponents_FutSettDate -> opt msg "54" parse_Side (fun msg f_BidRequestBidComponents_Side -> opt msg "1" parse_string (fun msg f_BidRequestBidComponents_Account -> (ParseSuccess {
+        f_BidRequestBidComponents_Account = f_BidRequestBidComponents_Account;
+        f_BidRequestBidComponents_Side = f_BidRequestBidComponents_Side;
+        f_BidRequestBidComponents_FutSettDate = f_BidRequestBidComponents_FutSettDate;
+        f_BidRequestBidComponents_NoBidComponents = f_BidRequestBidComponents_NoBidComponents;
+        f_BidRequestBidComponents_ListID = f_BidRequestBidComponents_ListID;
+        f_BidRequestBidComponents_TradingSessionID = f_BidRequestBidComponents_TradingSessionID;
+        f_BidRequestBidComponents_SettlmntTyp = f_BidRequestBidComponents_SettlmntTyp;
+        f_BidRequestBidComponents_NetGrossInd = f_BidRequestBidComponents_NetGrossInd
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_MiscFeesGrp (msg)  =
+    opt msg "136" parse_int (fun msg f_MiscFeesGrp_NoMiscFees -> opt msg "137" parse_float (fun msg f_MiscFeesGrp_MiscFeeAmt -> opt msg "139" parse_MiscFeeType (fun msg f_MiscFeesGrp_MiscFeeType -> opt msg "138" parse_Currency (fun msg f_MiscFeesGrp_MiscFeeCurr -> opt msg "891" parse_MiscFeeBasis (fun msg f_MiscFeesGrp_MiscFeeBasis -> (ParseSuccess {
+        f_MiscFeesGrp_MiscFeeBasis = f_MiscFeesGrp_MiscFeeBasis;
+        f_MiscFeesGrp_MiscFeeCurr = f_MiscFeesGrp_MiscFeeCurr;
+        f_MiscFeesGrp_MiscFeeType = f_MiscFeesGrp_MiscFeeType;
+        f_MiscFeesGrp_MiscFeeAmt = f_MiscFeesGrp_MiscFeeAmt;
+        f_MiscFeesGrp_NoMiscFees = f_MiscFeesGrp_NoMiscFees
+    },msg)
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_OrdListStatGrp (msg)  =
+    opt msg "151" parse_float (fun msg f_OrdListStatGrp_LeavesQty -> opt msg "84" parse_float (fun msg f_OrdListStatGrp_CxlQty -> opt msg "73" parse_int (fun msg f_OrdListStatGrp_NoOrders -> opt msg "39" parse_OrdStatus (fun msg f_OrdListStatGrp_OrdStatus -> opt msg "354" parse_int (fun msg f_OrdListStatGrp_EncodedTextLen -> opt msg "6" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_OrdListStatGrp_AvgPx -> opt msg "636" parse_WorkingIndicator (fun msg f_OrdListStatGrp_WorkingIndicator -> opt msg "526" parse_string (fun msg f_OrdListStatGrp_SecondaryClOrdID -> opt msg "58" parse_string (fun msg f_OrdListStatGrp_Text -> opt msg "11" parse_string (fun msg f_OrdListStatGrp_ClOrdID -> opt msg "355" parse_string (fun msg f_OrdListStatGrp_EncodedText -> opt msg "103" parse_OrdRejReason (fun msg f_OrdListStatGrp_OrdRejReason -> opt msg "14" parse_float (fun msg f_OrdListStatGrp_CumQty -> (ParseSuccess {
+        f_OrdListStatGrp_CumQty = f_OrdListStatGrp_CumQty;
+        f_OrdListStatGrp_OrdRejReason = f_OrdListStatGrp_OrdRejReason;
+        f_OrdListStatGrp_EncodedText = f_OrdListStatGrp_EncodedText;
+        f_OrdListStatGrp_ClOrdID = f_OrdListStatGrp_ClOrdID;
+        f_OrdListStatGrp_Text = f_OrdListStatGrp_Text;
+        f_OrdListStatGrp_SecondaryClOrdID = f_OrdListStatGrp_SecondaryClOrdID;
+        f_OrdListStatGrp_WorkingIndicator = f_OrdListStatGrp_WorkingIndicator;
+        f_OrdListStatGrp_AvgPx = f_OrdListStatGrp_AvgPx;
+        f_OrdListStatGrp_EncodedTextLen = f_OrdListStatGrp_EncodedTextLen;
+        f_OrdListStatGrp_OrdStatus = f_OrdListStatGrp_OrdStatus;
+        f_OrdListStatGrp_NoOrders = f_OrdListStatGrp_NoOrders;
+        f_OrdListStatGrp_CxlQty = f_OrdListStatGrp_CxlQty;
+        f_OrdListStatGrp_LeavesQty = f_OrdListStatGrp_LeavesQty
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_BidRequestBidDescriptors (msg)  =
+    opt msg "405" parse_float (fun msg f_BidRequestBidDescriptors_EFPTrackingError -> opt msg "403" parse_float (fun msg f_BidRequestBidDescriptors_LiquidityPctHigh -> opt msg "404" parse_float (fun msg f_BidRequestBidDescriptors_LiquidityValue -> opt msg "400" parse_string (fun msg f_BidRequestBidDescriptors_BidDescriptor -> opt msg "407" parse_float (fun msg f_BidRequestBidDescriptors_OutsideIndexPct -> opt msg "401" parse_int (fun msg f_BidRequestBidDescriptors_SideValueInd -> opt msg "399" parse_int (fun msg f_BidRequestBidDescriptors_BidDescriptorType -> opt msg "408" parse_float (fun msg f_BidRequestBidDescriptors_ValueOfFutures -> opt msg "406" parse_float (fun msg f_BidRequestBidDescriptors_FairValue -> opt msg "402" parse_float (fun msg f_BidRequestBidDescriptors_LiquidityPctLow -> opt msg "398" parse_int (fun msg f_BidRequestBidDescriptors_NoBidDescriptors -> opt msg "441" parse_int (fun msg f_BidRequestBidDescriptors_LiquidityNumSecurities -> (ParseSuccess {
+        f_BidRequestBidDescriptors_LiquidityNumSecurities = f_BidRequestBidDescriptors_LiquidityNumSecurities;
+        f_BidRequestBidDescriptors_NoBidDescriptors = f_BidRequestBidDescriptors_NoBidDescriptors;
+        f_BidRequestBidDescriptors_LiquidityPctLow = f_BidRequestBidDescriptors_LiquidityPctLow;
+        f_BidRequestBidDescriptors_FairValue = f_BidRequestBidDescriptors_FairValue;
+        f_BidRequestBidDescriptors_ValueOfFutures = f_BidRequestBidDescriptors_ValueOfFutures;
+        f_BidRequestBidDescriptors_BidDescriptorType = f_BidRequestBidDescriptors_BidDescriptorType;
+        f_BidRequestBidDescriptors_SideValueInd = f_BidRequestBidDescriptors_SideValueInd;
+        f_BidRequestBidDescriptors_OutsideIndexPct = f_BidRequestBidDescriptors_OutsideIndexPct;
+        f_BidRequestBidDescriptors_BidDescriptor = f_BidRequestBidDescriptors_BidDescriptor;
+        f_BidRequestBidDescriptors_LiquidityValue = f_BidRequestBidDescriptors_LiquidityValue;
+        f_BidRequestBidDescriptors_LiquidityPctHigh = f_BidRequestBidDescriptors_LiquidityPctHigh;
+        f_BidRequestBidDescriptors_EFPTrackingError = f_BidRequestBidDescriptors_EFPTrackingError
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_CommissionData (msg)  =
+    opt msg "13" parse_CommType (fun msg f_CommissionData_CommType -> opt msg "479" parse_Currency (fun msg f_CommissionData_CommCurrency -> opt msg "12" parse_float (fun msg f_CommissionData_Commission -> opt msg "497" parse_FundRenewWaiv (fun msg f_CommissionData_FundRenewWaiv -> (ParseSuccess {
+        f_CommissionData_FundRenewWaiv = f_CommissionData_FundRenewWaiv;
+        f_CommissionData_Commission = f_CommissionData_Commission;
+        f_CommissionData_CommCurrency = f_CommissionData_CommCurrency;
+        f_CommissionData_CommType = f_CommissionData_CommType
+    },msg)
+    )
+    )
+    )
+    )
+;;
+
+let parse_NstdPtys3SubGrp (msg)  =
+    opt msg "952" parse_int (fun msg f_NstdPtys3SubGrp_NoNested3PartySubIDs -> opt msg "954" parse_int (fun msg f_NstdPtys3SubGrp_Nested3PartySubIDType -> opt msg "953" parse_string (fun msg f_NstdPtys3SubGrp_Nested3PartySubID -> (ParseSuccess {
+        f_NstdPtys3SubGrp_Nested3PartySubID = f_NstdPtys3SubGrp_Nested3PartySubID;
+        f_NstdPtys3SubGrp_Nested3PartySubIDType = f_NstdPtys3SubGrp_Nested3PartySubIDType;
+        f_NstdPtys3SubGrp_NoNested3PartySubIDs = f_NstdPtys3SubGrp_NoNested3PartySubIDs
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_PtysSubGrp (msg)  =
+    opt msg "802" parse_int (fun msg f_PtysSubGrp_NoPartySubIDs -> opt msg "523" parse_string (fun msg f_PtysSubGrp_PartySubID -> opt msg "803" parse_PartySubIDType (fun msg f_PtysSubGrp_PartySubIDType -> (ParseSuccess {
+        f_PtysSubGrp_PartySubIDType = f_PtysSubGrp_PartySubIDType;
+        f_PtysSubGrp_PartySubID = f_PtysSubGrp_PartySubID;
+        f_PtysSubGrp_NoPartySubIDs = f_PtysSubGrp_NoPartySubIDs
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_MarketDataSnapshotFullRefreshMDEntries (msg)  =
+    opt msg "269" parse_MDEntryType (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryType -> opt msg "284" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_DeskID -> opt msg "18" parse_ExecInst (fun msg f_MarketDataSnapshotFullRefreshMDEntries_ExecInst -> opt msg "299" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_QuoteEntryID -> opt msg "283" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_LocationID -> opt msg "59" parse_TimeInForce (fun msg f_MarketDataSnapshotFullRefreshMDEntries_TimeInForce -> opt msg "15" parse_Currency (fun msg f_MarketDataSnapshotFullRefreshMDEntries_Currency -> opt msg "282" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryOriginator -> opt msg "276" parse_QuoteCondition (fun msg f_MarketDataSnapshotFullRefreshMDEntries_QuoteCondition -> opt msg "288" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryBuyer -> opt msg "354" parse_int (fun msg f_MarketDataSnapshotFullRefreshMDEntries_EncodedTextLen -> opt msg "274" parse_TickDirection (fun msg f_MarketDataSnapshotFullRefreshMDEntries_TickDirection -> opt msg "271" parse_float (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySize -> opt msg "37" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_OrderID -> opt msg "336" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_TradingSessionID -> opt msg "272" parse_UTCDateOnly (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryDate -> opt msg "355" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_EncodedText -> opt msg "432" parse_LocalMktDate (fun msg f_MarketDataSnapshotFullRefreshMDEntries_ExpireDate -> opt msg "110" parse_float (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MinQty -> opt msg "270" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPx -> opt msg "126" parse_UTCTimestamp (fun msg f_MarketDataSnapshotFullRefreshMDEntries_ExpireTime -> opt msg "287" parse_int (fun msg f_MarketDataSnapshotFullRefreshMDEntries_SellerDays -> opt msg "290" parse_int (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPositionNo -> opt msg "289" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySeller -> opt msg "346" parse_int (fun msg f_MarketDataSnapshotFullRefreshMDEntries_NumberOfOrders -> opt msg "286" parse_OpenCloseSettleFlag (fun msg f_MarketDataSnapshotFullRefreshMDEntries_OpenCloseSettleFlag -> opt msg "268" parse_int (fun msg f_MarketDataSnapshotFullRefreshMDEntries_NoMDEntries -> opt msg "277" parse_TradeCondition (fun msg f_MarketDataSnapshotFullRefreshMDEntries_TradeCondition -> opt msg "273" parse_UTCTimeOnly (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDEntryTime -> opt msg "58" parse_string (fun msg f_MarketDataSnapshotFullRefreshMDEntries_Text -> opt msg "275" parse_Exchange (fun msg f_MarketDataSnapshotFullRefreshMDEntries_MDMkt -> (ParseSuccess {
+        f_MarketDataSnapshotFullRefreshMDEntries_MDMkt = f_MarketDataSnapshotFullRefreshMDEntries_MDMkt;
+        f_MarketDataSnapshotFullRefreshMDEntries_Text = f_MarketDataSnapshotFullRefreshMDEntries_Text;
+        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryTime = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryTime;
+        f_MarketDataSnapshotFullRefreshMDEntries_TradeCondition = f_MarketDataSnapshotFullRefreshMDEntries_TradeCondition;
+        f_MarketDataSnapshotFullRefreshMDEntries_NoMDEntries = f_MarketDataSnapshotFullRefreshMDEntries_NoMDEntries;
+        f_MarketDataSnapshotFullRefreshMDEntries_OpenCloseSettleFlag = f_MarketDataSnapshotFullRefreshMDEntries_OpenCloseSettleFlag;
+        f_MarketDataSnapshotFullRefreshMDEntries_NumberOfOrders = f_MarketDataSnapshotFullRefreshMDEntries_NumberOfOrders;
+        f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySeller = f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySeller;
+        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPositionNo = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPositionNo;
+        f_MarketDataSnapshotFullRefreshMDEntries_SellerDays = f_MarketDataSnapshotFullRefreshMDEntries_SellerDays;
+        f_MarketDataSnapshotFullRefreshMDEntries_ExpireTime = f_MarketDataSnapshotFullRefreshMDEntries_ExpireTime;
+        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPx = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryPx;
+        f_MarketDataSnapshotFullRefreshMDEntries_MinQty = f_MarketDataSnapshotFullRefreshMDEntries_MinQty;
+        f_MarketDataSnapshotFullRefreshMDEntries_ExpireDate = f_MarketDataSnapshotFullRefreshMDEntries_ExpireDate;
+        f_MarketDataSnapshotFullRefreshMDEntries_EncodedText = f_MarketDataSnapshotFullRefreshMDEntries_EncodedText;
+        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryDate = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryDate;
+        f_MarketDataSnapshotFullRefreshMDEntries_TradingSessionID = f_MarketDataSnapshotFullRefreshMDEntries_TradingSessionID;
+        f_MarketDataSnapshotFullRefreshMDEntries_OrderID = f_MarketDataSnapshotFullRefreshMDEntries_OrderID;
+        f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySize = f_MarketDataSnapshotFullRefreshMDEntries_MDEntrySize;
+        f_MarketDataSnapshotFullRefreshMDEntries_TickDirection = f_MarketDataSnapshotFullRefreshMDEntries_TickDirection;
+        f_MarketDataSnapshotFullRefreshMDEntries_EncodedTextLen = f_MarketDataSnapshotFullRefreshMDEntries_EncodedTextLen;
+        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryBuyer = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryBuyer;
+        f_MarketDataSnapshotFullRefreshMDEntries_QuoteCondition = f_MarketDataSnapshotFullRefreshMDEntries_QuoteCondition;
+        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryOriginator = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryOriginator;
+        f_MarketDataSnapshotFullRefreshMDEntries_Currency = f_MarketDataSnapshotFullRefreshMDEntries_Currency;
+        f_MarketDataSnapshotFullRefreshMDEntries_TimeInForce = f_MarketDataSnapshotFullRefreshMDEntries_TimeInForce;
+        f_MarketDataSnapshotFullRefreshMDEntries_LocationID = f_MarketDataSnapshotFullRefreshMDEntries_LocationID;
+        f_MarketDataSnapshotFullRefreshMDEntries_QuoteEntryID = f_MarketDataSnapshotFullRefreshMDEntries_QuoteEntryID;
+        f_MarketDataSnapshotFullRefreshMDEntries_ExecInst = f_MarketDataSnapshotFullRefreshMDEntries_ExecInst;
+        f_MarketDataSnapshotFullRefreshMDEntries_DeskID = f_MarketDataSnapshotFullRefreshMDEntries_DeskID;
+        f_MarketDataSnapshotFullRefreshMDEntries_MDEntryType = f_MarketDataSnapshotFullRefreshMDEntries_MDEntryType
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_MDReqGrp (msg)  =
+    opt msg "269" parse_MDEntryType (fun msg f_MDReqGrp_MDEntryType -> opt msg "267" parse_int (fun msg f_MDReqGrp_NoMDEntryTypes -> (ParseSuccess {
+        f_MDReqGrp_NoMDEntryTypes = f_MDReqGrp_NoMDEntryTypes;
+        f_MDReqGrp_MDEntryType = f_MDReqGrp_MDEntryType
+    },msg)
+    )
+    )
+;;
+
+let parse_MDFullGrp (msg)  =
+    opt msg "269" parse_MDEntryType (fun msg f_MDFullGrp_MDEntryType -> opt msg "284" parse_string (fun msg f_MDFullGrp_DeskID -> opt msg "18" parse_ExecInst (fun msg f_MDFullGrp_ExecInst -> opt msg "299" parse_string (fun msg f_MDFullGrp_QuoteEntryID -> opt msg "283" parse_string (fun msg f_MDFullGrp_LocationID -> opt msg "811" parse_float (fun msg f_MDFullGrp_PriceDelta -> opt msg "59" parse_TimeInForce (fun msg f_MDFullGrp_TimeInForce -> opt msg "15" parse_Currency (fun msg f_MDFullGrp_Currency -> opt msg "282" parse_string (fun msg f_MDFullGrp_MDEntryOriginator -> opt msg "276" parse_QuoteCondition (fun msg f_MDFullGrp_QuoteCondition -> opt msg "288" parse_string (fun msg f_MDFullGrp_MDEntryBuyer -> opt msg "354" parse_int (fun msg f_MDFullGrp_EncodedTextLen -> opt msg "274" parse_TickDirection (fun msg f_MDFullGrp_TickDirection -> opt msg "271" parse_float (fun msg f_MDFullGrp_MDEntrySize -> opt msg "286" parse_OpenCloseSettlFlag (fun msg f_MDFullGrp_OpenCloseSettlFlag -> opt msg "37" parse_string (fun msg f_MDFullGrp_OrderID -> opt msg "336" parse_string (fun msg f_MDFullGrp_TradingSessionID -> opt msg "272" parse_UTCDateOnly (fun msg f_MDFullGrp_MDEntryDate -> opt msg "355" parse_string (fun msg f_MDFullGrp_EncodedText -> opt msg "432" parse_LocalMktDate (fun msg f_MDFullGrp_ExpireDate -> opt msg "110" parse_float (fun msg f_MDFullGrp_MinQty -> opt msg "270" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_MDFullGrp_MDEntryPx -> opt msg "126" parse_UTCTimestamp (fun msg f_MDFullGrp_ExpireTime -> opt msg "287" parse_int (fun msg f_MDFullGrp_SellerDays -> opt msg "290" parse_int (fun msg f_MDFullGrp_MDEntryPositionNo -> opt msg "546" parse_Scope (fun msg f_MDFullGrp_Scope -> opt msg "289" parse_string (fun msg f_MDFullGrp_MDEntrySeller -> opt msg "346" parse_int (fun msg f_MDFullGrp_NumberOfOrders -> opt msg "625" parse_string (fun msg f_MDFullGrp_TradingSessionSubID -> opt msg "268" parse_int (fun msg f_MDFullGrp_NoMDEntries -> opt msg "277" parse_TradeCondition (fun msg f_MDFullGrp_TradeCondition -> opt msg "273" parse_UTCTimeOnly (fun msg f_MDFullGrp_MDEntryTime -> opt msg "58" parse_string (fun msg f_MDFullGrp_Text -> opt msg "275" parse_Exchange (fun msg f_MDFullGrp_MDMkt -> (ParseSuccess {
+        f_MDFullGrp_MDMkt = f_MDFullGrp_MDMkt;
+        f_MDFullGrp_Text = f_MDFullGrp_Text;
+        f_MDFullGrp_MDEntryTime = f_MDFullGrp_MDEntryTime;
+        f_MDFullGrp_TradeCondition = f_MDFullGrp_TradeCondition;
+        f_MDFullGrp_NoMDEntries = f_MDFullGrp_NoMDEntries;
+        f_MDFullGrp_TradingSessionSubID = f_MDFullGrp_TradingSessionSubID;
+        f_MDFullGrp_NumberOfOrders = f_MDFullGrp_NumberOfOrders;
+        f_MDFullGrp_MDEntrySeller = f_MDFullGrp_MDEntrySeller;
+        f_MDFullGrp_Scope = f_MDFullGrp_Scope;
+        f_MDFullGrp_MDEntryPositionNo = f_MDFullGrp_MDEntryPositionNo;
+        f_MDFullGrp_SellerDays = f_MDFullGrp_SellerDays;
+        f_MDFullGrp_ExpireTime = f_MDFullGrp_ExpireTime;
+        f_MDFullGrp_MDEntryPx = f_MDFullGrp_MDEntryPx;
+        f_MDFullGrp_MinQty = f_MDFullGrp_MinQty;
+        f_MDFullGrp_ExpireDate = f_MDFullGrp_ExpireDate;
+        f_MDFullGrp_EncodedText = f_MDFullGrp_EncodedText;
+        f_MDFullGrp_MDEntryDate = f_MDFullGrp_MDEntryDate;
+        f_MDFullGrp_TradingSessionID = f_MDFullGrp_TradingSessionID;
+        f_MDFullGrp_OrderID = f_MDFullGrp_OrderID;
+        f_MDFullGrp_OpenCloseSettlFlag = f_MDFullGrp_OpenCloseSettlFlag;
+        f_MDFullGrp_MDEntrySize = f_MDFullGrp_MDEntrySize;
+        f_MDFullGrp_TickDirection = f_MDFullGrp_TickDirection;
+        f_MDFullGrp_EncodedTextLen = f_MDFullGrp_EncodedTextLen;
+        f_MDFullGrp_MDEntryBuyer = f_MDFullGrp_MDEntryBuyer;
+        f_MDFullGrp_QuoteCondition = f_MDFullGrp_QuoteCondition;
+        f_MDFullGrp_MDEntryOriginator = f_MDFullGrp_MDEntryOriginator;
+        f_MDFullGrp_Currency = f_MDFullGrp_Currency;
+        f_MDFullGrp_TimeInForce = f_MDFullGrp_TimeInForce;
+        f_MDFullGrp_PriceDelta = f_MDFullGrp_PriceDelta;
+        f_MDFullGrp_LocationID = f_MDFullGrp_LocationID;
+        f_MDFullGrp_QuoteEntryID = f_MDFullGrp_QuoteEntryID;
+        f_MDFullGrp_ExecInst = f_MDFullGrp_ExecInst;
+        f_MDFullGrp_DeskID = f_MDFullGrp_DeskID;
+        f_MDFullGrp_MDEntryType = f_MDFullGrp_MDEntryType
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_SpreadOrBenchmarkCurveData (msg)  =
+    opt msg "220" parse_Currency (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency -> opt msg "761" parse_string (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource -> opt msg "699" parse_string (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkSecurityID -> opt msg "222" parse_string (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkCurvePoint -> opt msg "663" parse_int (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkPriceType -> opt msg "218" parse_float (fun msg f_SpreadOrBenchmarkCurveData_Spread -> opt msg "221" parse_string (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkCurveName -> opt msg "662" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_SpreadOrBenchmarkCurveData_BenchmarkPrice -> (ParseSuccess {
+        f_SpreadOrBenchmarkCurveData_BenchmarkPrice = f_SpreadOrBenchmarkCurveData_BenchmarkPrice;
+        f_SpreadOrBenchmarkCurveData_BenchmarkCurveName = f_SpreadOrBenchmarkCurveData_BenchmarkCurveName;
+        f_SpreadOrBenchmarkCurveData_Spread = f_SpreadOrBenchmarkCurveData_Spread;
+        f_SpreadOrBenchmarkCurveData_BenchmarkPriceType = f_SpreadOrBenchmarkCurveData_BenchmarkPriceType;
+        f_SpreadOrBenchmarkCurveData_BenchmarkCurvePoint = f_SpreadOrBenchmarkCurveData_BenchmarkCurvePoint;
+        f_SpreadOrBenchmarkCurveData_BenchmarkSecurityID = f_SpreadOrBenchmarkCurveData_BenchmarkSecurityID;
+        f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource = f_SpreadOrBenchmarkCurveData_BenchmarkSecurityIDSource;
+        f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency = f_SpreadOrBenchmarkCurveData_BenchmarkCurveCurrency
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_SettlPtysSubGrp (msg)  =
+    opt msg "785" parse_string (fun msg f_SettlPtysSubGrp_SettlPartySubID -> opt msg "801" parse_int (fun msg f_SettlPtysSubGrp_NoSettlPartySubIDs -> opt msg "786" parse_int (fun msg f_SettlPtysSubGrp_SettlPartySubIDType -> (ParseSuccess {
+        f_SettlPtysSubGrp_SettlPartySubIDType = f_SettlPtysSubGrp_SettlPartySubIDType;
+        f_SettlPtysSubGrp_NoSettlPartySubIDs = f_SettlPtysSubGrp_NoSettlPartySubIDs;
+        f_SettlPtysSubGrp_SettlPartySubID = f_SettlPtysSubGrp_SettlPartySubID
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_Hop (msg)  =
+    opt msg "630" parse_int (fun msg f_Hop_HopRefID -> opt msg "628" parse_string (fun msg f_Hop_HopCompID -> opt msg "627" parse_int (fun msg f_Hop_NoHops -> opt msg "629" parse_UTCTimestamp (fun msg f_Hop_HopSendingTime -> (ParseSuccess {
+        f_Hop_HopSendingTime = f_Hop_HopSendingTime;
+        f_Hop_NoHops = f_Hop_NoHops;
+        f_Hop_HopCompID = f_Hop_HopCompID;
+        f_Hop_HopRefID = f_Hop_HopRefID
+    },msg)
+    )
+    )
+    )
+    )
+;;
+
+let parse_QuoteRequestRelatedSym (msg)  =
+    opt msg "351" parse_string (fun msg f_QuoteRequestRelatedSym_EncodedSecurityDesc -> opt msg "207" parse_Exchange (fun msg f_QuoteRequestRelatedSym_SecurityExchange -> opt msg "140" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_QuoteRequestRelatedSym_PrevClosePx -> opt msg "48" parse_string (fun msg f_QuoteRequestRelatedSym_SecurityID -> opt msg "15" parse_Currency (fun msg f_QuoteRequestRelatedSym_Currency -> opt msg "54" parse_Side (fun msg f_QuoteRequestRelatedSym_Side -> opt msg "192" parse_float (fun msg f_QuoteRequestRelatedSym_OrderQty2 -> opt msg "60" parse_UTCTimestamp (fun msg f_QuoteRequestRelatedSym_TransactTime -> opt msg "38" parse_float (fun msg f_QuoteRequestRelatedSym_OrderQty -> opt msg "336" parse_string (fun msg f_QuoteRequestRelatedSym_TradingSessionID -> opt msg "349" parse_string (fun msg f_QuoteRequestRelatedSym_EncodedIssuer -> opt msg "55" parse_string (fun msg f_QuoteRequestRelatedSym_Symbol -> opt msg "22" parse_IDSource (fun msg f_QuoteRequestRelatedSym_IDSource -> opt msg "200" parse_MonthYear (fun msg f_QuoteRequestRelatedSym_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_QuoteRequestRelatedSym_Issuer -> opt msg "64" parse_LocalMktDate (fun msg f_QuoteRequestRelatedSym_FutSettDate -> opt msg "65" parse_string (fun msg f_QuoteRequestRelatedSym_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_QuoteRequestRelatedSym_SecurityType -> opt msg "205" parse_int (fun msg f_QuoteRequestRelatedSym_MaturityDay -> opt msg "126" parse_UTCTimestamp (fun msg f_QuoteRequestRelatedSym_ExpireTime -> opt msg "193" parse_LocalMktDate (fun msg f_QuoteRequestRelatedSym_FutSettDate2 -> opt msg "201" parse_PutOrCall (fun msg f_QuoteRequestRelatedSym_PutOrCall -> opt msg "350" parse_int (fun msg f_QuoteRequestRelatedSym_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_QuoteRequestRelatedSym_ContractMultiplier -> opt msg "348" parse_int (fun msg f_QuoteRequestRelatedSym_EncodedIssuerLen -> opt msg "303" parse_QuoteRequestType (fun msg f_QuoteRequestRelatedSym_QuoteRequestType -> opt msg "206" parse_char (fun msg f_QuoteRequestRelatedSym_OptAttribute -> opt msg "40" parse_OrdType (fun msg f_QuoteRequestRelatedSym_OrdType -> opt msg "146" parse_int (fun msg f_QuoteRequestRelatedSym_NoRelatedSym -> opt msg "202" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_QuoteRequestRelatedSym_StrikePrice -> opt msg "223" parse_float (fun msg f_QuoteRequestRelatedSym_CouponRate -> opt msg "107" parse_string (fun msg f_QuoteRequestRelatedSym_SecurityDesc -> (ParseSuccess {
+        f_QuoteRequestRelatedSym_SecurityDesc = f_QuoteRequestRelatedSym_SecurityDesc;
+        f_QuoteRequestRelatedSym_CouponRate = f_QuoteRequestRelatedSym_CouponRate;
+        f_QuoteRequestRelatedSym_StrikePrice = f_QuoteRequestRelatedSym_StrikePrice;
+        f_QuoteRequestRelatedSym_NoRelatedSym = f_QuoteRequestRelatedSym_NoRelatedSym;
+        f_QuoteRequestRelatedSym_OrdType = f_QuoteRequestRelatedSym_OrdType;
+        f_QuoteRequestRelatedSym_OptAttribute = f_QuoteRequestRelatedSym_OptAttribute;
+        f_QuoteRequestRelatedSym_QuoteRequestType = f_QuoteRequestRelatedSym_QuoteRequestType;
+        f_QuoteRequestRelatedSym_EncodedIssuerLen = f_QuoteRequestRelatedSym_EncodedIssuerLen;
+        f_QuoteRequestRelatedSym_ContractMultiplier = f_QuoteRequestRelatedSym_ContractMultiplier;
+        f_QuoteRequestRelatedSym_EncodedSecurityDescLen = f_QuoteRequestRelatedSym_EncodedSecurityDescLen;
+        f_QuoteRequestRelatedSym_PutOrCall = f_QuoteRequestRelatedSym_PutOrCall;
+        f_QuoteRequestRelatedSym_FutSettDate2 = f_QuoteRequestRelatedSym_FutSettDate2;
+        f_QuoteRequestRelatedSym_ExpireTime = f_QuoteRequestRelatedSym_ExpireTime;
+        f_QuoteRequestRelatedSym_MaturityDay = f_QuoteRequestRelatedSym_MaturityDay;
+        f_QuoteRequestRelatedSym_SecurityType = f_QuoteRequestRelatedSym_SecurityType;
+        f_QuoteRequestRelatedSym_SymbolSfx = f_QuoteRequestRelatedSym_SymbolSfx;
+        f_QuoteRequestRelatedSym_FutSettDate = f_QuoteRequestRelatedSym_FutSettDate;
+        f_QuoteRequestRelatedSym_Issuer = f_QuoteRequestRelatedSym_Issuer;
+        f_QuoteRequestRelatedSym_MaturityMonthYear = f_QuoteRequestRelatedSym_MaturityMonthYear;
+        f_QuoteRequestRelatedSym_IDSource = f_QuoteRequestRelatedSym_IDSource;
+        f_QuoteRequestRelatedSym_Symbol = f_QuoteRequestRelatedSym_Symbol;
+        f_QuoteRequestRelatedSym_EncodedIssuer = f_QuoteRequestRelatedSym_EncodedIssuer;
+        f_QuoteRequestRelatedSym_TradingSessionID = f_QuoteRequestRelatedSym_TradingSessionID;
+        f_QuoteRequestRelatedSym_OrderQty = f_QuoteRequestRelatedSym_OrderQty;
+        f_QuoteRequestRelatedSym_TransactTime = f_QuoteRequestRelatedSym_TransactTime;
+        f_QuoteRequestRelatedSym_OrderQty2 = f_QuoteRequestRelatedSym_OrderQty2;
+        f_QuoteRequestRelatedSym_Side = f_QuoteRequestRelatedSym_Side;
+        f_QuoteRequestRelatedSym_Currency = f_QuoteRequestRelatedSym_Currency;
+        f_QuoteRequestRelatedSym_SecurityID = f_QuoteRequestRelatedSym_SecurityID;
+        f_QuoteRequestRelatedSym_PrevClosePx = f_QuoteRequestRelatedSym_PrevClosePx;
+        f_QuoteRequestRelatedSym_SecurityExchange = f_QuoteRequestRelatedSym_SecurityExchange;
+        f_QuoteRequestRelatedSym_EncodedSecurityDesc = f_QuoteRequestRelatedSym_EncodedSecurityDesc
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_TrdCollGrp (msg)  =
+    opt msg "571" parse_string (fun msg f_TrdCollGrp_TradeReportID -> opt msg "897" parse_int (fun msg f_TrdCollGrp_NoTrades -> opt msg "818" parse_string (fun msg f_TrdCollGrp_SecondaryTradeReportID -> (ParseSuccess {
+        f_TrdCollGrp_SecondaryTradeReportID = f_TrdCollGrp_SecondaryTradeReportID;
+        f_TrdCollGrp_NoTrades = f_TrdCollGrp_NoTrades;
+        f_TrdCollGrp_TradeReportID = f_TrdCollGrp_TradeReportID
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_BidCompReqGrp (msg)  =
+    opt msg "430" parse_NetGrossInd (fun msg f_BidCompReqGrp_NetGrossInd -> opt msg "336" parse_string (fun msg f_BidCompReqGrp_TradingSessionID -> opt msg "64" parse_LocalMktDate (fun msg f_BidCompReqGrp_SettlDate -> opt msg "63" parse_SettlType (fun msg f_BidCompReqGrp_SettlType -> opt msg "66" parse_string (fun msg f_BidCompReqGrp_ListID -> opt msg "420" parse_int (fun msg f_BidCompReqGrp_NoBidComponents -> opt msg "625" parse_string (fun msg f_BidCompReqGrp_TradingSessionSubID -> opt msg "54" parse_Side (fun msg f_BidCompReqGrp_Side -> opt msg "660" parse_AcctIDSource (fun msg f_BidCompReqGrp_AcctIDSource -> opt msg "1" parse_string (fun msg f_BidCompReqGrp_Account -> (ParseSuccess {
+        f_BidCompReqGrp_Account = f_BidCompReqGrp_Account;
+        f_BidCompReqGrp_AcctIDSource = f_BidCompReqGrp_AcctIDSource;
+        f_BidCompReqGrp_Side = f_BidCompReqGrp_Side;
+        f_BidCompReqGrp_TradingSessionSubID = f_BidCompReqGrp_TradingSessionSubID;
+        f_BidCompReqGrp_NoBidComponents = f_BidCompReqGrp_NoBidComponents;
+        f_BidCompReqGrp_ListID = f_BidCompReqGrp_ListID;
+        f_BidCompReqGrp_SettlType = f_BidCompReqGrp_SettlType;
+        f_BidCompReqGrp_SettlDate = f_BidCompReqGrp_SettlDate;
+        f_BidCompReqGrp_TradingSessionID = f_BidCompReqGrp_TradingSessionID;
+        f_BidCompReqGrp_NetGrossInd = f_BidCompReqGrp_NetGrossInd
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_UnderlyingStipulations (msg)  =
+    opt msg "888" parse_string (fun msg f_UnderlyingStipulations_UnderlyingStipType -> opt msg "889" parse_string (fun msg f_UnderlyingStipulations_UnderlyingStipValue -> opt msg "887" parse_int (fun msg f_UnderlyingStipulations_NoUnderlyingStips -> (ParseSuccess {
+        f_UnderlyingStipulations_NoUnderlyingStips = f_UnderlyingStipulations_NoUnderlyingStips;
+        f_UnderlyingStipulations_UnderlyingStipValue = f_UnderlyingStipulations_UnderlyingStipValue;
+        f_UnderlyingStipulations_UnderlyingStipType = f_UnderlyingStipulations_UnderlyingStipType
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_NstdPtysSubGrp (msg)  =
+    opt msg "804" parse_int (fun msg f_NstdPtysSubGrp_NoNestedPartySubIDs -> opt msg "545" parse_string (fun msg f_NstdPtysSubGrp_NestedPartySubID -> opt msg "805" parse_int (fun msg f_NstdPtysSubGrp_NestedPartySubIDType -> (ParseSuccess {
+        f_NstdPtysSubGrp_NestedPartySubIDType = f_NstdPtysSubGrp_NestedPartySubIDType;
+        f_NstdPtysSubGrp_NestedPartySubID = f_NstdPtysSubGrp_NestedPartySubID;
+        f_NstdPtysSubGrp_NoNestedPartySubIDs = f_NstdPtysSubGrp_NoNestedPartySubIDs
+    },msg)
+    )
+    )
+    )
+;;
+
 let parse_EmailLinesOfText (msg)  =
     opt msg "58" parse_string (fun msg f_EmailLinesOfText_Text -> opt msg "355" parse_string (fun msg f_EmailLinesOfText_EncodedText -> opt msg "354" parse_int (fun msg f_EmailLinesOfText_EncodedTextLen -> opt msg "33" parse_int (fun msg f_EmailLinesOfText_LinesOfText -> (ParseSuccess {
         f_EmailLinesOfText_LinesOfText = f_EmailLinesOfText_LinesOfText;
@@ -2337,14 +1691,60 @@ let parse_EmailLinesOfText (msg)  =
     )
 ;;
 
-let parse_Parties (msg)  =
-    opt msg "453" parse_int (fun msg f_Parties_NoPartyIDs -> opt msg "452" parse_PartyRole (fun msg f_Parties_PartyRole -> opt msg "448" parse_string (fun msg f_Parties_PartyID -> opt msg "2376" parse_PartyRoleQualifier (fun msg f_Parties_PartyRoleQualifier -> opt msg "447" parse_PartyIDSource (fun msg f_Parties_PartyIDSource -> repeating msg "802" parse_PtysSubGrp (fun msg f_Parties_PtysSubGrp -> (ParseSuccess {
-        f_Parties_PtysSubGrp = f_Parties_PtysSubGrp;
-        f_Parties_PartyIDSource = f_Parties_PartyIDSource;
-        f_Parties_PartyRoleQualifier = f_Parties_PartyRoleQualifier;
-        f_Parties_PartyID = f_Parties_PartyID;
-        f_Parties_PartyRole = f_Parties_PartyRole;
-        f_Parties_NoPartyIDs = f_Parties_NoPartyIDs
+let parse_AllocAckGrp (msg)  =
+    opt msg "79" parse_string (fun msg f_AllocAckGrp_AllocAccount -> opt msg "360" parse_int (fun msg f_AllocAckGrp_EncodedAllocTextLen -> opt msg "161" parse_string (fun msg f_AllocAckGrp_AllocText -> opt msg "776" parse_int (fun msg f_AllocAckGrp_IndividualAllocRejCode -> opt msg "661" parse_int (fun msg f_AllocAckGrp_AllocAcctIDSource -> opt msg "361" parse_string (fun msg f_AllocAckGrp_EncodedAllocText -> opt msg "78" parse_int (fun msg f_AllocAckGrp_NoAllocs -> opt msg "467" parse_string (fun msg f_AllocAckGrp_IndividualAllocID -> opt msg "366" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_AllocAckGrp_AllocPrice -> (ParseSuccess {
+        f_AllocAckGrp_AllocPrice = f_AllocAckGrp_AllocPrice;
+        f_AllocAckGrp_IndividualAllocID = f_AllocAckGrp_IndividualAllocID;
+        f_AllocAckGrp_NoAllocs = f_AllocAckGrp_NoAllocs;
+        f_AllocAckGrp_EncodedAllocText = f_AllocAckGrp_EncodedAllocText;
+        f_AllocAckGrp_AllocAcctIDSource = f_AllocAckGrp_AllocAcctIDSource;
+        f_AllocAckGrp_IndividualAllocRejCode = f_AllocAckGrp_IndividualAllocRejCode;
+        f_AllocAckGrp_AllocText = f_AllocAckGrp_AllocText;
+        f_AllocAckGrp_EncodedAllocTextLen = f_AllocAckGrp_EncodedAllocTextLen;
+        f_AllocAckGrp_AllocAccount = f_AllocAckGrp_AllocAccount
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_AllocationExecs (msg)  =
+    opt msg "29" parse_LastCapacity (fun msg f_AllocationExecs_LastCapacity -> opt msg "32" parse_float (fun msg f_AllocationExecs_LastShares -> opt msg "124" parse_int (fun msg f_AllocationExecs_NoExecs -> opt msg "17" parse_string (fun msg f_AllocationExecs_ExecID -> opt msg "31" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_AllocationExecs_LastPx -> (ParseSuccess {
+        f_AllocationExecs_LastPx = f_AllocationExecs_LastPx;
+        f_AllocationExecs_ExecID = f_AllocationExecs_ExecID;
+        f_AllocationExecs_NoExecs = f_AllocationExecs_NoExecs;
+        f_AllocationExecs_LastShares = f_AllocationExecs_LastShares;
+        f_AllocationExecs_LastCapacity = f_AllocationExecs_LastCapacity
+    },msg)
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_ContraGrp (msg)  =
+    opt msg "438" parse_UTCTimestamp (fun msg f_ContraGrp_ContraTradeTime -> opt msg "375" parse_string (fun msg f_ContraGrp_ContraBroker -> opt msg "655" parse_string (fun msg f_ContraGrp_ContraLegRefID -> opt msg "337" parse_string (fun msg f_ContraGrp_ContraTrader -> opt msg "382" parse_int (fun msg f_ContraGrp_NoContraBrokers -> opt msg "437" parse_float (fun msg f_ContraGrp_ContraTradeQty -> (ParseSuccess {
+        f_ContraGrp_ContraTradeQty = f_ContraGrp_ContraTradeQty;
+        f_ContraGrp_NoContraBrokers = f_ContraGrp_NoContraBrokers;
+        f_ContraGrp_ContraTrader = f_ContraGrp_ContraTrader;
+        f_ContraGrp_ContraLegRefID = f_ContraGrp_ContraLegRefID;
+        f_ContraGrp_ContraBroker = f_ContraGrp_ContraBroker;
+        f_ContraGrp_ContraTradeTime = f_ContraGrp_ContraTradeTime
     },msg)
     )
     )
@@ -2354,13 +1754,56 @@ let parse_Parties (msg)  =
     )
 ;;
 
-let parse_NestedParties3 (msg)  =
-    opt msg "949" parse_string (fun msg f_NestedParties3_Nested3PartyID -> opt msg "948" parse_int (fun msg f_NestedParties3_NoNested3PartyIDs -> opt msg "950" parse_char (fun msg f_NestedParties3_Nested3PartyIDSource -> opt msg "951" parse_int (fun msg f_NestedParties3_Nested3PartyRole -> repeating msg "952" parse_NstdPtys3SubGrp (fun msg f_NestedParties3_NstdPtys3SubGrp -> (ParseSuccess {
-        f_NestedParties3_NstdPtys3SubGrp = f_NestedParties3_NstdPtys3SubGrp;
-        f_NestedParties3_Nested3PartyRole = f_NestedParties3_Nested3PartyRole;
-        f_NestedParties3_Nested3PartyIDSource = f_NestedParties3_Nested3PartyIDSource;
-        f_NestedParties3_NoNested3PartyIDs = f_NestedParties3_NoNested3PartyIDs;
-        f_NestedParties3_Nested3PartyID = f_NestedParties3_Nested3PartyID
+let parse_LinesOfTextGrp (msg)  =
+    opt msg "58" parse_string (fun msg f_LinesOfTextGrp_Text -> opt msg "355" parse_string (fun msg f_LinesOfTextGrp_EncodedText -> opt msg "33" parse_int (fun msg f_LinesOfTextGrp_NoLinesOfText -> opt msg "354" parse_int (fun msg f_LinesOfTextGrp_EncodedTextLen -> (ParseSuccess {
+        f_LinesOfTextGrp_EncodedTextLen = f_LinesOfTextGrp_EncodedTextLen;
+        f_LinesOfTextGrp_NoLinesOfText = f_LinesOfTextGrp_NoLinesOfText;
+        f_LinesOfTextGrp_EncodedText = f_LinesOfTextGrp_EncodedText;
+        f_LinesOfTextGrp_Text = f_LinesOfTextGrp_Text
+    },msg)
+    )
+    )
+    )
+    )
+;;
+
+let parse_PositionAmountData (msg)  =
+    opt msg "707" parse_PosAmtType (fun msg f_PositionAmountData_PosAmtType -> opt msg "708" parse_float (fun msg f_PositionAmountData_PosAmt -> opt msg "753" parse_int (fun msg f_PositionAmountData_NoPosAmt -> (ParseSuccess {
+        f_PositionAmountData_NoPosAmt = f_PositionAmountData_NoPosAmt;
+        f_PositionAmountData_PosAmt = f_PositionAmountData_PosAmt;
+        f_PositionAmountData_PosAmtType = f_PositionAmountData_PosAmtType
+    },msg)
+    )
+    )
+    )
+;;
+
+let parse_CompIDStatGrp (msg)  =
+    opt msg "928" parse_StatusValue (fun msg f_CompIDStatGrp_StatusValue -> opt msg "284" parse_string (fun msg f_CompIDStatGrp_DeskID -> opt msg "930" parse_string (fun msg f_CompIDStatGrp_RefCompID -> opt msg "936" parse_int (fun msg f_CompIDStatGrp_NoCompIDs -> opt msg "931" parse_string (fun msg f_CompIDStatGrp_RefSubID -> opt msg "283" parse_string (fun msg f_CompIDStatGrp_LocationID -> opt msg "929" parse_string (fun msg f_CompIDStatGrp_StatusText -> (ParseSuccess {
+        f_CompIDStatGrp_StatusText = f_CompIDStatGrp_StatusText;
+        f_CompIDStatGrp_LocationID = f_CompIDStatGrp_LocationID;
+        f_CompIDStatGrp_RefSubID = f_CompIDStatGrp_RefSubID;
+        f_CompIDStatGrp_NoCompIDs = f_CompIDStatGrp_NoCompIDs;
+        f_CompIDStatGrp_RefCompID = f_CompIDStatGrp_RefCompID;
+        f_CompIDStatGrp_DeskID = f_CompIDStatGrp_DeskID;
+        f_CompIDStatGrp_StatusValue = f_CompIDStatGrp_StatusValue
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_CompIDReqGrp (msg)  =
+    opt msg "284" parse_string (fun msg f_CompIDReqGrp_DeskID -> opt msg "930" parse_string (fun msg f_CompIDReqGrp_RefCompID -> opt msg "936" parse_int (fun msg f_CompIDReqGrp_NoCompIDs -> opt msg "931" parse_string (fun msg f_CompIDReqGrp_RefSubID -> opt msg "283" parse_string (fun msg f_CompIDReqGrp_LocationID -> (ParseSuccess {
+        f_CompIDReqGrp_LocationID = f_CompIDReqGrp_LocationID;
+        f_CompIDReqGrp_RefSubID = f_CompIDReqGrp_RefSubID;
+        f_CompIDReqGrp_NoCompIDs = f_CompIDReqGrp_NoCompIDs;
+        f_CompIDReqGrp_RefCompID = f_CompIDReqGrp_RefCompID;
+        f_CompIDReqGrp_DeskID = f_CompIDReqGrp_DeskID
     },msg)
     )
     )
@@ -2369,25 +1812,291 @@ let parse_NestedParties3 (msg)  =
     )
 ;;
 
-let parse_InstrumentExtension (msg)  =
-    opt msg "668" parse_DeliveryForm (fun msg f_InstrumentExtension_DeliveryForm -> opt msg "869" parse_float (fun msg f_InstrumentExtension_PctAtRisk -> repeating msg "870" parse_AttrbGrp (fun msg f_InstrumentExtension_AttrbGrp -> (ParseSuccess {
-        f_InstrumentExtension_AttrbGrp = f_InstrumentExtension_AttrbGrp;
-        f_InstrumentExtension_PctAtRisk = f_InstrumentExtension_PctAtRisk;
-        f_InstrumentExtension_DeliveryForm = f_InstrumentExtension_DeliveryForm
+let parse_SecurityDefinitionRelatedSym (msg)  =
+    opt msg "311" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSymbol -> opt msg "316" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_SecurityDefinitionRelatedSym_UnderlyingStrikePrice -> opt msg "306" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingIssuer -> opt msg "365" parse_string (fun msg f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDesc -> opt msg "307" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSecurityDesc -> opt msg "362" parse_int (fun msg f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuerLen -> opt msg "312" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSymbolSfx -> opt msg "364" parse_int (fun msg f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDescLen -> opt msg "436" parse_float (fun msg f_SecurityDefinitionRelatedSym_UnderlyingContractMultiplier -> opt msg "54" parse_Side (fun msg f_SecurityDefinitionRelatedSym_Side -> opt msg "309" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSecurityID -> opt msg "308" parse_Exchange (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSecurityExchange -> opt msg "315" parse_int (fun msg f_SecurityDefinitionRelatedSym_UnderlyingPutOrCall -> opt msg "310" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingSecurityType -> opt msg "318" parse_Currency (fun msg f_SecurityDefinitionRelatedSym_UnderlyingCurrency -> opt msg "435" parse_float (fun msg f_SecurityDefinitionRelatedSym_UnderlyingCouponRate -> opt msg "146" parse_int (fun msg f_SecurityDefinitionRelatedSym_NoRelatedSym -> opt msg "313" parse_MonthYear (fun msg f_SecurityDefinitionRelatedSym_UnderlyingMaturityMonthYear -> opt msg "363" parse_string (fun msg f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuer -> opt msg "314" parse_int (fun msg f_SecurityDefinitionRelatedSym_UnderlyingMaturityDay -> opt msg "317" parse_char (fun msg f_SecurityDefinitionRelatedSym_UnderlyingOptAttribute -> opt msg "319" parse_float (fun msg f_SecurityDefinitionRelatedSym_RatioQty -> opt msg "305" parse_string (fun msg f_SecurityDefinitionRelatedSym_UnderlyingIDSource -> (ParseSuccess {
+        f_SecurityDefinitionRelatedSym_UnderlyingIDSource = f_SecurityDefinitionRelatedSym_UnderlyingIDSource;
+        f_SecurityDefinitionRelatedSym_RatioQty = f_SecurityDefinitionRelatedSym_RatioQty;
+        f_SecurityDefinitionRelatedSym_UnderlyingOptAttribute = f_SecurityDefinitionRelatedSym_UnderlyingOptAttribute;
+        f_SecurityDefinitionRelatedSym_UnderlyingMaturityDay = f_SecurityDefinitionRelatedSym_UnderlyingMaturityDay;
+        f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuer = f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuer;
+        f_SecurityDefinitionRelatedSym_UnderlyingMaturityMonthYear = f_SecurityDefinitionRelatedSym_UnderlyingMaturityMonthYear;
+        f_SecurityDefinitionRelatedSym_NoRelatedSym = f_SecurityDefinitionRelatedSym_NoRelatedSym;
+        f_SecurityDefinitionRelatedSym_UnderlyingCouponRate = f_SecurityDefinitionRelatedSym_UnderlyingCouponRate;
+        f_SecurityDefinitionRelatedSym_UnderlyingCurrency = f_SecurityDefinitionRelatedSym_UnderlyingCurrency;
+        f_SecurityDefinitionRelatedSym_UnderlyingSecurityType = f_SecurityDefinitionRelatedSym_UnderlyingSecurityType;
+        f_SecurityDefinitionRelatedSym_UnderlyingPutOrCall = f_SecurityDefinitionRelatedSym_UnderlyingPutOrCall;
+        f_SecurityDefinitionRelatedSym_UnderlyingSecurityExchange = f_SecurityDefinitionRelatedSym_UnderlyingSecurityExchange;
+        f_SecurityDefinitionRelatedSym_UnderlyingSecurityID = f_SecurityDefinitionRelatedSym_UnderlyingSecurityID;
+        f_SecurityDefinitionRelatedSym_Side = f_SecurityDefinitionRelatedSym_Side;
+        f_SecurityDefinitionRelatedSym_UnderlyingContractMultiplier = f_SecurityDefinitionRelatedSym_UnderlyingContractMultiplier;
+        f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDescLen = f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDescLen;
+        f_SecurityDefinitionRelatedSym_UnderlyingSymbolSfx = f_SecurityDefinitionRelatedSym_UnderlyingSymbolSfx;
+        f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuerLen = f_SecurityDefinitionRelatedSym_EncodedUnderlyingIssuerLen;
+        f_SecurityDefinitionRelatedSym_UnderlyingSecurityDesc = f_SecurityDefinitionRelatedSym_UnderlyingSecurityDesc;
+        f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDesc = f_SecurityDefinitionRelatedSym_EncodedUnderlyingSecurityDesc;
+        f_SecurityDefinitionRelatedSym_UnderlyingIssuer = f_SecurityDefinitionRelatedSym_UnderlyingIssuer;
+        f_SecurityDefinitionRelatedSym_UnderlyingStrikePrice = f_SecurityDefinitionRelatedSym_UnderlyingStrikePrice;
+        f_SecurityDefinitionRelatedSym_UnderlyingSymbol = f_SecurityDefinitionRelatedSym_UnderlyingSymbol
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_SecTypesGrp (msg)  =
+    opt msg "461" parse_string (fun msg f_SecTypesGrp_CFICode -> opt msg "762" parse_string (fun msg f_SecTypesGrp_SecuritySubType -> opt msg "460" parse_Product (fun msg f_SecTypesGrp_Product -> opt msg "558" parse_int (fun msg f_SecTypesGrp_NoSecurityTypes -> opt msg "167" parse_SecurityType (fun msg f_SecTypesGrp_SecurityType -> (ParseSuccess {
+        f_SecTypesGrp_SecurityType = f_SecTypesGrp_SecurityType;
+        f_SecTypesGrp_NoSecurityTypes = f_SecTypesGrp_NoSecurityTypes;
+        f_SecTypesGrp_Product = f_SecTypesGrp_Product;
+        f_SecTypesGrp_SecuritySubType = f_SecTypesGrp_SecuritySubType;
+        f_SecTypesGrp_CFICode = f_SecTypesGrp_CFICode
+    },msg)
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_ContAmtGrp (msg)  =
+    opt msg "519" parse_ContAmtType (fun msg f_ContAmtGrp_ContAmtType -> opt msg "521" parse_Currency (fun msg f_ContAmtGrp_ContAmtCurr -> opt msg "518" parse_int (fun msg f_ContAmtGrp_NoContAmts -> opt msg "520" parse_float (fun msg f_ContAmtGrp_ContAmtValue -> (ParseSuccess {
+        f_ContAmtGrp_ContAmtValue = f_ContAmtGrp_ContAmtValue;
+        f_ContAmtGrp_NoContAmts = f_ContAmtGrp_NoContAmts;
+        f_ContAmtGrp_ContAmtCurr = f_ContAmtGrp_ContAmtCurr;
+        f_ContAmtGrp_ContAmtType = f_ContAmtGrp_ContAmtType
+    },msg)
+    )
+    )
+    )
+    )
+;;
+
+let parse_MarketDataIncrementalRefreshMDEntries (msg)  =
+    opt msg "351" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDesc -> opt msg "284" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_DeskID -> opt msg "299" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_QuoteEntryID -> opt msg "283" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_LocationID -> opt msg "15" parse_Currency (fun msg f_MarketDataIncrementalRefreshMDEntries_Currency -> opt msg "282" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryOriginator -> opt msg "276" parse_QuoteCondition (fun msg f_MarketDataIncrementalRefreshMDEntries_QuoteCondition -> opt msg "274" parse_TickDirection (fun msg f_MarketDataIncrementalRefreshMDEntries_TickDirection -> opt msg "271" parse_float (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntrySize -> opt msg "336" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_TradingSessionID -> opt msg "349" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedIssuer -> opt msg "355" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedText -> opt msg "22" parse_IDSource (fun msg f_MarketDataIncrementalRefreshMDEntries_IDSource -> opt msg "200" parse_MonthYear (fun msg f_MarketDataIncrementalRefreshMDEntries_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_Issuer -> opt msg "270" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryPx -> opt msg "65" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_SymbolSfx -> opt msg "285" parse_DeleteReason (fun msg f_MarketDataIncrementalRefreshMDEntries_DeleteReason -> opt msg "126" parse_UTCTimestamp (fun msg f_MarketDataIncrementalRefreshMDEntries_ExpireTime -> opt msg "231" parse_float (fun msg f_MarketDataIncrementalRefreshMDEntries_ContractMultiplier -> opt msg "278" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryID -> opt msg "289" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntrySeller -> opt msg "346" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_NumberOfOrders -> opt msg "286" parse_OpenCloseSettleFlag (fun msg f_MarketDataIncrementalRefreshMDEntries_OpenCloseSettleFlag -> opt msg "387" parse_float (fun msg f_MarketDataIncrementalRefreshMDEntries_TotalVolumeTraded -> opt msg "58" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_Text -> opt msg "202" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_MarketDataIncrementalRefreshMDEntries_StrikePrice -> opt msg "275" parse_Exchange (fun msg f_MarketDataIncrementalRefreshMDEntries_MDMkt -> opt msg "223" parse_float (fun msg f_MarketDataIncrementalRefreshMDEntries_CouponRate -> opt msg "107" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_SecurityDesc -> opt msg "269" parse_MDEntryType (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryType -> opt msg "207" parse_Exchange (fun msg f_MarketDataIncrementalRefreshMDEntries_SecurityExchange -> opt msg "18" parse_ExecInst (fun msg f_MarketDataIncrementalRefreshMDEntries_ExecInst -> opt msg "48" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_SecurityID -> opt msg "59" parse_TimeInForce (fun msg f_MarketDataIncrementalRefreshMDEntries_TimeInForce -> opt msg "288" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryBuyer -> opt msg "354" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedTextLen -> opt msg "280" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryRefID -> opt msg "37" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_OrderID -> opt msg "291" parse_FinancialStatus (fun msg f_MarketDataIncrementalRefreshMDEntries_FinancialStatus -> opt msg "272" parse_UTCDateOnly (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryDate -> opt msg "55" parse_string (fun msg f_MarketDataIncrementalRefreshMDEntries_Symbol -> opt msg "279" parse_MDUpdateAction (fun msg f_MarketDataIncrementalRefreshMDEntries_MDUpdateAction -> opt msg "432" parse_LocalMktDate (fun msg f_MarketDataIncrementalRefreshMDEntries_ExpireDate -> opt msg "110" parse_float (fun msg f_MarketDataIncrementalRefreshMDEntries_MinQty -> opt msg "167" parse_SecurityType (fun msg f_MarketDataIncrementalRefreshMDEntries_SecurityType -> opt msg "205" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_MaturityDay -> opt msg "292" parse_CorporateAction (fun msg f_MarketDataIncrementalRefreshMDEntries_CorporateAction -> opt msg "201" parse_PutOrCall (fun msg f_MarketDataIncrementalRefreshMDEntries_PutOrCall -> opt msg "287" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_SellerDays -> opt msg "290" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryPositionNo -> opt msg "350" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDescLen -> opt msg "348" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_EncodedIssuerLen -> opt msg "268" parse_int (fun msg f_MarketDataIncrementalRefreshMDEntries_NoMDEntries -> opt msg "277" parse_TradeCondition (fun msg f_MarketDataIncrementalRefreshMDEntries_TradeCondition -> opt msg "273" parse_UTCTimeOnly (fun msg f_MarketDataIncrementalRefreshMDEntries_MDEntryTime -> opt msg "206" parse_char (fun msg f_MarketDataIncrementalRefreshMDEntries_OptAttribute -> (ParseSuccess {
+        f_MarketDataIncrementalRefreshMDEntries_OptAttribute = f_MarketDataIncrementalRefreshMDEntries_OptAttribute;
+        f_MarketDataIncrementalRefreshMDEntries_MDEntryTime = f_MarketDataIncrementalRefreshMDEntries_MDEntryTime;
+        f_MarketDataIncrementalRefreshMDEntries_TradeCondition = f_MarketDataIncrementalRefreshMDEntries_TradeCondition;
+        f_MarketDataIncrementalRefreshMDEntries_NoMDEntries = f_MarketDataIncrementalRefreshMDEntries_NoMDEntries;
+        f_MarketDataIncrementalRefreshMDEntries_EncodedIssuerLen = f_MarketDataIncrementalRefreshMDEntries_EncodedIssuerLen;
+        f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDescLen = f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDescLen;
+        f_MarketDataIncrementalRefreshMDEntries_MDEntryPositionNo = f_MarketDataIncrementalRefreshMDEntries_MDEntryPositionNo;
+        f_MarketDataIncrementalRefreshMDEntries_SellerDays = f_MarketDataIncrementalRefreshMDEntries_SellerDays;
+        f_MarketDataIncrementalRefreshMDEntries_PutOrCall = f_MarketDataIncrementalRefreshMDEntries_PutOrCall;
+        f_MarketDataIncrementalRefreshMDEntries_CorporateAction = f_MarketDataIncrementalRefreshMDEntries_CorporateAction;
+        f_MarketDataIncrementalRefreshMDEntries_MaturityDay = f_MarketDataIncrementalRefreshMDEntries_MaturityDay;
+        f_MarketDataIncrementalRefreshMDEntries_SecurityType = f_MarketDataIncrementalRefreshMDEntries_SecurityType;
+        f_MarketDataIncrementalRefreshMDEntries_MinQty = f_MarketDataIncrementalRefreshMDEntries_MinQty;
+        f_MarketDataIncrementalRefreshMDEntries_ExpireDate = f_MarketDataIncrementalRefreshMDEntries_ExpireDate;
+        f_MarketDataIncrementalRefreshMDEntries_MDUpdateAction = f_MarketDataIncrementalRefreshMDEntries_MDUpdateAction;
+        f_MarketDataIncrementalRefreshMDEntries_Symbol = f_MarketDataIncrementalRefreshMDEntries_Symbol;
+        f_MarketDataIncrementalRefreshMDEntries_MDEntryDate = f_MarketDataIncrementalRefreshMDEntries_MDEntryDate;
+        f_MarketDataIncrementalRefreshMDEntries_FinancialStatus = f_MarketDataIncrementalRefreshMDEntries_FinancialStatus;
+        f_MarketDataIncrementalRefreshMDEntries_OrderID = f_MarketDataIncrementalRefreshMDEntries_OrderID;
+        f_MarketDataIncrementalRefreshMDEntries_MDEntryRefID = f_MarketDataIncrementalRefreshMDEntries_MDEntryRefID;
+        f_MarketDataIncrementalRefreshMDEntries_EncodedTextLen = f_MarketDataIncrementalRefreshMDEntries_EncodedTextLen;
+        f_MarketDataIncrementalRefreshMDEntries_MDEntryBuyer = f_MarketDataIncrementalRefreshMDEntries_MDEntryBuyer;
+        f_MarketDataIncrementalRefreshMDEntries_TimeInForce = f_MarketDataIncrementalRefreshMDEntries_TimeInForce;
+        f_MarketDataIncrementalRefreshMDEntries_SecurityID = f_MarketDataIncrementalRefreshMDEntries_SecurityID;
+        f_MarketDataIncrementalRefreshMDEntries_ExecInst = f_MarketDataIncrementalRefreshMDEntries_ExecInst;
+        f_MarketDataIncrementalRefreshMDEntries_SecurityExchange = f_MarketDataIncrementalRefreshMDEntries_SecurityExchange;
+        f_MarketDataIncrementalRefreshMDEntries_MDEntryType = f_MarketDataIncrementalRefreshMDEntries_MDEntryType;
+        f_MarketDataIncrementalRefreshMDEntries_SecurityDesc = f_MarketDataIncrementalRefreshMDEntries_SecurityDesc;
+        f_MarketDataIncrementalRefreshMDEntries_CouponRate = f_MarketDataIncrementalRefreshMDEntries_CouponRate;
+        f_MarketDataIncrementalRefreshMDEntries_MDMkt = f_MarketDataIncrementalRefreshMDEntries_MDMkt;
+        f_MarketDataIncrementalRefreshMDEntries_StrikePrice = f_MarketDataIncrementalRefreshMDEntries_StrikePrice;
+        f_MarketDataIncrementalRefreshMDEntries_Text = f_MarketDataIncrementalRefreshMDEntries_Text;
+        f_MarketDataIncrementalRefreshMDEntries_TotalVolumeTraded = f_MarketDataIncrementalRefreshMDEntries_TotalVolumeTraded;
+        f_MarketDataIncrementalRefreshMDEntries_OpenCloseSettleFlag = f_MarketDataIncrementalRefreshMDEntries_OpenCloseSettleFlag;
+        f_MarketDataIncrementalRefreshMDEntries_NumberOfOrders = f_MarketDataIncrementalRefreshMDEntries_NumberOfOrders;
+        f_MarketDataIncrementalRefreshMDEntries_MDEntrySeller = f_MarketDataIncrementalRefreshMDEntries_MDEntrySeller;
+        f_MarketDataIncrementalRefreshMDEntries_MDEntryID = f_MarketDataIncrementalRefreshMDEntries_MDEntryID;
+        f_MarketDataIncrementalRefreshMDEntries_ContractMultiplier = f_MarketDataIncrementalRefreshMDEntries_ContractMultiplier;
+        f_MarketDataIncrementalRefreshMDEntries_ExpireTime = f_MarketDataIncrementalRefreshMDEntries_ExpireTime;
+        f_MarketDataIncrementalRefreshMDEntries_DeleteReason = f_MarketDataIncrementalRefreshMDEntries_DeleteReason;
+        f_MarketDataIncrementalRefreshMDEntries_SymbolSfx = f_MarketDataIncrementalRefreshMDEntries_SymbolSfx;
+        f_MarketDataIncrementalRefreshMDEntries_MDEntryPx = f_MarketDataIncrementalRefreshMDEntries_MDEntryPx;
+        f_MarketDataIncrementalRefreshMDEntries_Issuer = f_MarketDataIncrementalRefreshMDEntries_Issuer;
+        f_MarketDataIncrementalRefreshMDEntries_MaturityMonthYear = f_MarketDataIncrementalRefreshMDEntries_MaturityMonthYear;
+        f_MarketDataIncrementalRefreshMDEntries_IDSource = f_MarketDataIncrementalRefreshMDEntries_IDSource;
+        f_MarketDataIncrementalRefreshMDEntries_EncodedText = f_MarketDataIncrementalRefreshMDEntries_EncodedText;
+        f_MarketDataIncrementalRefreshMDEntries_EncodedIssuer = f_MarketDataIncrementalRefreshMDEntries_EncodedIssuer;
+        f_MarketDataIncrementalRefreshMDEntries_TradingSessionID = f_MarketDataIncrementalRefreshMDEntries_TradingSessionID;
+        f_MarketDataIncrementalRefreshMDEntries_MDEntrySize = f_MarketDataIncrementalRefreshMDEntries_MDEntrySize;
+        f_MarketDataIncrementalRefreshMDEntries_TickDirection = f_MarketDataIncrementalRefreshMDEntries_TickDirection;
+        f_MarketDataIncrementalRefreshMDEntries_QuoteCondition = f_MarketDataIncrementalRefreshMDEntries_QuoteCondition;
+        f_MarketDataIncrementalRefreshMDEntries_MDEntryOriginator = f_MarketDataIncrementalRefreshMDEntries_MDEntryOriginator;
+        f_MarketDataIncrementalRefreshMDEntries_Currency = f_MarketDataIncrementalRefreshMDEntries_Currency;
+        f_MarketDataIncrementalRefreshMDEntries_LocationID = f_MarketDataIncrementalRefreshMDEntries_LocationID;
+        f_MarketDataIncrementalRefreshMDEntries_QuoteEntryID = f_MarketDataIncrementalRefreshMDEntries_QuoteEntryID;
+        f_MarketDataIncrementalRefreshMDEntries_DeskID = f_MarketDataIncrementalRefreshMDEntries_DeskID;
+        f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDesc = f_MarketDataIncrementalRefreshMDEntries_EncodedSecurityDesc
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_OrderListTradingSessions (msg)  =
+    opt msg "336" parse_string (fun msg f_OrderListTradingSessions_TradingSessionID -> opt msg "386" parse_int (fun msg f_OrderListTradingSessions_NoTradingSessions -> (ParseSuccess {
+        f_OrderListTradingSessions_NoTradingSessions = f_OrderListTradingSessions_NoTradingSessions;
+        f_OrderListTradingSessions_TradingSessionID = f_OrderListTradingSessions_TradingSessionID
+    },msg)
+    )
+    )
+;;
+
+let parse_LegSecAltIDGrp (msg)  =
+    opt msg "604" parse_int (fun msg f_LegSecAltIDGrp_NoLegSecurityAltID -> opt msg "606" parse_string (fun msg f_LegSecAltIDGrp_LegSecurityAltIDSource -> opt msg "605" parse_string (fun msg f_LegSecAltIDGrp_LegSecurityAltID -> (ParseSuccess {
+        f_LegSecAltIDGrp_LegSecurityAltID = f_LegSecAltIDGrp_LegSecurityAltID;
+        f_LegSecAltIDGrp_LegSecurityAltIDSource = f_LegSecAltIDGrp_LegSecurityAltIDSource;
+        f_LegSecAltIDGrp_NoLegSecurityAltID = f_LegSecAltIDGrp_NoLegSecurityAltID
     },msg)
     )
     )
     )
 ;;
 
-let parse_SettlParties (msg)  =
-    opt msg "782" parse_string (fun msg f_SettlParties_SettlPartyID -> opt msg "784" parse_int (fun msg f_SettlParties_SettlPartyRole -> opt msg "783" parse_char (fun msg f_SettlParties_SettlPartyIDSource -> opt msg "781" parse_int (fun msg f_SettlParties_NoSettlPartyIDs -> repeating msg "801" parse_SettlPtysSubGrp (fun msg f_SettlParties_SettlPtysSubGrp -> (ParseSuccess {
-        f_SettlParties_SettlPtysSubGrp = f_SettlParties_SettlPtysSubGrp;
-        f_SettlParties_NoSettlPartyIDs = f_SettlParties_NoSettlPartyIDs;
-        f_SettlParties_SettlPartyIDSource = f_SettlParties_SettlPartyIDSource;
-        f_SettlParties_SettlPartyRole = f_SettlParties_SettlPartyRole;
-        f_SettlParties_SettlPartyID = f_SettlParties_SettlPartyID
+let parse_RoutingGrp (msg)  =
+    opt msg "217" parse_string (fun msg f_RoutingGrp_RoutingID -> opt msg "215" parse_int (fun msg f_RoutingGrp_NoRoutingIDs -> opt msg "216" parse_RoutingType (fun msg f_RoutingGrp_RoutingType -> (ParseSuccess {
+        f_RoutingGrp_RoutingType = f_RoutingGrp_RoutingType;
+        f_RoutingGrp_NoRoutingIDs = f_RoutingGrp_NoRoutingIDs;
+        f_RoutingGrp_RoutingID = f_RoutingGrp_RoutingID
     },msg)
+    )
+    )
+    )
+;;
+
+let parse_MarketDataRequestRelatedSym (msg)  =
+    opt msg "351" parse_string (fun msg f_MarketDataRequestRelatedSym_EncodedSecurityDesc -> opt msg "207" parse_Exchange (fun msg f_MarketDataRequestRelatedSym_SecurityExchange -> opt msg "205" parse_int (fun msg f_MarketDataRequestRelatedSym_MaturityDay -> opt msg "201" parse_PutOrCall (fun msg f_MarketDataRequestRelatedSym_PutOrCall -> opt msg "48" parse_string (fun msg f_MarketDataRequestRelatedSym_SecurityID -> opt msg "350" parse_int (fun msg f_MarketDataRequestRelatedSym_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_MarketDataRequestRelatedSym_ContractMultiplier -> opt msg "348" parse_int (fun msg f_MarketDataRequestRelatedSym_EncodedIssuerLen -> opt msg "336" parse_string (fun msg f_MarketDataRequestRelatedSym_TradingSessionID -> opt msg "349" parse_string (fun msg f_MarketDataRequestRelatedSym_EncodedIssuer -> opt msg "206" parse_char (fun msg f_MarketDataRequestRelatedSym_OptAttribute -> opt msg "55" parse_string (fun msg f_MarketDataRequestRelatedSym_Symbol -> opt msg "22" parse_IDSource (fun msg f_MarketDataRequestRelatedSym_IDSource -> opt msg "146" parse_int (fun msg f_MarketDataRequestRelatedSym_NoRelatedSym -> opt msg "202" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_MarketDataRequestRelatedSym_StrikePrice -> opt msg "200" parse_MonthYear (fun msg f_MarketDataRequestRelatedSym_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_MarketDataRequestRelatedSym_Issuer -> opt msg "223" parse_float (fun msg f_MarketDataRequestRelatedSym_CouponRate -> opt msg "65" parse_string (fun msg f_MarketDataRequestRelatedSym_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_MarketDataRequestRelatedSym_SecurityType -> opt msg "107" parse_string (fun msg f_MarketDataRequestRelatedSym_SecurityDesc -> (ParseSuccess {
+        f_MarketDataRequestRelatedSym_SecurityDesc = f_MarketDataRequestRelatedSym_SecurityDesc;
+        f_MarketDataRequestRelatedSym_SecurityType = f_MarketDataRequestRelatedSym_SecurityType;
+        f_MarketDataRequestRelatedSym_SymbolSfx = f_MarketDataRequestRelatedSym_SymbolSfx;
+        f_MarketDataRequestRelatedSym_CouponRate = f_MarketDataRequestRelatedSym_CouponRate;
+        f_MarketDataRequestRelatedSym_Issuer = f_MarketDataRequestRelatedSym_Issuer;
+        f_MarketDataRequestRelatedSym_MaturityMonthYear = f_MarketDataRequestRelatedSym_MaturityMonthYear;
+        f_MarketDataRequestRelatedSym_StrikePrice = f_MarketDataRequestRelatedSym_StrikePrice;
+        f_MarketDataRequestRelatedSym_NoRelatedSym = f_MarketDataRequestRelatedSym_NoRelatedSym;
+        f_MarketDataRequestRelatedSym_IDSource = f_MarketDataRequestRelatedSym_IDSource;
+        f_MarketDataRequestRelatedSym_Symbol = f_MarketDataRequestRelatedSym_Symbol;
+        f_MarketDataRequestRelatedSym_OptAttribute = f_MarketDataRequestRelatedSym_OptAttribute;
+        f_MarketDataRequestRelatedSym_EncodedIssuer = f_MarketDataRequestRelatedSym_EncodedIssuer;
+        f_MarketDataRequestRelatedSym_TradingSessionID = f_MarketDataRequestRelatedSym_TradingSessionID;
+        f_MarketDataRequestRelatedSym_EncodedIssuerLen = f_MarketDataRequestRelatedSym_EncodedIssuerLen;
+        f_MarketDataRequestRelatedSym_ContractMultiplier = f_MarketDataRequestRelatedSym_ContractMultiplier;
+        f_MarketDataRequestRelatedSym_EncodedSecurityDescLen = f_MarketDataRequestRelatedSym_EncodedSecurityDescLen;
+        f_MarketDataRequestRelatedSym_SecurityID = f_MarketDataRequestRelatedSym_SecurityID;
+        f_MarketDataRequestRelatedSym_PutOrCall = f_MarketDataRequestRelatedSym_PutOrCall;
+        f_MarketDataRequestRelatedSym_MaturityDay = f_MarketDataRequestRelatedSym_MaturityDay;
+        f_MarketDataRequestRelatedSym_SecurityExchange = f_MarketDataRequestRelatedSym_SecurityExchange;
+        f_MarketDataRequestRelatedSym_EncodedSecurityDesc = f_MarketDataRequestRelatedSym_EncodedSecurityDesc
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
     )
     )
     )
@@ -2395,14 +2104,107 @@ let parse_SettlParties (msg)  =
     )
 ;;
 
-let parse_NestedParties (msg)  =
-    opt msg "525" parse_char (fun msg f_NestedParties_NestedPartyIDSource -> opt msg "538" parse_int (fun msg f_NestedParties_NestedPartyRole -> opt msg "524" parse_string (fun msg f_NestedParties_NestedPartyID -> opt msg "539" parse_int (fun msg f_NestedParties_NoNestedPartyIDs -> repeating msg "804" parse_NstdPtysSubGrp (fun msg f_NestedParties_NstdPtysSubGrp -> (ParseSuccess {
-        f_NestedParties_NstdPtysSubGrp = f_NestedParties_NstdPtysSubGrp;
-        f_NestedParties_NoNestedPartyIDs = f_NestedParties_NoNestedPartyIDs;
-        f_NestedParties_NestedPartyID = f_NestedParties_NestedPartyID;
-        f_NestedParties_NestedPartyRole = f_NestedParties_NestedPartyRole;
-        f_NestedParties_NestedPartyIDSource = f_NestedParties_NestedPartyIDSource
+let parse_IOIIOIQualifiers (msg)  =
+    opt msg "104" parse_IOIQualifier (fun msg f_IOIIOIQualifiers_IOIQualifier -> opt msg "199" parse_int (fun msg f_IOIIOIQualifiers_NoIOIQualifiers -> (ParseSuccess {
+        f_IOIIOIQualifiers_NoIOIQualifiers = f_IOIIOIQualifiers_NoIOIQualifiers;
+        f_IOIIOIQualifiers_IOIQualifier = f_IOIIOIQualifiers_IOIQualifier
     },msg)
+    )
+    )
+;;
+
+let parse_MassQuoteQuoteEntries (msg)  =
+    opt msg "351" parse_string (fun msg f_MassQuoteQuoteEntries_EncodedSecurityDesc -> opt msg "295" parse_int (fun msg f_MassQuoteQuoteEntries_NoQuoteEntries -> opt msg "207" parse_Exchange (fun msg f_MassQuoteQuoteEntries_SecurityExchange -> opt msg "191" parse_float (fun msg f_MassQuoteQuoteEntries_OfferForwardPoints -> opt msg "48" parse_string (fun msg f_MassQuoteQuoteEntries_SecurityID -> opt msg "132" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_MassQuoteQuoteEntries_BidPx -> opt msg "299" parse_string (fun msg f_MassQuoteQuoteEntries_QuoteEntryID -> opt msg "15" parse_Currency (fun msg f_MassQuoteQuoteEntries_Currency -> opt msg "192" parse_float (fun msg f_MassQuoteQuoteEntries_OrderQty2 -> opt msg "60" parse_UTCTimestamp (fun msg f_MassQuoteQuoteEntries_TransactTime -> opt msg "134" parse_float (fun msg f_MassQuoteQuoteEntries_BidSize -> opt msg "336" parse_string (fun msg f_MassQuoteQuoteEntries_TradingSessionID -> opt msg "349" parse_string (fun msg f_MassQuoteQuoteEntries_EncodedIssuer -> opt msg "55" parse_string (fun msg f_MassQuoteQuoteEntries_Symbol -> opt msg "22" parse_IDSource (fun msg f_MassQuoteQuoteEntries_IDSource -> opt msg "135" parse_float (fun msg f_MassQuoteQuoteEntries_OfferSize -> opt msg "200" parse_MonthYear (fun msg f_MassQuoteQuoteEntries_MaturityMonthYear -> opt msg "133" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_MassQuoteQuoteEntries_OfferPx -> opt msg "106" parse_string (fun msg f_MassQuoteQuoteEntries_Issuer -> opt msg "64" parse_LocalMktDate (fun msg f_MassQuoteQuoteEntries_FutSettDate -> opt msg "65" parse_string (fun msg f_MassQuoteQuoteEntries_SymbolSfx -> opt msg "188" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_MassQuoteQuoteEntries_BidSpotRate -> opt msg "167" parse_SecurityType (fun msg f_MassQuoteQuoteEntries_SecurityType -> opt msg "205" parse_int (fun msg f_MassQuoteQuoteEntries_MaturityDay -> opt msg "193" parse_LocalMktDate (fun msg f_MassQuoteQuoteEntries_FutSettDate2 -> opt msg "201" parse_PutOrCall (fun msg f_MassQuoteQuoteEntries_PutOrCall -> opt msg "350" parse_int (fun msg f_MassQuoteQuoteEntries_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_MassQuoteQuoteEntries_ContractMultiplier -> opt msg "348" parse_int (fun msg f_MassQuoteQuoteEntries_EncodedIssuerLen -> opt msg "189" parse_float (fun msg f_MassQuoteQuoteEntries_BidForwardPoints -> opt msg "190" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_MassQuoteQuoteEntries_OfferSpotRate -> opt msg "206" parse_char (fun msg f_MassQuoteQuoteEntries_OptAttribute -> opt msg "40" parse_OrdType (fun msg f_MassQuoteQuoteEntries_OrdType -> opt msg "62" parse_UTCTimestamp (fun msg f_MassQuoteQuoteEntries_ValidUntilTime -> opt msg "202" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_MassQuoteQuoteEntries_StrikePrice -> opt msg "223" parse_float (fun msg f_MassQuoteQuoteEntries_CouponRate -> opt msg "107" parse_string (fun msg f_MassQuoteQuoteEntries_SecurityDesc -> (ParseSuccess {
+        f_MassQuoteQuoteEntries_SecurityDesc = f_MassQuoteQuoteEntries_SecurityDesc;
+        f_MassQuoteQuoteEntries_CouponRate = f_MassQuoteQuoteEntries_CouponRate;
+        f_MassQuoteQuoteEntries_StrikePrice = f_MassQuoteQuoteEntries_StrikePrice;
+        f_MassQuoteQuoteEntries_ValidUntilTime = f_MassQuoteQuoteEntries_ValidUntilTime;
+        f_MassQuoteQuoteEntries_OrdType = f_MassQuoteQuoteEntries_OrdType;
+        f_MassQuoteQuoteEntries_OptAttribute = f_MassQuoteQuoteEntries_OptAttribute;
+        f_MassQuoteQuoteEntries_OfferSpotRate = f_MassQuoteQuoteEntries_OfferSpotRate;
+        f_MassQuoteQuoteEntries_BidForwardPoints = f_MassQuoteQuoteEntries_BidForwardPoints;
+        f_MassQuoteQuoteEntries_EncodedIssuerLen = f_MassQuoteQuoteEntries_EncodedIssuerLen;
+        f_MassQuoteQuoteEntries_ContractMultiplier = f_MassQuoteQuoteEntries_ContractMultiplier;
+        f_MassQuoteQuoteEntries_EncodedSecurityDescLen = f_MassQuoteQuoteEntries_EncodedSecurityDescLen;
+        f_MassQuoteQuoteEntries_PutOrCall = f_MassQuoteQuoteEntries_PutOrCall;
+        f_MassQuoteQuoteEntries_FutSettDate2 = f_MassQuoteQuoteEntries_FutSettDate2;
+        f_MassQuoteQuoteEntries_MaturityDay = f_MassQuoteQuoteEntries_MaturityDay;
+        f_MassQuoteQuoteEntries_SecurityType = f_MassQuoteQuoteEntries_SecurityType;
+        f_MassQuoteQuoteEntries_BidSpotRate = f_MassQuoteQuoteEntries_BidSpotRate;
+        f_MassQuoteQuoteEntries_SymbolSfx = f_MassQuoteQuoteEntries_SymbolSfx;
+        f_MassQuoteQuoteEntries_FutSettDate = f_MassQuoteQuoteEntries_FutSettDate;
+        f_MassQuoteQuoteEntries_Issuer = f_MassQuoteQuoteEntries_Issuer;
+        f_MassQuoteQuoteEntries_OfferPx = f_MassQuoteQuoteEntries_OfferPx;
+        f_MassQuoteQuoteEntries_MaturityMonthYear = f_MassQuoteQuoteEntries_MaturityMonthYear;
+        f_MassQuoteQuoteEntries_OfferSize = f_MassQuoteQuoteEntries_OfferSize;
+        f_MassQuoteQuoteEntries_IDSource = f_MassQuoteQuoteEntries_IDSource;
+        f_MassQuoteQuoteEntries_Symbol = f_MassQuoteQuoteEntries_Symbol;
+        f_MassQuoteQuoteEntries_EncodedIssuer = f_MassQuoteQuoteEntries_EncodedIssuer;
+        f_MassQuoteQuoteEntries_TradingSessionID = f_MassQuoteQuoteEntries_TradingSessionID;
+        f_MassQuoteQuoteEntries_BidSize = f_MassQuoteQuoteEntries_BidSize;
+        f_MassQuoteQuoteEntries_TransactTime = f_MassQuoteQuoteEntries_TransactTime;
+        f_MassQuoteQuoteEntries_OrderQty2 = f_MassQuoteQuoteEntries_OrderQty2;
+        f_MassQuoteQuoteEntries_Currency = f_MassQuoteQuoteEntries_Currency;
+        f_MassQuoteQuoteEntries_QuoteEntryID = f_MassQuoteQuoteEntries_QuoteEntryID;
+        f_MassQuoteQuoteEntries_BidPx = f_MassQuoteQuoteEntries_BidPx;
+        f_MassQuoteQuoteEntries_SecurityID = f_MassQuoteQuoteEntries_SecurityID;
+        f_MassQuoteQuoteEntries_OfferForwardPoints = f_MassQuoteQuoteEntries_OfferForwardPoints;
+        f_MassQuoteQuoteEntries_SecurityExchange = f_MassQuoteQuoteEntries_SecurityExchange;
+        f_MassQuoteQuoteEntries_NoQuoteEntries = f_MassQuoteQuoteEntries_NoQuoteEntries;
+        f_MassQuoteQuoteEntries_EncodedSecurityDesc = f_MassQuoteQuoteEntries_EncodedSecurityDesc
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
     )
     )
     )
@@ -2410,17 +2212,127 @@ let parse_NestedParties (msg)  =
     )
 ;;
 
-let parse_NestedParties2 (msg)  =
-    opt msg "757" parse_string (fun msg f_NestedParties2_Nested2PartyID -> opt msg "758" parse_char (fun msg f_NestedParties2_Nested2PartyIDSource -> opt msg "756" parse_int (fun msg f_NestedParties2_NoNested2PartyIDs -> opt msg "759" parse_int (fun msg f_NestedParties2_Nested2PartyRole -> repeating msg "806" parse_NstdPtys2SubGrp (fun msg f_NestedParties2_NstdPtys2SubGrp -> (ParseSuccess {
-        f_NestedParties2_NstdPtys2SubGrp = f_NestedParties2_NstdPtys2SubGrp;
-        f_NestedParties2_Nested2PartyRole = f_NestedParties2_Nested2PartyRole;
-        f_NestedParties2_NoNested2PartyIDs = f_NestedParties2_NoNested2PartyIDs;
-        f_NestedParties2_Nested2PartyIDSource = f_NestedParties2_Nested2PartyIDSource;
-        f_NestedParties2_Nested2PartyID = f_NestedParties2_Nested2PartyID
+let parse_QuotQualGrp (msg)  =
+    opt msg "695" parse_char (fun msg f_QuotQualGrp_QuoteQualifier -> opt msg "735" parse_int (fun msg f_QuotQualGrp_NoQuoteQualifiers -> (ParseSuccess {
+        f_QuotQualGrp_NoQuoteQualifiers = f_QuotQualGrp_NoQuoteQualifiers;
+        f_QuotQualGrp_QuoteQualifier = f_QuotQualGrp_QuoteQualifier
+    },msg)
+    )
+    )
+;;
+
+let parse_PegInstructions (msg)  =
+    opt msg "836" parse_PegOffsetType (fun msg f_PegInstructions_PegOffsetType -> opt msg "838" parse_PegRoundDirection (fun msg f_PegInstructions_PegRoundDirection -> opt msg "840" parse_PegScope (fun msg f_PegInstructions_PegScope -> opt msg "837" parse_PegLimitType (fun msg f_PegInstructions_PegLimitType -> opt msg "835" parse_PegMoveType (fun msg f_PegInstructions_PegMoveType -> opt msg "211" parse_float (fun msg f_PegInstructions_PegOffsetValue -> (ParseSuccess {
+        f_PegInstructions_PegOffsetValue = f_PegInstructions_PegOffsetValue;
+        f_PegInstructions_PegMoveType = f_PegInstructions_PegMoveType;
+        f_PegInstructions_PegLimitType = f_PegInstructions_PegLimitType;
+        f_PegInstructions_PegScope = f_PegInstructions_PegScope;
+        f_PegInstructions_PegRoundDirection = f_PegInstructions_PegRoundDirection;
+        f_PegInstructions_PegOffsetType = f_PegInstructions_PegOffsetType
     },msg)
     )
     )
     )
+    )
+    )
+    )
+;;
+
+let parse_EmailRelatedSym (msg)  =
+    opt msg "351" parse_string (fun msg f_EmailRelatedSym_EncodedSecurityDesc -> opt msg "207" parse_Exchange (fun msg f_EmailRelatedSym_SecurityExchange -> opt msg "205" parse_int (fun msg f_EmailRelatedSym_MaturityDay -> opt msg "201" parse_PutOrCall (fun msg f_EmailRelatedSym_PutOrCall -> opt msg "48" parse_string (fun msg f_EmailRelatedSym_SecurityID -> opt msg "350" parse_int (fun msg f_EmailRelatedSym_EncodedSecurityDescLen -> opt msg "231" parse_float (fun msg f_EmailRelatedSym_ContractMultiplier -> opt msg "46" parse_string (fun msg f_EmailRelatedSym_RelatdSym -> opt msg "348" parse_int (fun msg f_EmailRelatedSym_EncodedIssuerLen -> opt msg "349" parse_string (fun msg f_EmailRelatedSym_EncodedIssuer -> opt msg "206" parse_char (fun msg f_EmailRelatedSym_OptAttribute -> opt msg "22" parse_IDSource (fun msg f_EmailRelatedSym_IDSource -> opt msg "146" parse_int (fun msg f_EmailRelatedSym_NoRelatedSym -> opt msg "202" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_EmailRelatedSym_StrikePrice -> opt msg "200" parse_MonthYear (fun msg f_EmailRelatedSym_MaturityMonthYear -> opt msg "106" parse_string (fun msg f_EmailRelatedSym_Issuer -> opt msg "223" parse_float (fun msg f_EmailRelatedSym_CouponRate -> opt msg "65" parse_string (fun msg f_EmailRelatedSym_SymbolSfx -> opt msg "167" parse_SecurityType (fun msg f_EmailRelatedSym_SecurityType -> opt msg "107" parse_string (fun msg f_EmailRelatedSym_SecurityDesc -> (ParseSuccess {
+        f_EmailRelatedSym_SecurityDesc = f_EmailRelatedSym_SecurityDesc;
+        f_EmailRelatedSym_SecurityType = f_EmailRelatedSym_SecurityType;
+        f_EmailRelatedSym_SymbolSfx = f_EmailRelatedSym_SymbolSfx;
+        f_EmailRelatedSym_CouponRate = f_EmailRelatedSym_CouponRate;
+        f_EmailRelatedSym_Issuer = f_EmailRelatedSym_Issuer;
+        f_EmailRelatedSym_MaturityMonthYear = f_EmailRelatedSym_MaturityMonthYear;
+        f_EmailRelatedSym_StrikePrice = f_EmailRelatedSym_StrikePrice;
+        f_EmailRelatedSym_NoRelatedSym = f_EmailRelatedSym_NoRelatedSym;
+        f_EmailRelatedSym_IDSource = f_EmailRelatedSym_IDSource;
+        f_EmailRelatedSym_OptAttribute = f_EmailRelatedSym_OptAttribute;
+        f_EmailRelatedSym_EncodedIssuer = f_EmailRelatedSym_EncodedIssuer;
+        f_EmailRelatedSym_EncodedIssuerLen = f_EmailRelatedSym_EncodedIssuerLen;
+        f_EmailRelatedSym_RelatdSym = f_EmailRelatedSym_RelatdSym;
+        f_EmailRelatedSym_ContractMultiplier = f_EmailRelatedSym_ContractMultiplier;
+        f_EmailRelatedSym_EncodedSecurityDescLen = f_EmailRelatedSym_EncodedSecurityDescLen;
+        f_EmailRelatedSym_SecurityID = f_EmailRelatedSym_SecurityID;
+        f_EmailRelatedSym_PutOrCall = f_EmailRelatedSym_PutOrCall;
+        f_EmailRelatedSym_MaturityDay = f_EmailRelatedSym_MaturityDay;
+        f_EmailRelatedSym_SecurityExchange = f_EmailRelatedSym_SecurityExchange;
+        f_EmailRelatedSym_EncodedSecurityDesc = f_EmailRelatedSym_EncodedSecurityDesc
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_ExecCollGrp (msg)  =
+    opt msg "124" parse_int (fun msg f_ExecCollGrp_NoExecs -> opt msg "17" parse_string (fun msg f_ExecCollGrp_ExecID -> (ParseSuccess {
+        f_ExecCollGrp_ExecID = f_ExecCollGrp_ExecID;
+        f_ExecCollGrp_NoExecs = f_ExecCollGrp_NoExecs
+    },msg)
+    )
+    )
+;;
+
+let parse_MarketDataRequestMDEntryTypes (msg)  =
+    opt msg "269" parse_MDEntryType (fun msg f_MarketDataRequestMDEntryTypes_MDEntryType -> opt msg "267" parse_int (fun msg f_MarketDataRequestMDEntryTypes_NoMDEntryTypes -> (ParseSuccess {
+        f_MarketDataRequestMDEntryTypes_NoMDEntryTypes = f_MarketDataRequestMDEntryTypes_NoMDEntryTypes;
+        f_MarketDataRequestMDEntryTypes_MDEntryType = f_MarketDataRequestMDEntryTypes_MDEntryType
+    },msg)
+    )
+    )
+;;
+
+let parse_FinancingDetails (msg)  =
+    opt msg "916" parse_LocalMktDate (fun msg f_FinancingDetails_StartDate -> opt msg "919" parse_DeliveryType (fun msg f_FinancingDetails_DeliveryType -> opt msg "917" parse_LocalMktDate (fun msg f_FinancingDetails_EndDate -> opt msg "915" parse_LocalMktDate (fun msg f_FinancingDetails_AgreementDate -> opt msg "898" parse_float (fun msg f_FinancingDetails_MarginRatio -> opt msg "913" parse_string (fun msg f_FinancingDetails_AgreementDesc -> opt msg "918" parse_Currency (fun msg f_FinancingDetails_AgreementCurrency -> opt msg "914" parse_string (fun msg f_FinancingDetails_AgreementID -> opt msg "788" parse_TerminationType (fun msg f_FinancingDetails_TerminationType -> (ParseSuccess {
+        f_FinancingDetails_TerminationType = f_FinancingDetails_TerminationType;
+        f_FinancingDetails_AgreementID = f_FinancingDetails_AgreementID;
+        f_FinancingDetails_AgreementCurrency = f_FinancingDetails_AgreementCurrency;
+        f_FinancingDetails_AgreementDesc = f_FinancingDetails_AgreementDesc;
+        f_FinancingDetails_MarginRatio = f_FinancingDetails_MarginRatio;
+        f_FinancingDetails_AgreementDate = f_FinancingDetails_AgreementDate;
+        f_FinancingDetails_EndDate = f_FinancingDetails_EndDate;
+        f_FinancingDetails_DeliveryType = f_FinancingDetails_DeliveryType;
+        f_FinancingDetails_StartDate = f_FinancingDetails_StartDate
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_OrderCancelReplaceRequestTradingSessions (msg)  =
+    opt msg "336" parse_string (fun msg f_OrderCancelReplaceRequestTradingSessions_TradingSessionID -> opt msg "386" parse_int (fun msg f_OrderCancelReplaceRequestTradingSessions_NoTradingSessions -> (ParseSuccess {
+        f_OrderCancelReplaceRequestTradingSessions_NoTradingSessions = f_OrderCancelReplaceRequestTradingSessions_NoTradingSessions;
+        f_OrderCancelReplaceRequestTradingSessions_TradingSessionID = f_OrderCancelReplaceRequestTradingSessions_TradingSessionID
+    },msg)
     )
     )
 ;;
@@ -2511,6 +2423,124 @@ let parse_InstrumentLeg (msg)  =
     )
     )
     )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_NestedParties (msg)  =
+    opt msg "525" parse_char (fun msg f_NestedParties_NestedPartyIDSource -> opt msg "538" parse_int (fun msg f_NestedParties_NestedPartyRole -> opt msg "524" parse_string (fun msg f_NestedParties_NestedPartyID -> opt msg "539" parse_int (fun msg f_NestedParties_NoNestedPartyIDs -> repeating msg "804" parse_NstdPtysSubGrp (fun msg f_NestedParties_NstdPtysSubGrp -> (ParseSuccess {
+        f_NestedParties_NstdPtysSubGrp = f_NestedParties_NstdPtysSubGrp;
+        f_NestedParties_NoNestedPartyIDs = f_NestedParties_NoNestedPartyIDs;
+        f_NestedParties_NestedPartyID = f_NestedParties_NestedPartyID;
+        f_NestedParties_NestedPartyRole = f_NestedParties_NestedPartyRole;
+        f_NestedParties_NestedPartyIDSource = f_NestedParties_NestedPartyIDSource
+    },msg)
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_SettlParties (msg)  =
+    opt msg "782" parse_string (fun msg f_SettlParties_SettlPartyID -> opt msg "784" parse_int (fun msg f_SettlParties_SettlPartyRole -> opt msg "783" parse_char (fun msg f_SettlParties_SettlPartyIDSource -> opt msg "781" parse_int (fun msg f_SettlParties_NoSettlPartyIDs -> repeating msg "801" parse_SettlPtysSubGrp (fun msg f_SettlParties_SettlPtysSubGrp -> (ParseSuccess {
+        f_SettlParties_SettlPtysSubGrp = f_SettlParties_SettlPtysSubGrp;
+        f_SettlParties_NoSettlPartyIDs = f_SettlParties_NoSettlPartyIDs;
+        f_SettlParties_SettlPartyIDSource = f_SettlParties_SettlPartyIDSource;
+        f_SettlParties_SettlPartyRole = f_SettlParties_SettlPartyRole;
+        f_SettlParties_SettlPartyID = f_SettlParties_SettlPartyID
+    },msg)
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_Parties (msg)  =
+    opt msg "453" parse_int (fun msg f_Parties_NoPartyIDs -> opt msg "452" parse_PartyRole (fun msg f_Parties_PartyRole -> opt msg "448" parse_string (fun msg f_Parties_PartyID -> opt msg "2376" parse_PartyRoleQualifier (fun msg f_Parties_PartyRoleQualifier -> opt msg "447" parse_PartyIDSource (fun msg f_Parties_PartyIDSource -> repeating msg "802" parse_PtysSubGrp (fun msg f_Parties_PtysSubGrp -> (ParseSuccess {
+        f_Parties_PtysSubGrp = f_Parties_PtysSubGrp;
+        f_Parties_PartyIDSource = f_Parties_PartyIDSource;
+        f_Parties_PartyRoleQualifier = f_Parties_PartyRoleQualifier;
+        f_Parties_PartyID = f_Parties_PartyID;
+        f_Parties_PartyRole = f_Parties_PartyRole;
+        f_Parties_NoPartyIDs = f_Parties_NoPartyIDs
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_NestedParties3 (msg)  =
+    opt msg "949" parse_string (fun msg f_NestedParties3_Nested3PartyID -> opt msg "948" parse_int (fun msg f_NestedParties3_NoNested3PartyIDs -> opt msg "950" parse_char (fun msg f_NestedParties3_Nested3PartyIDSource -> opt msg "951" parse_int (fun msg f_NestedParties3_Nested3PartyRole -> repeating msg "952" parse_NstdPtys3SubGrp (fun msg f_NestedParties3_NstdPtys3SubGrp -> (ParseSuccess {
+        f_NestedParties3_NstdPtys3SubGrp = f_NestedParties3_NstdPtys3SubGrp;
+        f_NestedParties3_Nested3PartyRole = f_NestedParties3_Nested3PartyRole;
+        f_NestedParties3_Nested3PartyIDSource = f_NestedParties3_Nested3PartyIDSource;
+        f_NestedParties3_NoNested3PartyIDs = f_NestedParties3_NoNested3PartyIDs;
+        f_NestedParties3_Nested3PartyID = f_NestedParties3_Nested3PartyID
+    },msg)
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_BidCompRspGrp (msg)  =
+    opt msg "423" parse_PriceType (fun msg f_BidCompRspGrp_PriceType -> opt msg "421" parse_Country (fun msg f_BidCompRspGrp_Country -> opt msg "64" parse_LocalMktDate (fun msg f_BidCompRspGrp_SettlDate -> opt msg "63" parse_SettlType (fun msg f_BidCompRspGrp_SettlType -> opt msg "66" parse_string (fun msg f_BidCompRspGrp_ListID -> opt msg "44" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_BidCompRspGrp_Price -> opt msg "420" parse_int (fun msg f_BidCompRspGrp_NoBidComponents -> opt msg "354" parse_int (fun msg f_BidCompRspGrp_EncodedTextLen -> opt msg "625" parse_string (fun msg f_BidCompRspGrp_TradingSessionSubID -> opt msg "54" parse_Side (fun msg f_BidCompRspGrp_Side -> opt msg "430" parse_NetGrossInd (fun msg f_BidCompRspGrp_NetGrossInd -> opt msg "58" parse_string (fun msg f_BidCompRspGrp_Text -> opt msg "336" parse_string (fun msg f_BidCompRspGrp_TradingSessionID -> opt msg "355" parse_string (fun msg f_BidCompRspGrp_EncodedText -> opt msg "406" parse_float (fun msg f_BidCompRspGrp_FairValue -> block msg parse_CommissionData (fun msg f_BidCompRspGrp_CommissionData -> (ParseSuccess {
+        f_BidCompRspGrp_CommissionData = f_BidCompRspGrp_CommissionData;
+        f_BidCompRspGrp_FairValue = f_BidCompRspGrp_FairValue;
+        f_BidCompRspGrp_EncodedText = f_BidCompRspGrp_EncodedText;
+        f_BidCompRspGrp_TradingSessionID = f_BidCompRspGrp_TradingSessionID;
+        f_BidCompRspGrp_Text = f_BidCompRspGrp_Text;
+        f_BidCompRspGrp_NetGrossInd = f_BidCompRspGrp_NetGrossInd;
+        f_BidCompRspGrp_Side = f_BidCompRspGrp_Side;
+        f_BidCompRspGrp_TradingSessionSubID = f_BidCompRspGrp_TradingSessionSubID;
+        f_BidCompRspGrp_EncodedTextLen = f_BidCompRspGrp_EncodedTextLen;
+        f_BidCompRspGrp_NoBidComponents = f_BidCompRspGrp_NoBidComponents;
+        f_BidCompRspGrp_Price = f_BidCompRspGrp_Price;
+        f_BidCompRspGrp_ListID = f_BidCompRspGrp_ListID;
+        f_BidCompRspGrp_SettlType = f_BidCompRspGrp_SettlType;
+        f_BidCompRspGrp_SettlDate = f_BidCompRspGrp_SettlDate;
+        f_BidCompRspGrp_Country = f_BidCompRspGrp_Country;
+        f_BidCompRspGrp_PriceType = f_BidCompRspGrp_PriceType
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_NestedParties2 (msg)  =
+    opt msg "757" parse_string (fun msg f_NestedParties2_Nested2PartyID -> opt msg "758" parse_char (fun msg f_NestedParties2_Nested2PartyIDSource -> opt msg "756" parse_int (fun msg f_NestedParties2_NoNested2PartyIDs -> opt msg "759" parse_int (fun msg f_NestedParties2_Nested2PartyRole -> repeating msg "806" parse_NstdPtys2SubGrp (fun msg f_NestedParties2_NstdPtys2SubGrp -> (ParseSuccess {
+        f_NestedParties2_NstdPtys2SubGrp = f_NestedParties2_NstdPtys2SubGrp;
+        f_NestedParties2_Nested2PartyRole = f_NestedParties2_Nested2PartyRole;
+        f_NestedParties2_NoNested2PartyIDs = f_NestedParties2_NoNested2PartyIDs;
+        f_NestedParties2_Nested2PartyIDSource = f_NestedParties2_Nested2PartyIDSource;
+        f_NestedParties2_Nested2PartyID = f_NestedParties2_Nested2PartyID
+    },msg)
     )
     )
     )
@@ -2724,52 +2754,13 @@ let parse_Instrument (msg)  =
     )
 ;;
 
-let parse_BidCompRspGrp (msg)  =
-    opt msg "423" parse_PriceType (fun msg f_BidCompRspGrp_PriceType -> opt msg "421" parse_Country (fun msg f_BidCompRspGrp_Country -> opt msg "64" parse_LocalMktDate (fun msg f_BidCompRspGrp_SettlDate -> opt msg "63" parse_SettlType (fun msg f_BidCompRspGrp_SettlType -> opt msg "66" parse_string (fun msg f_BidCompRspGrp_ListID -> opt msg "44" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_BidCompRspGrp_Price -> opt msg "420" parse_int (fun msg f_BidCompRspGrp_NoBidComponents -> opt msg "354" parse_int (fun msg f_BidCompRspGrp_EncodedTextLen -> opt msg "625" parse_string (fun msg f_BidCompRspGrp_TradingSessionSubID -> opt msg "54" parse_Side (fun msg f_BidCompRspGrp_Side -> opt msg "430" parse_NetGrossInd (fun msg f_BidCompRspGrp_NetGrossInd -> opt msg "58" parse_string (fun msg f_BidCompRspGrp_Text -> opt msg "336" parse_string (fun msg f_BidCompRspGrp_TradingSessionID -> opt msg "355" parse_string (fun msg f_BidCompRspGrp_EncodedText -> opt msg "406" parse_float (fun msg f_BidCompRspGrp_FairValue -> block msg parse_CommissionData (fun msg f_BidCompRspGrp_CommissionData -> (ParseSuccess {
-        f_BidCompRspGrp_CommissionData = f_BidCompRspGrp_CommissionData;
-        f_BidCompRspGrp_FairValue = f_BidCompRspGrp_FairValue;
-        f_BidCompRspGrp_EncodedText = f_BidCompRspGrp_EncodedText;
-        f_BidCompRspGrp_TradingSessionID = f_BidCompRspGrp_TradingSessionID;
-        f_BidCompRspGrp_Text = f_BidCompRspGrp_Text;
-        f_BidCompRspGrp_NetGrossInd = f_BidCompRspGrp_NetGrossInd;
-        f_BidCompRspGrp_Side = f_BidCompRspGrp_Side;
-        f_BidCompRspGrp_TradingSessionSubID = f_BidCompRspGrp_TradingSessionSubID;
-        f_BidCompRspGrp_EncodedTextLen = f_BidCompRspGrp_EncodedTextLen;
-        f_BidCompRspGrp_NoBidComponents = f_BidCompRspGrp_NoBidComponents;
-        f_BidCompRspGrp_Price = f_BidCompRspGrp_Price;
-        f_BidCompRspGrp_ListID = f_BidCompRspGrp_ListID;
-        f_BidCompRspGrp_SettlType = f_BidCompRspGrp_SettlType;
-        f_BidCompRspGrp_SettlDate = f_BidCompRspGrp_SettlDate;
-        f_BidCompRspGrp_Country = f_BidCompRspGrp_Country;
-        f_BidCompRspGrp_PriceType = f_BidCompRspGrp_PriceType
+let parse_InstrumentExtension (msg)  =
+    opt msg "668" parse_DeliveryForm (fun msg f_InstrumentExtension_DeliveryForm -> opt msg "869" parse_float (fun msg f_InstrumentExtension_PctAtRisk -> repeating msg "870" parse_AttrbGrp (fun msg f_InstrumentExtension_AttrbGrp -> (ParseSuccess {
+        f_InstrumentExtension_AttrbGrp = f_InstrumentExtension_AttrbGrp;
+        f_InstrumentExtension_PctAtRisk = f_InstrumentExtension_PctAtRisk;
+        f_InstrumentExtension_DeliveryForm = f_InstrumentExtension_DeliveryForm
     },msg)
     )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_InstrmtStrkPxGrp (msg)  =
-    opt msg "428" parse_int (fun msg f_InstrmtStrkPxGrp_NoStrikes -> block msg parse_Instrument (fun msg f_InstrmtStrkPxGrp_Instrument -> (ParseSuccess {
-        f_InstrmtStrkPxGrp_Instrument = f_InstrmtStrkPxGrp_Instrument;
-        f_InstrmtStrkPxGrp_NoStrikes = f_InstrmtStrkPxGrp_NoStrikes
-    },msg)
     )
     )
 ;;
@@ -2783,10 +2774,10 @@ let parse_InstrmtGrp (msg)  =
     )
 ;;
 
-let parse_UndInstrmtGrp (msg)  =
-    opt msg "711" parse_int (fun msg f_UndInstrmtGrp_NoUnderlyings -> block msg parse_UnderlyingInstrument (fun msg f_UndInstrmtGrp_UnderlyingInstrument -> (ParseSuccess {
-        f_UndInstrmtGrp_UnderlyingInstrument = f_UndInstrmtGrp_UnderlyingInstrument;
-        f_UndInstrmtGrp_NoUnderlyings = f_UndInstrmtGrp_NoUnderlyings
+let parse_InstrmtStrkPxGrp (msg)  =
+    opt msg "428" parse_int (fun msg f_InstrmtStrkPxGrp_NoStrikes -> block msg parse_Instrument (fun msg f_InstrmtStrkPxGrp_Instrument -> (ParseSuccess {
+        f_InstrmtStrkPxGrp_Instrument = f_InstrmtStrkPxGrp_Instrument;
+        f_InstrmtStrkPxGrp_NoStrikes = f_InstrmtStrkPxGrp_NoStrikes
     },msg)
     )
     )
@@ -2855,60 +2846,11 @@ let parse_UndInstrmtCollGrp (msg)  =
     )
 ;;
 
-let parse_InstrmtLegIOIGrp (msg)  =
-    opt msg "555" parse_int (fun msg f_InstrmtLegIOIGrp_NoLegs -> opt msg "682" parse_string (fun msg f_InstrmtLegIOIGrp_LegIOIQty -> block msg parse_InstrumentLeg (fun msg f_InstrmtLegIOIGrp_InstrumentLeg -> repeating msg "683" parse_LegStipulations (fun msg f_InstrmtLegIOIGrp_LegStipulations -> (ParseSuccess {
-        f_InstrmtLegIOIGrp_LegStipulations = f_InstrmtLegIOIGrp_LegStipulations;
-        f_InstrmtLegIOIGrp_InstrumentLeg = f_InstrmtLegIOIGrp_InstrumentLeg;
-        f_InstrmtLegIOIGrp_LegIOIQty = f_InstrmtLegIOIGrp_LegIOIQty;
-        f_InstrmtLegIOIGrp_NoLegs = f_InstrmtLegIOIGrp_NoLegs
+let parse_UndInstrmtGrp (msg)  =
+    opt msg "711" parse_int (fun msg f_UndInstrmtGrp_NoUnderlyings -> block msg parse_UnderlyingInstrument (fun msg f_UndInstrmtGrp_UnderlyingInstrument -> (ParseSuccess {
+        f_UndInstrmtGrp_UnderlyingInstrument = f_UndInstrmtGrp_UnderlyingInstrument;
+        f_UndInstrmtGrp_NoUnderlyings = f_UndInstrmtGrp_NoUnderlyings
     },msg)
-    )
-    )
-    )
-    )
-;;
-
-let parse_InstrmtLegSecListGrp (msg)  =
-    opt msg "555" parse_int (fun msg f_InstrmtLegSecListGrp_NoLegs -> opt msg "587" parse_char (fun msg f_InstrmtLegSecListGrp_LegSettlType -> opt msg "690" parse_LegSwapType (fun msg f_InstrmtLegSecListGrp_LegSwapType -> block msg parse_InstrumentLeg (fun msg f_InstrmtLegSecListGrp_InstrumentLeg -> block msg parse_LegBenchmarkCurveData (fun msg f_InstrmtLegSecListGrp_LegBenchmarkCurveData -> repeating msg "683" parse_LegStipulations (fun msg f_InstrmtLegSecListGrp_LegStipulations -> (ParseSuccess {
-        f_InstrmtLegSecListGrp_LegStipulations = f_InstrmtLegSecListGrp_LegStipulations;
-        f_InstrmtLegSecListGrp_LegBenchmarkCurveData = f_InstrmtLegSecListGrp_LegBenchmarkCurveData;
-        f_InstrmtLegSecListGrp_InstrumentLeg = f_InstrmtLegSecListGrp_InstrumentLeg;
-        f_InstrmtLegSecListGrp_LegSwapType = f_InstrmtLegSecListGrp_LegSwapType;
-        f_InstrmtLegSecListGrp_LegSettlType = f_InstrmtLegSecListGrp_LegSettlType;
-        f_InstrmtLegSecListGrp_NoLegs = f_InstrmtLegSecListGrp_NoLegs
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_InstrmtLegGrp (msg)  =
-    opt msg "555" parse_int (fun msg f_InstrmtLegGrp_NoLegs -> block msg parse_InstrumentLeg (fun msg f_InstrmtLegGrp_InstrumentLeg -> (ParseSuccess {
-        f_InstrmtLegGrp_InstrumentLeg = f_InstrmtLegGrp_InstrumentLeg;
-        f_InstrmtLegGrp_NoLegs = f_InstrmtLegGrp_NoLegs
-    },msg)
-    )
-    )
-;;
-
-let parse_TrdAllocGrp (msg)  =
-    opt msg "79" parse_string (fun msg f_TrdAllocGrp_AllocAccount -> opt msg "661" parse_int (fun msg f_TrdAllocGrp_AllocAcctIDSource -> opt msg "80" parse_float (fun msg f_TrdAllocGrp_AllocQty -> opt msg "736" parse_Currency (fun msg f_TrdAllocGrp_AllocSettlCurrency -> opt msg "78" parse_int (fun msg f_TrdAllocGrp_NoAllocs -> opt msg "467" parse_string (fun msg f_TrdAllocGrp_IndividualAllocID -> repeating msg "756" parse_NestedParties2 (fun msg f_TrdAllocGrp_NestedParties2 -> (ParseSuccess {
-        f_TrdAllocGrp_NestedParties2 = f_TrdAllocGrp_NestedParties2;
-        f_TrdAllocGrp_IndividualAllocID = f_TrdAllocGrp_IndividualAllocID;
-        f_TrdAllocGrp_NoAllocs = f_TrdAllocGrp_NoAllocs;
-        f_TrdAllocGrp_AllocSettlCurrency = f_TrdAllocGrp_AllocSettlCurrency;
-        f_TrdAllocGrp_AllocQty = f_TrdAllocGrp_AllocQty;
-        f_TrdAllocGrp_AllocAcctIDSource = f_TrdAllocGrp_AllocAcctIDSource;
-        f_TrdAllocGrp_AllocAccount = f_TrdAllocGrp_AllocAccount
-    },msg)
-    )
-    )
-    )
-    )
-    )
     )
     )
 ;;
@@ -2961,231 +2903,19 @@ let parse_OrdAllocGrp (msg)  =
     )
 ;;
 
-let parse_LegQuotGrp (msg)  =
-    opt msg "555" parse_int (fun msg f_LegQuotGrp_NoLegs -> opt msg "587" parse_char (fun msg f_LegQuotGrp_LegSettlType -> opt msg "690" parse_LegSwapType (fun msg f_LegQuotGrp_LegSwapType -> opt msg "684" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_LegQuotGrp_LegOfferPx -> opt msg "588" parse_LocalMktDate (fun msg f_LegQuotGrp_LegSettlDate -> opt msg "687" parse_float (fun msg f_LegQuotGrp_LegQty -> opt msg "686" parse_int (fun msg f_LegQuotGrp_LegPriceType -> opt msg "681" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_LegQuotGrp_LegBidPx -> block msg parse_InstrumentLeg (fun msg f_LegQuotGrp_InstrumentLeg -> block msg parse_LegBenchmarkCurveData (fun msg f_LegQuotGrp_LegBenchmarkCurveData -> repeating msg "539" parse_NestedParties (fun msg f_LegQuotGrp_NestedParties -> repeating msg "683" parse_LegStipulations (fun msg f_LegQuotGrp_LegStipulations -> (ParseSuccess {
-        f_LegQuotGrp_LegStipulations = f_LegQuotGrp_LegStipulations;
-        f_LegQuotGrp_NestedParties = f_LegQuotGrp_NestedParties;
-        f_LegQuotGrp_LegBenchmarkCurveData = f_LegQuotGrp_LegBenchmarkCurveData;
-        f_LegQuotGrp_InstrumentLeg = f_LegQuotGrp_InstrumentLeg;
-        f_LegQuotGrp_LegBidPx = f_LegQuotGrp_LegBidPx;
-        f_LegQuotGrp_LegPriceType = f_LegQuotGrp_LegPriceType;
-        f_LegQuotGrp_LegQty = f_LegQuotGrp_LegQty;
-        f_LegQuotGrp_LegSettlDate = f_LegQuotGrp_LegSettlDate;
-        f_LegQuotGrp_LegOfferPx = f_LegQuotGrp_LegOfferPx;
-        f_LegQuotGrp_LegSwapType = f_LegQuotGrp_LegSwapType;
-        f_LegQuotGrp_LegSettlType = f_LegQuotGrp_LegSettlType;
-        f_LegQuotGrp_NoLegs = f_LegQuotGrp_NoLegs
+let parse_TrdAllocGrp (msg)  =
+    opt msg "79" parse_string (fun msg f_TrdAllocGrp_AllocAccount -> opt msg "661" parse_int (fun msg f_TrdAllocGrp_AllocAcctIDSource -> opt msg "80" parse_float (fun msg f_TrdAllocGrp_AllocQty -> opt msg "736" parse_Currency (fun msg f_TrdAllocGrp_AllocSettlCurrency -> opt msg "78" parse_int (fun msg f_TrdAllocGrp_NoAllocs -> opt msg "467" parse_string (fun msg f_TrdAllocGrp_IndividualAllocID -> repeating msg "756" parse_NestedParties2 (fun msg f_TrdAllocGrp_NestedParties2 -> (ParseSuccess {
+        f_TrdAllocGrp_NestedParties2 = f_TrdAllocGrp_NestedParties2;
+        f_TrdAllocGrp_IndividualAllocID = f_TrdAllocGrp_IndividualAllocID;
+        f_TrdAllocGrp_NoAllocs = f_TrdAllocGrp_NoAllocs;
+        f_TrdAllocGrp_AllocSettlCurrency = f_TrdAllocGrp_AllocSettlCurrency;
+        f_TrdAllocGrp_AllocQty = f_TrdAllocGrp_AllocQty;
+        f_TrdAllocGrp_AllocAcctIDSource = f_TrdAllocGrp_AllocAcctIDSource;
+        f_TrdAllocGrp_AllocAccount = f_TrdAllocGrp_AllocAccount
     },msg)
     )
     )
     )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_PreAllocGrp (msg)  =
-    opt msg "79" parse_string (fun msg f_PreAllocGrp_AllocAccount -> opt msg "661" parse_int (fun msg f_PreAllocGrp_AllocAcctIDSource -> opt msg "80" parse_float (fun msg f_PreAllocGrp_AllocQty -> opt msg "736" parse_Currency (fun msg f_PreAllocGrp_AllocSettlCurrency -> opt msg "78" parse_int (fun msg f_PreAllocGrp_NoAllocs -> opt msg "467" parse_string (fun msg f_PreAllocGrp_IndividualAllocID -> repeating msg "539" parse_NestedParties (fun msg f_PreAllocGrp_NestedParties -> (ParseSuccess {
-        f_PreAllocGrp_NestedParties = f_PreAllocGrp_NestedParties;
-        f_PreAllocGrp_IndividualAllocID = f_PreAllocGrp_IndividualAllocID;
-        f_PreAllocGrp_NoAllocs = f_PreAllocGrp_NoAllocs;
-        f_PreAllocGrp_AllocSettlCurrency = f_PreAllocGrp_AllocSettlCurrency;
-        f_PreAllocGrp_AllocQty = f_PreAllocGrp_AllocQty;
-        f_PreAllocGrp_AllocAcctIDSource = f_PreAllocGrp_AllocAcctIDSource;
-        f_PreAllocGrp_AllocAccount = f_PreAllocGrp_AllocAccount
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_PositionQty (msg)  =
-    opt msg "706" parse_PosQtyStatus (fun msg f_PositionQty_PosQtyStatus -> opt msg "704" parse_float (fun msg f_PositionQty_LongQty -> opt msg "705" parse_float (fun msg f_PositionQty_ShortQty -> opt msg "703" parse_PosType (fun msg f_PositionQty_PosType -> opt msg "702" parse_int (fun msg f_PositionQty_NoPositions -> repeating msg "539" parse_NestedParties (fun msg f_PositionQty_NestedParties -> (ParseSuccess {
-        f_PositionQty_NestedParties = f_PositionQty_NestedParties;
-        f_PositionQty_NoPositions = f_PositionQty_NoPositions;
-        f_PositionQty_PosType = f_PositionQty_PosType;
-        f_PositionQty_ShortQty = f_PositionQty_ShortQty;
-        f_PositionQty_LongQty = f_PositionQty_LongQty;
-        f_PositionQty_PosQtyStatus = f_PositionQty_PosQtyStatus
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_LegQuotStatGrp (msg)  =
-    opt msg "555" parse_int (fun msg f_LegQuotStatGrp_NoLegs -> opt msg "587" parse_char (fun msg f_LegQuotStatGrp_LegSettlType -> opt msg "690" parse_LegSwapType (fun msg f_LegQuotStatGrp_LegSwapType -> opt msg "588" parse_LocalMktDate (fun msg f_LegQuotStatGrp_LegSettlDate -> opt msg "687" parse_float (fun msg f_LegQuotStatGrp_LegQty -> block msg parse_InstrumentLeg (fun msg f_LegQuotStatGrp_InstrumentLeg -> repeating msg "539" parse_NestedParties (fun msg f_LegQuotStatGrp_NestedParties -> repeating msg "683" parse_LegStipulations (fun msg f_LegQuotStatGrp_LegStipulations -> (ParseSuccess {
-        f_LegQuotStatGrp_LegStipulations = f_LegQuotStatGrp_LegStipulations;
-        f_LegQuotStatGrp_NestedParties = f_LegQuotStatGrp_NestedParties;
-        f_LegQuotStatGrp_InstrumentLeg = f_LegQuotStatGrp_InstrumentLeg;
-        f_LegQuotStatGrp_LegQty = f_LegQuotStatGrp_LegQty;
-        f_LegQuotStatGrp_LegSettlDate = f_LegQuotStatGrp_LegSettlDate;
-        f_LegQuotStatGrp_LegSwapType = f_LegQuotStatGrp_LegSwapType;
-        f_LegQuotStatGrp_LegSettlType = f_LegQuotStatGrp_LegSettlType;
-        f_LegQuotStatGrp_NoLegs = f_LegQuotStatGrp_NoLegs
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_RgstDtlsGrp (msg)  =
-    opt msg "482" parse_string (fun msg f_RgstDtlsGrp_MailingInst -> opt msg "474" parse_string (fun msg f_RgstDtlsGrp_MailingDtls -> opt msg "475" parse_Country (fun msg f_RgstDtlsGrp_InvestorCountryOfResidence -> opt msg "473" parse_int (fun msg f_RgstDtlsGrp_NoRegistDtls -> opt msg "511" parse_string (fun msg f_RgstDtlsGrp_RegistEmail -> opt msg "486" parse_LocalMktDate (fun msg f_RgstDtlsGrp_DateOfBirth -> opt msg "522" parse_OwnerType (fun msg f_RgstDtlsGrp_OwnerType -> opt msg "509" parse_string (fun msg f_RgstDtlsGrp_RegistDtls -> repeating msg "539" parse_NestedParties (fun msg f_RgstDtlsGrp_NestedParties -> (ParseSuccess {
-        f_RgstDtlsGrp_NestedParties = f_RgstDtlsGrp_NestedParties;
-        f_RgstDtlsGrp_RegistDtls = f_RgstDtlsGrp_RegistDtls;
-        f_RgstDtlsGrp_OwnerType = f_RgstDtlsGrp_OwnerType;
-        f_RgstDtlsGrp_DateOfBirth = f_RgstDtlsGrp_DateOfBirth;
-        f_RgstDtlsGrp_RegistEmail = f_RgstDtlsGrp_RegistEmail;
-        f_RgstDtlsGrp_NoRegistDtls = f_RgstDtlsGrp_NoRegistDtls;
-        f_RgstDtlsGrp_InvestorCountryOfResidence = f_RgstDtlsGrp_InvestorCountryOfResidence;
-        f_RgstDtlsGrp_MailingDtls = f_RgstDtlsGrp_MailingDtls;
-        f_RgstDtlsGrp_MailingInst = f_RgstDtlsGrp_MailingInst
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_InstrmtLegExecGrp (msg)  =
-    opt msg "555" parse_int (fun msg f_InstrmtLegExecGrp_NoLegs -> opt msg "565" parse_int (fun msg f_InstrmtLegExecGrp_LegCoveredOrUncovered -> opt msg "690" parse_LegSwapType (fun msg f_InstrmtLegExecGrp_LegSwapType -> opt msg "588" parse_LocalMktDate (fun msg f_InstrmtLegExecGrp_LegSettlDate -> opt msg "654" parse_string (fun msg f_InstrmtLegExecGrp_LegRefID -> opt msg "566" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_InstrmtLegExecGrp_LegPrice -> opt msg "637" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_InstrmtLegExecGrp_LegLastPx -> opt msg "587" parse_char (fun msg f_InstrmtLegExecGrp_LegSettlType -> opt msg "564" parse_char (fun msg f_InstrmtLegExecGrp_LegPositionEffect -> opt msg "687" parse_float (fun msg f_InstrmtLegExecGrp_LegQty -> block msg parse_InstrumentLeg (fun msg f_InstrmtLegExecGrp_InstrumentLeg -> repeating msg "539" parse_NestedParties (fun msg f_InstrmtLegExecGrp_NestedParties -> repeating msg "683" parse_LegStipulations (fun msg f_InstrmtLegExecGrp_LegStipulations -> (ParseSuccess {
-        f_InstrmtLegExecGrp_LegStipulations = f_InstrmtLegExecGrp_LegStipulations;
-        f_InstrmtLegExecGrp_NestedParties = f_InstrmtLegExecGrp_NestedParties;
-        f_InstrmtLegExecGrp_InstrumentLeg = f_InstrmtLegExecGrp_InstrumentLeg;
-        f_InstrmtLegExecGrp_LegQty = f_InstrmtLegExecGrp_LegQty;
-        f_InstrmtLegExecGrp_LegPositionEffect = f_InstrmtLegExecGrp_LegPositionEffect;
-        f_InstrmtLegExecGrp_LegSettlType = f_InstrmtLegExecGrp_LegSettlType;
-        f_InstrmtLegExecGrp_LegLastPx = f_InstrmtLegExecGrp_LegLastPx;
-        f_InstrmtLegExecGrp_LegPrice = f_InstrmtLegExecGrp_LegPrice;
-        f_InstrmtLegExecGrp_LegRefID = f_InstrmtLegExecGrp_LegRefID;
-        f_InstrmtLegExecGrp_LegSettlDate = f_InstrmtLegExecGrp_LegSettlDate;
-        f_InstrmtLegExecGrp_LegSwapType = f_InstrmtLegExecGrp_LegSwapType;
-        f_InstrmtLegExecGrp_LegCoveredOrUncovered = f_InstrmtLegExecGrp_LegCoveredOrUncovered;
-        f_InstrmtLegExecGrp_NoLegs = f_InstrmtLegExecGrp_NoLegs
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_QuotReqLegsGrp (msg)  =
-    opt msg "555" parse_int (fun msg f_QuotReqLegsGrp_NoLegs -> opt msg "587" parse_char (fun msg f_QuotReqLegsGrp_LegSettlType -> opt msg "690" parse_LegSwapType (fun msg f_QuotReqLegsGrp_LegSwapType -> opt msg "588" parse_LocalMktDate (fun msg f_QuotReqLegsGrp_LegSettlDate -> opt msg "687" parse_float (fun msg f_QuotReqLegsGrp_LegQty -> block msg parse_InstrumentLeg (fun msg f_QuotReqLegsGrp_InstrumentLeg -> block msg parse_LegBenchmarkCurveData (fun msg f_QuotReqLegsGrp_LegBenchmarkCurveData -> repeating msg "539" parse_NestedParties (fun msg f_QuotReqLegsGrp_NestedParties -> repeating msg "683" parse_LegStipulations (fun msg f_QuotReqLegsGrp_LegStipulations -> (ParseSuccess {
-        f_QuotReqLegsGrp_LegStipulations = f_QuotReqLegsGrp_LegStipulations;
-        f_QuotReqLegsGrp_NestedParties = f_QuotReqLegsGrp_NestedParties;
-        f_QuotReqLegsGrp_LegBenchmarkCurveData = f_QuotReqLegsGrp_LegBenchmarkCurveData;
-        f_QuotReqLegsGrp_InstrumentLeg = f_QuotReqLegsGrp_InstrumentLeg;
-        f_QuotReqLegsGrp_LegQty = f_QuotReqLegsGrp_LegQty;
-        f_QuotReqLegsGrp_LegSettlDate = f_QuotReqLegsGrp_LegSettlDate;
-        f_QuotReqLegsGrp_LegSwapType = f_QuotReqLegsGrp_LegSwapType;
-        f_QuotReqLegsGrp_LegSettlType = f_QuotReqLegsGrp_LegSettlType;
-        f_QuotReqLegsGrp_NoLegs = f_QuotReqLegsGrp_NoLegs
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_TrdInstrmtLegGrp (msg)  =
-    opt msg "555" parse_int (fun msg f_TrdInstrmtLegGrp_NoLegs -> opt msg "565" parse_int (fun msg f_TrdInstrmtLegGrp_LegCoveredOrUncovered -> opt msg "690" parse_LegSwapType (fun msg f_TrdInstrmtLegGrp_LegSwapType -> opt msg "588" parse_LocalMktDate (fun msg f_TrdInstrmtLegGrp_LegSettlDate -> opt msg "654" parse_string (fun msg f_TrdInstrmtLegGrp_LegRefID -> opt msg "566" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_TrdInstrmtLegGrp_LegPrice -> opt msg "637" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_TrdInstrmtLegGrp_LegLastPx -> opt msg "587" parse_char (fun msg f_TrdInstrmtLegGrp_LegSettlType -> opt msg "564" parse_char (fun msg f_TrdInstrmtLegGrp_LegPositionEffect -> opt msg "687" parse_float (fun msg f_TrdInstrmtLegGrp_LegQty -> block msg parse_InstrumentLeg (fun msg f_TrdInstrmtLegGrp_InstrumentLeg -> repeating msg "539" parse_NestedParties (fun msg f_TrdInstrmtLegGrp_NestedParties -> repeating msg "683" parse_LegStipulations (fun msg f_TrdInstrmtLegGrp_LegStipulations -> (ParseSuccess {
-        f_TrdInstrmtLegGrp_LegStipulations = f_TrdInstrmtLegGrp_LegStipulations;
-        f_TrdInstrmtLegGrp_NestedParties = f_TrdInstrmtLegGrp_NestedParties;
-        f_TrdInstrmtLegGrp_InstrumentLeg = f_TrdInstrmtLegGrp_InstrumentLeg;
-        f_TrdInstrmtLegGrp_LegQty = f_TrdInstrmtLegGrp_LegQty;
-        f_TrdInstrmtLegGrp_LegPositionEffect = f_TrdInstrmtLegGrp_LegPositionEffect;
-        f_TrdInstrmtLegGrp_LegSettlType = f_TrdInstrmtLegGrp_LegSettlType;
-        f_TrdInstrmtLegGrp_LegLastPx = f_TrdInstrmtLegGrp_LegLastPx;
-        f_TrdInstrmtLegGrp_LegPrice = f_TrdInstrmtLegGrp_LegPrice;
-        f_TrdInstrmtLegGrp_LegRefID = f_TrdInstrmtLegGrp_LegRefID;
-        f_TrdInstrmtLegGrp_LegSettlDate = f_TrdInstrmtLegGrp_LegSettlDate;
-        f_TrdInstrmtLegGrp_LegSwapType = f_TrdInstrmtLegGrp_LegSwapType;
-        f_TrdInstrmtLegGrp_LegCoveredOrUncovered = f_TrdInstrmtLegGrp_LegCoveredOrUncovered;
-        f_TrdInstrmtLegGrp_NoLegs = f_TrdInstrmtLegGrp_NoLegs
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_DlvyInstGrp (msg)  =
-    opt msg "165" parse_SettlInstSource (fun msg f_DlvyInstGrp_SettlInstSource -> opt msg "85" parse_int (fun msg f_DlvyInstGrp_NoDlvyInst -> opt msg "787" parse_DlvyInstType (fun msg f_DlvyInstGrp_DlvyInstType -> repeating msg "781" parse_SettlParties (fun msg f_DlvyInstGrp_SettlParties -> (ParseSuccess {
-        f_DlvyInstGrp_SettlParties = f_DlvyInstGrp_SettlParties;
-        f_DlvyInstGrp_DlvyInstType = f_DlvyInstGrp_DlvyInstType;
-        f_DlvyInstGrp_NoDlvyInst = f_DlvyInstGrp_NoDlvyInst;
-        f_DlvyInstGrp_SettlInstSource = f_DlvyInstGrp_SettlInstSource
-    },msg)
     )
     )
     )
@@ -3246,14 +2976,29 @@ let parse_SideCrossOrdCxlGrp (msg)  =
     )
 ;;
 
-let parse_SettlInstructionsData (msg)  =
-    opt msg "169" parse_StandInstDbType (fun msg f_SettlInstructionsData_StandInstDbType -> opt msg "170" parse_string (fun msg f_SettlInstructionsData_StandInstDbName -> opt msg "171" parse_string (fun msg f_SettlInstructionsData_StandInstDbID -> opt msg "172" parse_SettlDeliveryType (fun msg f_SettlInstructionsData_SettlDeliveryType -> repeating msg "85" parse_DlvyInstGrp (fun msg f_SettlInstructionsData_DlvyInstGrp -> (ParseSuccess {
-        f_SettlInstructionsData_DlvyInstGrp = f_SettlInstructionsData_DlvyInstGrp;
-        f_SettlInstructionsData_SettlDeliveryType = f_SettlInstructionsData_SettlDeliveryType;
-        f_SettlInstructionsData_StandInstDbID = f_SettlInstructionsData_StandInstDbID;
-        f_SettlInstructionsData_StandInstDbName = f_SettlInstructionsData_StandInstDbName;
-        f_SettlInstructionsData_StandInstDbType = f_SettlInstructionsData_StandInstDbType
+let parse_DlvyInstGrp (msg)  =
+    opt msg "165" parse_SettlInstSource (fun msg f_DlvyInstGrp_SettlInstSource -> opt msg "85" parse_int (fun msg f_DlvyInstGrp_NoDlvyInst -> opt msg "787" parse_DlvyInstType (fun msg f_DlvyInstGrp_DlvyInstType -> repeating msg "781" parse_SettlParties (fun msg f_DlvyInstGrp_SettlParties -> (ParseSuccess {
+        f_DlvyInstGrp_SettlParties = f_DlvyInstGrp_SettlParties;
+        f_DlvyInstGrp_DlvyInstType = f_DlvyInstGrp_DlvyInstType;
+        f_DlvyInstGrp_NoDlvyInst = f_DlvyInstGrp_NoDlvyInst;
+        f_DlvyInstGrp_SettlInstSource = f_DlvyInstGrp_SettlInstSource
     },msg)
+    )
+    )
+    )
+    )
+;;
+
+let parse_PositionQty (msg)  =
+    opt msg "706" parse_PosQtyStatus (fun msg f_PositionQty_PosQtyStatus -> opt msg "704" parse_float (fun msg f_PositionQty_LongQty -> opt msg "705" parse_float (fun msg f_PositionQty_ShortQty -> opt msg "703" parse_PosType (fun msg f_PositionQty_PosType -> opt msg "702" parse_int (fun msg f_PositionQty_NoPositions -> repeating msg "539" parse_NestedParties (fun msg f_PositionQty_NestedParties -> (ParseSuccess {
+        f_PositionQty_NestedParties = f_PositionQty_NestedParties;
+        f_PositionQty_NoPositions = f_PositionQty_NoPositions;
+        f_PositionQty_PosType = f_PositionQty_PosType;
+        f_PositionQty_ShortQty = f_PositionQty_ShortQty;
+        f_PositionQty_LongQty = f_PositionQty_LongQty;
+        f_PositionQty_PosQtyStatus = f_PositionQty_PosQtyStatus
+    },msg)
+    )
     )
     )
     )
@@ -3261,68 +3006,18 @@ let parse_SettlInstructionsData (msg)  =
     )
 ;;
 
-let parse_SideCrossOrdModGrp (msg)  =
-    opt msg "775" parse_BookingType (fun msg f_SideCrossOrdModGrp_BookingType -> opt msg "75" parse_LocalMktDate (fun msg f_SideCrossOrdModGrp_TradeDate -> opt msg "583" parse_string (fun msg f_SideCrossOrdModGrp_ClOrdLinkID -> opt msg "77" parse_PositionEffect (fun msg f_SideCrossOrdModGrp_PositionEffect -> opt msg "120" parse_Currency (fun msg f_SideCrossOrdModGrp_SettlCurrency -> opt msg "121" parse_ForexReq (fun msg f_SideCrossOrdModGrp_ForexReq -> opt msg "590" parse_BookingUnit (fun msg f_SideCrossOrdModGrp_BookingUnit -> opt msg "354" parse_int (fun msg f_SideCrossOrdModGrp_EncodedTextLen -> opt msg "54" parse_Side (fun msg f_SideCrossOrdModGrp_Side -> opt msg "70" parse_string (fun msg f_SideCrossOrdModGrp_AllocID -> opt msg "229" parse_LocalMktDate (fun msg f_SideCrossOrdModGrp_TradeOriginationDate -> opt msg "552" parse_int (fun msg f_SideCrossOrdModGrp_NoSides -> opt msg "355" parse_string (fun msg f_SideCrossOrdModGrp_EncodedText -> opt msg "591" parse_PreallocMethod (fun msg f_SideCrossOrdModGrp_PreallocMethod -> opt msg "660" parse_AcctIDSource (fun msg f_SideCrossOrdModGrp_AcctIDSource -> opt msg "1" parse_string (fun msg f_SideCrossOrdModGrp_Account -> opt msg "203" parse_CoveredOrUncovered (fun msg f_SideCrossOrdModGrp_CoveredOrUncovered -> opt msg "529" parse_OrderRestrictions (fun msg f_SideCrossOrdModGrp_OrderRestrictions -> opt msg "635" parse_ClearingFeeIndicator (fun msg f_SideCrossOrdModGrp_ClearingFeeIndicator -> opt msg "854" parse_QtyType (fun msg f_SideCrossOrdModGrp_QtyType -> opt msg "589" parse_DayBookingInst (fun msg f_SideCrossOrdModGrp_DayBookingInst -> opt msg "581" parse_AccountType (fun msg f_SideCrossOrdModGrp_AccountType -> opt msg "526" parse_string (fun msg f_SideCrossOrdModGrp_SecondaryClOrdID -> opt msg "58" parse_string (fun msg f_SideCrossOrdModGrp_Text -> opt msg "11" parse_string (fun msg f_SideCrossOrdModGrp_ClOrdID -> opt msg "659" parse_string (fun msg f_SideCrossOrdModGrp_SideComplianceID -> opt msg "544" parse_CashMargin (fun msg f_SideCrossOrdModGrp_CashMargin -> opt msg "582" parse_CustOrderCapacity (fun msg f_SideCrossOrdModGrp_CustOrderCapacity -> opt msg "528" parse_OrderCapacity (fun msg f_SideCrossOrdModGrp_OrderCapacity -> opt msg "377" parse_SolicitedFlag (fun msg f_SideCrossOrdModGrp_SolicitedFlag -> block msg parse_OrderQtyData (fun msg f_SideCrossOrdModGrp_OrderQtyData -> block msg parse_CommissionData (fun msg f_SideCrossOrdModGrp_CommissionData -> repeating msg "78" parse_PreAllocGrp (fun msg f_SideCrossOrdModGrp_PreAllocGrp -> repeating msg "453" parse_Parties (fun msg f_SideCrossOrdModGrp_Parties -> (ParseSuccess {
-        f_SideCrossOrdModGrp_Parties = f_SideCrossOrdModGrp_Parties;
-        f_SideCrossOrdModGrp_PreAllocGrp = f_SideCrossOrdModGrp_PreAllocGrp;
-        f_SideCrossOrdModGrp_CommissionData = f_SideCrossOrdModGrp_CommissionData;
-        f_SideCrossOrdModGrp_OrderQtyData = f_SideCrossOrdModGrp_OrderQtyData;
-        f_SideCrossOrdModGrp_SolicitedFlag = f_SideCrossOrdModGrp_SolicitedFlag;
-        f_SideCrossOrdModGrp_OrderCapacity = f_SideCrossOrdModGrp_OrderCapacity;
-        f_SideCrossOrdModGrp_CustOrderCapacity = f_SideCrossOrdModGrp_CustOrderCapacity;
-        f_SideCrossOrdModGrp_CashMargin = f_SideCrossOrdModGrp_CashMargin;
-        f_SideCrossOrdModGrp_SideComplianceID = f_SideCrossOrdModGrp_SideComplianceID;
-        f_SideCrossOrdModGrp_ClOrdID = f_SideCrossOrdModGrp_ClOrdID;
-        f_SideCrossOrdModGrp_Text = f_SideCrossOrdModGrp_Text;
-        f_SideCrossOrdModGrp_SecondaryClOrdID = f_SideCrossOrdModGrp_SecondaryClOrdID;
-        f_SideCrossOrdModGrp_AccountType = f_SideCrossOrdModGrp_AccountType;
-        f_SideCrossOrdModGrp_DayBookingInst = f_SideCrossOrdModGrp_DayBookingInst;
-        f_SideCrossOrdModGrp_QtyType = f_SideCrossOrdModGrp_QtyType;
-        f_SideCrossOrdModGrp_ClearingFeeIndicator = f_SideCrossOrdModGrp_ClearingFeeIndicator;
-        f_SideCrossOrdModGrp_OrderRestrictions = f_SideCrossOrdModGrp_OrderRestrictions;
-        f_SideCrossOrdModGrp_CoveredOrUncovered = f_SideCrossOrdModGrp_CoveredOrUncovered;
-        f_SideCrossOrdModGrp_Account = f_SideCrossOrdModGrp_Account;
-        f_SideCrossOrdModGrp_AcctIDSource = f_SideCrossOrdModGrp_AcctIDSource;
-        f_SideCrossOrdModGrp_PreallocMethod = f_SideCrossOrdModGrp_PreallocMethod;
-        f_SideCrossOrdModGrp_EncodedText = f_SideCrossOrdModGrp_EncodedText;
-        f_SideCrossOrdModGrp_NoSides = f_SideCrossOrdModGrp_NoSides;
-        f_SideCrossOrdModGrp_TradeOriginationDate = f_SideCrossOrdModGrp_TradeOriginationDate;
-        f_SideCrossOrdModGrp_AllocID = f_SideCrossOrdModGrp_AllocID;
-        f_SideCrossOrdModGrp_Side = f_SideCrossOrdModGrp_Side;
-        f_SideCrossOrdModGrp_EncodedTextLen = f_SideCrossOrdModGrp_EncodedTextLen;
-        f_SideCrossOrdModGrp_BookingUnit = f_SideCrossOrdModGrp_BookingUnit;
-        f_SideCrossOrdModGrp_ForexReq = f_SideCrossOrdModGrp_ForexReq;
-        f_SideCrossOrdModGrp_SettlCurrency = f_SideCrossOrdModGrp_SettlCurrency;
-        f_SideCrossOrdModGrp_PositionEffect = f_SideCrossOrdModGrp_PositionEffect;
-        f_SideCrossOrdModGrp_ClOrdLinkID = f_SideCrossOrdModGrp_ClOrdLinkID;
-        f_SideCrossOrdModGrp_TradeDate = f_SideCrossOrdModGrp_TradeDate;
-        f_SideCrossOrdModGrp_BookingType = f_SideCrossOrdModGrp_BookingType
+let parse_RgstDtlsGrp (msg)  =
+    opt msg "482" parse_string (fun msg f_RgstDtlsGrp_MailingInst -> opt msg "474" parse_string (fun msg f_RgstDtlsGrp_MailingDtls -> opt msg "475" parse_Country (fun msg f_RgstDtlsGrp_InvestorCountryOfResidence -> opt msg "473" parse_int (fun msg f_RgstDtlsGrp_NoRegistDtls -> opt msg "511" parse_string (fun msg f_RgstDtlsGrp_RegistEmail -> opt msg "486" parse_LocalMktDate (fun msg f_RgstDtlsGrp_DateOfBirth -> opt msg "522" parse_OwnerType (fun msg f_RgstDtlsGrp_OwnerType -> opt msg "509" parse_string (fun msg f_RgstDtlsGrp_RegistDtls -> repeating msg "539" parse_NestedParties (fun msg f_RgstDtlsGrp_NestedParties -> (ParseSuccess {
+        f_RgstDtlsGrp_NestedParties = f_RgstDtlsGrp_NestedParties;
+        f_RgstDtlsGrp_RegistDtls = f_RgstDtlsGrp_RegistDtls;
+        f_RgstDtlsGrp_OwnerType = f_RgstDtlsGrp_OwnerType;
+        f_RgstDtlsGrp_DateOfBirth = f_RgstDtlsGrp_DateOfBirth;
+        f_RgstDtlsGrp_RegistEmail = f_RgstDtlsGrp_RegistEmail;
+        f_RgstDtlsGrp_NoRegistDtls = f_RgstDtlsGrp_NoRegistDtls;
+        f_RgstDtlsGrp_InvestorCountryOfResidence = f_RgstDtlsGrp_InvestorCountryOfResidence;
+        f_RgstDtlsGrp_MailingDtls = f_RgstDtlsGrp_MailingDtls;
+        f_RgstDtlsGrp_MailingInst = f_RgstDtlsGrp_MailingInst
     },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
     )
     )
     )
@@ -3334,25 +3029,128 @@ let parse_SideCrossOrdModGrp (msg)  =
     )
 ;;
 
-let parse_LegOrdGrp (msg)  =
-    opt msg "555" parse_int (fun msg f_LegOrdGrp_NoLegs -> opt msg "565" parse_int (fun msg f_LegOrdGrp_LegCoveredOrUncovered -> opt msg "690" parse_LegSwapType (fun msg f_LegOrdGrp_LegSwapType -> opt msg "588" parse_LocalMktDate (fun msg f_LegOrdGrp_LegSettlDate -> opt msg "654" parse_string (fun msg f_LegOrdGrp_LegRefID -> opt msg "566" (fun x -> (match parse_float x with
+let parse_PreAllocGrp (msg)  =
+    opt msg "79" parse_string (fun msg f_PreAllocGrp_AllocAccount -> opt msg "661" parse_int (fun msg f_PreAllocGrp_AllocAcctIDSource -> opt msg "80" parse_float (fun msg f_PreAllocGrp_AllocQty -> opt msg "736" parse_Currency (fun msg f_PreAllocGrp_AllocSettlCurrency -> opt msg "78" parse_int (fun msg f_PreAllocGrp_NoAllocs -> opt msg "467" parse_string (fun msg f_PreAllocGrp_IndividualAllocID -> repeating msg "539" parse_NestedParties (fun msg f_PreAllocGrp_NestedParties -> (ParseSuccess {
+        f_PreAllocGrp_NestedParties = f_PreAllocGrp_NestedParties;
+        f_PreAllocGrp_IndividualAllocID = f_PreAllocGrp_IndividualAllocID;
+        f_PreAllocGrp_NoAllocs = f_PreAllocGrp_NoAllocs;
+        f_PreAllocGrp_AllocSettlCurrency = f_PreAllocGrp_AllocSettlCurrency;
+        f_PreAllocGrp_AllocQty = f_PreAllocGrp_AllocQty;
+        f_PreAllocGrp_AllocAcctIDSource = f_PreAllocGrp_AllocAcctIDSource;
+        f_PreAllocGrp_AllocAccount = f_PreAllocGrp_AllocAccount
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_LegQuotGrp (msg)  =
+    opt msg "555" parse_int (fun msg f_LegQuotGrp_NoLegs -> opt msg "587" parse_char (fun msg f_LegQuotGrp_LegSettlType -> opt msg "690" parse_LegSwapType (fun msg f_LegQuotGrp_LegSwapType -> opt msg "684" (fun x -> (match parse_float x with
         | None -> None
         | Some d -> (Some (float_Convert_6_4 d))
     )
-    ) (fun msg f_LegOrdGrp_LegPrice -> opt msg "587" parse_char (fun msg f_LegOrdGrp_LegSettlType -> opt msg "564" parse_char (fun msg f_LegOrdGrp_LegPositionEffect -> opt msg "687" parse_float (fun msg f_LegOrdGrp_LegQty -> block msg parse_InstrumentLeg (fun msg f_LegOrdGrp_InstrumentLeg -> repeating msg "539" parse_NestedParties (fun msg f_LegOrdGrp_NestedParties -> repeating msg "670" parse_LegPreAllocGrp (fun msg f_LegOrdGrp_LegPreAllocGrp -> repeating msg "683" parse_LegStipulations (fun msg f_LegOrdGrp_LegStipulations -> (ParseSuccess {
-        f_LegOrdGrp_LegStipulations = f_LegOrdGrp_LegStipulations;
-        f_LegOrdGrp_LegPreAllocGrp = f_LegOrdGrp_LegPreAllocGrp;
-        f_LegOrdGrp_NestedParties = f_LegOrdGrp_NestedParties;
-        f_LegOrdGrp_InstrumentLeg = f_LegOrdGrp_InstrumentLeg;
-        f_LegOrdGrp_LegQty = f_LegOrdGrp_LegQty;
-        f_LegOrdGrp_LegPositionEffect = f_LegOrdGrp_LegPositionEffect;
-        f_LegOrdGrp_LegSettlType = f_LegOrdGrp_LegSettlType;
-        f_LegOrdGrp_LegPrice = f_LegOrdGrp_LegPrice;
-        f_LegOrdGrp_LegRefID = f_LegOrdGrp_LegRefID;
-        f_LegOrdGrp_LegSettlDate = f_LegOrdGrp_LegSettlDate;
-        f_LegOrdGrp_LegSwapType = f_LegOrdGrp_LegSwapType;
-        f_LegOrdGrp_LegCoveredOrUncovered = f_LegOrdGrp_LegCoveredOrUncovered;
-        f_LegOrdGrp_NoLegs = f_LegOrdGrp_NoLegs
+    ) (fun msg f_LegQuotGrp_LegOfferPx -> opt msg "588" parse_LocalMktDate (fun msg f_LegQuotGrp_LegSettlDate -> opt msg "687" parse_float (fun msg f_LegQuotGrp_LegQty -> opt msg "686" parse_int (fun msg f_LegQuotGrp_LegPriceType -> opt msg "681" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_LegQuotGrp_LegBidPx -> block msg parse_InstrumentLeg (fun msg f_LegQuotGrp_InstrumentLeg -> block msg parse_LegBenchmarkCurveData (fun msg f_LegQuotGrp_LegBenchmarkCurveData -> repeating msg "539" parse_NestedParties (fun msg f_LegQuotGrp_NestedParties -> repeating msg "683" parse_LegStipulations (fun msg f_LegQuotGrp_LegStipulations -> (ParseSuccess {
+        f_LegQuotGrp_LegStipulations = f_LegQuotGrp_LegStipulations;
+        f_LegQuotGrp_NestedParties = f_LegQuotGrp_NestedParties;
+        f_LegQuotGrp_LegBenchmarkCurveData = f_LegQuotGrp_LegBenchmarkCurveData;
+        f_LegQuotGrp_InstrumentLeg = f_LegQuotGrp_InstrumentLeg;
+        f_LegQuotGrp_LegBidPx = f_LegQuotGrp_LegBidPx;
+        f_LegQuotGrp_LegPriceType = f_LegQuotGrp_LegPriceType;
+        f_LegQuotGrp_LegQty = f_LegQuotGrp_LegQty;
+        f_LegQuotGrp_LegSettlDate = f_LegQuotGrp_LegSettlDate;
+        f_LegQuotGrp_LegOfferPx = f_LegQuotGrp_LegOfferPx;
+        f_LegQuotGrp_LegSwapType = f_LegQuotGrp_LegSwapType;
+        f_LegQuotGrp_LegSettlType = f_LegQuotGrp_LegSettlType;
+        f_LegQuotGrp_NoLegs = f_LegQuotGrp_NoLegs
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_InstrmtLegIOIGrp (msg)  =
+    opt msg "555" parse_int (fun msg f_InstrmtLegIOIGrp_NoLegs -> opt msg "682" parse_string (fun msg f_InstrmtLegIOIGrp_LegIOIQty -> block msg parse_InstrumentLeg (fun msg f_InstrmtLegIOIGrp_InstrumentLeg -> repeating msg "683" parse_LegStipulations (fun msg f_InstrmtLegIOIGrp_LegStipulations -> (ParseSuccess {
+        f_InstrmtLegIOIGrp_LegStipulations = f_InstrmtLegIOIGrp_LegStipulations;
+        f_InstrmtLegIOIGrp_InstrumentLeg = f_InstrmtLegIOIGrp_InstrumentLeg;
+        f_InstrmtLegIOIGrp_LegIOIQty = f_InstrmtLegIOIGrp_LegIOIQty;
+        f_InstrmtLegIOIGrp_NoLegs = f_InstrmtLegIOIGrp_NoLegs
+    },msg)
+    )
+    )
+    )
+    )
+;;
+
+let parse_InstrmtLegGrp (msg)  =
+    opt msg "555" parse_int (fun msg f_InstrmtLegGrp_NoLegs -> block msg parse_InstrumentLeg (fun msg f_InstrmtLegGrp_InstrumentLeg -> (ParseSuccess {
+        f_InstrmtLegGrp_InstrumentLeg = f_InstrmtLegGrp_InstrumentLeg;
+        f_InstrmtLegGrp_NoLegs = f_InstrmtLegGrp_NoLegs
+    },msg)
+    )
+    )
+;;
+
+let parse_LegQuotStatGrp (msg)  =
+    opt msg "555" parse_int (fun msg f_LegQuotStatGrp_NoLegs -> opt msg "587" parse_char (fun msg f_LegQuotStatGrp_LegSettlType -> opt msg "690" parse_LegSwapType (fun msg f_LegQuotStatGrp_LegSwapType -> opt msg "588" parse_LocalMktDate (fun msg f_LegQuotStatGrp_LegSettlDate -> opt msg "687" parse_float (fun msg f_LegQuotStatGrp_LegQty -> block msg parse_InstrumentLeg (fun msg f_LegQuotStatGrp_InstrumentLeg -> repeating msg "539" parse_NestedParties (fun msg f_LegQuotStatGrp_NestedParties -> repeating msg "683" parse_LegStipulations (fun msg f_LegQuotStatGrp_LegStipulations -> (ParseSuccess {
+        f_LegQuotStatGrp_LegStipulations = f_LegQuotStatGrp_LegStipulations;
+        f_LegQuotStatGrp_NestedParties = f_LegQuotStatGrp_NestedParties;
+        f_LegQuotStatGrp_InstrumentLeg = f_LegQuotStatGrp_InstrumentLeg;
+        f_LegQuotStatGrp_LegQty = f_LegQuotStatGrp_LegQty;
+        f_LegQuotStatGrp_LegSettlDate = f_LegQuotStatGrp_LegSettlDate;
+        f_LegQuotStatGrp_LegSwapType = f_LegQuotStatGrp_LegSwapType;
+        f_LegQuotStatGrp_LegSettlType = f_LegQuotStatGrp_LegSettlType;
+        f_LegQuotStatGrp_NoLegs = f_LegQuotStatGrp_NoLegs
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_InstrmtLegExecGrp (msg)  =
+    opt msg "555" parse_int (fun msg f_InstrmtLegExecGrp_NoLegs -> opt msg "565" parse_int (fun msg f_InstrmtLegExecGrp_LegCoveredOrUncovered -> opt msg "690" parse_LegSwapType (fun msg f_InstrmtLegExecGrp_LegSwapType -> opt msg "588" parse_LocalMktDate (fun msg f_InstrmtLegExecGrp_LegSettlDate -> opt msg "654" parse_string (fun msg f_InstrmtLegExecGrp_LegRefID -> opt msg "566" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_InstrmtLegExecGrp_LegPrice -> opt msg "637" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_InstrmtLegExecGrp_LegLastPx -> opt msg "587" parse_char (fun msg f_InstrmtLegExecGrp_LegSettlType -> opt msg "564" parse_char (fun msg f_InstrmtLegExecGrp_LegPositionEffect -> opt msg "687" parse_float (fun msg f_InstrmtLegExecGrp_LegQty -> block msg parse_InstrumentLeg (fun msg f_InstrmtLegExecGrp_InstrumentLeg -> repeating msg "539" parse_NestedParties (fun msg f_InstrmtLegExecGrp_NestedParties -> repeating msg "683" parse_LegStipulations (fun msg f_InstrmtLegExecGrp_LegStipulations -> (ParseSuccess {
+        f_InstrmtLegExecGrp_LegStipulations = f_InstrmtLegExecGrp_LegStipulations;
+        f_InstrmtLegExecGrp_NestedParties = f_InstrmtLegExecGrp_NestedParties;
+        f_InstrmtLegExecGrp_InstrumentLeg = f_InstrmtLegExecGrp_InstrumentLeg;
+        f_InstrmtLegExecGrp_LegQty = f_InstrmtLegExecGrp_LegQty;
+        f_InstrmtLegExecGrp_LegPositionEffect = f_InstrmtLegExecGrp_LegPositionEffect;
+        f_InstrmtLegExecGrp_LegSettlType = f_InstrmtLegExecGrp_LegSettlType;
+        f_InstrmtLegExecGrp_LegLastPx = f_InstrmtLegExecGrp_LegLastPx;
+        f_InstrmtLegExecGrp_LegPrice = f_InstrmtLegExecGrp_LegPrice;
+        f_InstrmtLegExecGrp_LegRefID = f_InstrmtLegExecGrp_LegRefID;
+        f_InstrmtLegExecGrp_LegSettlDate = f_InstrmtLegExecGrp_LegSettlDate;
+        f_InstrmtLegExecGrp_LegSwapType = f_InstrmtLegExecGrp_LegSwapType;
+        f_InstrmtLegExecGrp_LegCoveredOrUncovered = f_InstrmtLegExecGrp_LegCoveredOrUncovered;
+        f_InstrmtLegExecGrp_NoLegs = f_InstrmtLegExecGrp_NoLegs
     },msg)
     )
     )
@@ -3369,67 +3167,46 @@ let parse_LegOrdGrp (msg)  =
     )
 ;;
 
-let parse_TrdCapRptSideGrp (msg)  =
-    opt msg "825" parse_string (fun msg f_TrdCapRptSideGrp_ExchangeRule -> opt msg "15" parse_Currency (fun msg f_TrdCapRptSideGrp_Currency -> opt msg "77" parse_PositionEffect (fun msg f_TrdCapRptSideGrp_PositionEffect -> opt msg "120" parse_Currency (fun msg f_TrdCapRptSideGrp_SettlCurrency -> opt msg "920" parse_float (fun msg f_TrdCapRptSideGrp_EndAccruedInterestAmt -> opt msg "336" parse_string (fun msg f_TrdCapRptSideGrp_TradingSessionID -> opt msg "70" parse_string (fun msg f_TrdCapRptSideGrp_AllocID -> opt msg "552" parse_int (fun msg f_TrdCapRptSideGrp_NoSides -> opt msg "355" parse_string (fun msg f_TrdCapRptSideGrp_EncodedText -> opt msg "156" parse_SettlCurrFxRateCalc (fun msg f_TrdCapRptSideGrp_SettlCurrFxRateCalc -> opt msg "157" parse_int (fun msg f_TrdCapRptSideGrp_NumDaysInterest -> opt msg "155" parse_float (fun msg f_TrdCapRptSideGrp_SettlCurrFxRate -> opt msg "529" parse_OrderRestrictions (fun msg f_TrdCapRptSideGrp_OrderRestrictions -> opt msg "579" parse_string (fun msg f_TrdCapRptSideGrp_TradeInputDevice -> opt msg "66" parse_string (fun msg f_TrdCapRptSideGrp_ListID -> opt msg "381" parse_float (fun msg f_TrdCapRptSideGrp_GrossTradeAmt -> opt msg "625" parse_string (fun msg f_TrdCapRptSideGrp_TradingSessionSubID -> opt msg "752" parse_SideMultiLegReportingType (fun msg f_TrdCapRptSideGrp_SideMultiLegReportingType -> opt msg "58" parse_string (fun msg f_TrdCapRptSideGrp_Text -> opt msg "921" parse_float (fun msg f_TrdCapRptSideGrp_StartCash -> opt msg "922" parse_float (fun msg f_TrdCapRptSideGrp_EndCash -> opt msg "11" parse_string (fun msg f_TrdCapRptSideGrp_ClOrdID -> opt msg "582" parse_CustOrderCapacity (fun msg f_TrdCapRptSideGrp_CustOrderCapacity -> opt msg "119" parse_float (fun msg f_TrdCapRptSideGrp_SettlCurrAmt -> opt msg "237" parse_float (fun msg f_TrdCapRptSideGrp_TotalTakedown -> opt msg "826" parse_TradeAllocIndicator (fun msg f_TrdCapRptSideGrp_TradeAllocIndicator -> opt msg "18" parse_ExecInst (fun msg f_TrdCapRptSideGrp_ExecInst -> opt msg "821" parse_string (fun msg f_TrdCapRptSideGrp_OrderInputDevice -> opt msg "230" parse_LocalMktDate (fun msg f_TrdCapRptSideGrp_ExDate -> opt msg "376" parse_string (fun msg f_TrdCapRptSideGrp_ComplianceID -> opt msg "118" parse_float (fun msg f_TrdCapRptSideGrp_NetMoney -> opt msg "738" parse_float (fun msg f_TrdCapRptSideGrp_InterestAtMaturity -> opt msg "158" parse_float (fun msg f_TrdCapRptSideGrp_AccruedInterestRate -> opt msg "354" parse_int (fun msg f_TrdCapRptSideGrp_EncodedTextLen -> opt msg "54" parse_Side (fun msg f_TrdCapRptSideGrp_Side -> opt msg "37" parse_string (fun msg f_TrdCapRptSideGrp_OrderID -> opt msg "591" parse_PreallocMethod (fun msg f_TrdCapRptSideGrp_PreallocMethod -> opt msg "660" parse_AcctIDSource (fun msg f_TrdCapRptSideGrp_AcctIDSource -> opt msg "1" parse_string (fun msg f_TrdCapRptSideGrp_Account -> opt msg "575" parse_OddLot (fun msg f_TrdCapRptSideGrp_OddLot -> opt msg "943" parse_string (fun msg f_TrdCapRptSideGrp_TimeBracket -> opt msg "238" parse_float (fun msg f_TrdCapRptSideGrp_Concession -> opt msg "159" parse_float (fun msg f_TrdCapRptSideGrp_AccruedInterestAmt -> opt msg "81" parse_ProcessCode (fun msg f_TrdCapRptSideGrp_ProcessCode -> opt msg "581" parse_AccountType (fun msg f_TrdCapRptSideGrp_AccountType -> opt msg "526" parse_string (fun msg f_TrdCapRptSideGrp_SecondaryClOrdID -> opt msg "578" parse_string (fun msg f_TrdCapRptSideGrp_TradeInputSource -> opt msg "198" parse_string (fun msg f_TrdCapRptSideGrp_SecondaryOrderID -> opt msg "40" parse_OrdType (fun msg f_TrdCapRptSideGrp_OrdType -> opt msg "528" parse_OrderCapacity (fun msg f_TrdCapRptSideGrp_OrderCapacity -> opt msg "377" parse_SolicitedFlag (fun msg f_TrdCapRptSideGrp_SolicitedFlag -> opt msg "483" parse_UTCTimestamp (fun msg f_TrdCapRptSideGrp_TransBkdTime -> block msg parse_CommissionData (fun msg f_TrdCapRptSideGrp_CommissionData -> repeating msg "453" parse_Parties (fun msg f_TrdCapRptSideGrp_Parties -> repeating msg "78" parse_TrdAllocGrp (fun msg f_TrdCapRptSideGrp_TrdAllocGrp -> repeating msg "576" parse_ClrInstGrp (fun msg f_TrdCapRptSideGrp_ClrInstGrp -> repeating msg "136" parse_MiscFeesGrp (fun msg f_TrdCapRptSideGrp_MiscFeesGrp -> repeating msg "518" parse_ContAmtGrp (fun msg f_TrdCapRptSideGrp_ContAmtGrp -> repeating msg "232" parse_Stipulations (fun msg f_TrdCapRptSideGrp_Stipulations -> (ParseSuccess {
-        f_TrdCapRptSideGrp_Stipulations = f_TrdCapRptSideGrp_Stipulations;
-        f_TrdCapRptSideGrp_ContAmtGrp = f_TrdCapRptSideGrp_ContAmtGrp;
-        f_TrdCapRptSideGrp_MiscFeesGrp = f_TrdCapRptSideGrp_MiscFeesGrp;
-        f_TrdCapRptSideGrp_ClrInstGrp = f_TrdCapRptSideGrp_ClrInstGrp;
-        f_TrdCapRptSideGrp_TrdAllocGrp = f_TrdCapRptSideGrp_TrdAllocGrp;
-        f_TrdCapRptSideGrp_Parties = f_TrdCapRptSideGrp_Parties;
-        f_TrdCapRptSideGrp_CommissionData = f_TrdCapRptSideGrp_CommissionData;
-        f_TrdCapRptSideGrp_TransBkdTime = f_TrdCapRptSideGrp_TransBkdTime;
-        f_TrdCapRptSideGrp_SolicitedFlag = f_TrdCapRptSideGrp_SolicitedFlag;
-        f_TrdCapRptSideGrp_OrderCapacity = f_TrdCapRptSideGrp_OrderCapacity;
-        f_TrdCapRptSideGrp_OrdType = f_TrdCapRptSideGrp_OrdType;
-        f_TrdCapRptSideGrp_SecondaryOrderID = f_TrdCapRptSideGrp_SecondaryOrderID;
-        f_TrdCapRptSideGrp_TradeInputSource = f_TrdCapRptSideGrp_TradeInputSource;
-        f_TrdCapRptSideGrp_SecondaryClOrdID = f_TrdCapRptSideGrp_SecondaryClOrdID;
-        f_TrdCapRptSideGrp_AccountType = f_TrdCapRptSideGrp_AccountType;
-        f_TrdCapRptSideGrp_ProcessCode = f_TrdCapRptSideGrp_ProcessCode;
-        f_TrdCapRptSideGrp_AccruedInterestAmt = f_TrdCapRptSideGrp_AccruedInterestAmt;
-        f_TrdCapRptSideGrp_Concession = f_TrdCapRptSideGrp_Concession;
-        f_TrdCapRptSideGrp_TimeBracket = f_TrdCapRptSideGrp_TimeBracket;
-        f_TrdCapRptSideGrp_OddLot = f_TrdCapRptSideGrp_OddLot;
-        f_TrdCapRptSideGrp_Account = f_TrdCapRptSideGrp_Account;
-        f_TrdCapRptSideGrp_AcctIDSource = f_TrdCapRptSideGrp_AcctIDSource;
-        f_TrdCapRptSideGrp_PreallocMethod = f_TrdCapRptSideGrp_PreallocMethod;
-        f_TrdCapRptSideGrp_OrderID = f_TrdCapRptSideGrp_OrderID;
-        f_TrdCapRptSideGrp_Side = f_TrdCapRptSideGrp_Side;
-        f_TrdCapRptSideGrp_EncodedTextLen = f_TrdCapRptSideGrp_EncodedTextLen;
-        f_TrdCapRptSideGrp_AccruedInterestRate = f_TrdCapRptSideGrp_AccruedInterestRate;
-        f_TrdCapRptSideGrp_InterestAtMaturity = f_TrdCapRptSideGrp_InterestAtMaturity;
-        f_TrdCapRptSideGrp_NetMoney = f_TrdCapRptSideGrp_NetMoney;
-        f_TrdCapRptSideGrp_ComplianceID = f_TrdCapRptSideGrp_ComplianceID;
-        f_TrdCapRptSideGrp_ExDate = f_TrdCapRptSideGrp_ExDate;
-        f_TrdCapRptSideGrp_OrderInputDevice = f_TrdCapRptSideGrp_OrderInputDevice;
-        f_TrdCapRptSideGrp_ExecInst = f_TrdCapRptSideGrp_ExecInst;
-        f_TrdCapRptSideGrp_TradeAllocIndicator = f_TrdCapRptSideGrp_TradeAllocIndicator;
-        f_TrdCapRptSideGrp_TotalTakedown = f_TrdCapRptSideGrp_TotalTakedown;
-        f_TrdCapRptSideGrp_SettlCurrAmt = f_TrdCapRptSideGrp_SettlCurrAmt;
-        f_TrdCapRptSideGrp_CustOrderCapacity = f_TrdCapRptSideGrp_CustOrderCapacity;
-        f_TrdCapRptSideGrp_ClOrdID = f_TrdCapRptSideGrp_ClOrdID;
-        f_TrdCapRptSideGrp_EndCash = f_TrdCapRptSideGrp_EndCash;
-        f_TrdCapRptSideGrp_StartCash = f_TrdCapRptSideGrp_StartCash;
-        f_TrdCapRptSideGrp_Text = f_TrdCapRptSideGrp_Text;
-        f_TrdCapRptSideGrp_SideMultiLegReportingType = f_TrdCapRptSideGrp_SideMultiLegReportingType;
-        f_TrdCapRptSideGrp_TradingSessionSubID = f_TrdCapRptSideGrp_TradingSessionSubID;
-        f_TrdCapRptSideGrp_GrossTradeAmt = f_TrdCapRptSideGrp_GrossTradeAmt;
-        f_TrdCapRptSideGrp_ListID = f_TrdCapRptSideGrp_ListID;
-        f_TrdCapRptSideGrp_TradeInputDevice = f_TrdCapRptSideGrp_TradeInputDevice;
-        f_TrdCapRptSideGrp_OrderRestrictions = f_TrdCapRptSideGrp_OrderRestrictions;
-        f_TrdCapRptSideGrp_SettlCurrFxRate = f_TrdCapRptSideGrp_SettlCurrFxRate;
-        f_TrdCapRptSideGrp_NumDaysInterest = f_TrdCapRptSideGrp_NumDaysInterest;
-        f_TrdCapRptSideGrp_SettlCurrFxRateCalc = f_TrdCapRptSideGrp_SettlCurrFxRateCalc;
-        f_TrdCapRptSideGrp_EncodedText = f_TrdCapRptSideGrp_EncodedText;
-        f_TrdCapRptSideGrp_NoSides = f_TrdCapRptSideGrp_NoSides;
-        f_TrdCapRptSideGrp_AllocID = f_TrdCapRptSideGrp_AllocID;
-        f_TrdCapRptSideGrp_TradingSessionID = f_TrdCapRptSideGrp_TradingSessionID;
-        f_TrdCapRptSideGrp_EndAccruedInterestAmt = f_TrdCapRptSideGrp_EndAccruedInterestAmt;
-        f_TrdCapRptSideGrp_SettlCurrency = f_TrdCapRptSideGrp_SettlCurrency;
-        f_TrdCapRptSideGrp_PositionEffect = f_TrdCapRptSideGrp_PositionEffect;
-        f_TrdCapRptSideGrp_Currency = f_TrdCapRptSideGrp_Currency;
-        f_TrdCapRptSideGrp_ExchangeRule = f_TrdCapRptSideGrp_ExchangeRule
+let parse_InstrmtLegSecListGrp (msg)  =
+    opt msg "555" parse_int (fun msg f_InstrmtLegSecListGrp_NoLegs -> opt msg "587" parse_char (fun msg f_InstrmtLegSecListGrp_LegSettlType -> opt msg "690" parse_LegSwapType (fun msg f_InstrmtLegSecListGrp_LegSwapType -> block msg parse_InstrumentLeg (fun msg f_InstrmtLegSecListGrp_InstrumentLeg -> block msg parse_LegBenchmarkCurveData (fun msg f_InstrmtLegSecListGrp_LegBenchmarkCurveData -> repeating msg "683" parse_LegStipulations (fun msg f_InstrmtLegSecListGrp_LegStipulations -> (ParseSuccess {
+        f_InstrmtLegSecListGrp_LegStipulations = f_InstrmtLegSecListGrp_LegStipulations;
+        f_InstrmtLegSecListGrp_LegBenchmarkCurveData = f_InstrmtLegSecListGrp_LegBenchmarkCurveData;
+        f_InstrmtLegSecListGrp_InstrumentLeg = f_InstrmtLegSecListGrp_InstrumentLeg;
+        f_InstrmtLegSecListGrp_LegSwapType = f_InstrmtLegSecListGrp_LegSwapType;
+        f_InstrmtLegSecListGrp_LegSettlType = f_InstrmtLegSecListGrp_LegSettlType;
+        f_InstrmtLegSecListGrp_NoLegs = f_InstrmtLegSecListGrp_NoLegs
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_TrdInstrmtLegGrp (msg)  =
+    opt msg "555" parse_int (fun msg f_TrdInstrmtLegGrp_NoLegs -> opt msg "565" parse_int (fun msg f_TrdInstrmtLegGrp_LegCoveredOrUncovered -> opt msg "690" parse_LegSwapType (fun msg f_TrdInstrmtLegGrp_LegSwapType -> opt msg "588" parse_LocalMktDate (fun msg f_TrdInstrmtLegGrp_LegSettlDate -> opt msg "654" parse_string (fun msg f_TrdInstrmtLegGrp_LegRefID -> opt msg "566" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_TrdInstrmtLegGrp_LegPrice -> opt msg "637" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_TrdInstrmtLegGrp_LegLastPx -> opt msg "587" parse_char (fun msg f_TrdInstrmtLegGrp_LegSettlType -> opt msg "564" parse_char (fun msg f_TrdInstrmtLegGrp_LegPositionEffect -> opt msg "687" parse_float (fun msg f_TrdInstrmtLegGrp_LegQty -> block msg parse_InstrumentLeg (fun msg f_TrdInstrmtLegGrp_InstrumentLeg -> repeating msg "539" parse_NestedParties (fun msg f_TrdInstrmtLegGrp_NestedParties -> repeating msg "683" parse_LegStipulations (fun msg f_TrdInstrmtLegGrp_LegStipulations -> (ParseSuccess {
+        f_TrdInstrmtLegGrp_LegStipulations = f_TrdInstrmtLegGrp_LegStipulations;
+        f_TrdInstrmtLegGrp_NestedParties = f_TrdInstrmtLegGrp_NestedParties;
+        f_TrdInstrmtLegGrp_InstrumentLeg = f_TrdInstrmtLegGrp_InstrumentLeg;
+        f_TrdInstrmtLegGrp_LegQty = f_TrdInstrmtLegGrp_LegQty;
+        f_TrdInstrmtLegGrp_LegPositionEffect = f_TrdInstrmtLegGrp_LegPositionEffect;
+        f_TrdInstrmtLegGrp_LegSettlType = f_TrdInstrmtLegGrp_LegSettlType;
+        f_TrdInstrmtLegGrp_LegLastPx = f_TrdInstrmtLegGrp_LegLastPx;
+        f_TrdInstrmtLegGrp_LegPrice = f_TrdInstrmtLegGrp_LegPrice;
+        f_TrdInstrmtLegGrp_LegRefID = f_TrdInstrmtLegGrp_LegRefID;
+        f_TrdInstrmtLegGrp_LegSettlDate = f_TrdInstrmtLegGrp_LegSettlDate;
+        f_TrdInstrmtLegGrp_LegSwapType = f_TrdInstrmtLegGrp_LegSwapType;
+        f_TrdInstrmtLegGrp_LegCoveredOrUncovered = f_TrdInstrmtLegGrp_LegCoveredOrUncovered;
+        f_TrdInstrmtLegGrp_NoLegs = f_TrdInstrmtLegGrp_NoLegs
     },msg)
     )
     )
@@ -3444,6 +3221,20 @@ let parse_TrdCapRptSideGrp (msg)  =
     )
     )
     )
+;;
+
+let parse_QuotReqLegsGrp (msg)  =
+    opt msg "555" parse_int (fun msg f_QuotReqLegsGrp_NoLegs -> opt msg "587" parse_char (fun msg f_QuotReqLegsGrp_LegSettlType -> opt msg "690" parse_LegSwapType (fun msg f_QuotReqLegsGrp_LegSwapType -> opt msg "588" parse_LocalMktDate (fun msg f_QuotReqLegsGrp_LegSettlDate -> opt msg "687" parse_float (fun msg f_QuotReqLegsGrp_LegQty -> block msg parse_InstrumentLeg (fun msg f_QuotReqLegsGrp_InstrumentLeg -> block msg parse_LegBenchmarkCurveData (fun msg f_QuotReqLegsGrp_LegBenchmarkCurveData -> repeating msg "539" parse_NestedParties (fun msg f_QuotReqLegsGrp_NestedParties -> repeating msg "683" parse_LegStipulations (fun msg f_QuotReqLegsGrp_LegStipulations -> (ParseSuccess {
+        f_QuotReqLegsGrp_LegStipulations = f_QuotReqLegsGrp_LegStipulations;
+        f_QuotReqLegsGrp_NestedParties = f_QuotReqLegsGrp_NestedParties;
+        f_QuotReqLegsGrp_LegBenchmarkCurveData = f_QuotReqLegsGrp_LegBenchmarkCurveData;
+        f_QuotReqLegsGrp_InstrumentLeg = f_QuotReqLegsGrp_InstrumentLeg;
+        f_QuotReqLegsGrp_LegQty = f_QuotReqLegsGrp_LegQty;
+        f_QuotReqLegsGrp_LegSettlDate = f_QuotReqLegsGrp_LegSettlDate;
+        f_QuotReqLegsGrp_LegSwapType = f_QuotReqLegsGrp_LegSwapType;
+        f_QuotReqLegsGrp_LegSettlType = f_QuotReqLegsGrp_LegSettlType;
+        f_QuotReqLegsGrp_NoLegs = f_QuotReqLegsGrp_NoLegs
+    },msg)
     )
     )
     )
@@ -3453,32 +3244,22 @@ let parse_TrdCapRptSideGrp (msg)  =
     )
     )
     )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
+;;
+
+let parse_RelSymDerivSecGrp (msg)  =
+    opt msg "58" parse_string (fun msg f_RelSymDerivSecGrp_Text -> opt msg "336" parse_string (fun msg f_RelSymDerivSecGrp_TradingSessionID -> opt msg "355" parse_string (fun msg f_RelSymDerivSecGrp_EncodedText -> opt msg "146" parse_int (fun msg f_RelSymDerivSecGrp_NoRelatedSym -> opt msg "15" parse_Currency (fun msg f_RelSymDerivSecGrp_Currency -> opt msg "354" parse_int (fun msg f_RelSymDerivSecGrp_EncodedTextLen -> opt msg "827" parse_ExpirationCycle (fun msg f_RelSymDerivSecGrp_ExpirationCycle -> opt msg "625" parse_string (fun msg f_RelSymDerivSecGrp_TradingSessionSubID -> block msg parse_InstrumentExtension (fun msg f_RelSymDerivSecGrp_InstrumentExtension -> block msg parse_Instrument (fun msg f_RelSymDerivSecGrp_Instrument -> repeating msg "555" parse_InstrmtLegGrp (fun msg f_RelSymDerivSecGrp_InstrmtLegGrp -> (ParseSuccess {
+        f_RelSymDerivSecGrp_InstrmtLegGrp = f_RelSymDerivSecGrp_InstrmtLegGrp;
+        f_RelSymDerivSecGrp_Instrument = f_RelSymDerivSecGrp_Instrument;
+        f_RelSymDerivSecGrp_InstrumentExtension = f_RelSymDerivSecGrp_InstrumentExtension;
+        f_RelSymDerivSecGrp_TradingSessionSubID = f_RelSymDerivSecGrp_TradingSessionSubID;
+        f_RelSymDerivSecGrp_ExpirationCycle = f_RelSymDerivSecGrp_ExpirationCycle;
+        f_RelSymDerivSecGrp_EncodedTextLen = f_RelSymDerivSecGrp_EncodedTextLen;
+        f_RelSymDerivSecGrp_Currency = f_RelSymDerivSecGrp_Currency;
+        f_RelSymDerivSecGrp_NoRelatedSym = f_RelSymDerivSecGrp_NoRelatedSym;
+        f_RelSymDerivSecGrp_EncodedText = f_RelSymDerivSecGrp_EncodedText;
+        f_RelSymDerivSecGrp_TradingSessionID = f_RelSymDerivSecGrp_TradingSessionID;
+        f_RelSymDerivSecGrp_Text = f_RelSymDerivSecGrp_Text
+    },msg)
     )
     )
     )
@@ -3652,19 +3433,42 @@ let parse_QuotEntryGrp (msg)  =
     )
 ;;
 
-let parse_RelSymDerivSecGrp (msg)  =
-    opt msg "58" parse_string (fun msg f_RelSymDerivSecGrp_Text -> opt msg "336" parse_string (fun msg f_RelSymDerivSecGrp_TradingSessionID -> opt msg "355" parse_string (fun msg f_RelSymDerivSecGrp_EncodedText -> opt msg "146" parse_int (fun msg f_RelSymDerivSecGrp_NoRelatedSym -> opt msg "15" parse_Currency (fun msg f_RelSymDerivSecGrp_Currency -> opt msg "354" parse_int (fun msg f_RelSymDerivSecGrp_EncodedTextLen -> opt msg "827" parse_ExpirationCycle (fun msg f_RelSymDerivSecGrp_ExpirationCycle -> opt msg "625" parse_string (fun msg f_RelSymDerivSecGrp_TradingSessionSubID -> block msg parse_InstrumentExtension (fun msg f_RelSymDerivSecGrp_InstrumentExtension -> block msg parse_Instrument (fun msg f_RelSymDerivSecGrp_Instrument -> repeating msg "555" parse_InstrmtLegGrp (fun msg f_RelSymDerivSecGrp_InstrmtLegGrp -> (ParseSuccess {
-        f_RelSymDerivSecGrp_InstrmtLegGrp = f_RelSymDerivSecGrp_InstrmtLegGrp;
-        f_RelSymDerivSecGrp_Instrument = f_RelSymDerivSecGrp_Instrument;
-        f_RelSymDerivSecGrp_InstrumentExtension = f_RelSymDerivSecGrp_InstrumentExtension;
-        f_RelSymDerivSecGrp_TradingSessionSubID = f_RelSymDerivSecGrp_TradingSessionSubID;
-        f_RelSymDerivSecGrp_ExpirationCycle = f_RelSymDerivSecGrp_ExpirationCycle;
-        f_RelSymDerivSecGrp_EncodedTextLen = f_RelSymDerivSecGrp_EncodedTextLen;
-        f_RelSymDerivSecGrp_Currency = f_RelSymDerivSecGrp_Currency;
-        f_RelSymDerivSecGrp_NoRelatedSym = f_RelSymDerivSecGrp_NoRelatedSym;
-        f_RelSymDerivSecGrp_EncodedText = f_RelSymDerivSecGrp_EncodedText;
-        f_RelSymDerivSecGrp_TradingSessionID = f_RelSymDerivSecGrp_TradingSessionID;
-        f_RelSymDerivSecGrp_Text = f_RelSymDerivSecGrp_Text
+let parse_SideCrossOrdModGrp (msg)  =
+    opt msg "775" parse_BookingType (fun msg f_SideCrossOrdModGrp_BookingType -> opt msg "75" parse_LocalMktDate (fun msg f_SideCrossOrdModGrp_TradeDate -> opt msg "583" parse_string (fun msg f_SideCrossOrdModGrp_ClOrdLinkID -> opt msg "77" parse_PositionEffect (fun msg f_SideCrossOrdModGrp_PositionEffect -> opt msg "120" parse_Currency (fun msg f_SideCrossOrdModGrp_SettlCurrency -> opt msg "121" parse_ForexReq (fun msg f_SideCrossOrdModGrp_ForexReq -> opt msg "590" parse_BookingUnit (fun msg f_SideCrossOrdModGrp_BookingUnit -> opt msg "354" parse_int (fun msg f_SideCrossOrdModGrp_EncodedTextLen -> opt msg "54" parse_Side (fun msg f_SideCrossOrdModGrp_Side -> opt msg "70" parse_string (fun msg f_SideCrossOrdModGrp_AllocID -> opt msg "229" parse_LocalMktDate (fun msg f_SideCrossOrdModGrp_TradeOriginationDate -> opt msg "552" parse_int (fun msg f_SideCrossOrdModGrp_NoSides -> opt msg "355" parse_string (fun msg f_SideCrossOrdModGrp_EncodedText -> opt msg "591" parse_PreallocMethod (fun msg f_SideCrossOrdModGrp_PreallocMethod -> opt msg "660" parse_AcctIDSource (fun msg f_SideCrossOrdModGrp_AcctIDSource -> opt msg "1" parse_string (fun msg f_SideCrossOrdModGrp_Account -> opt msg "203" parse_CoveredOrUncovered (fun msg f_SideCrossOrdModGrp_CoveredOrUncovered -> opt msg "529" parse_OrderRestrictions (fun msg f_SideCrossOrdModGrp_OrderRestrictions -> opt msg "635" parse_ClearingFeeIndicator (fun msg f_SideCrossOrdModGrp_ClearingFeeIndicator -> opt msg "854" parse_QtyType (fun msg f_SideCrossOrdModGrp_QtyType -> opt msg "589" parse_DayBookingInst (fun msg f_SideCrossOrdModGrp_DayBookingInst -> opt msg "581" parse_AccountType (fun msg f_SideCrossOrdModGrp_AccountType -> opt msg "526" parse_string (fun msg f_SideCrossOrdModGrp_SecondaryClOrdID -> opt msg "58" parse_string (fun msg f_SideCrossOrdModGrp_Text -> opt msg "11" parse_string (fun msg f_SideCrossOrdModGrp_ClOrdID -> opt msg "659" parse_string (fun msg f_SideCrossOrdModGrp_SideComplianceID -> opt msg "544" parse_CashMargin (fun msg f_SideCrossOrdModGrp_CashMargin -> opt msg "582" parse_CustOrderCapacity (fun msg f_SideCrossOrdModGrp_CustOrderCapacity -> opt msg "528" parse_OrderCapacity (fun msg f_SideCrossOrdModGrp_OrderCapacity -> opt msg "377" parse_SolicitedFlag (fun msg f_SideCrossOrdModGrp_SolicitedFlag -> block msg parse_OrderQtyData (fun msg f_SideCrossOrdModGrp_OrderQtyData -> block msg parse_CommissionData (fun msg f_SideCrossOrdModGrp_CommissionData -> repeating msg "78" parse_PreAllocGrp (fun msg f_SideCrossOrdModGrp_PreAllocGrp -> repeating msg "453" parse_Parties (fun msg f_SideCrossOrdModGrp_Parties -> (ParseSuccess {
+        f_SideCrossOrdModGrp_Parties = f_SideCrossOrdModGrp_Parties;
+        f_SideCrossOrdModGrp_PreAllocGrp = f_SideCrossOrdModGrp_PreAllocGrp;
+        f_SideCrossOrdModGrp_CommissionData = f_SideCrossOrdModGrp_CommissionData;
+        f_SideCrossOrdModGrp_OrderQtyData = f_SideCrossOrdModGrp_OrderQtyData;
+        f_SideCrossOrdModGrp_SolicitedFlag = f_SideCrossOrdModGrp_SolicitedFlag;
+        f_SideCrossOrdModGrp_OrderCapacity = f_SideCrossOrdModGrp_OrderCapacity;
+        f_SideCrossOrdModGrp_CustOrderCapacity = f_SideCrossOrdModGrp_CustOrderCapacity;
+        f_SideCrossOrdModGrp_CashMargin = f_SideCrossOrdModGrp_CashMargin;
+        f_SideCrossOrdModGrp_SideComplianceID = f_SideCrossOrdModGrp_SideComplianceID;
+        f_SideCrossOrdModGrp_ClOrdID = f_SideCrossOrdModGrp_ClOrdID;
+        f_SideCrossOrdModGrp_Text = f_SideCrossOrdModGrp_Text;
+        f_SideCrossOrdModGrp_SecondaryClOrdID = f_SideCrossOrdModGrp_SecondaryClOrdID;
+        f_SideCrossOrdModGrp_AccountType = f_SideCrossOrdModGrp_AccountType;
+        f_SideCrossOrdModGrp_DayBookingInst = f_SideCrossOrdModGrp_DayBookingInst;
+        f_SideCrossOrdModGrp_QtyType = f_SideCrossOrdModGrp_QtyType;
+        f_SideCrossOrdModGrp_ClearingFeeIndicator = f_SideCrossOrdModGrp_ClearingFeeIndicator;
+        f_SideCrossOrdModGrp_OrderRestrictions = f_SideCrossOrdModGrp_OrderRestrictions;
+        f_SideCrossOrdModGrp_CoveredOrUncovered = f_SideCrossOrdModGrp_CoveredOrUncovered;
+        f_SideCrossOrdModGrp_Account = f_SideCrossOrdModGrp_Account;
+        f_SideCrossOrdModGrp_AcctIDSource = f_SideCrossOrdModGrp_AcctIDSource;
+        f_SideCrossOrdModGrp_PreallocMethod = f_SideCrossOrdModGrp_PreallocMethod;
+        f_SideCrossOrdModGrp_EncodedText = f_SideCrossOrdModGrp_EncodedText;
+        f_SideCrossOrdModGrp_NoSides = f_SideCrossOrdModGrp_NoSides;
+        f_SideCrossOrdModGrp_TradeOriginationDate = f_SideCrossOrdModGrp_TradeOriginationDate;
+        f_SideCrossOrdModGrp_AllocID = f_SideCrossOrdModGrp_AllocID;
+        f_SideCrossOrdModGrp_Side = f_SideCrossOrdModGrp_Side;
+        f_SideCrossOrdModGrp_EncodedTextLen = f_SideCrossOrdModGrp_EncodedTextLen;
+        f_SideCrossOrdModGrp_BookingUnit = f_SideCrossOrdModGrp_BookingUnit;
+        f_SideCrossOrdModGrp_ForexReq = f_SideCrossOrdModGrp_ForexReq;
+        f_SideCrossOrdModGrp_SettlCurrency = f_SideCrossOrdModGrp_SettlCurrency;
+        f_SideCrossOrdModGrp_PositionEffect = f_SideCrossOrdModGrp_PositionEffect;
+        f_SideCrossOrdModGrp_ClOrdLinkID = f_SideCrossOrdModGrp_ClOrdLinkID;
+        f_SideCrossOrdModGrp_TradeDate = f_SideCrossOrdModGrp_TradeDate;
+        f_SideCrossOrdModGrp_BookingType = f_SideCrossOrdModGrp_BookingType
     },msg)
     )
     )
@@ -3673,6 +3477,215 @@ let parse_RelSymDerivSecGrp (msg)  =
     )
     )
     )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_SettlInstructionsData (msg)  =
+    opt msg "169" parse_StandInstDbType (fun msg f_SettlInstructionsData_StandInstDbType -> opt msg "170" parse_string (fun msg f_SettlInstructionsData_StandInstDbName -> opt msg "171" parse_string (fun msg f_SettlInstructionsData_StandInstDbID -> opt msg "172" parse_SettlDeliveryType (fun msg f_SettlInstructionsData_SettlDeliveryType -> repeating msg "85" parse_DlvyInstGrp (fun msg f_SettlInstructionsData_DlvyInstGrp -> (ParseSuccess {
+        f_SettlInstructionsData_DlvyInstGrp = f_SettlInstructionsData_DlvyInstGrp;
+        f_SettlInstructionsData_SettlDeliveryType = f_SettlInstructionsData_SettlDeliveryType;
+        f_SettlInstructionsData_StandInstDbID = f_SettlInstructionsData_StandInstDbID;
+        f_SettlInstructionsData_StandInstDbName = f_SettlInstructionsData_StandInstDbName;
+        f_SettlInstructionsData_StandInstDbType = f_SettlInstructionsData_StandInstDbType
+    },msg)
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_TrdCapRptSideGrp (msg)  =
+    opt msg "825" parse_string (fun msg f_TrdCapRptSideGrp_ExchangeRule -> opt msg "15" parse_Currency (fun msg f_TrdCapRptSideGrp_Currency -> opt msg "77" parse_PositionEffect (fun msg f_TrdCapRptSideGrp_PositionEffect -> opt msg "120" parse_Currency (fun msg f_TrdCapRptSideGrp_SettlCurrency -> opt msg "920" parse_float (fun msg f_TrdCapRptSideGrp_EndAccruedInterestAmt -> opt msg "336" parse_string (fun msg f_TrdCapRptSideGrp_TradingSessionID -> opt msg "70" parse_string (fun msg f_TrdCapRptSideGrp_AllocID -> opt msg "552" parse_int (fun msg f_TrdCapRptSideGrp_NoSides -> opt msg "355" parse_string (fun msg f_TrdCapRptSideGrp_EncodedText -> opt msg "156" parse_SettlCurrFxRateCalc (fun msg f_TrdCapRptSideGrp_SettlCurrFxRateCalc -> opt msg "157" parse_int (fun msg f_TrdCapRptSideGrp_NumDaysInterest -> opt msg "155" parse_float (fun msg f_TrdCapRptSideGrp_SettlCurrFxRate -> opt msg "529" parse_OrderRestrictions (fun msg f_TrdCapRptSideGrp_OrderRestrictions -> opt msg "579" parse_string (fun msg f_TrdCapRptSideGrp_TradeInputDevice -> opt msg "66" parse_string (fun msg f_TrdCapRptSideGrp_ListID -> opt msg "381" parse_float (fun msg f_TrdCapRptSideGrp_GrossTradeAmt -> opt msg "625" parse_string (fun msg f_TrdCapRptSideGrp_TradingSessionSubID -> opt msg "752" parse_SideMultiLegReportingType (fun msg f_TrdCapRptSideGrp_SideMultiLegReportingType -> opt msg "58" parse_string (fun msg f_TrdCapRptSideGrp_Text -> opt msg "921" parse_float (fun msg f_TrdCapRptSideGrp_StartCash -> opt msg "922" parse_float (fun msg f_TrdCapRptSideGrp_EndCash -> opt msg "11" parse_string (fun msg f_TrdCapRptSideGrp_ClOrdID -> opt msg "582" parse_CustOrderCapacity (fun msg f_TrdCapRptSideGrp_CustOrderCapacity -> opt msg "119" parse_float (fun msg f_TrdCapRptSideGrp_SettlCurrAmt -> opt msg "237" parse_float (fun msg f_TrdCapRptSideGrp_TotalTakedown -> opt msg "826" parse_TradeAllocIndicator (fun msg f_TrdCapRptSideGrp_TradeAllocIndicator -> opt msg "18" parse_ExecInst (fun msg f_TrdCapRptSideGrp_ExecInst -> opt msg "821" parse_string (fun msg f_TrdCapRptSideGrp_OrderInputDevice -> opt msg "230" parse_LocalMktDate (fun msg f_TrdCapRptSideGrp_ExDate -> opt msg "376" parse_string (fun msg f_TrdCapRptSideGrp_ComplianceID -> opt msg "118" parse_float (fun msg f_TrdCapRptSideGrp_NetMoney -> opt msg "738" parse_float (fun msg f_TrdCapRptSideGrp_InterestAtMaturity -> opt msg "158" parse_float (fun msg f_TrdCapRptSideGrp_AccruedInterestRate -> opt msg "354" parse_int (fun msg f_TrdCapRptSideGrp_EncodedTextLen -> opt msg "54" parse_Side (fun msg f_TrdCapRptSideGrp_Side -> opt msg "37" parse_string (fun msg f_TrdCapRptSideGrp_OrderID -> opt msg "591" parse_PreallocMethod (fun msg f_TrdCapRptSideGrp_PreallocMethod -> opt msg "660" parse_AcctIDSource (fun msg f_TrdCapRptSideGrp_AcctIDSource -> opt msg "1" parse_string (fun msg f_TrdCapRptSideGrp_Account -> opt msg "575" parse_OddLot (fun msg f_TrdCapRptSideGrp_OddLot -> opt msg "943" parse_string (fun msg f_TrdCapRptSideGrp_TimeBracket -> opt msg "238" parse_float (fun msg f_TrdCapRptSideGrp_Concession -> opt msg "159" parse_float (fun msg f_TrdCapRptSideGrp_AccruedInterestAmt -> opt msg "81" parse_ProcessCode (fun msg f_TrdCapRptSideGrp_ProcessCode -> opt msg "581" parse_AccountType (fun msg f_TrdCapRptSideGrp_AccountType -> opt msg "526" parse_string (fun msg f_TrdCapRptSideGrp_SecondaryClOrdID -> opt msg "578" parse_string (fun msg f_TrdCapRptSideGrp_TradeInputSource -> opt msg "198" parse_string (fun msg f_TrdCapRptSideGrp_SecondaryOrderID -> opt msg "40" parse_OrdType (fun msg f_TrdCapRptSideGrp_OrdType -> opt msg "528" parse_OrderCapacity (fun msg f_TrdCapRptSideGrp_OrderCapacity -> opt msg "377" parse_SolicitedFlag (fun msg f_TrdCapRptSideGrp_SolicitedFlag -> opt msg "483" parse_UTCTimestamp (fun msg f_TrdCapRptSideGrp_TransBkdTime -> block msg parse_CommissionData (fun msg f_TrdCapRptSideGrp_CommissionData -> repeating msg "453" parse_Parties (fun msg f_TrdCapRptSideGrp_Parties -> repeating msg "78" parse_TrdAllocGrp (fun msg f_TrdCapRptSideGrp_TrdAllocGrp -> repeating msg "576" parse_ClrInstGrp (fun msg f_TrdCapRptSideGrp_ClrInstGrp -> repeating msg "136" parse_MiscFeesGrp (fun msg f_TrdCapRptSideGrp_MiscFeesGrp -> repeating msg "518" parse_ContAmtGrp (fun msg f_TrdCapRptSideGrp_ContAmtGrp -> repeating msg "232" parse_Stipulations (fun msg f_TrdCapRptSideGrp_Stipulations -> (ParseSuccess {
+        f_TrdCapRptSideGrp_Stipulations = f_TrdCapRptSideGrp_Stipulations;
+        f_TrdCapRptSideGrp_ContAmtGrp = f_TrdCapRptSideGrp_ContAmtGrp;
+        f_TrdCapRptSideGrp_MiscFeesGrp = f_TrdCapRptSideGrp_MiscFeesGrp;
+        f_TrdCapRptSideGrp_ClrInstGrp = f_TrdCapRptSideGrp_ClrInstGrp;
+        f_TrdCapRptSideGrp_TrdAllocGrp = f_TrdCapRptSideGrp_TrdAllocGrp;
+        f_TrdCapRptSideGrp_Parties = f_TrdCapRptSideGrp_Parties;
+        f_TrdCapRptSideGrp_CommissionData = f_TrdCapRptSideGrp_CommissionData;
+        f_TrdCapRptSideGrp_TransBkdTime = f_TrdCapRptSideGrp_TransBkdTime;
+        f_TrdCapRptSideGrp_SolicitedFlag = f_TrdCapRptSideGrp_SolicitedFlag;
+        f_TrdCapRptSideGrp_OrderCapacity = f_TrdCapRptSideGrp_OrderCapacity;
+        f_TrdCapRptSideGrp_OrdType = f_TrdCapRptSideGrp_OrdType;
+        f_TrdCapRptSideGrp_SecondaryOrderID = f_TrdCapRptSideGrp_SecondaryOrderID;
+        f_TrdCapRptSideGrp_TradeInputSource = f_TrdCapRptSideGrp_TradeInputSource;
+        f_TrdCapRptSideGrp_SecondaryClOrdID = f_TrdCapRptSideGrp_SecondaryClOrdID;
+        f_TrdCapRptSideGrp_AccountType = f_TrdCapRptSideGrp_AccountType;
+        f_TrdCapRptSideGrp_ProcessCode = f_TrdCapRptSideGrp_ProcessCode;
+        f_TrdCapRptSideGrp_AccruedInterestAmt = f_TrdCapRptSideGrp_AccruedInterestAmt;
+        f_TrdCapRptSideGrp_Concession = f_TrdCapRptSideGrp_Concession;
+        f_TrdCapRptSideGrp_TimeBracket = f_TrdCapRptSideGrp_TimeBracket;
+        f_TrdCapRptSideGrp_OddLot = f_TrdCapRptSideGrp_OddLot;
+        f_TrdCapRptSideGrp_Account = f_TrdCapRptSideGrp_Account;
+        f_TrdCapRptSideGrp_AcctIDSource = f_TrdCapRptSideGrp_AcctIDSource;
+        f_TrdCapRptSideGrp_PreallocMethod = f_TrdCapRptSideGrp_PreallocMethod;
+        f_TrdCapRptSideGrp_OrderID = f_TrdCapRptSideGrp_OrderID;
+        f_TrdCapRptSideGrp_Side = f_TrdCapRptSideGrp_Side;
+        f_TrdCapRptSideGrp_EncodedTextLen = f_TrdCapRptSideGrp_EncodedTextLen;
+        f_TrdCapRptSideGrp_AccruedInterestRate = f_TrdCapRptSideGrp_AccruedInterestRate;
+        f_TrdCapRptSideGrp_InterestAtMaturity = f_TrdCapRptSideGrp_InterestAtMaturity;
+        f_TrdCapRptSideGrp_NetMoney = f_TrdCapRptSideGrp_NetMoney;
+        f_TrdCapRptSideGrp_ComplianceID = f_TrdCapRptSideGrp_ComplianceID;
+        f_TrdCapRptSideGrp_ExDate = f_TrdCapRptSideGrp_ExDate;
+        f_TrdCapRptSideGrp_OrderInputDevice = f_TrdCapRptSideGrp_OrderInputDevice;
+        f_TrdCapRptSideGrp_ExecInst = f_TrdCapRptSideGrp_ExecInst;
+        f_TrdCapRptSideGrp_TradeAllocIndicator = f_TrdCapRptSideGrp_TradeAllocIndicator;
+        f_TrdCapRptSideGrp_TotalTakedown = f_TrdCapRptSideGrp_TotalTakedown;
+        f_TrdCapRptSideGrp_SettlCurrAmt = f_TrdCapRptSideGrp_SettlCurrAmt;
+        f_TrdCapRptSideGrp_CustOrderCapacity = f_TrdCapRptSideGrp_CustOrderCapacity;
+        f_TrdCapRptSideGrp_ClOrdID = f_TrdCapRptSideGrp_ClOrdID;
+        f_TrdCapRptSideGrp_EndCash = f_TrdCapRptSideGrp_EndCash;
+        f_TrdCapRptSideGrp_StartCash = f_TrdCapRptSideGrp_StartCash;
+        f_TrdCapRptSideGrp_Text = f_TrdCapRptSideGrp_Text;
+        f_TrdCapRptSideGrp_SideMultiLegReportingType = f_TrdCapRptSideGrp_SideMultiLegReportingType;
+        f_TrdCapRptSideGrp_TradingSessionSubID = f_TrdCapRptSideGrp_TradingSessionSubID;
+        f_TrdCapRptSideGrp_GrossTradeAmt = f_TrdCapRptSideGrp_GrossTradeAmt;
+        f_TrdCapRptSideGrp_ListID = f_TrdCapRptSideGrp_ListID;
+        f_TrdCapRptSideGrp_TradeInputDevice = f_TrdCapRptSideGrp_TradeInputDevice;
+        f_TrdCapRptSideGrp_OrderRestrictions = f_TrdCapRptSideGrp_OrderRestrictions;
+        f_TrdCapRptSideGrp_SettlCurrFxRate = f_TrdCapRptSideGrp_SettlCurrFxRate;
+        f_TrdCapRptSideGrp_NumDaysInterest = f_TrdCapRptSideGrp_NumDaysInterest;
+        f_TrdCapRptSideGrp_SettlCurrFxRateCalc = f_TrdCapRptSideGrp_SettlCurrFxRateCalc;
+        f_TrdCapRptSideGrp_EncodedText = f_TrdCapRptSideGrp_EncodedText;
+        f_TrdCapRptSideGrp_NoSides = f_TrdCapRptSideGrp_NoSides;
+        f_TrdCapRptSideGrp_AllocID = f_TrdCapRptSideGrp_AllocID;
+        f_TrdCapRptSideGrp_TradingSessionID = f_TrdCapRptSideGrp_TradingSessionID;
+        f_TrdCapRptSideGrp_EndAccruedInterestAmt = f_TrdCapRptSideGrp_EndAccruedInterestAmt;
+        f_TrdCapRptSideGrp_SettlCurrency = f_TrdCapRptSideGrp_SettlCurrency;
+        f_TrdCapRptSideGrp_PositionEffect = f_TrdCapRptSideGrp_PositionEffect;
+        f_TrdCapRptSideGrp_Currency = f_TrdCapRptSideGrp_Currency;
+        f_TrdCapRptSideGrp_ExchangeRule = f_TrdCapRptSideGrp_ExchangeRule
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_LegOrdGrp (msg)  =
+    opt msg "555" parse_int (fun msg f_LegOrdGrp_NoLegs -> opt msg "565" parse_int (fun msg f_LegOrdGrp_LegCoveredOrUncovered -> opt msg "690" parse_LegSwapType (fun msg f_LegOrdGrp_LegSwapType -> opt msg "588" parse_LocalMktDate (fun msg f_LegOrdGrp_LegSettlDate -> opt msg "654" parse_string (fun msg f_LegOrdGrp_LegRefID -> opt msg "566" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_LegOrdGrp_LegPrice -> opt msg "587" parse_char (fun msg f_LegOrdGrp_LegSettlType -> opt msg "564" parse_char (fun msg f_LegOrdGrp_LegPositionEffect -> opt msg "687" parse_float (fun msg f_LegOrdGrp_LegQty -> block msg parse_InstrumentLeg (fun msg f_LegOrdGrp_InstrumentLeg -> repeating msg "539" parse_NestedParties (fun msg f_LegOrdGrp_NestedParties -> repeating msg "670" parse_LegPreAllocGrp (fun msg f_LegOrdGrp_LegPreAllocGrp -> repeating msg "683" parse_LegStipulations (fun msg f_LegOrdGrp_LegStipulations -> (ParseSuccess {
+        f_LegOrdGrp_LegStipulations = f_LegOrdGrp_LegStipulations;
+        f_LegOrdGrp_LegPreAllocGrp = f_LegOrdGrp_LegPreAllocGrp;
+        f_LegOrdGrp_NestedParties = f_LegOrdGrp_NestedParties;
+        f_LegOrdGrp_InstrumentLeg = f_LegOrdGrp_InstrumentLeg;
+        f_LegOrdGrp_LegQty = f_LegOrdGrp_LegQty;
+        f_LegOrdGrp_LegPositionEffect = f_LegOrdGrp_LegPositionEffect;
+        f_LegOrdGrp_LegSettlType = f_LegOrdGrp_LegSettlType;
+        f_LegOrdGrp_LegPrice = f_LegOrdGrp_LegPrice;
+        f_LegOrdGrp_LegRefID = f_LegOrdGrp_LegRefID;
+        f_LegOrdGrp_LegSettlDate = f_LegOrdGrp_LegSettlDate;
+        f_LegOrdGrp_LegSwapType = f_LegOrdGrp_LegSwapType;
+        f_LegOrdGrp_LegCoveredOrUncovered = f_LegOrdGrp_LegCoveredOrUncovered;
+        f_LegOrdGrp_NoLegs = f_LegOrdGrp_NoLegs
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_InstrmtMDReqGrp (msg)  =
+    opt msg "146" parse_int (fun msg f_InstrmtMDReqGrp_NoRelatedSym -> block msg parse_Instrument (fun msg f_InstrmtMDReqGrp_Instrument -> repeating msg "555" parse_InstrmtLegGrp (fun msg f_InstrmtMDReqGrp_InstrmtLegGrp -> repeating msg "711" parse_UndInstrmtGrp (fun msg f_InstrmtMDReqGrp_UndInstrmtGrp -> (ParseSuccess {
+        f_InstrmtMDReqGrp_UndInstrmtGrp = f_InstrmtMDReqGrp_UndInstrmtGrp;
+        f_InstrmtMDReqGrp_InstrmtLegGrp = f_InstrmtMDReqGrp_InstrmtLegGrp;
+        f_InstrmtMDReqGrp_Instrument = f_InstrmtMDReqGrp_Instrument;
+        f_InstrmtMDReqGrp_NoRelatedSym = f_InstrmtMDReqGrp_NoRelatedSym
+    },msg)
     )
     )
     )
@@ -3776,98 +3789,27 @@ let parse_MDIncGrp (msg)  =
     )
 ;;
 
-let parse_RFQReqGrp (msg)  =
-    opt msg "336" parse_string (fun msg f_RFQReqGrp_TradingSessionID -> opt msg "303" parse_QuoteRequestType (fun msg f_RFQReqGrp_QuoteRequestType -> opt msg "140" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_RFQReqGrp_PrevClosePx -> opt msg "537" parse_QuoteType (fun msg f_RFQReqGrp_QuoteType -> opt msg "146" parse_int (fun msg f_RFQReqGrp_NoRelatedSym -> opt msg "625" parse_string (fun msg f_RFQReqGrp_TradingSessionSubID -> block msg parse_Instrument (fun msg f_RFQReqGrp_Instrument -> repeating msg "555" parse_InstrmtLegGrp (fun msg f_RFQReqGrp_InstrmtLegGrp -> repeating msg "711" parse_UndInstrmtGrp (fun msg f_RFQReqGrp_UndInstrmtGrp -> (ParseSuccess {
-        f_RFQReqGrp_UndInstrmtGrp = f_RFQReqGrp_UndInstrmtGrp;
-        f_RFQReqGrp_InstrmtLegGrp = f_RFQReqGrp_InstrmtLegGrp;
-        f_RFQReqGrp_Instrument = f_RFQReqGrp_Instrument;
-        f_RFQReqGrp_TradingSessionSubID = f_RFQReqGrp_TradingSessionSubID;
-        f_RFQReqGrp_NoRelatedSym = f_RFQReqGrp_NoRelatedSym;
-        f_RFQReqGrp_QuoteType = f_RFQReqGrp_QuoteType;
-        f_RFQReqGrp_PrevClosePx = f_RFQReqGrp_PrevClosePx;
-        f_RFQReqGrp_QuoteRequestType = f_RFQReqGrp_QuoteRequestType;
-        f_RFQReqGrp_TradingSessionID = f_RFQReqGrp_TradingSessionID
+let parse_SecListGrp (msg)  =
+    opt msg "15" parse_Currency (fun msg f_SecListGrp_Currency -> opt msg "561" parse_float (fun msg f_SecListGrp_RoundLot -> opt msg "354" parse_int (fun msg f_SecListGrp_EncodedTextLen -> opt msg "827" parse_ExpirationCycle (fun msg f_SecListGrp_ExpirationCycle -> opt msg "625" parse_string (fun msg f_SecListGrp_TradingSessionSubID -> opt msg "562" parse_float (fun msg f_SecListGrp_MinTradeVol -> opt msg "58" parse_string (fun msg f_SecListGrp_Text -> opt msg "336" parse_string (fun msg f_SecListGrp_TradingSessionID -> opt msg "355" parse_string (fun msg f_SecListGrp_EncodedText -> opt msg "146" parse_int (fun msg f_SecListGrp_NoRelatedSym -> block msg parse_YieldData (fun msg f_SecListGrp_YieldData -> block msg parse_Instrument (fun msg f_SecListGrp_Instrument -> block msg parse_SpreadOrBenchmarkCurveData (fun msg f_SecListGrp_SpreadOrBenchmarkCurveData -> block msg parse_InstrumentExtension (fun msg f_SecListGrp_InstrumentExtension -> block msg parse_FinancingDetails (fun msg f_SecListGrp_FinancingDetails -> repeating msg "232" parse_Stipulations (fun msg f_SecListGrp_Stipulations -> repeating msg "555" parse_InstrmtLegSecListGrp (fun msg f_SecListGrp_InstrmtLegSecListGrp -> repeating msg "711" parse_UndInstrmtGrp (fun msg f_SecListGrp_UndInstrmtGrp -> (ParseSuccess {
+        f_SecListGrp_UndInstrmtGrp = f_SecListGrp_UndInstrmtGrp;
+        f_SecListGrp_InstrmtLegSecListGrp = f_SecListGrp_InstrmtLegSecListGrp;
+        f_SecListGrp_Stipulations = f_SecListGrp_Stipulations;
+        f_SecListGrp_FinancingDetails = f_SecListGrp_FinancingDetails;
+        f_SecListGrp_InstrumentExtension = f_SecListGrp_InstrumentExtension;
+        f_SecListGrp_SpreadOrBenchmarkCurveData = f_SecListGrp_SpreadOrBenchmarkCurveData;
+        f_SecListGrp_Instrument = f_SecListGrp_Instrument;
+        f_SecListGrp_YieldData = f_SecListGrp_YieldData;
+        f_SecListGrp_NoRelatedSym = f_SecListGrp_NoRelatedSym;
+        f_SecListGrp_EncodedText = f_SecListGrp_EncodedText;
+        f_SecListGrp_TradingSessionID = f_SecListGrp_TradingSessionID;
+        f_SecListGrp_Text = f_SecListGrp_Text;
+        f_SecListGrp_MinTradeVol = f_SecListGrp_MinTradeVol;
+        f_SecListGrp_TradingSessionSubID = f_SecListGrp_TradingSessionSubID;
+        f_SecListGrp_ExpirationCycle = f_SecListGrp_ExpirationCycle;
+        f_SecListGrp_EncodedTextLen = f_SecListGrp_EncodedTextLen;
+        f_SecListGrp_RoundLot = f_SecListGrp_RoundLot;
+        f_SecListGrp_Currency = f_SecListGrp_Currency
     },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_QuotReqRjctGrp (msg)  =
-    opt msg "64" parse_LocalMktDate (fun msg f_QuotReqRjctGrp_SettlDate -> opt msg "140" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_QuotReqRjctGrp_PrevClosePx -> opt msg "15" parse_Currency (fun msg f_QuotReqRjctGrp_Currency -> opt msg "640" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_QuotReqRjctGrp_Price2 -> opt msg "54" parse_Side (fun msg f_QuotReqRjctGrp_Side -> opt msg "192" parse_float (fun msg f_QuotReqRjctGrp_OrderQty2 -> opt msg "60" parse_UTCTimestamp (fun msg f_QuotReqRjctGrp_TransactTime -> opt msg "193" parse_LocalMktDate (fun msg f_QuotReqRjctGrp_SettlDate2 -> opt msg "336" parse_string (fun msg f_QuotReqRjctGrp_TradingSessionID -> opt msg "229" parse_LocalMktDate (fun msg f_QuotReqRjctGrp_TradeOriginationDate -> opt msg "692" parse_QuotePriceType (fun msg f_QuotReqRjctGrp_QuotePriceType -> opt msg "660" parse_AcctIDSource (fun msg f_QuotReqRjctGrp_AcctIDSource -> opt msg "1" parse_string (fun msg f_QuotReqRjctGrp_Account -> opt msg "423" parse_PriceType (fun msg f_QuotReqRjctGrp_PriceType -> opt msg "126" parse_UTCTimestamp (fun msg f_QuotReqRjctGrp_ExpireTime -> opt msg "537" parse_QuoteType (fun msg f_QuotReqRjctGrp_QuoteType -> opt msg "63" parse_SettlType (fun msg f_QuotReqRjctGrp_SettlType -> opt msg "44" (fun x -> (match parse_float x with
-        | None -> None
-        | Some d -> (Some (float_Convert_6_4 d))
-    )
-    ) (fun msg f_QuotReqRjctGrp_Price -> opt msg "854" parse_QtyType (fun msg f_QuotReqRjctGrp_QtyType -> opt msg "625" parse_string (fun msg f_QuotReqRjctGrp_TradingSessionSubID -> opt msg "581" parse_AccountType (fun msg f_QuotReqRjctGrp_AccountType -> opt msg "303" parse_QuoteRequestType (fun msg f_QuotReqRjctGrp_QuoteRequestType -> opt msg "40" parse_OrdType (fun msg f_QuotReqRjctGrp_OrdType -> opt msg "146" parse_int (fun msg f_QuotReqRjctGrp_NoRelatedSym -> block msg parse_YieldData (fun msg f_QuotReqRjctGrp_YieldData -> block msg parse_SpreadOrBenchmarkCurveData (fun msg f_QuotReqRjctGrp_SpreadOrBenchmarkCurveData -> block msg parse_OrderQtyData (fun msg f_QuotReqRjctGrp_OrderQtyData -> block msg parse_FinancingDetails (fun msg f_QuotReqRjctGrp_FinancingDetails -> block msg parse_Instrument (fun msg f_QuotReqRjctGrp_Instrument -> repeating msg "453" parse_Parties (fun msg f_QuotReqRjctGrp_Parties -> repeating msg "735" parse_QuotQualGrp (fun msg f_QuotReqRjctGrp_QuotQualGrp -> repeating msg "711" parse_UndInstrmtGrp (fun msg f_QuotReqRjctGrp_UndInstrmtGrp -> repeating msg "555" parse_QuotReqLegsGrp (fun msg f_QuotReqRjctGrp_QuotReqLegsGrp -> repeating msg "232" parse_Stipulations (fun msg f_QuotReqRjctGrp_Stipulations -> (ParseSuccess {
-        f_QuotReqRjctGrp_Stipulations = f_QuotReqRjctGrp_Stipulations;
-        f_QuotReqRjctGrp_QuotReqLegsGrp = f_QuotReqRjctGrp_QuotReqLegsGrp;
-        f_QuotReqRjctGrp_UndInstrmtGrp = f_QuotReqRjctGrp_UndInstrmtGrp;
-        f_QuotReqRjctGrp_QuotQualGrp = f_QuotReqRjctGrp_QuotQualGrp;
-        f_QuotReqRjctGrp_Parties = f_QuotReqRjctGrp_Parties;
-        f_QuotReqRjctGrp_Instrument = f_QuotReqRjctGrp_Instrument;
-        f_QuotReqRjctGrp_FinancingDetails = f_QuotReqRjctGrp_FinancingDetails;
-        f_QuotReqRjctGrp_OrderQtyData = f_QuotReqRjctGrp_OrderQtyData;
-        f_QuotReqRjctGrp_SpreadOrBenchmarkCurveData = f_QuotReqRjctGrp_SpreadOrBenchmarkCurveData;
-        f_QuotReqRjctGrp_YieldData = f_QuotReqRjctGrp_YieldData;
-        f_QuotReqRjctGrp_NoRelatedSym = f_QuotReqRjctGrp_NoRelatedSym;
-        f_QuotReqRjctGrp_OrdType = f_QuotReqRjctGrp_OrdType;
-        f_QuotReqRjctGrp_QuoteRequestType = f_QuotReqRjctGrp_QuoteRequestType;
-        f_QuotReqRjctGrp_AccountType = f_QuotReqRjctGrp_AccountType;
-        f_QuotReqRjctGrp_TradingSessionSubID = f_QuotReqRjctGrp_TradingSessionSubID;
-        f_QuotReqRjctGrp_QtyType = f_QuotReqRjctGrp_QtyType;
-        f_QuotReqRjctGrp_Price = f_QuotReqRjctGrp_Price;
-        f_QuotReqRjctGrp_SettlType = f_QuotReqRjctGrp_SettlType;
-        f_QuotReqRjctGrp_QuoteType = f_QuotReqRjctGrp_QuoteType;
-        f_QuotReqRjctGrp_ExpireTime = f_QuotReqRjctGrp_ExpireTime;
-        f_QuotReqRjctGrp_PriceType = f_QuotReqRjctGrp_PriceType;
-        f_QuotReqRjctGrp_Account = f_QuotReqRjctGrp_Account;
-        f_QuotReqRjctGrp_AcctIDSource = f_QuotReqRjctGrp_AcctIDSource;
-        f_QuotReqRjctGrp_QuotePriceType = f_QuotReqRjctGrp_QuotePriceType;
-        f_QuotReqRjctGrp_TradeOriginationDate = f_QuotReqRjctGrp_TradeOriginationDate;
-        f_QuotReqRjctGrp_TradingSessionID = f_QuotReqRjctGrp_TradingSessionID;
-        f_QuotReqRjctGrp_SettlDate2 = f_QuotReqRjctGrp_SettlDate2;
-        f_QuotReqRjctGrp_TransactTime = f_QuotReqRjctGrp_TransactTime;
-        f_QuotReqRjctGrp_OrderQty2 = f_QuotReqRjctGrp_OrderQty2;
-        f_QuotReqRjctGrp_Side = f_QuotReqRjctGrp_Side;
-        f_QuotReqRjctGrp_Price2 = f_QuotReqRjctGrp_Price2;
-        f_QuotReqRjctGrp_Currency = f_QuotReqRjctGrp_Currency;
-        f_QuotReqRjctGrp_PrevClosePx = f_QuotReqRjctGrp_PrevClosePx;
-        f_QuotReqRjctGrp_SettlDate = f_QuotReqRjctGrp_SettlDate
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
     )
     )
     )
@@ -3969,75 +3911,6 @@ let parse_QuotReqGrp (msg)  =
     )
     )
     )
-    )
-    )
-    )
-    )
-;;
-
-let parse_SecListGrp (msg)  =
-    opt msg "15" parse_Currency (fun msg f_SecListGrp_Currency -> opt msg "561" parse_float (fun msg f_SecListGrp_RoundLot -> opt msg "354" parse_int (fun msg f_SecListGrp_EncodedTextLen -> opt msg "827" parse_ExpirationCycle (fun msg f_SecListGrp_ExpirationCycle -> opt msg "625" parse_string (fun msg f_SecListGrp_TradingSessionSubID -> opt msg "562" parse_float (fun msg f_SecListGrp_MinTradeVol -> opt msg "58" parse_string (fun msg f_SecListGrp_Text -> opt msg "336" parse_string (fun msg f_SecListGrp_TradingSessionID -> opt msg "355" parse_string (fun msg f_SecListGrp_EncodedText -> opt msg "146" parse_int (fun msg f_SecListGrp_NoRelatedSym -> block msg parse_YieldData (fun msg f_SecListGrp_YieldData -> block msg parse_Instrument (fun msg f_SecListGrp_Instrument -> block msg parse_SpreadOrBenchmarkCurveData (fun msg f_SecListGrp_SpreadOrBenchmarkCurveData -> block msg parse_InstrumentExtension (fun msg f_SecListGrp_InstrumentExtension -> block msg parse_FinancingDetails (fun msg f_SecListGrp_FinancingDetails -> repeating msg "232" parse_Stipulations (fun msg f_SecListGrp_Stipulations -> repeating msg "555" parse_InstrmtLegSecListGrp (fun msg f_SecListGrp_InstrmtLegSecListGrp -> repeating msg "711" parse_UndInstrmtGrp (fun msg f_SecListGrp_UndInstrmtGrp -> (ParseSuccess {
-        f_SecListGrp_UndInstrmtGrp = f_SecListGrp_UndInstrmtGrp;
-        f_SecListGrp_InstrmtLegSecListGrp = f_SecListGrp_InstrmtLegSecListGrp;
-        f_SecListGrp_Stipulations = f_SecListGrp_Stipulations;
-        f_SecListGrp_FinancingDetails = f_SecListGrp_FinancingDetails;
-        f_SecListGrp_InstrumentExtension = f_SecListGrp_InstrumentExtension;
-        f_SecListGrp_SpreadOrBenchmarkCurveData = f_SecListGrp_SpreadOrBenchmarkCurveData;
-        f_SecListGrp_Instrument = f_SecListGrp_Instrument;
-        f_SecListGrp_YieldData = f_SecListGrp_YieldData;
-        f_SecListGrp_NoRelatedSym = f_SecListGrp_NoRelatedSym;
-        f_SecListGrp_EncodedText = f_SecListGrp_EncodedText;
-        f_SecListGrp_TradingSessionID = f_SecListGrp_TradingSessionID;
-        f_SecListGrp_Text = f_SecListGrp_Text;
-        f_SecListGrp_MinTradeVol = f_SecListGrp_MinTradeVol;
-        f_SecListGrp_TradingSessionSubID = f_SecListGrp_TradingSessionSubID;
-        f_SecListGrp_ExpirationCycle = f_SecListGrp_ExpirationCycle;
-        f_SecListGrp_EncodedTextLen = f_SecListGrp_EncodedTextLen;
-        f_SecListGrp_RoundLot = f_SecListGrp_RoundLot;
-        f_SecListGrp_Currency = f_SecListGrp_Currency
-    },msg)
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_QuotCxlEntriesGrp (msg)  =
-    opt msg "295" parse_int (fun msg f_QuotCxlEntriesGrp_NoQuoteEntries -> block msg parse_Instrument (fun msg f_QuotCxlEntriesGrp_Instrument -> block msg parse_FinancingDetails (fun msg f_QuotCxlEntriesGrp_FinancingDetails -> repeating msg "555" parse_InstrmtLegGrp (fun msg f_QuotCxlEntriesGrp_InstrmtLegGrp -> repeating msg "711" parse_UndInstrmtGrp (fun msg f_QuotCxlEntriesGrp_UndInstrmtGrp -> (ParseSuccess {
-        f_QuotCxlEntriesGrp_UndInstrmtGrp = f_QuotCxlEntriesGrp_UndInstrmtGrp;
-        f_QuotCxlEntriesGrp_InstrmtLegGrp = f_QuotCxlEntriesGrp_InstrmtLegGrp;
-        f_QuotCxlEntriesGrp_FinancingDetails = f_QuotCxlEntriesGrp_FinancingDetails;
-        f_QuotCxlEntriesGrp_Instrument = f_QuotCxlEntriesGrp_Instrument;
-        f_QuotCxlEntriesGrp_NoQuoteEntries = f_QuotCxlEntriesGrp_NoQuoteEntries
-    },msg)
-    )
-    )
-    )
-    )
-    )
-;;
-
-let parse_InstrmtMDReqGrp (msg)  =
-    opt msg "146" parse_int (fun msg f_InstrmtMDReqGrp_NoRelatedSym -> block msg parse_Instrument (fun msg f_InstrmtMDReqGrp_Instrument -> repeating msg "555" parse_InstrmtLegGrp (fun msg f_InstrmtMDReqGrp_InstrmtLegGrp -> repeating msg "711" parse_UndInstrmtGrp (fun msg f_InstrmtMDReqGrp_UndInstrmtGrp -> (ParseSuccess {
-        f_InstrmtMDReqGrp_UndInstrmtGrp = f_InstrmtMDReqGrp_UndInstrmtGrp;
-        f_InstrmtMDReqGrp_InstrmtLegGrp = f_InstrmtMDReqGrp_InstrmtLegGrp;
-        f_InstrmtMDReqGrp_Instrument = f_InstrmtMDReqGrp_Instrument;
-        f_InstrmtMDReqGrp_NoRelatedSym = f_InstrmtMDReqGrp_NoRelatedSym
-    },msg)
     )
     )
     )
@@ -4217,16 +4090,97 @@ let parse_ListOrdGrp (msg)  =
     )
 ;;
 
-let parse_QuotSetGrp (msg)  =
-    opt msg "304" parse_int (fun msg f_QuotSetGrp_TotNoQuoteEntries -> opt msg "367" parse_UTCTimestamp (fun msg f_QuotSetGrp_QuoteSetValidUntilTime -> opt msg "296" parse_int (fun msg f_QuotSetGrp_NoQuoteSets -> opt msg "893" parse_LastFragment (fun msg f_QuotSetGrp_LastFragment -> opt msg "302" parse_string (fun msg f_QuotSetGrp_QuoteSetID -> block msg parse_UnderlyingInstrument (fun msg f_QuotSetGrp_UnderlyingInstrument -> repeating msg "295" parse_QuotEntryGrp (fun msg f_QuotSetGrp_QuotEntryGrp -> (ParseSuccess {
-        f_QuotSetGrp_QuotEntryGrp = f_QuotSetGrp_QuotEntryGrp;
-        f_QuotSetGrp_UnderlyingInstrument = f_QuotSetGrp_UnderlyingInstrument;
-        f_QuotSetGrp_QuoteSetID = f_QuotSetGrp_QuoteSetID;
-        f_QuotSetGrp_LastFragment = f_QuotSetGrp_LastFragment;
-        f_QuotSetGrp_NoQuoteSets = f_QuotSetGrp_NoQuoteSets;
-        f_QuotSetGrp_QuoteSetValidUntilTime = f_QuotSetGrp_QuoteSetValidUntilTime;
-        f_QuotSetGrp_TotNoQuoteEntries = f_QuotSetGrp_TotNoQuoteEntries
+let parse_QuotCxlEntriesGrp (msg)  =
+    opt msg "295" parse_int (fun msg f_QuotCxlEntriesGrp_NoQuoteEntries -> block msg parse_Instrument (fun msg f_QuotCxlEntriesGrp_Instrument -> block msg parse_FinancingDetails (fun msg f_QuotCxlEntriesGrp_FinancingDetails -> repeating msg "555" parse_InstrmtLegGrp (fun msg f_QuotCxlEntriesGrp_InstrmtLegGrp -> repeating msg "711" parse_UndInstrmtGrp (fun msg f_QuotCxlEntriesGrp_UndInstrmtGrp -> (ParseSuccess {
+        f_QuotCxlEntriesGrp_UndInstrmtGrp = f_QuotCxlEntriesGrp_UndInstrmtGrp;
+        f_QuotCxlEntriesGrp_InstrmtLegGrp = f_QuotCxlEntriesGrp_InstrmtLegGrp;
+        f_QuotCxlEntriesGrp_FinancingDetails = f_QuotCxlEntriesGrp_FinancingDetails;
+        f_QuotCxlEntriesGrp_Instrument = f_QuotCxlEntriesGrp_Instrument;
+        f_QuotCxlEntriesGrp_NoQuoteEntries = f_QuotCxlEntriesGrp_NoQuoteEntries
     },msg)
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_QuotReqRjctGrp (msg)  =
+    opt msg "64" parse_LocalMktDate (fun msg f_QuotReqRjctGrp_SettlDate -> opt msg "140" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_QuotReqRjctGrp_PrevClosePx -> opt msg "15" parse_Currency (fun msg f_QuotReqRjctGrp_Currency -> opt msg "640" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_QuotReqRjctGrp_Price2 -> opt msg "54" parse_Side (fun msg f_QuotReqRjctGrp_Side -> opt msg "192" parse_float (fun msg f_QuotReqRjctGrp_OrderQty2 -> opt msg "60" parse_UTCTimestamp (fun msg f_QuotReqRjctGrp_TransactTime -> opt msg "193" parse_LocalMktDate (fun msg f_QuotReqRjctGrp_SettlDate2 -> opt msg "336" parse_string (fun msg f_QuotReqRjctGrp_TradingSessionID -> opt msg "229" parse_LocalMktDate (fun msg f_QuotReqRjctGrp_TradeOriginationDate -> opt msg "692" parse_QuotePriceType (fun msg f_QuotReqRjctGrp_QuotePriceType -> opt msg "660" parse_AcctIDSource (fun msg f_QuotReqRjctGrp_AcctIDSource -> opt msg "1" parse_string (fun msg f_QuotReqRjctGrp_Account -> opt msg "423" parse_PriceType (fun msg f_QuotReqRjctGrp_PriceType -> opt msg "126" parse_UTCTimestamp (fun msg f_QuotReqRjctGrp_ExpireTime -> opt msg "537" parse_QuoteType (fun msg f_QuotReqRjctGrp_QuoteType -> opt msg "63" parse_SettlType (fun msg f_QuotReqRjctGrp_SettlType -> opt msg "44" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_QuotReqRjctGrp_Price -> opt msg "854" parse_QtyType (fun msg f_QuotReqRjctGrp_QtyType -> opt msg "625" parse_string (fun msg f_QuotReqRjctGrp_TradingSessionSubID -> opt msg "581" parse_AccountType (fun msg f_QuotReqRjctGrp_AccountType -> opt msg "303" parse_QuoteRequestType (fun msg f_QuotReqRjctGrp_QuoteRequestType -> opt msg "40" parse_OrdType (fun msg f_QuotReqRjctGrp_OrdType -> opt msg "146" parse_int (fun msg f_QuotReqRjctGrp_NoRelatedSym -> block msg parse_YieldData (fun msg f_QuotReqRjctGrp_YieldData -> block msg parse_SpreadOrBenchmarkCurveData (fun msg f_QuotReqRjctGrp_SpreadOrBenchmarkCurveData -> block msg parse_OrderQtyData (fun msg f_QuotReqRjctGrp_OrderQtyData -> block msg parse_FinancingDetails (fun msg f_QuotReqRjctGrp_FinancingDetails -> block msg parse_Instrument (fun msg f_QuotReqRjctGrp_Instrument -> repeating msg "453" parse_Parties (fun msg f_QuotReqRjctGrp_Parties -> repeating msg "735" parse_QuotQualGrp (fun msg f_QuotReqRjctGrp_QuotQualGrp -> repeating msg "711" parse_UndInstrmtGrp (fun msg f_QuotReqRjctGrp_UndInstrmtGrp -> repeating msg "555" parse_QuotReqLegsGrp (fun msg f_QuotReqRjctGrp_QuotReqLegsGrp -> repeating msg "232" parse_Stipulations (fun msg f_QuotReqRjctGrp_Stipulations -> (ParseSuccess {
+        f_QuotReqRjctGrp_Stipulations = f_QuotReqRjctGrp_Stipulations;
+        f_QuotReqRjctGrp_QuotReqLegsGrp = f_QuotReqRjctGrp_QuotReqLegsGrp;
+        f_QuotReqRjctGrp_UndInstrmtGrp = f_QuotReqRjctGrp_UndInstrmtGrp;
+        f_QuotReqRjctGrp_QuotQualGrp = f_QuotReqRjctGrp_QuotQualGrp;
+        f_QuotReqRjctGrp_Parties = f_QuotReqRjctGrp_Parties;
+        f_QuotReqRjctGrp_Instrument = f_QuotReqRjctGrp_Instrument;
+        f_QuotReqRjctGrp_FinancingDetails = f_QuotReqRjctGrp_FinancingDetails;
+        f_QuotReqRjctGrp_OrderQtyData = f_QuotReqRjctGrp_OrderQtyData;
+        f_QuotReqRjctGrp_SpreadOrBenchmarkCurveData = f_QuotReqRjctGrp_SpreadOrBenchmarkCurveData;
+        f_QuotReqRjctGrp_YieldData = f_QuotReqRjctGrp_YieldData;
+        f_QuotReqRjctGrp_NoRelatedSym = f_QuotReqRjctGrp_NoRelatedSym;
+        f_QuotReqRjctGrp_OrdType = f_QuotReqRjctGrp_OrdType;
+        f_QuotReqRjctGrp_QuoteRequestType = f_QuotReqRjctGrp_QuoteRequestType;
+        f_QuotReqRjctGrp_AccountType = f_QuotReqRjctGrp_AccountType;
+        f_QuotReqRjctGrp_TradingSessionSubID = f_QuotReqRjctGrp_TradingSessionSubID;
+        f_QuotReqRjctGrp_QtyType = f_QuotReqRjctGrp_QtyType;
+        f_QuotReqRjctGrp_Price = f_QuotReqRjctGrp_Price;
+        f_QuotReqRjctGrp_SettlType = f_QuotReqRjctGrp_SettlType;
+        f_QuotReqRjctGrp_QuoteType = f_QuotReqRjctGrp_QuoteType;
+        f_QuotReqRjctGrp_ExpireTime = f_QuotReqRjctGrp_ExpireTime;
+        f_QuotReqRjctGrp_PriceType = f_QuotReqRjctGrp_PriceType;
+        f_QuotReqRjctGrp_Account = f_QuotReqRjctGrp_Account;
+        f_QuotReqRjctGrp_AcctIDSource = f_QuotReqRjctGrp_AcctIDSource;
+        f_QuotReqRjctGrp_QuotePriceType = f_QuotReqRjctGrp_QuotePriceType;
+        f_QuotReqRjctGrp_TradeOriginationDate = f_QuotReqRjctGrp_TradeOriginationDate;
+        f_QuotReqRjctGrp_TradingSessionID = f_QuotReqRjctGrp_TradingSessionID;
+        f_QuotReqRjctGrp_SettlDate2 = f_QuotReqRjctGrp_SettlDate2;
+        f_QuotReqRjctGrp_TransactTime = f_QuotReqRjctGrp_TransactTime;
+        f_QuotReqRjctGrp_OrderQty2 = f_QuotReqRjctGrp_OrderQty2;
+        f_QuotReqRjctGrp_Side = f_QuotReqRjctGrp_Side;
+        f_QuotReqRjctGrp_Price2 = f_QuotReqRjctGrp_Price2;
+        f_QuotReqRjctGrp_Currency = f_QuotReqRjctGrp_Currency;
+        f_QuotReqRjctGrp_PrevClosePx = f_QuotReqRjctGrp_PrevClosePx;
+        f_QuotReqRjctGrp_SettlDate = f_QuotReqRjctGrp_SettlDate
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
     )
     )
     )
@@ -4236,15 +4190,74 @@ let parse_QuotSetGrp (msg)  =
     )
 ;;
 
-let parse_QuotSetAckGrp (msg)  =
-    opt msg "304" parse_int (fun msg f_QuotSetAckGrp_TotNoQuoteEntries -> opt msg "296" parse_int (fun msg f_QuotSetAckGrp_NoQuoteSets -> opt msg "893" parse_LastFragment (fun msg f_QuotSetAckGrp_LastFragment -> opt msg "302" parse_string (fun msg f_QuotSetAckGrp_QuoteSetID -> block msg parse_UnderlyingInstrument (fun msg f_QuotSetAckGrp_UnderlyingInstrument -> repeating msg "295" parse_QuotEntryAckGrp (fun msg f_QuotSetAckGrp_QuotEntryAckGrp -> (ParseSuccess {
-        f_QuotSetAckGrp_QuotEntryAckGrp = f_QuotSetAckGrp_QuotEntryAckGrp;
-        f_QuotSetAckGrp_UnderlyingInstrument = f_QuotSetAckGrp_UnderlyingInstrument;
-        f_QuotSetAckGrp_QuoteSetID = f_QuotSetAckGrp_QuoteSetID;
-        f_QuotSetAckGrp_LastFragment = f_QuotSetAckGrp_LastFragment;
-        f_QuotSetAckGrp_NoQuoteSets = f_QuotSetAckGrp_NoQuoteSets;
-        f_QuotSetAckGrp_TotNoQuoteEntries = f_QuotSetAckGrp_TotNoQuoteEntries
+let parse_RFQReqGrp (msg)  =
+    opt msg "336" parse_string (fun msg f_RFQReqGrp_TradingSessionID -> opt msg "303" parse_QuoteRequestType (fun msg f_RFQReqGrp_QuoteRequestType -> opt msg "140" (fun x -> (match parse_float x with
+        | None -> None
+        | Some d -> (Some (float_Convert_6_4 d))
+    )
+    ) (fun msg f_RFQReqGrp_PrevClosePx -> opt msg "537" parse_QuoteType (fun msg f_RFQReqGrp_QuoteType -> opt msg "146" parse_int (fun msg f_RFQReqGrp_NoRelatedSym -> opt msg "625" parse_string (fun msg f_RFQReqGrp_TradingSessionSubID -> block msg parse_Instrument (fun msg f_RFQReqGrp_Instrument -> repeating msg "555" parse_InstrmtLegGrp (fun msg f_RFQReqGrp_InstrmtLegGrp -> repeating msg "711" parse_UndInstrmtGrp (fun msg f_RFQReqGrp_UndInstrmtGrp -> (ParseSuccess {
+        f_RFQReqGrp_UndInstrmtGrp = f_RFQReqGrp_UndInstrmtGrp;
+        f_RFQReqGrp_InstrmtLegGrp = f_RFQReqGrp_InstrmtLegGrp;
+        f_RFQReqGrp_Instrument = f_RFQReqGrp_Instrument;
+        f_RFQReqGrp_TradingSessionSubID = f_RFQReqGrp_TradingSessionSubID;
+        f_RFQReqGrp_NoRelatedSym = f_RFQReqGrp_NoRelatedSym;
+        f_RFQReqGrp_QuoteType = f_RFQReqGrp_QuoteType;
+        f_RFQReqGrp_PrevClosePx = f_RFQReqGrp_PrevClosePx;
+        f_RFQReqGrp_QuoteRequestType = f_RFQReqGrp_QuoteRequestType;
+        f_RFQReqGrp_TradingSessionID = f_RFQReqGrp_TradingSessionID
     },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+;;
+
+let parse_SettlInstGrp (msg)  =
+    opt msg "503" parse_LocalMktDate (fun msg f_SettlInstGrp_CardStartDate -> opt msg "491" parse_string (fun msg f_SettlInstGrp_CardIssNum -> opt msg "126" parse_UTCTimestamp (fun msg f_SettlInstGrp_ExpireTime -> opt msg "162" parse_string (fun msg f_SettlInstGrp_SettlInstID -> opt msg "476" parse_string (fun msg f_SettlInstGrp_PaymentRef -> opt msg "492" parse_PaymentMethod (fun msg f_SettlInstGrp_PaymentMethod -> opt msg "778" parse_int (fun msg f_SettlInstGrp_NoSettlInst -> opt msg "779" parse_UTCTimestamp (fun msg f_SettlInstGrp_LastUpdateTime -> opt msg "54" parse_Side (fun msg f_SettlInstGrp_Side -> opt msg "488" parse_string (fun msg f_SettlInstGrp_CardHolderName -> opt msg "461" parse_string (fun msg f_SettlInstGrp_CFICode -> opt msg "460" parse_Product (fun msg f_SettlInstGrp_Product -> opt msg "163" parse_SettlInstTransType (fun msg f_SettlInstGrp_SettlInstTransType -> opt msg "505" parse_string (fun msg f_SettlInstGrp_PaymentRemitterID -> opt msg "504" parse_LocalMktDate (fun msg f_SettlInstGrp_PaymentDate -> opt msg "168" parse_UTCTimestamp (fun msg f_SettlInstGrp_EffectiveTime -> opt msg "490" parse_LocalMktDate (fun msg f_SettlInstGrp_CardExpDate -> opt msg "489" parse_string (fun msg f_SettlInstGrp_CardNumber -> opt msg "167" parse_SecurityType (fun msg f_SettlInstGrp_SecurityType -> opt msg "214" parse_string (fun msg f_SettlInstGrp_SettlInstRefID -> block msg parse_SettlInstructionsData (fun msg f_SettlInstGrp_SettlInstructionsData -> repeating msg "453" parse_Parties (fun msg f_SettlInstGrp_Parties -> (ParseSuccess {
+        f_SettlInstGrp_Parties = f_SettlInstGrp_Parties;
+        f_SettlInstGrp_SettlInstructionsData = f_SettlInstGrp_SettlInstructionsData;
+        f_SettlInstGrp_SettlInstRefID = f_SettlInstGrp_SettlInstRefID;
+        f_SettlInstGrp_SecurityType = f_SettlInstGrp_SecurityType;
+        f_SettlInstGrp_CardNumber = f_SettlInstGrp_CardNumber;
+        f_SettlInstGrp_CardExpDate = f_SettlInstGrp_CardExpDate;
+        f_SettlInstGrp_EffectiveTime = f_SettlInstGrp_EffectiveTime;
+        f_SettlInstGrp_PaymentDate = f_SettlInstGrp_PaymentDate;
+        f_SettlInstGrp_PaymentRemitterID = f_SettlInstGrp_PaymentRemitterID;
+        f_SettlInstGrp_SettlInstTransType = f_SettlInstGrp_SettlInstTransType;
+        f_SettlInstGrp_Product = f_SettlInstGrp_Product;
+        f_SettlInstGrp_CFICode = f_SettlInstGrp_CFICode;
+        f_SettlInstGrp_CardHolderName = f_SettlInstGrp_CardHolderName;
+        f_SettlInstGrp_Side = f_SettlInstGrp_Side;
+        f_SettlInstGrp_LastUpdateTime = f_SettlInstGrp_LastUpdateTime;
+        f_SettlInstGrp_NoSettlInst = f_SettlInstGrp_NoSettlInst;
+        f_SettlInstGrp_PaymentMethod = f_SettlInstGrp_PaymentMethod;
+        f_SettlInstGrp_PaymentRef = f_SettlInstGrp_PaymentRef;
+        f_SettlInstGrp_SettlInstID = f_SettlInstGrp_SettlInstID;
+        f_SettlInstGrp_ExpireTime = f_SettlInstGrp_ExpireTime;
+        f_SettlInstGrp_CardIssNum = f_SettlInstGrp_CardIssNum;
+        f_SettlInstGrp_CardStartDate = f_SettlInstGrp_CardStartDate
+    },msg)
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
+    )
     )
     )
     )
@@ -4324,30 +4337,15 @@ let parse_AllocGrp (msg)  =
     )
 ;;
 
-let parse_SettlInstGrp (msg)  =
-    opt msg "503" parse_LocalMktDate (fun msg f_SettlInstGrp_CardStartDate -> opt msg "491" parse_string (fun msg f_SettlInstGrp_CardIssNum -> opt msg "126" parse_UTCTimestamp (fun msg f_SettlInstGrp_ExpireTime -> opt msg "162" parse_string (fun msg f_SettlInstGrp_SettlInstID -> opt msg "476" parse_string (fun msg f_SettlInstGrp_PaymentRef -> opt msg "492" parse_PaymentMethod (fun msg f_SettlInstGrp_PaymentMethod -> opt msg "778" parse_int (fun msg f_SettlInstGrp_NoSettlInst -> opt msg "779" parse_UTCTimestamp (fun msg f_SettlInstGrp_LastUpdateTime -> opt msg "54" parse_Side (fun msg f_SettlInstGrp_Side -> opt msg "488" parse_string (fun msg f_SettlInstGrp_CardHolderName -> opt msg "461" parse_string (fun msg f_SettlInstGrp_CFICode -> opt msg "460" parse_Product (fun msg f_SettlInstGrp_Product -> opt msg "163" parse_SettlInstTransType (fun msg f_SettlInstGrp_SettlInstTransType -> opt msg "505" parse_string (fun msg f_SettlInstGrp_PaymentRemitterID -> opt msg "504" parse_LocalMktDate (fun msg f_SettlInstGrp_PaymentDate -> opt msg "168" parse_UTCTimestamp (fun msg f_SettlInstGrp_EffectiveTime -> opt msg "490" parse_LocalMktDate (fun msg f_SettlInstGrp_CardExpDate -> opt msg "489" parse_string (fun msg f_SettlInstGrp_CardNumber -> opt msg "167" parse_SecurityType (fun msg f_SettlInstGrp_SecurityType -> opt msg "214" parse_string (fun msg f_SettlInstGrp_SettlInstRefID -> block msg parse_SettlInstructionsData (fun msg f_SettlInstGrp_SettlInstructionsData -> repeating msg "453" parse_Parties (fun msg f_SettlInstGrp_Parties -> (ParseSuccess {
-        f_SettlInstGrp_Parties = f_SettlInstGrp_Parties;
-        f_SettlInstGrp_SettlInstructionsData = f_SettlInstGrp_SettlInstructionsData;
-        f_SettlInstGrp_SettlInstRefID = f_SettlInstGrp_SettlInstRefID;
-        f_SettlInstGrp_SecurityType = f_SettlInstGrp_SecurityType;
-        f_SettlInstGrp_CardNumber = f_SettlInstGrp_CardNumber;
-        f_SettlInstGrp_CardExpDate = f_SettlInstGrp_CardExpDate;
-        f_SettlInstGrp_EffectiveTime = f_SettlInstGrp_EffectiveTime;
-        f_SettlInstGrp_PaymentDate = f_SettlInstGrp_PaymentDate;
-        f_SettlInstGrp_PaymentRemitterID = f_SettlInstGrp_PaymentRemitterID;
-        f_SettlInstGrp_SettlInstTransType = f_SettlInstGrp_SettlInstTransType;
-        f_SettlInstGrp_Product = f_SettlInstGrp_Product;
-        f_SettlInstGrp_CFICode = f_SettlInstGrp_CFICode;
-        f_SettlInstGrp_CardHolderName = f_SettlInstGrp_CardHolderName;
-        f_SettlInstGrp_Side = f_SettlInstGrp_Side;
-        f_SettlInstGrp_LastUpdateTime = f_SettlInstGrp_LastUpdateTime;
-        f_SettlInstGrp_NoSettlInst = f_SettlInstGrp_NoSettlInst;
-        f_SettlInstGrp_PaymentMethod = f_SettlInstGrp_PaymentMethod;
-        f_SettlInstGrp_PaymentRef = f_SettlInstGrp_PaymentRef;
-        f_SettlInstGrp_SettlInstID = f_SettlInstGrp_SettlInstID;
-        f_SettlInstGrp_ExpireTime = f_SettlInstGrp_ExpireTime;
-        f_SettlInstGrp_CardIssNum = f_SettlInstGrp_CardIssNum;
-        f_SettlInstGrp_CardStartDate = f_SettlInstGrp_CardStartDate
+let parse_QuotSetGrp (msg)  =
+    opt msg "304" parse_int (fun msg f_QuotSetGrp_TotNoQuoteEntries -> opt msg "367" parse_UTCTimestamp (fun msg f_QuotSetGrp_QuoteSetValidUntilTime -> opt msg "296" parse_int (fun msg f_QuotSetGrp_NoQuoteSets -> opt msg "893" parse_LastFragment (fun msg f_QuotSetGrp_LastFragment -> opt msg "302" parse_string (fun msg f_QuotSetGrp_QuoteSetID -> block msg parse_UnderlyingInstrument (fun msg f_QuotSetGrp_UnderlyingInstrument -> repeating msg "295" parse_QuotEntryGrp (fun msg f_QuotSetGrp_QuotEntryGrp -> (ParseSuccess {
+        f_QuotSetGrp_QuotEntryGrp = f_QuotSetGrp_QuotEntryGrp;
+        f_QuotSetGrp_UnderlyingInstrument = f_QuotSetGrp_UnderlyingInstrument;
+        f_QuotSetGrp_QuoteSetID = f_QuotSetGrp_QuoteSetID;
+        f_QuotSetGrp_LastFragment = f_QuotSetGrp_LastFragment;
+        f_QuotSetGrp_NoQuoteSets = f_QuotSetGrp_NoQuoteSets;
+        f_QuotSetGrp_QuoteSetValidUntilTime = f_QuotSetGrp_QuoteSetValidUntilTime;
+        f_QuotSetGrp_TotNoQuoteEntries = f_QuotSetGrp_TotNoQuoteEntries
     },msg)
     )
     )
@@ -4356,15 +4354,17 @@ let parse_SettlInstGrp (msg)  =
     )
     )
     )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
-    )
+;;
+
+let parse_QuotSetAckGrp (msg)  =
+    opt msg "304" parse_int (fun msg f_QuotSetAckGrp_TotNoQuoteEntries -> opt msg "296" parse_int (fun msg f_QuotSetAckGrp_NoQuoteSets -> opt msg "893" parse_LastFragment (fun msg f_QuotSetAckGrp_LastFragment -> opt msg "302" parse_string (fun msg f_QuotSetAckGrp_QuoteSetID -> block msg parse_UnderlyingInstrument (fun msg f_QuotSetAckGrp_UnderlyingInstrument -> repeating msg "295" parse_QuotEntryAckGrp (fun msg f_QuotSetAckGrp_QuotEntryAckGrp -> (ParseSuccess {
+        f_QuotSetAckGrp_QuotEntryAckGrp = f_QuotSetAckGrp_QuotEntryAckGrp;
+        f_QuotSetAckGrp_UnderlyingInstrument = f_QuotSetAckGrp_UnderlyingInstrument;
+        f_QuotSetAckGrp_QuoteSetID = f_QuotSetAckGrp_QuoteSetID;
+        f_QuotSetAckGrp_LastFragment = f_QuotSetAckGrp_LastFragment;
+        f_QuotSetAckGrp_NoQuoteSets = f_QuotSetAckGrp_NoQuoteSets;
+        f_QuotSetAckGrp_TotNoQuoteEntries = f_QuotSetAckGrp_TotNoQuoteEntries
+    },msg)
     )
     )
     )

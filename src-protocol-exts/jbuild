@@ -4,6 +4,7 @@
   ( (name protocol_exts)
     (public_name protocol_exts)
     (wrapped false)
+    (flags (:standard -open Imandra_prelude))
     (libraries (core))
   )
 )

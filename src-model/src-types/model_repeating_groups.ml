@@ -3,24 +3,22 @@ open Datetime;;
 open Model_app_enums;;
 open Numeric;;
 
-type model_fix_inner_clearingentries = {
-    mod_f_ClearingEntries_Account : string option;
-    mod_f_ClearingEntries_FreeText : string option;
-    mod_f_ClearingEntries_OpenClose : model_fix_openclose option;
-    mod_f_ClearingEntries_ClearingFirm : string option;
-    mod_f_ClearingEntries_Rule80A : model_fix_rule80a option;
-    mod_f_ClearingEntries_ClientID : string option;
-    mod_f_ClearingEntries_ClearingHandlingType : model_fix_clearinghandlingtype option
+type model_fix_inner_contragrp = {
+    mod_f_ContraGrp_ContraTradeQty : fix_float_6 option;
+    mod_f_ContraGrp_ContraTrader : string option;
+    mod_f_ContraGrp_ContraLegRefID : string option;
+    mod_f_ContraGrp_ContraBroker : string option;
+    mod_f_ContraGrp_ContraTradeTime : fix_utctimestamp option
 }
 ;;
 
-type model_fix_rec_clearingentries = {
-    mod_f_ClearingEntries_NoClearingEntries : int option;
-    rg_ClearingEntries_element_0 : model_fix_inner_clearingentries option;
-    rg_ClearingEntries_element_1 : model_fix_inner_clearingentries option;
-    rg_ClearingEntries_element_2 : model_fix_inner_clearingentries option;
-    rg_ClearingEntries_element_3 : model_fix_inner_clearingentries option;
-    rg_ClearingEntries_element_4 : model_fix_inner_clearingentries option
+type model_fix_rec_contragrp = {
+    mod_f_ContraGrp_NoContraBrokers : int option;
+    rg_ContraGrp_element_0 : model_fix_inner_contragrp option;
+    rg_ContraGrp_element_1 : model_fix_inner_contragrp option;
+    rg_ContraGrp_element_2 : model_fix_inner_contragrp option;
+    rg_ContraGrp_element_3 : model_fix_inner_contragrp option;
+    rg_ContraGrp_element_4 : model_fix_inner_contragrp option
 }
 ;;
 
@@ -40,22 +38,24 @@ type model_fix_rec_ptyssubgrp = {
 }
 ;;
 
-type model_fix_inner_contragrp = {
-    mod_f_ContraGrp_ContraTradeQty : fix_float_6 option;
-    mod_f_ContraGrp_ContraTrader : string option;
-    mod_f_ContraGrp_ContraLegRefID : string option;
-    mod_f_ContraGrp_ContraBroker : string option;
-    mod_f_ContraGrp_ContraTradeTime : fix_utctimestamp option
+type model_fix_inner_clearingentries = {
+    mod_f_ClearingEntries_Account : string option;
+    mod_f_ClearingEntries_FreeText : string option;
+    mod_f_ClearingEntries_OpenClose : model_fix_openclose option;
+    mod_f_ClearingEntries_ClearingFirm : string option;
+    mod_f_ClearingEntries_Rule80A : model_fix_rule80a option;
+    mod_f_ClearingEntries_ClientID : string option;
+    mod_f_ClearingEntries_ClearingHandlingType : model_fix_clearinghandlingtype option
 }
 ;;
 
-type model_fix_rec_contragrp = {
-    mod_f_ContraGrp_NoContraBrokers : int option;
-    rg_ContraGrp_element_0 : model_fix_inner_contragrp option;
-    rg_ContraGrp_element_1 : model_fix_inner_contragrp option;
-    rg_ContraGrp_element_2 : model_fix_inner_contragrp option;
-    rg_ContraGrp_element_3 : model_fix_inner_contragrp option;
-    rg_ContraGrp_element_4 : model_fix_inner_contragrp option
+type model_fix_rec_clearingentries = {
+    mod_f_ClearingEntries_NoClearingEntries : int option;
+    rg_ClearingEntries_element_0 : model_fix_inner_clearingentries option;
+    rg_ClearingEntries_element_1 : model_fix_inner_clearingentries option;
+    rg_ClearingEntries_element_2 : model_fix_inner_clearingentries option;
+    rg_ClearingEntries_element_3 : model_fix_inner_clearingentries option;
+    rg_ClearingEntries_element_4 : model_fix_inner_clearingentries option
 }
 ;;
 

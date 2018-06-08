@@ -4,6 +4,7 @@
   ( (name types_pp)
     (public_name types_pp)
     (wrapped false)
+    (flags (:standard -open Imandra_prelude))
     (libraries (core_pp protocol_exts_pp string_factory venue_types yojson))
   )
 )

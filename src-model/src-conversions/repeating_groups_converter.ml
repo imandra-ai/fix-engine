@@ -18,6 +18,284 @@ let rec cap_length (d) (x) (h)  =
     )
 ;;
 
+let rec map_convert__model_to_full_RG_ContraGrp (d) (x)  =
+    (match d with
+        | [] -> []
+        | h :: t -> ((convert__model_to_full_RG_ContraGrp h x) :: (map_convert__model_to_full_RG_ContraGrp t x))
+    ) and 
+convert__model_to_full_RG_ContraGrp (rec_in : model_fix_inner_contragrp) (len : int)  =
+    {
+        f_ContraGrp_ContraTradeQty = rec_in.mod_f_ContraGrp_ContraTradeQty;
+        f_ContraGrp_ContraTrader = rec_in.mod_f_ContraGrp_ContraTrader;
+        f_ContraGrp_ContraLegRefID = rec_in.mod_f_ContraGrp_ContraLegRefID;
+        f_ContraGrp_ContraBroker = rec_in.mod_f_ContraGrp_ContraBroker;
+        f_ContraGrp_ContraTradeTime = rec_in.mod_f_ContraGrp_ContraTradeTime;
+        f_ContraGrp_NoContraBrokers = Some len
+    } and 
+convert__model_to_full_ContraGrp (rec_in : model_fix_rec_contragrp)  =
+    let d = [] in
+    let d = (match rec_in.rg_ContraGrp_element_0 with
+        | None -> d
+        | Some x -> (x :: d)
+    )
+     in
+    let d = (match rec_in.rg_ContraGrp_element_1 with
+        | None -> d
+        | Some x -> (x :: d)
+    )
+     in
+    let d = (match rec_in.rg_ContraGrp_element_2 with
+        | None -> d
+        | Some x -> (x :: d)
+    )
+     in
+    let d = (match rec_in.rg_ContraGrp_element_3 with
+        | None -> d
+        | Some x -> (x :: d)
+    )
+     in
+    let d = (match rec_in.rg_ContraGrp_element_4 with
+        | None -> d
+        | Some x -> (x :: d)
+    )
+     in
+    map_convert__model_to_full_RG_ContraGrp d (cap_length d 0 5)
+;;
+
+let rec convert__full_to_model_ContraGrp (rec_in : fix_rg_contragrp)  =
+    let block4 = None in
+    let block3 = None in
+    let block2 = None in
+    let block1 = None in
+    let block0 = None in
+    let t = rec_in in
+    (match t with
+        | [] -> {
+            mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
+            rg_ContraGrp_element_4 = block4;
+            rg_ContraGrp_element_3 = block3;
+            rg_ContraGrp_element_2 = block2;
+            rg_ContraGrp_element_1 = block1;
+            rg_ContraGrp_element_0 = block0
+        }
+        | h :: t -> let block0 = Some (convert__full_to_model_RG_ContraGrp h) in
+        (match t with
+            | [] -> {
+                mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
+                rg_ContraGrp_element_4 = block4;
+                rg_ContraGrp_element_3 = block3;
+                rg_ContraGrp_element_2 = block2;
+                rg_ContraGrp_element_1 = block1;
+                rg_ContraGrp_element_0 = block0
+            }
+            | h :: t -> let block1 = Some (convert__full_to_model_RG_ContraGrp h) in
+            (match t with
+                | [] -> {
+                    mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
+                    rg_ContraGrp_element_4 = block4;
+                    rg_ContraGrp_element_3 = block3;
+                    rg_ContraGrp_element_2 = block2;
+                    rg_ContraGrp_element_1 = block1;
+                    rg_ContraGrp_element_0 = block0
+                }
+                | h :: t -> let block2 = Some (convert__full_to_model_RG_ContraGrp h) in
+                (match t with
+                    | [] -> {
+                        mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
+                        rg_ContraGrp_element_4 = block4;
+                        rg_ContraGrp_element_3 = block3;
+                        rg_ContraGrp_element_2 = block2;
+                        rg_ContraGrp_element_1 = block1;
+                        rg_ContraGrp_element_0 = block0
+                    }
+                    | h :: t -> let block3 = Some (convert__full_to_model_RG_ContraGrp h) in
+                    (match t with
+                        | [] -> {
+                            mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
+                            rg_ContraGrp_element_4 = block4;
+                            rg_ContraGrp_element_3 = block3;
+                            rg_ContraGrp_element_2 = block2;
+                            rg_ContraGrp_element_1 = block1;
+                            rg_ContraGrp_element_0 = block0
+                        }
+                        | h :: t -> let block4 = Some (convert__full_to_model_RG_ContraGrp h) in
+                        {
+                            mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
+                            rg_ContraGrp_element_4 = block4;
+                            rg_ContraGrp_element_3 = block3;
+                            rg_ContraGrp_element_2 = block2;
+                            rg_ContraGrp_element_1 = block1;
+                            rg_ContraGrp_element_0 = block0
+                        }
+                    )
+                )
+            )
+        )
+    ) and 
+convert__full_to_model_RG_ContraGrp (rec_in : fix_rg_inner_contragrp)  =
+    {
+        mod_f_ContraGrp_ContraTradeQty = rec_in.f_ContraGrp_ContraTradeQty;
+        mod_f_ContraGrp_ContraTrader = rec_in.f_ContraGrp_ContraTrader;
+        mod_f_ContraGrp_ContraLegRefID = rec_in.f_ContraGrp_ContraLegRefID;
+        mod_f_ContraGrp_ContraBroker = rec_in.f_ContraGrp_ContraBroker;
+        mod_f_ContraGrp_ContraTradeTime = rec_in.f_ContraGrp_ContraTradeTime
+    }
+;;
+
+let check_convert_full_to_model_RG_ContraGrp (rec_in : fix_rg_inner_contragrp)  =
+    RG_Success
+;;
+
+let rec check_convert_full_to_model__ContraGrp (rec_in : fix_rg_contragrp)  =
+    (match rec_in with
+        | [] -> RG_Success
+        | x :: y -> ((match check_convert_full_to_model_RG_ContraGrp x with
+            | RG_Success -> (check_convert_full_to_model__ContraGrp y)
+            | f -> f
+        )
+        )
+    )
+;;
+
+let rec map_convert__model_to_full_RG_PtysSubGrp (d) (x)  =
+    (match d with
+        | [] -> []
+        | h :: t -> ((convert__model_to_full_RG_PtysSubGrp h x) :: (map_convert__model_to_full_RG_PtysSubGrp t x))
+    ) and 
+convert__model_to_full_RG_PtysSubGrp (rec_in : model_fix_inner_ptyssubgrp) (len : int)  =
+    {
+        f_PtysSubGrp_PartySubIDType = (match rec_in.mod_f_PtysSubGrp_PartySubIDType with
+            | None -> None
+            | Some x -> (Some (convert__model_to_full_PartySubIDType x))
+        );
+        f_PtysSubGrp_PartySubID = rec_in.mod_f_PtysSubGrp_PartySubID;
+        f_PtysSubGrp_NoPartySubIDs = Some len
+    } and 
+convert__model_to_full_PtysSubGrp (rec_in : model_fix_rec_ptyssubgrp)  =
+    let d = [] in
+    let d = (match rec_in.rg_PtysSubGrp_element_0 with
+        | None -> d
+        | Some x -> (x :: d)
+    )
+     in
+    let d = (match rec_in.rg_PtysSubGrp_element_1 with
+        | None -> d
+        | Some x -> (x :: d)
+    )
+     in
+    let d = (match rec_in.rg_PtysSubGrp_element_2 with
+        | None -> d
+        | Some x -> (x :: d)
+    )
+     in
+    let d = (match rec_in.rg_PtysSubGrp_element_3 with
+        | None -> d
+        | Some x -> (x :: d)
+    )
+     in
+    let d = (match rec_in.rg_PtysSubGrp_element_4 with
+        | None -> d
+        | Some x -> (x :: d)
+    )
+     in
+    map_convert__model_to_full_RG_PtysSubGrp d (cap_length d 0 5)
+;;
+
+let rec convert__full_to_model_PtysSubGrp (rec_in : fix_rg_ptyssubgrp)  =
+    let block4 = None in
+    let block3 = None in
+    let block2 = None in
+    let block1 = None in
+    let block0 = None in
+    let t = rec_in in
+    (match t with
+        | [] -> {
+            mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
+            rg_PtysSubGrp_element_4 = block4;
+            rg_PtysSubGrp_element_3 = block3;
+            rg_PtysSubGrp_element_2 = block2;
+            rg_PtysSubGrp_element_1 = block1;
+            rg_PtysSubGrp_element_0 = block0
+        }
+        | h :: t -> let block0 = Some (convert__full_to_model_RG_PtysSubGrp h) in
+        (match t with
+            | [] -> {
+                mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
+                rg_PtysSubGrp_element_4 = block4;
+                rg_PtysSubGrp_element_3 = block3;
+                rg_PtysSubGrp_element_2 = block2;
+                rg_PtysSubGrp_element_1 = block1;
+                rg_PtysSubGrp_element_0 = block0
+            }
+            | h :: t -> let block1 = Some (convert__full_to_model_RG_PtysSubGrp h) in
+            (match t with
+                | [] -> {
+                    mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
+                    rg_PtysSubGrp_element_4 = block4;
+                    rg_PtysSubGrp_element_3 = block3;
+                    rg_PtysSubGrp_element_2 = block2;
+                    rg_PtysSubGrp_element_1 = block1;
+                    rg_PtysSubGrp_element_0 = block0
+                }
+                | h :: t -> let block2 = Some (convert__full_to_model_RG_PtysSubGrp h) in
+                (match t with
+                    | [] -> {
+                        mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
+                        rg_PtysSubGrp_element_4 = block4;
+                        rg_PtysSubGrp_element_3 = block3;
+                        rg_PtysSubGrp_element_2 = block2;
+                        rg_PtysSubGrp_element_1 = block1;
+                        rg_PtysSubGrp_element_0 = block0
+                    }
+                    | h :: t -> let block3 = Some (convert__full_to_model_RG_PtysSubGrp h) in
+                    (match t with
+                        | [] -> {
+                            mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
+                            rg_PtysSubGrp_element_4 = block4;
+                            rg_PtysSubGrp_element_3 = block3;
+                            rg_PtysSubGrp_element_2 = block2;
+                            rg_PtysSubGrp_element_1 = block1;
+                            rg_PtysSubGrp_element_0 = block0
+                        }
+                        | h :: t -> let block4 = Some (convert__full_to_model_RG_PtysSubGrp h) in
+                        {
+                            mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
+                            rg_PtysSubGrp_element_4 = block4;
+                            rg_PtysSubGrp_element_3 = block3;
+                            rg_PtysSubGrp_element_2 = block2;
+                            rg_PtysSubGrp_element_1 = block1;
+                            rg_PtysSubGrp_element_0 = block0
+                        }
+                    )
+                )
+            )
+        )
+    ) and 
+convert__full_to_model_RG_PtysSubGrp (rec_in : fix_rg_inner_ptyssubgrp)  =
+    {
+        mod_f_PtysSubGrp_PartySubIDType = (match rec_in.f_PtysSubGrp_PartySubIDType with
+            | None -> None
+            | Some x -> (Some (convert__full_to_model_PartySubIDType x))
+        );
+        mod_f_PtysSubGrp_PartySubID = rec_in.f_PtysSubGrp_PartySubID
+    }
+;;
+
+let check_convert_full_to_model_RG_PtysSubGrp (rec_in : fix_rg_inner_ptyssubgrp)  =
+    RG_Success
+;;
+
+let rec check_convert_full_to_model__PtysSubGrp (rec_in : fix_rg_ptyssubgrp)  =
+    (match rec_in with
+        | [] -> RG_Success
+        | x :: y -> ((match check_convert_full_to_model_RG_PtysSubGrp x with
+            | RG_Success -> (check_convert_full_to_model__PtysSubGrp y)
+            | f -> f
+        )
+        )
+    )
+;;
+
 let rec map_convert__model_to_full_RG_ClearingEntries (d) (x)  =
     (match d with
         | [] -> []
@@ -173,284 +451,6 @@ let rec check_convert_full_to_model__ClearingEntries (rec_in : fix_rg_clearingen
         | [] -> RG_Success
         | x :: y -> ((match check_convert_full_to_model_RG_ClearingEntries x with
             | RG_Success -> (check_convert_full_to_model__ClearingEntries y)
-            | f -> f
-        )
-        )
-    )
-;;
-
-let rec map_convert__model_to_full_RG_PtysSubGrp (d) (x)  =
-    (match d with
-        | [] -> []
-        | h :: t -> ((convert__model_to_full_RG_PtysSubGrp h x) :: (map_convert__model_to_full_RG_PtysSubGrp t x))
-    ) and 
-convert__model_to_full_RG_PtysSubGrp (rec_in : model_fix_inner_ptyssubgrp) (len : int)  =
-    {
-        f_PtysSubGrp_PartySubIDType = (match rec_in.mod_f_PtysSubGrp_PartySubIDType with
-            | None -> None
-            | Some x -> (Some (convert__model_to_full_PartySubIDType x))
-        );
-        f_PtysSubGrp_PartySubID = rec_in.mod_f_PtysSubGrp_PartySubID;
-        f_PtysSubGrp_NoPartySubIDs = Some len
-    } and 
-convert__model_to_full_PtysSubGrp (rec_in : model_fix_rec_ptyssubgrp)  =
-    let d = [] in
-    let d = (match rec_in.rg_PtysSubGrp_element_0 with
-        | None -> d
-        | Some x -> (x :: d)
-    )
-     in
-    let d = (match rec_in.rg_PtysSubGrp_element_1 with
-        | None -> d
-        | Some x -> (x :: d)
-    )
-     in
-    let d = (match rec_in.rg_PtysSubGrp_element_2 with
-        | None -> d
-        | Some x -> (x :: d)
-    )
-     in
-    let d = (match rec_in.rg_PtysSubGrp_element_3 with
-        | None -> d
-        | Some x -> (x :: d)
-    )
-     in
-    let d = (match rec_in.rg_PtysSubGrp_element_4 with
-        | None -> d
-        | Some x -> (x :: d)
-    )
-     in
-    map_convert__model_to_full_RG_PtysSubGrp d (cap_length d 0 5)
-;;
-
-let rec convert__full_to_model_PtysSubGrp (rec_in : fix_rg_ptyssubgrp)  =
-    let block4 = None in
-    let block3 = None in
-    let block2 = None in
-    let block1 = None in
-    let block0 = None in
-    let t = rec_in in
-    (match t with
-        | [] -> {
-            mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
-            rg_PtysSubGrp_element_4 = block4;
-            rg_PtysSubGrp_element_3 = block3;
-            rg_PtysSubGrp_element_2 = block2;
-            rg_PtysSubGrp_element_1 = block1;
-            rg_PtysSubGrp_element_0 = block0
-        }
-        | h :: t -> let block0 = Some (convert__full_to_model_RG_PtysSubGrp h) in
-        (match t with
-            | [] -> {
-                mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
-                rg_PtysSubGrp_element_4 = block4;
-                rg_PtysSubGrp_element_3 = block3;
-                rg_PtysSubGrp_element_2 = block2;
-                rg_PtysSubGrp_element_1 = block1;
-                rg_PtysSubGrp_element_0 = block0
-            }
-            | h :: t -> let block1 = Some (convert__full_to_model_RG_PtysSubGrp h) in
-            (match t with
-                | [] -> {
-                    mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
-                    rg_PtysSubGrp_element_4 = block4;
-                    rg_PtysSubGrp_element_3 = block3;
-                    rg_PtysSubGrp_element_2 = block2;
-                    rg_PtysSubGrp_element_1 = block1;
-                    rg_PtysSubGrp_element_0 = block0
-                }
-                | h :: t -> let block2 = Some (convert__full_to_model_RG_PtysSubGrp h) in
-                (match t with
-                    | [] -> {
-                        mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
-                        rg_PtysSubGrp_element_4 = block4;
-                        rg_PtysSubGrp_element_3 = block3;
-                        rg_PtysSubGrp_element_2 = block2;
-                        rg_PtysSubGrp_element_1 = block1;
-                        rg_PtysSubGrp_element_0 = block0
-                    }
-                    | h :: t -> let block3 = Some (convert__full_to_model_RG_PtysSubGrp h) in
-                    (match t with
-                        | [] -> {
-                            mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
-                            rg_PtysSubGrp_element_4 = block4;
-                            rg_PtysSubGrp_element_3 = block3;
-                            rg_PtysSubGrp_element_2 = block2;
-                            rg_PtysSubGrp_element_1 = block1;
-                            rg_PtysSubGrp_element_0 = block0
-                        }
-                        | h :: t -> let block4 = Some (convert__full_to_model_RG_PtysSubGrp h) in
-                        {
-                            mod_f_PtysSubGrp_NoPartySubIDs = Some (cap_length rec_in 0 5);
-                            rg_PtysSubGrp_element_4 = block4;
-                            rg_PtysSubGrp_element_3 = block3;
-                            rg_PtysSubGrp_element_2 = block2;
-                            rg_PtysSubGrp_element_1 = block1;
-                            rg_PtysSubGrp_element_0 = block0
-                        }
-                    )
-                )
-            )
-        )
-    ) and 
-convert__full_to_model_RG_PtysSubGrp (rec_in : fix_rg_inner_ptyssubgrp)  =
-    {
-        mod_f_PtysSubGrp_PartySubIDType = (match rec_in.f_PtysSubGrp_PartySubIDType with
-            | None -> None
-            | Some x -> (Some (convert__full_to_model_PartySubIDType x))
-        );
-        mod_f_PtysSubGrp_PartySubID = rec_in.f_PtysSubGrp_PartySubID
-    }
-;;
-
-let check_convert_full_to_model_RG_PtysSubGrp (rec_in : fix_rg_inner_ptyssubgrp)  =
-    RG_Success
-;;
-
-let rec check_convert_full_to_model__PtysSubGrp (rec_in : fix_rg_ptyssubgrp)  =
-    (match rec_in with
-        | [] -> RG_Success
-        | x :: y -> ((match check_convert_full_to_model_RG_PtysSubGrp x with
-            | RG_Success -> (check_convert_full_to_model__PtysSubGrp y)
-            | f -> f
-        )
-        )
-    )
-;;
-
-let rec map_convert__model_to_full_RG_ContraGrp (d) (x)  =
-    (match d with
-        | [] -> []
-        | h :: t -> ((convert__model_to_full_RG_ContraGrp h x) :: (map_convert__model_to_full_RG_ContraGrp t x))
-    ) and 
-convert__model_to_full_RG_ContraGrp (rec_in : model_fix_inner_contragrp) (len : int)  =
-    {
-        f_ContraGrp_ContraTradeQty = rec_in.mod_f_ContraGrp_ContraTradeQty;
-        f_ContraGrp_ContraTrader = rec_in.mod_f_ContraGrp_ContraTrader;
-        f_ContraGrp_ContraLegRefID = rec_in.mod_f_ContraGrp_ContraLegRefID;
-        f_ContraGrp_ContraBroker = rec_in.mod_f_ContraGrp_ContraBroker;
-        f_ContraGrp_ContraTradeTime = rec_in.mod_f_ContraGrp_ContraTradeTime;
-        f_ContraGrp_NoContraBrokers = Some len
-    } and 
-convert__model_to_full_ContraGrp (rec_in : model_fix_rec_contragrp)  =
-    let d = [] in
-    let d = (match rec_in.rg_ContraGrp_element_0 with
-        | None -> d
-        | Some x -> (x :: d)
-    )
-     in
-    let d = (match rec_in.rg_ContraGrp_element_1 with
-        | None -> d
-        | Some x -> (x :: d)
-    )
-     in
-    let d = (match rec_in.rg_ContraGrp_element_2 with
-        | None -> d
-        | Some x -> (x :: d)
-    )
-     in
-    let d = (match rec_in.rg_ContraGrp_element_3 with
-        | None -> d
-        | Some x -> (x :: d)
-    )
-     in
-    let d = (match rec_in.rg_ContraGrp_element_4 with
-        | None -> d
-        | Some x -> (x :: d)
-    )
-     in
-    map_convert__model_to_full_RG_ContraGrp d (cap_length d 0 5)
-;;
-
-let rec convert__full_to_model_ContraGrp (rec_in : fix_rg_contragrp)  =
-    let block4 = None in
-    let block3 = None in
-    let block2 = None in
-    let block1 = None in
-    let block0 = None in
-    let t = rec_in in
-    (match t with
-        | [] -> {
-            mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
-            rg_ContraGrp_element_4 = block4;
-            rg_ContraGrp_element_3 = block3;
-            rg_ContraGrp_element_2 = block2;
-            rg_ContraGrp_element_1 = block1;
-            rg_ContraGrp_element_0 = block0
-        }
-        | h :: t -> let block0 = Some (convert__full_to_model_RG_ContraGrp h) in
-        (match t with
-            | [] -> {
-                mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
-                rg_ContraGrp_element_4 = block4;
-                rg_ContraGrp_element_3 = block3;
-                rg_ContraGrp_element_2 = block2;
-                rg_ContraGrp_element_1 = block1;
-                rg_ContraGrp_element_0 = block0
-            }
-            | h :: t -> let block1 = Some (convert__full_to_model_RG_ContraGrp h) in
-            (match t with
-                | [] -> {
-                    mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
-                    rg_ContraGrp_element_4 = block4;
-                    rg_ContraGrp_element_3 = block3;
-                    rg_ContraGrp_element_2 = block2;
-                    rg_ContraGrp_element_1 = block1;
-                    rg_ContraGrp_element_0 = block0
-                }
-                | h :: t -> let block2 = Some (convert__full_to_model_RG_ContraGrp h) in
-                (match t with
-                    | [] -> {
-                        mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
-                        rg_ContraGrp_element_4 = block4;
-                        rg_ContraGrp_element_3 = block3;
-                        rg_ContraGrp_element_2 = block2;
-                        rg_ContraGrp_element_1 = block1;
-                        rg_ContraGrp_element_0 = block0
-                    }
-                    | h :: t -> let block3 = Some (convert__full_to_model_RG_ContraGrp h) in
-                    (match t with
-                        | [] -> {
-                            mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
-                            rg_ContraGrp_element_4 = block4;
-                            rg_ContraGrp_element_3 = block3;
-                            rg_ContraGrp_element_2 = block2;
-                            rg_ContraGrp_element_1 = block1;
-                            rg_ContraGrp_element_0 = block0
-                        }
-                        | h :: t -> let block4 = Some (convert__full_to_model_RG_ContraGrp h) in
-                        {
-                            mod_f_ContraGrp_NoContraBrokers = Some (cap_length rec_in 0 5);
-                            rg_ContraGrp_element_4 = block4;
-                            rg_ContraGrp_element_3 = block3;
-                            rg_ContraGrp_element_2 = block2;
-                            rg_ContraGrp_element_1 = block1;
-                            rg_ContraGrp_element_0 = block0
-                        }
-                    )
-                )
-            )
-        )
-    ) and 
-convert__full_to_model_RG_ContraGrp (rec_in : fix_rg_inner_contragrp)  =
-    {
-        mod_f_ContraGrp_ContraTradeQty = rec_in.f_ContraGrp_ContraTradeQty;
-        mod_f_ContraGrp_ContraTrader = rec_in.f_ContraGrp_ContraTrader;
-        mod_f_ContraGrp_ContraLegRefID = rec_in.f_ContraGrp_ContraLegRefID;
-        mod_f_ContraGrp_ContraBroker = rec_in.f_ContraGrp_ContraBroker;
-        mod_f_ContraGrp_ContraTradeTime = rec_in.f_ContraGrp_ContraTradeTime
-    }
-;;
-
-let check_convert_full_to_model_RG_ContraGrp (rec_in : fix_rg_inner_contragrp)  =
-    RG_Success
-;;
-
-let rec check_convert_full_to_model__ContraGrp (rec_in : fix_rg_contragrp)  =
-    (match rec_in with
-        | [] -> RG_Success
-        | x :: y -> ((match check_convert_full_to_model_RG_ContraGrp x with
-            | RG_Success -> (check_convert_full_to_model__ContraGrp y)
             | f -> f
         )
         )
