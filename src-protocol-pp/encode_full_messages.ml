@@ -88,8 +88,8 @@ let get_checksum msg =
 
 let prepare_packet msg_body =
     let encode_checksum = Printf.sprintf "%03u" in
-    let msg = [ ( "8"   , "FIX.4.2" )
-              ; ( "9"   , get_body_length msg_body |> encode_int    )
+    let msg = [ ( "8"   , Fix_engine_utils.default_session_details.constant_begin_string )
+              ; ( "9"   , get_body_length msg_body |> encode_int )
               ] @ msg_body
               in             
     msg @ [ ( "10" , get_checksum msg |> encode_checksum )] 

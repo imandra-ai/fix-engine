@@ -23,7 +23,7 @@ type session_details = {
 };;
 
 let default_session_details = {
-    constant_begin_string = "FIX.4.2" 
+    constant_begin_string = "FIX.4.4" 
 };;
 
 
