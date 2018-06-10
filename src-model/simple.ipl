@@ -60,8 +60,8 @@ reject (msg:NewOrderSingle,rejReason:string)
     }
     invalidfield:{
         send ExecutionReport with {
-            ClOrdID = "None";
-            OrderID = "None";
+            ClOrdID = msg.ClOrdID;
+            OrderID = msg.ClOrdID;
             ExecID = "Test";
             ExecType = ExecType.Calculated;
             AvgPx = 0.0;
@@ -69,14 +69,14 @@ reject (msg:NewOrderSingle,rejReason:string)
             LeavesQty = 0.0;
             CumQty = 0.0;
             OrdStatus = OrdStatus.New;
-            Instrument.Symbol = "None";
+            Instrument.Symbol = msg.Instrument.Symbol;
             Text = Some rejReason;
         }
     }
     invalid:{
         send ExecutionReport with {
-            ClOrdID = "None";
-            OrderID = "None";
+            ClOrdID = msg.ClOrdID;
+            OrderID = msg.ClOrdID;
             ExecID = "Test";
             ExecType = ExecType.Calculated;
             AvgPx = 0.0;

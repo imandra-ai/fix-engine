@@ -26,14 +26,14 @@ let reject_NewOrderSingle_missingfield (m_state : model_state) (reject_text : st
 let reject_NewOrderSingle_invalidfield (m_state : model_state) (msg_data : mod_newordersingle_data) (reject_text : string)  =
     let msg_data_inner = {
         mod_f_ExecutionReport_AvgPx = float_Create_6 0;
-        mod_f_ExecutionReport_ClOrdID = "None";
+        mod_f_ExecutionReport_ClOrdID = msg_data.mod_f_NewOrderSingle_ClOrdID;
         mod_f_ExecutionReport_CumQty = float_Create_6 0;
         mod_f_ExecutionReport_ExecID = "Test";
         mod_f_ExecutionReport_ExecType = MOD_FIX_ExecType_Calculated;
-        mod_f_ExecutionReport_Instrument_Symbol = "None";
+        mod_f_ExecutionReport_Instrument_Symbol = msg_data.mod_f_NewOrderSingle_Instrument_Symbol;
         mod_f_ExecutionReport_LeavesQty = float_Create_6 0;
         mod_f_ExecutionReport_OrdStatus = MOD_FIX_OrdStatus_New;
-        mod_f_ExecutionReport_OrderID = "None";
+        mod_f_ExecutionReport_OrderID = msg_data.mod_f_NewOrderSingle_ClOrdID;
         mod_f_ExecutionReport_Side = MOD_FIX_Side_Buy;
         mod_f_ExecutionReport_Text = Some reject_text
     } in
@@ -44,14 +44,14 @@ let reject_NewOrderSingle_invalidfield (m_state : model_state) (msg_data : mod_n
 let reject_NewOrderSingle_invalid (m_state : model_state) (msg_data : mod_newordersingle_data) (reject_text : string)  =
     let msg_data_inner = {
         mod_f_ExecutionReport_AvgPx = float_Create_6 0;
-        mod_f_ExecutionReport_ClOrdID = "None";
+        mod_f_ExecutionReport_ClOrdID = msg_data.mod_f_NewOrderSingle_ClOrdID;
         mod_f_ExecutionReport_CumQty = float_Create_6 0;
         mod_f_ExecutionReport_ExecID = "Test";
         mod_f_ExecutionReport_ExecType = MOD_FIX_ExecType_Calculated;
         mod_f_ExecutionReport_Instrument_Symbol = "None";
         mod_f_ExecutionReport_LeavesQty = float_Create_6 0;
         mod_f_ExecutionReport_OrdStatus = MOD_FIX_OrdStatus_New;
-        mod_f_ExecutionReport_OrderID = "None";
+        mod_f_ExecutionReport_OrderID = msg_data.mod_f_NewOrderSingle_ClOrdID;
         mod_f_ExecutionReport_Side = MOD_FIX_Side_Buy;
         mod_f_ExecutionReport_Text = Some reject_text
     } in
