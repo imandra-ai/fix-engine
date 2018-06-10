@@ -85,16 +85,16 @@ type biz_rejected_msg_data = {
     message type. We do not need this tag as message type is 
     explicit. *)
 type fix_header = {
-    h_begin_string                    : string;   (* Tag 8    *)
+    h_begin_string                    : string;       (* Tag 8    *)
     h_body_length                     : int;          (* Tag 9    *)
-    h_sender_comp_id                  : string;   (* Tag 49   *)
-    h_target_comp_id                  : string;   (* Tag 56   *)
+    h_sender_comp_id                  : string;       (* Tag 49   *)
+    h_target_comp_id                  : string;       (* Tag 56   *)
     h_msg_seq_num                     : int;          (* Tag 34   *)
 
     h_on_behalf_of_comp_id            : string option;   (* Tag 115  *)
     h_deliver_to_comp_id              : string option;   (* Tag 128  *)
-    h_secure_data_len                 : int option;   (* Tag 90   *)
-    h_secure_data                     : int option;   (* Tag 91   *)
+    h_secure_data_len                 : int option;      (* Tag 90   *)
+    h_secure_data                     : int option;      (* Tag 91   *)
     h_sender_sub_id                   : string option;   (* Tag 50   *)
     h_sender_location_id              : string option;   (* Tag 142  *)
     h_target_sub_id                   : string option;   (* Tag 57   *)
@@ -103,16 +103,16 @@ type fix_header = {
     h_on_behalf_of_location_id        : string option;   (* Tag 114  *)
     h_deliver_to_sub_id               : string option;   (* Tag 129  *)
     h_deliver_to_location_id          : string option;   (* Tag 145  *)
-    h_poss_dup_flag                   : bool option;  (* Tag 43   *)
+    h_poss_dup_flag                   : bool option;     (* Tag 43   *)
     
-    h_poss_resend                     : bool option;  (* Tag 97   *)
-    h_sending_time                    : fix_utctimestamp;   (* Tag 52   *)
+    h_poss_resend                     : bool option;     (* Tag 97   *)
+    h_sending_time                    : fix_utctimestamp;(* Tag 52   *)
     h_orig_sending_time               : fix_utctimestamp option;   (* Tag 122  *)
-    h_xml_data_len                    : int option;   (* Tag 212  *)
-    h_xml_data                        : int option;   (* Tag 213  *)
-    h_message_enconding               : int option;   (* Tag 347  *)
-    h_last_msg_seq_num_processed      : int option;   (* Tag 369  *)
-    h_no_hops                         : int option;   (* Tag 627  *)
+    h_xml_data_len                    : int option;      (* Tag 212  *)
+    h_xml_data                        : int option;      (* Tag 213  *)
+    h_message_enconding               : int option;      (* Tag 347  *)
+    h_last_msg_seq_num_processed      : int option;      (* Tag 369  *)
+    h_no_hops                         : int option;      (* Tag 627  *)
 } 
 ;;
 

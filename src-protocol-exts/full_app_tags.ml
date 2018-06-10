@@ -1,96 +1,134 @@
 (* Aesthetic Integration copyright 2018 *)
 
 type full_app_msg_tag =
-    | Full_Msg_OrderSingle_Tag 
-    | Full_Msg_OrderCancelReplaceRequest_Tag 
-    | Full_Msg_OrderCancelRequest_Tag 
-    | Full_Msg_OrderMassCancelRequest_Tag 
     | Full_Msg_ExecutionReport_Tag 
-    | Full_Msg_OrderCancelReject_Tag 
-    | Full_Msg_OrderMassCancelReport_Tag 
+    | Full_Msg_NewOrderSingle_Tag 
 ;;
 
 type full_app_field_tag =
+    | Full_Field_OrderID_Tag 
+    | Full_Field_SecondaryOrderID_Tag 
+    | Full_Field_SecondaryClOrdID_Tag 
+    | Full_Field_SecondaryExecID_Tag 
     | Full_Field_ClOrdID_Tag 
-    | Full_Field_ClientID_Tag 
-    | Full_Field_ExecBroker_Tag 
+    | Full_Field_OrigClOrdID_Tag 
+    | Full_Field_ClOrdLinkID_Tag 
+    | Full_Field_QuoteRespID_Tag 
+    | Full_Field_OrdStatusReqID_Tag 
+    | Full_Field_MassStatusReqID_Tag 
+    | Full_Field_TotNumReports_Tag 
+    | Full_Field_LastRptRequested_Tag 
+    | Full_Field_TradeOriginationDate_Tag 
+    | Full_Field_ListID_Tag 
+    | Full_Field_CrossID_Tag 
+    | Full_Field_OrigCrossID_Tag 
+    | Full_Field_CrossType_Tag 
+    | Full_Field_ExecID_Tag 
+    | Full_Field_ExecRefID_Tag 
+    | Full_Field_ExecType_Tag 
+    | Full_Field_OrdStatus_Tag 
+    | Full_Field_WorkingIndicator_Tag 
+    | Full_Field_OrdRejReason_Tag 
+    | Full_Field_ExecRestatementReason_Tag 
     | Full_Field_Account_Tag 
-    | Full_Field_SettlmntTyp_Tag 
-    | Full_Field_FutSettDate_Tag 
-    | Full_Field_HandlInst_Tag 
-    | Full_Field_ExecInst_Tag 
-    | Full_Field_MinQty_Tag 
-    | Full_Field_MaxFloor_Tag 
-    | Full_Field_ExDestination_Tag 
-    | Full_Field_ProcessCode_Tag 
-    | Full_Field_Symbol_Tag 
-    | Full_Field_SymbolSfx_Tag 
-    | Full_Field_SecurityID_Tag 
-    | Full_Field_IDSource_Tag 
-    | Full_Field_SecurityType_Tag 
-    | Full_Field_MaturityMonthYear_Tag 
-    | Full_Field_MaturityDay_Tag 
-    | Full_Field_PutOrCall_Tag 
-    | Full_Field_StrikePrice_Tag 
-    | Full_Field_OptAttribute_Tag 
-    | Full_Field_ContractMultiplier_Tag 
-    | Full_Field_CouponRate_Tag 
-    | Full_Field_SecurityExchange_Tag 
-    | Full_Field_Issuer_Tag 
-    | Full_Field_EncodedIssuerLen_Tag 
-    | Full_Field_EncodedIssuer_Tag 
-    | Full_Field_SecurityDesc_Tag 
-    | Full_Field_EncodedSecurityDescLen_Tag 
-    | Full_Field_EncodedSecurityDesc_Tag 
-    | Full_Field_PrevClosePx_Tag 
+    | Full_Field_AcctIDSource_Tag 
+    | Full_Field_AccountType_Tag 
+    | Full_Field_DayBookingInst_Tag 
+    | Full_Field_BookingUnit_Tag 
+    | Full_Field_PreallocMethod_Tag 
+    | Full_Field_SettlType_Tag 
+    | Full_Field_SettlDate_Tag 
+    | Full_Field_CashMargin_Tag 
+    | Full_Field_ClearingFeeIndicator_Tag 
     | Full_Field_Side_Tag 
-    | Full_Field_LocateReqd_Tag 
-    | Full_Field_TransactTime_Tag 
-    | Full_Field_OrderQty_Tag 
-    | Full_Field_CashOrderQty_Tag 
+    | Full_Field_QtyType_Tag 
     | Full_Field_OrdType_Tag 
+    | Full_Field_PriceType_Tag 
     | Full_Field_Price_Tag 
     | Full_Field_StopPx_Tag 
+    | Full_Field_PeggedPrice_Tag 
+    | Full_Field_DiscretionPrice_Tag 
+    | Full_Field_TargetStrategy_Tag 
+    | Full_Field_TargetStrategyParameters_Tag 
+    | Full_Field_ParticipationRate_Tag 
+    | Full_Field_TargetStrategyPerformance_Tag 
     | Full_Field_Currency_Tag 
     | Full_Field_ComplianceID_Tag 
     | Full_Field_SolicitedFlag_Tag 
-    | Full_Field_IOIid_Tag 
-    | Full_Field_QuoteID_Tag 
     | Full_Field_TimeInForce_Tag 
     | Full_Field_EffectiveTime_Tag 
     | Full_Field_ExpireDate_Tag 
     | Full_Field_ExpireTime_Tag 
+    | Full_Field_ExecInst_Tag 
+    | Full_Field_OrderCapacity_Tag 
+    | Full_Field_OrderRestrictions_Tag 
+    | Full_Field_CustOrderCapacity_Tag 
+    | Full_Field_LastQty_Tag 
+    | Full_Field_UnderlyingLastQty_Tag 
+    | Full_Field_LastPx_Tag 
+    | Full_Field_UnderlyingLastPx_Tag 
+    | Full_Field_LastParPx_Tag 
+    | Full_Field_LastSpotRate_Tag 
+    | Full_Field_LastForwardPoints_Tag 
+    | Full_Field_LastMkt_Tag 
+    | Full_Field_TradingSessionID_Tag 
+    | Full_Field_TradingSessionSubID_Tag 
+    | Full_Field_TimeBracket_Tag 
+    | Full_Field_LastCapacity_Tag 
+    | Full_Field_LeavesQty_Tag 
+    | Full_Field_CumQty_Tag 
+    | Full_Field_AvgPx_Tag 
+    | Full_Field_DayOrderQty_Tag 
+    | Full_Field_DayCumQty_Tag 
+    | Full_Field_DayAvgPx_Tag 
     | Full_Field_GTBookingInst_Tag 
-    | Full_Field_Commission_Tag 
-    | Full_Field_CommType_Tag 
-    | Full_Field_Rule80A_Tag 
-    | Full_Field_ForexReq_Tag 
+    | Full_Field_TradeDate_Tag 
+    | Full_Field_TransactTime_Tag 
+    | Full_Field_ReportToExch_Tag 
+    | Full_Field_GrossTradeAmt_Tag 
+    | Full_Field_NumDaysInterest_Tag 
+    | Full_Field_ExDate_Tag 
+    | Full_Field_AccruedInterestRate_Tag 
+    | Full_Field_AccruedInterestAmt_Tag 
+    | Full_Field_InterestAtMaturity_Tag 
+    | Full_Field_EndAccruedInterestAmt_Tag 
+    | Full_Field_StartCash_Tag 
+    | Full_Field_EndCash_Tag 
+    | Full_Field_TradedFlatSwitch_Tag 
+    | Full_Field_BasisFeatureDate_Tag 
+    | Full_Field_BasisFeaturePrice_Tag 
+    | Full_Field_Concession_Tag 
+    | Full_Field_TotalTakedown_Tag 
+    | Full_Field_NetMoney_Tag 
+    | Full_Field_SettlCurrAmt_Tag 
     | Full_Field_SettlCurrency_Tag 
+    | Full_Field_SettlCurrFxRate_Tag 
+    | Full_Field_SettlCurrFxRateCalc_Tag 
+    | Full_Field_HandlInst_Tag 
+    | Full_Field_MinQty_Tag 
+    | Full_Field_MaxFloor_Tag 
+    | Full_Field_PositionEffect_Tag 
+    | Full_Field_MaxShow_Tag 
+    | Full_Field_BookingType_Tag 
     | Full_Field_Text_Tag 
     | Full_Field_EncodedTextLen_Tag 
     | Full_Field_EncodedText_Tag 
-    | Full_Field_FutSettDate2_Tag 
+    | Full_Field_SettlDate2_Tag 
     | Full_Field_OrderQty2_Tag 
-    | Full_Field_OpenClose_Tag 
-    | Full_Field_CoveredOrUncovered_Tag 
-    | Full_Field_CustomerOrFirm_Tag 
-    | Full_Field_MaxShow_Tag 
-    | Full_Field_PegDifference_Tag 
-    | Full_Field_DiscretionInst_Tag 
-    | Full_Field_DiscretionOffset_Tag 
-    | Full_Field_ClearingFirm_Tag 
-    | Full_Field_ClearingAccount_Tag 
-    | Full_Field_TechnicalOrdType_Tag 
-    | Full_Field_BookIndicator_Tag 
-    | Full_Field_MIC_Tag 
-    | Full_Field_BrokerPrioritization_Tag 
-    | Full_Field_DEAIndicator_Tag 
-    | Full_Field_OrderAttributeTypes_Tag 
-    | Full_Field_NoAllocs_Tag 
-    | Full_Field_AllocAccount_Tag 
-    | Full_Field_AllocShares_Tag 
-    | Full_Field_NoTradingSessions_Tag 
-    | Full_Field_TradingSessionID_Tag 
+    | Full_Field_LastForwardPoints2_Tag 
+    | Full_Field_MultiLegReportingType_Tag 
+    | Full_Field_CancellationRights_Tag 
+    | Full_Field_MoneyLaunderingStatus_Tag 
+    | Full_Field_RegistID_Tag 
+    | Full_Field_Designation_Tag 
+    | Full_Field_TransBkdTime_Tag 
+    | Full_Field_ExecValuationPoint_Tag 
+    | Full_Field_ExecPriceType_Tag 
+    | Full_Field_ExecPriceAdjustment_Tag 
+    | Full_Field_PriorityIndicator_Tag 
+    | Full_Field_PriceImprovement_Tag 
+    | Full_Field_LastLiquidityInd_Tag 
+    | Full_Field_CopyMsgIndicator_Tag 
     | Full_Field_NoPartyIDs_Tag 
     | Full_Field_PartyID_Tag 
     | Full_Field_PartyIDSource_Tag 
@@ -98,20 +136,21 @@ type full_app_field_tag =
     | Full_Field_NoPartySubIDs_Tag 
     | Full_Field_PartySubID_Tag 
     | Full_Field_PartySubIDType_Tag 
-    | Full_Field_NoClearingEntries_Tag 
-    | Full_Field_FreeText_Tag 
-    | Full_Field_ClearingHandlingType_Tag 
-    | Full_Field_OrderID_Tag 
-    | Full_Field_OrigClOrdID_Tag 
-    | Full_Field_ListID_Tag 
-    | Full_Field_SecondaryClOrdID_Tag 
-    | Full_Field_MassCancelRequestType_Tag 
-    | Full_Field_TradingSessionSubID_Tag 
-    | Full_Field_ClassID_Tag 
-    | Full_Field_CancelByLocationID_Tag 
+    | Full_Field_NoContraBrokers_Tag 
+    | Full_Field_ContraBroker_Tag 
+    | Full_Field_ContraTrader_Tag 
+    | Full_Field_ContraTradeQty_Tag 
+    | Full_Field_ContraTradeTime_Tag 
+    | Full_Field_ContraLegRefID_Tag 
+    | Full_Field_Symbol_Tag 
+    | Full_Field_SymbolSfx_Tag 
+    | Full_Field_SecurityID_Tag 
+    | Full_Field_SecurityIDSource_Tag 
     | Full_Field_Product_Tag 
     | Full_Field_CFICode_Tag 
+    | Full_Field_SecurityType_Tag 
     | Full_Field_SecuritySubType_Tag 
+    | Full_Field_MaturityMonthYear_Tag 
     | Full_Field_MaturityDate_Tag 
     | Full_Field_CouponPaymentDate_Tag 
     | Full_Field_IssueDate_Tag 
@@ -125,7 +164,18 @@ type full_app_field_tag =
     | Full_Field_StateOrProvinceOfIssue_Tag 
     | Full_Field_LocaleOfIssue_Tag 
     | Full_Field_RedemptionDate_Tag 
+    | Full_Field_StrikePrice_Tag 
     | Full_Field_StrikeCurrency_Tag 
+    | Full_Field_OptAttribute_Tag 
+    | Full_Field_ContractMultiplier_Tag 
+    | Full_Field_CouponRate_Tag 
+    | Full_Field_SecurityExchange_Tag 
+    | Full_Field_Issuer_Tag 
+    | Full_Field_EncodedIssuerLen_Tag 
+    | Full_Field_EncodedIssuer_Tag 
+    | Full_Field_SecurityDesc_Tag 
+    | Full_Field_EncodedSecurityDescLen_Tag 
+    | Full_Field_EncodedSecurityDesc_Tag 
     | Full_Field_Pool_Tag 
     | Full_Field_ContractSettlMonth_Tag 
     | Full_Field_CPProgram_Tag 
@@ -140,6 +190,16 @@ type full_app_field_tag =
     | Full_Field_EventDate_Tag 
     | Full_Field_EventPx_Tag 
     | Full_Field_EventText_Tag 
+    | Full_Field_AgreementDesc_Tag 
+    | Full_Field_AgreementID_Tag 
+    | Full_Field_AgreementDate_Tag 
+    | Full_Field_AgreementCurrency_Tag 
+    | Full_Field_TerminationType_Tag 
+    | Full_Field_StartDate_Tag 
+    | Full_Field_EndDate_Tag 
+    | Full_Field_DeliveryType_Tag 
+    | Full_Field_MarginRatio_Tag 
+    | Full_Field_NoUnderlyings_Tag 
     | Full_Field_UnderlyingSymbol_Tag 
     | Full_Field_UnderlyingSymbolSfx_Tag 
     | Full_Field_UnderlyingSecurityID_Tag 
@@ -190,50 +250,133 @@ type full_app_field_tag =
     | Full_Field_NoUnderlyingStips_Tag 
     | Full_Field_UnderlyingStipType_Tag 
     | Full_Field_UnderlyingStipValue_Tag 
-    | Full_Field_SecondaryOrderID_Tag 
-    | Full_Field_ExecID_Tag 
-    | Full_Field_ExecTransType_Tag 
-    | Full_Field_ExecRefID_Tag 
-    | Full_Field_ExecType_Tag 
-    | Full_Field_OrdStatus_Tag 
-    | Full_Field_OrdRejReason_Tag 
-    | Full_Field_ExecRestatementReason_Tag 
-    | Full_Field_LastShares_Tag 
-    | Full_Field_LastPx_Tag 
-    | Full_Field_LastSpotRate_Tag 
-    | Full_Field_LastForwardPoints_Tag 
-    | Full_Field_LastMkt_Tag 
-    | Full_Field_LastCapacity_Tag 
-    | Full_Field_LeavesQty_Tag 
-    | Full_Field_CumQty_Tag 
-    | Full_Field_AvgPx_Tag 
-    | Full_Field_DayOrderQty_Tag 
-    | Full_Field_DayCumQty_Tag 
-    | Full_Field_DayAvgPx_Tag 
-    | Full_Field_TradeDate_Tag 
-    | Full_Field_ReportToExch_Tag 
-    | Full_Field_GrossTradeAmt_Tag 
-    | Full_Field_SettlCurrAmt_Tag 
-    | Full_Field_SettlCurrFxRate_Tag 
-    | Full_Field_SettlCurrFxRateCalc_Tag 
-    | Full_Field_MultiLegReportingType_Tag 
-    | Full_Field_CrossType_Tag 
-    | Full_Field_UTPExID_Tag 
-    | Full_Field_LiquidityIndicator_Tag 
-    | Full_Field_ErrorCode_Tag 
-    | Full_Field_IMPTimestamp_Tag 
-    | Full_Field_NoContraBrokers_Tag 
-    | Full_Field_ContraBroker_Tag 
-    | Full_Field_ContraTrader_Tag 
-    | Full_Field_ContraTradeQty_Tag 
-    | Full_Field_ContraTradeTime_Tag 
-    | Full_Field_ContraLegRefID_Tag 
-    | Full_Field_CxlRejResponseTo_Tag 
-    | Full_Field_CxlRejReason_Tag 
-    | Full_Field_MassCancelResponse_Tag 
-    | Full_Field_MassCancelRejectReason_Tag 
-    | Full_Field_TotalAffectedOrders_Tag 
-    | Full_Field_NoAffectedOrders_Tag 
-    | Full_Field_AffectedOrderID_Tag 
-    | Full_Field_AffectedSecondaryOrderID_Tag 
+    | Full_Field_NoStipulations_Tag 
+    | Full_Field_StipulationType_Tag 
+    | Full_Field_StipulationValue_Tag 
+    | Full_Field_OrderQty_Tag 
+    | Full_Field_CashOrderQty_Tag 
+    | Full_Field_OrderPercent_Tag 
+    | Full_Field_RoundingDirection_Tag 
+    | Full_Field_RoundingModulus_Tag 
+    | Full_Field_PegOffsetValue_Tag 
+    | Full_Field_PegMoveType_Tag 
+    | Full_Field_PegOffsetType_Tag 
+    | Full_Field_PegLimitType_Tag 
+    | Full_Field_PegRoundDirection_Tag 
+    | Full_Field_PegScope_Tag 
+    | Full_Field_DiscretionInst_Tag 
+    | Full_Field_DiscretionOffsetValue_Tag 
+    | Full_Field_DiscretionMoveType_Tag 
+    | Full_Field_DiscretionOffsetType_Tag 
+    | Full_Field_DiscretionLimitType_Tag 
+    | Full_Field_DiscretionRoundDirection_Tag 
+    | Full_Field_DiscretionScope_Tag 
+    | Full_Field_Commission_Tag 
+    | Full_Field_CommType_Tag 
+    | Full_Field_CommCurrency_Tag 
+    | Full_Field_FundRenewWaiv_Tag 
+    | Full_Field_Spread_Tag 
+    | Full_Field_BenchmarkCurveCurrency_Tag 
+    | Full_Field_BenchmarkCurveName_Tag 
+    | Full_Field_BenchmarkCurvePoint_Tag 
+    | Full_Field_BenchmarkPrice_Tag 
+    | Full_Field_BenchmarkPriceType_Tag 
+    | Full_Field_BenchmarkSecurityID_Tag 
+    | Full_Field_BenchmarkSecurityIDSource_Tag 
+    | Full_Field_YieldType_Tag 
+    | Full_Field_Yield_Tag 
+    | Full_Field_YieldCalcDate_Tag 
+    | Full_Field_YieldRedemptionDate_Tag 
+    | Full_Field_YieldRedemptionPrice_Tag 
+    | Full_Field_YieldRedemptionPriceType_Tag 
+    | Full_Field_NoContAmts_Tag 
+    | Full_Field_ContAmtType_Tag 
+    | Full_Field_ContAmtValue_Tag 
+    | Full_Field_ContAmtCurr_Tag 
+    | Full_Field_NoLegs_Tag 
+    | Full_Field_LegQty_Tag 
+    | Full_Field_LegSwapType_Tag 
+    | Full_Field_LegPositionEffect_Tag 
+    | Full_Field_LegCoveredOrUncovered_Tag 
+    | Full_Field_LegRefID_Tag 
+    | Full_Field_LegPrice_Tag 
+    | Full_Field_LegSettlType_Tag 
+    | Full_Field_LegSettlDate_Tag 
+    | Full_Field_LegLastPx_Tag 
+    | Full_Field_LegSymbol_Tag 
+    | Full_Field_LegSymbolSfx_Tag 
+    | Full_Field_LegSecurityID_Tag 
+    | Full_Field_LegSecurityIDSource_Tag 
+    | Full_Field_LegProduct_Tag 
+    | Full_Field_LegCFICode_Tag 
+    | Full_Field_LegSecurityType_Tag 
+    | Full_Field_LegSecuritySubType_Tag 
+    | Full_Field_LegMaturityMonthYear_Tag 
+    | Full_Field_LegMaturityDate_Tag 
+    | Full_Field_LegCouponPaymentDate_Tag 
+    | Full_Field_LegIssueDate_Tag 
+    | Full_Field_LegRepoCollateralSecurityType_Tag 
+    | Full_Field_LegRepurchaseTerm_Tag 
+    | Full_Field_LegRepurchaseRate_Tag 
+    | Full_Field_LegFactor_Tag 
+    | Full_Field_LegCreditRating_Tag 
+    | Full_Field_LegInstrRegistry_Tag 
+    | Full_Field_LegCountryOfIssue_Tag 
+    | Full_Field_LegStateOrProvinceOfIssue_Tag 
+    | Full_Field_LegLocaleOfIssue_Tag 
+    | Full_Field_LegRedemptionDate_Tag 
+    | Full_Field_LegStrikePrice_Tag 
+    | Full_Field_LegStrikeCurrency_Tag 
+    | Full_Field_LegOptAttribute_Tag 
+    | Full_Field_LegContractMultiplier_Tag 
+    | Full_Field_LegCouponRate_Tag 
+    | Full_Field_LegSecurityExchange_Tag 
+    | Full_Field_LegIssuer_Tag 
+    | Full_Field_EncodedLegIssuerLen_Tag 
+    | Full_Field_EncodedLegIssuer_Tag 
+    | Full_Field_LegSecurityDesc_Tag 
+    | Full_Field_EncodedLegSecurityDescLen_Tag 
+    | Full_Field_EncodedLegSecurityDesc_Tag 
+    | Full_Field_LegRatioQty_Tag 
+    | Full_Field_LegSide_Tag 
+    | Full_Field_LegCurrency_Tag 
+    | Full_Field_LegPool_Tag 
+    | Full_Field_LegDatedDate_Tag 
+    | Full_Field_LegContractSettlMonth_Tag 
+    | Full_Field_LegInterestAccrualDate_Tag 
+    | Full_Field_NoLegSecurityAltID_Tag 
+    | Full_Field_LegSecurityAltID_Tag 
+    | Full_Field_LegSecurityAltIDSource_Tag 
+    | Full_Field_NoLegStipulations_Tag 
+    | Full_Field_LegStipulationType_Tag 
+    | Full_Field_LegStipulationValue_Tag 
+    | Full_Field_NoNestedPartyIDs_Tag 
+    | Full_Field_NestedPartyID_Tag 
+    | Full_Field_NestedPartyIDSource_Tag 
+    | Full_Field_NestedPartyRole_Tag 
+    | Full_Field_NoNestedPartySubIDs_Tag 
+    | Full_Field_NestedPartySubID_Tag 
+    | Full_Field_NestedPartySubIDType_Tag 
+    | Full_Field_NoMiscFees_Tag 
+    | Full_Field_MiscFeeAmt_Tag 
+    | Full_Field_MiscFeeCurr_Tag 
+    | Full_Field_MiscFeeType_Tag 
+    | Full_Field_MiscFeeBasis_Tag 
+    | Full_Field_AllocID_Tag 
+    | Full_Field_ExDestination_Tag 
+    | Full_Field_ProcessCode_Tag 
+    | Full_Field_PrevClosePx_Tag 
+    | Full_Field_LocateReqd_Tag 
+    | Full_Field_IOIID_Tag 
+    | Full_Field_QuoteID_Tag 
+    | Full_Field_ForexReq_Tag 
+    | Full_Field_Price2_Tag 
+    | Full_Field_CoveredOrUncovered_Tag 
+    | Full_Field_NoAllocs_Tag 
+    | Full_Field_AllocAccount_Tag 
+    | Full_Field_AllocAcctIDSource_Tag 
+    | Full_Field_AllocSettlCurrency_Tag 
+    | Full_Field_IndividualAllocID_Tag 
+    | Full_Field_AllocQty_Tag 
+    | Full_Field_NoTradingSessions_Tag 
 ;;

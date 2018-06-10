@@ -2,1525 +2,6 @@
 open Full_app_enums;;
 open Parser_utils.Parser;;
 
-let parse_PartyRoleQualifier (str)  =
-    (match str with
-        | "23" -> (Some (FIX_PartyRoleQualifier_FirmOrLegalEntity))
-        | "22" -> (Some (FIX_PartyRoleQualifier_Algorithm))
-        | "24" -> (Some (FIX_PartyRoleQualifier_NaturalPerson))
-        | _ -> (None)
-    )
-;;
-
-let parse_LiquidityIndicator (str)  =
-    (match str with
-        | "R" -> (Some (FIX_LiquidityIndicator_RemoveLiquidity))
-        | "A" -> (Some (FIX_LiquidityIndicator_AddLiquidity))
-        | "P" -> (Some (FIX_LiquidityIndicator_PeriodicAuction))
-        | _ -> (None)
-    )
-;;
-
-let parse_Routing (str)  =
-    (match str with
-        | "1" -> (Some (FIX_Routing_OrderRoutingApproved))
-        | "0" -> (Some (FIX_Routing_NoOrderRouting))
-        | _ -> (None)
-    )
-;;
-
-let parse_TechnicalOrdType (str)  =
-    (match str with
-        | "C" -> (Some (FIX_TechnicalOrdType_CrossMargining))
-        | "I" -> (Some (FIX_TechnicalOrdType_IndexArbitrage))
-        | "U" -> (Some (FIX_TechnicalOrdType_UnwindOrder))
-        | "A" -> (Some (FIX_TechnicalOrdType_OtherOrders))
-        | "P" -> (Some (FIX_TechnicalOrdType_PortfolioStrategy))
-        | _ -> (None)
-    )
-;;
-
-let parse_inner_OrderAttributeTypes (str)  =
-    (match str with
-        | "4" -> (Some (FIX_OrderAttributeTypes_AlgorithmicOrder))
-        | "2" -> (Some (FIX_OrderAttributeTypes_LiquidityProvisionActivity))
-        | _ -> (None)
-    )
-;;
-
-let rec parse_OrderAttributeTypes_filter (f)  =
-    (match f with
-        | [] -> []
-        | h :: t -> ((match parse_inner_OrderAttributeTypes h with
-            | None -> (parse_OrderAttributeTypes_filter t)
-            | Some x -> (x :: (parse_OrderAttributeTypes_filter t))
-        )
-        )
-    )
-;;
-
-let parse_OrderAttributeTypes (str)  =
-    let x = split_to_list str '|' in
-    Some (parse_OrderAttributeTypes_filter x)
-;;
-
-let parse_ClearingHandlingType (str)  =
-    (match str with
-        | "0" -> (Some (FIX_ClearingHandlingType_ManualMode))
-        | "1" -> (Some (FIX_ClearingHandlingType_AutomaticExtraction))
-        | "2" -> (Some (FIX_ClearingHandlingType_AutomaticAllocation))
-        | _ -> (None)
-    )
-;;
-
-let parse_OrderEntryAllowed (str)  =
-    (match str with
-        | "1" -> (Some (FIX_OrderEntryAllowed_OrderEntryAllowed))
-        | "0" -> (Some (FIX_OrderEntryAllowed_OrderEntryForbidden))
-        | _ -> (None)
-    )
-;;
-
-let parse_CollareRejType (str)  =
-    (match str with
-        | "H" -> (Some (FIX_CollareRejType_HighCollar))
-        | "L" -> (Some (FIX_CollareRejType_LowCollar))
-        | _ -> (None)
-    )
-;;
-
-let parse_BookIndicator (str)  =
-    (match str with
-        | "A" -> (Some (FIX_BookIndicator_Auction))
-        | "R" -> (Some (FIX_BookIndicator_RPW))
-        | _ -> (None)
-    )
-;;
-
-let parse_BrokerPrioritization (str)  =
-    (match str with
-        | "1" -> (Some (FIX_BrokerPrioritization_WithBrokerPrioritization))
-        | "0" -> (Some (FIX_BrokerPrioritization_WithoutBrokerPriotization))
-        | _ -> (None)
-    )
-;;
-
-let parse_ClassStatus (str)  =
-    (match str with
-        | "SPCO" -> (Some (FIX_ClassStatus_SPContinuous))
-        | "LAMO" -> (Some (FIX_ClassStatus_LateMonitoring))
-        | "CLSD" -> (Some (FIX_ClassStatus_Closed))
-        | "HALT" -> (Some (FIX_ClassStatus_Halted))
-        | "CLCA" -> (Some (FIX_ClassStatus_ClosingCall))
-        | "EAMO" -> (Some (FIX_ClassStatus_EarlyMonitoring))
-        | _ -> (None)
-    )
-;;
-
-let parse_Adjustment (str)  =
-    (match str with
-        | "1" -> (Some (FIX_Adjustment_Cancel))
-        | "2" -> (Some (FIX_Adjustment_Error))
-        | "3" -> (Some (FIX_Adjustment_Correction))
-        | _ -> (None)
-    )
-;;
-
-let parse_AdvSide (str)  =
-    (match str with
-        | "B" -> (Some (FIX_AdvSide_Buy))
-        | "S" -> (Some (FIX_AdvSide_Sell))
-        | "T" -> (Some (FIX_AdvSide_Trade))
-        | "X" -> (Some (FIX_AdvSide_Cross))
-        | _ -> (None)
-    )
-;;
-
-let parse_AdvTransType (str)  =
-    (match str with
-        | "C" -> (Some (FIX_AdvTransType_Cancel))
-        | "R" -> (Some (FIX_AdvTransType_Replace))
-        | "N" -> (Some (FIX_AdvTransType_New))
-        | _ -> (None)
-    )
-;;
-
-let parse_AggregatedBook (str)  =
-    (match str with
-        | "Y" -> (Some (FIX_AggregatedBook_BookEntriesToBeAggregated))
-        | "N" -> (Some (FIX_AggregatedBook_BookEntriesShouldNotBeAggregated))
-        | _ -> (None)
-    )
-;;
-
-let parse_AllocHandlInst (str)  =
-    (match str with
-        | "3" -> (Some (FIX_AllocHandlInst_ForwardAndMatch))
-        | "2" -> (Some (FIX_AllocHandlInst_Forward))
-        | "1" -> (Some (FIX_AllocHandlInst_Match))
-        | _ -> (None)
-    )
-;;
-
-let parse_AllocLinkType (str)  =
-    (match str with
-        | "1" -> (Some (FIX_AllocLinkType_FXSwap))
-        | "0" -> (Some (FIX_AllocLinkType_FXNetting))
-        | _ -> (None)
-    )
-;;
-
-let parse_AllocRejCode (str)  =
-    (match str with
-        | "10" -> (Some (FIX_AllocRejCode_UnknownOrStaleExecID))
-        | "0" -> (Some (FIX_AllocRejCode_UnknownAccount))
-        | "7" -> (Some (FIX_AllocRejCode_OtherSeeText))
-        | "6" -> (Some (FIX_AllocRejCode_UnknownListID))
-        | "9" -> (Some (FIX_AllocRejCode_CalculationDifference))
-        | "1" -> (Some (FIX_AllocRejCode_IncorrectQuantity))
-        | "12" -> (Some (FIX_AllocRejCode_UnknownClOrdID))
-        | "4" -> (Some (FIX_AllocRejCode_CommissionDifference))
-        | "13" -> (Some (FIX_AllocRejCode_WarehouseRequestRejected))
-        | "3" -> (Some (FIX_AllocRejCode_UnknownExecutingBrokerMnemonic))
-        | "11" -> (Some (FIX_AllocRejCode_MismatchedData))
-        | "5" -> (Some (FIX_AllocRejCode_UnknownOrderID))
-        | "2" -> (Some (FIX_AllocRejCode_IncorrectAveragegPrice))
-        | "8" -> (Some (FIX_AllocRejCode_IncorrectAllocatedQuantity))
-        | _ -> (None)
-    )
-;;
-
-let parse_AllocStatus (str)  =
-    (match str with
-        | "4" -> (Some (FIX_AllocStatus_Incomplete))
-        | "3" -> (Some (FIX_AllocStatus_Received))
-        | "1" -> (Some (FIX_AllocStatus_BlockLevelReject))
-        | "2" -> (Some (FIX_AllocStatus_AccountLevelReject))
-        | "5" -> (Some (FIX_AllocStatus_RejectedByIntermediary))
-        | "0" -> (Some (FIX_AllocStatus_Accepted))
-        | _ -> (None)
-    )
-;;
-
-let parse_AllocTransType (str)  =
-    (match str with
-        | "3" -> (Some (FIX_AllocTransType_Preliminary))
-        | "5" -> (Some (FIX_AllocTransType_CalculatedWithoutPreliminary))
-        | "1" -> (Some (FIX_AllocTransType_Replace))
-        | "2" -> (Some (FIX_AllocTransType_Cancel))
-        | "4" -> (Some (FIX_AllocTransType_Calculated))
-        | "0" -> (Some (FIX_AllocTransType_New))
-        | _ -> (None)
-    )
-;;
-
-let parse_BasisPxType (str)  =
-    (match str with
-        | "Z" -> (Some (FIX_BasisPxType_Others))
-        | "6" -> (Some (FIX_BasisPxType_VWAPThroughADay))
-        | "B" -> (Some (FIX_BasisPxType_VWAPThroughAnAfternoonSessionExcept))
-        | "7" -> (Some (FIX_BasisPxType_VWAPThroughAMorningSession))
-        | "3" -> (Some (FIX_BasisPxType_ClosingPrice))
-        | "4" -> (Some (FIX_BasisPxType_CurrentPrice))
-        | "C" -> (Some (FIX_BasisPxType_Strike))
-        | "D" -> (Some (FIX_BasisPxType_Open))
-        | "2" -> (Some (FIX_BasisPxType_ClosingPriceAtMorningSession))
-        | "9" -> (Some (FIX_BasisPxType_VWAPThroughADayExcept))
-        | "A" -> (Some (FIX_BasisPxType_VWAPThroughAMorningSessionExcept))
-        | "8" -> (Some (FIX_BasisPxType_VWAPThroughAnAfternoonSession))
-        | "5" -> (Some (FIX_BasisPxType_SQ))
-        | _ -> (None)
-    )
-;;
-
-let parse_Benchmark (str)  =
-    (match str with
-        | "1" -> (Some (FIX_Benchmark_CURVE))
-        | "2" -> (Some (FIX_Benchmark_FiveYR))
-        | "3" -> (Some (FIX_Benchmark_OLD5))
-        | "5" -> (Some (FIX_Benchmark_OLD10))
-        | "4" -> (Some (FIX_Benchmark_TenYR))
-        | "8" -> (Some (FIX_Benchmark_ThreeMOLIBOR))
-        | "9" -> (Some (FIX_Benchmark_SixMOLIBOR))
-        | "6" -> (Some (FIX_Benchmark_ThirtyYR))
-        | "7" -> (Some (FIX_Benchmark_OLD30))
-        | _ -> (None)
-    )
-;;
-
-let parse_BidRequestTransType (str)  =
-    (match str with
-        | "C" -> (Some (FIX_BidRequestTransType_Cancel))
-        | "N" -> (Some (FIX_BidRequestTransType_New))
-        | _ -> (None)
-    )
-;;
-
-let parse_CommType (str)  =
-    (match str with
-        | "5" -> (Some (FIX_CommType_PercentageWaivedEnhancedUnits))
-        | "6" -> (Some (FIX_CommType_PointsPerBondOrContract))
-        | "2" -> (Some (FIX_CommType_Percent))
-        | "1" -> (Some (FIX_CommType_PerUnit))
-        | "3" -> (Some (FIX_CommType_Absolute))
-        | "4" -> (Some (FIX_CommType_PercentageWaivedCashDiscount))
-        | _ -> (None)
-    )
-;;
-
-let parse_CorporateAction (str)  =
-    (match str with
-        | "B" -> (Some (FIX_CorporateAction_ExDistribution))
-        | "A" -> (Some (FIX_CorporateAction_ExDividend))
-        | "E" -> (Some (FIX_CorporateAction_ExInterest))
-        | "C" -> (Some (FIX_CorporateAction_ExRights))
-        | "D" -> (Some (FIX_CorporateAction_New))
-        | _ -> (None)
-    )
-;;
-
-let parse_CoveredOrUncovered (str)  =
-    (match str with
-        | "1" -> (Some (FIX_CoveredOrUncovered_Uncovered))
-        | "0" -> (Some (FIX_CoveredOrUncovered_Covered))
-        | _ -> (None)
-    )
-;;
-
-let parse_CustomerOrFirm (str)  =
-    (match str with
-        | "0" -> (Some (FIX_CustomerOrFirm_Customer))
-        | "1" -> (Some (FIX_CustomerOrFirm_Firm))
-        | _ -> (None)
-    )
-;;
-
-let parse_CxlRejReason (str)  =
-    (match str with
-        | "99" -> (Some (FIX_CxlRejReason_Other))
-        | "3" -> (Some (FIX_CxlRejReason_OrderAlreadyInPendingStatus))
-        | "0" -> (Some (FIX_CxlRejReason_TooLateToCancel))
-        | "1" -> (Some (FIX_CxlRejReason_UnknownOrder))
-        | "4" -> (Some (FIX_CxlRejReason_UnableToProcessOrderMassCancelRequest))
-        | "5" -> (Some (FIX_CxlRejReason_OrigOrdModTime))
-        | "6" -> (Some (FIX_CxlRejReason_DuplicateClOrdID))
-        | "2" -> (Some (FIX_CxlRejReason_BrokerCredit))
-        | _ -> (None)
-    )
-;;
-
-let parse_CxlRejResponseTo (str)  =
-    (match str with
-        | "1" -> (Some (FIX_CxlRejResponseTo_OrderCancelRequest))
-        | "2" -> (Some (FIX_CxlRejResponseTo_OrderCancel))
-        | _ -> (None)
-    )
-;;
-
-let parse_DKReason (str)  =
-    (match str with
-        | "B" -> (Some (FIX_DKReason_WrongSide))
-        | "C" -> (Some (FIX_DKReason_QuantityExceedsOrder))
-        | "Z" -> (Some (FIX_DKReason_Other))
-        | "F" -> (Some (FIX_DKReason_CalculationDifference))
-        | "D" -> (Some (FIX_DKReason_NoMatchingOrder))
-        | "E" -> (Some (FIX_DKReason_PriceExceedsLimit))
-        | "A" -> (Some (FIX_DKReason_UnknownSymbol))
-        | _ -> (None)
-    )
-;;
-
-let parse_DeleteReason (str)  =
-    (match str with
-        | "1" -> (Some (FIX_DeleteReason_Error))
-        | "0" -> (Some (FIX_DeleteReason_Cancellation))
-        | _ -> (None)
-    )
-;;
-
-let parse_DiscretionInst (str)  =
-    (match str with
-        | "2" -> (Some (FIX_DiscretionInst_RelatedToPrimaryPrice))
-        | "4" -> (Some (FIX_DiscretionInst_RelatedToMidpointPrice))
-        | "5" -> (Some (FIX_DiscretionInst_RelatedToLastTradePrice))
-        | "0" -> (Some (FIX_DiscretionInst_RelatedToDisplayedPrice))
-        | "6" -> (Some (FIX_DiscretionInst_RelatedToVWAP))
-        | "1" -> (Some (FIX_DiscretionInst_RelatedToMarketPrice))
-        | "3" -> (Some (FIX_DiscretionInst_RelatedToLocalPrimaryPrice))
-        | _ -> (None)
-    )
-;;
-
-let parse_DueToRelated (str)  =
-    (match str with
-        | "N" -> (Some (FIX_DueToRelated_NotRelatedToSecurityHalt))
-        | "Y" -> (Some (FIX_DueToRelated_RelatedToSecurityHalt))
-        | _ -> (None)
-    )
-;;
-
-let parse_EmailType (str)  =
-    (match str with
-        | "1" -> (Some (FIX_EmailType_Reply))
-        | "2" -> (Some (FIX_EmailType_AdminReply))
-        | "0" -> (Some (FIX_EmailType_New))
-        | _ -> (None)
-    )
-;;
-
-let parse_ExchangeForPhysical (str)  =
-    (match str with
-        | "N" -> (Some (FIX_ExchangeForPhysical_False))
-        | "Y" -> (Some (FIX_ExchangeForPhysical_True))
-        | _ -> (None)
-    )
-;;
-
-let parse_ExecInst (str)  =
-    (match str with
-        | "6" -> (Some (FIX_ExecInst_ParticipateDoNotInitiate))
-        | "G" -> (Some (FIX_ExecInst_AllOrNone))
-        | "C" -> (Some (FIX_ExecInst_CallFirst))
-        | "D" -> (Some (FIX_ExecInst_PercentOfVolume))
-        | "I" -> (Some (FIX_ExecInst_InstitutionsOnly))
-        | "f" -> (Some (FIX_ExecInst_FullSweep))
-        | "A" -> (Some (FIX_ExecInst_NoCross))
-        | "z" -> (Some (FIX_ExecInst_BestOfferPeg))
-        | "4" -> (Some (FIX_ExecInst_OverTheDay))
-        | "E" -> (Some (FIX_ExecInst_DoNotIncrease))
-        | "O" -> (Some (FIX_ExecInst_OpeningPeg))
-        | "Y" -> (Some (FIX_ExecInst_TryToStop))
-        | "V" -> (Some (FIX_ExecInst_Netting))
-        | "9" -> (Some (FIX_ExecInst_StayOnBidSide))
-        | "5" -> (Some (FIX_ExecInst_Held))
-        | "B" -> (Some (FIX_ExecInst_OKToCross))
-        | "U" -> (Some (FIX_ExecInst_CustomerDisplayInstruction))
-        | "3" -> (Some (FIX_ExecInst_GoAlong))
-        | "F" -> (Some (FIX_ExecInst_DoNotReduce))
-        | "0" -> (Some (FIX_ExecInst_StayOnOfferSide))
-        | "d" -> (Some (FIX_ExecInst_PegToLimitPrice))
-        | "8" -> (Some (FIX_ExecInst_TryToScale))
-        | "H" -> (Some (FIX_ExecInst_ReinstateOnSystemFailure))
-        | "Z" -> (Some (FIX_ExecInst_CancelIfNotBest))
-        | "x" -> (Some (FIX_ExecInst_BestBidPeg))
-        | "M" -> (Some (FIX_ExecInst_MidPricePeg))
-        | "e" -> (Some (FIX_ExecInst_WorkToTargetStrategy))
-        | "W" -> (Some (FIX_ExecInst_PegToVWAP))
-        | "X" -> (Some (FIX_ExecInst_TradeAlong))
-        | "b" -> (Some (FIX_ExecInst_StrictLimit))
-        | "S" -> (Some (FIX_ExecInst_Suspend))
-        | "L" -> (Some (FIX_ExecInst_LastPeg))
-        | "N" -> (Some (FIX_ExecInst_NonNegotiable))
-        | "h" -> (Some (FIX_ExecInst_HalfSweep))
-        | "1" -> (Some (FIX_ExecInst_NotHeld))
-        | "T" -> (Some (FIX_ExecInst_FixedPegToLocalBestBidOrOfferAtTimeOfOrder))
-        | "K" -> (Some (FIX_ExecInst_CancelOnTradingHalt))
-        | "Q" -> (Some (FIX_ExecInst_CancelOnSystemFailure))
-        | "c" -> (Some (FIX_ExecInst_IgnorePriceValidityChecks))
-        | "2" -> (Some (FIX_ExecInst_Work))
-        | "J" -> (Some (FIX_ExecInst_ReinstateOnTradingHalt))
-        | "R" -> (Some (FIX_ExecInst_PrimaryPeg))
-        | "a" -> (Some (FIX_ExecInst_TrailingStopPeg))
-        | "P" -> (Some (FIX_ExecInst_MarketPeg))
-        | "7" -> (Some (FIX_ExecInst_StrictScale))
-        | _ -> (None)
-    )
-;;
-
-let parse_ExecRestatementReason (str)  =
-    (match str with
-        | "99" -> (Some (FIX_ExecRestatementReason_Other))
-        | "3" -> (Some (FIX_ExecRestatementReason_RepricingOfOrder))
-        | "0" -> (Some (FIX_ExecRestatementReason_GTCorporateAction))
-        | "2" -> (Some (FIX_ExecRestatementReason_VerbalChange))
-        | "10" -> (Some (FIX_ExecRestatementReason_WarehouseRecap))
-        | "6" -> (Some (FIX_ExecRestatementReason_CancelOnTradingHalt))
-        | "7" -> (Some (FIX_ExecRestatementReason_CancelOnSystemFailure))
-        | "1" -> (Some (FIX_ExecRestatementReason_GTRenewal))
-        | "8" -> (Some (FIX_ExecRestatementReason_Market))
-        | "9" -> (Some (FIX_ExecRestatementReason_Canceled))
-        | "4" -> (Some (FIX_ExecRestatementReason_BrokerOption))
-        | "5" -> (Some (FIX_ExecRestatementReason_PartialDeclineOfOrderQty))
-        | _ -> (None)
-    )
-;;
-
-let parse_ExecTransType (str)  =
-    (match str with
-        | "3" -> (Some (FIX_ExecTransType_Status))
-        | "1" -> (Some (FIX_ExecTransType_Cancel))
-        | "0" -> (Some (FIX_ExecTransType_New))
-        | "2" -> (Some (FIX_ExecTransType_Correct))
-        | _ -> (None)
-    )
-;;
-
-let parse_ExecType (str)  =
-    (match str with
-        | "6" -> (Some (FIX_ExecType_PendingCancel))
-        | "2" -> (Some (FIX_ExecType_Fill))
-        | "7" -> (Some (FIX_ExecType_Stopped))
-        | "A" -> (Some (FIX_ExecType_PendingNew))
-        | "D" -> (Some (FIX_ExecType_Restated))
-        | "8" -> (Some (FIX_ExecType_Rejected))
-        | "B" -> (Some (FIX_ExecType_Calculated))
-        | "G" -> (Some (FIX_ExecType_TradeCorrect))
-        | "H" -> (Some (FIX_ExecType_TradeCancel))
-        | "C" -> (Some (FIX_ExecType_Expired))
-        | "I" -> (Some (FIX_ExecType_OrderStatus))
-        | "1" -> (Some (FIX_ExecType_PartialFill))
-        | "F" -> (Some (FIX_ExecType_Trade))
-        | "4" -> (Some (FIX_ExecType_Canceled))
-        | "5" -> (Some (FIX_ExecType_Replaced))
-        | "E" -> (Some (FIX_ExecType_PendingReplace))
-        | "3" -> (Some (FIX_ExecType_DoneForDay))
-        | "9" -> (Some (FIX_ExecType_Suspended))
-        | "0" -> (Some (FIX_ExecType_New))
-        | _ -> (None)
-    )
-;;
-
-let parse_FinancialStatus (str)  =
-    (match str with
-        | "2" -> (Some (FIX_FinancialStatus_PendingDelisting))
-        | "1" -> (Some (FIX_FinancialStatus_Bankrupt))
-        | _ -> (None)
-    )
-;;
-
-let parse_ForexReq (str)  =
-    (match str with
-        | "N" -> (Some (FIX_ForexReq_DoNotExecuteForexAfterSecurityTrade))
-        | "Y" -> (Some (FIX_ForexReq_ExecuteForexAfterSecurityTrade))
-        | _ -> (None)
-    )
-;;
-
-let parse_GTBookingInst (str)  =
-    (match str with
-        | "2" -> (Some (FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise))
-        | "1" -> (Some (FIX_GTBookingInst_AccumulateUntilFilledOrExpired))
-        | "0" -> (Some (FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution))
-        | _ -> (None)
-    )
-;;
-
-let parse_HaltReason (str)  =
-    (match str with
-        | "I" -> (Some (FIX_HaltReason_OrderImbalance))
-        | "M" -> (Some (FIX_HaltReason_AdditionalInformation))
-        | "E" -> (Some (FIX_HaltReason_OrderInflux))
-        | "P" -> (Some (FIX_HaltReason_NewsPending))
-        | "X" -> (Some (FIX_HaltReason_EquipmentChangeover))
-        | "D" -> (Some (FIX_HaltReason_NewsDissemination))
-        | _ -> (None)
-    )
-;;
-
-let parse_HandlInst (str)  =
-    (match str with
-        | "3" -> (Some (FIX_HandlInst_ManualOrder))
-        | "2" -> (Some (FIX_HandlInst_AutomatedExecutionInterventionOK))
-        | "1" -> (Some (FIX_HandlInst_AutomatedExecutionNoIntervention))
-        | _ -> (None)
-    )
-;;
-
-let parse_IDSource (str)  =
-    (match str with
-        | "9" -> (Some (FIX_IDSource_ConsolidatedTapeAssociation))
-        | "3" -> (Some (FIX_IDSource_QUIK))
-        | "6" -> (Some (FIX_IDSource_ISOCurrencyCode))
-        | "7" -> (Some (FIX_IDSource_ISOCountryCode))
-        | "5" -> (Some (FIX_IDSource_RICCode))
-        | "2" -> (Some (FIX_IDSource_SEDOL))
-        | "8" -> (Some (FIX_IDSource_ExchangeSymbol))
-        | "4" -> (Some (FIX_IDSource_ISINNumber))
-        | "1" -> (Some (FIX_IDSource_CUSIP))
-        | _ -> (None)
-    )
-;;
-
-let parse_IOINaturalFlag (str)  =
-    (match str with
-        | "Y" -> (Some (FIX_IOINaturalFlag_Natural))
-        | "N" -> (Some (FIX_IOINaturalFlag_NotNatural))
-        | _ -> (None)
-    )
-;;
-
-let parse_IOIQltyInd (str)  =
-    (match str with
-        | "L" -> (Some (FIX_IOIQltyInd_Low))
-        | "H" -> (Some (FIX_IOIQltyInd_High))
-        | "M" -> (Some (FIX_IOIQltyInd_Medium))
-        | _ -> (None)
-    )
-;;
-
-let parse_IOIQualifier (str)  =
-    (match str with
-        | "A" -> (Some (FIX_IOIQualifier_AllOrNone))
-        | "P" -> (Some (FIX_IOIQualifier_TakingAPosition))
-        | "W" -> (Some (FIX_IOIQualifier_Indication))
-        | "Z" -> (Some (FIX_IOIQualifier_PreOpen))
-        | "O" -> (Some (FIX_IOIQualifier_AtTheOpen))
-        | "D" -> (Some (FIX_IOIQualifier_VWAP))
-        | "V" -> (Some (FIX_IOIQualifier_Versus))
-        | "Y" -> (Some (FIX_IOIQualifier_AtTheMidpoint))
-        | "R" -> (Some (FIX_IOIQualifier_ReadyToTrade))
-        | "S" -> (Some (FIX_IOIQualifier_PortfolioShown))
-        | "T" -> (Some (FIX_IOIQualifier_ThroughTheDay))
-        | "M" -> (Some (FIX_IOIQualifier_MoreBehind))
-        | "B" -> (Some (FIX_IOIQualifier_MarketOnClose))
-        | "C" -> (Some (FIX_IOIQualifier_AtTheClose))
-        | "I" -> (Some (FIX_IOIQualifier_InTouchWith))
-        | "Q" -> (Some (FIX_IOIQualifier_AtTheMarket))
-        | "L" -> (Some (FIX_IOIQualifier_Limit))
-        | "X" -> (Some (FIX_IOIQualifier_CrossingOpportunity))
-        | _ -> (None)
-    )
-;;
-
-let parse_IOIShares (str)  =
-    (match str with
-        | "S" -> (Some (FIX_IOIShares_Small))
-        | "L" -> (Some (FIX_IOIShares_Large))
-        | "M" -> (Some (FIX_IOIShares_Medium))
-        | _ -> (None)
-    )
-;;
-
-let parse_IOITransType (str)  =
-    (match str with
-        | "C" -> (Some (FIX_IOITransType_Cancel))
-        | "R" -> (Some (FIX_IOITransType_Replace))
-        | "N" -> (Some (FIX_IOITransType_New))
-        | _ -> (None)
-    )
-;;
-
-let parse_InViewOfCommon (str)  =
-    (match str with
-        | "Y" -> (Some (FIX_InViewOfCommon_HaltWasDueToCommonStockBeingHalted))
-        | "N" -> (Some (FIX_InViewOfCommon_HaltWasNotRelatedToAHaltOfTheCommonStock))
-        | _ -> (None)
-    )
-;;
-
-let parse_IncTaxInd (str)  =
-    (match str with
-        | "1" -> (Some (FIX_IncTaxInd_Net))
-        | "2" -> (Some (FIX_IncTaxInd_Gross))
-        | _ -> (None)
-    )
-;;
-
-let parse_LastCapacity (str)  =
-    (match str with
-        | "1" -> (Some (FIX_LastCapacity_Agent))
-        | "2" -> (Some (FIX_LastCapacity_CrossAsAgent))
-        | "4" -> (Some (FIX_LastCapacity_Principal))
-        | "3" -> (Some (FIX_LastCapacity_CrossAsPrincipal))
-        | _ -> (None)
-    )
-;;
-
-let parse_LiquidityIndType (str)  =
-    (match str with
-        | "4" -> (Some (FIX_LiquidityIndType_Other))
-        | "3" -> (Some (FIX_LiquidityIndType_NormalMarketSize))
-        | "2" -> (Some (FIX_LiquidityIndType_TwentyDayMovingAverage))
-        | "1" -> (Some (FIX_LiquidityIndType_FiveDayMovingAverage))
-        | _ -> (None)
-    )
-;;
-
-let parse_ListExecInstType (str)  =
-    (match str with
-        | "3" -> (Some (FIX_ListExecInstType_SellDriven))
-        | "1" -> (Some (FIX_ListExecInstType_Immediate))
-        | "4" -> (Some (FIX_ListExecInstType_BuyDrivenCashTopUp))
-        | "2" -> (Some (FIX_ListExecInstType_WaitForInstruction))
-        | "5" -> (Some (FIX_ListExecInstType_BuyDrivenCashWithdraw))
-        | _ -> (None)
-    )
-;;
-
-let parse_LocateReqd (str)  =
-    (match str with
-        | "N" -> (Some (FIX_LocateReqd_No))
-        | "Y" -> (Some (FIX_LocateReqd_Yes))
-        | _ -> (None)
-    )
-;;
-
-let parse_MDEntryType (str)  =
-    (match str with
-        | "C" -> (Some (FIX_MDEntryType_OpenInterest))
-        | "5" -> (Some (FIX_MDEntryType_ClosingPrice))
-        | "3" -> (Some (FIX_MDEntryType_IndexValue))
-        | "1" -> (Some (FIX_MDEntryType_Offer))
-        | "6" -> (Some (FIX_MDEntryType_SettlementPrice))
-        | "9" -> (Some (FIX_MDEntryType_TradingSessionVWAPPrice))
-        | "2" -> (Some (FIX_MDEntryType_Trade))
-        | "7" -> (Some (FIX_MDEntryType_TradingSessionHighPrice))
-        | "4" -> (Some (FIX_MDEntryType_OpeningPrice))
-        | "B" -> (Some (FIX_MDEntryType_TradeVolume))
-        | "A" -> (Some (FIX_MDEntryType_Imbalance))
-        | "0" -> (Some (FIX_MDEntryType_Bid))
-        | "8" -> (Some (FIX_MDEntryType_TradingSessionLowPrice))
-        | _ -> (None)
-    )
-;;
-
-let parse_MDReqRejReason (str)  =
-    (match str with
-        | "7" -> (Some (FIX_MDReqRejReason_UnsupportedAggregatedBook))
-        | "6" -> (Some (FIX_MDReqRejReason_UnsupportedMDUpdateType))
-        | "C" -> (Some (FIX_MDReqRejReason_UnsupportedMDImplicitDelete))
-        | "3" -> (Some (FIX_MDReqRejReason_InsufficientPermissions))
-        | "A" -> (Some (FIX_MDReqRejReason_UnsupportedScope))
-        | "9" -> (Some (FIX_MDReqRejReason_UnsupportedTradingSessionID))
-        | "4" -> (Some (FIX_MDReqRejReason_UnsupportedSubscriptionRequestType))
-        | "8" -> (Some (FIX_MDReqRejReason_UnsupportedMDEntryType))
-        | "2" -> (Some (FIX_MDReqRejReason_InsufficientBandwidth))
-        | "1" -> (Some (FIX_MDReqRejReason_DuplicateMDReqID))
-        | "5" -> (Some (FIX_MDReqRejReason_UnsupportedMarketDepth))
-        | "B" -> (Some (FIX_MDReqRejReason_UnsupportedOpenCloseSettleFlag))
-        | "0" -> (Some (FIX_MDReqRejReason_UnknownSymbol))
-        | _ -> (None)
-    )
-;;
-
-let parse_MDUpdateAction (str)  =
-    (match str with
-        | "2" -> (Some (FIX_MDUpdateAction_Delete))
-        | "1" -> (Some (FIX_MDUpdateAction_Change))
-        | "0" -> (Some (FIX_MDUpdateAction_New))
-        | _ -> (None)
-    )
-;;
-
-let parse_MDUpdateType (str)  =
-    (match str with
-        | "0" -> (Some (FIX_MDUpdateType_FullRefresh))
-        | "1" -> (Some (FIX_MDUpdateType_IncrementalRefresh))
-        | _ -> (None)
-    )
-;;
-
-let parse_MessageEncoding (str)  =
-    (match str with
-        | "ISO-2022-JP" -> (Some (FIX_MessageEncoding_ISO2022JP))
-        | "UTF-8" -> (Some (FIX_MessageEncoding_UTF8))
-        | "Shift_JIS" -> (Some (FIX_MessageEncoding_ShiftJIS))
-        | "EUC-JP" -> (Some (FIX_MessageEncoding_EUCJP))
-        | _ -> (None)
-    )
-;;
-
-let parse_MiscFeeType (str)  =
-    (match str with
-        | "7" -> (Some (FIX_MiscFeeType_Other))
-        | "12" -> (Some (FIX_MiscFeeType_Agent))
-        | "3" -> (Some (FIX_MiscFeeType_LocalCommission))
-        | "4" -> (Some (FIX_MiscFeeType_ExchangeFees))
-        | "5" -> (Some (FIX_MiscFeeType_Stamp))
-        | "8" -> (Some (FIX_MiscFeeType_Markup))
-        | "10" -> (Some (FIX_MiscFeeType_PerTransaction))
-        | "1" -> (Some (FIX_MiscFeeType_Regulatory))
-        | "2" -> (Some (FIX_MiscFeeType_Tax))
-        | "9" -> (Some (FIX_MiscFeeType_ConsumptionTax))
-        | "11" -> (Some (FIX_MiscFeeType_Conversion))
-        | "6" -> (Some (FIX_MiscFeeType_Levy))
-        | _ -> (None)
-    )
-;;
-
-let parse_MsgDirection (str)  =
-    (match str with
-        | "S" -> (Some (FIX_MsgDirection_Send))
-        | "R" -> (Some (FIX_MsgDirection_Receive))
-        | _ -> (None)
-    )
-;;
-
-let parse_MultiLegReportingType (str)  =
-    (match str with
-        | "1" -> (Some (FIX_MultiLegReportingType_SingleSecurity))
-        | "2" -> (Some (FIX_MultiLegReportingType_IndividualLegOfAMultiLegSecurity))
-        | "3" -> (Some (FIX_MultiLegReportingType_MultiLegSecurity))
-        | _ -> (None)
-    )
-;;
-
-let parse_NetGrossInd (str)  =
-    (match str with
-        | "1" -> (Some (FIX_NetGrossInd_Net))
-        | "2" -> (Some (FIX_NetGrossInd_Gross))
-        | _ -> (None)
-    )
-;;
-
-let parse_NotifyBrokerOfCredit (str)  =
-    (match str with
-        | "N" -> (Some (FIX_NotifyBrokerOfCredit_DetailsShouldNotBeCommunicated))
-        | "Y" -> (Some (FIX_NotifyBrokerOfCredit_DetailsShouldBeCommunicated))
-        | _ -> (None)
-    )
-;;
-
-let parse_OpenClose (str)  =
-    (match str with
-        | "C" -> (Some (FIX_OpenClose_Close))
-        | "O" -> (Some (FIX_OpenClose_Open))
-        | _ -> (None)
-    )
-;;
-
-let parse_OpenCloseSettleFlag (str)  =
-    (match str with
-        | "2" -> (Some (FIX_OpenCloseSettleFlag_DeliverySettlementEntry))
-        | "0" -> (Some (FIX_OpenCloseSettleFlag_DailyOpen))
-        | "1" -> (Some (FIX_OpenCloseSettleFlag_SessionOpen))
-        | _ -> (None)
-    )
-;;
-
-let parse_OrdRejReason (str)  =
-    (match str with
-        | "6" -> (Some (FIX_OrdRejReason_DuplicateOrder))
-        | "99" -> (Some (FIX_OrdRejReason_Other))
-        | "5" -> (Some (FIX_OrdRejReason_UnknownOrder))
-        | "T" -> (Some (FIX_OrdRejReason_DVC_ThresholdBreached))
-        | "4" -> (Some (FIX_OrdRejReason_TooLateToEnter))
-        | "3" -> (Some (FIX_OrdRejReason_OrderExceedsLimit))
-        | "15" -> (Some (FIX_OrdRejReason_UnknownAccount))
-        | "O" -> (Some (FIX_OrdRejReason_OtherRejectReason))
-        | "0" -> (Some (FIX_OrdRejReason_BrokerCredit))
-        | "11" -> (Some (FIX_OrdRejReason_UnsupportedOrderCharacteristic))
-        | "7" -> (Some (FIX_OrdRejReason_DuplicateOfAVerballyCommunicatedOrder))
-        | "13" -> (Some (FIX_OrdRejReason_IncorrectQuantity))
-        | "9" -> (Some (FIX_OrdRejReason_TradeAlongRequired))
-        | "8" -> (Some (FIX_OrdRejReason_StaleOrder))
-        | "10" -> (Some (FIX_OrdRejReason_InvalidInvestorID))
-        | "2" -> (Some (FIX_OrdRejReason_ExchangeClosed))
-        | "14" -> (Some (FIX_OrdRejReason_IncorrectAllocatedQuantity))
-        | "P" -> (Some (FIX_OrdRejReason_DVC_ProactivelyHaltedInstrument))
-        | "1" -> (Some (FIX_OrdRejReason_UnknownSymbol))
-        | _ -> (None)
-    )
-;;
-
-let parse_OrdStatus (str)  =
-    (match str with
-        | "6" -> (Some (FIX_OrdStatus_PendingCancel))
-        | "7" -> (Some (FIX_OrdStatus_Stopped))
-        | "A" -> (Some (FIX_OrdStatus_PendingNew))
-        | "8" -> (Some (FIX_OrdStatus_Rejected))
-        | "B" -> (Some (FIX_OrdStatus_Calculated))
-        | "C" -> (Some (FIX_OrdStatus_Expired))
-        | "2" -> (Some (FIX_OrdStatus_Filled))
-        | "4" -> (Some (FIX_OrdStatus_Canceled))
-        | "5" -> (Some (FIX_OrdStatus_Replaced))
-        | "E" -> (Some (FIX_OrdStatus_PendingReplace))
-        | "3" -> (Some (FIX_OrdStatus_DoneForDay))
-        | "9" -> (Some (FIX_OrdStatus_Suspended))
-        | "0" -> (Some (FIX_OrdStatus_New))
-        | "1" -> (Some (FIX_OrdStatus_PartiallyFilled))
-        | "D" -> (Some (FIX_OrdStatus_AcceptedForBidding))
-        | _ -> (None)
-    )
-;;
-
-let parse_OrdType (str)  =
-    (match str with
-        | "7" -> (Some (FIX_OrdType_LimitOrBetter))
-        | "M" -> (Some (FIX_OrdType_NextFundValuationPoint))
-        | "6" -> (Some (FIX_OrdType_WithOrWithout))
-        | "E" -> (Some (FIX_OrdType_PreviouslyIndicated))
-        | "3" -> (Some (FIX_OrdType_Stop))
-        | "H" -> (Some (FIX_OrdType_ForexPreviouslyQuoted))
-        | "1" -> (Some (FIX_OrdType_Market))
-        | "9" -> (Some (FIX_OrdType_OnBasis))
-        | "I" -> (Some (FIX_OrdType_Funari))
-        | "B" -> (Some (FIX_OrdType_LimitOnClose))
-        | "P" -> (Some (FIX_OrdType_Pegged))
-        | "8" -> (Some (FIX_OrdType_LimitWithOrWithout))
-        | "5" -> (Some (FIX_OrdType_MarketOnClose))
-        | "4" -> (Some (FIX_OrdType_StopLimit))
-        | "G" -> (Some (FIX_OrdType_ForexSwap))
-        | "J" -> (Some (FIX_OrdType_MarketIfTouched))
-        | "K" -> (Some (FIX_OrdType_MarketWithLeftOverAsLimit))
-        | "D" -> (Some (FIX_OrdType_PreviouslyQuoted))
-        | "C" -> (Some (FIX_OrdType_ForexMarket))
-        | "2" -> (Some (FIX_OrdType_Limit))
-        | "L" -> (Some (FIX_OrdType_PreviousFundValuationPoint))
-        | "A" -> (Some (FIX_OrdType_OnClose))
-        | "F" -> (Some (FIX_OrdType_ForexLimit))
-        | _ -> (None)
-    )
-;;
-
-let parse_PossDupFlag (str)  =
-    (match str with
-        | "Y" -> (Some (FIX_PossDupFlag_PossibleDuplicate))
-        | "N" -> (Some (FIX_PossDupFlag_OriginalTransmission))
-        | _ -> (None)
-    )
-;;
-
-let parse_PossResend (str)  =
-    (match str with
-        | "N" -> (Some (FIX_PossResend_OriginalTransmission))
-        | "Y" -> (Some (FIX_PossResend_PossibleResend))
-        | _ -> (None)
-    )
-;;
-
-let parse_PriceType (str)  =
-    (match str with
-        | "4" -> (Some (FIX_PriceType_Discount))
-        | "6" -> (Some (FIX_PriceType_Spread))
-        | "7" -> (Some (FIX_PriceType_TEDPrice))
-        | "10" -> (Some (FIX_PriceType_FixedCabinetTradePrice))
-        | "1" -> (Some (FIX_PriceType_Percentage))
-        | "11" -> (Some (FIX_PriceType_VariableCabinetTradePrice))
-        | "8" -> (Some (FIX_PriceType_TEDYield))
-        | "2" -> (Some (FIX_PriceType_PerUnit))
-        | "3" -> (Some (FIX_PriceType_FixedAmount))
-        | "5" -> (Some (FIX_PriceType_Premium))
-        | "9" -> (Some (FIX_PriceType_Yield))
-        | _ -> (None)
-    )
-;;
-
-let parse_ProcessCode (str)  =
-    (match str with
-        | "0" -> (Some (FIX_ProcessCode_Regular))
-        | "5" -> (Some (FIX_ProcessCode_SoftDollarStepOut))
-        | "2" -> (Some (FIX_ProcessCode_StepIn))
-        | "6" -> (Some (FIX_ProcessCode_PlanSponsor))
-        | "4" -> (Some (FIX_ProcessCode_SoftDollarStepIn))
-        | "1" -> (Some (FIX_ProcessCode_SoftDollar))
-        | "3" -> (Some (FIX_ProcessCode_StepOut))
-        | _ -> (None)
-    )
-;;
-
-let parse_ProgRptReqs (str)  =
-    (match str with
-        | "1" -> (Some (FIX_ProgRptReqs_BuySideRequests))
-        | "2" -> (Some (FIX_ProgRptReqs_SellSideSends))
-        | "3" -> (Some (FIX_ProgRptReqs_RealTimeExecutionReports))
-        | _ -> (None)
-    )
-;;
-
-let parse_PutOrCall (str)  =
-    (match str with
-        | "1" -> (Some (FIX_PutOrCall_Call))
-        | "0" -> (Some (FIX_PutOrCall_Put))
-        | _ -> (None)
-    )
-;;
-
-let parse_QuoteAckStatus (str)  =
-    (match str with
-        | "5" -> (Some (FIX_QuoteAckStatus_Rejected))
-        | "2" -> (Some (FIX_QuoteAckStatus_CanceledForSecurityType))
-        | "3" -> (Some (FIX_QuoteAckStatus_CanceledForUnderlying))
-        | "4" -> (Some (FIX_QuoteAckStatus_CanceledAll))
-        | "0" -> (Some (FIX_QuoteAckStatus_Accepted))
-        | "1" -> (Some (FIX_QuoteAckStatus_CancelForSymbol))
-        | _ -> (None)
-    )
-;;
-
-let parse_QuoteCancelType (str)  =
-    (match str with
-        | "4" -> (Some (FIX_QuoteCancelType_CancelAllQuotes))
-        | "1" -> (Some (FIX_QuoteCancelType_CancelForOneOrMoreSecurities))
-        | "3" -> (Some (FIX_QuoteCancelType_CancelForUnderlyingSecurity))
-        | "2" -> (Some (FIX_QuoteCancelType_CancelForSecurityType))
-        | _ -> (None)
-    )
-;;
-
-let parse_inner_QuoteCondition (str)  =
-    (match str with
-        | "B" -> (Some (FIX_QuoteCondition_Closed))
-        | "E" -> (Some (FIX_QuoteCondition_Locked))
-        | "F" -> (Some (FIX_QuoteCondition_Crossed))
-        | "I" -> (Some (FIX_QuoteCondition_NonFirm))
-        | "H" -> (Some (FIX_QuoteCondition_FastTrading))
-        | "D" -> (Some (FIX_QuoteCondition_ConsolidatedBest))
-        | "A" -> (Some (FIX_QuoteCondition_Open))
-        | "C" -> (Some (FIX_QuoteCondition_ExchangeBest))
-        | "G" -> (Some (FIX_QuoteCondition_Depth))
-        | _ -> (None)
-    )
-;;
-
-let rec parse_QuoteCondition_filter (f)  =
-    (match f with
-        | [] -> []
-        | h :: t -> ((match parse_inner_QuoteCondition h with
-            | None -> (parse_QuoteCondition_filter t)
-            | Some x -> (x :: (parse_QuoteCondition_filter t))
-        )
-        )
-    )
-;;
-
-let parse_QuoteCondition (str)  =
-    let x = split_to_list str ' ' in
-    Some (parse_QuoteCondition_filter x)
-;;
-
-let parse_QuoteEntryRejectReason (str)  =
-    (match str with
-        | "6" -> (Some (FIX_QuoteEntryRejectReason_DuplicateQuote))
-        | "2" -> (Some (FIX_QuoteEntryRejectReason_Exchange))
-        | "8" -> (Some (FIX_QuoteEntryRejectReason_InvalidPrice))
-        | "5" -> (Some (FIX_QuoteEntryRejectReason_UnknownQuote))
-        | "4" -> (Some (FIX_QuoteEntryRejectReason_TooLateToEnter))
-        | "3" -> (Some (FIX_QuoteEntryRejectReason_QuoteExceedsLimit))
-        | "9" -> (Some (FIX_QuoteEntryRejectReason_NotAuthorizedToQuoteSecurity))
-        | "1" -> (Some (FIX_QuoteEntryRejectReason_UnknownSymbol))
-        | "7" -> (Some (FIX_QuoteEntryRejectReason_InvalidBidAskSpread))
-        | _ -> (None)
-    )
-;;
-
-let parse_QuoteRejectReason (str)  =
-    (match str with
-        | "6" -> (Some (FIX_QuoteRejectReason_DuplicateQuote))
-        | "99" -> (Some (FIX_QuoteRejectReason_Other))
-        | "2" -> (Some (FIX_QuoteRejectReason_Exchange))
-        | "8" -> (Some (FIX_QuoteRejectReason_InvalidPrice))
-        | "7" -> (Some (FIX_QuoteRejectReason_InvalidBid))
-        | "5" -> (Some (FIX_QuoteRejectReason_UnknownQuote))
-        | "4" -> (Some (FIX_QuoteRejectReason_TooLateToEnter))
-        | "3" -> (Some (FIX_QuoteRejectReason_QuoteRequestExceedsLimit))
-        | "9" -> (Some (FIX_QuoteRejectReason_NotAuthorizedToQuoteSecurity))
-        | "1" -> (Some (FIX_QuoteRejectReason_UnknownSymbol))
-        | _ -> (None)
-    )
-;;
-
-let parse_QuoteRequestType (str)  =
-    (match str with
-        | "1" -> (Some (FIX_QuoteRequestType_Manual))
-        | "2" -> (Some (FIX_QuoteRequestType_Automatic))
-        | _ -> (None)
-    )
-;;
-
-let parse_QuoteResponseLevel (str)  =
-    (match str with
-        | "0" -> (Some (FIX_QuoteResponseLevel_NoAcknowledgement))
-        | "1" -> (Some (FIX_QuoteResponseLevel_AcknowledgeOnlyNegativeOrErroneousQuotes))
-        | "2" -> (Some (FIX_QuoteResponseLevel_AcknowledgeEachQuoteMessage))
-        | _ -> (None)
-    )
-;;
-
-let parse_ReportToExch (str)  =
-    (match str with
-        | "Y" -> (Some (FIX_ReportToExch_ReceiverReports))
-        | "N" -> (Some (FIX_ReportToExch_SenderReports))
-        | _ -> (None)
-    )
-;;
-
-let parse_ResetSeqNumFlag (str)  =
-    (match str with
-        | "N" -> (Some (FIX_ResetSeqNumFlag_No))
-        | "Y" -> (Some (FIX_ResetSeqNumFlag_Yes))
-        | _ -> (None)
-    )
-;;
-
-let parse_RoutingType (str)  =
-    (match str with
-        | "2" -> (Some (FIX_RoutingType_TargetList))
-        | "1" -> (Some (FIX_RoutingType_TargetFirm))
-        | "4" -> (Some (FIX_RoutingType_BlockList))
-        | "3" -> (Some (FIX_RoutingType_BlockFirm))
-        | _ -> (None)
-    )
-;;
-
-let parse_Rule80A (str)  =
-    (match str with
-        | "A" -> (Some (FIX_Rule80A_AgencySingleOrder))
-        | "E" -> (Some (FIX_Rule80A_ShortExemptTransactionForPrincipal))
-        | "B" -> (Some (FIX_Rule80A_ShortExemptTransactionAType))
-        | "S" -> (Some (FIX_Rule80A_SpecialistTrades))
-        | "Y" -> (Some (FIX_Rule80A_AgencyNonAlgo))
-        | "T" -> (Some (FIX_Rule80A_TransactionUnaffiliatedMember))
-        | "F" -> (Some (FIX_Rule80A_ShortExemptTransactionWType))
-        | "J" -> (Some (FIX_Rule80A_ProprietaryAlgo))
-        | "O" -> (Some (FIX_Rule80A_ProprietaryTransactionAffiliated))
-        | "K" -> (Some (FIX_Rule80A_AgencyAlgo))
-        | "P" -> (Some (FIX_Rule80A_Principal))
-        | "W" -> (Some (FIX_Rule80A_AllOtherOrdersAsAgentForOtherMember))
-        | "C" -> (Some (FIX_Rule80A_ProprietaryNonAlgo))
-        | "H" -> (Some (FIX_Rule80A_ShortExemptTransactionIType))
-        | "N" -> (Some (FIX_Rule80A_AgentForOtherMember))
-        | "Z" -> (Some (FIX_Rule80A_ShortExemptTransactionNonMember))
-        | "3" -> (Some (FIX_Rule80A_RisklessPrincipal))
-        | "U" -> (Some (FIX_Rule80A_AgencyIndexArb))
-        | "M" -> (Some (FIX_Rule80A_ProgramOrderOtherMember))
-        | "X" -> (Some (FIX_Rule80A_ShortExemptTransactionMemberNotAffliated))
-        | "D" -> (Some (FIX_Rule80A_ProgramOrderMember))
-        | "2" -> (Some (FIX_Rule80A_House))
-        | "R" -> (Some (FIX_Rule80A_TransactionNonMember))
-        | "I" -> (Some (FIX_Rule80A_IndividualInvestor))
-        | "L" -> (Some (FIX_Rule80A_ShortExemptTransactionMemberAffliated))
-        | "1" -> (Some (FIX_Rule80A_Client))
-        | _ -> (None)
-    )
-;;
-
-let parse_SecurityRequestType (str)  =
-    (match str with
-        | "3" -> (Some (FIX_SecurityRequestType_RequestListSecurities))
-        | "2" -> (Some (FIX_SecurityRequestType_RequestListSecurityTypes))
-        | "0" -> (Some (FIX_SecurityRequestType_RequestSecurityIdentityAndSpecifications))
-        | "1" -> (Some (FIX_SecurityRequestType_RequestSecurityIdentityForSpecifications))
-        | _ -> (None)
-    )
-;;
-
-let parse_SecurityResponseType (str)  =
-    (match str with
-        | "1" -> (Some (FIX_SecurityResponseType_AcceptAsIs))
-        | "5" -> (Some (FIX_SecurityResponseType_RejectSecurityProposal))
-        | "6" -> (Some (FIX_SecurityResponseType_CannotMatchSelectionCriteria))
-        | "3" -> (Some (FIX_SecurityResponseType_ListOfSecurityTypesReturnedPerRequest))
-        | "2" -> (Some (FIX_SecurityResponseType_AcceptWithRevisions))
-        | "4" -> (Some (FIX_SecurityResponseType_ListOfSecuritiesReturnedPerRequest))
-        | _ -> (None)
-    )
-;;
-
-let parse_SecurityTradingStatus (str)  =
-    (match str with
-        | "14" -> (Some (FIX_SecurityTradingStatus_ITSPreOpening))
-        | "21" -> (Some (FIX_SecurityTradingStatus_PreOpen))
-        | "7" -> (Some (FIX_SecurityTradingStatus_MarketImbalanceBuy))
-        | "13" -> (Some (FIX_SecurityTradingStatus_NoMarketOnCloseImbalance))
-        | "18" -> (Some (FIX_SecurityTradingStatus_NotAvailableForTrading))
-        | "22" -> (Some (FIX_SecurityTradingStatus_OpeningRotation))
-        | "12" -> (Some (FIX_SecurityTradingStatus_NoMarketImbalance))
-        | "16" -> (Some (FIX_SecurityTradingStatus_TradeDisseminationTime))
-        | "17" -> (Some (FIX_SecurityTradingStatus_ReadyToTrade))
-        | "20" -> (Some (FIX_SecurityTradingStatus_UnknownOrInvalid))
-        | "9" -> (Some (FIX_SecurityTradingStatus_MarketOnCloseImbalanceBuy))
-        | "1" -> (Some (FIX_SecurityTradingStatus_OpeningDelay))
-        | "4" -> (Some (FIX_SecurityTradingStatus_NoOpen))
-        | "10" -> (Some (FIX_SecurityTradingStatus_MarketOnCloseImbalanceSell))
-        | "2" -> (Some (FIX_SecurityTradingStatus_TradingHalt))
-        | "19" -> (Some (FIX_SecurityTradingStatus_NotTradedOnThisMarket))
-        | "8" -> (Some (FIX_SecurityTradingStatus_MarketImbalanceSell))
-        | "6" -> (Some (FIX_SecurityTradingStatus_TradingRangeIndication))
-        | "23" -> (Some (FIX_SecurityTradingStatus_FastMarket))
-        | "15" -> (Some (FIX_SecurityTradingStatus_NewPriceIndication))
-        | "5" -> (Some (FIX_SecurityTradingStatus_PriceIndication))
-        | "3" -> (Some (FIX_SecurityTradingStatus_Resume))
-        | _ -> (None)
-    )
-;;
-
-let parse_SecurityType (str)  =
-    (match str with
-        | "MF" -> (Some (FIX_SecurityType_MutualFund))
-        | "FHL" -> (Some (FIX_SecurityType_FederalHomeLoan))
-        | "YANK" -> (Some (FIX_SecurityType_YankeeCorporateBond))
-        | "MATURED" -> (Some (FIX_SecurityType_Matured))
-        | "RETIRED" -> (Some (FIX_SecurityType_Retired))
-        | "SUPRA" -> (Some (FIX_SecurityType_USDSupranationalCoupons))
-        | "ZOO" -> (Some (FIX_SecurityType_CatsTigersAndLions))
-        | "GO" -> (Some (FIX_SecurityType_GeneralObligationBonds))
-        | "TD" -> (Some (FIX_SecurityType_TimeDeposit))
-        | "XCN" -> (Some (FIX_SecurityType_ExtendedCommNote))
-        | "FUT" -> (Some (FIX_SecurityType_Future))
-        | "FORWARD" -> (Some (FIX_SecurityType_Forward))
-        | "VRDN" -> (Some (FIX_SecurityType_VariableRateDemandNote))
-        | "MTN" -> (Some (FIX_SecurityType_MediumTermNotes))
-        | "REPO" -> (Some (FIX_SecurityType_Repurchase))
-        | "PZFJ" -> (Some (FIX_SecurityType_PlazosFijos))
-        | "BN" -> (Some (FIX_SecurityType_BankNotes))
-        | "WAR" -> (Some (FIX_SecurityType_Warrant))
-        | "SPCLT" -> (Some (FIX_SecurityType_SpecialTax))
-        | "FOR" -> (Some (FIX_SecurityType_ForeignExchangeContract))
-        | "CD" -> (Some (FIX_SecurityType_CertificateOfDeposit))
-        | "TAN" -> (Some (FIX_SecurityType_TaxAnticipationNote))
-        | "LOFC" -> (Some (FIX_SecurityType_LetterOfCredit))
-        | "CMO" -> (Some (FIX_SecurityType_CollateralizedMortgageObligation))
-        | "AMENDED" -> (Some (FIX_SecurityType_Amended))
-        | "RVLV" -> (Some (FIX_SecurityType_RevolverLoan))
-        | "DN" -> (Some (FIX_SecurityType_DepositNotes))
-        | "EUCD" -> (Some (FIX_SecurityType_EuroCertificateOfDeposit))
-        | "ONITE" -> (Some (FIX_SecurityType_Overnight))
-        | "RP" -> (Some (FIX_SecurityType_RepurchaseAgreement))
-        | "SPCLO" -> (Some (FIX_SecurityType_SpecialObligation))
-        | "FADN" -> (Some (FIX_SecurityType_FederalAgencyDiscountNote))
-        | "GN" -> (Some (FIX_SecurityType_GovernmentNationalMortgageAssociation))
-        | "DINP" -> (Some (FIX_SecurityType_DebtorInPossession))
-        | "REPLACD" -> (Some (FIX_SecurityType_Replaced))
-        | "NONE" -> (Some (FIX_SecurityType_NoSecurityType))
-        | "SWING" -> (Some (FIX_SecurityType_SwingLineFacility))
-        | "TECP" -> (Some (FIX_SecurityType_TaxExemptCommercialPaper))
-        | "DUAL" -> (Some (FIX_SecurityType_DualCurrency))
-        | "TIPS" -> (Some (FIX_SecurityType_TreasuryInflationProtectedSecurities))
-        | "BRIDGE" -> (Some (FIX_SecurityType_BridgeLoan))
-        | "STN" -> (Some (FIX_SecurityType_ShortTermLoanNote))
-        | "DEFLTED" -> (Some (FIX_SecurityType_Defaulted))
-        | "SL" -> (Some (FIX_SecurityType_StudentLoanMarketingAssociation))
-        | "LQN" -> (Some (FIX_SecurityType_LiquidityNote))
-        | "TINT" -> (Some (FIX_SecurityType_InterestStripFromAnyBondOrNote))
-        | "RVLVTRM" -> (Some (FIX_SecurityType_Revolver))
-        | "CP" -> (Some (FIX_SecurityType_CommercialPaper))
-        | "RAN" -> (Some (FIX_SecurityType_RevenueAnticipationNote))
-        | "STRUCT" -> (Some (FIX_SecurityType_StructuredNotes))
-        | "MPP" -> (Some (FIX_SecurityType_MortgagePrivatePlacement))
-        | "PFAND" -> (Some (FIX_SecurityType_Pfandbriefe))
-        | "AN" -> (Some (FIX_SecurityType_OtherAnticipationNotes))
-        | "MT" -> (Some (FIX_SecurityType_MandatoryTender))
-        | "PS" -> (Some (FIX_SecurityType_PreferredStock))
-        | "TBA" -> (Some (FIX_SecurityType_ToBeAnnounced))
-        | "FHA" -> (Some (FIX_SecurityType_FederalHousingAuthority))
-        | "MPT" -> (Some (FIX_SecurityType_MiscellaneousPassThrough))
-        | "YCD" -> (Some (FIX_SecurityType_YankeeCertificateOfDeposit))
-        | "OPT" -> (Some (FIX_SecurityType_Option))
-        | "MPO" -> (Some (FIX_SecurityType_MortgagePrincipalOnly))
-        | "TBILL" -> (Some (FIX_SecurityType_USTreasuryBill))
-        | "MIO" -> (Some (FIX_SecurityType_MortgageInterestOnly))
-        | "ABS" -> (Some (FIX_SecurityType_AssetBackedSecurities))
-        | "EUSUPRA" -> (Some (FIX_SecurityType_EuroSupranationalCoupons))
-        | "USTB" -> (Some (FIX_SecurityType_USTreasuryBillOld))
-        | "IET" -> (Some (FIX_SecurityType_IOETTEMortgage))
-        | "MBS" -> (Some (FIX_SecurityType_MortgageBackedSecurities))
-        | "BOX" -> (Some (FIX_SecurityType_BillOfExchanges))
-        | "REV" -> (Some (FIX_SecurityType_RevenueBonds))
-        | "RVRP" -> (Some (FIX_SecurityType_ReverseRepurchaseAgreement))
-        | "EUCORP" -> (Some (FIX_SecurityType_EuroCorporateBond))
-        | "PEF" -> (Some (FIX_SecurityType_PrivateExportFunding))
-        | "TPRN" -> (Some (FIX_SecurityType_PrincipalStripFromANonCallableBondOrNote))
-        | "WITHDRN" -> (Some (FIX_SecurityType_Withdrawn))
-        | "SPCLA" -> (Some (FIX_SecurityType_SpecialAssessment))
-        | "EUSOV" -> (Some (FIX_SecurityType_EuroSovereigns))
-        | "FN" -> (Some (FIX_SecurityType_FederalNationalMortgageAssociation))
-        | "TAXA" -> (Some (FIX_SecurityType_TaxAllocation))
-        | "PN" -> (Some (FIX_SecurityType_PromissoryNote))
-        | "TCAL" -> (Some (FIX_SecurityType_PrincipalStripOfACallableBondOrNote))
-        | "CB" -> (Some (FIX_SecurityType_ConvertibleBond))
-        | "CMBS" -> (Some (FIX_SecurityType_Corp))
-        | "SECLOAN" -> (Some (FIX_SecurityType_SecuritiesLoan))
-        | "COFO" -> (Some (FIX_SecurityType_CertificateOfObligation))
-        | "CL" -> (Some (FIX_SecurityType_CallLoans))
-        | "TBOND" -> (Some (FIX_SecurityType_USTreasuryBond))
-        | "SECPLEDGE" -> (Some (FIX_SecurityType_SecuritiesPledge))
-        | "BRADY" -> (Some (FIX_SecurityType_BradyBond))
-        | "CORP" -> (Some (FIX_SecurityType_CorporateBond))
-        | "TERM" -> (Some (FIX_SecurityType_TermLoan))
-        | "TRAN" -> (Some (FIX_SecurityType_TaxRevenueAnticipationNote))
-        | "FAC" -> (Some (FIX_SecurityType_FederalAgencyCoupon))
-        | "BA" -> (Some (FIX_SecurityType_BankersAcceptance))
-        | "MLEG" -> (Some (FIX_SecurityType_MultilegInstrument))
-        | "EUCP" -> (Some (FIX_SecurityType_EuroCommercialPaper))
-        | "CS" -> (Some (FIX_SecurityType_CommonStock))
-        | "GOVT" -> (Some (FIX_SecurityType_TreasuriesAgencyDebenture))
-        | "TNOTE" -> (Some (FIX_SecurityType_USTreasuryNote))
-        | "XLINKD" -> (Some (FIX_SecurityType_IndexedLinked))
-        | "MUNI" -> (Some (FIX_SecurityType_MunicipalBond))
-        | "?" -> (Some (FIX_SecurityType_Wildcard))
-        | "UST" -> (Some (FIX_SecurityType_USTreasuryNoteOld))
-        | "COFP" -> (Some (FIX_SecurityType_CertificateOfParticipation))
-        | "CPP" -> (Some (FIX_SecurityType_CorporatePrivatePlacement))
-        | "BUYSELL" -> (Some (FIX_SecurityType_BuySellback))
-        | _ -> (None)
-    )
-;;
-
-let parse_SettlInstMode (str)  =
-    (match str with
-        | "2" -> (Some (FIX_SettlInstMode_SpecificAllocationAccountOverriding))
-        | "5" -> (Some (FIX_SettlInstMode_RequestReject))
-        | "0" -> (Some (FIX_SettlInstMode_Default))
-        | "1" -> (Some (FIX_SettlInstMode_StandingInstructionsProvided))
-        | "3" -> (Some (FIX_SettlInstMode_SpecificAllocationAccountStanding))
-        | "4" -> (Some (FIX_SettlInstMode_SpecificOrderForASingleAccount))
-        | _ -> (None)
-    )
-;;
-
-let parse_SettlInstSource (str)  =
-    (match str with
-        | "3" -> (Some (FIX_SettlInstSource_Investor))
-        | "2" -> (Some (FIX_SettlInstSource_Institution))
-        | "1" -> (Some (FIX_SettlInstSource_BrokerCredit))
-        | _ -> (None)
-    )
-;;
-
-let parse_SettlInstTransType (str)  =
-    (match str with
-        | "C" -> (Some (FIX_SettlInstTransType_Cancel))
-        | "R" -> (Some (FIX_SettlInstTransType_Replace))
-        | "N" -> (Some (FIX_SettlInstTransType_New))
-        | "T" -> (Some (FIX_SettlInstTransType_Restate))
-        | _ -> (None)
-    )
-;;
-
-let parse_SettlLocation (str)  =
-    (match str with
-        | "PNY" -> (Some (FIX_SettlLocation_Physical))
-        | "EUR" -> (Some (FIX_SettlLocation_EuroClear))
-        | "FED" -> (Some (FIX_SettlLocation_FederalBookEntry))
-        | "ISO Country Code" -> (Some (FIX_SettlLocation_LocalMarketSettleLocation))
-        | "CED" -> (Some (FIX_SettlLocation_CEDEL))
-        | "PTC" -> (Some (FIX_SettlLocation_ParticipantTrustCompany))
-        | "DTC" -> (Some (FIX_SettlLocation_DepositoryTrustCompany))
-        | _ -> (None)
-    )
-;;
-
-let parse_SettlmntTyp (str)  =
-    (match str with
-        | "0" -> (Some (FIX_SettlmntTyp_Regular))
-        | "3" -> (Some (FIX_SettlmntTyp_TPlus2))
-        | "8" -> (Some (FIX_SettlmntTyp_SellersOption))
-        | "5" -> (Some (FIX_SettlmntTyp_TPlus4))
-        | "4" -> (Some (FIX_SettlmntTyp_TPlus3))
-        | "9" -> (Some (FIX_SettlmntTyp_TPlus5))
-        | "2" -> (Some (FIX_SettlmntTyp_NextDay))
-        | "6" -> (Some (FIX_SettlmntTyp_Future))
-        | "1" -> (Some (FIX_SettlmntTyp_Cash))
-        | "7" -> (Some (FIX_SettlmntTyp_WhenAndIfIssued))
-        | _ -> (None)
-    )
-;;
-
-let parse_Side (str)  =
-    (match str with
-        | "B" -> (Some (FIX_Side_AsDefined))
-        | "C" -> (Some (FIX_Side_Opposite))
-        | "1" -> (Some (FIX_Side_Buy))
-        | "A" -> (Some (FIX_Side_CrossShortExempt))
-        | "G" -> (Some (FIX_Side_Borrow))
-        | "3" -> (Some (FIX_Side_BuyMinus))
-        | "D" -> (Some (FIX_Side_Subscribe))
-        | "F" -> (Some (FIX_Side_Lend))
-        | "6" -> (Some (FIX_Side_SellShortExempt))
-        | "E" -> (Some (FIX_Side_Redeem))
-        | "4" -> (Some (FIX_Side_SellPlus))
-        | "2" -> (Some (FIX_Side_Sell))
-        | "7" -> (Some (FIX_Side_Undisclosed))
-        | "8" -> (Some (FIX_Side_Cross))
-        | "9" -> (Some (FIX_Side_CrossShort))
-        | "5" -> (Some (FIX_Side_SellShort))
-        | _ -> (None)
-    )
-;;
-
-let parse_SolicitedFlag (str)  =
-    (match str with
-        | "Y" -> (Some (FIX_SolicitedFlag_WasSolicited))
-        | "N" -> (Some (FIX_SolicitedFlag_WasNotSolicited))
-        | _ -> (None)
-    )
-;;
-
-let parse_StandInstDbType (str)  =
-    (match str with
-        | "0" -> (Some (FIX_StandInstDbType_Other))
-        | "4" -> (Some (FIX_StandInstDbType_AccountNet))
-        | "1" -> (Some (FIX_StandInstDbType_DTCSID))
-        | "2" -> (Some (FIX_StandInstDbType_ThomsonALERT))
-        | "3" -> (Some (FIX_StandInstDbType_AGlobalCustodian))
-        | _ -> (None)
-    )
-;;
-
-let parse_SubscriptionRequestType (str)  =
-    (match str with
-        | "2" -> (Some (FIX_SubscriptionRequestType_DisablePreviousSnapshot))
-        | "1" -> (Some (FIX_SubscriptionRequestType_SnapshotAndUpdates))
-        | "0" -> (Some (FIX_SubscriptionRequestType_Snapshot))
-        | _ -> (None)
-    )
-;;
-
-let parse_TickDirection (str)  =
-    (match str with
-        | "3" -> (Some (FIX_TickDirection_ZeroMinusTick))
-        | "0" -> (Some (FIX_TickDirection_PlusTick))
-        | "2" -> (Some (FIX_TickDirection_MinusTick))
-        | "1" -> (Some (FIX_TickDirection_ZeroPlusTick))
-        | _ -> (None)
-    )
-;;
-
-let parse_TimeInForce (str)  =
-    (match str with
-        | "1" -> (Some (FIX_TimeInForce_GoodTillCancel))
-        | "7" -> (Some (FIX_TimeInForce_AtTheClose))
-        | "3" -> (Some (FIX_TimeInForce_ImmediateOrCancel))
-        | "0" -> (Some (FIX_TimeInForce_Day))
-        | "4" -> (Some (FIX_TimeInForce_FillOrKill))
-        | "B" -> (Some (FIX_TimeInForce_GoodForAuction))
-        | "2" -> (Some (FIX_TimeInForce_AtTheOpening))
-        | "5" -> (Some (FIX_TimeInForce_GoodTillCrossing))
-        | "6" -> (Some (FIX_TimeInForce_GoodTillDate))
-        | _ -> (None)
-    )
-;;
-
-let parse_TradSesMethod (str)  =
-    (match str with
-        | "2" -> (Some (FIX_TradSesMethod_OpenOutcry))
-        | "1" -> (Some (FIX_TradSesMethod_Electronic))
-        | "3" -> (Some (FIX_TradSesMethod_TwoParty))
-        | _ -> (None)
-    )
-;;
-
-let parse_TradSesMode (str)  =
-    (match str with
-        | "1" -> (Some (FIX_TradSesMode_Testing))
-        | "2" -> (Some (FIX_TradSesMode_Simulated))
-        | "3" -> (Some (FIX_TradSesMode_Production))
-        | _ -> (None)
-    )
-;;
-
-let parse_TradSesStatus (str)  =
-    (match str with
-        | "3" -> (Some (FIX_TradSesStatus_Closed))
-        | "4" -> (Some (FIX_TradSesStatus_PreOpen))
-        | "6" -> (Some (FIX_TradSesStatus_RequestRejected))
-        | "5" -> (Some (FIX_TradSesStatus_PreClose))
-        | "0" -> (Some (FIX_TradSesStatus_Unknown))
-        | "1" -> (Some (FIX_TradSesStatus_Halted))
-        | "2" -> (Some (FIX_TradSesStatus_Open))
-        | _ -> (None)
-    )
-;;
-
-let parse_inner_TradeCondition (str)  =
-    (match str with
-        | "K" -> (Some (FIX_TradeCondition_Opened))
-        | "G" -> (Some (FIX_TradeCondition_Rule127Trade))
-        | "C" -> (Some (FIX_TradeCondition_CashTrade))
-        | "F" -> (Some (FIX_TradeCondition_IntradayTradeDetail))
-        | "I" -> (Some (FIX_TradeCondition_SoldLast))
-        | "A" -> (Some (FIX_TradeCondition_Cash))
-        | "N" -> (Some (FIX_TradeCondition_StoppedStock))
-        | "Q" -> (Some (FIX_TradeCondition_ImbalanceMoreSellers))
-        | "M" -> (Some (FIX_TradeCondition_Sold))
-        | "P" -> (Some (FIX_TradeCondition_ImbalanceMoreBuyers))
-        | "D" -> (Some (FIX_TradeCondition_NextDay))
-        | "E" -> (Some (FIX_TradeCondition_Opening))
-        | "L" -> (Some (FIX_TradeCondition_Seller))
-        | "R" -> (Some (FIX_TradeCondition_OpeningPrice))
-        | "B" -> (Some (FIX_TradeCondition_AveragePriceTrade))
-        | "H" -> (Some (FIX_TradeCondition_Rule155Trade))
-        | "J" -> (Some (FIX_TradeCondition_NextDayTrade))
-        | _ -> (None)
-    )
-;;
-
-let rec parse_TradeCondition_filter (f)  =
-    (match f with
-        | [] -> []
-        | h :: t -> ((match parse_inner_TradeCondition h with
-            | None -> (parse_TradeCondition_filter t)
-            | Some x -> (x :: (parse_TradeCondition_filter t))
-        )
-        )
-    )
-;;
-
-let parse_TradeCondition (str)  =
-    let x = split_to_list str ' ' in
-    Some (parse_TradeCondition_filter x)
-;;
-
-let parse_TradeType (str)  =
-    (match str with
-        | "A" -> (Some (FIX_TradeType_Agency))
-        | "R" -> (Some (FIX_TradeType_RiskTrade))
-        | "G" -> (Some (FIX_TradeType_VWAPGuarantee))
-        | "J" -> (Some (FIX_TradeType_GuaranteedClose))
-        | _ -> (None)
-    )
-;;
-
-let parse_UnsolicitedIndicator (str)  =
-    (match str with
-        | "N" -> (Some (FIX_UnsolicitedIndicator_MessageIsBeingSentAsAResultOfAPriorRequest))
-        | "Y" -> (Some (FIX_UnsolicitedIndicator_MessageIsBeingSentUnsolicited))
-        | _ -> (None)
-    )
-;;
-
-let parse_Urgency (str)  =
-    (match str with
-        | "1" -> (Some (FIX_Urgency_Flash))
-        | "2" -> (Some (FIX_Urgency_Background))
-        | "0" -> (Some (FIX_Urgency_Normal))
-        | _ -> (None)
-    )
-;;
-
-let parse_week (str)  =
-    (match str with
-        | "w1" -> (Some (FIX_week_w1))
-        | "w2" -> (Some (FIX_week_w2))
-        | "w3" -> (Some (FIX_week_w3))
-        | "noweek" -> (Some (FIX_week_noweek))
-        | "w4" -> (Some (FIX_week_w4))
-        | "w5" -> (Some (FIX_week_w5))
-        | _ -> (None)
-    )
-;;
-
-let parse_Currency (str)  =
-    (match str with
-        | "EUR" -> (Some (FIX_Currency_EUR))
-        | "CHF" -> (Some (FIX_Currency_CHF))
-        | "USD" -> (Some (FIX_Currency_USD))
-        | "GBP" -> (Some (FIX_Currency_GBP))
-        | _ -> (None)
-    )
-;;
-
-let parse_Country (str)  =
-    (match str with
-        | "DE" -> (Some (FIX_Country_DE))
-        | "GB" -> (Some (FIX_Country_GB))
-        | "US" -> (Some (FIX_Country_US))
-        | _ -> (None)
-    )
-;;
-
-let parse_Exchange (str)  =
-    (match str with
-        | "XSHG" -> (Some (FIX_Exchange_XSHG))
-        | "SHSC" -> (Some (FIX_Exchange_SHSC))
-        | "XNYS" -> (Some (FIX_Exchange_XNYS))
-        | "XJAS" -> (Some (FIX_Exchange_XJAS))
-        | "XLON" -> (Some (FIX_Exchange_XLON))
-        | "XNAS" -> (Some (FIX_Exchange_XNAS))
-        | _ -> (None)
-    )
-;;
-
 let parse_AccountType (str)  =
     (match str with
         | "1" -> (Some (FIX_AccountType_CarriedCustomerSide))
@@ -1546,6 +27,15 @@ let parse_AcctIDSource (str)  =
     )
 ;;
 
+let parse_Adjustment (str)  =
+    (match str with
+        | "1" -> (Some (FIX_Adjustment_Cancel))
+        | "2" -> (Some (FIX_Adjustment_Error))
+        | "3" -> (Some (FIX_Adjustment_Correction))
+        | _ -> (None)
+    )
+;;
+
 let parse_AdjustmentType (str)  =
     (match str with
         | "0" -> (Some (FIX_AdjustmentType_ProcessRequestAsMarginDisposition))
@@ -1556,11 +46,38 @@ let parse_AdjustmentType (str)  =
     )
 ;;
 
+let parse_AdvSide (str)  =
+    (match str with
+        | "B" -> (Some (FIX_AdvSide_Buy))
+        | "S" -> (Some (FIX_AdvSide_Sell))
+        | "T" -> (Some (FIX_AdvSide_Trade))
+        | "X" -> (Some (FIX_AdvSide_Cross))
+        | _ -> (None)
+    )
+;;
+
+let parse_AdvTransType (str)  =
+    (match str with
+        | "C" -> (Some (FIX_AdvTransType_Cancel))
+        | "R" -> (Some (FIX_AdvTransType_Replace))
+        | "N" -> (Some (FIX_AdvTransType_New))
+        | _ -> (None)
+    )
+;;
+
 let parse_AffirmStatus (str)  =
     (match str with
         | "3" -> (Some (FIX_AffirmStatus_Affirmed))
         | "1" -> (Some (FIX_AffirmStatus_Received))
         | "2" -> (Some (FIX_AffirmStatus_ConfirmRejected))
+        | _ -> (None)
+    )
+;;
+
+let parse_AggregatedBook (str)  =
+    (match str with
+        | "Y" -> (Some (FIX_AggregatedBook_BookEntriesToBeAggregated))
+        | "N" -> (Some (FIX_AggregatedBook_BookEntriesShouldNotBeAggregated))
         | _ -> (None)
     )
 ;;
@@ -1587,6 +104,15 @@ let parse_AllocCancReplaceReason (str)  =
     )
 ;;
 
+let parse_AllocHandlInst (str)  =
+    (match str with
+        | "3" -> (Some (FIX_AllocHandlInst_ForwardAndMatch))
+        | "2" -> (Some (FIX_AllocHandlInst_Forward))
+        | "1" -> (Some (FIX_AllocHandlInst_Match))
+        | _ -> (None)
+    )
+;;
+
 let parse_AllocIntermedReqType (str)  =
     (match str with
         | "1" -> (Some (FIX_AllocIntermedReqType_PendingAccept))
@@ -1599,10 +125,38 @@ let parse_AllocIntermedReqType (str)  =
     )
 ;;
 
+let parse_AllocLinkType (str)  =
+    (match str with
+        | "1" -> (Some (FIX_AllocLinkType_FXSwap))
+        | "0" -> (Some (FIX_AllocLinkType_FXNetting))
+        | _ -> (None)
+    )
+;;
+
 let parse_AllocNoOrdersType (str)  =
     (match str with
         | "1" -> (Some (FIX_AllocNoOrdersType_ExplicitListProvided))
         | "0" -> (Some (FIX_AllocNoOrdersType_NotSpecified))
+        | _ -> (None)
+    )
+;;
+
+let parse_AllocRejCode (str)  =
+    (match str with
+        | "10" -> (Some (FIX_AllocRejCode_UnknownOrStaleExecID))
+        | "0" -> (Some (FIX_AllocRejCode_UnknownAccount))
+        | "7" -> (Some (FIX_AllocRejCode_OtherSeeText))
+        | "6" -> (Some (FIX_AllocRejCode_UnknownListID))
+        | "9" -> (Some (FIX_AllocRejCode_CalculationDifference))
+        | "1" -> (Some (FIX_AllocRejCode_IncorrectQuantity))
+        | "12" -> (Some (FIX_AllocRejCode_UnknownClOrdID))
+        | "4" -> (Some (FIX_AllocRejCode_CommissionDifference))
+        | "13" -> (Some (FIX_AllocRejCode_WarehouseRequestRejected))
+        | "3" -> (Some (FIX_AllocRejCode_UnknownExecutingBrokerMnemonic))
+        | "11" -> (Some (FIX_AllocRejCode_MismatchedData))
+        | "5" -> (Some (FIX_AllocRejCode_UnknownOrderID))
+        | "2" -> (Some (FIX_AllocRejCode_IncorrectAveragegPrice))
+        | "8" -> (Some (FIX_AllocRejCode_IncorrectAllocatedQuantity))
         | _ -> (None)
     )
 ;;
@@ -1624,6 +178,27 @@ let parse_AllocSettlInstType (str)  =
         | "4" -> (Some (FIX_AllocSettlInstType_PhoneForInstructions))
         | "0" -> (Some (FIX_AllocSettlInstType_UseDefaultInstructions))
         | "3" -> (Some (FIX_AllocSettlInstType_SSIDBIDsProvided))
+        | _ -> (None)
+    )
+;;
+
+let parse_AllocStatus (str)  =
+    (match str with
+        | "4" -> (Some (FIX_AllocStatus_Incomplete))
+        | "3" -> (Some (FIX_AllocStatus_Received))
+        | "1" -> (Some (FIX_AllocStatus_BlockLevelReject))
+        | "2" -> (Some (FIX_AllocStatus_AccountLevelReject))
+        | "5" -> (Some (FIX_AllocStatus_RejectedByIntermediary))
+        | "0" -> (Some (FIX_AllocStatus_Accepted))
+        | _ -> (None)
+    )
+;;
+
+let parse_AllocTransType (str)  =
+    (match str with
+        | "1" -> (Some (FIX_AllocTransType_Replace))
+        | "2" -> (Some (FIX_AllocTransType_Cancel))
+        | "0" -> (Some (FIX_AllocTransType_New))
         | _ -> (None)
     )
 ;;
@@ -1676,11 +251,38 @@ let parse_AvgPxIndicator (str)  =
     )
 ;;
 
+let parse_BasisPxType (str)  =
+    (match str with
+        | "Z" -> (Some (FIX_BasisPxType_Others))
+        | "6" -> (Some (FIX_BasisPxType_VWAPThroughADay))
+        | "B" -> (Some (FIX_BasisPxType_VWAPThroughAnAfternoonSessionExcept))
+        | "7" -> (Some (FIX_BasisPxType_VWAPThroughAMorningSession))
+        | "3" -> (Some (FIX_BasisPxType_ClosingPrice))
+        | "4" -> (Some (FIX_BasisPxType_CurrentPrice))
+        | "C" -> (Some (FIX_BasisPxType_Strike))
+        | "D" -> (Some (FIX_BasisPxType_Open))
+        | "2" -> (Some (FIX_BasisPxType_ClosingPriceAtMorningSession))
+        | "9" -> (Some (FIX_BasisPxType_VWAPThroughADayExcept))
+        | "A" -> (Some (FIX_BasisPxType_VWAPThroughAMorningSessionExcept))
+        | "8" -> (Some (FIX_BasisPxType_VWAPThroughAnAfternoonSession))
+        | "5" -> (Some (FIX_BasisPxType_SQ))
+        | _ -> (None)
+    )
+;;
+
 let parse_BidDescriptorType (str)  =
     (match str with
         | "1" -> (Some (FIX_BidDescriptorType_Sector))
         | "3" -> (Some (FIX_BidDescriptorType_Index))
         | "2" -> (Some (FIX_BidDescriptorType_Country))
+        | _ -> (None)
+    )
+;;
+
+let parse_BidRequestTransType (str)  =
+    (match str with
+        | "C" -> (Some (FIX_BidRequestTransType_Cancel))
+        | "N" -> (Some (FIX_BidRequestTransType_New))
         | _ -> (None)
     )
 ;;
@@ -1900,6 +502,18 @@ let parse_CollStatus (str)  =
     )
 ;;
 
+let parse_CommType (str)  =
+    (match str with
+        | "5" -> (Some (FIX_CommType_PercentageWaivedEnhancedUnits))
+        | "6" -> (Some (FIX_CommType_PointsPerBondOrContract))
+        | "2" -> (Some (FIX_CommType_Percent))
+        | "1" -> (Some (FIX_CommType_PerUnit))
+        | "3" -> (Some (FIX_CommType_Absolute))
+        | "4" -> (Some (FIX_CommType_PercentageWaivedCashDiscount))
+        | _ -> (None)
+    )
+;;
+
 let parse_ConfirmRejReason (str)  =
     (match str with
         | "2" -> (Some (FIX_ConfirmRejReason_MissingSettlementInstructions))
@@ -1959,6 +573,41 @@ let parse_ContAmtType (str)  =
     )
 ;;
 
+let parse_inner_CorporateAction (str)  =
+    (match str with
+        | "B" -> (Some (FIX_CorporateAction_ExDistribution))
+        | "A" -> (Some (FIX_CorporateAction_ExDividend))
+        | "E" -> (Some (FIX_CorporateAction_ExInterest))
+        | "C" -> (Some (FIX_CorporateAction_ExRights))
+        | "D" -> (Some (FIX_CorporateAction_New))
+        | _ -> (None)
+    )
+;;
+
+let rec parse_CorporateAction_filter (f)  =
+    (match f with
+        | [] -> []
+        | h :: t -> ((match parse_inner_CorporateAction h with
+            | None -> (parse_CorporateAction_filter t)
+            | Some x -> (x :: (parse_CorporateAction_filter t))
+        )
+        )
+    )
+;;
+
+let parse_CorporateAction (str)  =
+    let x = split_to_list str ' ' in
+    Some (parse_CorporateAction_filter x)
+;;
+
+let parse_CoveredOrUncovered (str)  =
+    (match str with
+        | "1" -> (Some (FIX_CoveredOrUncovered_Uncovered))
+        | "0" -> (Some (FIX_CoveredOrUncovered_Covered))
+        | _ -> (None)
+    )
+;;
+
 let parse_CrossPrioritization (str)  =
     (match str with
         | "1" -> (Some (FIX_CrossPrioritization_BuySideIsPrioritized))
@@ -1974,8 +623,6 @@ let parse_CrossType (str)  =
         | "3" -> (Some (FIX_CrossType_CrossOneSide))
         | "4" -> (Some (FIX_CrossType_CrossSamePrice))
         | "1" -> (Some (FIX_CrossType_CrossAON))
-        | "0" -> (Some (FIX_CrossType_NotSignificant))
-        | "P" -> (Some (FIX_CrossType_StandardCross))
         | _ -> (None)
     )
 ;;
@@ -1990,11 +637,54 @@ let parse_CustOrderCapacity (str)  =
     )
 ;;
 
+let parse_CxlRejReason (str)  =
+    (match str with
+        | "99" -> (Some (FIX_CxlRejReason_Other))
+        | "3" -> (Some (FIX_CxlRejReason_OrderAlreadyInPendingStatus))
+        | "0" -> (Some (FIX_CxlRejReason_TooLateToCancel))
+        | "1" -> (Some (FIX_CxlRejReason_UnknownOrder))
+        | "4" -> (Some (FIX_CxlRejReason_UnableToProcessOrderMassCancelRequest))
+        | "5" -> (Some (FIX_CxlRejReason_OrigOrdModTime))
+        | "6" -> (Some (FIX_CxlRejReason_DuplicateClOrdID))
+        | "2" -> (Some (FIX_CxlRejReason_BrokerCredit))
+        | _ -> (None)
+    )
+;;
+
+let parse_CxlRejResponseTo (str)  =
+    (match str with
+        | "1" -> (Some (FIX_CxlRejResponseTo_OrderCancelRequest))
+        | "2" -> (Some (FIX_CxlRejResponseTo_OrderCancel))
+        | _ -> (None)
+    )
+;;
+
+let parse_DKReason (str)  =
+    (match str with
+        | "B" -> (Some (FIX_DKReason_WrongSide))
+        | "C" -> (Some (FIX_DKReason_QuantityExceedsOrder))
+        | "Z" -> (Some (FIX_DKReason_Other))
+        | "F" -> (Some (FIX_DKReason_CalculationDifference))
+        | "D" -> (Some (FIX_DKReason_NoMatchingOrder))
+        | "E" -> (Some (FIX_DKReason_PriceExceedsLimit))
+        | "A" -> (Some (FIX_DKReason_UnknownSymbol))
+        | _ -> (None)
+    )
+;;
+
 let parse_DayBookingInst (str)  =
     (match str with
         | "0" -> (Some (FIX_DayBookingInst_Auto))
         | "1" -> (Some (FIX_DayBookingInst_SpeakWithOrderInitiatorBeforeBooking))
         | "2" -> (Some (FIX_DayBookingInst_Accumulate))
+        | _ -> (None)
+    )
+;;
+
+let parse_DeleteReason (str)  =
+    (match str with
+        | "1" -> (Some (FIX_DeleteReason_Error))
+        | "0" -> (Some (FIX_DeleteReason_Cancellation))
         | _ -> (None)
     )
 ;;
@@ -2013,6 +703,19 @@ let parse_DeliveryType (str)  =
         | "0" -> (Some (FIX_DeliveryType_VersusPayment))
         | "3" -> (Some (FIX_DeliveryType_HoldInCustody))
         | "1" -> (Some (FIX_DeliveryType_Free))
+        | _ -> (None)
+    )
+;;
+
+let parse_DiscretionInst (str)  =
+    (match str with
+        | "2" -> (Some (FIX_DiscretionInst_RelatedToPrimaryPrice))
+        | "4" -> (Some (FIX_DiscretionInst_RelatedToMidpointPrice))
+        | "5" -> (Some (FIX_DiscretionInst_RelatedToLastTradePrice))
+        | "0" -> (Some (FIX_DiscretionInst_RelatedToDisplayedPrice))
+        | "6" -> (Some (FIX_DiscretionInst_RelatedToVWAP))
+        | "1" -> (Some (FIX_DiscretionInst_RelatedToMarketPrice))
+        | "3" -> (Some (FIX_DiscretionInst_RelatedToLocalPrimaryPrice))
         | _ -> (None)
     )
 ;;
@@ -2088,6 +791,23 @@ let parse_DlvyInstType (str)  =
     )
 ;;
 
+let parse_DueToRelated (str)  =
+    (match str with
+        | "Y" -> (Some (FIX_DueToRelated_RelatedToSecurityHalt))
+        | "N" -> (Some (FIX_DueToRelated_NotRelatedToSecurityHalt))
+        | _ -> (None)
+    )
+;;
+
+let parse_EmailType (str)  =
+    (match str with
+        | "1" -> (Some (FIX_EmailType_Reply))
+        | "2" -> (Some (FIX_EmailType_AdminReply))
+        | "0" -> (Some (FIX_EmailType_New))
+        | _ -> (None)
+    )
+;;
+
 let parse_EventType (str)  =
     (match str with
         | "99" -> (Some (FIX_EventType_Other))
@@ -2097,6 +817,76 @@ let parse_EventType (str)  =
         | "4" -> (Some (FIX_EventType_SinkingFundCall))
         | _ -> (None)
     )
+;;
+
+let parse_ExchangeForPhysical (str)  =
+    (match str with
+        | "Y" -> (Some (FIX_ExchangeForPhysical_True))
+        | "N" -> (Some (FIX_ExchangeForPhysical_False))
+        | _ -> (None)
+    )
+;;
+
+let parse_inner_ExecInst (str)  =
+    (match str with
+        | "6" -> (Some (FIX_ExecInst_ParticipateDoNotInitiate))
+        | "G" -> (Some (FIX_ExecInst_AllOrNone))
+        | "C" -> (Some (FIX_ExecInst_CallFirst))
+        | "D" -> (Some (FIX_ExecInst_PercentOfVolume))
+        | "I" -> (Some (FIX_ExecInst_InstitutionsOnly))
+        | "A" -> (Some (FIX_ExecInst_NoCross))
+        | "4" -> (Some (FIX_ExecInst_OverTheDay))
+        | "E" -> (Some (FIX_ExecInst_DoNotIncrease))
+        | "O" -> (Some (FIX_ExecInst_OpeningPeg))
+        | "Y" -> (Some (FIX_ExecInst_TryToStop))
+        | "V" -> (Some (FIX_ExecInst_Netting))
+        | "9" -> (Some (FIX_ExecInst_StayOnBidSide))
+        | "5" -> (Some (FIX_ExecInst_Held))
+        | "B" -> (Some (FIX_ExecInst_OKToCross))
+        | "U" -> (Some (FIX_ExecInst_CustomerDisplayInstruction))
+        | "3" -> (Some (FIX_ExecInst_GoAlong))
+        | "F" -> (Some (FIX_ExecInst_DoNotReduce))
+        | "0" -> (Some (FIX_ExecInst_StayOnOfferSide))
+        | "d" -> (Some (FIX_ExecInst_PegToLimitPrice))
+        | "8" -> (Some (FIX_ExecInst_TryToScale))
+        | "H" -> (Some (FIX_ExecInst_ReinstateOnSystemFailure))
+        | "Z" -> (Some (FIX_ExecInst_CancelIfNotBest))
+        | "M" -> (Some (FIX_ExecInst_MidPricePeg))
+        | "e" -> (Some (FIX_ExecInst_WorkToTargetStrategy))
+        | "W" -> (Some (FIX_ExecInst_PegToVWAP))
+        | "X" -> (Some (FIX_ExecInst_TradeAlong))
+        | "b" -> (Some (FIX_ExecInst_StrictLimit))
+        | "S" -> (Some (FIX_ExecInst_Suspend))
+        | "L" -> (Some (FIX_ExecInst_LastPeg))
+        | "N" -> (Some (FIX_ExecInst_NonNegotiable))
+        | "1" -> (Some (FIX_ExecInst_NotHeld))
+        | "K" -> (Some (FIX_ExecInst_CancelOnTradingHalt))
+        | "Q" -> (Some (FIX_ExecInst_CancelOnSystemFailure))
+        | "c" -> (Some (FIX_ExecInst_IgnorePriceValidityChecks))
+        | "2" -> (Some (FIX_ExecInst_Work))
+        | "J" -> (Some (FIX_ExecInst_ReinstateOnTradingHalt))
+        | "R" -> (Some (FIX_ExecInst_PrimaryPeg))
+        | "a" -> (Some (FIX_ExecInst_TrailingStopPeg))
+        | "P" -> (Some (FIX_ExecInst_MarketPeg))
+        | "7" -> (Some (FIX_ExecInst_StrictScale))
+        | _ -> (None)
+    )
+;;
+
+let rec parse_ExecInst_filter (f)  =
+    (match f with
+        | [] -> []
+        | h :: t -> ((match parse_inner_ExecInst h with
+            | None -> (parse_ExecInst_filter t)
+            | Some x -> (x :: (parse_ExecInst_filter t))
+        )
+        )
+    )
+;;
+
+let parse_ExecInst (str)  =
+    let x = split_to_list str ' ' in
+    Some (parse_ExecInst_filter x)
 ;;
 
 let parse_ExecPriceType (str)  =
@@ -2109,6 +899,47 @@ let parse_ExecPriceType (str)  =
         | "S" -> (Some (FIX_ExecPriceType_SinglePrice))
         | "C" -> (Some (FIX_ExecPriceType_CreationPrice))
         | "D" -> (Some (FIX_ExecPriceType_CreationPricePlusAdjustmentPercent))
+        | _ -> (None)
+    )
+;;
+
+let parse_ExecRestatementReason (str)  =
+    (match str with
+        | "99" -> (Some (FIX_ExecRestatementReason_Other))
+        | "3" -> (Some (FIX_ExecRestatementReason_RepricingOfOrder))
+        | "0" -> (Some (FIX_ExecRestatementReason_GTCorporateAction))
+        | "2" -> (Some (FIX_ExecRestatementReason_VerbalChange))
+        | "10" -> (Some (FIX_ExecRestatementReason_WarehouseRecap))
+        | "6" -> (Some (FIX_ExecRestatementReason_CancelOnTradingHalt))
+        | "7" -> (Some (FIX_ExecRestatementReason_CancelOnSystemFailure))
+        | "1" -> (Some (FIX_ExecRestatementReason_GTRenewal))
+        | "8" -> (Some (FIX_ExecRestatementReason_Market))
+        | "9" -> (Some (FIX_ExecRestatementReason_Canceled))
+        | "4" -> (Some (FIX_ExecRestatementReason_BrokerOption))
+        | "5" -> (Some (FIX_ExecRestatementReason_PartialDeclineOfOrderQty))
+        | _ -> (None)
+    )
+;;
+
+let parse_ExecType (str)  =
+    (match str with
+        | "6" -> (Some (FIX_ExecType_PendingCancel))
+        | "7" -> (Some (FIX_ExecType_Stopped))
+        | "A" -> (Some (FIX_ExecType_PendingNew))
+        | "D" -> (Some (FIX_ExecType_Restated))
+        | "8" -> (Some (FIX_ExecType_Rejected))
+        | "B" -> (Some (FIX_ExecType_Calculated))
+        | "G" -> (Some (FIX_ExecType_TradeCorrect))
+        | "H" -> (Some (FIX_ExecType_TradeCancel))
+        | "C" -> (Some (FIX_ExecType_Expired))
+        | "I" -> (Some (FIX_ExecType_OrderStatus))
+        | "F" -> (Some (FIX_ExecType_Trade))
+        | "4" -> (Some (FIX_ExecType_Canceled))
+        | "5" -> (Some (FIX_ExecType_Replaced))
+        | "E" -> (Some (FIX_ExecType_PendingReplace))
+        | "3" -> (Some (FIX_ExecType_DoneForDay))
+        | "9" -> (Some (FIX_ExecType_Suspended))
+        | "0" -> (Some (FIX_ExecType_New))
         | _ -> (None)
     )
 ;;
@@ -2129,10 +960,89 @@ let parse_ExpirationCycle (str)  =
     )
 ;;
 
+let parse_inner_FinancialStatus (str)  =
+    (match str with
+        | "2" -> (Some (FIX_FinancialStatus_PendingDelisting))
+        | "1" -> (Some (FIX_FinancialStatus_Bankrupt))
+        | _ -> (None)
+    )
+;;
+
+let rec parse_FinancialStatus_filter (f)  =
+    (match f with
+        | [] -> []
+        | h :: t -> ((match parse_inner_FinancialStatus h with
+            | None -> (parse_FinancialStatus_filter t)
+            | Some x -> (x :: (parse_FinancialStatus_filter t))
+        )
+        )
+    )
+;;
+
+let parse_FinancialStatus (str)  =
+    let x = split_to_list str ' ' in
+    Some (parse_FinancialStatus_filter x)
+;;
+
+let parse_ForexReq (str)  =
+    (match str with
+        | "N" -> (Some (FIX_ForexReq_DoNotExecuteForexAfterSecurityTrade))
+        | "Y" -> (Some (FIX_ForexReq_ExecuteForexAfterSecurityTrade))
+        | _ -> (None)
+    )
+;;
+
 let parse_FundRenewWaiv (str)  =
     (match str with
         | "N" -> (Some (FIX_FundRenewWaiv_No))
         | "Y" -> (Some (FIX_FundRenewWaiv_Yes))
+        | _ -> (None)
+    )
+;;
+
+let parse_GTBookingInst (str)  =
+    (match str with
+        | "2" -> (Some (FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise))
+        | "1" -> (Some (FIX_GTBookingInst_AccumulateUntilFilledOrExpired))
+        | "0" -> (Some (FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution))
+        | _ -> (None)
+    )
+;;
+
+let parse_HaltReason (str)  =
+    (match str with
+        | "I" -> (Some (FIX_HaltReason_OrderImbalance))
+        | "M" -> (Some (FIX_HaltReason_AdditionalInformation))
+        | "P" -> (Some (FIX_HaltReason_NewsPending))
+        | "E" -> (Some (FIX_HaltReason_OrderInflux))
+        | "X" -> (Some (FIX_HaltReason_EquipmentChangeover))
+        | "D" -> (Some (FIX_HaltReason_NewsDissemination))
+        | _ -> (None)
+    )
+;;
+
+let parse_HandlInst (str)  =
+    (match str with
+        | "3" -> (Some (FIX_HandlInst_ManualOrder))
+        | "2" -> (Some (FIX_HandlInst_AutomatedExecutionInterventionOK))
+        | "1" -> (Some (FIX_HandlInst_AutomatedExecutionNoIntervention))
+        | _ -> (None)
+    )
+;;
+
+let parse_IOINaturalFlag (str)  =
+    (match str with
+        | "Y" -> (Some (FIX_IOINaturalFlag_Natural))
+        | "N" -> (Some (FIX_IOINaturalFlag_NotNatural))
+        | _ -> (None)
+    )
+;;
+
+let parse_IOIQltyInd (str)  =
+    (match str with
+        | "L" -> (Some (FIX_IOIQltyInd_Low))
+        | "H" -> (Some (FIX_IOIQltyInd_High))
+        | "M" -> (Some (FIX_IOIQltyInd_Medium))
         | _ -> (None)
     )
 ;;
@@ -2142,6 +1052,55 @@ let parse_IOIQty (str)  =
         | "S" -> (Some (FIX_IOIQty_Small))
         | "L" -> (Some (FIX_IOIQty_Large))
         | "M" -> (Some (FIX_IOIQty_Medium))
+        | _ -> (None)
+    )
+;;
+
+let parse_IOIQualifier (str)  =
+    (match str with
+        | "A" -> (Some (FIX_IOIQualifier_AllOrNone))
+        | "P" -> (Some (FIX_IOIQualifier_TakingAPosition))
+        | "W" -> (Some (FIX_IOIQualifier_Indication))
+        | "Z" -> (Some (FIX_IOIQualifier_PreOpen))
+        | "D" -> (Some (FIX_IOIQualifier_VWAP))
+        | "O" -> (Some (FIX_IOIQualifier_AtTheOpen))
+        | "V" -> (Some (FIX_IOIQualifier_Versus))
+        | "Y" -> (Some (FIX_IOIQualifier_AtTheMidpoint))
+        | "R" -> (Some (FIX_IOIQualifier_ReadyToTrade))
+        | "S" -> (Some (FIX_IOIQualifier_PortfolioShown))
+        | "T" -> (Some (FIX_IOIQualifier_ThroughTheDay))
+        | "M" -> (Some (FIX_IOIQualifier_MoreBehind))
+        | "B" -> (Some (FIX_IOIQualifier_MarketOnClose))
+        | "C" -> (Some (FIX_IOIQualifier_AtTheClose))
+        | "I" -> (Some (FIX_IOIQualifier_InTouchWith))
+        | "Q" -> (Some (FIX_IOIQualifier_AtTheMarket))
+        | "L" -> (Some (FIX_IOIQualifier_Limit))
+        | "X" -> (Some (FIX_IOIQualifier_CrossingOpportunity))
+        | _ -> (None)
+    )
+;;
+
+let parse_IOITransType (str)  =
+    (match str with
+        | "C" -> (Some (FIX_IOITransType_Cancel))
+        | "R" -> (Some (FIX_IOITransType_Replace))
+        | "N" -> (Some (FIX_IOITransType_New))
+        | _ -> (None)
+    )
+;;
+
+let parse_InViewOfCommon (str)  =
+    (match str with
+        | "Y" -> (Some (FIX_InViewOfCommon_HaltWasDueToCommonStockBeingHalted))
+        | "N" -> (Some (FIX_InViewOfCommon_HaltWasNotRelatedToAHaltOfTheCommonStock))
+        | _ -> (None)
+    )
+;;
+
+let parse_IncTaxInd (str)  =
+    (match str with
+        | "1" -> (Some (FIX_IncTaxInd_Net))
+        | "2" -> (Some (FIX_IncTaxInd_Gross))
         | _ -> (None)
     )
 ;;
@@ -2171,6 +1130,16 @@ let parse_InstrAttribType (str)  =
         | "2" -> (Some (FIX_InstrAttribType_ZeroCoupon))
         | "12" -> (Some (FIX_InstrAttribType_EscrowedToMaturity))
         | "17" -> (Some (FIX_InstrAttribType_Taxable))
+        | _ -> (None)
+    )
+;;
+
+let parse_LastCapacity (str)  =
+    (match str with
+        | "1" -> (Some (FIX_LastCapacity_Agent))
+        | "2" -> (Some (FIX_LastCapacity_CrossAsAgent))
+        | "4" -> (Some (FIX_LastCapacity_Principal))
+        | "3" -> (Some (FIX_LastCapacity_CrossAsPrincipal))
         | _ -> (None)
     )
 ;;
@@ -2210,6 +1179,27 @@ let parse_LegalConfirm (str)  =
     )
 ;;
 
+let parse_LiquidityIndType (str)  =
+    (match str with
+        | "4" -> (Some (FIX_LiquidityIndType_Other))
+        | "3" -> (Some (FIX_LiquidityIndType_NormalMarketSize))
+        | "2" -> (Some (FIX_LiquidityIndType_TwentyDayMovingAverage))
+        | "1" -> (Some (FIX_LiquidityIndType_FiveDayMovingAverage))
+        | _ -> (None)
+    )
+;;
+
+let parse_ListExecInstType (str)  =
+    (match str with
+        | "3" -> (Some (FIX_ListExecInstType_SellDriven))
+        | "1" -> (Some (FIX_ListExecInstType_Immediate))
+        | "4" -> (Some (FIX_ListExecInstType_BuyDrivenCashTopUp))
+        | "2" -> (Some (FIX_ListExecInstType_WaitForInstruction))
+        | "5" -> (Some (FIX_ListExecInstType_BuyDrivenCashWithdraw))
+        | _ -> (None)
+    )
+;;
+
 let parse_ListOrderStatus (str)  =
     (match str with
         | "6" -> (Some (FIX_ListOrderStatus_AllDone))
@@ -2235,10 +1225,73 @@ let parse_ListStatusType (str)  =
     )
 ;;
 
+let parse_LocateReqd (str)  =
+    (match str with
+        | "N" -> (Some (FIX_LocateReqd_No))
+        | "Y" -> (Some (FIX_LocateReqd_Yes))
+        | _ -> (None)
+    )
+;;
+
+let parse_MDEntryType (str)  =
+    (match str with
+        | "C" -> (Some (FIX_MDEntryType_OpenInterest))
+        | "5" -> (Some (FIX_MDEntryType_ClosingPrice))
+        | "3" -> (Some (FIX_MDEntryType_IndexValue))
+        | "1" -> (Some (FIX_MDEntryType_Offer))
+        | "6" -> (Some (FIX_MDEntryType_SettlementPrice))
+        | "9" -> (Some (FIX_MDEntryType_TradingSessionVWAPPrice))
+        | "2" -> (Some (FIX_MDEntryType_Trade))
+        | "7" -> (Some (FIX_MDEntryType_TradingSessionHighPrice))
+        | "4" -> (Some (FIX_MDEntryType_OpeningPrice))
+        | "B" -> (Some (FIX_MDEntryType_TradeVolume))
+        | "A" -> (Some (FIX_MDEntryType_Imbalance))
+        | "0" -> (Some (FIX_MDEntryType_Bid))
+        | "8" -> (Some (FIX_MDEntryType_TradingSessionLowPrice))
+        | _ -> (None)
+    )
+;;
+
 let parse_MDImplicitDelete (str)  =
     (match str with
         | "N" -> (Some (FIX_MDImplicitDelete_No))
         | "Y" -> (Some (FIX_MDImplicitDelete_Yes))
+        | _ -> (None)
+    )
+;;
+
+let parse_MDReqRejReason (str)  =
+    (match str with
+        | "7" -> (Some (FIX_MDReqRejReason_UnsupportedAggregatedBook))
+        | "6" -> (Some (FIX_MDReqRejReason_UnsupportedMDUpdateType))
+        | "C" -> (Some (FIX_MDReqRejReason_UnsupportedMDImplicitDelete))
+        | "3" -> (Some (FIX_MDReqRejReason_InsufficientPermissions))
+        | "A" -> (Some (FIX_MDReqRejReason_UnsupportedScope))
+        | "9" -> (Some (FIX_MDReqRejReason_UnsupportedTradingSessionID))
+        | "4" -> (Some (FIX_MDReqRejReason_UnsupportedSubscriptionRequestType))
+        | "8" -> (Some (FIX_MDReqRejReason_UnsupportedMDEntryType))
+        | "2" -> (Some (FIX_MDReqRejReason_InsufficientBandwidth))
+        | "1" -> (Some (FIX_MDReqRejReason_DuplicateMDReqID))
+        | "5" -> (Some (FIX_MDReqRejReason_UnsupportedMarketDepth))
+        | "B" -> (Some (FIX_MDReqRejReason_UnsupportedOpenCloseSettleFlag))
+        | "0" -> (Some (FIX_MDReqRejReason_UnknownSymbol))
+        | _ -> (None)
+    )
+;;
+
+let parse_MDUpdateAction (str)  =
+    (match str with
+        | "2" -> (Some (FIX_MDUpdateAction_Delete))
+        | "1" -> (Some (FIX_MDUpdateAction_Change))
+        | "0" -> (Some (FIX_MDUpdateAction_New))
+        | _ -> (None)
+    )
+;;
+
+let parse_MDUpdateType (str)  =
+    (match str with
+        | "0" -> (Some (FIX_MDUpdateType_FullRefresh))
+        | "1" -> (Some (FIX_MDUpdateType_IncrementalRefresh))
         | _ -> (None)
     )
 ;;
@@ -2331,11 +1384,39 @@ let parse_MatchType (str)  =
     )
 ;;
 
+let parse_MessageEncoding (str)  =
+    (match str with
+        | "ISO-2022-JP" -> (Some (FIX_MessageEncoding_ISO2022JP))
+        | "UTF-8" -> (Some (FIX_MessageEncoding_UTF8))
+        | "Shift_JIS" -> (Some (FIX_MessageEncoding_ShiftJIS))
+        | "EUC-JP" -> (Some (FIX_MessageEncoding_EUCJP))
+        | _ -> (None)
+    )
+;;
+
 let parse_MiscFeeBasis (str)  =
     (match str with
         | "2" -> (Some (FIX_MiscFeeBasis_Percentage))
         | "1" -> (Some (FIX_MiscFeeBasis_PerUnit))
         | "0" -> (Some (FIX_MiscFeeBasis_Absolute))
+        | _ -> (None)
+    )
+;;
+
+let parse_MiscFeeType (str)  =
+    (match str with
+        | "7" -> (Some (FIX_MiscFeeType_Other))
+        | "12" -> (Some (FIX_MiscFeeType_Agent))
+        | "3" -> (Some (FIX_MiscFeeType_LocalCommission))
+        | "4" -> (Some (FIX_MiscFeeType_ExchangeFees))
+        | "5" -> (Some (FIX_MiscFeeType_Stamp))
+        | "8" -> (Some (FIX_MiscFeeType_Markup))
+        | "10" -> (Some (FIX_MiscFeeType_PerTransaction))
+        | "1" -> (Some (FIX_MiscFeeType_Regulatory))
+        | "2" -> (Some (FIX_MiscFeeType_Tax))
+        | "9" -> (Some (FIX_MiscFeeType_ConsumptionTax))
+        | "11" -> (Some (FIX_MiscFeeType_Conversion))
+        | "6" -> (Some (FIX_MiscFeeType_Levy))
         | _ -> (None)
     )
 ;;
@@ -2351,11 +1432,36 @@ let parse_MoneyLaunderingStatus (str)  =
     )
 ;;
 
+let parse_MsgDirection (str)  =
+    (match str with
+        | "S" -> (Some (FIX_MsgDirection_Send))
+        | "R" -> (Some (FIX_MsgDirection_Receive))
+        | _ -> (None)
+    )
+;;
+
+let parse_MultiLegReportingType (str)  =
+    (match str with
+        | "1" -> (Some (FIX_MultiLegReportingType_SingleSecurity))
+        | "2" -> (Some (FIX_MultiLegReportingType_IndividualLegOfAMultiLegSecurity))
+        | "3" -> (Some (FIX_MultiLegReportingType_MultiLegSecurity))
+        | _ -> (None)
+    )
+;;
+
 let parse_MultiLegRptTypeReq (str)  =
     (match str with
         | "2" -> (Some (FIX_MultiLegRptTypeReq_ReportByInstrumentLegsOnly))
         | "0" -> (Some (FIX_MultiLegRptTypeReq_ReportByMulitlegSecurityOnly))
         | "1" -> (Some (FIX_MultiLegRptTypeReq_ReportByMultilegSecurityAndInstrumentLegs))
+        | _ -> (None)
+    )
+;;
+
+let parse_NetGrossInd (str)  =
+    (match str with
+        | "1" -> (Some (FIX_NetGrossInd_Net))
+        | "2" -> (Some (FIX_NetGrossInd_Gross))
         | _ -> (None)
     )
 ;;
@@ -2382,6 +1488,14 @@ let parse_NoSides (str)  =
     (match str with
         | "1" -> (Some (FIX_NoSides_OneSide))
         | "2" -> (Some (FIX_NoSides_BothSides))
+        | _ -> (None)
+    )
+;;
+
+let parse_NotifyBrokerOfCredit (str)  =
+    (match str with
+        | "Y" -> (Some (FIX_NotifyBrokerOfCredit_DetailsShouldBeCommunicated))
+        | "N" -> (Some (FIX_NotifyBrokerOfCredit_DetailsShouldNotBeCommunicated))
         | _ -> (None)
     )
 ;;
@@ -2420,6 +1534,72 @@ let rec parse_OpenCloseSettlFlag_filter (f)  =
 let parse_OpenCloseSettlFlag (str)  =
     let x = split_to_list str ' ' in
     Some (parse_OpenCloseSettlFlag_filter x)
+;;
+
+let parse_OrdRejReason (str)  =
+    (match str with
+        | "6" -> (Some (FIX_OrdRejReason_DuplicateOrder))
+        | "99" -> (Some (FIX_OrdRejReason_Other))
+        | "5" -> (Some (FIX_OrdRejReason_UnknownOrder))
+        | "4" -> (Some (FIX_OrdRejReason_TooLateToEnter))
+        | "3" -> (Some (FIX_OrdRejReason_OrderExceedsLimit))
+        | "15" -> (Some (FIX_OrdRejReason_UnknownAccount))
+        | "0" -> (Some (FIX_OrdRejReason_BrokerCredit))
+        | "11" -> (Some (FIX_OrdRejReason_UnsupportedOrderCharacteristic))
+        | "7" -> (Some (FIX_OrdRejReason_DuplicateOfAVerballyCommunicatedOrder))
+        | "13" -> (Some (FIX_OrdRejReason_IncorrectQuantity))
+        | "9" -> (Some (FIX_OrdRejReason_TradeAlongRequired))
+        | "8" -> (Some (FIX_OrdRejReason_StaleOrder))
+        | "10" -> (Some (FIX_OrdRejReason_InvalidInvestorID))
+        | "2" -> (Some (FIX_OrdRejReason_ExchangeClosed))
+        | "14" -> (Some (FIX_OrdRejReason_IncorrectAllocatedQuantity))
+        | "1" -> (Some (FIX_OrdRejReason_UnknownSymbol))
+        | _ -> (None)
+    )
+;;
+
+let parse_OrdStatus (str)  =
+    (match str with
+        | "6" -> (Some (FIX_OrdStatus_PendingCancel))
+        | "7" -> (Some (FIX_OrdStatus_Stopped))
+        | "A" -> (Some (FIX_OrdStatus_PendingNew))
+        | "8" -> (Some (FIX_OrdStatus_Rejected))
+        | "B" -> (Some (FIX_OrdStatus_Calculated))
+        | "C" -> (Some (FIX_OrdStatus_Expired))
+        | "2" -> (Some (FIX_OrdStatus_Filled))
+        | "4" -> (Some (FIX_OrdStatus_Canceled))
+        | "5" -> (Some (FIX_OrdStatus_Replaced))
+        | "E" -> (Some (FIX_OrdStatus_PendingReplace))
+        | "3" -> (Some (FIX_OrdStatus_DoneForDay))
+        | "9" -> (Some (FIX_OrdStatus_Suspended))
+        | "0" -> (Some (FIX_OrdStatus_New))
+        | "1" -> (Some (FIX_OrdStatus_PartiallyFilled))
+        | "D" -> (Some (FIX_OrdStatus_AcceptedForBidding))
+        | _ -> (None)
+    )
+;;
+
+let parse_OrdType (str)  =
+    (match str with
+        | "7" -> (Some (FIX_OrdType_LimitOrBetter))
+        | "M" -> (Some (FIX_OrdType_NextFundValuationPoint))
+        | "6" -> (Some (FIX_OrdType_WithOrWithout))
+        | "E" -> (Some (FIX_OrdType_PreviouslyIndicated))
+        | "3" -> (Some (FIX_OrdType_Stop))
+        | "1" -> (Some (FIX_OrdType_Market))
+        | "9" -> (Some (FIX_OrdType_OnBasis))
+        | "I" -> (Some (FIX_OrdType_Funari))
+        | "P" -> (Some (FIX_OrdType_Pegged))
+        | "8" -> (Some (FIX_OrdType_LimitWithOrWithout))
+        | "4" -> (Some (FIX_OrdType_StopLimit))
+        | "G" -> (Some (FIX_OrdType_ForexSwap))
+        | "J" -> (Some (FIX_OrdType_MarketIfTouched))
+        | "K" -> (Some (FIX_OrdType_MarketWithLeftOverAsLimit))
+        | "D" -> (Some (FIX_OrdType_PreviouslyQuoted))
+        | "2" -> (Some (FIX_OrdType_Limit))
+        | "L" -> (Some (FIX_OrdType_PreviousFundValuationPoint))
+        | _ -> (None)
+    )
 ;;
 
 let parse_OrderCapacity (str)  =
@@ -2506,7 +1686,6 @@ let parse_PartyIDSource (str)  =
         | "7" -> (Some (FIX_PartyIDSource_USSocialSecurityNumber))
         | "D" -> (Some (FIX_PartyIDSource_Proprietary))
         | "A" -> (Some (FIX_PartyIDSource_AustralianTaxFileNumber))
-        | "P" -> (Some (FIX_PartyIDSource_ShortCodeIdentifier))
         | "4" -> (Some (FIX_PartyIDSource_MalaysianCentralDepository))
         | "I" -> (Some (FIX_PartyIDSource_ISITCAcronym))
         | "E" -> (Some (FIX_PartyIDSource_ISOCountryCode))
@@ -2554,7 +1733,6 @@ let parse_PartyRole (str)  =
         | "2" -> (Some (FIX_PartyRole_BrokerOfCredit))
         | "31" -> (Some (FIX_PartyRole_SubCustodian))
         | "36" -> (Some (FIX_PartyRole_EnteringTrader))
-        | "112" -> (Some (FIX_PartyRole_InvestmentDecisionMaker))
         | "1" -> (Some (FIX_PartyRole_ExecutingFirm))
         | "9" -> (Some (FIX_PartyRole_FundManagerClientID))
         | "18" -> (Some (FIX_PartyRole_ContraClearingFirm))
@@ -2790,6 +1968,22 @@ let parse_PositionEffect (str)  =
     )
 ;;
 
+let parse_PossDupFlag (str)  =
+    (match str with
+        | "Y" -> (Some (FIX_PossDupFlag_PossibleDuplicate))
+        | "N" -> (Some (FIX_PossDupFlag_OriginalTransmission))
+        | _ -> (None)
+    )
+;;
+
+let parse_PossResend (str)  =
+    (match str with
+        | "N" -> (Some (FIX_PossResend_OriginalTransmission))
+        | "Y" -> (Some (FIX_PossResend_PossibleResend))
+        | _ -> (None)
+    )
+;;
+
 let parse_PreallocMethod (str)  =
     (match str with
         | "0" -> (Some (FIX_PreallocMethod_ProRata))
@@ -2806,10 +2000,40 @@ let parse_PreviouslyReported (str)  =
     )
 ;;
 
+let parse_PriceType (str)  =
+    (match str with
+        | "4" -> (Some (FIX_PriceType_Discount))
+        | "6" -> (Some (FIX_PriceType_Spread))
+        | "7" -> (Some (FIX_PriceType_TEDPrice))
+        | "10" -> (Some (FIX_PriceType_FixedCabinetTradePrice))
+        | "1" -> (Some (FIX_PriceType_Percentage))
+        | "11" -> (Some (FIX_PriceType_VariableCabinetTradePrice))
+        | "8" -> (Some (FIX_PriceType_TEDYield))
+        | "2" -> (Some (FIX_PriceType_PerUnit))
+        | "3" -> (Some (FIX_PriceType_FixedAmount))
+        | "5" -> (Some (FIX_PriceType_Premium))
+        | "9" -> (Some (FIX_PriceType_Yield))
+        | _ -> (None)
+    )
+;;
+
 let parse_PriorityIndicator (str)  =
     (match str with
         | "0" -> (Some (FIX_PriorityIndicator_PriorityUnchanged))
         | "1" -> (Some (FIX_PriorityIndicator_LostPriorityAsResultOfOrderChange))
+        | _ -> (None)
+    )
+;;
+
+let parse_ProcessCode (str)  =
+    (match str with
+        | "0" -> (Some (FIX_ProcessCode_Regular))
+        | "5" -> (Some (FIX_ProcessCode_SoftDollarStepOut))
+        | "2" -> (Some (FIX_ProcessCode_StepIn))
+        | "6" -> (Some (FIX_ProcessCode_PlanSponsor))
+        | "4" -> (Some (FIX_ProcessCode_SoftDollarStepIn))
+        | "1" -> (Some (FIX_ProcessCode_SoftDollar))
+        | "3" -> (Some (FIX_ProcessCode_StepOut))
         | _ -> (None)
     )
 ;;
@@ -2833,10 +2057,27 @@ let parse_Product (str)  =
     )
 ;;
 
+let parse_ProgRptReqs (str)  =
+    (match str with
+        | "1" -> (Some (FIX_ProgRptReqs_BuySideRequests))
+        | "2" -> (Some (FIX_ProgRptReqs_SellSideSends))
+        | "3" -> (Some (FIX_ProgRptReqs_RealTimeExecutionReports))
+        | _ -> (None)
+    )
+;;
+
 let parse_PublishTrdIndicator (str)  =
     (match str with
         | "Y" -> (Some (FIX_PublishTrdIndicator_ReportTrade))
         | "N" -> (Some (FIX_PublishTrdIndicator_DoNotReportTrade))
+        | _ -> (None)
+    )
+;;
+
+let parse_PutOrCall (str)  =
+    (match str with
+        | "1" -> (Some (FIX_PutOrCall_Call))
+        | "0" -> (Some (FIX_PutOrCall_Put))
         | _ -> (None)
     )
 ;;
@@ -2847,6 +2088,47 @@ let parse_QtyType (str)  =
         | "1" -> (Some (FIX_QtyType_Contracts))
         | _ -> (None)
     )
+;;
+
+let parse_QuoteCancelType (str)  =
+    (match str with
+        | "4" -> (Some (FIX_QuoteCancelType_CancelAllQuotes))
+        | "1" -> (Some (FIX_QuoteCancelType_CancelForOneOrMoreSecurities))
+        | "3" -> (Some (FIX_QuoteCancelType_CancelForUnderlyingSecurity))
+        | "2" -> (Some (FIX_QuoteCancelType_CancelForSecurityType))
+        | _ -> (None)
+    )
+;;
+
+let parse_inner_QuoteCondition (str)  =
+    (match str with
+        | "B" -> (Some (FIX_QuoteCondition_Closed))
+        | "E" -> (Some (FIX_QuoteCondition_Locked))
+        | "F" -> (Some (FIX_QuoteCondition_Crossed))
+        | "I" -> (Some (FIX_QuoteCondition_NonFirm))
+        | "H" -> (Some (FIX_QuoteCondition_FastTrading))
+        | "D" -> (Some (FIX_QuoteCondition_ConsolidatedBest))
+        | "A" -> (Some (FIX_QuoteCondition_Open))
+        | "C" -> (Some (FIX_QuoteCondition_ExchangeBest))
+        | "G" -> (Some (FIX_QuoteCondition_Depth))
+        | _ -> (None)
+    )
+;;
+
+let rec parse_QuoteCondition_filter (f)  =
+    (match f with
+        | [] -> []
+        | h :: t -> ((match parse_inner_QuoteCondition h with
+            | None -> (parse_QuoteCondition_filter t)
+            | Some x -> (x :: (parse_QuoteCondition_filter t))
+        )
+        )
+    )
+;;
+
+let parse_QuoteCondition (str)  =
+    let x = split_to_list str ' ' in
+    Some (parse_QuoteCondition_filter x)
 ;;
 
 let parse_QuotePriceType (str)  =
@@ -2861,6 +2143,22 @@ let parse_QuotePriceType (str)  =
         | "10" -> (Some (FIX_QuotePriceType_Yield))
         | "9" -> (Some (FIX_QuotePriceType_YieldSpread))
         | "2" -> (Some (FIX_QuotePriceType_PerShare))
+        | _ -> (None)
+    )
+;;
+
+let parse_QuoteRejectReason (str)  =
+    (match str with
+        | "6" -> (Some (FIX_QuoteRejectReason_DuplicateQuote))
+        | "99" -> (Some (FIX_QuoteRejectReason_Other))
+        | "2" -> (Some (FIX_QuoteRejectReason_Exchange))
+        | "8" -> (Some (FIX_QuoteRejectReason_InvalidPrice))
+        | "7" -> (Some (FIX_QuoteRejectReason_InvalidBid))
+        | "5" -> (Some (FIX_QuoteRejectReason_UnknownQuote))
+        | "4" -> (Some (FIX_QuoteRejectReason_TooLateToEnter))
+        | "3" -> (Some (FIX_QuoteRejectReason_QuoteRequestExceedsLimit))
+        | "9" -> (Some (FIX_QuoteRejectReason_NotAuthorizedToQuoteSecurity))
+        | "1" -> (Some (FIX_QuoteRejectReason_UnknownSymbol))
         | _ -> (None)
     )
 ;;
@@ -2882,6 +2180,14 @@ let parse_QuoteRequestRejectReason (str)  =
     )
 ;;
 
+let parse_QuoteRequestType (str)  =
+    (match str with
+        | "1" -> (Some (FIX_QuoteRequestType_Manual))
+        | "2" -> (Some (FIX_QuoteRequestType_Automatic))
+        | _ -> (None)
+    )
+;;
+
 let parse_QuoteRespType (str)  =
     (match str with
         | "4" -> (Some (FIX_QuoteRespType_Cover))
@@ -2890,6 +2196,15 @@ let parse_QuoteRespType (str)  =
         | "6" -> (Some (FIX_QuoteRespType_Pass))
         | "5" -> (Some (FIX_QuoteRespType_DoneAway))
         | "3" -> (Some (FIX_QuoteRespType_Expired))
+        | _ -> (None)
+    )
+;;
+
+let parse_QuoteResponseLevel (str)  =
+    (match str with
+        | "0" -> (Some (FIX_QuoteResponseLevel_NoAcknowledgement))
+        | "1" -> (Some (FIX_QuoteResponseLevel_AcknowledgeOnlyNegativeOrErroneousQuotes))
+        | "2" -> (Some (FIX_QuoteResponseLevel_AcknowledgeEachQuoteMessage))
         | _ -> (None)
     )
 ;;
@@ -2970,6 +2285,22 @@ let parse_RegistTransType (str)  =
     )
 ;;
 
+let parse_ReportToExch (str)  =
+    (match str with
+        | "Y" -> (Some (FIX_ReportToExch_ReceiverReports))
+        | "N" -> (Some (FIX_ReportToExch_SenderReports))
+        | _ -> (None)
+    )
+;;
+
+let parse_ResetSeqNumFlag (str)  =
+    (match str with
+        | "N" -> (Some (FIX_ResetSeqNumFlag_No))
+        | "Y" -> (Some (FIX_ResetSeqNumFlag_Yes))
+        | _ -> (None)
+    )
+;;
+
 let parse_ResponseTransportType (str)  =
     (match str with
         | "0" -> (Some (FIX_ResponseTransportType_Inband))
@@ -2983,6 +2314,16 @@ let parse_RoundingDirection (str)  =
         | "1" -> (Some (FIX_RoundingDirection_RoundDown))
         | "2" -> (Some (FIX_RoundingDirection_RoundUp))
         | "0" -> (Some (FIX_RoundingDirection_RoundToNearest))
+        | _ -> (None)
+    )
+;;
+
+let parse_RoutingType (str)  =
+    (match str with
+        | "2" -> (Some (FIX_RoutingType_TargetList))
+        | "1" -> (Some (FIX_RoutingType_TargetFirm))
+        | "4" -> (Some (FIX_RoutingType_BlockList))
+        | "3" -> (Some (FIX_RoutingType_BlockFirm))
         | _ -> (None)
     )
 ;;
@@ -3060,6 +2401,155 @@ let parse_SecurityRequestResult (str)  =
     )
 ;;
 
+let parse_SecurityRequestType (str)  =
+    (match str with
+        | "3" -> (Some (FIX_SecurityRequestType_RequestListSecurities))
+        | "2" -> (Some (FIX_SecurityRequestType_RequestListSecurityTypes))
+        | "0" -> (Some (FIX_SecurityRequestType_RequestSecurityIdentityAndSpecifications))
+        | "1" -> (Some (FIX_SecurityRequestType_RequestSecurityIdentityForSpecifications))
+        | _ -> (None)
+    )
+;;
+
+let parse_SecurityResponseType (str)  =
+    (match str with
+        | "1" -> (Some (FIX_SecurityResponseType_AcceptAsIs))
+        | "5" -> (Some (FIX_SecurityResponseType_RejectSecurityProposal))
+        | "6" -> (Some (FIX_SecurityResponseType_CannotMatchSelectionCriteria))
+        | "2" -> (Some (FIX_SecurityResponseType_AcceptWithRevisions))
+        | _ -> (None)
+    )
+;;
+
+let parse_SecurityTradingStatus (str)  =
+    (match str with
+        | "14" -> (Some (FIX_SecurityTradingStatus_ITSPreOpening))
+        | "21" -> (Some (FIX_SecurityTradingStatus_PreOpen))
+        | "7" -> (Some (FIX_SecurityTradingStatus_MarketImbalanceBuy))
+        | "13" -> (Some (FIX_SecurityTradingStatus_NoMarketOnCloseImbalance))
+        | "18" -> (Some (FIX_SecurityTradingStatus_NotAvailableForTrading))
+        | "22" -> (Some (FIX_SecurityTradingStatus_OpeningRotation))
+        | "12" -> (Some (FIX_SecurityTradingStatus_NoMarketImbalance))
+        | "16" -> (Some (FIX_SecurityTradingStatus_TradeDisseminationTime))
+        | "17" -> (Some (FIX_SecurityTradingStatus_ReadyToTrade))
+        | "20" -> (Some (FIX_SecurityTradingStatus_UnknownOrInvalid))
+        | "9" -> (Some (FIX_SecurityTradingStatus_MarketOnCloseImbalanceBuy))
+        | "1" -> (Some (FIX_SecurityTradingStatus_OpeningDelay))
+        | "4" -> (Some (FIX_SecurityTradingStatus_NoOpen))
+        | "2" -> (Some (FIX_SecurityTradingStatus_TradingHalt))
+        | "10" -> (Some (FIX_SecurityTradingStatus_MarketOnCloseImbalanceSell))
+        | "8" -> (Some (FIX_SecurityTradingStatus_MarketImbalanceSell))
+        | "19" -> (Some (FIX_SecurityTradingStatus_NotTradedOnThisMarket))
+        | "6" -> (Some (FIX_SecurityTradingStatus_TradingRangeIndication))
+        | "23" -> (Some (FIX_SecurityTradingStatus_FastMarket))
+        | "15" -> (Some (FIX_SecurityTradingStatus_NewPriceIndication))
+        | "5" -> (Some (FIX_SecurityTradingStatus_PriceIndication))
+        | "3" -> (Some (FIX_SecurityTradingStatus_Resume))
+        | _ -> (None)
+    )
+;;
+
+let parse_SecurityType (str)  =
+    (match str with
+        | "MF" -> (Some (FIX_SecurityType_MutualFund))
+        | "YANK" -> (Some (FIX_SecurityType_YankeeCorporateBond))
+        | "TINT" -> (Some (FIX_SecurityType_InterestStripFromAnyBondOrNote))
+        | "RVLVTRM" -> (Some (FIX_SecurityType_Revolver))
+        | "CP" -> (Some (FIX_SecurityType_CommercialPaper))
+        | "RAN" -> (Some (FIX_SecurityType_RevenueAnticipationNote))
+        | "MATURED" -> (Some (FIX_SecurityType_Matured))
+        | "RETIRED" -> (Some (FIX_SecurityType_Retired))
+        | "STRUCT" -> (Some (FIX_SecurityType_StructuredNotes))
+        | "MPP" -> (Some (FIX_SecurityType_MortgagePrivatePlacement))
+        | "PFAND" -> (Some (FIX_SecurityType_Pfandbriefe))
+        | "AN" -> (Some (FIX_SecurityType_OtherAnticipationNotes))
+        | "SUPRA" -> (Some (FIX_SecurityType_USDSupranationalCoupons))
+        | "MT" -> (Some (FIX_SecurityType_MandatoryTender))
+        | "PS" -> (Some (FIX_SecurityType_PreferredStock))
+        | "TBA" -> (Some (FIX_SecurityType_ToBeAnnounced))
+        | "GO" -> (Some (FIX_SecurityType_GeneralObligationBonds))
+        | "TD" -> (Some (FIX_SecurityType_TimeDeposit))
+        | "XCN" -> (Some (FIX_SecurityType_ExtendedCommNote))
+        | "MPT" -> (Some (FIX_SecurityType_MiscellaneousPassThrough))
+        | "YCD" -> (Some (FIX_SecurityType_YankeeCertificateOfDeposit))
+        | "FUT" -> (Some (FIX_SecurityType_Future))
+        | "FORWARD" -> (Some (FIX_SecurityType_Forward))
+        | "VRDN" -> (Some (FIX_SecurityType_VariableRateDemandNote))
+        | "MTN" -> (Some (FIX_SecurityType_MediumTermNotes))
+        | "OPT" -> (Some (FIX_SecurityType_Option))
+        | "REPO" -> (Some (FIX_SecurityType_Repurchase))
+        | "PZFJ" -> (Some (FIX_SecurityType_PlazosFijos))
+        | "TBILL" -> (Some (FIX_SecurityType_USTreasuryBill))
+        | "BN" -> (Some (FIX_SecurityType_BankNotes))
+        | "MPO" -> (Some (FIX_SecurityType_MortgagePrincipalOnly))
+        | "MIO" -> (Some (FIX_SecurityType_MortgageInterestOnly))
+        | "ABS" -> (Some (FIX_SecurityType_AssetBackedSecurities))
+        | "WAR" -> (Some (FIX_SecurityType_Warrant))
+        | "SPCLT" -> (Some (FIX_SecurityType_SpecialTax))
+        | "EUSUPRA" -> (Some (FIX_SecurityType_EuroSupranationalCoupons))
+        | "FOR" -> (Some (FIX_SecurityType_ForeignExchangeContract))
+        | "USTB" -> (Some (FIX_SecurityType_USTreasuryBillOld))
+        | "CD" -> (Some (FIX_SecurityType_CertificateOfDeposit))
+        | "TAN" -> (Some (FIX_SecurityType_TaxAnticipationNote))
+        | "LOFC" -> (Some (FIX_SecurityType_LetterOfCredit))
+        | "CMO" -> (Some (FIX_SecurityType_CollateralizedMortgageObligation))
+        | "IET" -> (Some (FIX_SecurityType_IOETTEMortgage))
+        | "MBS" -> (Some (FIX_SecurityType_MortgageBackedSecurities))
+        | "BOX" -> (Some (FIX_SecurityType_BillOfExchanges))
+        | "AMENDED" -> (Some (FIX_SecurityType_Amended))
+        | "REV" -> (Some (FIX_SecurityType_RevenueBonds))
+        | "EUCORP" -> (Some (FIX_SecurityType_EuroCorporateBond))
+        | "PEF" -> (Some (FIX_SecurityType_PrivateExportFunding))
+        | "RVLV" -> (Some (FIX_SecurityType_RevolverLoan))
+        | "TPRN" -> (Some (FIX_SecurityType_PrincipalStripFromANonCallableBondOrNote))
+        | "WITHDRN" -> (Some (FIX_SecurityType_Withdrawn))
+        | "DN" -> (Some (FIX_SecurityType_DepositNotes))
+        | "SPCLA" -> (Some (FIX_SecurityType_SpecialAssessment))
+        | "EUSOV" -> (Some (FIX_SecurityType_EuroSovereigns))
+        | "TAXA" -> (Some (FIX_SecurityType_TaxAllocation))
+        | "EUCD" -> (Some (FIX_SecurityType_EuroCertificateOfDeposit))
+        | "PN" -> (Some (FIX_SecurityType_PromissoryNote))
+        | "TCAL" -> (Some (FIX_SecurityType_PrincipalStripOfACallableBondOrNote))
+        | "ONITE" -> (Some (FIX_SecurityType_Overnight))
+        | "CB" -> (Some (FIX_SecurityType_ConvertibleBond))
+        | "CMBS" -> (Some (FIX_SecurityType_Corp))
+        | "SPCLO" -> (Some (FIX_SecurityType_SpecialObligation))
+        | "SECLOAN" -> (Some (FIX_SecurityType_SecuritiesLoan))
+        | "COFO" -> (Some (FIX_SecurityType_CertificateOfObligation))
+        | "FADN" -> (Some (FIX_SecurityType_FederalAgencyDiscountNote))
+        | "CL" -> (Some (FIX_SecurityType_CallLoans))
+        | "DINP" -> (Some (FIX_SecurityType_DebtorInPossession))
+        | "TBOND" -> (Some (FIX_SecurityType_USTreasuryBond))
+        | "SECPLEDGE" -> (Some (FIX_SecurityType_SecuritiesPledge))
+        | "REPLACD" -> (Some (FIX_SecurityType_Replaced))
+        | "BRADY" -> (Some (FIX_SecurityType_BradyBond))
+        | "CORP" -> (Some (FIX_SecurityType_CorporateBond))
+        | "TERM" -> (Some (FIX_SecurityType_TermLoan))
+        | "TRAN" -> (Some (FIX_SecurityType_TaxRevenueAnticipationNote))
+        | "SWING" -> (Some (FIX_SecurityType_SwingLineFacility))
+        | "TECP" -> (Some (FIX_SecurityType_TaxExemptCommercialPaper))
+        | "NONE" -> (Some (FIX_SecurityType_NoSecurityType))
+        | "DUAL" -> (Some (FIX_SecurityType_DualCurrency))
+        | "FAC" -> (Some (FIX_SecurityType_FederalAgencyCoupon))
+        | "BA" -> (Some (FIX_SecurityType_BankersAcceptance))
+        | "MLEG" -> (Some (FIX_SecurityType_MultilegInstrument))
+        | "EUCP" -> (Some (FIX_SecurityType_EuroCommercialPaper))
+        | "CS" -> (Some (FIX_SecurityType_CommonStock))
+        | "TNOTE" -> (Some (FIX_SecurityType_USTreasuryNote))
+        | "TIPS" -> (Some (FIX_SecurityType_TreasuryInflationProtectedSecurities))
+        | "XLINKD" -> (Some (FIX_SecurityType_IndexedLinked))
+        | "BRIDGE" -> (Some (FIX_SecurityType_BridgeLoan))
+        | "STN" -> (Some (FIX_SecurityType_ShortTermLoanNote))
+        | "DEFLTED" -> (Some (FIX_SecurityType_Defaulted))
+        | "UST" -> (Some (FIX_SecurityType_USTreasuryNoteOld))
+        | "COFP" -> (Some (FIX_SecurityType_CertificateOfParticipation))
+        | "CPP" -> (Some (FIX_SecurityType_CorporatePrivatePlacement))
+        | "BUYSELL" -> (Some (FIX_SecurityType_BuySellback))
+        | "LQN" -> (Some (FIX_SecurityType_LiquidityNote))
+        | _ -> (None)
+    )
+;;
+
 let parse_SettlCurrFxRateCalc (str)  =
     (match str with
         | "M" -> (Some (FIX_SettlCurrFxRateCalc_Multiply))
@@ -3078,12 +2568,40 @@ let parse_SettlDeliveryType (str)  =
     )
 ;;
 
+let parse_SettlInstMode (str)  =
+    (match str with
+        | "5" -> (Some (FIX_SettlInstMode_RequestReject))
+        | "1" -> (Some (FIX_SettlInstMode_StandingInstructionsProvided))
+        | "4" -> (Some (FIX_SettlInstMode_SpecificOrderForASingleAccount))
+        | _ -> (None)
+    )
+;;
+
 let parse_SettlInstReqRejCode (str)  =
     (match str with
         | "99" -> (Some (FIX_SettlInstReqRejCode_Other))
         | "2" -> (Some (FIX_SettlInstReqRejCode_NoMatchingSettlementInstructionsFound))
         | "1" -> (Some (FIX_SettlInstReqRejCode_UnknownAccount))
         | "0" -> (Some (FIX_SettlInstReqRejCode_UnableToProcessRequest))
+        | _ -> (None)
+    )
+;;
+
+let parse_SettlInstSource (str)  =
+    (match str with
+        | "3" -> (Some (FIX_SettlInstSource_Investor))
+        | "2" -> (Some (FIX_SettlInstSource_Institution))
+        | "1" -> (Some (FIX_SettlInstSource_BrokerCredit))
+        | _ -> (None)
+    )
+;;
+
+let parse_SettlInstTransType (str)  =
+    (match str with
+        | "C" -> (Some (FIX_SettlInstTransType_Cancel))
+        | "R" -> (Some (FIX_SettlInstTransType_Replace))
+        | "N" -> (Some (FIX_SettlInstTransType_New))
+        | "T" -> (Some (FIX_SettlInstTransType_Restate))
         | _ -> (None)
     )
 ;;
@@ -3133,6 +2651,28 @@ let parse_ShortSaleReason (str)  =
     )
 ;;
 
+let parse_Side (str)  =
+    (match str with
+        | "B" -> (Some (FIX_Side_AsDefined))
+        | "C" -> (Some (FIX_Side_Opposite))
+        | "1" -> (Some (FIX_Side_Buy))
+        | "A" -> (Some (FIX_Side_CrossShortExempt))
+        | "G" -> (Some (FIX_Side_Borrow))
+        | "3" -> (Some (FIX_Side_BuyMinus))
+        | "D" -> (Some (FIX_Side_Subscribe))
+        | "F" -> (Some (FIX_Side_Lend))
+        | "6" -> (Some (FIX_Side_SellShortExempt))
+        | "E" -> (Some (FIX_Side_Redeem))
+        | "4" -> (Some (FIX_Side_SellPlus))
+        | "2" -> (Some (FIX_Side_Sell))
+        | "7" -> (Some (FIX_Side_Undisclosed))
+        | "8" -> (Some (FIX_Side_Cross))
+        | "9" -> (Some (FIX_Side_CrossShort))
+        | "5" -> (Some (FIX_Side_SellShort))
+        | _ -> (None)
+    )
+;;
+
 let parse_SideMultiLegReportingType (str)  =
     (match str with
         | "1" -> (Some (FIX_SideMultiLegReportingType_SingleSecurity))
@@ -3146,6 +2686,25 @@ let parse_SideValueInd (str)  =
     (match str with
         | "1" -> (Some (FIX_SideValueInd_SideValue1))
         | "2" -> (Some (FIX_SideValueInd_SideValue2))
+        | _ -> (None)
+    )
+;;
+
+let parse_SolicitedFlag (str)  =
+    (match str with
+        | "Y" -> (Some (FIX_SolicitedFlag_WasSolicited))
+        | "N" -> (Some (FIX_SolicitedFlag_WasNotSolicited))
+        | _ -> (None)
+    )
+;;
+
+let parse_StandInstDbType (str)  =
+    (match str with
+        | "0" -> (Some (FIX_StandInstDbType_Other))
+        | "4" -> (Some (FIX_StandInstDbType_AccountNet))
+        | "1" -> (Some (FIX_StandInstDbType_DTCSID))
+        | "2" -> (Some (FIX_StandInstDbType_ThomsonALERT))
+        | "3" -> (Some (FIX_StandInstDbType_AGlobalCustodian))
         | _ -> (None)
     )
 ;;
@@ -3216,6 +2775,15 @@ let parse_StipulationType (str)  =
     )
 ;;
 
+let parse_SubscriptionRequestType (str)  =
+    (match str with
+        | "2" -> (Some (FIX_SubscriptionRequestType_DisablePreviousSnapshot))
+        | "1" -> (Some (FIX_SubscriptionRequestType_SnapshotAndUpdates))
+        | "0" -> (Some (FIX_SubscriptionRequestType_Snapshot))
+        | _ -> (None)
+    )
+;;
+
 let parse_TargetStrategy (str)  =
     (match str with
         | "3" -> (Some (FIX_TargetStrategy_MininizeMarketImpact))
@@ -3279,6 +2847,61 @@ let parse_TestMessageIndicator (str)  =
     )
 ;;
 
+let parse_TickDirection (str)  =
+    (match str with
+        | "3" -> (Some (FIX_TickDirection_ZeroMinusTick))
+        | "0" -> (Some (FIX_TickDirection_PlusTick))
+        | "2" -> (Some (FIX_TickDirection_MinusTick))
+        | "1" -> (Some (FIX_TickDirection_ZeroPlusTick))
+        | _ -> (None)
+    )
+;;
+
+let parse_TimeInForce (str)  =
+    (match str with
+        | "1" -> (Some (FIX_TimeInForce_GoodTillCancel))
+        | "7" -> (Some (FIX_TimeInForce_AtTheClose))
+        | "3" -> (Some (FIX_TimeInForce_ImmediateOrCancel))
+        | "0" -> (Some (FIX_TimeInForce_Day))
+        | "4" -> (Some (FIX_TimeInForce_FillOrKill))
+        | "2" -> (Some (FIX_TimeInForce_AtTheOpening))
+        | "5" -> (Some (FIX_TimeInForce_GoodTillCrossing))
+        | "6" -> (Some (FIX_TimeInForce_GoodTillDate))
+        | _ -> (None)
+    )
+;;
+
+let parse_TradSesMethod (str)  =
+    (match str with
+        | "2" -> (Some (FIX_TradSesMethod_OpenOutcry))
+        | "1" -> (Some (FIX_TradSesMethod_Electronic))
+        | "3" -> (Some (FIX_TradSesMethod_TwoParty))
+        | _ -> (None)
+    )
+;;
+
+let parse_TradSesMode (str)  =
+    (match str with
+        | "1" -> (Some (FIX_TradSesMode_Testing))
+        | "2" -> (Some (FIX_TradSesMode_Simulated))
+        | "3" -> (Some (FIX_TradSesMode_Production))
+        | _ -> (None)
+    )
+;;
+
+let parse_TradSesStatus (str)  =
+    (match str with
+        | "3" -> (Some (FIX_TradSesStatus_Closed))
+        | "4" -> (Some (FIX_TradSesStatus_PreOpen))
+        | "6" -> (Some (FIX_TradSesStatus_RequestRejected))
+        | "5" -> (Some (FIX_TradSesStatus_PreClose))
+        | "0" -> (Some (FIX_TradSesStatus_Unknown))
+        | "1" -> (Some (FIX_TradSesStatus_Halted))
+        | "2" -> (Some (FIX_TradSesStatus_Open))
+        | _ -> (None)
+    )
+;;
+
 let parse_TradSesStatusRejReason (str)  =
     (match str with
         | "99" -> (Some (FIX_TradSesStatusRejReason_Other))
@@ -3294,6 +2917,45 @@ let parse_TradeAllocIndicator (str)  =
         | "1" -> (Some (FIX_TradeAllocIndicator_AllocationRequired))
         | _ -> (None)
     )
+;;
+
+let parse_inner_TradeCondition (str)  =
+    (match str with
+        | "K" -> (Some (FIX_TradeCondition_Opened))
+        | "G" -> (Some (FIX_TradeCondition_Rule127Trade))
+        | "C" -> (Some (FIX_TradeCondition_CashTrade))
+        | "F" -> (Some (FIX_TradeCondition_IntradayTradeDetail))
+        | "I" -> (Some (FIX_TradeCondition_SoldLast))
+        | "A" -> (Some (FIX_TradeCondition_Cash))
+        | "N" -> (Some (FIX_TradeCondition_StoppedStock))
+        | "Q" -> (Some (FIX_TradeCondition_ImbalanceMoreSellers))
+        | "M" -> (Some (FIX_TradeCondition_Sold))
+        | "P" -> (Some (FIX_TradeCondition_ImbalanceMoreBuyers))
+        | "D" -> (Some (FIX_TradeCondition_NextDay))
+        | "E" -> (Some (FIX_TradeCondition_Opening))
+        | "L" -> (Some (FIX_TradeCondition_Seller))
+        | "R" -> (Some (FIX_TradeCondition_OpeningPrice))
+        | "B" -> (Some (FIX_TradeCondition_AveragePriceTrade))
+        | "H" -> (Some (FIX_TradeCondition_Rule155Trade))
+        | "J" -> (Some (FIX_TradeCondition_NextDayTrade))
+        | _ -> (None)
+    )
+;;
+
+let rec parse_TradeCondition_filter (f)  =
+    (match f with
+        | [] -> []
+        | h :: t -> ((match parse_inner_TradeCondition h with
+            | None -> (parse_TradeCondition_filter t)
+            | Some x -> (x :: (parse_TradeCondition_filter t))
+        )
+        )
+    )
+;;
+
+let parse_TradeCondition (str)  =
+    let x = split_to_list str ' ' in
+    Some (parse_TradeCondition_filter x)
 ;;
 
 let parse_TradeReportRejectReason (str)  =
@@ -3401,6 +3063,23 @@ let parse_TrdType (str)  =
     )
 ;;
 
+let parse_UnsolicitedIndicator (str)  =
+    (match str with
+        | "N" -> (Some (FIX_UnsolicitedIndicator_MessageIsBeingSentAsAResultOfAPriorRequest))
+        | "Y" -> (Some (FIX_UnsolicitedIndicator_MessageIsBeingSentUnsolicited))
+        | _ -> (None)
+    )
+;;
+
+let parse_Urgency (str)  =
+    (match str with
+        | "1" -> (Some (FIX_Urgency_Flash))
+        | "2" -> (Some (FIX_Urgency_Background))
+        | "0" -> (Some (FIX_Urgency_Normal))
+        | _ -> (None)
+    )
+;;
+
 let parse_UserRequestType (str)  =
     (match str with
         | "4" -> (Some (FIX_UserRequestType_RequestIndividualUserStatus))
@@ -3467,6 +3146,49 @@ let parse_YieldType (str)  =
         | "PREVCLOSE" -> (Some (FIX_YieldType_PreviousCloseYield))
         | "LASTCLOSE" -> (Some (FIX_YieldType_MostRecentClosingYield))
         | "PROCEEDS" -> (Some (FIX_YieldType_ProceedsYield))
+        | _ -> (None)
+    )
+;;
+
+let parse_week (str)  =
+    (match str with
+        | "w1" -> (Some (FIX_week_w1))
+        | "w2" -> (Some (FIX_week_w2))
+        | "w3" -> (Some (FIX_week_w3))
+        | "noweek" -> (Some (FIX_week_noweek))
+        | "w4" -> (Some (FIX_week_w4))
+        | "w5" -> (Some (FIX_week_w5))
+        | _ -> (None)
+    )
+;;
+
+let parse_Currency (str)  =
+    (match str with
+        | "EUR" -> (Some (FIX_Currency_EUR))
+        | "CHF" -> (Some (FIX_Currency_CHF))
+        | "USD" -> (Some (FIX_Currency_USD))
+        | "GBP" -> (Some (FIX_Currency_GBP))
+        | _ -> (None)
+    )
+;;
+
+let parse_Country (str)  =
+    (match str with
+        | "DE" -> (Some (FIX_Country_DE))
+        | "GB" -> (Some (FIX_Country_GB))
+        | "US" -> (Some (FIX_Country_US))
+        | _ -> (None)
+    )
+;;
+
+let parse_Exchange (str)  =
+    (match str with
+        | "XSHG" -> (Some (FIX_Exchange_XSHG))
+        | "SHSC" -> (Some (FIX_Exchange_SHSC))
+        | "XNYS" -> (Some (FIX_Exchange_XNYS))
+        | "XJAS" -> (Some (FIX_Exchange_XJAS))
+        | "XLON" -> (Some (FIX_Exchange_XLON))
+        | "XNAS" -> (Some (FIX_Exchange_XNAS))
         | _ -> (None)
     )
 ;;

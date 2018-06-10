@@ -2,1363 +2,6 @@
 open Full_app_enums;;
 open Yojson;;
 
-let partyrolequalifier_to_string (d)  =
-    (match d with
-        | FIX_PartyRoleQualifier_FirmOrLegalEntity -> "FirmOrLegalEntity"
-        | FIX_PartyRoleQualifier_Algorithm -> "Algorithm"
-        | FIX_PartyRoleQualifier_NaturalPerson -> "NaturalPerson"
-    )
-;;
-
-let liquidityindicator_to_string (d)  =
-    (match d with
-        | FIX_LiquidityIndicator_RemoveLiquidity -> "RemoveLiquidity"
-        | FIX_LiquidityIndicator_AddLiquidity -> "AddLiquidity"
-        | FIX_LiquidityIndicator_PeriodicAuction -> "PeriodicAuction"
-    )
-;;
-
-let routing_to_string (d)  =
-    (match d with
-        | FIX_Routing_OrderRoutingApproved -> "OrderRoutingApproved"
-        | FIX_Routing_NoOrderRouting -> "NoOrderRouting"
-    )
-;;
-
-let technicalordtype_to_string (d)  =
-    (match d with
-        | FIX_TechnicalOrdType_CrossMargining -> "CrossMargining"
-        | FIX_TechnicalOrdType_IndexArbitrage -> "IndexArbitrage"
-        | FIX_TechnicalOrdType_UnwindOrder -> "UnwindOrder"
-        | FIX_TechnicalOrdType_OtherOrders -> "OtherOrders"
-        | FIX_TechnicalOrdType_PortfolioStrategy -> "PortfolioStrategy"
-    )
-;;
-
-let orderattributetypes_to_string (d)  =
-    (match d with
-        | FIX_OrderAttributeTypes_AlgorithmicOrder -> "AlgorithmicOrder"
-        | FIX_OrderAttributeTypes_LiquidityProvisionActivity -> "LiquidityProvisionActivity"
-    )
-;;
-
-let clearinghandlingtype_to_string (d)  =
-    (match d with
-        | FIX_ClearingHandlingType_ManualMode -> "ManualMode"
-        | FIX_ClearingHandlingType_AutomaticExtraction -> "AutomaticExtraction"
-        | FIX_ClearingHandlingType_AutomaticAllocation -> "AutomaticAllocation"
-    )
-;;
-
-let orderentryallowed_to_string (d)  =
-    (match d with
-        | FIX_OrderEntryAllowed_OrderEntryAllowed -> "OrderEntryAllowed"
-        | FIX_OrderEntryAllowed_OrderEntryForbidden -> "OrderEntryForbidden"
-    )
-;;
-
-let collarerejtype_to_string (d)  =
-    (match d with
-        | FIX_CollareRejType_HighCollar -> "HighCollar"
-        | FIX_CollareRejType_LowCollar -> "LowCollar"
-    )
-;;
-
-let bookindicator_to_string (d)  =
-    (match d with
-        | FIX_BookIndicator_Auction -> "Auction"
-        | FIX_BookIndicator_RPW -> "RPW"
-    )
-;;
-
-let brokerprioritization_to_string (d)  =
-    (match d with
-        | FIX_BrokerPrioritization_WithBrokerPrioritization -> "WithBrokerPrioritization"
-        | FIX_BrokerPrioritization_WithoutBrokerPriotization -> "WithoutBrokerPriotization"
-    )
-;;
-
-let classstatus_to_string (d)  =
-    (match d with
-        | FIX_ClassStatus_SPContinuous -> "SPContinuous"
-        | FIX_ClassStatus_LateMonitoring -> "LateMonitoring"
-        | FIX_ClassStatus_Closed -> "Closed"
-        | FIX_ClassStatus_Halted -> "Halted"
-        | FIX_ClassStatus_ClosingCall -> "ClosingCall"
-        | FIX_ClassStatus_EarlyMonitoring -> "EarlyMonitoring"
-    )
-;;
-
-let adjustment_to_string (d)  =
-    (match d with
-        | FIX_Adjustment_Cancel -> "Cancel"
-        | FIX_Adjustment_Error -> "Error"
-        | FIX_Adjustment_Correction -> "Correction"
-    )
-;;
-
-let advside_to_string (d)  =
-    (match d with
-        | FIX_AdvSide_Buy -> "Buy"
-        | FIX_AdvSide_Sell -> "Sell"
-        | FIX_AdvSide_Trade -> "Trade"
-        | FIX_AdvSide_Cross -> "Cross"
-    )
-;;
-
-let advtranstype_to_string (d)  =
-    (match d with
-        | FIX_AdvTransType_Cancel -> "Cancel"
-        | FIX_AdvTransType_Replace -> "Replace"
-        | FIX_AdvTransType_New -> "New"
-    )
-;;
-
-let aggregatedbook_to_string (d)  =
-    (match d with
-        | FIX_AggregatedBook_BookEntriesToBeAggregated -> "BookEntriesToBeAggregated"
-        | FIX_AggregatedBook_BookEntriesShouldNotBeAggregated -> "BookEntriesShouldNotBeAggregated"
-    )
-;;
-
-let allochandlinst_to_string (d)  =
-    (match d with
-        | FIX_AllocHandlInst_ForwardAndMatch -> "ForwardAndMatch"
-        | FIX_AllocHandlInst_Forward -> "Forward"
-        | FIX_AllocHandlInst_Match -> "Match"
-    )
-;;
-
-let alloclinktype_to_string (d)  =
-    (match d with
-        | FIX_AllocLinkType_FXSwap -> "FXSwap"
-        | FIX_AllocLinkType_FXNetting -> "FXNetting"
-    )
-;;
-
-let allocrejcode_to_string (d)  =
-    (match d with
-        | FIX_AllocRejCode_UnknownOrStaleExecID -> "UnknownOrStaleExecID"
-        | FIX_AllocRejCode_UnknownAccount -> "UnknownAccount"
-        | FIX_AllocRejCode_OtherSeeText -> "OtherSeeText"
-        | FIX_AllocRejCode_UnknownListID -> "UnknownListID"
-        | FIX_AllocRejCode_CalculationDifference -> "CalculationDifference"
-        | FIX_AllocRejCode_IncorrectQuantity -> "IncorrectQuantity"
-        | FIX_AllocRejCode_UnknownClOrdID -> "UnknownClOrdID"
-        | FIX_AllocRejCode_CommissionDifference -> "CommissionDifference"
-        | FIX_AllocRejCode_WarehouseRequestRejected -> "WarehouseRequestRejected"
-        | FIX_AllocRejCode_UnknownExecutingBrokerMnemonic -> "UnknownExecutingBrokerMnemonic"
-        | FIX_AllocRejCode_MismatchedData -> "MismatchedData"
-        | FIX_AllocRejCode_UnknownOrderID -> "UnknownOrderID"
-        | FIX_AllocRejCode_IncorrectAveragegPrice -> "IncorrectAveragegPrice"
-        | FIX_AllocRejCode_IncorrectAllocatedQuantity -> "IncorrectAllocatedQuantity"
-    )
-;;
-
-let allocstatus_to_string (d)  =
-    (match d with
-        | FIX_AllocStatus_Incomplete -> "Incomplete"
-        | FIX_AllocStatus_Received -> "Received"
-        | FIX_AllocStatus_BlockLevelReject -> "BlockLevelReject"
-        | FIX_AllocStatus_AccountLevelReject -> "AccountLevelReject"
-        | FIX_AllocStatus_RejectedByIntermediary -> "RejectedByIntermediary"
-        | FIX_AllocStatus_Accepted -> "Accepted"
-    )
-;;
-
-let alloctranstype_to_string (d)  =
-    (match d with
-        | FIX_AllocTransType_Preliminary -> "Preliminary"
-        | FIX_AllocTransType_CalculatedWithoutPreliminary -> "CalculatedWithoutPreliminary"
-        | FIX_AllocTransType_Replace -> "Replace"
-        | FIX_AllocTransType_Cancel -> "Cancel"
-        | FIX_AllocTransType_Calculated -> "Calculated"
-        | FIX_AllocTransType_New -> "New"
-    )
-;;
-
-let basispxtype_to_string (d)  =
-    (match d with
-        | FIX_BasisPxType_Others -> "Others"
-        | FIX_BasisPxType_VWAPThroughADay -> "VWAPThroughADay"
-        | FIX_BasisPxType_VWAPThroughAnAfternoonSessionExcept -> "VWAPThroughAnAfternoonSessionExcept"
-        | FIX_BasisPxType_VWAPThroughAMorningSession -> "VWAPThroughAMorningSession"
-        | FIX_BasisPxType_ClosingPrice -> "ClosingPrice"
-        | FIX_BasisPxType_CurrentPrice -> "CurrentPrice"
-        | FIX_BasisPxType_Strike -> "Strike"
-        | FIX_BasisPxType_Open -> "Open"
-        | FIX_BasisPxType_ClosingPriceAtMorningSession -> "ClosingPriceAtMorningSession"
-        | FIX_BasisPxType_VWAPThroughADayExcept -> "VWAPThroughADayExcept"
-        | FIX_BasisPxType_VWAPThroughAMorningSessionExcept -> "VWAPThroughAMorningSessionExcept"
-        | FIX_BasisPxType_VWAPThroughAnAfternoonSession -> "VWAPThroughAnAfternoonSession"
-        | FIX_BasisPxType_SQ -> "SQ"
-    )
-;;
-
-let benchmark_to_string (d)  =
-    (match d with
-        | FIX_Benchmark_CURVE -> "CURVE"
-        | FIX_Benchmark_FiveYR -> "FiveYR"
-        | FIX_Benchmark_OLD5 -> "OLD5"
-        | FIX_Benchmark_OLD10 -> "OLD10"
-        | FIX_Benchmark_TenYR -> "TenYR"
-        | FIX_Benchmark_ThreeMOLIBOR -> "ThreeMOLIBOR"
-        | FIX_Benchmark_SixMOLIBOR -> "SixMOLIBOR"
-        | FIX_Benchmark_ThirtyYR -> "ThirtyYR"
-        | FIX_Benchmark_OLD30 -> "OLD30"
-    )
-;;
-
-let bidrequesttranstype_to_string (d)  =
-    (match d with
-        | FIX_BidRequestTransType_Cancel -> "Cancel"
-        | FIX_BidRequestTransType_New -> "New"
-    )
-;;
-
-let commtype_to_string (d)  =
-    (match d with
-        | FIX_CommType_PercentageWaivedEnhancedUnits -> "PercentageWaivedEnhancedUnits"
-        | FIX_CommType_PointsPerBondOrContract -> "PointsPerBondOrContract"
-        | FIX_CommType_Percent -> "Percent"
-        | FIX_CommType_PerUnit -> "PerUnit"
-        | FIX_CommType_Absolute -> "Absolute"
-        | FIX_CommType_PercentageWaivedCashDiscount -> "PercentageWaivedCashDiscount"
-    )
-;;
-
-let corporateaction_to_string (d)  =
-    (match d with
-        | FIX_CorporateAction_ExDistribution -> "ExDistribution"
-        | FIX_CorporateAction_ExDividend -> "ExDividend"
-        | FIX_CorporateAction_ExInterest -> "ExInterest"
-        | FIX_CorporateAction_ExRights -> "ExRights"
-        | FIX_CorporateAction_New -> "New"
-    )
-;;
-
-let coveredoruncovered_to_string (d)  =
-    (match d with
-        | FIX_CoveredOrUncovered_Uncovered -> "Uncovered"
-        | FIX_CoveredOrUncovered_Covered -> "Covered"
-    )
-;;
-
-let customerorfirm_to_string (d)  =
-    (match d with
-        | FIX_CustomerOrFirm_Customer -> "Customer"
-        | FIX_CustomerOrFirm_Firm -> "Firm"
-    )
-;;
-
-let cxlrejreason_to_string (d)  =
-    (match d with
-        | FIX_CxlRejReason_Other -> "Other"
-        | FIX_CxlRejReason_OrderAlreadyInPendingStatus -> "OrderAlreadyInPendingStatus"
-        | FIX_CxlRejReason_TooLateToCancel -> "TooLateToCancel"
-        | FIX_CxlRejReason_UnknownOrder -> "UnknownOrder"
-        | FIX_CxlRejReason_UnableToProcessOrderMassCancelRequest -> "UnableToProcessOrderMassCancelRequest"
-        | FIX_CxlRejReason_OrigOrdModTime -> "OrigOrdModTime"
-        | FIX_CxlRejReason_DuplicateClOrdID -> "DuplicateClOrdID"
-        | FIX_CxlRejReason_BrokerCredit -> "BrokerCredit"
-    )
-;;
-
-let cxlrejresponseto_to_string (d)  =
-    (match d with
-        | FIX_CxlRejResponseTo_OrderCancelRequest -> "OrderCancelRequest"
-        | FIX_CxlRejResponseTo_OrderCancel -> "OrderCancel"
-    )
-;;
-
-let dkreason_to_string (d)  =
-    (match d with
-        | FIX_DKReason_WrongSide -> "WrongSide"
-        | FIX_DKReason_QuantityExceedsOrder -> "QuantityExceedsOrder"
-        | FIX_DKReason_Other -> "Other"
-        | FIX_DKReason_CalculationDifference -> "CalculationDifference"
-        | FIX_DKReason_NoMatchingOrder -> "NoMatchingOrder"
-        | FIX_DKReason_PriceExceedsLimit -> "PriceExceedsLimit"
-        | FIX_DKReason_UnknownSymbol -> "UnknownSymbol"
-    )
-;;
-
-let deletereason_to_string (d)  =
-    (match d with
-        | FIX_DeleteReason_Error -> "Error"
-        | FIX_DeleteReason_Cancellation -> "Cancellation"
-    )
-;;
-
-let discretioninst_to_string (d)  =
-    (match d with
-        | FIX_DiscretionInst_RelatedToPrimaryPrice -> "RelatedToPrimaryPrice"
-        | FIX_DiscretionInst_RelatedToMidpointPrice -> "RelatedToMidpointPrice"
-        | FIX_DiscretionInst_RelatedToLastTradePrice -> "RelatedToLastTradePrice"
-        | FIX_DiscretionInst_RelatedToDisplayedPrice -> "RelatedToDisplayedPrice"
-        | FIX_DiscretionInst_RelatedToVWAP -> "RelatedToVWAP"
-        | FIX_DiscretionInst_RelatedToMarketPrice -> "RelatedToMarketPrice"
-        | FIX_DiscretionInst_RelatedToLocalPrimaryPrice -> "RelatedToLocalPrimaryPrice"
-    )
-;;
-
-let duetorelated_to_string (d)  =
-    (match d with
-        | FIX_DueToRelated_NotRelatedToSecurityHalt -> "NotRelatedToSecurityHalt"
-        | FIX_DueToRelated_RelatedToSecurityHalt -> "RelatedToSecurityHalt"
-    )
-;;
-
-let emailtype_to_string (d)  =
-    (match d with
-        | FIX_EmailType_Reply -> "Reply"
-        | FIX_EmailType_AdminReply -> "AdminReply"
-        | FIX_EmailType_New -> "New"
-    )
-;;
-
-let exchangeforphysical_to_string (d)  =
-    (match d with
-        | FIX_ExchangeForPhysical_False -> "False"
-        | FIX_ExchangeForPhysical_True -> "True"
-    )
-;;
-
-let execinst_to_string (d)  =
-    (match d with
-        | FIX_ExecInst_ParticipateDoNotInitiate -> "ParticipateDoNotInitiate"
-        | FIX_ExecInst_AllOrNone -> "AllOrNone"
-        | FIX_ExecInst_CallFirst -> "CallFirst"
-        | FIX_ExecInst_PercentOfVolume -> "PercentOfVolume"
-        | FIX_ExecInst_InstitutionsOnly -> "InstitutionsOnly"
-        | FIX_ExecInst_FullSweep -> "FullSweep"
-        | FIX_ExecInst_NoCross -> "NoCross"
-        | FIX_ExecInst_BestOfferPeg -> "BestOfferPeg"
-        | FIX_ExecInst_OverTheDay -> "OverTheDay"
-        | FIX_ExecInst_DoNotIncrease -> "DoNotIncrease"
-        | FIX_ExecInst_OpeningPeg -> "OpeningPeg"
-        | FIX_ExecInst_TryToStop -> "TryToStop"
-        | FIX_ExecInst_Netting -> "Netting"
-        | FIX_ExecInst_StayOnBidSide -> "StayOnBidSide"
-        | FIX_ExecInst_Held -> "Held"
-        | FIX_ExecInst_OKToCross -> "OKToCross"
-        | FIX_ExecInst_CustomerDisplayInstruction -> "CustomerDisplayInstruction"
-        | FIX_ExecInst_GoAlong -> "GoAlong"
-        | FIX_ExecInst_DoNotReduce -> "DoNotReduce"
-        | FIX_ExecInst_StayOnOfferSide -> "StayOnOfferSide"
-        | FIX_ExecInst_PegToLimitPrice -> "PegToLimitPrice"
-        | FIX_ExecInst_TryToScale -> "TryToScale"
-        | FIX_ExecInst_ReinstateOnSystemFailure -> "ReinstateOnSystemFailure"
-        | FIX_ExecInst_CancelIfNotBest -> "CancelIfNotBest"
-        | FIX_ExecInst_BestBidPeg -> "BestBidPeg"
-        | FIX_ExecInst_MidPricePeg -> "MidPricePeg"
-        | FIX_ExecInst_WorkToTargetStrategy -> "WorkToTargetStrategy"
-        | FIX_ExecInst_PegToVWAP -> "PegToVWAP"
-        | FIX_ExecInst_TradeAlong -> "TradeAlong"
-        | FIX_ExecInst_StrictLimit -> "StrictLimit"
-        | FIX_ExecInst_Suspend -> "Suspend"
-        | FIX_ExecInst_LastPeg -> "LastPeg"
-        | FIX_ExecInst_NonNegotiable -> "NonNegotiable"
-        | FIX_ExecInst_HalfSweep -> "HalfSweep"
-        | FIX_ExecInst_NotHeld -> "NotHeld"
-        | FIX_ExecInst_FixedPegToLocalBestBidOrOfferAtTimeOfOrder -> "FixedPegToLocalBestBidOrOfferAtTimeOfOrder"
-        | FIX_ExecInst_CancelOnTradingHalt -> "CancelOnTradingHalt"
-        | FIX_ExecInst_CancelOnSystemFailure -> "CancelOnSystemFailure"
-        | FIX_ExecInst_IgnorePriceValidityChecks -> "IgnorePriceValidityChecks"
-        | FIX_ExecInst_Work -> "Work"
-        | FIX_ExecInst_ReinstateOnTradingHalt -> "ReinstateOnTradingHalt"
-        | FIX_ExecInst_PrimaryPeg -> "PrimaryPeg"
-        | FIX_ExecInst_TrailingStopPeg -> "TrailingStopPeg"
-        | FIX_ExecInst_MarketPeg -> "MarketPeg"
-        | FIX_ExecInst_StrictScale -> "StrictScale"
-    )
-;;
-
-let execrestatementreason_to_string (d)  =
-    (match d with
-        | FIX_ExecRestatementReason_Other -> "Other"
-        | FIX_ExecRestatementReason_RepricingOfOrder -> "RepricingOfOrder"
-        | FIX_ExecRestatementReason_GTCorporateAction -> "GTCorporateAction"
-        | FIX_ExecRestatementReason_VerbalChange -> "VerbalChange"
-        | FIX_ExecRestatementReason_WarehouseRecap -> "WarehouseRecap"
-        | FIX_ExecRestatementReason_CancelOnTradingHalt -> "CancelOnTradingHalt"
-        | FIX_ExecRestatementReason_CancelOnSystemFailure -> "CancelOnSystemFailure"
-        | FIX_ExecRestatementReason_GTRenewal -> "GTRenewal"
-        | FIX_ExecRestatementReason_Market -> "Market"
-        | FIX_ExecRestatementReason_Canceled -> "Canceled"
-        | FIX_ExecRestatementReason_BrokerOption -> "BrokerOption"
-        | FIX_ExecRestatementReason_PartialDeclineOfOrderQty -> "PartialDeclineOfOrderQty"
-    )
-;;
-
-let exectranstype_to_string (d)  =
-    (match d with
-        | FIX_ExecTransType_Status -> "Status"
-        | FIX_ExecTransType_Cancel -> "Cancel"
-        | FIX_ExecTransType_New -> "New"
-        | FIX_ExecTransType_Correct -> "Correct"
-    )
-;;
-
-let exectype_to_string (d)  =
-    (match d with
-        | FIX_ExecType_PendingCancel -> "PendingCancel"
-        | FIX_ExecType_Fill -> "Fill"
-        | FIX_ExecType_Stopped -> "Stopped"
-        | FIX_ExecType_PendingNew -> "PendingNew"
-        | FIX_ExecType_Restated -> "Restated"
-        | FIX_ExecType_Rejected -> "Rejected"
-        | FIX_ExecType_Calculated -> "Calculated"
-        | FIX_ExecType_TradeCorrect -> "TradeCorrect"
-        | FIX_ExecType_TradeCancel -> "TradeCancel"
-        | FIX_ExecType_Expired -> "Expired"
-        | FIX_ExecType_OrderStatus -> "OrderStatus"
-        | FIX_ExecType_PartialFill -> "PartialFill"
-        | FIX_ExecType_Trade -> "Trade"
-        | FIX_ExecType_Canceled -> "Canceled"
-        | FIX_ExecType_Replaced -> "Replaced"
-        | FIX_ExecType_PendingReplace -> "PendingReplace"
-        | FIX_ExecType_DoneForDay -> "DoneForDay"
-        | FIX_ExecType_Suspended -> "Suspended"
-        | FIX_ExecType_New -> "New"
-    )
-;;
-
-let financialstatus_to_string (d)  =
-    (match d with
-        | FIX_FinancialStatus_PendingDelisting -> "PendingDelisting"
-        | FIX_FinancialStatus_Bankrupt -> "Bankrupt"
-    )
-;;
-
-let forexreq_to_string (d)  =
-    (match d with
-        | FIX_ForexReq_DoNotExecuteForexAfterSecurityTrade -> "DoNotExecuteForexAfterSecurityTrade"
-        | FIX_ForexReq_ExecuteForexAfterSecurityTrade -> "ExecuteForexAfterSecurityTrade"
-    )
-;;
-
-let gtbookinginst_to_string (d)  =
-    (match d with
-        | FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise -> "AccumulateUntilVerballyNotifiedOtherwise"
-        | FIX_GTBookingInst_AccumulateUntilFilledOrExpired -> "AccumulateUntilFilledOrExpired"
-        | FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution -> "BookOutAllTradesOnDayOfExecution"
-    )
-;;
-
-let haltreason_to_string (d)  =
-    (match d with
-        | FIX_HaltReason_OrderImbalance -> "OrderImbalance"
-        | FIX_HaltReason_AdditionalInformation -> "AdditionalInformation"
-        | FIX_HaltReason_OrderInflux -> "OrderInflux"
-        | FIX_HaltReason_NewsPending -> "NewsPending"
-        | FIX_HaltReason_EquipmentChangeover -> "EquipmentChangeover"
-        | FIX_HaltReason_NewsDissemination -> "NewsDissemination"
-    )
-;;
-
-let handlinst_to_string (d)  =
-    (match d with
-        | FIX_HandlInst_ManualOrder -> "ManualOrder"
-        | FIX_HandlInst_AutomatedExecutionInterventionOK -> "AutomatedExecutionInterventionOK"
-        | FIX_HandlInst_AutomatedExecutionNoIntervention -> "AutomatedExecutionNoIntervention"
-    )
-;;
-
-let idsource_to_string (d)  =
-    (match d with
-        | FIX_IDSource_ConsolidatedTapeAssociation -> "ConsolidatedTapeAssociation"
-        | FIX_IDSource_QUIK -> "QUIK"
-        | FIX_IDSource_ISOCurrencyCode -> "ISOCurrencyCode"
-        | FIX_IDSource_ISOCountryCode -> "ISOCountryCode"
-        | FIX_IDSource_RICCode -> "RICCode"
-        | FIX_IDSource_SEDOL -> "SEDOL"
-        | FIX_IDSource_ExchangeSymbol -> "ExchangeSymbol"
-        | FIX_IDSource_ISINNumber -> "ISINNumber"
-        | FIX_IDSource_CUSIP -> "CUSIP"
-    )
-;;
-
-let ioinaturalflag_to_string (d)  =
-    (match d with
-        | FIX_IOINaturalFlag_Natural -> "Natural"
-        | FIX_IOINaturalFlag_NotNatural -> "NotNatural"
-    )
-;;
-
-let ioiqltyind_to_string (d)  =
-    (match d with
-        | FIX_IOIQltyInd_Low -> "Low"
-        | FIX_IOIQltyInd_High -> "High"
-        | FIX_IOIQltyInd_Medium -> "Medium"
-    )
-;;
-
-let ioiqualifier_to_string (d)  =
-    (match d with
-        | FIX_IOIQualifier_AllOrNone -> "AllOrNone"
-        | FIX_IOIQualifier_TakingAPosition -> "TakingAPosition"
-        | FIX_IOIQualifier_Indication -> "Indication"
-        | FIX_IOIQualifier_PreOpen -> "PreOpen"
-        | FIX_IOIQualifier_AtTheOpen -> "AtTheOpen"
-        | FIX_IOIQualifier_VWAP -> "VWAP"
-        | FIX_IOIQualifier_Versus -> "Versus"
-        | FIX_IOIQualifier_AtTheMidpoint -> "AtTheMidpoint"
-        | FIX_IOIQualifier_ReadyToTrade -> "ReadyToTrade"
-        | FIX_IOIQualifier_PortfolioShown -> "PortfolioShown"
-        | FIX_IOIQualifier_ThroughTheDay -> "ThroughTheDay"
-        | FIX_IOIQualifier_MoreBehind -> "MoreBehind"
-        | FIX_IOIQualifier_MarketOnClose -> "MarketOnClose"
-        | FIX_IOIQualifier_AtTheClose -> "AtTheClose"
-        | FIX_IOIQualifier_InTouchWith -> "InTouchWith"
-        | FIX_IOIQualifier_AtTheMarket -> "AtTheMarket"
-        | FIX_IOIQualifier_Limit -> "Limit"
-        | FIX_IOIQualifier_CrossingOpportunity -> "CrossingOpportunity"
-    )
-;;
-
-let ioishares_to_string (d)  =
-    (match d with
-        | FIX_IOIShares_Small -> "Small"
-        | FIX_IOIShares_Large -> "Large"
-        | FIX_IOIShares_Medium -> "Medium"
-    )
-;;
-
-let ioitranstype_to_string (d)  =
-    (match d with
-        | FIX_IOITransType_Cancel -> "Cancel"
-        | FIX_IOITransType_Replace -> "Replace"
-        | FIX_IOITransType_New -> "New"
-    )
-;;
-
-let inviewofcommon_to_string (d)  =
-    (match d with
-        | FIX_InViewOfCommon_HaltWasDueToCommonStockBeingHalted -> "HaltWasDueToCommonStockBeingHalted"
-        | FIX_InViewOfCommon_HaltWasNotRelatedToAHaltOfTheCommonStock -> "HaltWasNotRelatedToAHaltOfTheCommonStock"
-    )
-;;
-
-let inctaxind_to_string (d)  =
-    (match d with
-        | FIX_IncTaxInd_Net -> "Net"
-        | FIX_IncTaxInd_Gross -> "Gross"
-    )
-;;
-
-let lastcapacity_to_string (d)  =
-    (match d with
-        | FIX_LastCapacity_Agent -> "Agent"
-        | FIX_LastCapacity_CrossAsAgent -> "CrossAsAgent"
-        | FIX_LastCapacity_Principal -> "Principal"
-        | FIX_LastCapacity_CrossAsPrincipal -> "CrossAsPrincipal"
-    )
-;;
-
-let liquidityindtype_to_string (d)  =
-    (match d with
-        | FIX_LiquidityIndType_Other -> "Other"
-        | FIX_LiquidityIndType_NormalMarketSize -> "NormalMarketSize"
-        | FIX_LiquidityIndType_TwentyDayMovingAverage -> "TwentyDayMovingAverage"
-        | FIX_LiquidityIndType_FiveDayMovingAverage -> "FiveDayMovingAverage"
-    )
-;;
-
-let listexecinsttype_to_string (d)  =
-    (match d with
-        | FIX_ListExecInstType_SellDriven -> "SellDriven"
-        | FIX_ListExecInstType_Immediate -> "Immediate"
-        | FIX_ListExecInstType_BuyDrivenCashTopUp -> "BuyDrivenCashTopUp"
-        | FIX_ListExecInstType_WaitForInstruction -> "WaitForInstruction"
-        | FIX_ListExecInstType_BuyDrivenCashWithdraw -> "BuyDrivenCashWithdraw"
-    )
-;;
-
-let locatereqd_to_string (d)  =
-    (match d with
-        | FIX_LocateReqd_No -> "No"
-        | FIX_LocateReqd_Yes -> "Yes"
-    )
-;;
-
-let mdentrytype_to_string (d)  =
-    (match d with
-        | FIX_MDEntryType_OpenInterest -> "OpenInterest"
-        | FIX_MDEntryType_ClosingPrice -> "ClosingPrice"
-        | FIX_MDEntryType_IndexValue -> "IndexValue"
-        | FIX_MDEntryType_Offer -> "Offer"
-        | FIX_MDEntryType_SettlementPrice -> "SettlementPrice"
-        | FIX_MDEntryType_TradingSessionVWAPPrice -> "TradingSessionVWAPPrice"
-        | FIX_MDEntryType_Trade -> "Trade"
-        | FIX_MDEntryType_TradingSessionHighPrice -> "TradingSessionHighPrice"
-        | FIX_MDEntryType_OpeningPrice -> "OpeningPrice"
-        | FIX_MDEntryType_TradeVolume -> "TradeVolume"
-        | FIX_MDEntryType_Imbalance -> "Imbalance"
-        | FIX_MDEntryType_Bid -> "Bid"
-        | FIX_MDEntryType_TradingSessionLowPrice -> "TradingSessionLowPrice"
-    )
-;;
-
-let mdreqrejreason_to_string (d)  =
-    (match d with
-        | FIX_MDReqRejReason_UnsupportedAggregatedBook -> "UnsupportedAggregatedBook"
-        | FIX_MDReqRejReason_UnsupportedMDUpdateType -> "UnsupportedMDUpdateType"
-        | FIX_MDReqRejReason_UnsupportedMDImplicitDelete -> "UnsupportedMDImplicitDelete"
-        | FIX_MDReqRejReason_InsufficientPermissions -> "InsufficientPermissions"
-        | FIX_MDReqRejReason_UnsupportedScope -> "UnsupportedScope"
-        | FIX_MDReqRejReason_UnsupportedTradingSessionID -> "UnsupportedTradingSessionID"
-        | FIX_MDReqRejReason_UnsupportedSubscriptionRequestType -> "UnsupportedSubscriptionRequestType"
-        | FIX_MDReqRejReason_UnsupportedMDEntryType -> "UnsupportedMDEntryType"
-        | FIX_MDReqRejReason_InsufficientBandwidth -> "InsufficientBandwidth"
-        | FIX_MDReqRejReason_DuplicateMDReqID -> "DuplicateMDReqID"
-        | FIX_MDReqRejReason_UnsupportedMarketDepth -> "UnsupportedMarketDepth"
-        | FIX_MDReqRejReason_UnsupportedOpenCloseSettleFlag -> "UnsupportedOpenCloseSettleFlag"
-        | FIX_MDReqRejReason_UnknownSymbol -> "UnknownSymbol"
-    )
-;;
-
-let mdupdateaction_to_string (d)  =
-    (match d with
-        | FIX_MDUpdateAction_Delete -> "Delete"
-        | FIX_MDUpdateAction_Change -> "Change"
-        | FIX_MDUpdateAction_New -> "New"
-    )
-;;
-
-let mdupdatetype_to_string (d)  =
-    (match d with
-        | FIX_MDUpdateType_FullRefresh -> "FullRefresh"
-        | FIX_MDUpdateType_IncrementalRefresh -> "IncrementalRefresh"
-    )
-;;
-
-let messageencoding_to_string (d)  =
-    (match d with
-        | FIX_MessageEncoding_ISO2022JP -> "ISO2022JP"
-        | FIX_MessageEncoding_UTF8 -> "UTF8"
-        | FIX_MessageEncoding_ShiftJIS -> "ShiftJIS"
-        | FIX_MessageEncoding_EUCJP -> "EUCJP"
-    )
-;;
-
-let miscfeetype_to_string (d)  =
-    (match d with
-        | FIX_MiscFeeType_Other -> "Other"
-        | FIX_MiscFeeType_Agent -> "Agent"
-        | FIX_MiscFeeType_LocalCommission -> "LocalCommission"
-        | FIX_MiscFeeType_ExchangeFees -> "ExchangeFees"
-        | FIX_MiscFeeType_Stamp -> "Stamp"
-        | FIX_MiscFeeType_Markup -> "Markup"
-        | FIX_MiscFeeType_PerTransaction -> "PerTransaction"
-        | FIX_MiscFeeType_Regulatory -> "Regulatory"
-        | FIX_MiscFeeType_Tax -> "Tax"
-        | FIX_MiscFeeType_ConsumptionTax -> "ConsumptionTax"
-        | FIX_MiscFeeType_Conversion -> "Conversion"
-        | FIX_MiscFeeType_Levy -> "Levy"
-    )
-;;
-
-let msgdirection_to_string (d)  =
-    (match d with
-        | FIX_MsgDirection_Send -> "Send"
-        | FIX_MsgDirection_Receive -> "Receive"
-    )
-;;
-
-let multilegreportingtype_to_string (d)  =
-    (match d with
-        | FIX_MultiLegReportingType_SingleSecurity -> "SingleSecurity"
-        | FIX_MultiLegReportingType_IndividualLegOfAMultiLegSecurity -> "IndividualLegOfAMultiLegSecurity"
-        | FIX_MultiLegReportingType_MultiLegSecurity -> "MultiLegSecurity"
-    )
-;;
-
-let netgrossind_to_string (d)  =
-    (match d with
-        | FIX_NetGrossInd_Net -> "Net"
-        | FIX_NetGrossInd_Gross -> "Gross"
-    )
-;;
-
-let notifybrokerofcredit_to_string (d)  =
-    (match d with
-        | FIX_NotifyBrokerOfCredit_DetailsShouldNotBeCommunicated -> "DetailsShouldNotBeCommunicated"
-        | FIX_NotifyBrokerOfCredit_DetailsShouldBeCommunicated -> "DetailsShouldBeCommunicated"
-    )
-;;
-
-let openclose_to_string (d)  =
-    (match d with
-        | FIX_OpenClose_Close -> "Close"
-        | FIX_OpenClose_Open -> "Open"
-    )
-;;
-
-let openclosesettleflag_to_string (d)  =
-    (match d with
-        | FIX_OpenCloseSettleFlag_DeliverySettlementEntry -> "DeliverySettlementEntry"
-        | FIX_OpenCloseSettleFlag_DailyOpen -> "DailyOpen"
-        | FIX_OpenCloseSettleFlag_SessionOpen -> "SessionOpen"
-    )
-;;
-
-let ordrejreason_to_string (d)  =
-    (match d with
-        | FIX_OrdRejReason_DuplicateOrder -> "DuplicateOrder"
-        | FIX_OrdRejReason_Other -> "Other"
-        | FIX_OrdRejReason_UnknownOrder -> "UnknownOrder"
-        | FIX_OrdRejReason_DVC_ThresholdBreached -> "DVC_ThresholdBreached"
-        | FIX_OrdRejReason_TooLateToEnter -> "TooLateToEnter"
-        | FIX_OrdRejReason_OrderExceedsLimit -> "OrderExceedsLimit"
-        | FIX_OrdRejReason_UnknownAccount -> "UnknownAccount"
-        | FIX_OrdRejReason_OtherRejectReason -> "OtherRejectReason"
-        | FIX_OrdRejReason_BrokerCredit -> "BrokerCredit"
-        | FIX_OrdRejReason_UnsupportedOrderCharacteristic -> "UnsupportedOrderCharacteristic"
-        | FIX_OrdRejReason_DuplicateOfAVerballyCommunicatedOrder -> "DuplicateOfAVerballyCommunicatedOrder"
-        | FIX_OrdRejReason_IncorrectQuantity -> "IncorrectQuantity"
-        | FIX_OrdRejReason_TradeAlongRequired -> "TradeAlongRequired"
-        | FIX_OrdRejReason_StaleOrder -> "StaleOrder"
-        | FIX_OrdRejReason_InvalidInvestorID -> "InvalidInvestorID"
-        | FIX_OrdRejReason_ExchangeClosed -> "ExchangeClosed"
-        | FIX_OrdRejReason_IncorrectAllocatedQuantity -> "IncorrectAllocatedQuantity"
-        | FIX_OrdRejReason_DVC_ProactivelyHaltedInstrument -> "DVC_ProactivelyHaltedInstrument"
-        | FIX_OrdRejReason_UnknownSymbol -> "UnknownSymbol"
-    )
-;;
-
-let ordstatus_to_string (d)  =
-    (match d with
-        | FIX_OrdStatus_PendingCancel -> "PendingCancel"
-        | FIX_OrdStatus_Stopped -> "Stopped"
-        | FIX_OrdStatus_PendingNew -> "PendingNew"
-        | FIX_OrdStatus_Rejected -> "Rejected"
-        | FIX_OrdStatus_Calculated -> "Calculated"
-        | FIX_OrdStatus_Expired -> "Expired"
-        | FIX_OrdStatus_Filled -> "Filled"
-        | FIX_OrdStatus_Canceled -> "Canceled"
-        | FIX_OrdStatus_Replaced -> "Replaced"
-        | FIX_OrdStatus_PendingReplace -> "PendingReplace"
-        | FIX_OrdStatus_DoneForDay -> "DoneForDay"
-        | FIX_OrdStatus_Suspended -> "Suspended"
-        | FIX_OrdStatus_New -> "New"
-        | FIX_OrdStatus_PartiallyFilled -> "PartiallyFilled"
-        | FIX_OrdStatus_AcceptedForBidding -> "AcceptedForBidding"
-    )
-;;
-
-let ordtype_to_string (d)  =
-    (match d with
-        | FIX_OrdType_LimitOrBetter -> "LimitOrBetter"
-        | FIX_OrdType_NextFundValuationPoint -> "NextFundValuationPoint"
-        | FIX_OrdType_WithOrWithout -> "WithOrWithout"
-        | FIX_OrdType_PreviouslyIndicated -> "PreviouslyIndicated"
-        | FIX_OrdType_Stop -> "Stop"
-        | FIX_OrdType_ForexPreviouslyQuoted -> "ForexPreviouslyQuoted"
-        | FIX_OrdType_Market -> "Market"
-        | FIX_OrdType_OnBasis -> "OnBasis"
-        | FIX_OrdType_Funari -> "Funari"
-        | FIX_OrdType_LimitOnClose -> "LimitOnClose"
-        | FIX_OrdType_Pegged -> "Pegged"
-        | FIX_OrdType_LimitWithOrWithout -> "LimitWithOrWithout"
-        | FIX_OrdType_MarketOnClose -> "MarketOnClose"
-        | FIX_OrdType_StopLimit -> "StopLimit"
-        | FIX_OrdType_ForexSwap -> "ForexSwap"
-        | FIX_OrdType_MarketIfTouched -> "MarketIfTouched"
-        | FIX_OrdType_MarketWithLeftOverAsLimit -> "MarketWithLeftOverAsLimit"
-        | FIX_OrdType_PreviouslyQuoted -> "PreviouslyQuoted"
-        | FIX_OrdType_ForexMarket -> "ForexMarket"
-        | FIX_OrdType_Limit -> "Limit"
-        | FIX_OrdType_PreviousFundValuationPoint -> "PreviousFundValuationPoint"
-        | FIX_OrdType_OnClose -> "OnClose"
-        | FIX_OrdType_ForexLimit -> "ForexLimit"
-    )
-;;
-
-let possdupflag_to_string (d)  =
-    (match d with
-        | FIX_PossDupFlag_PossibleDuplicate -> "PossibleDuplicate"
-        | FIX_PossDupFlag_OriginalTransmission -> "OriginalTransmission"
-    )
-;;
-
-let possresend_to_string (d)  =
-    (match d with
-        | FIX_PossResend_OriginalTransmission -> "OriginalTransmission"
-        | FIX_PossResend_PossibleResend -> "PossibleResend"
-    )
-;;
-
-let pricetype_to_string (d)  =
-    (match d with
-        | FIX_PriceType_Discount -> "Discount"
-        | FIX_PriceType_Spread -> "Spread"
-        | FIX_PriceType_TEDPrice -> "TEDPrice"
-        | FIX_PriceType_FixedCabinetTradePrice -> "FixedCabinetTradePrice"
-        | FIX_PriceType_Percentage -> "Percentage"
-        | FIX_PriceType_VariableCabinetTradePrice -> "VariableCabinetTradePrice"
-        | FIX_PriceType_TEDYield -> "TEDYield"
-        | FIX_PriceType_PerUnit -> "PerUnit"
-        | FIX_PriceType_FixedAmount -> "FixedAmount"
-        | FIX_PriceType_Premium -> "Premium"
-        | FIX_PriceType_Yield -> "Yield"
-    )
-;;
-
-let processcode_to_string (d)  =
-    (match d with
-        | FIX_ProcessCode_Regular -> "Regular"
-        | FIX_ProcessCode_SoftDollarStepOut -> "SoftDollarStepOut"
-        | FIX_ProcessCode_StepIn -> "StepIn"
-        | FIX_ProcessCode_PlanSponsor -> "PlanSponsor"
-        | FIX_ProcessCode_SoftDollarStepIn -> "SoftDollarStepIn"
-        | FIX_ProcessCode_SoftDollar -> "SoftDollar"
-        | FIX_ProcessCode_StepOut -> "StepOut"
-    )
-;;
-
-let progrptreqs_to_string (d)  =
-    (match d with
-        | FIX_ProgRptReqs_BuySideRequests -> "BuySideRequests"
-        | FIX_ProgRptReqs_SellSideSends -> "SellSideSends"
-        | FIX_ProgRptReqs_RealTimeExecutionReports -> "RealTimeExecutionReports"
-    )
-;;
-
-let putorcall_to_string (d)  =
-    (match d with
-        | FIX_PutOrCall_Call -> "Call"
-        | FIX_PutOrCall_Put -> "Put"
-    )
-;;
-
-let quoteackstatus_to_string (d)  =
-    (match d with
-        | FIX_QuoteAckStatus_Rejected -> "Rejected"
-        | FIX_QuoteAckStatus_CanceledForSecurityType -> "CanceledForSecurityType"
-        | FIX_QuoteAckStatus_CanceledForUnderlying -> "CanceledForUnderlying"
-        | FIX_QuoteAckStatus_CanceledAll -> "CanceledAll"
-        | FIX_QuoteAckStatus_Accepted -> "Accepted"
-        | FIX_QuoteAckStatus_CancelForSymbol -> "CancelForSymbol"
-    )
-;;
-
-let quotecanceltype_to_string (d)  =
-    (match d with
-        | FIX_QuoteCancelType_CancelAllQuotes -> "CancelAllQuotes"
-        | FIX_QuoteCancelType_CancelForOneOrMoreSecurities -> "CancelForOneOrMoreSecurities"
-        | FIX_QuoteCancelType_CancelForUnderlyingSecurity -> "CancelForUnderlyingSecurity"
-        | FIX_QuoteCancelType_CancelForSecurityType -> "CancelForSecurityType"
-    )
-;;
-
-let quotecondition_to_string (d)  =
-    (match d with
-        | FIX_QuoteCondition_Closed -> "Closed"
-        | FIX_QuoteCondition_Locked -> "Locked"
-        | FIX_QuoteCondition_Crossed -> "Crossed"
-        | FIX_QuoteCondition_NonFirm -> "NonFirm"
-        | FIX_QuoteCondition_FastTrading -> "FastTrading"
-        | FIX_QuoteCondition_ConsolidatedBest -> "ConsolidatedBest"
-        | FIX_QuoteCondition_Open -> "Open"
-        | FIX_QuoteCondition_ExchangeBest -> "ExchangeBest"
-        | FIX_QuoteCondition_Depth -> "Depth"
-    )
-;;
-
-let quoteentryrejectreason_to_string (d)  =
-    (match d with
-        | FIX_QuoteEntryRejectReason_DuplicateQuote -> "DuplicateQuote"
-        | FIX_QuoteEntryRejectReason_Exchange -> "Exchange"
-        | FIX_QuoteEntryRejectReason_InvalidPrice -> "InvalidPrice"
-        | FIX_QuoteEntryRejectReason_UnknownQuote -> "UnknownQuote"
-        | FIX_QuoteEntryRejectReason_TooLateToEnter -> "TooLateToEnter"
-        | FIX_QuoteEntryRejectReason_QuoteExceedsLimit -> "QuoteExceedsLimit"
-        | FIX_QuoteEntryRejectReason_NotAuthorizedToQuoteSecurity -> "NotAuthorizedToQuoteSecurity"
-        | FIX_QuoteEntryRejectReason_UnknownSymbol -> "UnknownSymbol"
-        | FIX_QuoteEntryRejectReason_InvalidBidAskSpread -> "InvalidBidAskSpread"
-    )
-;;
-
-let quoterejectreason_to_string (d)  =
-    (match d with
-        | FIX_QuoteRejectReason_DuplicateQuote -> "DuplicateQuote"
-        | FIX_QuoteRejectReason_Other -> "Other"
-        | FIX_QuoteRejectReason_Exchange -> "Exchange"
-        | FIX_QuoteRejectReason_InvalidPrice -> "InvalidPrice"
-        | FIX_QuoteRejectReason_InvalidBid -> "InvalidBid"
-        | FIX_QuoteRejectReason_UnknownQuote -> "UnknownQuote"
-        | FIX_QuoteRejectReason_TooLateToEnter -> "TooLateToEnter"
-        | FIX_QuoteRejectReason_QuoteRequestExceedsLimit -> "QuoteRequestExceedsLimit"
-        | FIX_QuoteRejectReason_NotAuthorizedToQuoteSecurity -> "NotAuthorizedToQuoteSecurity"
-        | FIX_QuoteRejectReason_UnknownSymbol -> "UnknownSymbol"
-    )
-;;
-
-let quoterequesttype_to_string (d)  =
-    (match d with
-        | FIX_QuoteRequestType_Manual -> "Manual"
-        | FIX_QuoteRequestType_Automatic -> "Automatic"
-    )
-;;
-
-let quoteresponselevel_to_string (d)  =
-    (match d with
-        | FIX_QuoteResponseLevel_NoAcknowledgement -> "NoAcknowledgement"
-        | FIX_QuoteResponseLevel_AcknowledgeOnlyNegativeOrErroneousQuotes -> "AcknowledgeOnlyNegativeOrErroneousQuotes"
-        | FIX_QuoteResponseLevel_AcknowledgeEachQuoteMessage -> "AcknowledgeEachQuoteMessage"
-    )
-;;
-
-let reporttoexch_to_string (d)  =
-    (match d with
-        | FIX_ReportToExch_ReceiverReports -> "ReceiverReports"
-        | FIX_ReportToExch_SenderReports -> "SenderReports"
-    )
-;;
-
-let resetseqnumflag_to_string (d)  =
-    (match d with
-        | FIX_ResetSeqNumFlag_No -> "No"
-        | FIX_ResetSeqNumFlag_Yes -> "Yes"
-    )
-;;
-
-let routingtype_to_string (d)  =
-    (match d with
-        | FIX_RoutingType_TargetList -> "TargetList"
-        | FIX_RoutingType_TargetFirm -> "TargetFirm"
-        | FIX_RoutingType_BlockList -> "BlockList"
-        | FIX_RoutingType_BlockFirm -> "BlockFirm"
-    )
-;;
-
-let rule80a_to_string (d)  =
-    (match d with
-        | FIX_Rule80A_AgencySingleOrder -> "AgencySingleOrder"
-        | FIX_Rule80A_ShortExemptTransactionForPrincipal -> "ShortExemptTransactionForPrincipal"
-        | FIX_Rule80A_ShortExemptTransactionAType -> "ShortExemptTransactionAType"
-        | FIX_Rule80A_SpecialistTrades -> "SpecialistTrades"
-        | FIX_Rule80A_AgencyNonAlgo -> "AgencyNonAlgo"
-        | FIX_Rule80A_TransactionUnaffiliatedMember -> "TransactionUnaffiliatedMember"
-        | FIX_Rule80A_ShortExemptTransactionWType -> "ShortExemptTransactionWType"
-        | FIX_Rule80A_ProprietaryAlgo -> "ProprietaryAlgo"
-        | FIX_Rule80A_ProprietaryTransactionAffiliated -> "ProprietaryTransactionAffiliated"
-        | FIX_Rule80A_AgencyAlgo -> "AgencyAlgo"
-        | FIX_Rule80A_Principal -> "Principal"
-        | FIX_Rule80A_AllOtherOrdersAsAgentForOtherMember -> "AllOtherOrdersAsAgentForOtherMember"
-        | FIX_Rule80A_ProprietaryNonAlgo -> "ProprietaryNonAlgo"
-        | FIX_Rule80A_ShortExemptTransactionIType -> "ShortExemptTransactionIType"
-        | FIX_Rule80A_AgentForOtherMember -> "AgentForOtherMember"
-        | FIX_Rule80A_ShortExemptTransactionNonMember -> "ShortExemptTransactionNonMember"
-        | FIX_Rule80A_RisklessPrincipal -> "RisklessPrincipal"
-        | FIX_Rule80A_AgencyIndexArb -> "AgencyIndexArb"
-        | FIX_Rule80A_ProgramOrderOtherMember -> "ProgramOrderOtherMember"
-        | FIX_Rule80A_ShortExemptTransactionMemberNotAffliated -> "ShortExemptTransactionMemberNotAffliated"
-        | FIX_Rule80A_ProgramOrderMember -> "ProgramOrderMember"
-        | FIX_Rule80A_House -> "House"
-        | FIX_Rule80A_TransactionNonMember -> "TransactionNonMember"
-        | FIX_Rule80A_IndividualInvestor -> "IndividualInvestor"
-        | FIX_Rule80A_ShortExemptTransactionMemberAffliated -> "ShortExemptTransactionMemberAffliated"
-        | FIX_Rule80A_Client -> "Client"
-    )
-;;
-
-let securityrequesttype_to_string (d)  =
-    (match d with
-        | FIX_SecurityRequestType_RequestListSecurities -> "RequestListSecurities"
-        | FIX_SecurityRequestType_RequestListSecurityTypes -> "RequestListSecurityTypes"
-        | FIX_SecurityRequestType_RequestSecurityIdentityAndSpecifications -> "RequestSecurityIdentityAndSpecifications"
-        | FIX_SecurityRequestType_RequestSecurityIdentityForSpecifications -> "RequestSecurityIdentityForSpecifications"
-    )
-;;
-
-let securityresponsetype_to_string (d)  =
-    (match d with
-        | FIX_SecurityResponseType_AcceptAsIs -> "AcceptAsIs"
-        | FIX_SecurityResponseType_RejectSecurityProposal -> "RejectSecurityProposal"
-        | FIX_SecurityResponseType_CannotMatchSelectionCriteria -> "CannotMatchSelectionCriteria"
-        | FIX_SecurityResponseType_ListOfSecurityTypesReturnedPerRequest -> "ListOfSecurityTypesReturnedPerRequest"
-        | FIX_SecurityResponseType_AcceptWithRevisions -> "AcceptWithRevisions"
-        | FIX_SecurityResponseType_ListOfSecuritiesReturnedPerRequest -> "ListOfSecuritiesReturnedPerRequest"
-    )
-;;
-
-let securitytradingstatus_to_string (d)  =
-    (match d with
-        | FIX_SecurityTradingStatus_ITSPreOpening -> "ITSPreOpening"
-        | FIX_SecurityTradingStatus_PreOpen -> "PreOpen"
-        | FIX_SecurityTradingStatus_MarketImbalanceBuy -> "MarketImbalanceBuy"
-        | FIX_SecurityTradingStatus_NoMarketOnCloseImbalance -> "NoMarketOnCloseImbalance"
-        | FIX_SecurityTradingStatus_NotAvailableForTrading -> "NotAvailableForTrading"
-        | FIX_SecurityTradingStatus_OpeningRotation -> "OpeningRotation"
-        | FIX_SecurityTradingStatus_NoMarketImbalance -> "NoMarketImbalance"
-        | FIX_SecurityTradingStatus_TradeDisseminationTime -> "TradeDisseminationTime"
-        | FIX_SecurityTradingStatus_ReadyToTrade -> "ReadyToTrade"
-        | FIX_SecurityTradingStatus_UnknownOrInvalid -> "UnknownOrInvalid"
-        | FIX_SecurityTradingStatus_MarketOnCloseImbalanceBuy -> "MarketOnCloseImbalanceBuy"
-        | FIX_SecurityTradingStatus_OpeningDelay -> "OpeningDelay"
-        | FIX_SecurityTradingStatus_NoOpen -> "NoOpen"
-        | FIX_SecurityTradingStatus_MarketOnCloseImbalanceSell -> "MarketOnCloseImbalanceSell"
-        | FIX_SecurityTradingStatus_TradingHalt -> "TradingHalt"
-        | FIX_SecurityTradingStatus_NotTradedOnThisMarket -> "NotTradedOnThisMarket"
-        | FIX_SecurityTradingStatus_MarketImbalanceSell -> "MarketImbalanceSell"
-        | FIX_SecurityTradingStatus_TradingRangeIndication -> "TradingRangeIndication"
-        | FIX_SecurityTradingStatus_FastMarket -> "FastMarket"
-        | FIX_SecurityTradingStatus_NewPriceIndication -> "NewPriceIndication"
-        | FIX_SecurityTradingStatus_PriceIndication -> "PriceIndication"
-        | FIX_SecurityTradingStatus_Resume -> "Resume"
-    )
-;;
-
-let securitytype_to_string (d)  =
-    (match d with
-        | FIX_SecurityType_MutualFund -> "MutualFund"
-        | FIX_SecurityType_FederalHomeLoan -> "FederalHomeLoan"
-        | FIX_SecurityType_YankeeCorporateBond -> "YankeeCorporateBond"
-        | FIX_SecurityType_Matured -> "Matured"
-        | FIX_SecurityType_Retired -> "Retired"
-        | FIX_SecurityType_USDSupranationalCoupons -> "USDSupranationalCoupons"
-        | FIX_SecurityType_CatsTigersAndLions -> "CatsTigersAndLions"
-        | FIX_SecurityType_GeneralObligationBonds -> "GeneralObligationBonds"
-        | FIX_SecurityType_TimeDeposit -> "TimeDeposit"
-        | FIX_SecurityType_ExtendedCommNote -> "ExtendedCommNote"
-        | FIX_SecurityType_Future -> "Future"
-        | FIX_SecurityType_Forward -> "Forward"
-        | FIX_SecurityType_VariableRateDemandNote -> "VariableRateDemandNote"
-        | FIX_SecurityType_MediumTermNotes -> "MediumTermNotes"
-        | FIX_SecurityType_Repurchase -> "Repurchase"
-        | FIX_SecurityType_PlazosFijos -> "PlazosFijos"
-        | FIX_SecurityType_BankNotes -> "BankNotes"
-        | FIX_SecurityType_Warrant -> "Warrant"
-        | FIX_SecurityType_SpecialTax -> "SpecialTax"
-        | FIX_SecurityType_ForeignExchangeContract -> "ForeignExchangeContract"
-        | FIX_SecurityType_CertificateOfDeposit -> "CertificateOfDeposit"
-        | FIX_SecurityType_TaxAnticipationNote -> "TaxAnticipationNote"
-        | FIX_SecurityType_LetterOfCredit -> "LetterOfCredit"
-        | FIX_SecurityType_CollateralizedMortgageObligation -> "CollateralizedMortgageObligation"
-        | FIX_SecurityType_Amended -> "Amended"
-        | FIX_SecurityType_RevolverLoan -> "RevolverLoan"
-        | FIX_SecurityType_DepositNotes -> "DepositNotes"
-        | FIX_SecurityType_EuroCertificateOfDeposit -> "EuroCertificateOfDeposit"
-        | FIX_SecurityType_Overnight -> "Overnight"
-        | FIX_SecurityType_RepurchaseAgreement -> "RepurchaseAgreement"
-        | FIX_SecurityType_SpecialObligation -> "SpecialObligation"
-        | FIX_SecurityType_FederalAgencyDiscountNote -> "FederalAgencyDiscountNote"
-        | FIX_SecurityType_GovernmentNationalMortgageAssociation -> "GovernmentNationalMortgageAssociation"
-        | FIX_SecurityType_DebtorInPossession -> "DebtorInPossession"
-        | FIX_SecurityType_Replaced -> "Replaced"
-        | FIX_SecurityType_NoSecurityType -> "NoSecurityType"
-        | FIX_SecurityType_SwingLineFacility -> "SwingLineFacility"
-        | FIX_SecurityType_TaxExemptCommercialPaper -> "TaxExemptCommercialPaper"
-        | FIX_SecurityType_DualCurrency -> "DualCurrency"
-        | FIX_SecurityType_TreasuryInflationProtectedSecurities -> "TreasuryInflationProtectedSecurities"
-        | FIX_SecurityType_BridgeLoan -> "BridgeLoan"
-        | FIX_SecurityType_ShortTermLoanNote -> "ShortTermLoanNote"
-        | FIX_SecurityType_Defaulted -> "Defaulted"
-        | FIX_SecurityType_StudentLoanMarketingAssociation -> "StudentLoanMarketingAssociation"
-        | FIX_SecurityType_LiquidityNote -> "LiquidityNote"
-        | FIX_SecurityType_InterestStripFromAnyBondOrNote -> "InterestStripFromAnyBondOrNote"
-        | FIX_SecurityType_Revolver -> "Revolver"
-        | FIX_SecurityType_CommercialPaper -> "CommercialPaper"
-        | FIX_SecurityType_RevenueAnticipationNote -> "RevenueAnticipationNote"
-        | FIX_SecurityType_StructuredNotes -> "StructuredNotes"
-        | FIX_SecurityType_MortgagePrivatePlacement -> "MortgagePrivatePlacement"
-        | FIX_SecurityType_Pfandbriefe -> "Pfandbriefe"
-        | FIX_SecurityType_OtherAnticipationNotes -> "OtherAnticipationNotes"
-        | FIX_SecurityType_MandatoryTender -> "MandatoryTender"
-        | FIX_SecurityType_PreferredStock -> "PreferredStock"
-        | FIX_SecurityType_ToBeAnnounced -> "ToBeAnnounced"
-        | FIX_SecurityType_FederalHousingAuthority -> "FederalHousingAuthority"
-        | FIX_SecurityType_MiscellaneousPassThrough -> "MiscellaneousPassThrough"
-        | FIX_SecurityType_YankeeCertificateOfDeposit -> "YankeeCertificateOfDeposit"
-        | FIX_SecurityType_Option -> "Option"
-        | FIX_SecurityType_MortgagePrincipalOnly -> "MortgagePrincipalOnly"
-        | FIX_SecurityType_USTreasuryBill -> "USTreasuryBill"
-        | FIX_SecurityType_MortgageInterestOnly -> "MortgageInterestOnly"
-        | FIX_SecurityType_AssetBackedSecurities -> "AssetBackedSecurities"
-        | FIX_SecurityType_EuroSupranationalCoupons -> "EuroSupranationalCoupons"
-        | FIX_SecurityType_USTreasuryBillOld -> "USTreasuryBillOld"
-        | FIX_SecurityType_IOETTEMortgage -> "IOETTEMortgage"
-        | FIX_SecurityType_MortgageBackedSecurities -> "MortgageBackedSecurities"
-        | FIX_SecurityType_BillOfExchanges -> "BillOfExchanges"
-        | FIX_SecurityType_RevenueBonds -> "RevenueBonds"
-        | FIX_SecurityType_ReverseRepurchaseAgreement -> "ReverseRepurchaseAgreement"
-        | FIX_SecurityType_EuroCorporateBond -> "EuroCorporateBond"
-        | FIX_SecurityType_PrivateExportFunding -> "PrivateExportFunding"
-        | FIX_SecurityType_PrincipalStripFromANonCallableBondOrNote -> "PrincipalStripFromANonCallableBondOrNote"
-        | FIX_SecurityType_Withdrawn -> "Withdrawn"
-        | FIX_SecurityType_SpecialAssessment -> "SpecialAssessment"
-        | FIX_SecurityType_EuroSovereigns -> "EuroSovereigns"
-        | FIX_SecurityType_FederalNationalMortgageAssociation -> "FederalNationalMortgageAssociation"
-        | FIX_SecurityType_TaxAllocation -> "TaxAllocation"
-        | FIX_SecurityType_PromissoryNote -> "PromissoryNote"
-        | FIX_SecurityType_PrincipalStripOfACallableBondOrNote -> "PrincipalStripOfACallableBondOrNote"
-        | FIX_SecurityType_ConvertibleBond -> "ConvertibleBond"
-        | FIX_SecurityType_Corp -> "Corp"
-        | FIX_SecurityType_SecuritiesLoan -> "SecuritiesLoan"
-        | FIX_SecurityType_CertificateOfObligation -> "CertificateOfObligation"
-        | FIX_SecurityType_CallLoans -> "CallLoans"
-        | FIX_SecurityType_USTreasuryBond -> "USTreasuryBond"
-        | FIX_SecurityType_SecuritiesPledge -> "SecuritiesPledge"
-        | FIX_SecurityType_BradyBond -> "BradyBond"
-        | FIX_SecurityType_CorporateBond -> "CorporateBond"
-        | FIX_SecurityType_TermLoan -> "TermLoan"
-        | FIX_SecurityType_TaxRevenueAnticipationNote -> "TaxRevenueAnticipationNote"
-        | FIX_SecurityType_FederalAgencyCoupon -> "FederalAgencyCoupon"
-        | FIX_SecurityType_BankersAcceptance -> "BankersAcceptance"
-        | FIX_SecurityType_MultilegInstrument -> "MultilegInstrument"
-        | FIX_SecurityType_EuroCommercialPaper -> "EuroCommercialPaper"
-        | FIX_SecurityType_CommonStock -> "CommonStock"
-        | FIX_SecurityType_TreasuriesAgencyDebenture -> "TreasuriesAgencyDebenture"
-        | FIX_SecurityType_USTreasuryNote -> "USTreasuryNote"
-        | FIX_SecurityType_IndexedLinked -> "IndexedLinked"
-        | FIX_SecurityType_MunicipalBond -> "MunicipalBond"
-        | FIX_SecurityType_Wildcard -> "Wildcard"
-        | FIX_SecurityType_USTreasuryNoteOld -> "USTreasuryNoteOld"
-        | FIX_SecurityType_CertificateOfParticipation -> "CertificateOfParticipation"
-        | FIX_SecurityType_CorporatePrivatePlacement -> "CorporatePrivatePlacement"
-        | FIX_SecurityType_BuySellback -> "BuySellback"
-    )
-;;
-
-let settlinstmode_to_string (d)  =
-    (match d with
-        | FIX_SettlInstMode_SpecificAllocationAccountOverriding -> "SpecificAllocationAccountOverriding"
-        | FIX_SettlInstMode_RequestReject -> "RequestReject"
-        | FIX_SettlInstMode_Default -> "Default"
-        | FIX_SettlInstMode_StandingInstructionsProvided -> "StandingInstructionsProvided"
-        | FIX_SettlInstMode_SpecificAllocationAccountStanding -> "SpecificAllocationAccountStanding"
-        | FIX_SettlInstMode_SpecificOrderForASingleAccount -> "SpecificOrderForASingleAccount"
-    )
-;;
-
-let settlinstsource_to_string (d)  =
-    (match d with
-        | FIX_SettlInstSource_Investor -> "Investor"
-        | FIX_SettlInstSource_Institution -> "Institution"
-        | FIX_SettlInstSource_BrokerCredit -> "BrokerCredit"
-    )
-;;
-
-let settlinsttranstype_to_string (d)  =
-    (match d with
-        | FIX_SettlInstTransType_Cancel -> "Cancel"
-        | FIX_SettlInstTransType_Replace -> "Replace"
-        | FIX_SettlInstTransType_New -> "New"
-        | FIX_SettlInstTransType_Restate -> "Restate"
-    )
-;;
-
-let settllocation_to_string (d)  =
-    (match d with
-        | FIX_SettlLocation_Physical -> "Physical"
-        | FIX_SettlLocation_EuroClear -> "EuroClear"
-        | FIX_SettlLocation_FederalBookEntry -> "FederalBookEntry"
-        | FIX_SettlLocation_LocalMarketSettleLocation -> "LocalMarketSettleLocation"
-        | FIX_SettlLocation_CEDEL -> "CEDEL"
-        | FIX_SettlLocation_ParticipantTrustCompany -> "ParticipantTrustCompany"
-        | FIX_SettlLocation_DepositoryTrustCompany -> "DepositoryTrustCompany"
-    )
-;;
-
-let settlmnttyp_to_string (d)  =
-    (match d with
-        | FIX_SettlmntTyp_Regular -> "Regular"
-        | FIX_SettlmntTyp_TPlus2 -> "TPlus2"
-        | FIX_SettlmntTyp_SellersOption -> "SellersOption"
-        | FIX_SettlmntTyp_TPlus4 -> "TPlus4"
-        | FIX_SettlmntTyp_TPlus3 -> "TPlus3"
-        | FIX_SettlmntTyp_TPlus5 -> "TPlus5"
-        | FIX_SettlmntTyp_NextDay -> "NextDay"
-        | FIX_SettlmntTyp_Future -> "Future"
-        | FIX_SettlmntTyp_Cash -> "Cash"
-        | FIX_SettlmntTyp_WhenAndIfIssued -> "WhenAndIfIssued"
-    )
-;;
-
-let side_to_string (d)  =
-    (match d with
-        | FIX_Side_AsDefined -> "AsDefined"
-        | FIX_Side_Opposite -> "Opposite"
-        | FIX_Side_Buy -> "Buy"
-        | FIX_Side_CrossShortExempt -> "CrossShortExempt"
-        | FIX_Side_Borrow -> "Borrow"
-        | FIX_Side_BuyMinus -> "BuyMinus"
-        | FIX_Side_Subscribe -> "Subscribe"
-        | FIX_Side_Lend -> "Lend"
-        | FIX_Side_SellShortExempt -> "SellShortExempt"
-        | FIX_Side_Redeem -> "Redeem"
-        | FIX_Side_SellPlus -> "SellPlus"
-        | FIX_Side_Sell -> "Sell"
-        | FIX_Side_Undisclosed -> "Undisclosed"
-        | FIX_Side_Cross -> "Cross"
-        | FIX_Side_CrossShort -> "CrossShort"
-        | FIX_Side_SellShort -> "SellShort"
-    )
-;;
-
-let solicitedflag_to_string (d)  =
-    (match d with
-        | FIX_SolicitedFlag_WasSolicited -> "WasSolicited"
-        | FIX_SolicitedFlag_WasNotSolicited -> "WasNotSolicited"
-    )
-;;
-
-let standinstdbtype_to_string (d)  =
-    (match d with
-        | FIX_StandInstDbType_Other -> "Other"
-        | FIX_StandInstDbType_AccountNet -> "AccountNet"
-        | FIX_StandInstDbType_DTCSID -> "DTCSID"
-        | FIX_StandInstDbType_ThomsonALERT -> "ThomsonALERT"
-        | FIX_StandInstDbType_AGlobalCustodian -> "AGlobalCustodian"
-    )
-;;
-
-let subscriptionrequesttype_to_string (d)  =
-    (match d with
-        | FIX_SubscriptionRequestType_DisablePreviousSnapshot -> "DisablePreviousSnapshot"
-        | FIX_SubscriptionRequestType_SnapshotAndUpdates -> "SnapshotAndUpdates"
-        | FIX_SubscriptionRequestType_Snapshot -> "Snapshot"
-    )
-;;
-
-let tickdirection_to_string (d)  =
-    (match d with
-        | FIX_TickDirection_ZeroMinusTick -> "ZeroMinusTick"
-        | FIX_TickDirection_PlusTick -> "PlusTick"
-        | FIX_TickDirection_MinusTick -> "MinusTick"
-        | FIX_TickDirection_ZeroPlusTick -> "ZeroPlusTick"
-    )
-;;
-
-let timeinforce_to_string (d)  =
-    (match d with
-        | FIX_TimeInForce_GoodTillCancel -> "GoodTillCancel"
-        | FIX_TimeInForce_AtTheClose -> "AtTheClose"
-        | FIX_TimeInForce_ImmediateOrCancel -> "ImmediateOrCancel"
-        | FIX_TimeInForce_Day -> "Day"
-        | FIX_TimeInForce_FillOrKill -> "FillOrKill"
-        | FIX_TimeInForce_GoodForAuction -> "GoodForAuction"
-        | FIX_TimeInForce_AtTheOpening -> "AtTheOpening"
-        | FIX_TimeInForce_GoodTillCrossing -> "GoodTillCrossing"
-        | FIX_TimeInForce_GoodTillDate -> "GoodTillDate"
-    )
-;;
-
-let tradsesmethod_to_string (d)  =
-    (match d with
-        | FIX_TradSesMethod_OpenOutcry -> "OpenOutcry"
-        | FIX_TradSesMethod_Electronic -> "Electronic"
-        | FIX_TradSesMethod_TwoParty -> "TwoParty"
-    )
-;;
-
-let tradsesmode_to_string (d)  =
-    (match d with
-        | FIX_TradSesMode_Testing -> "Testing"
-        | FIX_TradSesMode_Simulated -> "Simulated"
-        | FIX_TradSesMode_Production -> "Production"
-    )
-;;
-
-let tradsesstatus_to_string (d)  =
-    (match d with
-        | FIX_TradSesStatus_Closed -> "Closed"
-        | FIX_TradSesStatus_PreOpen -> "PreOpen"
-        | FIX_TradSesStatus_RequestRejected -> "RequestRejected"
-        | FIX_TradSesStatus_PreClose -> "PreClose"
-        | FIX_TradSesStatus_Unknown -> "Unknown"
-        | FIX_TradSesStatus_Halted -> "Halted"
-        | FIX_TradSesStatus_Open -> "Open"
-    )
-;;
-
-let tradecondition_to_string (d)  =
-    (match d with
-        | FIX_TradeCondition_Opened -> "Opened"
-        | FIX_TradeCondition_Rule127Trade -> "Rule127Trade"
-        | FIX_TradeCondition_CashTrade -> "CashTrade"
-        | FIX_TradeCondition_IntradayTradeDetail -> "IntradayTradeDetail"
-        | FIX_TradeCondition_SoldLast -> "SoldLast"
-        | FIX_TradeCondition_Cash -> "Cash"
-        | FIX_TradeCondition_StoppedStock -> "StoppedStock"
-        | FIX_TradeCondition_ImbalanceMoreSellers -> "ImbalanceMoreSellers"
-        | FIX_TradeCondition_Sold -> "Sold"
-        | FIX_TradeCondition_ImbalanceMoreBuyers -> "ImbalanceMoreBuyers"
-        | FIX_TradeCondition_NextDay -> "NextDay"
-        | FIX_TradeCondition_Opening -> "Opening"
-        | FIX_TradeCondition_Seller -> "Seller"
-        | FIX_TradeCondition_OpeningPrice -> "OpeningPrice"
-        | FIX_TradeCondition_AveragePriceTrade -> "AveragePriceTrade"
-        | FIX_TradeCondition_Rule155Trade -> "Rule155Trade"
-        | FIX_TradeCondition_NextDayTrade -> "NextDayTrade"
-    )
-;;
-
-let tradetype_to_string (d)  =
-    (match d with
-        | FIX_TradeType_Agency -> "Agency"
-        | FIX_TradeType_RiskTrade -> "RiskTrade"
-        | FIX_TradeType_VWAPGuarantee -> "VWAPGuarantee"
-        | FIX_TradeType_GuaranteedClose -> "GuaranteedClose"
-    )
-;;
-
-let unsolicitedindicator_to_string (d)  =
-    (match d with
-        | FIX_UnsolicitedIndicator_MessageIsBeingSentAsAResultOfAPriorRequest -> "MessageIsBeingSentAsAResultOfAPriorRequest"
-        | FIX_UnsolicitedIndicator_MessageIsBeingSentUnsolicited -> "MessageIsBeingSentUnsolicited"
-    )
-;;
-
-let urgency_to_string (d)  =
-    (match d with
-        | FIX_Urgency_Flash -> "Flash"
-        | FIX_Urgency_Background -> "Background"
-        | FIX_Urgency_Normal -> "Normal"
-    )
-;;
-
-let week_to_string (d)  =
-    (match d with
-        | FIX_week_w1 -> "w1"
-        | FIX_week_w2 -> "w2"
-        | FIX_week_w3 -> "w3"
-        | FIX_week_noweek -> "noweek"
-        | FIX_week_w4 -> "w4"
-        | FIX_week_w5 -> "w5"
-    )
-;;
-
-let currency_to_string (d)  =
-    (match d with
-        | FIX_Currency_EUR -> "EUR"
-        | FIX_Currency_CHF -> "CHF"
-        | FIX_Currency_USD -> "USD"
-        | FIX_Currency_GBP -> "GBP"
-    )
-;;
-
-let country_to_string (d)  =
-    (match d with
-        | FIX_Country_DE -> "DE"
-        | FIX_Country_GB -> "GB"
-        | FIX_Country_US -> "US"
-    )
-;;
-
-let exchange_to_string (d)  =
-    (match d with
-        | FIX_Exchange_XSHG -> "XSHG"
-        | FIX_Exchange_SHSC -> "SHSC"
-        | FIX_Exchange_XNYS -> "XNYS"
-        | FIX_Exchange_XJAS -> "XJAS"
-        | FIX_Exchange_XLON -> "XLON"
-        | FIX_Exchange_XNAS -> "XNAS"
-    )
-;;
-
 let accounttype_to_string (d)  =
     (match d with
         | FIX_AccountType_CarriedCustomerSide -> "CarriedCustomerSide"
@@ -1382,6 +25,14 @@ let acctidsource_to_string (d)  =
     )
 ;;
 
+let adjustment_to_string (d)  =
+    (match d with
+        | FIX_Adjustment_Cancel -> "Cancel"
+        | FIX_Adjustment_Error -> "Error"
+        | FIX_Adjustment_Correction -> "Correction"
+    )
+;;
+
 let adjustmenttype_to_string (d)  =
     (match d with
         | FIX_AdjustmentType_ProcessRequestAsMarginDisposition -> "ProcessRequestAsMarginDisposition"
@@ -1391,11 +42,35 @@ let adjustmenttype_to_string (d)  =
     )
 ;;
 
+let advside_to_string (d)  =
+    (match d with
+        | FIX_AdvSide_Buy -> "Buy"
+        | FIX_AdvSide_Sell -> "Sell"
+        | FIX_AdvSide_Trade -> "Trade"
+        | FIX_AdvSide_Cross -> "Cross"
+    )
+;;
+
+let advtranstype_to_string (d)  =
+    (match d with
+        | FIX_AdvTransType_Cancel -> "Cancel"
+        | FIX_AdvTransType_Replace -> "Replace"
+        | FIX_AdvTransType_New -> "New"
+    )
+;;
+
 let affirmstatus_to_string (d)  =
     (match d with
         | FIX_AffirmStatus_Affirmed -> "Affirmed"
         | FIX_AffirmStatus_Received -> "Received"
         | FIX_AffirmStatus_ConfirmRejected -> "ConfirmRejected"
+    )
+;;
+
+let aggregatedbook_to_string (d)  =
+    (match d with
+        | FIX_AggregatedBook_BookEntriesToBeAggregated -> "BookEntriesToBeAggregated"
+        | FIX_AggregatedBook_BookEntriesShouldNotBeAggregated -> "BookEntriesShouldNotBeAggregated"
     )
 ;;
 
@@ -1419,6 +94,14 @@ let alloccancreplacereason_to_string (d)  =
     )
 ;;
 
+let allochandlinst_to_string (d)  =
+    (match d with
+        | FIX_AllocHandlInst_ForwardAndMatch -> "ForwardAndMatch"
+        | FIX_AllocHandlInst_Forward -> "Forward"
+        | FIX_AllocHandlInst_Match -> "Match"
+    )
+;;
+
 let allocintermedreqtype_to_string (d)  =
     (match d with
         | FIX_AllocIntermedReqType_PendingAccept -> "PendingAccept"
@@ -1430,10 +113,36 @@ let allocintermedreqtype_to_string (d)  =
     )
 ;;
 
+let alloclinktype_to_string (d)  =
+    (match d with
+        | FIX_AllocLinkType_FXSwap -> "FXSwap"
+        | FIX_AllocLinkType_FXNetting -> "FXNetting"
+    )
+;;
+
 let allocnoorderstype_to_string (d)  =
     (match d with
         | FIX_AllocNoOrdersType_ExplicitListProvided -> "ExplicitListProvided"
         | FIX_AllocNoOrdersType_NotSpecified -> "NotSpecified"
+    )
+;;
+
+let allocrejcode_to_string (d)  =
+    (match d with
+        | FIX_AllocRejCode_UnknownOrStaleExecID -> "UnknownOrStaleExecID"
+        | FIX_AllocRejCode_UnknownAccount -> "UnknownAccount"
+        | FIX_AllocRejCode_OtherSeeText -> "OtherSeeText"
+        | FIX_AllocRejCode_UnknownListID -> "UnknownListID"
+        | FIX_AllocRejCode_CalculationDifference -> "CalculationDifference"
+        | FIX_AllocRejCode_IncorrectQuantity -> "IncorrectQuantity"
+        | FIX_AllocRejCode_UnknownClOrdID -> "UnknownClOrdID"
+        | FIX_AllocRejCode_CommissionDifference -> "CommissionDifference"
+        | FIX_AllocRejCode_WarehouseRequestRejected -> "WarehouseRequestRejected"
+        | FIX_AllocRejCode_UnknownExecutingBrokerMnemonic -> "UnknownExecutingBrokerMnemonic"
+        | FIX_AllocRejCode_MismatchedData -> "MismatchedData"
+        | FIX_AllocRejCode_UnknownOrderID -> "UnknownOrderID"
+        | FIX_AllocRejCode_IncorrectAveragegPrice -> "IncorrectAveragegPrice"
+        | FIX_AllocRejCode_IncorrectAllocatedQuantity -> "IncorrectAllocatedQuantity"
     )
 ;;
 
@@ -1453,6 +162,25 @@ let allocsettlinsttype_to_string (d)  =
         | FIX_AllocSettlInstType_PhoneForInstructions -> "PhoneForInstructions"
         | FIX_AllocSettlInstType_UseDefaultInstructions -> "UseDefaultInstructions"
         | FIX_AllocSettlInstType_SSIDBIDsProvided -> "SSIDBIDsProvided"
+    )
+;;
+
+let allocstatus_to_string (d)  =
+    (match d with
+        | FIX_AllocStatus_Incomplete -> "Incomplete"
+        | FIX_AllocStatus_Received -> "Received"
+        | FIX_AllocStatus_BlockLevelReject -> "BlockLevelReject"
+        | FIX_AllocStatus_AccountLevelReject -> "AccountLevelReject"
+        | FIX_AllocStatus_RejectedByIntermediary -> "RejectedByIntermediary"
+        | FIX_AllocStatus_Accepted -> "Accepted"
+    )
+;;
+
+let alloctranstype_to_string (d)  =
+    (match d with
+        | FIX_AllocTransType_Replace -> "Replace"
+        | FIX_AllocTransType_Cancel -> "Cancel"
+        | FIX_AllocTransType_New -> "New"
     )
 ;;
 
@@ -1499,11 +227,36 @@ let avgpxindicator_to_string (d)  =
     )
 ;;
 
+let basispxtype_to_string (d)  =
+    (match d with
+        | FIX_BasisPxType_Others -> "Others"
+        | FIX_BasisPxType_VWAPThroughADay -> "VWAPThroughADay"
+        | FIX_BasisPxType_VWAPThroughAnAfternoonSessionExcept -> "VWAPThroughAnAfternoonSessionExcept"
+        | FIX_BasisPxType_VWAPThroughAMorningSession -> "VWAPThroughAMorningSession"
+        | FIX_BasisPxType_ClosingPrice -> "ClosingPrice"
+        | FIX_BasisPxType_CurrentPrice -> "CurrentPrice"
+        | FIX_BasisPxType_Strike -> "Strike"
+        | FIX_BasisPxType_Open -> "Open"
+        | FIX_BasisPxType_ClosingPriceAtMorningSession -> "ClosingPriceAtMorningSession"
+        | FIX_BasisPxType_VWAPThroughADayExcept -> "VWAPThroughADayExcept"
+        | FIX_BasisPxType_VWAPThroughAMorningSessionExcept -> "VWAPThroughAMorningSessionExcept"
+        | FIX_BasisPxType_VWAPThroughAnAfternoonSession -> "VWAPThroughAnAfternoonSession"
+        | FIX_BasisPxType_SQ -> "SQ"
+    )
+;;
+
 let biddescriptortype_to_string (d)  =
     (match d with
         | FIX_BidDescriptorType_Sector -> "Sector"
         | FIX_BidDescriptorType_Index -> "Index"
         | FIX_BidDescriptorType_Country -> "Country"
+    )
+;;
+
+let bidrequesttranstype_to_string (d)  =
+    (match d with
+        | FIX_BidRequestTransType_Cancel -> "Cancel"
+        | FIX_BidRequestTransType_New -> "New"
     )
 ;;
 
@@ -1704,6 +457,17 @@ let collstatus_to_string (d)  =
     )
 ;;
 
+let commtype_to_string (d)  =
+    (match d with
+        | FIX_CommType_PercentageWaivedEnhancedUnits -> "PercentageWaivedEnhancedUnits"
+        | FIX_CommType_PointsPerBondOrContract -> "PointsPerBondOrContract"
+        | FIX_CommType_Percent -> "Percent"
+        | FIX_CommType_PerUnit -> "PerUnit"
+        | FIX_CommType_Absolute -> "Absolute"
+        | FIX_CommType_PercentageWaivedCashDiscount -> "PercentageWaivedCashDiscount"
+    )
+;;
+
 let confirmrejreason_to_string (d)  =
     (match d with
         | FIX_ConfirmRejReason_MissingSettlementInstructions -> "MissingSettlementInstructions"
@@ -1758,6 +522,23 @@ let contamttype_to_string (d)  =
     )
 ;;
 
+let corporateaction_to_string (d)  =
+    (match d with
+        | FIX_CorporateAction_ExDistribution -> "ExDistribution"
+        | FIX_CorporateAction_ExDividend -> "ExDividend"
+        | FIX_CorporateAction_ExInterest -> "ExInterest"
+        | FIX_CorporateAction_ExRights -> "ExRights"
+        | FIX_CorporateAction_New -> "New"
+    )
+;;
+
+let coveredoruncovered_to_string (d)  =
+    (match d with
+        | FIX_CoveredOrUncovered_Uncovered -> "Uncovered"
+        | FIX_CoveredOrUncovered_Covered -> "Covered"
+    )
+;;
+
 let crossprioritization_to_string (d)  =
     (match d with
         | FIX_CrossPrioritization_BuySideIsPrioritized -> "BuySideIsPrioritized"
@@ -1772,8 +553,6 @@ let crosstype_to_string (d)  =
         | FIX_CrossType_CrossOneSide -> "CrossOneSide"
         | FIX_CrossType_CrossSamePrice -> "CrossSamePrice"
         | FIX_CrossType_CrossAON -> "CrossAON"
-        | FIX_CrossType_NotSignificant -> "NotSignificant"
-        | FIX_CrossType_StandardCross -> "StandardCross"
     )
 ;;
 
@@ -1786,11 +565,50 @@ let custordercapacity_to_string (d)  =
     )
 ;;
 
+let cxlrejreason_to_string (d)  =
+    (match d with
+        | FIX_CxlRejReason_Other -> "Other"
+        | FIX_CxlRejReason_OrderAlreadyInPendingStatus -> "OrderAlreadyInPendingStatus"
+        | FIX_CxlRejReason_TooLateToCancel -> "TooLateToCancel"
+        | FIX_CxlRejReason_UnknownOrder -> "UnknownOrder"
+        | FIX_CxlRejReason_UnableToProcessOrderMassCancelRequest -> "UnableToProcessOrderMassCancelRequest"
+        | FIX_CxlRejReason_OrigOrdModTime -> "OrigOrdModTime"
+        | FIX_CxlRejReason_DuplicateClOrdID -> "DuplicateClOrdID"
+        | FIX_CxlRejReason_BrokerCredit -> "BrokerCredit"
+    )
+;;
+
+let cxlrejresponseto_to_string (d)  =
+    (match d with
+        | FIX_CxlRejResponseTo_OrderCancelRequest -> "OrderCancelRequest"
+        | FIX_CxlRejResponseTo_OrderCancel -> "OrderCancel"
+    )
+;;
+
+let dkreason_to_string (d)  =
+    (match d with
+        | FIX_DKReason_WrongSide -> "WrongSide"
+        | FIX_DKReason_QuantityExceedsOrder -> "QuantityExceedsOrder"
+        | FIX_DKReason_Other -> "Other"
+        | FIX_DKReason_CalculationDifference -> "CalculationDifference"
+        | FIX_DKReason_NoMatchingOrder -> "NoMatchingOrder"
+        | FIX_DKReason_PriceExceedsLimit -> "PriceExceedsLimit"
+        | FIX_DKReason_UnknownSymbol -> "UnknownSymbol"
+    )
+;;
+
 let daybookinginst_to_string (d)  =
     (match d with
         | FIX_DayBookingInst_Auto -> "Auto"
         | FIX_DayBookingInst_SpeakWithOrderInitiatorBeforeBooking -> "SpeakWithOrderInitiatorBeforeBooking"
         | FIX_DayBookingInst_Accumulate -> "Accumulate"
+    )
+;;
+
+let deletereason_to_string (d)  =
+    (match d with
+        | FIX_DeleteReason_Error -> "Error"
+        | FIX_DeleteReason_Cancellation -> "Cancellation"
     )
 ;;
 
@@ -1807,6 +625,18 @@ let deliverytype_to_string (d)  =
         | FIX_DeliveryType_VersusPayment -> "VersusPayment"
         | FIX_DeliveryType_HoldInCustody -> "HoldInCustody"
         | FIX_DeliveryType_Free -> "Free"
+    )
+;;
+
+let discretioninst_to_string (d)  =
+    (match d with
+        | FIX_DiscretionInst_RelatedToPrimaryPrice -> "RelatedToPrimaryPrice"
+        | FIX_DiscretionInst_RelatedToMidpointPrice -> "RelatedToMidpointPrice"
+        | FIX_DiscretionInst_RelatedToLastTradePrice -> "RelatedToLastTradePrice"
+        | FIX_DiscretionInst_RelatedToDisplayedPrice -> "RelatedToDisplayedPrice"
+        | FIX_DiscretionInst_RelatedToVWAP -> "RelatedToVWAP"
+        | FIX_DiscretionInst_RelatedToMarketPrice -> "RelatedToMarketPrice"
+        | FIX_DiscretionInst_RelatedToLocalPrimaryPrice -> "RelatedToLocalPrimaryPrice"
     )
 ;;
 
@@ -1874,6 +704,21 @@ let dlvyinsttype_to_string (d)  =
     )
 ;;
 
+let duetorelated_to_string (d)  =
+    (match d with
+        | FIX_DueToRelated_RelatedToSecurityHalt -> "RelatedToSecurityHalt"
+        | FIX_DueToRelated_NotRelatedToSecurityHalt -> "NotRelatedToSecurityHalt"
+    )
+;;
+
+let emailtype_to_string (d)  =
+    (match d with
+        | FIX_EmailType_Reply -> "Reply"
+        | FIX_EmailType_AdminReply -> "AdminReply"
+        | FIX_EmailType_New -> "New"
+    )
+;;
+
 let eventtype_to_string (d)  =
     (match d with
         | FIX_EventType_Other -> "Other"
@@ -1881,6 +726,58 @@ let eventtype_to_string (d)  =
         | FIX_EventType_Tender -> "Tender"
         | FIX_EventType_Put -> "Put"
         | FIX_EventType_SinkingFundCall -> "SinkingFundCall"
+    )
+;;
+
+let exchangeforphysical_to_string (d)  =
+    (match d with
+        | FIX_ExchangeForPhysical_True -> "True"
+        | FIX_ExchangeForPhysical_False -> "False"
+    )
+;;
+
+let execinst_to_string (d)  =
+    (match d with
+        | FIX_ExecInst_ParticipateDoNotInitiate -> "ParticipateDoNotInitiate"
+        | FIX_ExecInst_AllOrNone -> "AllOrNone"
+        | FIX_ExecInst_CallFirst -> "CallFirst"
+        | FIX_ExecInst_PercentOfVolume -> "PercentOfVolume"
+        | FIX_ExecInst_InstitutionsOnly -> "InstitutionsOnly"
+        | FIX_ExecInst_NoCross -> "NoCross"
+        | FIX_ExecInst_OverTheDay -> "OverTheDay"
+        | FIX_ExecInst_DoNotIncrease -> "DoNotIncrease"
+        | FIX_ExecInst_OpeningPeg -> "OpeningPeg"
+        | FIX_ExecInst_TryToStop -> "TryToStop"
+        | FIX_ExecInst_Netting -> "Netting"
+        | FIX_ExecInst_StayOnBidSide -> "StayOnBidSide"
+        | FIX_ExecInst_Held -> "Held"
+        | FIX_ExecInst_OKToCross -> "OKToCross"
+        | FIX_ExecInst_CustomerDisplayInstruction -> "CustomerDisplayInstruction"
+        | FIX_ExecInst_GoAlong -> "GoAlong"
+        | FIX_ExecInst_DoNotReduce -> "DoNotReduce"
+        | FIX_ExecInst_StayOnOfferSide -> "StayOnOfferSide"
+        | FIX_ExecInst_PegToLimitPrice -> "PegToLimitPrice"
+        | FIX_ExecInst_TryToScale -> "TryToScale"
+        | FIX_ExecInst_ReinstateOnSystemFailure -> "ReinstateOnSystemFailure"
+        | FIX_ExecInst_CancelIfNotBest -> "CancelIfNotBest"
+        | FIX_ExecInst_MidPricePeg -> "MidPricePeg"
+        | FIX_ExecInst_WorkToTargetStrategy -> "WorkToTargetStrategy"
+        | FIX_ExecInst_PegToVWAP -> "PegToVWAP"
+        | FIX_ExecInst_TradeAlong -> "TradeAlong"
+        | FIX_ExecInst_StrictLimit -> "StrictLimit"
+        | FIX_ExecInst_Suspend -> "Suspend"
+        | FIX_ExecInst_LastPeg -> "LastPeg"
+        | FIX_ExecInst_NonNegotiable -> "NonNegotiable"
+        | FIX_ExecInst_NotHeld -> "NotHeld"
+        | FIX_ExecInst_CancelOnTradingHalt -> "CancelOnTradingHalt"
+        | FIX_ExecInst_CancelOnSystemFailure -> "CancelOnSystemFailure"
+        | FIX_ExecInst_IgnorePriceValidityChecks -> "IgnorePriceValidityChecks"
+        | FIX_ExecInst_Work -> "Work"
+        | FIX_ExecInst_ReinstateOnTradingHalt -> "ReinstateOnTradingHalt"
+        | FIX_ExecInst_PrimaryPeg -> "PrimaryPeg"
+        | FIX_ExecInst_TrailingStopPeg -> "TrailingStopPeg"
+        | FIX_ExecInst_MarketPeg -> "MarketPeg"
+        | FIX_ExecInst_StrictScale -> "StrictScale"
     )
 ;;
 
@@ -1894,6 +791,45 @@ let execpricetype_to_string (d)  =
         | FIX_ExecPriceType_SinglePrice -> "SinglePrice"
         | FIX_ExecPriceType_CreationPrice -> "CreationPrice"
         | FIX_ExecPriceType_CreationPricePlusAdjustmentPercent -> "CreationPricePlusAdjustmentPercent"
+    )
+;;
+
+let execrestatementreason_to_string (d)  =
+    (match d with
+        | FIX_ExecRestatementReason_Other -> "Other"
+        | FIX_ExecRestatementReason_RepricingOfOrder -> "RepricingOfOrder"
+        | FIX_ExecRestatementReason_GTCorporateAction -> "GTCorporateAction"
+        | FIX_ExecRestatementReason_VerbalChange -> "VerbalChange"
+        | FIX_ExecRestatementReason_WarehouseRecap -> "WarehouseRecap"
+        | FIX_ExecRestatementReason_CancelOnTradingHalt -> "CancelOnTradingHalt"
+        | FIX_ExecRestatementReason_CancelOnSystemFailure -> "CancelOnSystemFailure"
+        | FIX_ExecRestatementReason_GTRenewal -> "GTRenewal"
+        | FIX_ExecRestatementReason_Market -> "Market"
+        | FIX_ExecRestatementReason_Canceled -> "Canceled"
+        | FIX_ExecRestatementReason_BrokerOption -> "BrokerOption"
+        | FIX_ExecRestatementReason_PartialDeclineOfOrderQty -> "PartialDeclineOfOrderQty"
+    )
+;;
+
+let exectype_to_string (d)  =
+    (match d with
+        | FIX_ExecType_PendingCancel -> "PendingCancel"
+        | FIX_ExecType_Stopped -> "Stopped"
+        | FIX_ExecType_PendingNew -> "PendingNew"
+        | FIX_ExecType_Restated -> "Restated"
+        | FIX_ExecType_Rejected -> "Rejected"
+        | FIX_ExecType_Calculated -> "Calculated"
+        | FIX_ExecType_TradeCorrect -> "TradeCorrect"
+        | FIX_ExecType_TradeCancel -> "TradeCancel"
+        | FIX_ExecType_Expired -> "Expired"
+        | FIX_ExecType_OrderStatus -> "OrderStatus"
+        | FIX_ExecType_Trade -> "Trade"
+        | FIX_ExecType_Canceled -> "Canceled"
+        | FIX_ExecType_Replaced -> "Replaced"
+        | FIX_ExecType_PendingReplace -> "PendingReplace"
+        | FIX_ExecType_DoneForDay -> "DoneForDay"
+        | FIX_ExecType_Suspended -> "Suspended"
+        | FIX_ExecType_New -> "New"
     )
 ;;
 
@@ -1911,10 +847,66 @@ let expirationcycle_to_string (d)  =
     )
 ;;
 
+let financialstatus_to_string (d)  =
+    (match d with
+        | FIX_FinancialStatus_PendingDelisting -> "PendingDelisting"
+        | FIX_FinancialStatus_Bankrupt -> "Bankrupt"
+    )
+;;
+
+let forexreq_to_string (d)  =
+    (match d with
+        | FIX_ForexReq_DoNotExecuteForexAfterSecurityTrade -> "DoNotExecuteForexAfterSecurityTrade"
+        | FIX_ForexReq_ExecuteForexAfterSecurityTrade -> "ExecuteForexAfterSecurityTrade"
+    )
+;;
+
 let fundrenewwaiv_to_string (d)  =
     (match d with
         | FIX_FundRenewWaiv_No -> "No"
         | FIX_FundRenewWaiv_Yes -> "Yes"
+    )
+;;
+
+let gtbookinginst_to_string (d)  =
+    (match d with
+        | FIX_GTBookingInst_AccumulateUntilVerballyNotifiedOtherwise -> "AccumulateUntilVerballyNotifiedOtherwise"
+        | FIX_GTBookingInst_AccumulateUntilFilledOrExpired -> "AccumulateUntilFilledOrExpired"
+        | FIX_GTBookingInst_BookOutAllTradesOnDayOfExecution -> "BookOutAllTradesOnDayOfExecution"
+    )
+;;
+
+let haltreason_to_string (d)  =
+    (match d with
+        | FIX_HaltReason_OrderImbalance -> "OrderImbalance"
+        | FIX_HaltReason_AdditionalInformation -> "AdditionalInformation"
+        | FIX_HaltReason_NewsPending -> "NewsPending"
+        | FIX_HaltReason_OrderInflux -> "OrderInflux"
+        | FIX_HaltReason_EquipmentChangeover -> "EquipmentChangeover"
+        | FIX_HaltReason_NewsDissemination -> "NewsDissemination"
+    )
+;;
+
+let handlinst_to_string (d)  =
+    (match d with
+        | FIX_HandlInst_ManualOrder -> "ManualOrder"
+        | FIX_HandlInst_AutomatedExecutionInterventionOK -> "AutomatedExecutionInterventionOK"
+        | FIX_HandlInst_AutomatedExecutionNoIntervention -> "AutomatedExecutionNoIntervention"
+    )
+;;
+
+let ioinaturalflag_to_string (d)  =
+    (match d with
+        | FIX_IOINaturalFlag_Natural -> "Natural"
+        | FIX_IOINaturalFlag_NotNatural -> "NotNatural"
+    )
+;;
+
+let ioiqltyind_to_string (d)  =
+    (match d with
+        | FIX_IOIQltyInd_Low -> "Low"
+        | FIX_IOIQltyInd_High -> "High"
+        | FIX_IOIQltyInd_Medium -> "Medium"
     )
 ;;
 
@@ -1923,6 +915,51 @@ let ioiqty_to_string (d)  =
         | FIX_IOIQty_Small -> "Small"
         | FIX_IOIQty_Large -> "Large"
         | FIX_IOIQty_Medium -> "Medium"
+    )
+;;
+
+let ioiqualifier_to_string (d)  =
+    (match d with
+        | FIX_IOIQualifier_AllOrNone -> "AllOrNone"
+        | FIX_IOIQualifier_TakingAPosition -> "TakingAPosition"
+        | FIX_IOIQualifier_Indication -> "Indication"
+        | FIX_IOIQualifier_PreOpen -> "PreOpen"
+        | FIX_IOIQualifier_VWAP -> "VWAP"
+        | FIX_IOIQualifier_AtTheOpen -> "AtTheOpen"
+        | FIX_IOIQualifier_Versus -> "Versus"
+        | FIX_IOIQualifier_AtTheMidpoint -> "AtTheMidpoint"
+        | FIX_IOIQualifier_ReadyToTrade -> "ReadyToTrade"
+        | FIX_IOIQualifier_PortfolioShown -> "PortfolioShown"
+        | FIX_IOIQualifier_ThroughTheDay -> "ThroughTheDay"
+        | FIX_IOIQualifier_MoreBehind -> "MoreBehind"
+        | FIX_IOIQualifier_MarketOnClose -> "MarketOnClose"
+        | FIX_IOIQualifier_AtTheClose -> "AtTheClose"
+        | FIX_IOIQualifier_InTouchWith -> "InTouchWith"
+        | FIX_IOIQualifier_AtTheMarket -> "AtTheMarket"
+        | FIX_IOIQualifier_Limit -> "Limit"
+        | FIX_IOIQualifier_CrossingOpportunity -> "CrossingOpportunity"
+    )
+;;
+
+let ioitranstype_to_string (d)  =
+    (match d with
+        | FIX_IOITransType_Cancel -> "Cancel"
+        | FIX_IOITransType_Replace -> "Replace"
+        | FIX_IOITransType_New -> "New"
+    )
+;;
+
+let inviewofcommon_to_string (d)  =
+    (match d with
+        | FIX_InViewOfCommon_HaltWasDueToCommonStockBeingHalted -> "HaltWasDueToCommonStockBeingHalted"
+        | FIX_InViewOfCommon_HaltWasNotRelatedToAHaltOfTheCommonStock -> "HaltWasNotRelatedToAHaltOfTheCommonStock"
+    )
+;;
+
+let inctaxind_to_string (d)  =
+    (match d with
+        | FIX_IncTaxInd_Net -> "Net"
+        | FIX_IncTaxInd_Gross -> "Gross"
     )
 ;;
 
@@ -1951,6 +988,15 @@ let instrattribtype_to_string (d)  =
         | FIX_InstrAttribType_ZeroCoupon -> "ZeroCoupon"
         | FIX_InstrAttribType_EscrowedToMaturity -> "EscrowedToMaturity"
         | FIX_InstrAttribType_Taxable -> "Taxable"
+    )
+;;
+
+let lastcapacity_to_string (d)  =
+    (match d with
+        | FIX_LastCapacity_Agent -> "Agent"
+        | FIX_LastCapacity_CrossAsAgent -> "CrossAsAgent"
+        | FIX_LastCapacity_Principal -> "Principal"
+        | FIX_LastCapacity_CrossAsPrincipal -> "CrossAsPrincipal"
     )
 ;;
 
@@ -1985,6 +1031,25 @@ let legalconfirm_to_string (d)  =
     )
 ;;
 
+let liquidityindtype_to_string (d)  =
+    (match d with
+        | FIX_LiquidityIndType_Other -> "Other"
+        | FIX_LiquidityIndType_NormalMarketSize -> "NormalMarketSize"
+        | FIX_LiquidityIndType_TwentyDayMovingAverage -> "TwentyDayMovingAverage"
+        | FIX_LiquidityIndType_FiveDayMovingAverage -> "FiveDayMovingAverage"
+    )
+;;
+
+let listexecinsttype_to_string (d)  =
+    (match d with
+        | FIX_ListExecInstType_SellDriven -> "SellDriven"
+        | FIX_ListExecInstType_Immediate -> "Immediate"
+        | FIX_ListExecInstType_BuyDrivenCashTopUp -> "BuyDrivenCashTopUp"
+        | FIX_ListExecInstType_WaitForInstruction -> "WaitForInstruction"
+        | FIX_ListExecInstType_BuyDrivenCashWithdraw -> "BuyDrivenCashWithdraw"
+    )
+;;
+
 let listorderstatus_to_string (d)  =
     (match d with
         | FIX_ListOrderStatus_AllDone -> "AllDone"
@@ -2008,10 +1073,68 @@ let liststatustype_to_string (d)  =
     )
 ;;
 
+let locatereqd_to_string (d)  =
+    (match d with
+        | FIX_LocateReqd_No -> "No"
+        | FIX_LocateReqd_Yes -> "Yes"
+    )
+;;
+
+let mdentrytype_to_string (d)  =
+    (match d with
+        | FIX_MDEntryType_OpenInterest -> "OpenInterest"
+        | FIX_MDEntryType_ClosingPrice -> "ClosingPrice"
+        | FIX_MDEntryType_IndexValue -> "IndexValue"
+        | FIX_MDEntryType_Offer -> "Offer"
+        | FIX_MDEntryType_SettlementPrice -> "SettlementPrice"
+        | FIX_MDEntryType_TradingSessionVWAPPrice -> "TradingSessionVWAPPrice"
+        | FIX_MDEntryType_Trade -> "Trade"
+        | FIX_MDEntryType_TradingSessionHighPrice -> "TradingSessionHighPrice"
+        | FIX_MDEntryType_OpeningPrice -> "OpeningPrice"
+        | FIX_MDEntryType_TradeVolume -> "TradeVolume"
+        | FIX_MDEntryType_Imbalance -> "Imbalance"
+        | FIX_MDEntryType_Bid -> "Bid"
+        | FIX_MDEntryType_TradingSessionLowPrice -> "TradingSessionLowPrice"
+    )
+;;
+
 let mdimplicitdelete_to_string (d)  =
     (match d with
         | FIX_MDImplicitDelete_No -> "No"
         | FIX_MDImplicitDelete_Yes -> "Yes"
+    )
+;;
+
+let mdreqrejreason_to_string (d)  =
+    (match d with
+        | FIX_MDReqRejReason_UnsupportedAggregatedBook -> "UnsupportedAggregatedBook"
+        | FIX_MDReqRejReason_UnsupportedMDUpdateType -> "UnsupportedMDUpdateType"
+        | FIX_MDReqRejReason_UnsupportedMDImplicitDelete -> "UnsupportedMDImplicitDelete"
+        | FIX_MDReqRejReason_InsufficientPermissions -> "InsufficientPermissions"
+        | FIX_MDReqRejReason_UnsupportedScope -> "UnsupportedScope"
+        | FIX_MDReqRejReason_UnsupportedTradingSessionID -> "UnsupportedTradingSessionID"
+        | FIX_MDReqRejReason_UnsupportedSubscriptionRequestType -> "UnsupportedSubscriptionRequestType"
+        | FIX_MDReqRejReason_UnsupportedMDEntryType -> "UnsupportedMDEntryType"
+        | FIX_MDReqRejReason_InsufficientBandwidth -> "InsufficientBandwidth"
+        | FIX_MDReqRejReason_DuplicateMDReqID -> "DuplicateMDReqID"
+        | FIX_MDReqRejReason_UnsupportedMarketDepth -> "UnsupportedMarketDepth"
+        | FIX_MDReqRejReason_UnsupportedOpenCloseSettleFlag -> "UnsupportedOpenCloseSettleFlag"
+        | FIX_MDReqRejReason_UnknownSymbol -> "UnknownSymbol"
+    )
+;;
+
+let mdupdateaction_to_string (d)  =
+    (match d with
+        | FIX_MDUpdateAction_Delete -> "Delete"
+        | FIX_MDUpdateAction_Change -> "Change"
+        | FIX_MDUpdateAction_New -> "New"
+    )
+;;
+
+let mdupdatetype_to_string (d)  =
+    (match d with
+        | FIX_MDUpdateType_FullRefresh -> "FullRefresh"
+        | FIX_MDUpdateType_IncrementalRefresh -> "IncrementalRefresh"
     )
 ;;
 
@@ -2097,11 +1220,37 @@ let matchtype_to_string (d)  =
     )
 ;;
 
+let messageencoding_to_string (d)  =
+    (match d with
+        | FIX_MessageEncoding_ISO2022JP -> "ISO2022JP"
+        | FIX_MessageEncoding_UTF8 -> "UTF8"
+        | FIX_MessageEncoding_ShiftJIS -> "ShiftJIS"
+        | FIX_MessageEncoding_EUCJP -> "EUCJP"
+    )
+;;
+
 let miscfeebasis_to_string (d)  =
     (match d with
         | FIX_MiscFeeBasis_Percentage -> "Percentage"
         | FIX_MiscFeeBasis_PerUnit -> "PerUnit"
         | FIX_MiscFeeBasis_Absolute -> "Absolute"
+    )
+;;
+
+let miscfeetype_to_string (d)  =
+    (match d with
+        | FIX_MiscFeeType_Other -> "Other"
+        | FIX_MiscFeeType_Agent -> "Agent"
+        | FIX_MiscFeeType_LocalCommission -> "LocalCommission"
+        | FIX_MiscFeeType_ExchangeFees -> "ExchangeFees"
+        | FIX_MiscFeeType_Stamp -> "Stamp"
+        | FIX_MiscFeeType_Markup -> "Markup"
+        | FIX_MiscFeeType_PerTransaction -> "PerTransaction"
+        | FIX_MiscFeeType_Regulatory -> "Regulatory"
+        | FIX_MiscFeeType_Tax -> "Tax"
+        | FIX_MiscFeeType_ConsumptionTax -> "ConsumptionTax"
+        | FIX_MiscFeeType_Conversion -> "Conversion"
+        | FIX_MiscFeeType_Levy -> "Levy"
     )
 ;;
 
@@ -2115,11 +1264,33 @@ let moneylaunderingstatus_to_string (d)  =
     )
 ;;
 
+let msgdirection_to_string (d)  =
+    (match d with
+        | FIX_MsgDirection_Send -> "Send"
+        | FIX_MsgDirection_Receive -> "Receive"
+    )
+;;
+
+let multilegreportingtype_to_string (d)  =
+    (match d with
+        | FIX_MultiLegReportingType_SingleSecurity -> "SingleSecurity"
+        | FIX_MultiLegReportingType_IndividualLegOfAMultiLegSecurity -> "IndividualLegOfAMultiLegSecurity"
+        | FIX_MultiLegReportingType_MultiLegSecurity -> "MultiLegSecurity"
+    )
+;;
+
 let multilegrpttypereq_to_string (d)  =
     (match d with
         | FIX_MultiLegRptTypeReq_ReportByInstrumentLegsOnly -> "ReportByInstrumentLegsOnly"
         | FIX_MultiLegRptTypeReq_ReportByMulitlegSecurityOnly -> "ReportByMulitlegSecurityOnly"
         | FIX_MultiLegRptTypeReq_ReportByMultilegSecurityAndInstrumentLegs -> "ReportByMultilegSecurityAndInstrumentLegs"
+    )
+;;
+
+let netgrossind_to_string (d)  =
+    (match d with
+        | FIX_NetGrossInd_Net -> "Net"
+        | FIX_NetGrossInd_Gross -> "Gross"
     )
 ;;
 
@@ -2146,6 +1317,13 @@ let nosides_to_string (d)  =
     )
 ;;
 
+let notifybrokerofcredit_to_string (d)  =
+    (match d with
+        | FIX_NotifyBrokerOfCredit_DetailsShouldBeCommunicated -> "DetailsShouldBeCommunicated"
+        | FIX_NotifyBrokerOfCredit_DetailsShouldNotBeCommunicated -> "DetailsShouldNotBeCommunicated"
+    )
+;;
+
 let oddlot_to_string (d)  =
     (match d with
         | FIX_OddLot_TreatAsRoundLot -> "TreatAsRoundLot"
@@ -2161,6 +1339,69 @@ let openclosesettlflag_to_string (d)  =
         | FIX_OpenCloseSettlFlag_TheoreticalPriceValue -> "TheoreticalPriceValue"
         | FIX_OpenCloseSettlFlag_ExpectedEntry -> "ExpectedEntry"
         | FIX_OpenCloseSettlFlag_SessionOpen -> "SessionOpen"
+    )
+;;
+
+let ordrejreason_to_string (d)  =
+    (match d with
+        | FIX_OrdRejReason_DuplicateOrder -> "DuplicateOrder"
+        | FIX_OrdRejReason_Other -> "Other"
+        | FIX_OrdRejReason_UnknownOrder -> "UnknownOrder"
+        | FIX_OrdRejReason_TooLateToEnter -> "TooLateToEnter"
+        | FIX_OrdRejReason_OrderExceedsLimit -> "OrderExceedsLimit"
+        | FIX_OrdRejReason_UnknownAccount -> "UnknownAccount"
+        | FIX_OrdRejReason_BrokerCredit -> "BrokerCredit"
+        | FIX_OrdRejReason_UnsupportedOrderCharacteristic -> "UnsupportedOrderCharacteristic"
+        | FIX_OrdRejReason_DuplicateOfAVerballyCommunicatedOrder -> "DuplicateOfAVerballyCommunicatedOrder"
+        | FIX_OrdRejReason_IncorrectQuantity -> "IncorrectQuantity"
+        | FIX_OrdRejReason_TradeAlongRequired -> "TradeAlongRequired"
+        | FIX_OrdRejReason_StaleOrder -> "StaleOrder"
+        | FIX_OrdRejReason_InvalidInvestorID -> "InvalidInvestorID"
+        | FIX_OrdRejReason_ExchangeClosed -> "ExchangeClosed"
+        | FIX_OrdRejReason_IncorrectAllocatedQuantity -> "IncorrectAllocatedQuantity"
+        | FIX_OrdRejReason_UnknownSymbol -> "UnknownSymbol"
+    )
+;;
+
+let ordstatus_to_string (d)  =
+    (match d with
+        | FIX_OrdStatus_PendingCancel -> "PendingCancel"
+        | FIX_OrdStatus_Stopped -> "Stopped"
+        | FIX_OrdStatus_PendingNew -> "PendingNew"
+        | FIX_OrdStatus_Rejected -> "Rejected"
+        | FIX_OrdStatus_Calculated -> "Calculated"
+        | FIX_OrdStatus_Expired -> "Expired"
+        | FIX_OrdStatus_Filled -> "Filled"
+        | FIX_OrdStatus_Canceled -> "Canceled"
+        | FIX_OrdStatus_Replaced -> "Replaced"
+        | FIX_OrdStatus_PendingReplace -> "PendingReplace"
+        | FIX_OrdStatus_DoneForDay -> "DoneForDay"
+        | FIX_OrdStatus_Suspended -> "Suspended"
+        | FIX_OrdStatus_New -> "New"
+        | FIX_OrdStatus_PartiallyFilled -> "PartiallyFilled"
+        | FIX_OrdStatus_AcceptedForBidding -> "AcceptedForBidding"
+    )
+;;
+
+let ordtype_to_string (d)  =
+    (match d with
+        | FIX_OrdType_LimitOrBetter -> "LimitOrBetter"
+        | FIX_OrdType_NextFundValuationPoint -> "NextFundValuationPoint"
+        | FIX_OrdType_WithOrWithout -> "WithOrWithout"
+        | FIX_OrdType_PreviouslyIndicated -> "PreviouslyIndicated"
+        | FIX_OrdType_Stop -> "Stop"
+        | FIX_OrdType_Market -> "Market"
+        | FIX_OrdType_OnBasis -> "OnBasis"
+        | FIX_OrdType_Funari -> "Funari"
+        | FIX_OrdType_Pegged -> "Pegged"
+        | FIX_OrdType_LimitWithOrWithout -> "LimitWithOrWithout"
+        | FIX_OrdType_StopLimit -> "StopLimit"
+        | FIX_OrdType_ForexSwap -> "ForexSwap"
+        | FIX_OrdType_MarketIfTouched -> "MarketIfTouched"
+        | FIX_OrdType_MarketWithLeftOverAsLimit -> "MarketWithLeftOverAsLimit"
+        | FIX_OrdType_PreviouslyQuoted -> "PreviouslyQuoted"
+        | FIX_OrdType_Limit -> "Limit"
+        | FIX_OrdType_PreviousFundValuationPoint -> "PreviousFundValuationPoint"
     )
 ;;
 
@@ -2228,7 +1469,6 @@ let partyidsource_to_string (d)  =
         | FIX_PartyIDSource_USSocialSecurityNumber -> "USSocialSecurityNumber"
         | FIX_PartyIDSource_Proprietary -> "Proprietary"
         | FIX_PartyIDSource_AustralianTaxFileNumber -> "AustralianTaxFileNumber"
-        | FIX_PartyIDSource_ShortCodeIdentifier -> "ShortCodeIdentifier"
         | FIX_PartyIDSource_MalaysianCentralDepository -> "MalaysianCentralDepository"
         | FIX_PartyIDSource_ISITCAcronym -> "ISITCAcronym"
         | FIX_PartyIDSource_ISOCountryCode -> "ISOCountryCode"
@@ -2275,7 +1515,6 @@ let partyrole_to_string (d)  =
         | FIX_PartyRole_BrokerOfCredit -> "BrokerOfCredit"
         | FIX_PartyRole_SubCustodian -> "SubCustodian"
         | FIX_PartyRole_EnteringTrader -> "EnteringTrader"
-        | FIX_PartyRole_InvestmentDecisionMaker -> "InvestmentDecisionMaker"
         | FIX_PartyRole_ExecutingFirm -> "ExecutingFirm"
         | FIX_PartyRole_FundManagerClientID -> "FundManagerClientID"
         | FIX_PartyRole_ContraClearingFirm -> "ContraClearingFirm"
@@ -2492,6 +1731,20 @@ let positioneffect_to_string (d)  =
     )
 ;;
 
+let possdupflag_to_string (d)  =
+    (match d with
+        | FIX_PossDupFlag_PossibleDuplicate -> "PossibleDuplicate"
+        | FIX_PossDupFlag_OriginalTransmission -> "OriginalTransmission"
+    )
+;;
+
+let possresend_to_string (d)  =
+    (match d with
+        | FIX_PossResend_OriginalTransmission -> "OriginalTransmission"
+        | FIX_PossResend_PossibleResend -> "PossibleResend"
+    )
+;;
+
 let preallocmethod_to_string (d)  =
     (match d with
         | FIX_PreallocMethod_ProRata -> "ProRata"
@@ -2506,10 +1759,38 @@ let previouslyreported_to_string (d)  =
     )
 ;;
 
+let pricetype_to_string (d)  =
+    (match d with
+        | FIX_PriceType_Discount -> "Discount"
+        | FIX_PriceType_Spread -> "Spread"
+        | FIX_PriceType_TEDPrice -> "TEDPrice"
+        | FIX_PriceType_FixedCabinetTradePrice -> "FixedCabinetTradePrice"
+        | FIX_PriceType_Percentage -> "Percentage"
+        | FIX_PriceType_VariableCabinetTradePrice -> "VariableCabinetTradePrice"
+        | FIX_PriceType_TEDYield -> "TEDYield"
+        | FIX_PriceType_PerUnit -> "PerUnit"
+        | FIX_PriceType_FixedAmount -> "FixedAmount"
+        | FIX_PriceType_Premium -> "Premium"
+        | FIX_PriceType_Yield -> "Yield"
+    )
+;;
+
 let priorityindicator_to_string (d)  =
     (match d with
         | FIX_PriorityIndicator_PriorityUnchanged -> "PriorityUnchanged"
         | FIX_PriorityIndicator_LostPriorityAsResultOfOrderChange -> "LostPriorityAsResultOfOrderChange"
+    )
+;;
+
+let processcode_to_string (d)  =
+    (match d with
+        | FIX_ProcessCode_Regular -> "Regular"
+        | FIX_ProcessCode_SoftDollarStepOut -> "SoftDollarStepOut"
+        | FIX_ProcessCode_StepIn -> "StepIn"
+        | FIX_ProcessCode_PlanSponsor -> "PlanSponsor"
+        | FIX_ProcessCode_SoftDollarStepIn -> "SoftDollarStepIn"
+        | FIX_ProcessCode_SoftDollar -> "SoftDollar"
+        | FIX_ProcessCode_StepOut -> "StepOut"
     )
 ;;
 
@@ -2531,6 +1812,14 @@ let product_to_string (d)  =
     )
 ;;
 
+let progrptreqs_to_string (d)  =
+    (match d with
+        | FIX_ProgRptReqs_BuySideRequests -> "BuySideRequests"
+        | FIX_ProgRptReqs_SellSideSends -> "SellSideSends"
+        | FIX_ProgRptReqs_RealTimeExecutionReports -> "RealTimeExecutionReports"
+    )
+;;
+
 let publishtrdindicator_to_string (d)  =
     (match d with
         | FIX_PublishTrdIndicator_ReportTrade -> "ReportTrade"
@@ -2538,10 +1827,40 @@ let publishtrdindicator_to_string (d)  =
     )
 ;;
 
+let putorcall_to_string (d)  =
+    (match d with
+        | FIX_PutOrCall_Call -> "Call"
+        | FIX_PutOrCall_Put -> "Put"
+    )
+;;
+
 let qtytype_to_string (d)  =
     (match d with
         | FIX_QtyType_Units -> "Units"
         | FIX_QtyType_Contracts -> "Contracts"
+    )
+;;
+
+let quotecanceltype_to_string (d)  =
+    (match d with
+        | FIX_QuoteCancelType_CancelAllQuotes -> "CancelAllQuotes"
+        | FIX_QuoteCancelType_CancelForOneOrMoreSecurities -> "CancelForOneOrMoreSecurities"
+        | FIX_QuoteCancelType_CancelForUnderlyingSecurity -> "CancelForUnderlyingSecurity"
+        | FIX_QuoteCancelType_CancelForSecurityType -> "CancelForSecurityType"
+    )
+;;
+
+let quotecondition_to_string (d)  =
+    (match d with
+        | FIX_QuoteCondition_Closed -> "Closed"
+        | FIX_QuoteCondition_Locked -> "Locked"
+        | FIX_QuoteCondition_Crossed -> "Crossed"
+        | FIX_QuoteCondition_NonFirm -> "NonFirm"
+        | FIX_QuoteCondition_FastTrading -> "FastTrading"
+        | FIX_QuoteCondition_ConsolidatedBest -> "ConsolidatedBest"
+        | FIX_QuoteCondition_Open -> "Open"
+        | FIX_QuoteCondition_ExchangeBest -> "ExchangeBest"
+        | FIX_QuoteCondition_Depth -> "Depth"
     )
 ;;
 
@@ -2557,6 +1876,21 @@ let quotepricetype_to_string (d)  =
         | FIX_QuotePriceType_Yield -> "Yield"
         | FIX_QuotePriceType_YieldSpread -> "YieldSpread"
         | FIX_QuotePriceType_PerShare -> "PerShare"
+    )
+;;
+
+let quoterejectreason_to_string (d)  =
+    (match d with
+        | FIX_QuoteRejectReason_DuplicateQuote -> "DuplicateQuote"
+        | FIX_QuoteRejectReason_Other -> "Other"
+        | FIX_QuoteRejectReason_Exchange -> "Exchange"
+        | FIX_QuoteRejectReason_InvalidPrice -> "InvalidPrice"
+        | FIX_QuoteRejectReason_InvalidBid -> "InvalidBid"
+        | FIX_QuoteRejectReason_UnknownQuote -> "UnknownQuote"
+        | FIX_QuoteRejectReason_TooLateToEnter -> "TooLateToEnter"
+        | FIX_QuoteRejectReason_QuoteRequestExceedsLimit -> "QuoteRequestExceedsLimit"
+        | FIX_QuoteRejectReason_NotAuthorizedToQuoteSecurity -> "NotAuthorizedToQuoteSecurity"
+        | FIX_QuoteRejectReason_UnknownSymbol -> "UnknownSymbol"
     )
 ;;
 
@@ -2576,6 +1910,13 @@ let quoterequestrejectreason_to_string (d)  =
     )
 ;;
 
+let quoterequesttype_to_string (d)  =
+    (match d with
+        | FIX_QuoteRequestType_Manual -> "Manual"
+        | FIX_QuoteRequestType_Automatic -> "Automatic"
+    )
+;;
+
 let quoteresptype_to_string (d)  =
     (match d with
         | FIX_QuoteRespType_Cover -> "Cover"
@@ -2584,6 +1925,14 @@ let quoteresptype_to_string (d)  =
         | FIX_QuoteRespType_Pass -> "Pass"
         | FIX_QuoteRespType_DoneAway -> "DoneAway"
         | FIX_QuoteRespType_Expired -> "Expired"
+    )
+;;
+
+let quoteresponselevel_to_string (d)  =
+    (match d with
+        | FIX_QuoteResponseLevel_NoAcknowledgement -> "NoAcknowledgement"
+        | FIX_QuoteResponseLevel_AcknowledgeOnlyNegativeOrErroneousQuotes -> "AcknowledgeOnlyNegativeOrErroneousQuotes"
+        | FIX_QuoteResponseLevel_AcknowledgeEachQuoteMessage -> "AcknowledgeEachQuoteMessage"
     )
 ;;
 
@@ -2658,6 +2007,20 @@ let registtranstype_to_string (d)  =
     )
 ;;
 
+let reporttoexch_to_string (d)  =
+    (match d with
+        | FIX_ReportToExch_ReceiverReports -> "ReceiverReports"
+        | FIX_ReportToExch_SenderReports -> "SenderReports"
+    )
+;;
+
+let resetseqnumflag_to_string (d)  =
+    (match d with
+        | FIX_ResetSeqNumFlag_No -> "No"
+        | FIX_ResetSeqNumFlag_Yes -> "Yes"
+    )
+;;
+
 let responsetransporttype_to_string (d)  =
     (match d with
         | FIX_ResponseTransportType_Inband -> "Inband"
@@ -2670,6 +2033,15 @@ let roundingdirection_to_string (d)  =
         | FIX_RoundingDirection_RoundDown -> "RoundDown"
         | FIX_RoundingDirection_RoundUp -> "RoundUp"
         | FIX_RoundingDirection_RoundToNearest -> "RoundToNearest"
+    )
+;;
+
+let routingtype_to_string (d)  =
+    (match d with
+        | FIX_RoutingType_TargetList -> "TargetList"
+        | FIX_RoutingType_TargetFirm -> "TargetFirm"
+        | FIX_RoutingType_BlockList -> "BlockList"
+        | FIX_RoutingType_BlockFirm -> "BlockFirm"
     )
 ;;
 
@@ -2726,6 +2098,151 @@ let securityrequestresult_to_string (d)  =
     )
 ;;
 
+let securityrequesttype_to_string (d)  =
+    (match d with
+        | FIX_SecurityRequestType_RequestListSecurities -> "RequestListSecurities"
+        | FIX_SecurityRequestType_RequestListSecurityTypes -> "RequestListSecurityTypes"
+        | FIX_SecurityRequestType_RequestSecurityIdentityAndSpecifications -> "RequestSecurityIdentityAndSpecifications"
+        | FIX_SecurityRequestType_RequestSecurityIdentityForSpecifications -> "RequestSecurityIdentityForSpecifications"
+    )
+;;
+
+let securityresponsetype_to_string (d)  =
+    (match d with
+        | FIX_SecurityResponseType_AcceptAsIs -> "AcceptAsIs"
+        | FIX_SecurityResponseType_RejectSecurityProposal -> "RejectSecurityProposal"
+        | FIX_SecurityResponseType_CannotMatchSelectionCriteria -> "CannotMatchSelectionCriteria"
+        | FIX_SecurityResponseType_AcceptWithRevisions -> "AcceptWithRevisions"
+    )
+;;
+
+let securitytradingstatus_to_string (d)  =
+    (match d with
+        | FIX_SecurityTradingStatus_ITSPreOpening -> "ITSPreOpening"
+        | FIX_SecurityTradingStatus_PreOpen -> "PreOpen"
+        | FIX_SecurityTradingStatus_MarketImbalanceBuy -> "MarketImbalanceBuy"
+        | FIX_SecurityTradingStatus_NoMarketOnCloseImbalance -> "NoMarketOnCloseImbalance"
+        | FIX_SecurityTradingStatus_NotAvailableForTrading -> "NotAvailableForTrading"
+        | FIX_SecurityTradingStatus_OpeningRotation -> "OpeningRotation"
+        | FIX_SecurityTradingStatus_NoMarketImbalance -> "NoMarketImbalance"
+        | FIX_SecurityTradingStatus_TradeDisseminationTime -> "TradeDisseminationTime"
+        | FIX_SecurityTradingStatus_ReadyToTrade -> "ReadyToTrade"
+        | FIX_SecurityTradingStatus_UnknownOrInvalid -> "UnknownOrInvalid"
+        | FIX_SecurityTradingStatus_MarketOnCloseImbalanceBuy -> "MarketOnCloseImbalanceBuy"
+        | FIX_SecurityTradingStatus_OpeningDelay -> "OpeningDelay"
+        | FIX_SecurityTradingStatus_NoOpen -> "NoOpen"
+        | FIX_SecurityTradingStatus_TradingHalt -> "TradingHalt"
+        | FIX_SecurityTradingStatus_MarketOnCloseImbalanceSell -> "MarketOnCloseImbalanceSell"
+        | FIX_SecurityTradingStatus_MarketImbalanceSell -> "MarketImbalanceSell"
+        | FIX_SecurityTradingStatus_NotTradedOnThisMarket -> "NotTradedOnThisMarket"
+        | FIX_SecurityTradingStatus_TradingRangeIndication -> "TradingRangeIndication"
+        | FIX_SecurityTradingStatus_FastMarket -> "FastMarket"
+        | FIX_SecurityTradingStatus_NewPriceIndication -> "NewPriceIndication"
+        | FIX_SecurityTradingStatus_PriceIndication -> "PriceIndication"
+        | FIX_SecurityTradingStatus_Resume -> "Resume"
+    )
+;;
+
+let securitytype_to_string (d)  =
+    (match d with
+        | FIX_SecurityType_MutualFund -> "MutualFund"
+        | FIX_SecurityType_YankeeCorporateBond -> "YankeeCorporateBond"
+        | FIX_SecurityType_InterestStripFromAnyBondOrNote -> "InterestStripFromAnyBondOrNote"
+        | FIX_SecurityType_Revolver -> "Revolver"
+        | FIX_SecurityType_CommercialPaper -> "CommercialPaper"
+        | FIX_SecurityType_RevenueAnticipationNote -> "RevenueAnticipationNote"
+        | FIX_SecurityType_Matured -> "Matured"
+        | FIX_SecurityType_Retired -> "Retired"
+        | FIX_SecurityType_StructuredNotes -> "StructuredNotes"
+        | FIX_SecurityType_MortgagePrivatePlacement -> "MortgagePrivatePlacement"
+        | FIX_SecurityType_Pfandbriefe -> "Pfandbriefe"
+        | FIX_SecurityType_OtherAnticipationNotes -> "OtherAnticipationNotes"
+        | FIX_SecurityType_USDSupranationalCoupons -> "USDSupranationalCoupons"
+        | FIX_SecurityType_MandatoryTender -> "MandatoryTender"
+        | FIX_SecurityType_PreferredStock -> "PreferredStock"
+        | FIX_SecurityType_ToBeAnnounced -> "ToBeAnnounced"
+        | FIX_SecurityType_GeneralObligationBonds -> "GeneralObligationBonds"
+        | FIX_SecurityType_TimeDeposit -> "TimeDeposit"
+        | FIX_SecurityType_ExtendedCommNote -> "ExtendedCommNote"
+        | FIX_SecurityType_MiscellaneousPassThrough -> "MiscellaneousPassThrough"
+        | FIX_SecurityType_YankeeCertificateOfDeposit -> "YankeeCertificateOfDeposit"
+        | FIX_SecurityType_Future -> "Future"
+        | FIX_SecurityType_Forward -> "Forward"
+        | FIX_SecurityType_VariableRateDemandNote -> "VariableRateDemandNote"
+        | FIX_SecurityType_MediumTermNotes -> "MediumTermNotes"
+        | FIX_SecurityType_Option -> "Option"
+        | FIX_SecurityType_Repurchase -> "Repurchase"
+        | FIX_SecurityType_PlazosFijos -> "PlazosFijos"
+        | FIX_SecurityType_USTreasuryBill -> "USTreasuryBill"
+        | FIX_SecurityType_BankNotes -> "BankNotes"
+        | FIX_SecurityType_MortgagePrincipalOnly -> "MortgagePrincipalOnly"
+        | FIX_SecurityType_MortgageInterestOnly -> "MortgageInterestOnly"
+        | FIX_SecurityType_AssetBackedSecurities -> "AssetBackedSecurities"
+        | FIX_SecurityType_Warrant -> "Warrant"
+        | FIX_SecurityType_SpecialTax -> "SpecialTax"
+        | FIX_SecurityType_EuroSupranationalCoupons -> "EuroSupranationalCoupons"
+        | FIX_SecurityType_ForeignExchangeContract -> "ForeignExchangeContract"
+        | FIX_SecurityType_USTreasuryBillOld -> "USTreasuryBillOld"
+        | FIX_SecurityType_CertificateOfDeposit -> "CertificateOfDeposit"
+        | FIX_SecurityType_TaxAnticipationNote -> "TaxAnticipationNote"
+        | FIX_SecurityType_LetterOfCredit -> "LetterOfCredit"
+        | FIX_SecurityType_CollateralizedMortgageObligation -> "CollateralizedMortgageObligation"
+        | FIX_SecurityType_IOETTEMortgage -> "IOETTEMortgage"
+        | FIX_SecurityType_MortgageBackedSecurities -> "MortgageBackedSecurities"
+        | FIX_SecurityType_BillOfExchanges -> "BillOfExchanges"
+        | FIX_SecurityType_Amended -> "Amended"
+        | FIX_SecurityType_RevenueBonds -> "RevenueBonds"
+        | FIX_SecurityType_EuroCorporateBond -> "EuroCorporateBond"
+        | FIX_SecurityType_PrivateExportFunding -> "PrivateExportFunding"
+        | FIX_SecurityType_RevolverLoan -> "RevolverLoan"
+        | FIX_SecurityType_PrincipalStripFromANonCallableBondOrNote -> "PrincipalStripFromANonCallableBondOrNote"
+        | FIX_SecurityType_Withdrawn -> "Withdrawn"
+        | FIX_SecurityType_DepositNotes -> "DepositNotes"
+        | FIX_SecurityType_SpecialAssessment -> "SpecialAssessment"
+        | FIX_SecurityType_EuroSovereigns -> "EuroSovereigns"
+        | FIX_SecurityType_TaxAllocation -> "TaxAllocation"
+        | FIX_SecurityType_EuroCertificateOfDeposit -> "EuroCertificateOfDeposit"
+        | FIX_SecurityType_PromissoryNote -> "PromissoryNote"
+        | FIX_SecurityType_PrincipalStripOfACallableBondOrNote -> "PrincipalStripOfACallableBondOrNote"
+        | FIX_SecurityType_Overnight -> "Overnight"
+        | FIX_SecurityType_ConvertibleBond -> "ConvertibleBond"
+        | FIX_SecurityType_Corp -> "Corp"
+        | FIX_SecurityType_SpecialObligation -> "SpecialObligation"
+        | FIX_SecurityType_SecuritiesLoan -> "SecuritiesLoan"
+        | FIX_SecurityType_CertificateOfObligation -> "CertificateOfObligation"
+        | FIX_SecurityType_FederalAgencyDiscountNote -> "FederalAgencyDiscountNote"
+        | FIX_SecurityType_CallLoans -> "CallLoans"
+        | FIX_SecurityType_DebtorInPossession -> "DebtorInPossession"
+        | FIX_SecurityType_USTreasuryBond -> "USTreasuryBond"
+        | FIX_SecurityType_SecuritiesPledge -> "SecuritiesPledge"
+        | FIX_SecurityType_Replaced -> "Replaced"
+        | FIX_SecurityType_BradyBond -> "BradyBond"
+        | FIX_SecurityType_CorporateBond -> "CorporateBond"
+        | FIX_SecurityType_TermLoan -> "TermLoan"
+        | FIX_SecurityType_TaxRevenueAnticipationNote -> "TaxRevenueAnticipationNote"
+        | FIX_SecurityType_SwingLineFacility -> "SwingLineFacility"
+        | FIX_SecurityType_TaxExemptCommercialPaper -> "TaxExemptCommercialPaper"
+        | FIX_SecurityType_NoSecurityType -> "NoSecurityType"
+        | FIX_SecurityType_DualCurrency -> "DualCurrency"
+        | FIX_SecurityType_FederalAgencyCoupon -> "FederalAgencyCoupon"
+        | FIX_SecurityType_BankersAcceptance -> "BankersAcceptance"
+        | FIX_SecurityType_MultilegInstrument -> "MultilegInstrument"
+        | FIX_SecurityType_EuroCommercialPaper -> "EuroCommercialPaper"
+        | FIX_SecurityType_CommonStock -> "CommonStock"
+        | FIX_SecurityType_USTreasuryNote -> "USTreasuryNote"
+        | FIX_SecurityType_TreasuryInflationProtectedSecurities -> "TreasuryInflationProtectedSecurities"
+        | FIX_SecurityType_IndexedLinked -> "IndexedLinked"
+        | FIX_SecurityType_BridgeLoan -> "BridgeLoan"
+        | FIX_SecurityType_ShortTermLoanNote -> "ShortTermLoanNote"
+        | FIX_SecurityType_Defaulted -> "Defaulted"
+        | FIX_SecurityType_USTreasuryNoteOld -> "USTreasuryNoteOld"
+        | FIX_SecurityType_CertificateOfParticipation -> "CertificateOfParticipation"
+        | FIX_SecurityType_CorporatePrivatePlacement -> "CorporatePrivatePlacement"
+        | FIX_SecurityType_BuySellback -> "BuySellback"
+        | FIX_SecurityType_LiquidityNote -> "LiquidityNote"
+    )
+;;
+
 let settlcurrfxratecalc_to_string (d)  =
     (match d with
         | FIX_SettlCurrFxRateCalc_Multiply -> "Multiply"
@@ -2742,12 +2259,37 @@ let settldeliverytype_to_string (d)  =
     )
 ;;
 
+let settlinstmode_to_string (d)  =
+    (match d with
+        | FIX_SettlInstMode_RequestReject -> "RequestReject"
+        | FIX_SettlInstMode_StandingInstructionsProvided -> "StandingInstructionsProvided"
+        | FIX_SettlInstMode_SpecificOrderForASingleAccount -> "SpecificOrderForASingleAccount"
+    )
+;;
+
 let settlinstreqrejcode_to_string (d)  =
     (match d with
         | FIX_SettlInstReqRejCode_Other -> "Other"
         | FIX_SettlInstReqRejCode_NoMatchingSettlementInstructionsFound -> "NoMatchingSettlementInstructionsFound"
         | FIX_SettlInstReqRejCode_UnknownAccount -> "UnknownAccount"
         | FIX_SettlInstReqRejCode_UnableToProcessRequest -> "UnableToProcessRequest"
+    )
+;;
+
+let settlinstsource_to_string (d)  =
+    (match d with
+        | FIX_SettlInstSource_Investor -> "Investor"
+        | FIX_SettlInstSource_Institution -> "Institution"
+        | FIX_SettlInstSource_BrokerCredit -> "BrokerCredit"
+    )
+;;
+
+let settlinsttranstype_to_string (d)  =
+    (match d with
+        | FIX_SettlInstTransType_Cancel -> "Cancel"
+        | FIX_SettlInstTransType_Replace -> "Replace"
+        | FIX_SettlInstTransType_New -> "New"
+        | FIX_SettlInstTransType_Restate -> "Restate"
     )
 ;;
 
@@ -2792,6 +2334,27 @@ let shortsalereason_to_string (d)  =
     )
 ;;
 
+let side_to_string (d)  =
+    (match d with
+        | FIX_Side_AsDefined -> "AsDefined"
+        | FIX_Side_Opposite -> "Opposite"
+        | FIX_Side_Buy -> "Buy"
+        | FIX_Side_CrossShortExempt -> "CrossShortExempt"
+        | FIX_Side_Borrow -> "Borrow"
+        | FIX_Side_BuyMinus -> "BuyMinus"
+        | FIX_Side_Subscribe -> "Subscribe"
+        | FIX_Side_Lend -> "Lend"
+        | FIX_Side_SellShortExempt -> "SellShortExempt"
+        | FIX_Side_Redeem -> "Redeem"
+        | FIX_Side_SellPlus -> "SellPlus"
+        | FIX_Side_Sell -> "Sell"
+        | FIX_Side_Undisclosed -> "Undisclosed"
+        | FIX_Side_Cross -> "Cross"
+        | FIX_Side_CrossShort -> "CrossShort"
+        | FIX_Side_SellShort -> "SellShort"
+    )
+;;
+
 let sidemultilegreportingtype_to_string (d)  =
     (match d with
         | FIX_SideMultiLegReportingType_SingleSecurity -> "SingleSecurity"
@@ -2804,6 +2367,23 @@ let sidevalueind_to_string (d)  =
     (match d with
         | FIX_SideValueInd_SideValue1 -> "SideValue1"
         | FIX_SideValueInd_SideValue2 -> "SideValue2"
+    )
+;;
+
+let solicitedflag_to_string (d)  =
+    (match d with
+        | FIX_SolicitedFlag_WasSolicited -> "WasSolicited"
+        | FIX_SolicitedFlag_WasNotSolicited -> "WasNotSolicited"
+    )
+;;
+
+let standinstdbtype_to_string (d)  =
+    (match d with
+        | FIX_StandInstDbType_Other -> "Other"
+        | FIX_StandInstDbType_AccountNet -> "AccountNet"
+        | FIX_StandInstDbType_DTCSID -> "DTCSID"
+        | FIX_StandInstDbType_ThomsonALERT -> "ThomsonALERT"
+        | FIX_StandInstDbType_AGlobalCustodian -> "AGlobalCustodian"
     )
 ;;
 
@@ -2871,6 +2451,14 @@ let stipulationtype_to_string (d)  =
     )
 ;;
 
+let subscriptionrequesttype_to_string (d)  =
+    (match d with
+        | FIX_SubscriptionRequestType_DisablePreviousSnapshot -> "DisablePreviousSnapshot"
+        | FIX_SubscriptionRequestType_SnapshotAndUpdates -> "SnapshotAndUpdates"
+        | FIX_SubscriptionRequestType_Snapshot -> "Snapshot"
+    )
+;;
+
 let targetstrategy_to_string (d)  =
     (match d with
         | FIX_TargetStrategy_MininizeMarketImpact -> "MininizeMarketImpact"
@@ -2930,6 +2518,56 @@ let testmessageindicator_to_string (d)  =
     )
 ;;
 
+let tickdirection_to_string (d)  =
+    (match d with
+        | FIX_TickDirection_ZeroMinusTick -> "ZeroMinusTick"
+        | FIX_TickDirection_PlusTick -> "PlusTick"
+        | FIX_TickDirection_MinusTick -> "MinusTick"
+        | FIX_TickDirection_ZeroPlusTick -> "ZeroPlusTick"
+    )
+;;
+
+let timeinforce_to_string (d)  =
+    (match d with
+        | FIX_TimeInForce_GoodTillCancel -> "GoodTillCancel"
+        | FIX_TimeInForce_AtTheClose -> "AtTheClose"
+        | FIX_TimeInForce_ImmediateOrCancel -> "ImmediateOrCancel"
+        | FIX_TimeInForce_Day -> "Day"
+        | FIX_TimeInForce_FillOrKill -> "FillOrKill"
+        | FIX_TimeInForce_AtTheOpening -> "AtTheOpening"
+        | FIX_TimeInForce_GoodTillCrossing -> "GoodTillCrossing"
+        | FIX_TimeInForce_GoodTillDate -> "GoodTillDate"
+    )
+;;
+
+let tradsesmethod_to_string (d)  =
+    (match d with
+        | FIX_TradSesMethod_OpenOutcry -> "OpenOutcry"
+        | FIX_TradSesMethod_Electronic -> "Electronic"
+        | FIX_TradSesMethod_TwoParty -> "TwoParty"
+    )
+;;
+
+let tradsesmode_to_string (d)  =
+    (match d with
+        | FIX_TradSesMode_Testing -> "Testing"
+        | FIX_TradSesMode_Simulated -> "Simulated"
+        | FIX_TradSesMode_Production -> "Production"
+    )
+;;
+
+let tradsesstatus_to_string (d)  =
+    (match d with
+        | FIX_TradSesStatus_Closed -> "Closed"
+        | FIX_TradSesStatus_PreOpen -> "PreOpen"
+        | FIX_TradSesStatus_RequestRejected -> "RequestRejected"
+        | FIX_TradSesStatus_PreClose -> "PreClose"
+        | FIX_TradSesStatus_Unknown -> "Unknown"
+        | FIX_TradSesStatus_Halted -> "Halted"
+        | FIX_TradSesStatus_Open -> "Open"
+    )
+;;
+
 let tradsesstatusrejreason_to_string (d)  =
     (match d with
         | FIX_TradSesStatusRejReason_Other -> "Other"
@@ -2942,6 +2580,28 @@ let tradeallocindicator_to_string (d)  =
         | FIX_TradeAllocIndicator_UseAllocationProvidedWithTheTrade -> "UseAllocationProvidedWithTheTrade"
         | FIX_TradeAllocIndicator_AllocationNotRequired -> "AllocationNotRequired"
         | FIX_TradeAllocIndicator_AllocationRequired -> "AllocationRequired"
+    )
+;;
+
+let tradecondition_to_string (d)  =
+    (match d with
+        | FIX_TradeCondition_Opened -> "Opened"
+        | FIX_TradeCondition_Rule127Trade -> "Rule127Trade"
+        | FIX_TradeCondition_CashTrade -> "CashTrade"
+        | FIX_TradeCondition_IntradayTradeDetail -> "IntradayTradeDetail"
+        | FIX_TradeCondition_SoldLast -> "SoldLast"
+        | FIX_TradeCondition_Cash -> "Cash"
+        | FIX_TradeCondition_StoppedStock -> "StoppedStock"
+        | FIX_TradeCondition_ImbalanceMoreSellers -> "ImbalanceMoreSellers"
+        | FIX_TradeCondition_Sold -> "Sold"
+        | FIX_TradeCondition_ImbalanceMoreBuyers -> "ImbalanceMoreBuyers"
+        | FIX_TradeCondition_NextDay -> "NextDay"
+        | FIX_TradeCondition_Opening -> "Opening"
+        | FIX_TradeCondition_Seller -> "Seller"
+        | FIX_TradeCondition_OpeningPrice -> "OpeningPrice"
+        | FIX_TradeCondition_AveragePriceTrade -> "AveragePriceTrade"
+        | FIX_TradeCondition_Rule155Trade -> "Rule155Trade"
+        | FIX_TradeCondition_NextDayTrade -> "NextDayTrade"
     )
 ;;
 
@@ -3041,6 +2701,21 @@ let trdtype_to_string (d)  =
     )
 ;;
 
+let unsolicitedindicator_to_string (d)  =
+    (match d with
+        | FIX_UnsolicitedIndicator_MessageIsBeingSentAsAResultOfAPriorRequest -> "MessageIsBeingSentAsAResultOfAPriorRequest"
+        | FIX_UnsolicitedIndicator_MessageIsBeingSentUnsolicited -> "MessageIsBeingSentUnsolicited"
+    )
+;;
+
+let urgency_to_string (d)  =
+    (match d with
+        | FIX_Urgency_Flash -> "Flash"
+        | FIX_Urgency_Background -> "Background"
+        | FIX_Urgency_Normal -> "Normal"
+    )
+;;
+
 let userrequesttype_to_string (d)  =
     (match d with
         | FIX_UserRequestType_RequestIndividualUserStatus -> "RequestIndividualUserStatus"
@@ -3107,463 +2782,43 @@ let yieldtype_to_string (d)  =
     )
 ;;
 
-let partyrolequalifier_to_json (d)  : json =
-    `String (partyrolequalifier_to_string d)
-;;
-
-let liquidityindicator_to_json (d)  : json =
-    `String (liquidityindicator_to_string d)
-;;
-
-let routing_to_json (d)  : json =
-    `String (routing_to_string d)
-;;
-
-let technicalordtype_to_json (d)  : json =
-    `String (technicalordtype_to_string d)
-;;
-
-let orderattributetypes_to_json (d)  : json =
-    `List (List.map (fun x -> `String (orderattributetypes_to_string x)
-    ) d)
-;;
-
-let clearinghandlingtype_to_json (d)  : json =
-    `String (clearinghandlingtype_to_string d)
-;;
-
-let orderentryallowed_to_json (d)  : json =
-    `String (orderentryallowed_to_string d)
-;;
-
-let collarerejtype_to_json (d)  : json =
-    `String (collarerejtype_to_string d)
-;;
-
-let bookindicator_to_json (d)  : json =
-    `String (bookindicator_to_string d)
-;;
-
-let brokerprioritization_to_json (d)  : json =
-    `String (brokerprioritization_to_string d)
-;;
-
-let classstatus_to_json (d)  : json =
-    `String (classstatus_to_string d)
-;;
-
-let adjustment_to_json (d)  : json =
-    `String (adjustment_to_string d)
-;;
-
-let advside_to_json (d)  : json =
-    `String (advside_to_string d)
-;;
-
-let advtranstype_to_json (d)  : json =
-    `String (advtranstype_to_string d)
-;;
-
-let aggregatedbook_to_json (d)  : json =
-    `String (aggregatedbook_to_string d)
-;;
-
-let allochandlinst_to_json (d)  : json =
-    `String (allochandlinst_to_string d)
-;;
-
-let alloclinktype_to_json (d)  : json =
-    `String (alloclinktype_to_string d)
-;;
-
-let allocrejcode_to_json (d)  : json =
-    `String (allocrejcode_to_string d)
-;;
-
-let allocstatus_to_json (d)  : json =
-    `String (allocstatus_to_string d)
-;;
-
-let alloctranstype_to_json (d)  : json =
-    `String (alloctranstype_to_string d)
-;;
-
-let basispxtype_to_json (d)  : json =
-    `String (basispxtype_to_string d)
-;;
-
-let benchmark_to_json (d)  : json =
-    `String (benchmark_to_string d)
-;;
-
-let bidrequesttranstype_to_json (d)  : json =
-    `String (bidrequesttranstype_to_string d)
-;;
-
-let commtype_to_json (d)  : json =
-    `String (commtype_to_string d)
-;;
-
-let corporateaction_to_json (d)  : json =
-    `String (corporateaction_to_string d)
-;;
-
-let coveredoruncovered_to_json (d)  : json =
-    `String (coveredoruncovered_to_string d)
-;;
-
-let customerorfirm_to_json (d)  : json =
-    `String (customerorfirm_to_string d)
-;;
-
-let cxlrejreason_to_json (d)  : json =
-    `String (cxlrejreason_to_string d)
-;;
-
-let cxlrejresponseto_to_json (d)  : json =
-    `String (cxlrejresponseto_to_string d)
-;;
-
-let dkreason_to_json (d)  : json =
-    `String (dkreason_to_string d)
-;;
-
-let deletereason_to_json (d)  : json =
-    `String (deletereason_to_string d)
-;;
-
-let discretioninst_to_json (d)  : json =
-    `String (discretioninst_to_string d)
-;;
-
-let duetorelated_to_json (d)  : json =
-    `String (duetorelated_to_string d)
-;;
-
-let emailtype_to_json (d)  : json =
-    `String (emailtype_to_string d)
-;;
-
-let exchangeforphysical_to_json (d)  : json =
-    `String (exchangeforphysical_to_string d)
-;;
-
-let execinst_to_json (d)  : json =
-    `String (execinst_to_string d)
-;;
-
-let execrestatementreason_to_json (d)  : json =
-    `String (execrestatementreason_to_string d)
-;;
-
-let exectranstype_to_json (d)  : json =
-    `String (exectranstype_to_string d)
-;;
-
-let exectype_to_json (d)  : json =
-    `String (exectype_to_string d)
-;;
-
-let financialstatus_to_json (d)  : json =
-    `String (financialstatus_to_string d)
-;;
-
-let forexreq_to_json (d)  : json =
-    `String (forexreq_to_string d)
-;;
-
-let gtbookinginst_to_json (d)  : json =
-    `String (gtbookinginst_to_string d)
-;;
-
-let haltreason_to_json (d)  : json =
-    `String (haltreason_to_string d)
-;;
-
-let handlinst_to_json (d)  : json =
-    `String (handlinst_to_string d)
-;;
-
-let idsource_to_json (d)  : json =
-    `String (idsource_to_string d)
-;;
-
-let ioinaturalflag_to_json (d)  : json =
-    `String (ioinaturalflag_to_string d)
-;;
-
-let ioiqltyind_to_json (d)  : json =
-    `String (ioiqltyind_to_string d)
-;;
-
-let ioiqualifier_to_json (d)  : json =
-    `String (ioiqualifier_to_string d)
-;;
-
-let ioishares_to_json (d)  : json =
-    `String (ioishares_to_string d)
-;;
-
-let ioitranstype_to_json (d)  : json =
-    `String (ioitranstype_to_string d)
-;;
-
-let inviewofcommon_to_json (d)  : json =
-    `String (inviewofcommon_to_string d)
-;;
-
-let inctaxind_to_json (d)  : json =
-    `String (inctaxind_to_string d)
-;;
-
-let lastcapacity_to_json (d)  : json =
-    `String (lastcapacity_to_string d)
-;;
-
-let liquidityindtype_to_json (d)  : json =
-    `String (liquidityindtype_to_string d)
-;;
-
-let listexecinsttype_to_json (d)  : json =
-    `String (listexecinsttype_to_string d)
-;;
-
-let locatereqd_to_json (d)  : json =
-    `String (locatereqd_to_string d)
-;;
-
-let mdentrytype_to_json (d)  : json =
-    `String (mdentrytype_to_string d)
-;;
-
-let mdreqrejreason_to_json (d)  : json =
-    `String (mdreqrejreason_to_string d)
-;;
-
-let mdupdateaction_to_json (d)  : json =
-    `String (mdupdateaction_to_string d)
-;;
-
-let mdupdatetype_to_json (d)  : json =
-    `String (mdupdatetype_to_string d)
-;;
-
-let messageencoding_to_json (d)  : json =
-    `String (messageencoding_to_string d)
-;;
-
-let miscfeetype_to_json (d)  : json =
-    `String (miscfeetype_to_string d)
-;;
-
-let msgdirection_to_json (d)  : json =
-    `String (msgdirection_to_string d)
-;;
-
-let multilegreportingtype_to_json (d)  : json =
-    `String (multilegreportingtype_to_string d)
-;;
-
-let netgrossind_to_json (d)  : json =
-    `String (netgrossind_to_string d)
-;;
-
-let notifybrokerofcredit_to_json (d)  : json =
-    `String (notifybrokerofcredit_to_string d)
-;;
-
-let openclose_to_json (d)  : json =
-    `String (openclose_to_string d)
-;;
-
-let openclosesettleflag_to_json (d)  : json =
-    `String (openclosesettleflag_to_string d)
-;;
-
-let ordrejreason_to_json (d)  : json =
-    `String (ordrejreason_to_string d)
-;;
-
-let ordstatus_to_json (d)  : json =
-    `String (ordstatus_to_string d)
-;;
-
-let ordtype_to_json (d)  : json =
-    `String (ordtype_to_string d)
-;;
-
-let possdupflag_to_json (d)  : json =
-    `String (possdupflag_to_string d)
-;;
-
-let possresend_to_json (d)  : json =
-    `String (possresend_to_string d)
-;;
-
-let pricetype_to_json (d)  : json =
-    `String (pricetype_to_string d)
-;;
-
-let processcode_to_json (d)  : json =
-    `String (processcode_to_string d)
-;;
-
-let progrptreqs_to_json (d)  : json =
-    `String (progrptreqs_to_string d)
-;;
-
-let putorcall_to_json (d)  : json =
-    `String (putorcall_to_string d)
-;;
-
-let quoteackstatus_to_json (d)  : json =
-    `String (quoteackstatus_to_string d)
-;;
-
-let quotecanceltype_to_json (d)  : json =
-    `String (quotecanceltype_to_string d)
-;;
-
-let quotecondition_to_json (d)  : json =
-    `List (List.map (fun x -> `String (quotecondition_to_string x)
-    ) d)
-;;
-
-let quoteentryrejectreason_to_json (d)  : json =
-    `String (quoteentryrejectreason_to_string d)
-;;
-
-let quoterejectreason_to_json (d)  : json =
-    `String (quoterejectreason_to_string d)
-;;
-
-let quoterequesttype_to_json (d)  : json =
-    `String (quoterequesttype_to_string d)
-;;
-
-let quoteresponselevel_to_json (d)  : json =
-    `String (quoteresponselevel_to_string d)
-;;
-
-let reporttoexch_to_json (d)  : json =
-    `String (reporttoexch_to_string d)
-;;
-
-let resetseqnumflag_to_json (d)  : json =
-    `String (resetseqnumflag_to_string d)
-;;
-
-let routingtype_to_json (d)  : json =
-    `String (routingtype_to_string d)
-;;
-
-let rule80a_to_json (d)  : json =
-    `String (rule80a_to_string d)
-;;
-
-let securityrequesttype_to_json (d)  : json =
-    `String (securityrequesttype_to_string d)
-;;
-
-let securityresponsetype_to_json (d)  : json =
-    `String (securityresponsetype_to_string d)
-;;
-
-let securitytradingstatus_to_json (d)  : json =
-    `String (securitytradingstatus_to_string d)
-;;
-
-let securitytype_to_json (d)  : json =
-    `String (securitytype_to_string d)
-;;
-
-let settlinstmode_to_json (d)  : json =
-    `String (settlinstmode_to_string d)
-;;
-
-let settlinstsource_to_json (d)  : json =
-    `String (settlinstsource_to_string d)
-;;
-
-let settlinsttranstype_to_json (d)  : json =
-    `String (settlinsttranstype_to_string d)
-;;
-
-let settllocation_to_json (d)  : json =
-    `String (settllocation_to_string d)
-;;
-
-let settlmnttyp_to_json (d)  : json =
-    `String (settlmnttyp_to_string d)
-;;
-
-let side_to_json (d)  : json =
-    `String (side_to_string d)
-;;
-
-let solicitedflag_to_json (d)  : json =
-    `String (solicitedflag_to_string d)
-;;
-
-let standinstdbtype_to_json (d)  : json =
-    `String (standinstdbtype_to_string d)
-;;
-
-let subscriptionrequesttype_to_json (d)  : json =
-    `String (subscriptionrequesttype_to_string d)
-;;
-
-let tickdirection_to_json (d)  : json =
-    `String (tickdirection_to_string d)
-;;
-
-let timeinforce_to_json (d)  : json =
-    `String (timeinforce_to_string d)
-;;
-
-let tradsesmethod_to_json (d)  : json =
-    `String (tradsesmethod_to_string d)
-;;
-
-let tradsesmode_to_json (d)  : json =
-    `String (tradsesmode_to_string d)
-;;
-
-let tradsesstatus_to_json (d)  : json =
-    `String (tradsesstatus_to_string d)
-;;
-
-let tradecondition_to_json (d)  : json =
-    `List (List.map (fun x -> `String (tradecondition_to_string x)
-    ) d)
-;;
-
-let tradetype_to_json (d)  : json =
-    `String (tradetype_to_string d)
-;;
-
-let unsolicitedindicator_to_json (d)  : json =
-    `String (unsolicitedindicator_to_string d)
-;;
-
-let urgency_to_json (d)  : json =
-    `String (urgency_to_string d)
-;;
-
-let week_to_json (d)  : json =
-    `String (week_to_string d)
-;;
-
-let currency_to_json (d)  : json =
-    `String (currency_to_string d)
-;;
-
-let country_to_json (d)  : json =
-    `String (country_to_string d)
-;;
-
-let exchange_to_json (d)  : json =
-    `String (exchange_to_string d)
+let week_to_string (d)  =
+    (match d with
+        | FIX_week_w1 -> "w1"
+        | FIX_week_w2 -> "w2"
+        | FIX_week_w3 -> "w3"
+        | FIX_week_noweek -> "noweek"
+        | FIX_week_w4 -> "w4"
+        | FIX_week_w5 -> "w5"
+    )
+;;
+
+let currency_to_string (d)  =
+    (match d with
+        | FIX_Currency_EUR -> "EUR"
+        | FIX_Currency_CHF -> "CHF"
+        | FIX_Currency_USD -> "USD"
+        | FIX_Currency_GBP -> "GBP"
+    )
+;;
+
+let country_to_string (d)  =
+    (match d with
+        | FIX_Country_DE -> "DE"
+        | FIX_Country_GB -> "GB"
+        | FIX_Country_US -> "US"
+    )
+;;
+
+let exchange_to_string (d)  =
+    (match d with
+        | FIX_Exchange_XSHG -> "XSHG"
+        | FIX_Exchange_SHSC -> "SHSC"
+        | FIX_Exchange_XNYS -> "XNYS"
+        | FIX_Exchange_XJAS -> "XJAS"
+        | FIX_Exchange_XLON -> "XLON"
+        | FIX_Exchange_XNAS -> "XNAS"
+    )
 ;;
 
 let accounttype_to_json (d)  : json =
@@ -3574,12 +2829,28 @@ let acctidsource_to_json (d)  : json =
     `String (acctidsource_to_string d)
 ;;
 
+let adjustment_to_json (d)  : json =
+    `String (adjustment_to_string d)
+;;
+
 let adjustmenttype_to_json (d)  : json =
     `String (adjustmenttype_to_string d)
 ;;
 
+let advside_to_json (d)  : json =
+    `String (advside_to_string d)
+;;
+
+let advtranstype_to_json (d)  : json =
+    `String (advtranstype_to_string d)
+;;
+
 let affirmstatus_to_json (d)  : json =
     `String (affirmstatus_to_string d)
+;;
+
+let aggregatedbook_to_json (d)  : json =
+    `String (aggregatedbook_to_string d)
 ;;
 
 let allocaccounttype_to_json (d)  : json =
@@ -3590,12 +2861,24 @@ let alloccancreplacereason_to_json (d)  : json =
     `String (alloccancreplacereason_to_string d)
 ;;
 
+let allochandlinst_to_json (d)  : json =
+    `String (allochandlinst_to_string d)
+;;
+
 let allocintermedreqtype_to_json (d)  : json =
     `String (allocintermedreqtype_to_string d)
 ;;
 
+let alloclinktype_to_json (d)  : json =
+    `String (alloclinktype_to_string d)
+;;
+
 let allocnoorderstype_to_json (d)  : json =
     `String (allocnoorderstype_to_string d)
+;;
+
+let allocrejcode_to_json (d)  : json =
+    `String (allocrejcode_to_string d)
 ;;
 
 let allocreporttype_to_json (d)  : json =
@@ -3604,6 +2887,14 @@ let allocreporttype_to_json (d)  : json =
 
 let allocsettlinsttype_to_json (d)  : json =
     `String (allocsettlinsttype_to_string d)
+;;
+
+let allocstatus_to_json (d)  : json =
+    `String (allocstatus_to_string d)
+;;
+
+let alloctranstype_to_json (d)  : json =
+    `String (alloctranstype_to_string d)
 ;;
 
 let alloctype_to_json (d)  : json =
@@ -3626,8 +2917,16 @@ let avgpxindicator_to_json (d)  : json =
     `String (avgpxindicator_to_string d)
 ;;
 
+let basispxtype_to_json (d)  : json =
+    `String (basispxtype_to_string d)
+;;
+
 let biddescriptortype_to_json (d)  : json =
     `String (biddescriptortype_to_string d)
+;;
+
+let bidrequesttranstype_to_json (d)  : json =
+    `String (bidrequesttranstype_to_string d)
 ;;
 
 let bidtradetype_to_json (d)  : json =
@@ -3702,6 +3001,10 @@ let collstatus_to_json (d)  : json =
     `String (collstatus_to_string d)
 ;;
 
+let commtype_to_json (d)  : json =
+    `String (commtype_to_string d)
+;;
+
 let confirmrejreason_to_json (d)  : json =
     `String (confirmrejreason_to_string d)
 ;;
@@ -3722,6 +3025,15 @@ let contamttype_to_json (d)  : json =
     `String (contamttype_to_string d)
 ;;
 
+let corporateaction_to_json (d)  : json =
+    `List (List.map (fun x -> `String (corporateaction_to_string x)
+    ) d)
+;;
+
+let coveredoruncovered_to_json (d)  : json =
+    `String (coveredoruncovered_to_string d)
+;;
+
 let crossprioritization_to_json (d)  : json =
     `String (crossprioritization_to_string d)
 ;;
@@ -3734,8 +3046,24 @@ let custordercapacity_to_json (d)  : json =
     `String (custordercapacity_to_string d)
 ;;
 
+let cxlrejreason_to_json (d)  : json =
+    `String (cxlrejreason_to_string d)
+;;
+
+let cxlrejresponseto_to_json (d)  : json =
+    `String (cxlrejresponseto_to_string d)
+;;
+
+let dkreason_to_json (d)  : json =
+    `String (dkreason_to_string d)
+;;
+
 let daybookinginst_to_json (d)  : json =
     `String (daybookinginst_to_string d)
+;;
+
+let deletereason_to_json (d)  : json =
+    `String (deletereason_to_string d)
 ;;
 
 let deliveryform_to_json (d)  : json =
@@ -3744,6 +3072,10 @@ let deliveryform_to_json (d)  : json =
 
 let deliverytype_to_json (d)  : json =
     `String (deliverytype_to_string d)
+;;
+
+let discretioninst_to_json (d)  : json =
+    `String (discretioninst_to_string d)
 ;;
 
 let discretionlimittype_to_json (d)  : json =
@@ -3774,12 +3106,37 @@ let dlvyinsttype_to_json (d)  : json =
     `String (dlvyinsttype_to_string d)
 ;;
 
+let duetorelated_to_json (d)  : json =
+    `String (duetorelated_to_string d)
+;;
+
+let emailtype_to_json (d)  : json =
+    `String (emailtype_to_string d)
+;;
+
 let eventtype_to_json (d)  : json =
     `String (eventtype_to_string d)
 ;;
 
+let exchangeforphysical_to_json (d)  : json =
+    `String (exchangeforphysical_to_string d)
+;;
+
+let execinst_to_json (d)  : json =
+    `List (List.map (fun x -> `String (execinst_to_string x)
+    ) d)
+;;
+
 let execpricetype_to_json (d)  : json =
     `String (execpricetype_to_string d)
+;;
+
+let execrestatementreason_to_json (d)  : json =
+    `String (execrestatementreason_to_string d)
+;;
+
+let exectype_to_json (d)  : json =
+    `String (exectype_to_string d)
 ;;
 
 let exercisemethod_to_json (d)  : json =
@@ -3790,16 +3147,65 @@ let expirationcycle_to_json (d)  : json =
     `String (expirationcycle_to_string d)
 ;;
 
+let financialstatus_to_json (d)  : json =
+    `List (List.map (fun x -> `String (financialstatus_to_string x)
+    ) d)
+;;
+
+let forexreq_to_json (d)  : json =
+    `String (forexreq_to_string d)
+;;
+
 let fundrenewwaiv_to_json (d)  : json =
     `String (fundrenewwaiv_to_string d)
+;;
+
+let gtbookinginst_to_json (d)  : json =
+    `String (gtbookinginst_to_string d)
+;;
+
+let haltreason_to_json (d)  : json =
+    `String (haltreason_to_string d)
+;;
+
+let handlinst_to_json (d)  : json =
+    `String (handlinst_to_string d)
+;;
+
+let ioinaturalflag_to_json (d)  : json =
+    `String (ioinaturalflag_to_string d)
+;;
+
+let ioiqltyind_to_json (d)  : json =
+    `String (ioiqltyind_to_string d)
 ;;
 
 let ioiqty_to_json (d)  : json =
     `String (ioiqty_to_string d)
 ;;
 
+let ioiqualifier_to_json (d)  : json =
+    `String (ioiqualifier_to_string d)
+;;
+
+let ioitranstype_to_json (d)  : json =
+    `String (ioitranstype_to_string d)
+;;
+
+let inviewofcommon_to_json (d)  : json =
+    `String (inviewofcommon_to_string d)
+;;
+
+let inctaxind_to_json (d)  : json =
+    `String (inctaxind_to_string d)
+;;
+
 let instrattribtype_to_json (d)  : json =
     `String (instrattribtype_to_string d)
+;;
+
+let lastcapacity_to_json (d)  : json =
+    `String (lastcapacity_to_string d)
 ;;
 
 let lastfragment_to_json (d)  : json =
@@ -3818,6 +3224,14 @@ let legalconfirm_to_json (d)  : json =
     `String (legalconfirm_to_string d)
 ;;
 
+let liquidityindtype_to_json (d)  : json =
+    `String (liquidityindtype_to_string d)
+;;
+
+let listexecinsttype_to_json (d)  : json =
+    `String (listexecinsttype_to_string d)
+;;
+
 let listorderstatus_to_json (d)  : json =
     `String (listorderstatus_to_string d)
 ;;
@@ -3826,8 +3240,28 @@ let liststatustype_to_json (d)  : json =
     `String (liststatustype_to_string d)
 ;;
 
+let locatereqd_to_json (d)  : json =
+    `String (locatereqd_to_string d)
+;;
+
+let mdentrytype_to_json (d)  : json =
+    `String (mdentrytype_to_string d)
+;;
+
 let mdimplicitdelete_to_json (d)  : json =
     `String (mdimplicitdelete_to_string d)
+;;
+
+let mdreqrejreason_to_json (d)  : json =
+    `String (mdreqrejreason_to_string d)
+;;
+
+let mdupdateaction_to_json (d)  : json =
+    `String (mdupdateaction_to_string d)
+;;
+
+let mdupdatetype_to_json (d)  : json =
+    `String (mdupdatetype_to_string d)
 ;;
 
 let masscancelrejectreason_to_json (d)  : json =
@@ -3854,16 +3288,36 @@ let matchtype_to_json (d)  : json =
     `String (matchtype_to_string d)
 ;;
 
+let messageencoding_to_json (d)  : json =
+    `String (messageencoding_to_string d)
+;;
+
 let miscfeebasis_to_json (d)  : json =
     `String (miscfeebasis_to_string d)
+;;
+
+let miscfeetype_to_json (d)  : json =
+    `String (miscfeetype_to_string d)
 ;;
 
 let moneylaunderingstatus_to_json (d)  : json =
     `String (moneylaunderingstatus_to_string d)
 ;;
 
+let msgdirection_to_json (d)  : json =
+    `String (msgdirection_to_string d)
+;;
+
+let multilegreportingtype_to_json (d)  : json =
+    `String (multilegreportingtype_to_string d)
+;;
+
 let multilegrpttypereq_to_json (d)  : json =
     `String (multilegrpttypereq_to_string d)
+;;
+
+let netgrossind_to_json (d)  : json =
+    `String (netgrossind_to_string d)
 ;;
 
 let networkrequesttype_to_json (d)  : json =
@@ -3878,6 +3332,10 @@ let nosides_to_json (d)  : json =
     `String (nosides_to_string d)
 ;;
 
+let notifybrokerofcredit_to_json (d)  : json =
+    `String (notifybrokerofcredit_to_string d)
+;;
+
 let oddlot_to_json (d)  : json =
     `String (oddlot_to_string d)
 ;;
@@ -3885,6 +3343,18 @@ let oddlot_to_json (d)  : json =
 let openclosesettlflag_to_json (d)  : json =
     `List (List.map (fun x -> `String (openclosesettlflag_to_string x)
     ) d)
+;;
+
+let ordrejreason_to_json (d)  : json =
+    `String (ordrejreason_to_string d)
+;;
+
+let ordstatus_to_json (d)  : json =
+    `String (ordstatus_to_string d)
+;;
+
+let ordtype_to_json (d)  : json =
+    `String (ordtype_to_string d)
 ;;
 
 let ordercapacity_to_json (d)  : json =
@@ -3984,6 +3454,14 @@ let positioneffect_to_json (d)  : json =
     `String (positioneffect_to_string d)
 ;;
 
+let possdupflag_to_json (d)  : json =
+    `String (possdupflag_to_string d)
+;;
+
+let possresend_to_json (d)  : json =
+    `String (possresend_to_string d)
+;;
+
 let preallocmethod_to_json (d)  : json =
     `String (preallocmethod_to_string d)
 ;;
@@ -3992,32 +3470,69 @@ let previouslyreported_to_json (d)  : json =
     `String (previouslyreported_to_string d)
 ;;
 
+let pricetype_to_json (d)  : json =
+    `String (pricetype_to_string d)
+;;
+
 let priorityindicator_to_json (d)  : json =
     `String (priorityindicator_to_string d)
+;;
+
+let processcode_to_json (d)  : json =
+    `String (processcode_to_string d)
 ;;
 
 let product_to_json (d)  : json =
     `String (product_to_string d)
 ;;
 
+let progrptreqs_to_json (d)  : json =
+    `String (progrptreqs_to_string d)
+;;
+
 let publishtrdindicator_to_json (d)  : json =
     `String (publishtrdindicator_to_string d)
+;;
+
+let putorcall_to_json (d)  : json =
+    `String (putorcall_to_string d)
 ;;
 
 let qtytype_to_json (d)  : json =
     `String (qtytype_to_string d)
 ;;
 
+let quotecanceltype_to_json (d)  : json =
+    `String (quotecanceltype_to_string d)
+;;
+
+let quotecondition_to_json (d)  : json =
+    `List (List.map (fun x -> `String (quotecondition_to_string x)
+    ) d)
+;;
+
 let quotepricetype_to_json (d)  : json =
     `String (quotepricetype_to_string d)
+;;
+
+let quoterejectreason_to_json (d)  : json =
+    `String (quoterejectreason_to_string d)
 ;;
 
 let quoterequestrejectreason_to_json (d)  : json =
     `String (quoterequestrejectreason_to_string d)
 ;;
 
+let quoterequesttype_to_json (d)  : json =
+    `String (quoterequesttype_to_string d)
+;;
+
 let quoteresptype_to_json (d)  : json =
     `String (quoteresptype_to_string d)
+;;
+
+let quoteresponselevel_to_json (d)  : json =
+    `String (quoteresponselevel_to_string d)
 ;;
 
 let quotestatus_to_json (d)  : json =
@@ -4040,12 +3555,24 @@ let registtranstype_to_json (d)  : json =
     `String (registtranstype_to_string d)
 ;;
 
+let reporttoexch_to_json (d)  : json =
+    `String (reporttoexch_to_string d)
+;;
+
+let resetseqnumflag_to_json (d)  : json =
+    `String (resetseqnumflag_to_string d)
+;;
+
 let responsetransporttype_to_json (d)  : json =
     `String (responsetransporttype_to_string d)
 ;;
 
 let roundingdirection_to_json (d)  : json =
     `String (roundingdirection_to_string d)
+;;
+
+let routingtype_to_json (d)  : json =
+    `String (routingtype_to_string d)
 ;;
 
 let scope_to_json (d)  : json =
@@ -4065,6 +3592,22 @@ let securityrequestresult_to_json (d)  : json =
     `String (securityrequestresult_to_string d)
 ;;
 
+let securityrequesttype_to_json (d)  : json =
+    `String (securityrequesttype_to_string d)
+;;
+
+let securityresponsetype_to_json (d)  : json =
+    `String (securityresponsetype_to_string d)
+;;
+
+let securitytradingstatus_to_json (d)  : json =
+    `String (securitytradingstatus_to_string d)
+;;
+
+let securitytype_to_json (d)  : json =
+    `String (securitytype_to_string d)
+;;
+
 let settlcurrfxratecalc_to_json (d)  : json =
     `String (settlcurrfxratecalc_to_string d)
 ;;
@@ -4073,8 +3616,20 @@ let settldeliverytype_to_json (d)  : json =
     `String (settldeliverytype_to_string d)
 ;;
 
+let settlinstmode_to_json (d)  : json =
+    `String (settlinstmode_to_string d)
+;;
+
 let settlinstreqrejcode_to_json (d)  : json =
     `String (settlinstreqrejcode_to_string d)
+;;
+
+let settlinstsource_to_json (d)  : json =
+    `String (settlinstsource_to_string d)
+;;
+
+let settlinsttranstype_to_json (d)  : json =
+    `String (settlinsttranstype_to_string d)
 ;;
 
 let settlpricetype_to_json (d)  : json =
@@ -4093,6 +3648,10 @@ let shortsalereason_to_json (d)  : json =
     `String (shortsalereason_to_string d)
 ;;
 
+let side_to_json (d)  : json =
+    `String (side_to_string d)
+;;
+
 let sidemultilegreportingtype_to_json (d)  : json =
     `String (sidemultilegreportingtype_to_string d)
 ;;
@@ -4101,12 +3660,24 @@ let sidevalueind_to_json (d)  : json =
     `String (sidevalueind_to_string d)
 ;;
 
+let solicitedflag_to_json (d)  : json =
+    `String (solicitedflag_to_string d)
+;;
+
+let standinstdbtype_to_json (d)  : json =
+    `String (standinstdbtype_to_string d)
+;;
+
 let statusvalue_to_json (d)  : json =
     `String (statusvalue_to_string d)
 ;;
 
 let stipulationtype_to_json (d)  : json =
     `String (stipulationtype_to_string d)
+;;
+
+let subscriptionrequesttype_to_json (d)  : json =
+    `String (subscriptionrequesttype_to_string d)
 ;;
 
 let targetstrategy_to_json (d)  : json =
@@ -4125,12 +3696,37 @@ let testmessageindicator_to_json (d)  : json =
     `String (testmessageindicator_to_string d)
 ;;
 
+let tickdirection_to_json (d)  : json =
+    `String (tickdirection_to_string d)
+;;
+
+let timeinforce_to_json (d)  : json =
+    `String (timeinforce_to_string d)
+;;
+
+let tradsesmethod_to_json (d)  : json =
+    `String (tradsesmethod_to_string d)
+;;
+
+let tradsesmode_to_json (d)  : json =
+    `String (tradsesmode_to_string d)
+;;
+
+let tradsesstatus_to_json (d)  : json =
+    `String (tradsesstatus_to_string d)
+;;
+
 let tradsesstatusrejreason_to_json (d)  : json =
     `String (tradsesstatusrejreason_to_string d)
 ;;
 
 let tradeallocindicator_to_json (d)  : json =
     `String (tradeallocindicator_to_string d)
+;;
+
+let tradecondition_to_json (d)  : json =
+    `List (List.map (fun x -> `String (tradecondition_to_string x)
+    ) d)
 ;;
 
 let tradereportrejectreason_to_json (d)  : json =
@@ -4169,6 +3765,14 @@ let trdtype_to_json (d)  : json =
     `String (trdtype_to_string d)
 ;;
 
+let unsolicitedindicator_to_json (d)  : json =
+    `String (unsolicitedindicator_to_string d)
+;;
+
+let urgency_to_json (d)  : json =
+    `String (urgency_to_string d)
+;;
+
 let userrequesttype_to_json (d)  : json =
     `String (userrequesttype_to_string d)
 ;;
@@ -4185,80 +3789,33 @@ let yieldtype_to_json (d)  : json =
     `String (yieldtype_to_string d)
 ;;
 
-let partyrolequalifier_opt_to_json (d)  : json =
+let week_to_json (d)  : json =
+    `String (week_to_string d)
+;;
+
+let currency_to_json (d)  : json =
+    `String (currency_to_string d)
+;;
+
+let country_to_json (d)  : json =
+    `String (country_to_string d)
+;;
+
+let exchange_to_json (d)  : json =
+    `String (exchange_to_string d)
+;;
+
+let accounttype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
-        | Some d -> (partyrolequalifier_to_json d)
+        | Some d -> (accounttype_to_json d)
     )
 ;;
 
-let liquidityindicator_opt_to_json (d)  : json =
+let acctidsource_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
-        | Some d -> (liquidityindicator_to_json d)
-    )
-;;
-
-let routing_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (routing_to_json d)
-    )
-;;
-
-let technicalordtype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (technicalordtype_to_json d)
-    )
-;;
-
-let orderattributetypes_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (orderattributetypes_to_json d)
-    )
-;;
-
-let clearinghandlingtype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (clearinghandlingtype_to_json d)
-    )
-;;
-
-let orderentryallowed_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (orderentryallowed_to_json d)
-    )
-;;
-
-let collarerejtype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (collarerejtype_to_json d)
-    )
-;;
-
-let bookindicator_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (bookindicator_to_json d)
-    )
-;;
-
-let brokerprioritization_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (brokerprioritization_to_json d)
-    )
-;;
-
-let classstatus_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (classstatus_to_json d)
+        | Some d -> (acctidsource_to_json d)
     )
 ;;
 
@@ -4266,6 +3823,13 @@ let adjustment_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (adjustment_to_json d)
+    )
+;;
+
+let adjustmenttype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (adjustmenttype_to_json d)
     )
 ;;
 
@@ -4283,731 +3847,17 @@ let advtranstype_opt_to_json (d)  : json =
     )
 ;;
 
-let aggregatedbook_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (aggregatedbook_to_json d)
-    )
-;;
-
-let allochandlinst_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (allochandlinst_to_json d)
-    )
-;;
-
-let alloclinktype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (alloclinktype_to_json d)
-    )
-;;
-
-let allocrejcode_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (allocrejcode_to_json d)
-    )
-;;
-
-let allocstatus_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (allocstatus_to_json d)
-    )
-;;
-
-let alloctranstype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (alloctranstype_to_json d)
-    )
-;;
-
-let basispxtype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (basispxtype_to_json d)
-    )
-;;
-
-let benchmark_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (benchmark_to_json d)
-    )
-;;
-
-let bidrequesttranstype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (bidrequesttranstype_to_json d)
-    )
-;;
-
-let commtype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (commtype_to_json d)
-    )
-;;
-
-let corporateaction_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (corporateaction_to_json d)
-    )
-;;
-
-let coveredoruncovered_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (coveredoruncovered_to_json d)
-    )
-;;
-
-let customerorfirm_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (customerorfirm_to_json d)
-    )
-;;
-
-let cxlrejreason_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (cxlrejreason_to_json d)
-    )
-;;
-
-let cxlrejresponseto_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (cxlrejresponseto_to_json d)
-    )
-;;
-
-let dkreason_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (dkreason_to_json d)
-    )
-;;
-
-let deletereason_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (deletereason_to_json d)
-    )
-;;
-
-let discretioninst_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (discretioninst_to_json d)
-    )
-;;
-
-let duetorelated_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (duetorelated_to_json d)
-    )
-;;
-
-let emailtype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (emailtype_to_json d)
-    )
-;;
-
-let exchangeforphysical_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (exchangeforphysical_to_json d)
-    )
-;;
-
-let execinst_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (execinst_to_json d)
-    )
-;;
-
-let execrestatementreason_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (execrestatementreason_to_json d)
-    )
-;;
-
-let exectranstype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (exectranstype_to_json d)
-    )
-;;
-
-let exectype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (exectype_to_json d)
-    )
-;;
-
-let financialstatus_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (financialstatus_to_json d)
-    )
-;;
-
-let forexreq_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (forexreq_to_json d)
-    )
-;;
-
-let gtbookinginst_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (gtbookinginst_to_json d)
-    )
-;;
-
-let haltreason_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (haltreason_to_json d)
-    )
-;;
-
-let handlinst_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (handlinst_to_json d)
-    )
-;;
-
-let idsource_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (idsource_to_json d)
-    )
-;;
-
-let ioinaturalflag_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (ioinaturalflag_to_json d)
-    )
-;;
-
-let ioiqltyind_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (ioiqltyind_to_json d)
-    )
-;;
-
-let ioiqualifier_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (ioiqualifier_to_json d)
-    )
-;;
-
-let ioishares_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (ioishares_to_json d)
-    )
-;;
-
-let ioitranstype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (ioitranstype_to_json d)
-    )
-;;
-
-let inviewofcommon_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (inviewofcommon_to_json d)
-    )
-;;
-
-let inctaxind_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (inctaxind_to_json d)
-    )
-;;
-
-let lastcapacity_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (lastcapacity_to_json d)
-    )
-;;
-
-let liquidityindtype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (liquidityindtype_to_json d)
-    )
-;;
-
-let listexecinsttype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (listexecinsttype_to_json d)
-    )
-;;
-
-let locatereqd_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (locatereqd_to_json d)
-    )
-;;
-
-let mdentrytype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (mdentrytype_to_json d)
-    )
-;;
-
-let mdreqrejreason_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (mdreqrejreason_to_json d)
-    )
-;;
-
-let mdupdateaction_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (mdupdateaction_to_json d)
-    )
-;;
-
-let mdupdatetype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (mdupdatetype_to_json d)
-    )
-;;
-
-let messageencoding_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (messageencoding_to_json d)
-    )
-;;
-
-let miscfeetype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (miscfeetype_to_json d)
-    )
-;;
-
-let msgdirection_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (msgdirection_to_json d)
-    )
-;;
-
-let multilegreportingtype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (multilegreportingtype_to_json d)
-    )
-;;
-
-let netgrossind_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (netgrossind_to_json d)
-    )
-;;
-
-let notifybrokerofcredit_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (notifybrokerofcredit_to_json d)
-    )
-;;
-
-let openclose_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (openclose_to_json d)
-    )
-;;
-
-let openclosesettleflag_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (openclosesettleflag_to_json d)
-    )
-;;
-
-let ordrejreason_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (ordrejreason_to_json d)
-    )
-;;
-
-let ordstatus_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (ordstatus_to_json d)
-    )
-;;
-
-let ordtype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (ordtype_to_json d)
-    )
-;;
-
-let possdupflag_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (possdupflag_to_json d)
-    )
-;;
-
-let possresend_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (possresend_to_json d)
-    )
-;;
-
-let pricetype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (pricetype_to_json d)
-    )
-;;
-
-let processcode_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (processcode_to_json d)
-    )
-;;
-
-let progrptreqs_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (progrptreqs_to_json d)
-    )
-;;
-
-let putorcall_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (putorcall_to_json d)
-    )
-;;
-
-let quoteackstatus_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (quoteackstatus_to_json d)
-    )
-;;
-
-let quotecanceltype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (quotecanceltype_to_json d)
-    )
-;;
-
-let quotecondition_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (quotecondition_to_json d)
-    )
-;;
-
-let quoteentryrejectreason_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (quoteentryrejectreason_to_json d)
-    )
-;;
-
-let quoterejectreason_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (quoterejectreason_to_json d)
-    )
-;;
-
-let quoterequesttype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (quoterequesttype_to_json d)
-    )
-;;
-
-let quoteresponselevel_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (quoteresponselevel_to_json d)
-    )
-;;
-
-let reporttoexch_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (reporttoexch_to_json d)
-    )
-;;
-
-let resetseqnumflag_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (resetseqnumflag_to_json d)
-    )
-;;
-
-let routingtype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (routingtype_to_json d)
-    )
-;;
-
-let rule80a_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (rule80a_to_json d)
-    )
-;;
-
-let securityrequesttype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (securityrequesttype_to_json d)
-    )
-;;
-
-let securityresponsetype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (securityresponsetype_to_json d)
-    )
-;;
-
-let securitytradingstatus_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (securitytradingstatus_to_json d)
-    )
-;;
-
-let securitytype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (securitytype_to_json d)
-    )
-;;
-
-let settlinstmode_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (settlinstmode_to_json d)
-    )
-;;
-
-let settlinstsource_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (settlinstsource_to_json d)
-    )
-;;
-
-let settlinsttranstype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (settlinsttranstype_to_json d)
-    )
-;;
-
-let settllocation_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (settllocation_to_json d)
-    )
-;;
-
-let settlmnttyp_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (settlmnttyp_to_json d)
-    )
-;;
-
-let side_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (side_to_json d)
-    )
-;;
-
-let solicitedflag_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (solicitedflag_to_json d)
-    )
-;;
-
-let standinstdbtype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (standinstdbtype_to_json d)
-    )
-;;
-
-let subscriptionrequesttype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (subscriptionrequesttype_to_json d)
-    )
-;;
-
-let tickdirection_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (tickdirection_to_json d)
-    )
-;;
-
-let timeinforce_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (timeinforce_to_json d)
-    )
-;;
-
-let tradsesmethod_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (tradsesmethod_to_json d)
-    )
-;;
-
-let tradsesmode_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (tradsesmode_to_json d)
-    )
-;;
-
-let tradsesstatus_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (tradsesstatus_to_json d)
-    )
-;;
-
-let tradecondition_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (tradecondition_to_json d)
-    )
-;;
-
-let tradetype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (tradetype_to_json d)
-    )
-;;
-
-let unsolicitedindicator_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (unsolicitedindicator_to_json d)
-    )
-;;
-
-let urgency_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (urgency_to_json d)
-    )
-;;
-
-let week_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (week_to_json d)
-    )
-;;
-
-let currency_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (currency_to_json d)
-    )
-;;
-
-let country_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (country_to_json d)
-    )
-;;
-
-let exchange_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (exchange_to_json d)
-    )
-;;
-
-let accounttype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (accounttype_to_json d)
-    )
-;;
-
-let acctidsource_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (acctidsource_to_json d)
-    )
-;;
-
-let adjustmenttype_opt_to_json (d)  : json =
-    (match d with
-        | None -> (`Null)
-        | Some d -> (adjustmenttype_to_json d)
-    )
-;;
-
 let affirmstatus_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (affirmstatus_to_json d)
+    )
+;;
+
+let aggregatedbook_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (aggregatedbook_to_json d)
     )
 ;;
 
@@ -5025,6 +3875,13 @@ let alloccancreplacereason_opt_to_json (d)  : json =
     )
 ;;
 
+let allochandlinst_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (allochandlinst_to_json d)
+    )
+;;
+
 let allocintermedreqtype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5032,10 +3889,24 @@ let allocintermedreqtype_opt_to_json (d)  : json =
     )
 ;;
 
+let alloclinktype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (alloclinktype_to_json d)
+    )
+;;
+
 let allocnoorderstype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (allocnoorderstype_to_json d)
+    )
+;;
+
+let allocrejcode_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (allocrejcode_to_json d)
     )
 ;;
 
@@ -5050,6 +3921,20 @@ let allocsettlinsttype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (allocsettlinsttype_to_json d)
+    )
+;;
+
+let allocstatus_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (allocstatus_to_json d)
+    )
+;;
+
+let alloctranstype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (alloctranstype_to_json d)
     )
 ;;
 
@@ -5088,10 +3973,24 @@ let avgpxindicator_opt_to_json (d)  : json =
     )
 ;;
 
+let basispxtype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (basispxtype_to_json d)
+    )
+;;
+
 let biddescriptortype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (biddescriptortype_to_json d)
+    )
+;;
+
+let bidrequesttranstype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (bidrequesttranstype_to_json d)
     )
 ;;
 
@@ -5221,6 +4120,13 @@ let collstatus_opt_to_json (d)  : json =
     )
 ;;
 
+let commtype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (commtype_to_json d)
+    )
+;;
+
 let confirmrejreason_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5256,6 +4162,20 @@ let contamttype_opt_to_json (d)  : json =
     )
 ;;
 
+let corporateaction_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (corporateaction_to_json d)
+    )
+;;
+
+let coveredoruncovered_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (coveredoruncovered_to_json d)
+    )
+;;
+
 let crossprioritization_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5277,10 +4197,38 @@ let custordercapacity_opt_to_json (d)  : json =
     )
 ;;
 
+let cxlrejreason_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (cxlrejreason_to_json d)
+    )
+;;
+
+let cxlrejresponseto_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (cxlrejresponseto_to_json d)
+    )
+;;
+
+let dkreason_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (dkreason_to_json d)
+    )
+;;
+
 let daybookinginst_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (daybookinginst_to_json d)
+    )
+;;
+
+let deletereason_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (deletereason_to_json d)
     )
 ;;
 
@@ -5295,6 +4243,13 @@ let deliverytype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (deliverytype_to_json d)
+    )
+;;
+
+let discretioninst_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (discretioninst_to_json d)
     )
 ;;
 
@@ -5347,6 +4302,20 @@ let dlvyinsttype_opt_to_json (d)  : json =
     )
 ;;
 
+let duetorelated_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (duetorelated_to_json d)
+    )
+;;
+
+let emailtype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (emailtype_to_json d)
+    )
+;;
+
 let eventtype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5354,10 +4323,38 @@ let eventtype_opt_to_json (d)  : json =
     )
 ;;
 
+let exchangeforphysical_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (exchangeforphysical_to_json d)
+    )
+;;
+
+let execinst_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (execinst_to_json d)
+    )
+;;
+
 let execpricetype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (execpricetype_to_json d)
+    )
+;;
+
+let execrestatementreason_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (execrestatementreason_to_json d)
+    )
+;;
+
+let exectype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (exectype_to_json d)
     )
 ;;
 
@@ -5375,10 +4372,59 @@ let expirationcycle_opt_to_json (d)  : json =
     )
 ;;
 
+let financialstatus_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (financialstatus_to_json d)
+    )
+;;
+
+let forexreq_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (forexreq_to_json d)
+    )
+;;
+
 let fundrenewwaiv_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (fundrenewwaiv_to_json d)
+    )
+;;
+
+let gtbookinginst_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (gtbookinginst_to_json d)
+    )
+;;
+
+let haltreason_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (haltreason_to_json d)
+    )
+;;
+
+let handlinst_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (handlinst_to_json d)
+    )
+;;
+
+let ioinaturalflag_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (ioinaturalflag_to_json d)
+    )
+;;
+
+let ioiqltyind_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (ioiqltyind_to_json d)
     )
 ;;
 
@@ -5389,10 +4435,45 @@ let ioiqty_opt_to_json (d)  : json =
     )
 ;;
 
+let ioiqualifier_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (ioiqualifier_to_json d)
+    )
+;;
+
+let ioitranstype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (ioitranstype_to_json d)
+    )
+;;
+
+let inviewofcommon_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (inviewofcommon_to_json d)
+    )
+;;
+
+let inctaxind_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (inctaxind_to_json d)
+    )
+;;
+
 let instrattribtype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (instrattribtype_to_json d)
+    )
+;;
+
+let lastcapacity_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (lastcapacity_to_json d)
     )
 ;;
 
@@ -5424,6 +4505,20 @@ let legalconfirm_opt_to_json (d)  : json =
     )
 ;;
 
+let liquidityindtype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (liquidityindtype_to_json d)
+    )
+;;
+
+let listexecinsttype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (listexecinsttype_to_json d)
+    )
+;;
+
 let listorderstatus_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5438,10 +4533,45 @@ let liststatustype_opt_to_json (d)  : json =
     )
 ;;
 
+let locatereqd_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (locatereqd_to_json d)
+    )
+;;
+
+let mdentrytype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (mdentrytype_to_json d)
+    )
+;;
+
 let mdimplicitdelete_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (mdimplicitdelete_to_json d)
+    )
+;;
+
+let mdreqrejreason_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (mdreqrejreason_to_json d)
+    )
+;;
+
+let mdupdateaction_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (mdupdateaction_to_json d)
+    )
+;;
+
+let mdupdatetype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (mdupdatetype_to_json d)
     )
 ;;
 
@@ -5487,10 +4617,24 @@ let matchtype_opt_to_json (d)  : json =
     )
 ;;
 
+let messageencoding_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (messageencoding_to_json d)
+    )
+;;
+
 let miscfeebasis_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (miscfeebasis_to_json d)
+    )
+;;
+
+let miscfeetype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (miscfeetype_to_json d)
     )
 ;;
 
@@ -5501,10 +4645,31 @@ let moneylaunderingstatus_opt_to_json (d)  : json =
     )
 ;;
 
+let msgdirection_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (msgdirection_to_json d)
+    )
+;;
+
+let multilegreportingtype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (multilegreportingtype_to_json d)
+    )
+;;
+
 let multilegrpttypereq_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (multilegrpttypereq_to_json d)
+    )
+;;
+
+let netgrossind_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (netgrossind_to_json d)
     )
 ;;
 
@@ -5529,6 +4694,13 @@ let nosides_opt_to_json (d)  : json =
     )
 ;;
 
+let notifybrokerofcredit_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (notifybrokerofcredit_to_json d)
+    )
+;;
+
 let oddlot_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5540,6 +4712,27 @@ let openclosesettlflag_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (openclosesettlflag_to_json d)
+    )
+;;
+
+let ordrejreason_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (ordrejreason_to_json d)
+    )
+;;
+
+let ordstatus_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (ordstatus_to_json d)
+    )
+;;
+
+let ordtype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (ordtype_to_json d)
     )
 ;;
 
@@ -5711,6 +4904,20 @@ let positioneffect_opt_to_json (d)  : json =
     )
 ;;
 
+let possdupflag_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (possdupflag_to_json d)
+    )
+;;
+
+let possresend_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (possresend_to_json d)
+    )
+;;
+
 let preallocmethod_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5725,10 +4932,24 @@ let previouslyreported_opt_to_json (d)  : json =
     )
 ;;
 
+let pricetype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (pricetype_to_json d)
+    )
+;;
+
 let priorityindicator_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (priorityindicator_to_json d)
+    )
+;;
+
+let processcode_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (processcode_to_json d)
     )
 ;;
 
@@ -5739,10 +4960,24 @@ let product_opt_to_json (d)  : json =
     )
 ;;
 
+let progrptreqs_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (progrptreqs_to_json d)
+    )
+;;
+
 let publishtrdindicator_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (publishtrdindicator_to_json d)
+    )
+;;
+
+let putorcall_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (putorcall_to_json d)
     )
 ;;
 
@@ -5753,10 +4988,31 @@ let qtytype_opt_to_json (d)  : json =
     )
 ;;
 
+let quotecanceltype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (quotecanceltype_to_json d)
+    )
+;;
+
+let quotecondition_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (quotecondition_to_json d)
+    )
+;;
+
 let quotepricetype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (quotepricetype_to_json d)
+    )
+;;
+
+let quoterejectreason_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (quoterejectreason_to_json d)
     )
 ;;
 
@@ -5767,10 +5023,24 @@ let quoterequestrejectreason_opt_to_json (d)  : json =
     )
 ;;
 
+let quoterequesttype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (quoterequesttype_to_json d)
+    )
+;;
+
 let quoteresptype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (quoteresptype_to_json d)
+    )
+;;
+
+let quoteresponselevel_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (quoteresponselevel_to_json d)
     )
 ;;
 
@@ -5809,6 +5079,20 @@ let registtranstype_opt_to_json (d)  : json =
     )
 ;;
 
+let reporttoexch_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (reporttoexch_to_json d)
+    )
+;;
+
+let resetseqnumflag_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (resetseqnumflag_to_json d)
+    )
+;;
+
 let responsetransporttype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5820,6 +5104,13 @@ let roundingdirection_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (roundingdirection_to_json d)
+    )
+;;
+
+let routingtype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (routingtype_to_json d)
     )
 ;;
 
@@ -5851,6 +5142,34 @@ let securityrequestresult_opt_to_json (d)  : json =
     )
 ;;
 
+let securityrequesttype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (securityrequesttype_to_json d)
+    )
+;;
+
+let securityresponsetype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (securityresponsetype_to_json d)
+    )
+;;
+
+let securitytradingstatus_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (securitytradingstatus_to_json d)
+    )
+;;
+
+let securitytype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (securitytype_to_json d)
+    )
+;;
+
 let settlcurrfxratecalc_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5865,10 +5184,31 @@ let settldeliverytype_opt_to_json (d)  : json =
     )
 ;;
 
+let settlinstmode_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (settlinstmode_to_json d)
+    )
+;;
+
 let settlinstreqrejcode_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (settlinstreqrejcode_to_json d)
+    )
+;;
+
+let settlinstsource_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (settlinstsource_to_json d)
+    )
+;;
+
+let settlinsttranstype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (settlinsttranstype_to_json d)
     )
 ;;
 
@@ -5900,6 +5240,13 @@ let shortsalereason_opt_to_json (d)  : json =
     )
 ;;
 
+let side_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (side_to_json d)
+    )
+;;
+
 let sidemultilegreportingtype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5914,6 +5261,20 @@ let sidevalueind_opt_to_json (d)  : json =
     )
 ;;
 
+let solicitedflag_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (solicitedflag_to_json d)
+    )
+;;
+
+let standinstdbtype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (standinstdbtype_to_json d)
+    )
+;;
+
 let statusvalue_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5925,6 +5286,13 @@ let stipulationtype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (stipulationtype_to_json d)
+    )
+;;
+
+let subscriptionrequesttype_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (subscriptionrequesttype_to_json d)
     )
 ;;
 
@@ -5956,6 +5324,41 @@ let testmessageindicator_opt_to_json (d)  : json =
     )
 ;;
 
+let tickdirection_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (tickdirection_to_json d)
+    )
+;;
+
+let timeinforce_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (timeinforce_to_json d)
+    )
+;;
+
+let tradsesmethod_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (tradsesmethod_to_json d)
+    )
+;;
+
+let tradsesmode_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (tradsesmode_to_json d)
+    )
+;;
+
+let tradsesstatus_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (tradsesstatus_to_json d)
+    )
+;;
+
 let tradsesstatusrejreason_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -5967,6 +5370,13 @@ let tradeallocindicator_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (tradeallocindicator_to_json d)
+    )
+;;
+
+let tradecondition_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (tradecondition_to_json d)
     )
 ;;
 
@@ -6033,6 +5443,20 @@ let trdtype_opt_to_json (d)  : json =
     )
 ;;
 
+let unsolicitedindicator_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (unsolicitedindicator_to_json d)
+    )
+;;
+
+let urgency_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (urgency_to_json d)
+    )
+;;
+
 let userrequesttype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
@@ -6058,5 +5482,33 @@ let yieldtype_opt_to_json (d)  : json =
     (match d with
         | None -> (`Null)
         | Some d -> (yieldtype_to_json d)
+    )
+;;
+
+let week_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (week_to_json d)
+    )
+;;
+
+let currency_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (currency_to_json d)
+    )
+;;
+
+let country_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (country_to_json d)
+    )
+;;
+
+let exchange_opt_to_json (d)  : json =
+    (match d with
+        | None -> (`Null)
+        | Some d -> (exchange_to_json d)
     )
 ;;
