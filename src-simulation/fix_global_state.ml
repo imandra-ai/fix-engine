@@ -16,12 +16,28 @@ type fix_global_state = {
      fix_callback : Full_messages.full_top_level_msg -> unit Lwt.t 
 }
 
+let pp_incoming = function
+  | FIX_Message ( ValidMsg             m ) -> 
+      "FIX_Message (ValidMsg): " 
+      ^ "\n - " ^ Yojson.pretty_to_string (Full_messages_json.full_msg_to_json m.full_msg_data)
+  | FIX_Message ( SessionRejectedMsg   m ) -> 
+      "FIX_Message (SessionRejectedMsg): " 
+      ^ "\n - " ^ Yojson.pretty_to_string (Full_messages_json.session_rejected_msg_to_json m)
+  | FIX_Message ( BusinessRejectedMsg  m ) -> 
+      "FIX_Message (BusinessRejectedMsg): "
+      ^ "\n - " ^ Yojson.pretty_to_string (Full_messages_json.biz_rejected_msg_to_json m) 
+  | FIX_Message ( Garbled                ) -> "FIX_Message (Garbled)" 
+  | Internal_Message _ -> "Internal_Message"
+  | ModelAction      _ -> "ModelAction"
+  | Terminate          -> "Terminate"
+
+
 (** Running Fix_engine.one_step while there are outgoing messages and 
     calling the fix_callback function for each *)
 let rec send_all_outgoing_fix engine_state fix_callback =
     let open Fix_engine_state in
     match engine_state.outgoing_fix_msg with 
-    | None -> Lwt.return engine_state 
+    | None -> Lwt.return engine_state   
     | Some msg -> begin 
         fix_callback msg >>= fun () -> 
         let engine_state = { engine_state with outgoing_fix_msg = None } in (* NOTE: I'm cleaning the out slot here *)
@@ -95,6 +111,7 @@ let rec while_busy_loop state =
 let rec main_loop state =
     let open Fix_engine_state in
     Lwt_mvar.take state.incoming >>= fun incoming ->
+(*    Lwt_io.printf "Main_loop received incoming : %s\n" (pp_incoming incoming) >>= fun () -> *)
     Lwt_io.flush_all () >>= fun () ->
     match incoming with 
         | Terminate -> Lwt.return_unit
