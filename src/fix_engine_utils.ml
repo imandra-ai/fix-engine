@@ -98,9 +98,8 @@ let combine_gapfill_msgs ( msgOne, msgTwo : full_msg_sequence_reset_data * full_
     - converting any message that needs to be converted into a SequenceRest-GapFill
     - ensuring that any two sequential SequenceReset-GapFill messages are combined into one with an updated
         expected NextSeqNum parameter *)
-let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix_msg ) = []
-    
-(*    let hist_msg = get_historic_msg ( msg ) in 
+let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix_msg ) = 
+    let hist_msg = get_historic_msg ( msg ) in 
     match history with
     | [] -> [ hist_msg ]
     | x::xs ->
@@ -117,7 +116,7 @@ let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix
                     new_full_msg :: xs
                 end 
             | _ -> hist_msg :: x :: xs
-        end*)
+        end
 ;;
 
 
