@@ -48,18 +48,20 @@ client:
 
 install-upgrade-deps: 
 	opam update
-	opam depext lwt=2.6.0
 	opam depext jbuilder
 	opam depext yojson
-	opam pin -y add lwt 2.6.0
+	opam depext lwt=3.1.0
+	opam depext zmq
+	opam depext cmdliner
+	opam pin -y add lwt 3.1.0
 	opam install -y jbuilder
 	opam install -y yojson
-	opam install -y odoc
-	opam install -y zmq
+	opam install -y lwt-zmq
+	opam install -y cmdliner 
 
 # dev-setup is used by (human) developers
 dev-setup: install-upgrade-deps
-	opam install merlin 
+	opam install -y merlin 
 
 clean:
 	jbuilder clean
