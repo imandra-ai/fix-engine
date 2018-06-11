@@ -46,22 +46,21 @@ client:
 	jbuilder build src-simulation/client.bc
 	rm jbuild-ignore
 
-install-upgrade-deps: 
-	opam update
-	opam depext jbuilder
-	opam depext yojson
-	opam depext lwt=3.1.0
-	opam depext zmq
-	opam depext cmdliner
-	opam pin -y add lwt 3.1.0
-	opam install -y jbuilder
-	opam install -y yojson
-	opam install -y lwt-zmq
-	opam install -y cmdliner 
+# opam1-setup - for running in Wercker. Assumes the correct switch is already installed and selected.
+opam1-setup:
+	opam pin add -y . --no-action
+	opam depext -y fix-engine
+	opam install fix-engine --deps-only
 
-# dev-setup is used by (human) developers
-dev-setup: install-upgrade-deps
-	opam install -y merlin 
+# opam2-setup - Will create a local switch under ./_opam.
+opam2-setup: _opam
+	opam pin add -y . --no-action
+	opam depext -y fix-engine
+	opam install -y . --deps-only --with-test --working-dir
+
+_opam:
+	opam switch create . --empty
+	opam install -y ocaml-base-compiler.4.05.0
 
 clean:
 	jbuilder clean

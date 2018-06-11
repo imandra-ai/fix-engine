@@ -1,4 +1,5 @@
 _build/*
+_opam/
 *.native
 .imandra_init.log
 fix-engine.install

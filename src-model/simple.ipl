@@ -16,7 +16,7 @@ outbound message ExecutionReport {
 
 message NewOrderSingle {
     req ClOrdID unique      
-    req Side valid when it in [Side.Buy, Side.Sell, SellShort] 
+    req Side
     req TransactTime
     req OrdType
     req Instrument.Symbol

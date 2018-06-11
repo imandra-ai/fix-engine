@@ -1,7 +1,0 @@
-OASISFormat: 0.4
-Name:        fix-engine
-Version:     0.0.1
-Synopsis:    Generic FIX engine implementation
-Authors:     Denis Ignatovich, Grant Passmore
-License:     "APACHE-2.0"
-
