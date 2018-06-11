@@ -63,6 +63,15 @@ install-upgrade-deps:
 dev-setup: install-upgrade-deps
 	opam install -y merlin 
 
+opam2-setup: _opam
+	opam pin add -y . --no-action
+	opam depext -y fix-engine
+	opam install -y . --deps-only --with-test --working-dir
+
+_opam:
+	opam switch create . --empty
+	opam install -y ocaml-base-compiler.4.05.0
+
 clean:
 	jbuilder clean
 
