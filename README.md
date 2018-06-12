@@ -33,6 +33,15 @@ Resurrect the customized `odoc` CSS:
 ~/fix-engine-doc $ git checkout -- _pages/doc/odoc.css _pages/doc/img
 ```
 
+Edit `~/fix-engine-doc/_pages/doc/index.html` and add an empty `<nav>` tag at the top of the `<body>`. This will add the docs logo:
+
+```html
+...
+  <body>
+    <nav></nav>
+    ...
+```
+
 Add the new docs and commit:
 ```
 ~/fix-engine-doc $ git add _pages/doc
