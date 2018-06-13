@@ -29,7 +29,6 @@ _build/default/_doc:
 doc: _build/default/_doc
 	rm -rf doc
 	mv _build/default/_doc doc
-	rm doc/odoc.css
 
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 	sed -e 's/rotate=90;//g' "$<" | dot -Tsvg -o $@
