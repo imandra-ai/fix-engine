@@ -12,7 +12,7 @@
     a stream of key=value pairs and then into a stream of messages.  
 *)
 
-(**  Splits a stream of characters into a stream of key*value pairs. *)
+(**  Splits a stream of characters into a stream of [(key * value)] pairs. *)
 let split_into_key_value (spliton : char) ( stream : char Stream.t ) : (string * string) Stream.t =
     let current = ref [] in
     let listref_to_string lst =
@@ -68,14 +68,16 @@ let take (key : string) (lst : (string * string) list ) =
     take [] lst
 ;;
 
-(** Splits a list of (tag * value) pairs into two lists on a given tag. The tag
+(** Splits a list of [(tag * value)] pairs into two lists on a given tag. The tag
     itself goes into the second list.  If the tag is absent -- returnes an empty
     second list. 
 
+    {[
     split_on_tag 4 [(1,0); (2,0); (3,0); (4,0); (5,0); (6,0)] =>
     ( [ (1,0); (2,0); (3,0) ] , 
       [ (4,0); (5,0); (6,0) ]
     )
+    ]}
  *)
 let split_on_tag ( key : string ) ( msg : (string * string) list ) =
     let rec split accu = function
@@ -101,7 +103,7 @@ let cut_on_separator ( msg : (string * string) list) =
 
 (** The Parser module collects an API of parser-combinators for parsing FIX
     messages into OCaml types. Each combinator takes a continuation function 
-    that returns a ( 'a Parser.t * msg ) type  
+    that returns a [( 'a Parser.t * msg )] type  
  *)
 module Parser = struct 
 
@@ -120,6 +122,7 @@ module Parser = struct
         | IncorrectNumInGroupCount of string
         | RepeatingGroupOutOfOrder of string
         | GarbledMessage
+
     (** A standard monadic bind operator for the Parser.t type *)
     let ( >>= ) x f = match x with
         | ParseSuccess             x -> f x   
@@ -133,7 +136,8 @@ module Parser = struct
         | RepeatingGroupOutOfOrder x -> RepeatingGroupOutOfOrder x
         | GarbledMessage             -> GarbledMessage
 
-    (** The modified bind operator that applies a function that returns ('a Parser.t , msg ) pair *)
+    (** The modified bind operator that applies a function that 
+        returns [( 'a Parser.t * msg )] pair *)
     let ( >|>= ) x f = match x with
         | ParseSuccess             x -> f x   
         | UnknownMessageTag        x -> UnknownMessageTag        x , []
@@ -146,7 +150,7 @@ module Parser = struct
         | RepeatingGroupOutOfOrder x -> RepeatingGroupOutOfOrder x , []
         | GarbledMessage             -> GarbledMessage , []
 
-    (** A "collect" function that convers 'a t list -> 'a list t 
+    (** A "collect" function that convers ['a t list -> 'a list t] 
         Note: Tail-recursive, but reverses the list.
     *)
     let rev_collect (lst: 'a t list) : 'a list t =
@@ -171,6 +175,7 @@ module Parser = struct
     
         A typical message parser would look like this.
         
+        {[
         let parse_message msg = (
             repeating msg "1" parse_rg @@ fun msg group ->
             check_duplicate_tags msg   @@ fun () ->
@@ -178,8 +183,9 @@ module Parser = struct
             req msg "2" parse_int      @@ fun msg x -> 
             opt msg "3" parse_string   @@ fun msg y -> 
             req msg "4" parse_int      @@ fun msg z -> 
-            ParseSuccess { block; group; x; y; z }, msg 
+            ParseSuccess \{ block; group; x; y; z \}, msg 
             ) |> check_unknown_tags 
+        ]}
     *)
 
     (** Optional field combinator, passes None into continuation if the tag is not present *)
