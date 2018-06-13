@@ -15,7 +15,7 @@ Do this once:
 Generate the docs:
 
 ```
-~/fix-engine $ jbuilder build @doc
+~/fix-engine $ make doc
 ```
 
 Copy them to the `gh-pages-src` branch:
