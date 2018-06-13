@@ -20,15 +20,11 @@ build_tests:
 	jbuilder build src-tests/test_runner.bc 
 	rm jbuild-ignore
 
-_build/default/_doc:
+doc:
 	@echo "src-protocol-exts-pp-vg" > jbuild-ignore 
 	@echo "src-protocol-exts-vg" >> jbuild-ignore 
 	jbuilder build @doc
 	rm jbuild-ignore
-
-doc: _build/default/_doc
-	rm -rf doc
-	mv _build/default/_doc doc
 
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 	sed -e 's/rotate=90;//g' "$<" | dot -Tsvg -o $@
