@@ -4,6 +4,7 @@
   ( (name venue)
     (public_name venue)
     (wrapped false)
-    (libraries (core venue_types))
+    (flags (:standard -open Imandra_prelude))
+    (libraries (venue_prelude core venue_types))
   )
 )

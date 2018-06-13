@@ -1,5 +1,3 @@
-imandramarkets : 0.0.0
-
 import FIX_4_4
 
 outbound message ExecutionReport {
@@ -18,7 +16,7 @@ outbound message ExecutionReport {
 
 message NewOrderSingle {
     req ClOrdID unique      
-    req Side valid when it in [Side.Buy, Side.Sell, SellShort] 
+    req Side
     req TransactTime
     req OrdType
     req Instrument.Symbol
@@ -62,8 +60,8 @@ reject (msg:NewOrderSingle,rejReason:string)
     }
     invalidfield:{
         send ExecutionReport with {
-            ClOrdID = "None";
-            OrderID = "None";
+            ClOrdID = msg.ClOrdID;
+            OrderID = msg.ClOrdID;
             ExecID = "Test";
             ExecType = ExecType.Calculated;
             AvgPx = 0.0;
@@ -71,14 +69,14 @@ reject (msg:NewOrderSingle,rejReason:string)
             LeavesQty = 0.0;
             CumQty = 0.0;
             OrdStatus = OrdStatus.New;
-            Instrument.Symbol = "None";
+            Instrument.Symbol = msg.Instrument.Symbol;
             Text = Some rejReason;
         }
     }
     invalid:{
         send ExecutionReport with {
-            ClOrdID = "None";
-            OrderID = "None";
+            ClOrdID = msg.ClOrdID;
+            OrderID = msg.ClOrdID;
             ExecID = "Test";
             ExecType = ExecType.Calculated;
             AvgPx = 0.0;

@@ -4,6 +4,7 @@
   ( (name protocol_exts_pp)
     (public_name protocol_exts_pp)
     (wrapped false)
-    (libraries (core_pp protocol_exts yojson))
+    (flags (:standard -open Imandra_prelude))
+    (libraries (venue_prelude core_pp protocol_exts yojson))
   )
 )

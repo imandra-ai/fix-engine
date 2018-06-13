@@ -1,7 +1,7 @@
 build:
   box:
     id: ocaml/opam  
-    tag: debian-9_ocaml-4.03.0
+    tag: debian-9_ocaml-4.05.0
     entrypoint: /usr/bin/sudo -u root --preserve-env opam config exec --
     cmd: /bin/bash
 
@@ -11,5 +11,6 @@ build:
         code: |          
           set -ex
           export OPAMROOT=/home/opam/.opam
-          make install-upgrade-deps
+          opam update
+          make opam1-setup
           make

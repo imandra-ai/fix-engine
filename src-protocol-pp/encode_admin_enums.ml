@@ -54,13 +54,13 @@ let encode_GapFillFlag = function
 
 
 let encode_encryption_method = function
-    | PKCS         -> "0"   
-    | DES_ECB      -> "1"   
-    | PKCS_DES     -> "2"   
-    | PGP_DES      -> "3"   
-    | PGP_DES_MD5  -> "4"   
-    | PEM_DES_MD5  -> "5"   
-    | NoEncryption -> "6"  
+    | NoEncryption -> "0"  
+    | PKCS         -> "1"   
+    | DES_ECB      -> "2"   
+    | PKCS_DES     -> "3"   
+    | PGP_DES      -> "4"   
+    | PGP_DES_MD5  -> "5"   
+    | PEM_DES_MD5  -> "6"   
 ;;
 
 (** *)

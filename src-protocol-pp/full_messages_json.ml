@@ -50,25 +50,24 @@ let biz_rejected_msg_to_json x : json =
     ] |> assoc_filter_nulls 
 ;;
 
- 
 let header_to_json x : json = 
     [ ( "BeginString" , string_to_json            x.h_begin_string                )
     ; ( "BodyLength"  , int_to_json               x.h_body_length                 )
     ; ( "SenderCompID", string_to_json            x.h_sender_comp_id              )
     ; ( "TargetCompID", string_to_json            x.h_target_comp_id              )
     ; ( "MsgSeqNum"   , int_to_json               x.h_msg_seq_num                 )
-    ; ( "OnBehalfOfCompID"      , int_opt_to_json           x.h_on_behalf_of_comp_id        )    
-    ; ( "DeliverToCompID"       , int_opt_to_json           x.h_deliver_to_comp_id          )    
+    ; ( "OnBehalfOfCompID"      , string_opt_to_json        x.h_on_behalf_of_comp_id        )    
+    ; ( "DeliverToCompID"       , string_opt_to_json        x.h_deliver_to_comp_id          )    
     ; ( "SecureDataLen"         , int_opt_to_json           x.h_secure_data_len             )    
     ; ( "SecureData"            , int_opt_to_json           x.h_secure_data                 )    
-    ; ( "SenderSubID"           , int_opt_to_json           x.h_sender_sub_id               )    
-    ; ( "SenderLocationID"      , int_opt_to_json           x.h_sender_location_id          )    
-    ; ( "TargetSubID"           , int_opt_to_json           x.h_target_sub_id               )    
-    ; ( "TargetLocationID"      , int_opt_to_json           x.h_target_location_id          )    
-    ; ( "OnBehalfOfSubID"       , int_opt_to_json           x.h_on_behalf_of_sub_id         )    
-    ; ( "OnBehalfOfLocationID"  , int_opt_to_json           x.h_on_behalf_of_location_id    )    
-    ; ( "DeliverToSubID"        , int_opt_to_json           x.h_deliver_to_sub_id           )    
-    ; ( "DeliverToLocationID"   , int_opt_to_json           x.h_deliver_to_location_id      )    
+    ; ( "SenderSubID"           , string_opt_to_json        x.h_sender_sub_id               )    
+    ; ( "SenderLocationID"      , string_opt_to_json        x.h_sender_location_id          )    
+    ; ( "TargetSubID"           , string_opt_to_json        x.h_target_sub_id               )    
+    ; ( "TargetLocationID"      , string_opt_to_json        x.h_target_location_id          )    
+    ; ( "OnBehalfOfSubID"       , string_opt_to_json        x.h_on_behalf_of_sub_id         )    
+    ; ( "OnBehalfOfLocationID"  , string_opt_to_json        x.h_on_behalf_of_location_id    )    
+    ; ( "DeliverToSubID"        , string_opt_to_json        x.h_deliver_to_sub_id           )    
+    ; ( "DeliverToLocationID"   , string_opt_to_json        x.h_deliver_to_location_id      )    
     ; ( "PossDupFlag"           , bool_opt_to_json          x.h_poss_dup_flag               )    
     ; ( "PossResend"            , bool_opt_to_json          x.h_poss_resend                 )    
     ; ( "SendingTime"           , utctimestamp_to_json      x.h_sending_time                )    
@@ -80,8 +79,7 @@ let header_to_json x : json =
     ; ( "NoHops"                , int_opt_to_json           x.h_no_hops                     )    
     ] |> assoc_filter_nulls 
 ;;
-
-
+ 
 let trailer_to_json x : json =  
     [ ( "SignatureLength" , int_opt_to_json x.signature_length )
     ; ( "Signature"       , int_opt_to_json x.signature        )

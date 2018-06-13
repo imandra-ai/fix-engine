@@ -1,12 +1,8 @@
 (* Aesthetic Integration copyright 2018 *)
-open Msg_check_types;;
 open Model_messages;;
+open Msg_check_types;;
 open State;;
 
-let check_validate_ExecutionReport ( msg_data , m_state : mod_executionreport_data * model_state ) =
-    no_invalid_validates
-;;
-
-let check_validate_NewOrderSingle ( msg_data , m_state : mod_newordersingle_data * model_state ) =
+let check_validate_NewOrderSingle (msg_data : mod_newordersingle_data) (m_state : model_state)  =
     no_invalid_validates
 ;;

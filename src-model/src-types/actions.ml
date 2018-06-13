@@ -3,7 +3,7 @@ open Datetime;;
 open Numeric;;
 
 type m_action_fix_x = {
-    f_x_x : int
+    mod_f_x_x : int
 }
 ;;
 
