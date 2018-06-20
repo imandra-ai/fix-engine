@@ -7,7 +7,6 @@ open Json_generator_utils;;
 open Yojson;;
 open TimeDefaults_json;;
 
-
 let trdcollgrp_to_string (d)  =
     ""
 ;;

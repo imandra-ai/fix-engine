@@ -4,6 +4,8 @@ open Parse_app_enums;;
 open Parse_base_types;;
 open Parse_datetime;;
 open Parser_utils.Parser;;
+open TimeDefaults_parser;;
+
 
 let parse_TrdCollGrp (msg)  =
     opt msg "571" parse_string (fun msg f_TrdCollGrp_TradeReportID -> opt msg "897" parse_int (fun msg f_TrdCollGrp_NoTrades -> opt msg "818" parse_string (fun msg f_TrdCollGrp_SecondaryTradeReportID -> (ParseSuccess {
