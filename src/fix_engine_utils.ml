@@ -17,6 +17,7 @@ open Full_messages;;
 open Full_message_tags;;
 open Full_admin_tags;;
 open Fix_engine_state;;
+open TimeDefaults;;
 (* @meta[imandra_ignore] off @end *)
 
 type session_details = {

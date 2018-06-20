@@ -5,6 +5,7 @@ open Json_generator_utils;;
 open Model_enums_json;;
 open Model_messages;;
 open Yojson;;
+open TimeDefaults_json;;
 
 let mod_executionreport_to_json (x)  : json =
     assoc_filter_nulls (("ClOrdID",string_to_json x.mod_f_ExecutionReport_ClOrdID) :: (("OrderID",string_to_json x.mod_f_ExecutionReport_OrderID) :: (("ExecID",string_to_json x.mod_f_ExecutionReport_ExecID) :: (("ExecType",mod_exectype_to_json x.mod_f_ExecutionReport_ExecType) :: (("AvgPx",float_6_to_json x.mod_f_ExecutionReport_AvgPx) :: (("Side",mod_side_to_json x.mod_f_ExecutionReport_Side) :: (("LeavesQty",float_6_to_json x.mod_f_ExecutionReport_LeavesQty) :: (("CumQty",float_6_to_json x.mod_f_ExecutionReport_CumQty) :: (("OrdStatus",mod_ordstatus_to_json x.mod_f_ExecutionReport_OrdStatus) :: (("Instrument.Symbol",string_to_json x.mod_f_ExecutionReport_Instrument_Symbol) :: (("Text",string_opt_to_json x.mod_f_ExecutionReport_Text) :: [])))))))))))
