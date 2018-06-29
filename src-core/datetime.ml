@@ -882,6 +882,10 @@ let utctimestamp_milli_duration_Add ( t:fix_utctimestamp_milli) (dur : fix_durat
     normalise_timestamp_milli ( new_ts )
 ;;
 
+let duration_utctimestamp_milli_Add (dur : fix_duration) ( t:fix_utctimestamp_milli) = 
+    utctimestamp_milli_duration_Add t dur
+;;
+
 let utctimestamp_micro_duration_Add ( t:fix_utctimestamp_micro) (dur : fix_duration ) = 
     let new_seconds = match dur.dur_seconds with
         | None -> t.utc_timestamp_second
@@ -913,6 +917,9 @@ let utctimestamp_micro_duration_Add ( t:fix_utctimestamp_micro) (dur : fix_durat
     normalise_timestamp_micro ( new_ts )
 ;;
 
+let duration_utctimestamp_micro_Add (dur : fix_duration) ( t:fix_utctimestamp_micro) = 
+    utctimestamp_micro_duration_Add t dur
+;;
 
 let seconds_to_duration ( seconds ) = 
     let ts = normalise_timestamp_milli {
