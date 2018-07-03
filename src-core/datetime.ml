@@ -295,7 +295,7 @@ let utctimestamp_GreaterThanEqual_milli_micro ( tOne:fix_utctimestamp_milli) (tT
     utctimestamp_GreaterThan_milli_micro tOne tTwo || utctimestamp_Equal_milli_micro tOne tTwo
 ;;
 
-let utctimestamp_GreaterThanEqual_milli_milli ( tOne:fix_utctimestamp_micro) (tTwo : fix_utctimestamp_milli) =
+let utctimestamp_GreaterThanEqual_micro_milli ( tOne:fix_utctimestamp_micro) (tTwo : fix_utctimestamp_milli) =
     utctimestamp_GreaterThan_micro_milli tOne tTwo || utctimestamp_Equal_micro_milli tOne tTwo
 ;;
 
@@ -303,16 +303,16 @@ let utctimestamp_LessThan_milli_milli ( tOne :fix_utctimestamp_milli) (tTwo : fi
     not ( utctimestamp_GreaterThan_milli_milli tOne tTwo || utctimestamp_Equal_milli_milli tOne tTwo)
 ;;
 
-let utctimestamp_LessThan_micro_micro ( tOne :fix_utctimestamp_milli) (tTwo : fix_utctimestamp_micro  ) =
+let utctimestamp_LessThan_micro_micro ( tOne :fix_utctimestamp_micro) (tTwo : fix_utctimestamp_micro  ) =
+    not ( utctimestamp_GreaterThan_micro_micro tOne tTwo || utctimestamp_Equal_micro_micro tOne tTwo)
+;;
+
+let utctimestamp_LessThan_milli_micro ( tOne :fix_utctimestamp_milli) (tTwo : fix_utctimestamp_micro  ) =
     not ( utctimestamp_GreaterThan_milli_micro tOne tTwo || utctimestamp_Equal_milli_micro tOne tTwo)
 ;;
 
-let utctimestamp_LessThan_milli_micro ( tOne :fix_utctimestamp_micro) (tTwo : fix_utctimestamp_milli  ) =
+let utctimestamp_LessThan_micro_milli ( tOne :fix_utctimestamp_micro) (tTwo : fix_utctimestamp_milli  ) =
     not ( utctimestamp_GreaterThan_micro_milli tOne tTwo || utctimestamp_Equal_micro_milli tOne tTwo)
-;;
-
-let utctimestamp_LessThan_micro_micro ( tOne :fix_utctimestamp_micro) (tTwo : fix_utctimestamp_micro  ) =
-    not ( utctimestamp_GreaterThan_micro_micro tOne tTwo || utctimestamp_Equal_micro_micro tOne tTwo)
 ;;
 
 let utctimestamp_LessThanEqual_milli_milli ( tOne : fix_utctimestamp_milli) (tTwo : fix_utctimestamp_milli  ) =
@@ -642,7 +642,7 @@ let utctimeonly_LessThan_milli_milli ( tOne:fix_utctimeonly_milli) (tTwo : fix_u
     not ( utctimeonly_GreaterThan_milli_milli tOne tTwo || utctimeonly_Equal_milli_milli tOne tTwo)
 ;;
 
-let utctimeonly_LessThan_milli_milli ( tOne:fix_utctimeonly_micro) (tTwo : fix_utctimeonly_micro ) =
+let utctimeonly_LessThan_micro_micro ( tOne:fix_utctimeonly_micro) (tTwo : fix_utctimeonly_micro ) =
     not ( utctimeonly_GreaterThan_micro_micro tOne tTwo || utctimeonly_Equal_micro_micro tOne tTwo)
 ;;
 
