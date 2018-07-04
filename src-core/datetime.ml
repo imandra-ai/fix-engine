@@ -7,7 +7,6 @@
     datetime.ml
 *)
 
-
 (** Helper function that determines wether the year is a leap year *)
 let is_leapyear ( year : int ) =
     match year with
@@ -1035,3 +1034,38 @@ let duration_LessThanEqual dur1 dur2 =
     not (duration_GreaterThan dur2 dur2)
 ;;
 
+let convert_utctimestamp_milli_utctimeonly_milli (ts:fix_utctimestamp_milli) : (fix_utctimeonly_milli) = 
+    {
+        utc_timeonly_hour     = ts.utc_timestamp_hour;
+        utc_timeonly_minute    = ts.utc_timestamp_minute;
+        utc_timeonly_second    = ts.utc_timestamp_second;
+        utc_timeonly_millisec  = ts.utc_timestamp_millisec
+    }
+;;
+
+let convert_utctimestamp_micro_utctimeonly_micro (ts:fix_utctimestamp_micro) : (fix_utctimeonly_micro) = 
+    {
+        utc_timeonly_hour     = ts.utc_timestamp_hour;
+        utc_timeonly_minute    = ts.utc_timestamp_minute;
+        utc_timeonly_second    = ts.utc_timestamp_second;
+        utc_timeonly_microsec  = ts.utc_timestamp_microsec
+    }
+;;
+
+let convert_utctimestamp_milli_utctimeonly_micro (ts:fix_utctimestamp_milli) : (fix_utctimeonly_micro) = 
+    {
+        utc_timeonly_hour     = ts.utc_timestamp_hour;
+        utc_timeonly_minute    = ts.utc_timestamp_minute;
+        utc_timeonly_second    = ts.utc_timestamp_second;
+        utc_timeonly_microsec  = ts.utc_timestamp_millisec
+    }
+;;
+
+let convert_utctimestamp_micro_utctimeonly_milli (ts:fix_utctimestamp_micro) : (fix_utctimeonly_milli) = 
+    {
+        utc_timeonly_hour     = ts.utc_timestamp_hour;
+        utc_timeonly_minute    = ts.utc_timestamp_minute;
+        utc_timeonly_second    = ts.utc_timestamp_second;
+        utc_timeonly_millisec  = ts.utc_timestamp_microsec
+    }
+;;
