@@ -78,6 +78,30 @@ let make_utctimestamp_micro ( year:int) (month:int) (day:int) (hour:int) (minute
 }
 ;;
 
+(** Conversion for the UTC timestamp and timeonly fields *)
+let convert_utctimestamp_milli_micro (f1:fix_utctimestamp_milli) : fix_utctimestamp_micro=
+    {
+        utc_timestamp_year      = f1.utc_timestamp_year ;
+        utc_timestamp_month     = f1.utc_timestamp_month;
+        utc_timestamp_day       = f1.utc_timestamp_day;
+        utc_timestamp_hour      = f1.utc_timestamp_hour;
+        utc_timestamp_minute    = f1.utc_timestamp_minute;
+        utc_timestamp_second    = f1.utc_timestamp_second;
+        utc_timestamp_microsec  = f1.utc_timestamp_millisec;
+    }
+;;
+
+let convert_utctimestamp_micro_milli (f1:fix_utctimestamp_micro) : fix_utctimestamp_milli =
+    {
+        utc_timestamp_year      = f1.utc_timestamp_year;
+        utc_timestamp_month     = f1.utc_timestamp_month;
+        utc_timestamp_day       = f1.utc_timestamp_day;
+        utc_timestamp_hour      = f1.utc_timestamp_hour;
+        utc_timestamp_minute    = f1.utc_timestamp_minute;
+        utc_timestamp_second    = f1.utc_timestamp_second;
+        utc_timestamp_millisec  = f1.utc_timestamp_microsec;
+    }
+;;
 
 (** Helper function that determines wether the year is a leap year *)
 let is_leapyear ( year : int ) =
@@ -523,6 +547,24 @@ let make_utctimeonly_micro (hour:int) (minute:int) (second:int) (microsec: int o
     utc_timeonly_second     = second;
     utc_timeonly_microsec   = microsec;
 };;
+
+let convert_utctimeonly_milli_micro (f1:fix_utctimeonly_milli) : fix_utctimeonly_micro =
+    {
+        utc_timeonly_hour      = f1.utc_timeonly_hour;
+        utc_timeonly_minute    = f1.utc_timeonly_minute;
+        utc_timeonly_second    = f1.utc_timeonly_second;
+        utc_timeonly_microsec  = f1.utc_timeonly_millisec;
+    }
+;;
+
+let convert_utctimeonly_milli_micro (f1:fix_utctimeonly_micro) : fix_utctimeonly_milli =
+    {
+        utc_timeonly_hour      = f1.utc_timeonly_hour;
+        utc_timeonly_minute    = f1.utc_timeonly_minute;
+        utc_timeonly_second    = f1.utc_timeonly_second;
+        utc_timeonly_millisec  = f1.utc_timeonly_microsec;
+    }
+;;
 
 let is_valid_utctimeonly_milli ( t : fix_utctimeonly_milli ) =
     0 <= t.utc_timeonly_hour && 
