@@ -973,3 +973,36 @@ let duration_to_seconds ( dur ) =
     let sec = sec + dur.dur_years * 365 * 31 * 24 * 60 * 60 in    
     sec
 ;;
+
+let duration_Equal dur1 dur2 = 
+    (normalise_duration dur1) = (normalise_duration dur2)
+;;
+
+let duration_GreaterThan dur1 dur2 = 
+    let ndur1 = normalise_duration dur1 in
+    let ndur2 = normalise_duration dur2 in
+    ndur1.dur_years > ndur2.dur_years ||
+    (ndur1.dur_years = ndur2.dur_years &&
+        ndur1.dur_months > ndur2.dur_months ||
+        (ndur1.dur_months = ndur2.dur_months &&
+            ndur1.dur_days > ndur2.dur_days ||
+            (ndur1.dur_days = ndur2.dur_days &&
+                ndur1.dur_hours > ndur2.dur_hours ||
+                (ndur1.dur_hours = ndur2.dur_hours &&
+                    ndur1.dur_minutes > ndur2.dur_minutes ||
+                    (ndur1.dur_minutes = ndur2.dur_minutes &&
+                        ndur1.dur_seconds > ndur2.dur_seconds)))))
+;;
+
+let duration_GreaterThanEqual dur1 dur2 = 
+    duration_GreaterThan dur1 dur2 || duration_Equal dur1 dur2
+;;
+
+let duration_LessThan dur1 dur2 = 
+    not (duration_GreaterThanEqual dur1 dur2)
+;;
+
+let duration_LessThanEqual dur1 dur2 = 
+    not (duration_GreaterThan dur2 dur2)
+;;
+
