@@ -343,12 +343,12 @@ let field_null ( f : int option ) =
 ;;
 
 let hbeat_interval_null ( interval : fix_duration ) =
-    field_null ( interval.dur_years )   &&
-    field_null ( interval.dur_months )  && 
-    field_null ( interval.dur_days )    && 
-    field_null ( interval.dur_hours )   &&
-    field_null ( interval.dur_minutes ) &&
-    field_null ( interval.dur_seconds )
+     ( interval.dur_years = 0)   &&
+     ( interval.dur_months = 0)  && 
+     ( interval.dur_days = 0)    && 
+     ( interval.dur_hours = 0)   &&
+     ( interval.dur_minutes = 0) &&
+     ( interval.dur_seconds = 0)
 ;;
 
 

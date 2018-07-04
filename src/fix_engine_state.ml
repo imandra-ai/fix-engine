@@ -149,9 +149,9 @@ let init_fix_engine_state = {
     fe_history              = [];
 
     fe_last_data_received   = make_utctimestamp 2017 1 1 0 1 0 None;
-    fe_heartbeat_interval   = make_duration None None None None None (Some 30 ); (* 30 seconds *)
+    fe_heartbeat_interval   = make_duration 0 0 0 0 0 30; (* 30 seconds *)
     fe_last_time_data_sent  = make_utctimestamp 2017 1 1 0 1 0 None;
-    fe_testreq_interval     = make_duration None None None None None (Some 30 );
+    fe_testreq_interval     = make_duration 0 0 0 0 0 30;
 
     fe_history_to_send      = [];
     fe_retransmit_start_idx = 0;

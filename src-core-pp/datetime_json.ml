@@ -53,12 +53,12 @@ let utctimestamp_micro_opt_to_json = function
 
 let duration_to_json ( d : fix_duration ) = 
     let list_assoc = [
-        ( "dur_years"   , int_opt_to_json d.dur_years   );
-        ( "dur_months"  , int_opt_to_json d.dur_months  );
-        ( "dur_days"    , int_opt_to_json d.dur_days    );
-        ( "dur_hours"   , int_opt_to_json d.dur_hours   );
-        ( "dur_minutes" , int_opt_to_json d.dur_minutes );
-        ( "dur_seconds" , int_opt_to_json d.dur_seconds );
+        ( "dur_years"   , int_to_json d.dur_years   );
+        ( "dur_months"  , int_to_json d.dur_months  );
+        ( "dur_days"    , int_to_json d.dur_days    );
+        ( "dur_hours"   , int_to_json d.dur_hours   );
+        ( "dur_minutes" , int_to_json d.dur_minutes );
+        ( "dur_seconds" , int_to_json d.dur_seconds );
     ] |> filter_nulls in 
     `Assoc list_assoc
 ;;

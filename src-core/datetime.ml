@@ -789,46 +789,28 @@ let utcdateonly_LessThanEqual ( dOne:fix_utcdateonly) (dTwo : fix_utcdateonly ) 
 
 (** Duration *)
 type fix_duration = {
-    dur_years               : int option;
-    dur_months              : int option;
-    dur_days                : int option;
-    dur_hours               : int option;
-    dur_minutes             : int option;
-    dur_seconds             : int option;
+    dur_years               : int;
+    dur_months              : int;
+    dur_days                : int;
+    dur_hours               : int;
+    dur_minutes             : int;
+    dur_seconds             : int;
 }
 ;;
 
-
-let make_duration years months days hours minutes seconds = {
-    dur_years               = years;
-    dur_months              = months;
-    dur_days                = days;
-    dur_hours               = hours;
-    dur_minutes             = minutes;
-    dur_seconds             = seconds;
-}
-;;
-
-
-let is_valid_duration ( d : fix_duration ) =
-    match d.dur_years with 
-    | Some y    -> 0 <= y && y <= 100
-    | None      ->
-    match d.dur_months with 
-    | Some m    -> 0 <= m && m <= 12
-    | None      -> 
-    match d.dur_days with
-    | Some d    -> 0 <= d && d <= 31
-    | None      -> 
-    match d.dur_hours with 
-    | Some h    -> 0 <= h && h <= 24
-    | None      ->
-    match d.dur_minutes with
-    | Some m    -> 0 <= m && m <= 59
-    | None      -> 
-    match d.dur_seconds with
-    | Some s    -> 0 <= s && s <= 59
-    | None      -> true
+let is_valid_duration ( dur : fix_duration ) =
+    let y =  dur.dur_years in
+     0 <= y && y <= 100 &&    
+    let m = dur.dur_months in 
+     0 <= m && m <= 12 &&   
+    let d =  dur.dur_days in
+    0 <= d && d <= 31 &&
+    let h = dur.dur_hours in
+    0 <= h && h <= 24 &&
+    let m = dur.dur_minutes in
+    0 <= m && m <= 59 &&
+    let s = dur.dur_seconds in
+    0 <= s && s <= 59
 ;;
 
 
@@ -847,6 +829,37 @@ let calculate_carry ( field:int) (max_value:int) (min_value : int  ) =
         new_field = field;
         carry_over = false;
     }
+;;
+
+let normalise_duration (d:fix_duration):fix_duration = 
+    let carry_secs  = calculate_carry d.dur_seconds 60 0 in
+    let new_minute  = if carry_secs.carry_over then ( d.dur_minutes + 1)  else d.dur_minutes in 
+    let carry_mins  = calculate_carry  new_minute            60 0  in
+    let new_hour    = if carry_mins.carry_over then ( d.dur_hours + 1 )   else d.dur_hours in 
+    let carry_hours = calculate_carry  new_hour               24 0 in 
+    let new_days    = if carry_hours.carry_over then ( d.dur_days + 1 )   else d.dur_days in 
+    let carry_days  = calculate_carry new_days (1 + (how_many_days d.dur_months d.dur_years )) 1 in
+    let new_months  = if carry_days.carry_over then ( d.dur_months + 1 )  else d.dur_months in
+    let carry_months = calculate_carry new_months            13 1 in 
+    let new_years   = if carry_months.carry_over then ( d.dur_years + 1 ) else d.dur_years in {
+        dur_seconds    = carry_secs.new_field;
+        dur_minutes    = carry_mins.new_field;
+        dur_hours      = carry_hours.new_field;
+        dur_days       = carry_days.new_field;
+        dur_months     = carry_months.new_field;
+        dur_years      = new_years;
+    }
+;;
+
+
+let make_duration years months days hours minutes seconds = {
+    dur_years               = years;
+    dur_months              = months;
+    dur_days                = days;
+    dur_hours               = hours;
+    dur_minutes             = minutes;
+    dur_seconds             = seconds;
+}
 ;;
 
 
@@ -894,24 +907,12 @@ let normalise_timestamp_micro ( ts : fix_utctimestamp_micro ) =
 
 
 let utctimestamp_milli_duration_Add ( t:fix_utctimestamp_milli) (dur : fix_duration ) = 
-    let new_seconds = match dur.dur_seconds with
-        | None -> t.utc_timestamp_second
-        | Some s -> t.utc_timestamp_second + s in
-    let new_minute = match dur.dur_minutes with
-        | None -> t.utc_timestamp_minute
-        | Some m -> t.utc_timestamp_minute + m in
-    let new_hour = match dur.dur_hours with 
-        | None -> t.utc_timestamp_hour
-        | Some h -> t.utc_timestamp_hour + h in 
-    let new_day = match dur.dur_days with
-        | None -> t.utc_timestamp_day
-        | Some d -> t.utc_timestamp_day + d in
-    let new_month = match dur.dur_months with
-        | None -> t.utc_timestamp_month
-        | Some m -> t.utc_timestamp_month + m in 
-    let new_year = match dur.dur_years with
-        | None -> t.utc_timestamp_year 
-        | Some y -> t.utc_timestamp_year + y in 
+    let new_seconds = t.utc_timestamp_second + dur.dur_seconds in
+    let new_minute = t.utc_timestamp_minute + dur.dur_minutes in
+    let new_hour = t.utc_timestamp_hour + dur.dur_hours in 
+    let new_day = t.utc_timestamp_day + dur.dur_days in
+    let new_month = t.utc_timestamp_month + dur.dur_months in
+    let new_year = t.utc_timestamp_year + dur.dur_years in
     let new_ts = {
         utc_timestamp_millisec  = t.utc_timestamp_millisec; 
         utc_timestamp_second    = new_seconds;
@@ -929,24 +930,12 @@ let duration_utctimestamp_milli_Add (dur : fix_duration) ( t:fix_utctimestamp_mi
 ;;
 
 let utctimestamp_micro_duration_Add ( t:fix_utctimestamp_micro) (dur : fix_duration ) = 
-    let new_seconds = match dur.dur_seconds with
-        | None -> t.utc_timestamp_second
-        | Some s -> t.utc_timestamp_second + s in
-    let new_minute = match dur.dur_minutes with
-        | None -> t.utc_timestamp_minute
-        | Some m -> t.utc_timestamp_minute + m in
-    let new_hour = match dur.dur_hours with 
-        | None -> t.utc_timestamp_hour
-        | Some h -> t.utc_timestamp_hour + h in 
-    let new_day = match dur.dur_days with
-        | None -> t.utc_timestamp_day
-        | Some d -> t.utc_timestamp_day + d in
-    let new_month = match dur.dur_months with
-        | None -> t.utc_timestamp_month
-        | Some m -> t.utc_timestamp_month + m in 
-    let new_year = match dur.dur_years with
-        | None -> t.utc_timestamp_year 
-        | Some y -> t.utc_timestamp_year + y in 
+    let new_seconds = t.utc_timestamp_second + dur.dur_seconds in
+    let new_minute = t.utc_timestamp_minute + dur.dur_minutes in
+    let new_hour = t.utc_timestamp_hour + dur.dur_hours in 
+    let new_day = t.utc_timestamp_day + dur.dur_days in
+    let new_month = t.utc_timestamp_month + dur.dur_months in
+    let new_year = t.utc_timestamp_year + dur.dur_years in
     let new_ts = {
         utc_timestamp_microsec  = t.utc_timestamp_microsec; 
         utc_timestamp_second    = new_seconds;
@@ -964,29 +953,23 @@ let duration_utctimestamp_micro_Add (dur : fix_duration) ( t:fix_utctimestamp_mi
 ;;
 
 let seconds_to_duration ( seconds ) = 
-    let ts = normalise_timestamp_milli {
-        utc_timestamp_year      = 0;
-        utc_timestamp_month     = 0;
-        utc_timestamp_day       = 0;
-        utc_timestamp_hour      = 0;
-        utc_timestamp_minute    = 0;
-        utc_timestamp_second    = seconds;
-        utc_timestamp_millisec  = None;
-    } in { 
-        dur_years    = ( match ts.utc_timestamp_year   with 0 -> None | x -> Some x) ; 
-        dur_months   = ( match ts.utc_timestamp_month  with 0 -> None | x -> Some x) ; 
-        dur_days     = ( match ts.utc_timestamp_day    with 0 -> None | x -> Some x) ; 
-        dur_hours    = ( match ts.utc_timestamp_hour   with 0 -> None | x -> Some x) ; 
-        dur_minutes  = ( match ts.utc_timestamp_minute with 0 -> None | x -> Some x) ; 
-        dur_seconds  = ( match ts.utc_timestamp_second with 0 -> None | x -> Some x) ; 
+    normalise_duration {
+        dur_years    = 0;
+        dur_months   = 0;
+        dur_days     = 0;
+        dur_hours    = 0;
+        dur_minutes  = 0;
+        dur_seconds  = seconds;
     }
 ;;
 
 (** TODO This is unfinished -- check how months are accounted for *)
 let duration_to_seconds ( dur ) =
-    let sec =       match dur.dur_seconds with None -> 0 | Some x -> x in
-    let sec = sec + match dur.dur_minutes with None -> 0 | Some x -> 60 * x in
-    let sec = sec + match dur.dur_hours   with None -> 0 | Some x -> 60 * 60 * x in
-    let sec = sec + match dur.dur_days    with None -> 0 | Some x -> 24 * 60 * 60 * x in    
+    let sec = dur.dur_seconds in
+    let sec = sec + dur.dur_minutes * 60 in
+    let sec = sec + dur.dur_hours * 60 * 60 in
+    let sec = sec + dur.dur_days * 24 * 60 * 60 in
+    let sec = sec + dur.dur_months * 31 * 24 * 60 * 60 in
+    let sec = sec + dur.dur_years * 365 * 31 * 24 * 60 * 60 in    
     sec
 ;;
