@@ -36,7 +36,7 @@ let encode_UTCTimeOnly_milli (x:fix_utctimeonly_milli ) : string =
     in
     match x.utc_timeonly_millisec with
         | None -> hms 
-        | Some ms -> hms ^ Printf.sprintf ".%06d" ms
+        | Some ms -> hms ^ Printf.sprintf ".%03d" ms
 ;;
 
 let encode_UTCTimeOnly_micro (x:fix_utctimeonly_micro ) : string = 
@@ -61,7 +61,7 @@ let encode_UTCTimestamp_milli (x:fix_utctimestamp_milli ) : string =
     in
     match x.utc_timestamp_millisec with
         | None -> ymdhms 
-        | Some ms -> ymdhms ^ Printf.sprintf ".%06d" ms
+        | Some ms -> ymdhms ^ Printf.sprintf ".%03d" ms
 ;;
 
 let encode_UTCTimestamp_micro (x:fix_utctimestamp_micro ) : string = 
