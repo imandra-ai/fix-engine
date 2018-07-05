@@ -647,7 +647,7 @@ let convert_utctimeonly_milli_micro (f1:fix_utctimeonly_milli) : fix_utctimeonly
     }
 ;;
 
-let convert_utctimeonly_milli_micro (f1:fix_utctimeonly_micro) : fix_utctimeonly_milli =
+let convert_utctimeonly_micro_milli (f1:fix_utctimeonly_micro) : fix_utctimeonly_milli =
     {
         utc_timeonly_hour      = f1.utc_timeonly_hour;
         utc_timeonly_minute    = f1.utc_timeonly_minute;
