@@ -10,6 +10,7 @@
 
 open Encode_base_types;;
 open Encode_datetime;;
+open TimeDefaults_pp;;
 
 let fix_float_0_to_string x =
   encode_float_0 x

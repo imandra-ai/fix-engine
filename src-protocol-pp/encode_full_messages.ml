@@ -13,6 +13,7 @@ open Full_messages
 open Encode_base_types
 open Encode_datetime
 open Encode_full_tags
+open TimeDefaults_pp
 
 let req f x = Some (f x);;
 let opt f v = match v with Some x -> Some ( f x ) | None -> None;;

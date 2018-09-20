@@ -4,6 +4,7 @@ open Encode_base_types;;
 open Encode_datetime;;
 open Encode_utils;;
 open Full_app_records;;
+open TimeDefaults_pp;;
 
 let encode_TrdCollGrp (msg)  =
     (@) (("818",enc_opt encode_string msg.f_TrdCollGrp_SecondaryTradeReportID) :: (("571",enc_opt encode_string msg.f_TrdCollGrp_TradeReportID) :: [])) []

@@ -16,6 +16,7 @@ open Full_messages;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
 open Fix_engine_transitions;;
+open TimeDefaults;;
 
 (** Process incoming internal transition message. *)
 let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_state) = 

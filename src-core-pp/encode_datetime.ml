@@ -28,7 +28,7 @@ let encode_LocalMktDate x : string =
 ;;
 
 
-let encode_UTCTimeOnly x : string = 
+let encode_UTCTimeOnly_milli (x:fix_utctimeonly_milli ) : string = 
     let hms = Printf.sprintf "%02u:%02u:%02u" 
                 x.utc_timeonly_hour  
                 x.utc_timeonly_minute
@@ -36,11 +36,21 @@ let encode_UTCTimeOnly x : string =
     in
     match x.utc_timeonly_millisec with
         | None -> hms 
+        | Some ms -> hms ^ Printf.sprintf ".%03d" ms
+;;
+
+let encode_UTCTimeOnly_micro (x:fix_utctimeonly_micro ) : string = 
+    let hms = Printf.sprintf "%02u:%02u:%02u" 
+                x.utc_timeonly_hour  
+                x.utc_timeonly_minute
+                x.utc_timeonly_second
+    in
+    match x.utc_timeonly_microsec with
+        | None -> hms 
         | Some ms -> hms ^ Printf.sprintf ".%06d" ms
 ;;
 
-
-let encode_UTCTimestamp x : string = 
+let encode_UTCTimestamp_milli (x:fix_utctimestamp_milli ) : string = 
     let ymdhms = Printf.sprintf "%04u%02u%02u-%02u:%02u:%02u" 
             x.utc_timestamp_year     
             x.utc_timestamp_month    
@@ -51,9 +61,22 @@ let encode_UTCTimestamp x : string =
     in
     match x.utc_timestamp_millisec with
         | None -> ymdhms 
-        | Some ms -> ymdhms ^ Printf.sprintf ".%06d" ms
+        | Some ms -> ymdhms ^ Printf.sprintf ".%03d" ms
 ;;
 
+let encode_UTCTimestamp_micro (x:fix_utctimestamp_micro ) : string = 
+    let ymdhms = Printf.sprintf "%04u%02u%02u-%02u:%02u:%02u" 
+            x.utc_timestamp_year     
+            x.utc_timestamp_month    
+            x.utc_timestamp_day      
+            x.utc_timestamp_hour     
+            x.utc_timestamp_minute   
+            x.utc_timestamp_second   
+    in
+    match x.utc_timestamp_microsec with
+        | None -> ymdhms 
+        | Some ms -> ymdhms ^ Printf.sprintf ".%06d" ms
+;;
 
 let encode_MonthYear x : string =
     let ym = Printf.sprintf "%04u%02u" 

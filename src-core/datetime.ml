@@ -7,42 +7,6 @@
     datetime.ml
 *)
 
-(** UTC Timestamp type. *)
-type fix_utctimestamp = {
-    utc_timestamp_year      : int;
-    utc_timestamp_month     : int;
-    utc_timestamp_day       : int;
-    utc_timestamp_hour      : int;
-    utc_timestamp_minute    : int;
-    utc_timestamp_second    : int;
-    utc_timestamp_millisec  : int option;
-}
-;;
-
-(** Default timestamp is 0 unix epoch timestamp *)
-let default_utctimestamp = {
-    utc_timestamp_year      = 1970;
-    utc_timestamp_month     = 1;
-    utc_timestamp_day       = 1;
-    utc_timestamp_hour      = 0;
-    utc_timestamp_minute    = 0;
-    utc_timestamp_second    = 0;
-    utc_timestamp_millisec  = Some 0;
-}
-;;
-
-(** Constructor for the UTC timestamp  *)
-let make_utctimestamp ( year:int) (month:int) (day:int) (hour:int) (minute:int) (second:int) (millisec:int option)  = {
-    utc_timestamp_year      = year;
-    utc_timestamp_month     = month;
-    utc_timestamp_day       = day;
-    utc_timestamp_hour      = hour;
-    utc_timestamp_minute    = minute;
-    utc_timestamp_second    = second;
-    utc_timestamp_millisec  = millisec;
-}
-;;
-
 (** Helper function that determines wether the year is a leap year *)
 let is_leapyear ( year : int ) =
     match year with
@@ -90,8 +54,167 @@ let valid_day day month year =
 ;;
 
 
-(** Checking validity of the values in the UTC timestamp*)
-let is_valid_utctimestamp ( ts : fix_utctimestamp ) =
+type field_carryover = {
+    carry_over  : bool;
+    new_field   : int;
+}
+;;
+
+
+let calculate_carry ( field:int) (max_value:int) (min_value : int  ) =
+    if field >= max_value then {
+        new_field = field - max_value + min_value;
+        carry_over = true;
+    } else {
+        new_field = field;
+        carry_over = false;
+    }
+;;
+
+(** UTC Timestamp type. *)
+type fix_utctimestamp_milli = {
+    utc_timestamp_year      : int;
+    utc_timestamp_month     : int;
+    utc_timestamp_day       : int;
+    utc_timestamp_hour      : int;
+    utc_timestamp_minute    : int;
+    utc_timestamp_second    : int;
+    utc_timestamp_millisec  : int option;
+}
+;;
+
+type fix_utctimestamp_micro = {
+    utc_timestamp_year      : int;
+    utc_timestamp_month     : int;
+    utc_timestamp_day       : int;
+    utc_timestamp_hour      : int;
+    utc_timestamp_minute    : int;
+    utc_timestamp_second    : int;
+    utc_timestamp_microsec  : int option;
+}
+;;
+
+(** Default timestamp is 0 unix epoch timestamp *)
+let default_utctimestamp_milli = {
+    utc_timestamp_year      = 1970;
+    utc_timestamp_month     = 1;
+    utc_timestamp_day       = 1;
+    utc_timestamp_hour      = 0;
+    utc_timestamp_minute    = 0;
+    utc_timestamp_second    = 0;
+    utc_timestamp_millisec  = Some 0;
+}
+;;
+
+(** Default timestamp is 0 unix epoch timestamp *)
+let default_utctimestamp_micro = {
+    utc_timestamp_year      = 1970;
+    utc_timestamp_month     = 1;
+    utc_timestamp_day       = 1;
+    utc_timestamp_hour      = 0;
+    utc_timestamp_minute    = 0;
+    utc_timestamp_second    = 0;
+    utc_timestamp_microsec  = Some 0;
+}
+;;
+
+let normalise_utctimestamp_milli ( ts : fix_utctimestamp_milli ) =
+    let carry_secs  = calculate_carry ts.utc_timestamp_second 60 0 in
+    let new_minute  = if carry_secs.carry_over then ( ts.utc_timestamp_minute + 1)  else ts.utc_timestamp_minute in 
+    let carry_mins  = calculate_carry  new_minute            60 0  in
+    let new_hour    = if carry_mins.carry_over then ( ts.utc_timestamp_hour + 1 )   else ts.utc_timestamp_hour in 
+    let carry_hours = calculate_carry  new_hour               24 0 in 
+    let new_days    = if carry_hours.carry_over then ( ts.utc_timestamp_day + 1 )   else ts.utc_timestamp_day in 
+    let carry_days  = calculate_carry new_days (1 + (how_many_days ts.utc_timestamp_month ts.utc_timestamp_year )) 1 in
+    let new_months  = if carry_days.carry_over then ( ts.utc_timestamp_month + 1 )  else ts.utc_timestamp_month in
+    let carry_months = calculate_carry new_months            13 1 in 
+    let new_years   = if carry_months.carry_over then ( ts.utc_timestamp_year + 1 ) else ts.utc_timestamp_year in {
+        utc_timestamp_millisec  = ts.utc_timestamp_millisec;
+        utc_timestamp_second    = carry_secs.new_field;
+        utc_timestamp_minute    = carry_mins.new_field;
+        utc_timestamp_hour      = carry_hours.new_field;
+        utc_timestamp_day       = carry_days.new_field;
+        utc_timestamp_month     = carry_months.new_field;
+        utc_timestamp_year      = new_years;
+    }
+;;
+
+let normalise_utctimestamp_micro ( ts : fix_utctimestamp_micro ) =
+    let carry_secs  = calculate_carry ts.utc_timestamp_second 60 0 in
+    let new_minute  = if carry_secs.carry_over then ( ts.utc_timestamp_minute + 1)  else ts.utc_timestamp_minute in 
+    let carry_mins  = calculate_carry  new_minute            60 0  in
+    let new_hour    = if carry_mins.carry_over then ( ts.utc_timestamp_hour + 1 )   else ts.utc_timestamp_hour in 
+    let carry_hours = calculate_carry  new_hour               24 0 in 
+    let new_days    = if carry_hours.carry_over then ( ts.utc_timestamp_day + 1 )   else ts.utc_timestamp_day in 
+    let carry_days  = calculate_carry new_days (1 + (how_many_days ts.utc_timestamp_month ts.utc_timestamp_year )) 1 in
+    let new_months  = if carry_days.carry_over then ( ts.utc_timestamp_month + 1 )  else ts.utc_timestamp_month in
+    let carry_months = calculate_carry new_months            13 1 in 
+    let new_years   = if carry_months.carry_over then ( ts.utc_timestamp_year + 1 ) else ts.utc_timestamp_year in {
+        utc_timestamp_microsec  = ts.utc_timestamp_microsec;
+        utc_timestamp_second    = carry_secs.new_field;
+        utc_timestamp_minute    = carry_mins.new_field;
+        utc_timestamp_hour      = carry_hours.new_field;
+        utc_timestamp_day       = carry_days.new_field;
+        utc_timestamp_month     = carry_months.new_field;
+        utc_timestamp_year      = new_years;
+    }
+;;
+
+(** Constructor for the UTC timestamp milli  *)
+let make_utctimestamp_milli ( year:int) (month:int) (day:int) (hour:int) (minute:int) (second:int) (millisec:int option) : fix_utctimestamp_milli = 
+    normalise_utctimestamp_milli
+    {
+    utc_timestamp_year      = year;
+    utc_timestamp_month     = month;
+    utc_timestamp_day       = day;
+    utc_timestamp_hour      = hour;
+    utc_timestamp_minute    = minute;
+    utc_timestamp_second    = second;
+    utc_timestamp_millisec  = millisec;
+}
+;;
+
+(** Constructor for the UTC timestamp micro  *)
+let make_utctimestamp_micro ( year:int) (month:int) (day:int) (hour:int) (minute:int) (second:int) (microsec:int option) : fix_utctimestamp_micro = 
+    normalise_utctimestamp_micro
+    {
+    utc_timestamp_year      = year;
+    utc_timestamp_month     = month;
+    utc_timestamp_day       = day;
+    utc_timestamp_hour      = hour;
+    utc_timestamp_minute    = minute;
+    utc_timestamp_second    = second;
+    utc_timestamp_microsec  = microsec;
+}
+;;
+
+(** Conversion for the UTC timestamp and timeonly fields *)
+let convert_utctimestamp_milli_micro (f1:fix_utctimestamp_milli) : fix_utctimestamp_micro=
+    {
+        utc_timestamp_year      = f1.utc_timestamp_year ;
+        utc_timestamp_month     = f1.utc_timestamp_month;
+        utc_timestamp_day       = f1.utc_timestamp_day;
+        utc_timestamp_hour      = f1.utc_timestamp_hour;
+        utc_timestamp_minute    = f1.utc_timestamp_minute;
+        utc_timestamp_second    = f1.utc_timestamp_second;
+        utc_timestamp_microsec  = f1.utc_timestamp_millisec;
+    }
+;;
+
+let convert_utctimestamp_micro_milli (f1:fix_utctimestamp_micro) : fix_utctimestamp_milli =
+    {
+        utc_timestamp_year      = f1.utc_timestamp_year;
+        utc_timestamp_month     = f1.utc_timestamp_month;
+        utc_timestamp_day       = f1.utc_timestamp_day;
+        utc_timestamp_hour      = f1.utc_timestamp_hour;
+        utc_timestamp_minute    = f1.utc_timestamp_minute;
+        utc_timestamp_second    = f1.utc_timestamp_second;
+        utc_timestamp_millisec  = f1.utc_timestamp_microsec;
+    }
+;;
+
+(** Checking validity of the values in the UTC timestamp milli *)
+let is_valid_utctimestamp_milli ( ts : fix_utctimestamp_milli ) =
   0 <= ts.utc_timestamp_year      && ts.utc_timestamp_year    <= 9999 && 
   1 <= ts.utc_timestamp_month     && ts.utc_timestamp_month   <= 12   && 
   valid_day ts.utc_timestamp_day ts.utc_timestamp_month ts.utc_timestamp_year  && 
@@ -103,10 +226,57 @@ let is_valid_utctimestamp ( ts : fix_utctimestamp ) =
         | Some ms -> 0 <= ms && ms <= 999 )
 ;;
 
+(** Checking validity of the values in the UTC timestamp micro *)
+let is_valid_utctimestamp_micro ( ts : fix_utctimestamp_micro ) =
+    0 <= ts.utc_timestamp_year      && ts.utc_timestamp_year    <= 9999 && 
+    1 <= ts.utc_timestamp_month     && ts.utc_timestamp_month   <= 12   && 
+    valid_day ts.utc_timestamp_day ts.utc_timestamp_month ts.utc_timestamp_year  && 
+    0 <= ts.utc_timestamp_hour      && ts.utc_timestamp_hour    <= 23   && 
+    0 <= ts.utc_timestamp_minute    && ts.utc_timestamp_minute  <= 59   && 
+    0 <= ts.utc_timestamp_second    && ts.utc_timestamp_second  <= 59   && (
+          match ts.utc_timestamp_microsec with
+          | None -> true
+          | Some ms -> 0 <= ms && ms <= 999999 )
+  ;;
+  
+(** Two UTC timestamps are equal if they have equal field values *)
+let utctimestamp_Equal_milli_milli ( tOne: fix_utctimestamp_milli) (tTwo : fix_utctimestamp_milli  ) =
+    (tOne = tTwo)
+ ;;
+ 
+ let utctimestamp_Equal_micro_micro ( tOne: fix_utctimestamp_micro) (tTwo : fix_utctimestamp_micro  ) =
+     (tOne = tTwo)
+ ;;
+ 
+ let utctimestamp_Equal_milli_micro ( tOne: fix_utctimestamp_milli) (tTwo : fix_utctimestamp_micro  ) =
+     (tOne = { 
+     utc_timestamp_year      = tTwo.utc_timestamp_year;
+     utc_timestamp_month     = tTwo.utc_timestamp_month;
+     utc_timestamp_day       = tTwo.utc_timestamp_day;
+     utc_timestamp_hour      = tTwo.utc_timestamp_hour;
+     utc_timestamp_minute    = tTwo.utc_timestamp_minute;
+     utc_timestamp_second    = tTwo.utc_timestamp_second;
+     utc_timestamp_millisec = match tTwo.utc_timestamp_microsec with
+     | None -> None
+     | Some x -> Some (x/1000)}) 
+ ;;
+ 
+ let utctimestamp_Equal_micro_milli ( tOne: fix_utctimestamp_micro) (tTwo : fix_utctimestamp_milli  ) =
+     ({
+     utc_timestamp_year      = tOne.utc_timestamp_year;
+     utc_timestamp_month     = tOne.utc_timestamp_month;
+     utc_timestamp_day       = tOne.utc_timestamp_day;
+     utc_timestamp_hour      = tOne.utc_timestamp_hour;
+     utc_timestamp_minute    = tOne.utc_timestamp_minute;
+     utc_timestamp_second    = tOne.utc_timestamp_second;
+     utc_timestamp_millisec = match tOne.utc_timestamp_microsec with
+     | None -> None
+     | Some x -> Some (x/1000)} = tTwo)
+ ;; 
 
-(** UTC Timestamp base comparison operator *)
-let utctimestamp_GreaterThan ( tOne: fix_utctimestamp) (tTwo : fix_utctimestamp ) =
-  if tOne = tTwo then false
+(** UTC Timestamp milli base comparison operator *)
+let utctimestamp_GreaterThan_milli_milli ( tOne: fix_utctimestamp_milli) (tTwo : fix_utctimestamp_milli ) =
+  if utctimestamp_Equal_milli_milli tOne tTwo then false
   else
   if tOne.utc_timestamp_year          > tTwo.utc_timestamp_year   then true
   else if tOne.utc_timestamp_year     < tTwo.utc_timestamp_year   then false 
@@ -128,24 +298,124 @@ let utctimestamp_GreaterThan ( tOne: fix_utctimestamp) (tTwo : fix_utctimestamp 
     | Some one  , Some two  -> one > two
 ;;
 
-(** Two UTC timestamps are equal if they have equal field values *)
-let utctimestamp_Equal ( tOne: fix_utctimestamp) (tTwo : fix_utctimestamp  ) =
-   (tOne = tTwo)
+(** UTC Timestamp milli base comparison operator *)
+let utctimestamp_GreaterThan_micro_micro ( tOne: fix_utctimestamp_micro) (tTwo : fix_utctimestamp_micro ) =
+    if utctimestamp_Equal_micro_micro tOne tTwo then false
+    else
+    if tOne.utc_timestamp_year          > tTwo.utc_timestamp_year   then true
+    else if tOne.utc_timestamp_year     < tTwo.utc_timestamp_year   then false 
+    else if tOne.utc_timestamp_month    > tTwo.utc_timestamp_month  then true
+    else if tOne.utc_timestamp_month    < tTwo.utc_timestamp_month  then false
+    else if tOne.utc_timestamp_day      > tTwo.utc_timestamp_day    then true
+    else if tOne.utc_timestamp_day      < tTwo.utc_timestamp_day    then false
+    else if tOne.utc_timestamp_hour     > tTwo.utc_timestamp_hour   then true
+    else if tOne.utc_timestamp_hour     < tTwo.utc_timestamp_hour   then false
+    else if tOne.utc_timestamp_minute   > tTwo.utc_timestamp_minute then true
+    else if tOne.utc_timestamp_minute   < tTwo.utc_timestamp_minute then false
+    else if tOne.utc_timestamp_second   > tTwo.utc_timestamp_second then true
+    else if tOne.utc_timestamp_second   < tTwo.utc_timestamp_second then false
+    else 
+      match tOne.utc_timestamp_microsec, tTwo.utc_timestamp_microsec with 
+      | None      , None      -> true
+      | Some _    , None      -> true
+      | None      , Some _    -> false
+      | Some one  , Some two  -> one > two
+  ;;
+
+(** UTC Timestamp base comparison operator - milli to micro *)
+let utctimestamp_GreaterThan_milli_micro ( tOne: fix_utctimestamp_milli) (tTwo : fix_utctimestamp_micro ) =
+    if utctimestamp_Equal_milli_micro tOne tTwo then false
+    else
+    if tOne.utc_timestamp_year          > tTwo.utc_timestamp_year   then true
+    else if tOne.utc_timestamp_year     < tTwo.utc_timestamp_year   then false 
+    else if tOne.utc_timestamp_month    > tTwo.utc_timestamp_month  then true
+    else if tOne.utc_timestamp_month    < tTwo.utc_timestamp_month  then false
+    else if tOne.utc_timestamp_day      > tTwo.utc_timestamp_day    then true
+    else if tOne.utc_timestamp_day      < tTwo.utc_timestamp_day    then false
+    else if tOne.utc_timestamp_hour     > tTwo.utc_timestamp_hour   then true
+    else if tOne.utc_timestamp_hour     < tTwo.utc_timestamp_hour   then false
+    else if tOne.utc_timestamp_minute   > tTwo.utc_timestamp_minute then true
+    else if tOne.utc_timestamp_minute   < tTwo.utc_timestamp_minute then false
+    else if tOne.utc_timestamp_second   > tTwo.utc_timestamp_second then true
+    else if tOne.utc_timestamp_second   < tTwo.utc_timestamp_second then false
+    else 
+      match tOne.utc_timestamp_millisec, tTwo.utc_timestamp_microsec with 
+      | None      , None      -> true
+      | Some _    , None      -> true
+      | None      , Some _    -> false
+      | Some one  , Some two  -> one > two/1000
+  ;;
+
+(** UTC Timestamp base comparison operator - micro to milli *)
+let utctimestamp_GreaterThan_micro_milli ( tOne: fix_utctimestamp_micro) (tTwo : fix_utctimestamp_milli ) =
+    if utctimestamp_Equal_micro_milli tOne tTwo then false
+    else
+    if tOne.utc_timestamp_year          > tTwo.utc_timestamp_year   then true
+    else if tOne.utc_timestamp_year     < tTwo.utc_timestamp_year   then false 
+    else if tOne.utc_timestamp_month    > tTwo.utc_timestamp_month  then true
+    else if tOne.utc_timestamp_month    < tTwo.utc_timestamp_month  then false
+    else if tOne.utc_timestamp_day      > tTwo.utc_timestamp_day    then true
+    else if tOne.utc_timestamp_day      < tTwo.utc_timestamp_day    then false
+    else if tOne.utc_timestamp_hour     > tTwo.utc_timestamp_hour   then true
+    else if tOne.utc_timestamp_hour     < tTwo.utc_timestamp_hour   then false
+    else if tOne.utc_timestamp_minute   > tTwo.utc_timestamp_minute then true
+    else if tOne.utc_timestamp_minute   < tTwo.utc_timestamp_minute then false
+    else if tOne.utc_timestamp_second   > tTwo.utc_timestamp_second then true
+    else if tOne.utc_timestamp_second   < tTwo.utc_timestamp_second then false
+    else 
+      match tOne.utc_timestamp_microsec, tTwo.utc_timestamp_millisec with 
+      | None      , None      -> true
+      | Some _    , None      -> true
+      | None      , Some _    -> false
+      | Some one  , Some two  -> one/1000 > two
+  ;;
+
+let utctimestamp_GreaterThanEqual_milli_milli ( tOne:fix_utctimestamp_milli) (tTwo : fix_utctimestamp_milli) =
+    utctimestamp_GreaterThan_milli_milli tOne tTwo || utctimestamp_Equal_milli_milli tOne tTwo
 ;;
 
-
-let utctimestamp_GreaterThanEqual ( tOne:fix_utctimestamp) (tTwo : fix_utctimestamp  ) =
-    utctimestamp_GreaterThan tOne tTwo || utctimestamp_Equal tOne tTwo
+let utctimestamp_GreaterThanEqual_micro_micro ( tOne:fix_utctimestamp_micro) (tTwo : fix_utctimestamp_micro) =
+    utctimestamp_GreaterThan_micro_micro tOne tTwo || utctimestamp_Equal_micro_micro tOne tTwo
 ;;
 
-
-let utctimestamp_LessThan ( tOne :fix_utctimestamp) (tTwo : fix_utctimestamp  ) =
-    not ( utctimestamp_GreaterThan tOne tTwo || utctimestamp_Equal tOne tTwo)
+let utctimestamp_GreaterThanEqual_milli_micro ( tOne:fix_utctimestamp_milli) (tTwo : fix_utctimestamp_micro) =
+    utctimestamp_GreaterThan_milli_micro tOne tTwo || utctimestamp_Equal_milli_micro tOne tTwo
 ;;
 
+let utctimestamp_GreaterThanEqual_micro_milli ( tOne:fix_utctimestamp_micro) (tTwo : fix_utctimestamp_milli) =
+    utctimestamp_GreaterThan_micro_milli tOne tTwo || utctimestamp_Equal_micro_milli tOne tTwo
+;;
 
-let utctimestamp_LessThanEqual ( tOne : fix_utctimestamp) (tTwo : fix_utctimestamp  ) =
-    not ( utctimestamp_GreaterThan tOne tTwo )
+let utctimestamp_LessThan_milli_milli ( tOne :fix_utctimestamp_milli) (tTwo : fix_utctimestamp_milli  ) =
+    not ( utctimestamp_GreaterThan_milli_milli tOne tTwo || utctimestamp_Equal_milli_milli tOne tTwo)
+;;
+
+let utctimestamp_LessThan_micro_micro ( tOne :fix_utctimestamp_micro) (tTwo : fix_utctimestamp_micro  ) =
+    not ( utctimestamp_GreaterThan_micro_micro tOne tTwo || utctimestamp_Equal_micro_micro tOne tTwo)
+;;
+
+let utctimestamp_LessThan_milli_micro ( tOne :fix_utctimestamp_milli) (tTwo : fix_utctimestamp_micro  ) =
+    not ( utctimestamp_GreaterThan_milli_micro tOne tTwo || utctimestamp_Equal_milli_micro tOne tTwo)
+;;
+
+let utctimestamp_LessThan_micro_milli ( tOne :fix_utctimestamp_micro) (tTwo : fix_utctimestamp_milli  ) =
+    not ( utctimestamp_GreaterThan_micro_milli tOne tTwo || utctimestamp_Equal_micro_milli tOne tTwo)
+;;
+
+let utctimestamp_LessThanEqual_milli_milli ( tOne : fix_utctimestamp_milli) (tTwo : fix_utctimestamp_milli  ) =
+    not ( utctimestamp_GreaterThan_milli_milli tOne tTwo )
+;;
+
+let utctimestamp_LessThanEqual_micro_micro ( tOne : fix_utctimestamp_micro) (tTwo : fix_utctimestamp_micro  ) =
+    not ( utctimestamp_GreaterThan_micro_micro tOne tTwo )
+;;
+
+let utctimestamp_LessThanEqual_milli_micro ( tOne : fix_utctimestamp_milli) (tTwo : fix_utctimestamp_micro  ) =
+    not ( utctimestamp_GreaterThan_milli_micro tOne tTwo )
+;;
+
+let utctimestamp_LessThanEqual_micro_milli ( tOne : fix_utctimestamp_micro) (tTwo : fix_utctimestamp_milli  ) =
+    not ( utctimestamp_GreaterThan_micro_milli tOne tTwo )
 ;;
 
 (** LocalMktDate type denotes a particular date*)
@@ -298,31 +568,95 @@ let monthyear_LessThanEqual ( myOne : fix_monthyear) (myTwo : fix_monthyear  ) =
 
 
 (** UTC Timeonly *)
-type fix_utctimeonly = {
+type fix_utctimeonly_milli = {
     utc_timeonly_hour       : int;
     utc_timeonly_minute     : int;
     utc_timeonly_second     : int;
     utc_timeonly_millisec   : int option;
 };;
 
+type fix_utctimeonly_micro = {
+    utc_timeonly_hour       : int;
+    utc_timeonly_minute     : int;
+    utc_timeonly_second     : int;
+    utc_timeonly_microsec   : int option;
+};;
 
-let default_utctimeonly = {
+let default_utctimeonly_milli = {
     utc_timeonly_hour       = 0;
     utc_timeonly_minute     = 0;
     utc_timeonly_second     = 0;
     utc_timeonly_millisec   = Some 0;
 };;
 
+let default_utctimeonly_micro = {
+    utc_timeonly_hour       = 0;
+    utc_timeonly_minute     = 0;
+    utc_timeonly_second     = 0;
+    utc_timeonly_microsec   = Some 0;
+};;
 
-let make_utctimeonly (hour:int) (minute:int) (second:int) (millisec: int option) = {
+let normalise_utctimeonly_milli ( ts : fix_utctimeonly_milli ) =
+    let carry_secs  = calculate_carry ts.utc_timeonly_second 60 0 in
+    let new_minute  = if carry_secs.carry_over then ( ts.utc_timeonly_minute + 1)  else ts.utc_timeonly_minute in 
+    let carry_mins  = calculate_carry  new_minute            60 0  in
+    let new_hour    = if carry_mins.carry_over then ( ts.utc_timeonly_hour + 1 )   else ts.utc_timeonly_hour
+    in {
+        utc_timeonly_millisec  = ts.utc_timeonly_millisec;
+        utc_timeonly_second    = carry_secs.new_field;
+        utc_timeonly_minute    = carry_mins.new_field;
+        utc_timeonly_hour      = new_hour;
+    }
+;;
+
+let normalise_utctimeonly_micro ( ts : fix_utctimeonly_micro ) =
+    let carry_secs  = calculate_carry ts.utc_timeonly_second 60 0 in
+    let new_minute  = if carry_secs.carry_over then ( ts.utc_timeonly_minute + 1)  else ts.utc_timeonly_minute in 
+    let carry_mins  = calculate_carry  new_minute            60 0  in
+    let new_hour    = if carry_mins.carry_over then ( ts.utc_timeonly_hour + 1 )   else ts.utc_timeonly_hour
+    in {
+        utc_timeonly_microsec  = ts.utc_timeonly_microsec;
+        utc_timeonly_second    = carry_secs.new_field;
+        utc_timeonly_minute    = carry_mins.new_field;
+        utc_timeonly_hour      = new_hour;
+    }
+;;
+
+let make_utctimeonly_milli (hour:int) (minute:int) (second:int) (millisec: int option) : fix_utctimeonly_milli = 
+    normalise_utctimeonly_milli {
     utc_timeonly_hour       = hour;
     utc_timeonly_minute     = minute;
     utc_timeonly_second     = second;
     utc_timeonly_millisec   = millisec;
 };;
 
+let make_utctimeonly_micro (hour:int) (minute:int) (second:int) (microsec: int option) : fix_utctimeonly_micro = 
+    normalise_utctimeonly_micro {
+    utc_timeonly_hour       = hour;
+    utc_timeonly_minute     = minute;
+    utc_timeonly_second     = second;
+    utc_timeonly_microsec   = microsec;
+};;
 
-let is_valid_utctimeonly ( t : fix_utctimeonly ) =
+let convert_utctimeonly_milli_micro (f1:fix_utctimeonly_milli) : fix_utctimeonly_micro =
+    {
+        utc_timeonly_hour      = f1.utc_timeonly_hour;
+        utc_timeonly_minute    = f1.utc_timeonly_minute;
+        utc_timeonly_second    = f1.utc_timeonly_second;
+        utc_timeonly_microsec  = f1.utc_timeonly_millisec;
+    }
+;;
+
+let convert_utctimeonly_micro_milli (f1:fix_utctimeonly_micro) : fix_utctimeonly_milli =
+    {
+        utc_timeonly_hour      = f1.utc_timeonly_hour;
+        utc_timeonly_minute    = f1.utc_timeonly_minute;
+        utc_timeonly_second    = f1.utc_timeonly_second;
+        utc_timeonly_millisec  = f1.utc_timeonly_microsec;
+    }
+;;
+
+let is_valid_utctimeonly_milli ( t : fix_utctimeonly_milli ) =
     0 <= t.utc_timeonly_hour && 
     t.utc_timeonly_hour <= 23 &&
     0 <= t.utc_timeonly_minute &&
@@ -335,35 +669,153 @@ let is_valid_utctimeonly ( t : fix_utctimeonly ) =
     )
 ;;
 
-(* TODO add logic for handling milliseconds. *)
-let utctimeonly_GreaterThan ( tOne:fix_utctimeonly) (tTwo : fix_utctimeonly ) =
-    if tOne.utc_timeonly_hour > tTwo.utc_timeonly_hour then true
+let is_valid_utctimeonly_micro ( t : fix_utctimeonly_micro ) =
+    0 <= t.utc_timeonly_hour && 
+    t.utc_timeonly_hour <= 23 &&
+    0 <= t.utc_timeonly_minute &&
+    t.utc_timeonly_minute <= 59 &&
+    0 <= t.utc_timeonly_second &&
+    t.utc_timeonly_second <= 59 && ( 
+        match t.utc_timeonly_microsec with 
+        | None      -> true
+        | Some ms   -> 0 <= ms && ms <= 999999
+    )
+;;
+
+let utctimeonly_Equal_milli_milli ( tOne: fix_utctimeonly_milli) (tTwo : fix_utctimeonly_milli  ) =
+    (tOne = tTwo)
+  ;;
+  
+  let utctimeonly_Equal_micro_micro ( tOne: fix_utctimeonly_micro) (tTwo : fix_utctimeonly_micro  ) =
+      (tOne = tTwo)
+    ;;
+  
+    let utctimeonly_Equal_milli_micro ( tOne: fix_utctimeonly_milli) (tTwo : fix_utctimeonly_micro  ) =
+      (tOne = {
+      utc_timeonly_hour      = tTwo.utc_timeonly_hour;
+      utc_timeonly_minute    = tTwo.utc_timeonly_minute;
+      utc_timeonly_second    = tTwo.utc_timeonly_second;
+      utc_timeonly_millisec = match tTwo.utc_timeonly_microsec with
+      | None -> None
+      | Some x -> Some (x/1000)}) 
+  ;;
+  
+  let utctimeonly_Equal_micro_milli ( tOne: fix_utctimeonly_micro) (tTwo : fix_utctimeonly_milli  ) =
+      ({
+      utc_timeonly_hour      = tOne.utc_timeonly_hour;
+      utc_timeonly_minute    = tOne.utc_timeonly_minute;
+      utc_timeonly_second    = tOne.utc_timeonly_second;
+      utc_timeonly_millisec = match tOne.utc_timeonly_microsec with
+      | None -> None
+      | Some x -> Some (x/1000)} = tTwo)
+  ;;
+
+let utctimeonly_GreaterThan_milli_milli ( tOne:fix_utctimeonly_milli) (tTwo : fix_utctimeonly_milli ) =
+    if utctimeonly_Equal_milli_milli tOne tTwo then false 
+    else if tOne.utc_timeonly_hour > tTwo.utc_timeonly_hour then true
     else if tOne.utc_timeonly_hour < tTwo.utc_timeonly_hour then false
     else if tOne.utc_timeonly_minute > tTwo.utc_timeonly_minute then true
     else if tOne.utc_timeonly_minute < tTwo.utc_timeonly_minute then false
     else if tOne.utc_timeonly_second > tTwo.utc_timeonly_second then true
-    else false
+    else 
+    match tOne.utc_timeonly_millisec, tTwo.utc_timeonly_millisec with 
+    | None      , None      -> true
+    | Some _    , None      -> true
+    | None      , Some _    -> false
+    | Some one  , Some two  -> one > two
 ;;
 
-
-(* TODO again, need to implement milliseconds *)
-let utctimeonly_Equal ( tOne: fix_utctimeonly) (tTwo : fix_utctimeonly  ) =
-  (tOne = tTwo)
+let utctimeonly_GreaterThan_micro_micro ( tOne:fix_utctimeonly_micro) (tTwo : fix_utctimeonly_micro ) =
+    if utctimeonly_Equal_micro_micro tOne tTwo then false 
+    else if tOne.utc_timeonly_hour > tTwo.utc_timeonly_hour then true
+    else if tOne.utc_timeonly_hour < tTwo.utc_timeonly_hour then false
+    else if tOne.utc_timeonly_minute > tTwo.utc_timeonly_minute then true
+    else if tOne.utc_timeonly_minute < tTwo.utc_timeonly_minute then false
+    else if tOne.utc_timeonly_second > tTwo.utc_timeonly_second then true
+    else 
+    match tOne.utc_timeonly_microsec, tTwo.utc_timeonly_microsec with 
+    | None      , None      -> true
+    | Some _    , None      -> true
+    | None      , Some _    -> false
+    | Some one  , Some two  -> one > two
 ;;
 
-
-let utctimeonly_LessThan ( tOne:fix_utctimeonly) (tTwo : fix_utctimeonly  ) =
-    not ( utctimeonly_GreaterThan tOne tTwo || utctimeonly_Equal tOne tTwo)
+let utctimeonly_GreaterThan_milli_micro ( tOne:fix_utctimeonly_milli) (tTwo : fix_utctimeonly_micro ) =
+    if utctimeonly_Equal_milli_micro tOne tTwo then false 
+    else if tOne.utc_timeonly_hour > tTwo.utc_timeonly_hour then true
+    else if tOne.utc_timeonly_hour < tTwo.utc_timeonly_hour then false
+    else if tOne.utc_timeonly_minute > tTwo.utc_timeonly_minute then true
+    else if tOne.utc_timeonly_minute < tTwo.utc_timeonly_minute then false
+    else if tOne.utc_timeonly_second > tTwo.utc_timeonly_second then true
+    else 
+    match tOne.utc_timeonly_millisec, tTwo.utc_timeonly_microsec with 
+    | None      , None      -> true
+    | Some _    , None      -> true
+    | None      , Some _    -> false
+    | Some one  , Some two  -> one > two/1000
 ;;
 
-
-let utctimeonly_LessThanEqual ( tOne:fix_utctimeonly) (tTwo : fix_utctimeonly ) =
-    not ( utctimeonly_GreaterThan tOne tTwo )
+let utctimeonly_GreaterThan_micro_milli ( tOne:fix_utctimeonly_micro) (tTwo : fix_utctimeonly_milli ) =
+    if utctimeonly_Equal_micro_milli tOne tTwo then false 
+    else if tOne.utc_timeonly_hour > tTwo.utc_timeonly_hour then true
+    else if tOne.utc_timeonly_hour < tTwo.utc_timeonly_hour then false
+    else if tOne.utc_timeonly_minute > tTwo.utc_timeonly_minute then true
+    else if tOne.utc_timeonly_minute < tTwo.utc_timeonly_minute then false
+    else if tOne.utc_timeonly_second > tTwo.utc_timeonly_second then true
+    else 
+    match tOne.utc_timeonly_microsec, tTwo.utc_timeonly_millisec with 
+    | None      , None      -> true
+    | Some _    , None      -> true
+    | None      , Some _    -> false
+    | Some one  , Some two  -> one/1000 > two
 ;;
 
+let utctimeonly_LessThan_milli_milli ( tOne:fix_utctimeonly_milli) (tTwo : fix_utctimeonly_milli ) =
+    not ( utctimeonly_GreaterThan_milli_milli tOne tTwo || utctimeonly_Equal_milli_milli tOne tTwo)
+;;
 
-let utctimeonly_GreaterThanEqual ( tOne:fix_utctimeonly) (tTwo : fix_utctimeonly  ) = 
-    utctimeonly_GreaterThan tOne tTwo || utctimeonly_Equal tOne tTwo
+let utctimeonly_LessThan_micro_micro ( tOne:fix_utctimeonly_micro) (tTwo : fix_utctimeonly_micro ) =
+    not ( utctimeonly_GreaterThan_micro_micro tOne tTwo || utctimeonly_Equal_micro_micro tOne tTwo)
+;;
+
+let utctimeonly_LessThan_milli_micro ( tOne:fix_utctimeonly_milli) (tTwo : fix_utctimeonly_micro ) =
+    not ( utctimeonly_GreaterThan_milli_micro tOne tTwo || utctimeonly_Equal_milli_micro tOne tTwo)
+;;
+
+let utctimeonly_LessThan_micro_milli ( tOne:fix_utctimeonly_micro) (tTwo : fix_utctimeonly_milli ) =
+    not ( utctimeonly_GreaterThan_micro_milli tOne tTwo || utctimeonly_Equal_micro_milli tOne tTwo)
+;;
+
+let utctimeonly_LessThanEqual_milli_milli ( tOne:fix_utctimeonly_milli) (tTwo : fix_utctimeonly_milli ) =
+    not ( utctimeonly_GreaterThan_milli_milli tOne tTwo )
+;;
+
+let utctimeonly_LessThanEqual_micro_micro ( tOne:fix_utctimeonly_micro) (tTwo : fix_utctimeonly_micro ) =
+    not ( utctimeonly_GreaterThan_micro_micro tOne tTwo )
+;;
+
+let utctimeonly_LessThanEqual_milli_micro ( tOne:fix_utctimeonly_milli) (tTwo : fix_utctimeonly_micro ) =
+    not ( utctimeonly_GreaterThan_milli_micro tOne tTwo )
+;;
+
+let utctimeonly_LessThanEqual_micro_milli ( tOne:fix_utctimeonly_micro) (tTwo : fix_utctimeonly_milli ) =
+    not ( utctimeonly_GreaterThan_micro_milli tOne tTwo )
+;;
+
+let utctimeonly_GreaterThanEqual_milli_milli ( tOne:fix_utctimeonly_milli) (tTwo : fix_utctimeonly_milli ) = 
+    utctimeonly_GreaterThan_milli_milli tOne tTwo || utctimeonly_Equal_milli_milli tOne tTwo
+;;
+
+let utctimeonly_GreaterThanEqual_micro_micro ( tOne:fix_utctimeonly_micro) (tTwo : fix_utctimeonly_micro ) = 
+    utctimeonly_GreaterThan_micro_micro tOne tTwo || utctimeonly_Equal_micro_micro tOne tTwo
+;;
+
+let utctimeonly_GreaterThanEqual_milli_micro ( tOne:fix_utctimeonly_milli) (tTwo : fix_utctimeonly_micro ) = 
+    utctimeonly_GreaterThan_milli_micro tOne tTwo || utctimeonly_Equal_milli_micro tOne tTwo
+;;
+
+let utctimeonly_GreaterThanEqual_micro_milli ( tOne:fix_utctimeonly_micro) (tTwo : fix_utctimeonly_milli ) = 
+    utctimeonly_GreaterThan_micro_milli tOne tTwo || utctimeonly_Equal_micro_milli tOne tTwo
 ;;
 
 (** UTC Dateonly *)
@@ -427,17 +879,54 @@ let utcdateonly_LessThanEqual ( dOne:fix_utcdateonly) (dTwo : fix_utcdateonly ) 
 
 (** Duration *)
 type fix_duration = {
-    dur_years               : int option;
-    dur_months              : int option;
-    dur_days                : int option;
-    dur_hours               : int option;
-    dur_minutes             : int option;
-    dur_seconds             : int option;
+    dur_years               : int;
+    dur_months              : int;
+    dur_days                : int;
+    dur_hours               : int;
+    dur_minutes             : int;
+    dur_seconds             : int;
 }
 ;;
 
+let is_valid_duration ( dur : fix_duration ) =
+    let y =  dur.dur_years in
+     0 <= y && y <= 100 &&    
+    let m = dur.dur_months in 
+     0 <= m && m <= 12 &&   
+    let d =  dur.dur_days in
+    0 <= d && d <= 31 &&
+    let h = dur.dur_hours in
+    0 <= h && h <= 24 &&
+    let m = dur.dur_minutes in
+    0 <= m && m <= 59 &&
+    let s = dur.dur_seconds in
+    0 <= s && s <= 59
+;;
 
-let make_duration years months days hours minutes seconds = {
+let normalise_duration (d:fix_duration):fix_duration = 
+    let carry_secs  = calculate_carry d.dur_seconds 60 0 in
+    let new_minute  = if carry_secs.carry_over then ( d.dur_minutes + 1)  else d.dur_minutes in 
+    let carry_mins  = calculate_carry  new_minute            60 0  in
+    let new_hour    = if carry_mins.carry_over then ( d.dur_hours + 1 )   else d.dur_hours in 
+    let carry_hours = calculate_carry  new_hour               24 0 in 
+    let new_days    = if carry_hours.carry_over then ( d.dur_days + 1 )   else d.dur_days in 
+    let carry_days  = calculate_carry new_days (1 + (how_many_days d.dur_months d.dur_years )) 1 in
+    let new_months  = if carry_days.carry_over then ( d.dur_months + 1 )  else d.dur_months in
+    let carry_months = calculate_carry new_months            13 1 in 
+    let new_years   = if carry_months.carry_over then ( d.dur_years + 1 ) else d.dur_years in {
+        dur_seconds    = carry_secs.new_field;
+        dur_minutes    = carry_mins.new_field;
+        dur_hours      = carry_hours.new_field;
+        dur_days       = carry_days.new_field;
+        dur_months     = carry_months.new_field;
+        dur_years      = new_years;
+    }
+;;
+
+
+let make_duration years months days hours minutes seconds = 
+    normalise_duration
+    {
     dur_years               = years;
     dur_months              = months;
     dur_days                = days;
@@ -447,88 +936,13 @@ let make_duration years months days hours minutes seconds = {
 }
 ;;
 
-
-let is_valid_duration ( d : fix_duration ) =
-    match d.dur_years with 
-    | Some y    -> 0 <= y && y <= 100
-    | None      ->
-    match d.dur_months with 
-    | Some m    -> 0 <= m && m <= 12
-    | None      -> 
-    match d.dur_days with
-    | Some d    -> 0 <= d && d <= 31
-    | None      -> 
-    match d.dur_hours with 
-    | Some h    -> 0 <= h && h <= 24
-    | None      ->
-    match d.dur_minutes with
-    | Some m    -> 0 <= m && m <= 59
-    | None      -> 
-    match d.dur_seconds with
-    | Some s    -> 0 <= s && s <= 59
-    | None      -> true
-;;
-
-
-type field_carryover = {
-    carry_over  : bool;
-    new_field   : int;
-}
-;;
-
-
-let calculate_carry ( field:int) (max_value:int) (min_value : int  ) =
-    if field >= max_value then {
-        new_field = field - max_value + min_value;
-        carry_over = true;
-    } else {
-        new_field = field;
-        carry_over = false;
-    }
-;;
-
-
-let normalise_timestamp ( ts : fix_utctimestamp ) =
-    let carry_secs  = calculate_carry ts.utc_timestamp_second 60 0 in
-    let new_minute  = if carry_secs.carry_over then ( ts.utc_timestamp_minute + 1)  else ts.utc_timestamp_minute in 
-    let carry_mins  = calculate_carry  new_minute            60 0  in
-    let new_hour    = if carry_mins.carry_over then ( ts.utc_timestamp_hour + 1 )   else ts.utc_timestamp_hour in 
-    let carry_hours = calculate_carry  new_hour               24 0 in 
-    let new_days    = if carry_hours.carry_over then ( ts.utc_timestamp_day + 1 )   else ts.utc_timestamp_day in 
-    let carry_days  = calculate_carry new_days (1 + (how_many_days ts.utc_timestamp_month ts.utc_timestamp_year )) 1 in
-    let new_months  = if carry_days.carry_over then ( ts.utc_timestamp_month + 1 )  else ts.utc_timestamp_month in
-    let carry_months = calculate_carry new_months            13 1 in 
-    let new_years   = if carry_months.carry_over then ( ts.utc_timestamp_year + 1 ) else ts.utc_timestamp_year in {
-        utc_timestamp_millisec  = ts.utc_timestamp_millisec;
-        utc_timestamp_second    = carry_secs.new_field;
-        utc_timestamp_minute    = carry_mins.new_field;
-        utc_timestamp_hour      = carry_hours.new_field;
-        utc_timestamp_day       = carry_days.new_field;
-        utc_timestamp_month     = carry_months.new_field;
-        utc_timestamp_year      = new_years;
-    }
-;;
-
-
-let utctimestamp_duration_Add ( t:fix_utctimestamp) (dur : fix_duration ) = 
-    let new_seconds = match dur.dur_seconds with
-        | None -> t.utc_timestamp_second
-        | Some s -> t.utc_timestamp_second + s in
-    let new_minute = match dur.dur_minutes with
-        | None -> t.utc_timestamp_minute
-        | Some m -> t.utc_timestamp_minute + m in
-    let new_hour = match dur.dur_hours with 
-        | None -> t.utc_timestamp_hour
-        | Some h -> t.utc_timestamp_hour + h in 
-    let new_day = match dur.dur_days with
-        | None -> t.utc_timestamp_day
-        | Some d -> t.utc_timestamp_day + d in
-    let new_month = match dur.dur_months with
-        | None -> t.utc_timestamp_month
-        | Some m -> t.utc_timestamp_month + m in 
-    let new_year = match dur.dur_years with
-        | None -> t.utc_timestamp_year 
-        | Some y -> t.utc_timestamp_year + y in 
+let utctimestamp_milli_duration_Add ( t:fix_utctimestamp_milli) (dur : fix_duration ) = 
+    let new_seconds = t.utc_timestamp_second + dur.dur_seconds in
+    let new_minute = t.utc_timestamp_minute + dur.dur_minutes in
+    let new_hour = t.utc_timestamp_hour + dur.dur_hours in 
+    let new_day = t.utc_timestamp_day + dur.dur_days in
+    let new_month = t.utc_timestamp_month + dur.dur_months in
+    let new_year = t.utc_timestamp_year + dur.dur_years in
     let new_ts = {
         utc_timestamp_millisec  = t.utc_timestamp_millisec; 
         utc_timestamp_second    = new_seconds;
@@ -538,34 +952,120 @@ let utctimestamp_duration_Add ( t:fix_utctimestamp) (dur : fix_duration ) =
         utc_timestamp_month     = new_month;
         utc_timestamp_year      = new_year;
     } in
-    normalise_timestamp ( new_ts )
+    normalise_utctimestamp_milli ( new_ts )
 ;;
 
+let duration_utctimestamp_milli_Add (dur : fix_duration) ( t:fix_utctimestamp_milli) = 
+    utctimestamp_milli_duration_Add t dur
+;;
+
+let utctimestamp_micro_duration_Add ( t:fix_utctimestamp_micro) (dur : fix_duration ) = 
+    let new_seconds = t.utc_timestamp_second + dur.dur_seconds in
+    let new_minute = t.utc_timestamp_minute + dur.dur_minutes in
+    let new_hour = t.utc_timestamp_hour + dur.dur_hours in 
+    let new_day = t.utc_timestamp_day + dur.dur_days in
+    let new_month = t.utc_timestamp_month + dur.dur_months in
+    let new_year = t.utc_timestamp_year + dur.dur_years in
+    let new_ts = {
+        utc_timestamp_microsec  = t.utc_timestamp_microsec; 
+        utc_timestamp_second    = new_seconds;
+        utc_timestamp_minute    = new_minute;
+        utc_timestamp_hour      = new_hour;
+        utc_timestamp_day       = new_day;
+        utc_timestamp_month     = new_month;
+        utc_timestamp_year      = new_year;
+    } in
+    normalise_utctimestamp_micro ( new_ts )
+;;
+
+let duration_utctimestamp_micro_Add (dur : fix_duration) ( t:fix_utctimestamp_micro) = 
+    utctimestamp_micro_duration_Add t dur
+;;
 
 let seconds_to_duration ( seconds ) = 
-    let ts = normalise_timestamp {
-        utc_timestamp_year      = 0;
-        utc_timestamp_month     = 0;
-        utc_timestamp_day       = 0;
-        utc_timestamp_hour      = 0;
-        utc_timestamp_minute    = 0;
-        utc_timestamp_second    = seconds;
-        utc_timestamp_millisec  = None;
-    } in { 
-        dur_years    = ( match ts.utc_timestamp_year   with 0 -> None | x -> Some x) ; 
-        dur_months   = ( match ts.utc_timestamp_month  with 0 -> None | x -> Some x) ; 
-        dur_days     = ( match ts.utc_timestamp_day    with 0 -> None | x -> Some x) ; 
-        dur_hours    = ( match ts.utc_timestamp_hour   with 0 -> None | x -> Some x) ; 
-        dur_minutes  = ( match ts.utc_timestamp_minute with 0 -> None | x -> Some x) ; 
-        dur_seconds  = ( match ts.utc_timestamp_second with 0 -> None | x -> Some x) ; 
+    normalise_duration {
+        dur_years    = 0;
+        dur_months   = 0;
+        dur_days     = 0;
+        dur_hours    = 0;
+        dur_minutes  = 0;
+        dur_seconds  = seconds;
     }
 ;;
 
 (** TODO This is unfinished -- check how months are accounted for *)
 let duration_to_seconds ( dur ) =
-    let sec =       match dur.dur_seconds with None -> 0 | Some x -> x in
-    let sec = sec + match dur.dur_minutes with None -> 0 | Some x -> 60 * x in
-    let sec = sec + match dur.dur_hours   with None -> 0 | Some x -> 60 * 60 * x in
-    let sec = sec + match dur.dur_days    with None -> 0 | Some x -> 24 * 60 * 60 * x in    
+    let sec = dur.dur_seconds in
+    let sec = sec + dur.dur_minutes * 60 in
+    let sec = sec + dur.dur_hours * 60 * 60 in
+    let sec = sec + dur.dur_days * 24 * 60 * 60 in
+    let sec = sec + dur.dur_months * 31 * 24 * 60 * 60 in
+    let sec = sec + dur.dur_years * 365 * 31 * 24 * 60 * 60 in    
     sec
+;;
+
+let duration_Equal dur1 dur2 = 
+    dur1 = dur2
+;;
+
+let duration_GreaterThan dur1 dur2 = 
+    dur1.dur_years > dur2.dur_years ||
+    (dur1.dur_years = dur2.dur_years &&
+        dur1.dur_months > dur2.dur_months ||
+        (dur1.dur_months = dur2.dur_months &&
+            dur1.dur_days > dur2.dur_days ||
+            (dur1.dur_days = dur2.dur_days &&
+                dur1.dur_hours > dur2.dur_hours ||
+                (dur1.dur_hours = dur2.dur_hours &&
+                    dur1.dur_minutes > dur2.dur_minutes ||
+                    (dur1.dur_minutes = dur2.dur_minutes &&
+                        dur1.dur_seconds > dur2.dur_seconds)))))
+;;
+
+let duration_GreaterThanEqual dur1 dur2 = 
+    duration_GreaterThan dur1 dur2 || duration_Equal dur1 dur2
+;;
+
+let duration_LessThan dur1 dur2 = 
+    not (duration_GreaterThanEqual dur1 dur2)
+;;
+
+let duration_LessThanEqual dur1 dur2 = 
+    not (duration_GreaterThan dur2 dur2)
+;;
+
+let convert_utctimestamp_milli_utctimeonly_milli (ts:fix_utctimestamp_milli) : (fix_utctimeonly_milli) = 
+    {
+        utc_timeonly_hour     = ts.utc_timestamp_hour;
+        utc_timeonly_minute    = ts.utc_timestamp_minute;
+        utc_timeonly_second    = ts.utc_timestamp_second;
+        utc_timeonly_millisec  = ts.utc_timestamp_millisec
+    }
+;;
+
+let convert_utctimestamp_micro_utctimeonly_micro (ts:fix_utctimestamp_micro) : (fix_utctimeonly_micro) = 
+    {
+        utc_timeonly_hour     = ts.utc_timestamp_hour;
+        utc_timeonly_minute    = ts.utc_timestamp_minute;
+        utc_timeonly_second    = ts.utc_timestamp_second;
+        utc_timeonly_microsec  = ts.utc_timestamp_microsec
+    }
+;;
+
+let convert_utctimestamp_milli_utctimeonly_micro (ts:fix_utctimestamp_milli) : (fix_utctimeonly_micro) = 
+    {
+        utc_timeonly_hour     = ts.utc_timestamp_hour;
+        utc_timeonly_minute    = ts.utc_timestamp_minute;
+        utc_timeonly_second    = ts.utc_timestamp_second;
+        utc_timeonly_microsec  = ts.utc_timestamp_millisec
+    }
+;;
+
+let convert_utctimestamp_micro_utctimeonly_milli (ts:fix_utctimestamp_micro) : (fix_utctimeonly_milli) = 
+    {
+        utc_timeonly_hour     = ts.utc_timestamp_hour;
+        utc_timeonly_minute    = ts.utc_timestamp_minute;
+        utc_timeonly_second    = ts.utc_timestamp_second;
+        utc_timeonly_millisec  = ts.utc_timestamp_microsec
+    }
 ;;
