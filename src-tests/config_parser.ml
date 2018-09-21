@@ -21,7 +21,7 @@ let read_file filename =
 
 let parse_config_line cfgstr =
     if Bytes.length cfgstr <= 1 then None else
-    let payload = Bytes.sub cfgstr 1 (Bytes.length cfgstr - 1) in
+    let payload = Bytes.(sub cfgstr 1 (length cfgstr - 1) |> to_string) in
     let parse_action = function
         | "CONNECT" | "CONNECT\r" -> Connect 
         | "DISCONNECT" | "DISCONNECT\r" -> Disconnect 
@@ -41,11 +41,12 @@ let parse_config_line cfgstr =
         | 'i' -> Some (InitiateAction  (parse_action payload) )
         | 'E' -> Some (  ExpectMessage (string_to_key_value payload) )
         | 'I' -> Some (InitiateMessage (string_to_key_value payload) )
-        | _ -> failwith ( "Error on line: " ^ cfgstr )
+        | _ -> failwith ( "Error on line: " ^ (Bytes.to_string cfgstr) )
 ;;
 
 let parse_file filename = 
     read_file filename
+        |> List.map Bytes.of_string
         |> List.map parse_config_line
         |> List.filter (fun x -> x != None)
         |> List.map (function Some x -> x | None -> failwith "Internal error in parse_file.")
