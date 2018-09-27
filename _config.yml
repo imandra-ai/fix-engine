@@ -26,7 +26,7 @@ permalink: /:title/
 # Build settings
 layouts_dir: /jekyll-resources/_layouts
 includes_dir: /jekyll-resources/_includes
-data_dir: /jekyll-resource/_data
+data_dir: /jekyll-resources/_data
 sass:
   sass_dir: /jekyll-resources/_sass
 include: ['_pages']
