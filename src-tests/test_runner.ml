@@ -64,7 +64,7 @@ let prepare_message msg (src, tagret)=
             let adds = Scanf.sscanf v "<TIME%s@>" id in
             let adds = if adds = "" then 0 else Scanf.sscanf adds "%d" id in
             let time = get_current_utctimstamp ~offset:adds () 
-                       |> normalise_timestamp in
+                       |> normalise_utctimestamp_milli in
             ( k , Core_printer.fix_utctimestamp_to_string time ) 
         end in
     let fill_empty_ts (k,v) =
@@ -99,7 +99,7 @@ let check_expected_compatible received expected =
         else begin
             let rv = List.assoc ek received in  
             if rv = ev then Lwt.return_unit else
-            match Parse_datetime.parse_UTCTimestamp rv, Parse_datetime.parse_UTCTimestamp ev  with
+            match Parse_datetime.parse_UTCTimestamp_milli rv, Parse_datetime.parse_UTCTimestamp_milli ev  with
             | Some rt, Some et -> Lwt.return_unit 
             | _, _ -> Lwt_io.printf "  Error: for the key \"%s\" expected value was \"%s\", got \"%s\" instead.\n" ek ev rv           
         end
