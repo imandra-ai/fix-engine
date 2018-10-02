@@ -191,6 +191,11 @@ let string_to_json x : json =
   `String  x  
 ;;
 
+let json_to_string_opt x : string option =
+  JU.to_string_option x
+;;
+
+
 let string_opt_to_json = function 
   | None   -> `Null
   | Some x -> string_to_json x
@@ -203,6 +208,10 @@ let string_opt_to_json = function
 
 let symbol_to_json x : json = 
   `String x  
+;;
+
+let json_to_symbol_opt x : string option =
+  JU.to_string_option x
 ;;
 
 let symbol_opt_to_json = function 
@@ -220,6 +229,15 @@ let bool_to_json : bool -> json = function
   | false -> `String "false" 
 ;;
 
+let json_to_bool_opt x : bool option = 
+  match (JU.to_string_option x) with
+  | None -> None
+  | Some b -> (match b with
+      | "true" -> Some true
+      | "false" -> Some false
+      | _ -> None
+    )
+;;
 
 let bool_opt_to_json : bool option -> json = function
   | None   -> `Null
