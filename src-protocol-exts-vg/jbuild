@@ -4,6 +4,6 @@
   ( (name        protocol_exts)
     (public_name protocol_exts)
     (wrapped  false)
-    (libraries (core))
+    (libraries (core core_time_defaults))
   )
 )

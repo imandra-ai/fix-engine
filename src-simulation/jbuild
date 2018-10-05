@@ -10,6 +10,7 @@
         venue
         fix_engine
         core_pp
+        core_time_defaults
         protocol_pp
         conversions
       )

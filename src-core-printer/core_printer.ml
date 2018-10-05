@@ -41,7 +41,7 @@ let fix_float_6_to_string x =
 ;;
 
 let fix_float_to_string x = 
-  fix_float_4_to_string x
+  fix_float_6_to_string x
 ;;
 
 let int_to_string x =
