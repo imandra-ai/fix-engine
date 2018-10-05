@@ -1,0 +1,13 @@
+(jbuild_version 1)
+
+(library
+  ( (name        core_time_defaults)
+    (public_name core_time_defaults)
+    (wrapped  false)
+    (libraries (
+      core_pp
+      core
+      yojson
+    ))
+  )
+)
