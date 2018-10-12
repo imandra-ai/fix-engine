@@ -2,7 +2,7 @@
 let (>>=) = Lwt.(>>=);;
 
 let split_into_key_value (spliton : char) ( stream : char Lwt_stream.t ) : (string * string) Lwt_stream.t =
-    (** Converts [ '5'; '2'; '='; 'A' ] to ("52" , "A" ) *)
+    (* Converts [ '5'; '2'; '='; 'A' ] to ("52" , "A" ) *)
     let get_key_value (chlist : char list) : string * string =
         List.fold_left (fun ((k,v),f) char -> match char with
             | '=' -> ((k,v), true)
@@ -26,7 +26,7 @@ let split_into_key_value (spliton : char) ( stream : char Lwt_stream.t ) : (stri
 
 let split_into_messages (verbose:bool) (stream : (string * string) Lwt_stream.t) =
     let f () =
-        Lwt_stream.get_while (fun (k,v) -> k <> "10") stream >>= fun msg ->
+        Lwt_stream.get_while (fun (k,_v) -> k <> "10") stream >>= fun msg ->
         Lwt_stream.get stream >>= function None -> Lwt.return_none | Some chsum ->
         if msg <> [] 
         then (

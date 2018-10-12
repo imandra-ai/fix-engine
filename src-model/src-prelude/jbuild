@@ -1,9 +1,0 @@
-(jbuild_version 1)
-
-(library
-  ( (name venue_prelude)
-    (public_name venue_prelude)
-    (wrapped false)
-    (libraries ())
-  )
-)

@@ -8,10 +8,6 @@
     
 *)
 
-open Datetime;;
-open Full_admin_enums;;
-open Full_admin_messages;;
-open Full_app_messages;;
 open Full_messages;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
@@ -125,7 +121,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
             | _ -> engine
         end
         
-    | IncIntMsg_ManualIntervention mi -> {
+    | IncIntMsg_ManualIntervention _mi -> {
         engine with
             incoming_int_msg            = None;
             outgoing_int_msg            = Some OutIntMsg_Reject 
@@ -155,7 +151,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
 (** Process incoming FIX message here. *)
 let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) = 
     match m with
-    | Garbled                   -> engine   (** Garbled messages are simply ignored. Note the timestamp is not updated. *)
+    | Garbled                   -> engine   (* Garbled messages are simply ignored. Note the timestamp is not updated. *)
     | SessionRejectedMsg data   -> 
         begin
             match engine.fe_curr_mode with
@@ -191,8 +187,8 @@ let is_int_message_valid ( engine : fix_engine_state ) =
     | Some int_msg ->
     match int_msg with 
     | IncIntMsg_TimeChange t -> (utctimestamp_LessThan engine.fe_curr_time t ) && is_valid_utctimestamp ( t )
-    | IncIntMsg_ApplicationData d -> true
-    | IncIntMsg_CreateSession d -> 
+    | IncIntMsg_ApplicationData _d -> true
+    | IncIntMsg_CreateSession _d -> 
         begin
             match engine.fe_curr_mode with
             | NoActiveSession -> true
@@ -208,15 +204,15 @@ let one_step ( engine : fix_engine_state ) =
         | Some i -> proc_incoming_int_msg (i, { engine with incoming_int_msg = None } )
         | None -> 
     match engine.fe_curr_mode with     
-    (** Check if we're in the middle of replaying our cache. *)
+    (* Check if we're in the middle of replaying our cache. *)
     | CacheReplay -> run_cache_replay (engine)
-    (** If gap is detected -- we'll send resend request and move to recovery mode. *)
+    (* If gap is detected -- we'll send resend request and move to recovery mode. *)
     | GapDetected  -> run_gap_detected (engine)
-    (** If we still need to retransmit our messages out to the receiving engine. *)
+    (* If we still need to retransmit our messages out to the receiving engine. *)
     | Retransmit   -> run_retransmit (engine)
-    (** We need to send out Logoff and transition to ShutdownInitiated *)
+    (* We need to send out Logoff and transition to ShutdownInitiated *)
     | ShuttingDown -> logoff_and_shutdown (engine)
-    (** Now we look to process internal (coming from our application) and external (coming from
+    (* Now we look to process internal (coming from our application) and external (coming from
         another FIX engine) messages. *)
     | _ -> begin match engine.incoming_fix_msg with 
         | Some m -> proc_incoming_fix_msg (m, { engine with incoming_fix_msg = None } )

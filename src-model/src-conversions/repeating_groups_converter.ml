@@ -1,5 +1,4 @@
 (* Aesthetic Integration copyright 2018 *)
-open Imandra_utils;;
 open Model_tags;;
 
 exception Ipl_rg_exception 

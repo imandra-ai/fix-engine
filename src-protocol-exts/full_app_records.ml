@@ -50,10 +50,10 @@ type fix_rg_compidstatgrp = fix_rg_inner_compidstatgrp list
 ;;
 
 type fix_commissiondata = {
-    (** For CIV - Optional*)
+    (* For CIV - Optional*)
     f_CommissionData_FundRenewWaiv : fix_fundrenewwaiv option;
     f_CommissionData_Commission : fix_float_6 option;
-    (** For CIV - Optional*)
+    (* For CIV - Optional*)
     f_CommissionData_CommCurrency : fix_currency option;
     f_CommissionData_CommType : fix_commtype option
 }
@@ -86,7 +86,7 @@ type fix_rg_execallocgrp = fix_rg_inner_execallocgrp list
 ;;
 
 type fix_financingdetails = {
-    (** For Repos the timing or method for terminating the agreement.*)
+    (* For Repos the timing or method for terminating the agreement.*)
     f_FinancingDetails_TerminationType : fix_terminationtype option;
     (** A common reference to the applicable standing agreement between the principals*)
     f_FinancingDetails_AgreementID : string option;
@@ -108,7 +108,7 @@ type fix_financingdetails = {
 ;;
 
 type fix_rg_inner_positionamountdata = {
-    (** Number of Position Amount entries*)
+    (* Number of Position Amount entries*)
     f_PositionAmountData_NoPosAmt : int option;
     f_PositionAmountData_PosAmt : fix_float_6 option;
     f_PositionAmountData_PosAmtType : fix_posamttype option
@@ -247,7 +247,7 @@ type fix_yielddata = {
 ;;
 
 type fix_discretioninstructions = {
-    (** The scope of "related to" price of the discretion (e.g. local, global etc)*)
+    (* The scope of "related to" price of the discretion (e.g. local, global etc)*)
     f_DiscretionInstructions_DiscretionScope : fix_discretionscope option;
     (** Amount (signed) added to the "related to" price specified via DiscretionInst, in the context of DiscretionOffsetType*)
     f_DiscretionInstructions_DiscretionOffsetValue : fix_float option;
@@ -265,7 +265,7 @@ type fix_discretioninstructions = {
 ;;
 
 type fix_peginstructions = {
-    (** Amount (signed) added to the peg for a pegged order in the context of the PegOffsetType*)
+    (* Amount (signed) added to the peg for a pegged order in the context of the PegOffsetType*)
     f_PegInstructions_PegOffsetValue : fix_float option;
     (** Describes whether peg is static/fixed or floats*)
     f_PegInstructions_PegMoveType : fix_pegmovetype option;
@@ -318,7 +318,7 @@ type fix_rg_allocackgrp = fix_rg_inner_allocackgrp list
 ;;
 
 type fix_rg_inner_logonmsgtypes = {
-    (** Indicates direction (send vs. receive) of a supported MsgType. Required if NoMsgTypes is > 0. Should be specified from the point of view of the sender of the Logon message*)
+    (* Indicates direction (send vs. receive) of a supported MsgType. Required if NoMsgTypes is > 0. Should be specified from the point of view of the sender of the Logon message*)
     f_LogonMsgTypes_MsgDirection : fix_msgdirection option;
     (** Specifies the number of repeating RefMsgTypes specified*)
     f_LogonMsgTypes_NoMsgTypes : int option;
@@ -395,7 +395,7 @@ type fix_rg_biddescreqgrp = fix_rg_inner_biddescreqgrp list
 
 type fix_rg_inner_legstipulations = {
     f_LegStipulations_NoLegStipulations : int option;
-    (** Required if NoLegStipulations >0*)
+    (* Required if NoLegStipulations >0*)
     f_LegStipulations_LegStipulationType : string option;
     f_LegStipulations_LegStipulationValue : string option
 }
@@ -497,7 +497,7 @@ type fix_rg_nstdptyssubgrp = fix_rg_inner_nstdptyssubgrp list
 ;;
 
 type fix_rg_inner_stipulations = {
-    (** Required if NoStipulations >0*)
+    (* Required if NoStipulations >0*)
     f_Stipulations_StipulationType : fix_stipulationtype option;
     f_Stipulations_StipulationValue : string option;
     f_Stipulations_NoStipulations : int option
@@ -632,7 +632,7 @@ type fix_rg_execsgrp = fix_rg_inner_execsgrp list
 ;;
 
 type fix_orderqtydata = {
-    (** For CIV - Optional*)
+    (* For CIV - Optional*)
     f_OrderQtyData_RoundingDirection : fix_roundingdirection option;
     (** For CIV - Optional*)
     f_OrderQtyData_RoundingModulus : fix_float option;
@@ -672,7 +672,7 @@ type fix_rg_underlyingstipulations = fix_rg_inner_underlyingstipulations list
 ;;
 
 type fix_rg_inner_nestedparties2 = {
-    (** Identifies the type of Nested2PartyID (e.g. Executing Broker). Required if NoNested2PartyIDs > 0.*)
+    (* Identifies the type of Nested2PartyID (e.g. Executing Broker). Required if NoNested2PartyIDs > 0.*)
     f_NestedParties2_Nested2PartyRole : int option;
     (** Repeating group of Nested2Party sub-identifiers.*)
     f_NestedParties2_NstdPtys2SubGrp : fix_rg_nstdptys2subgrp;
@@ -689,7 +689,7 @@ type fix_rg_nestedparties2 = fix_rg_inner_nestedparties2 list
 ;;
 
 type fix_rg_inner_settlparties = {
-    (** Repeating group below should contain unique combinations of SettlPartyID, SettlPartyIDSource, and SettlPartyRole*)
+    (* Repeating group below should contain unique combinations of SettlPartyID, SettlPartyIDSource, and SettlPartyRole*)
     f_SettlParties_NoSettlPartyIDs : int option;
     (** Repeating group of SettlParty sub-identifiers.*)
     f_SettlParties_SettlPtysSubGrp : fix_rg_settlptyssubgrp;
@@ -706,7 +706,7 @@ type fix_rg_settlparties = fix_rg_inner_settlparties list
 ;;
 
 type fix_rg_inner_nestedparties = {
-    (** Repeating group of NestedParty sub-identifiers.*)
+    (* Repeating group of NestedParty sub-identifiers.*)
     f_NestedParties_NstdPtysSubGrp : fix_rg_nstdptyssubgrp;
     (** Repeating group below should contain unique combinations of NestedPartyID, NestedPartyIDSource, and NestedPartyRole*)
     f_NestedParties_NoNestedPartyIDs : int option;
@@ -723,7 +723,7 @@ type fix_rg_nestedparties = fix_rg_inner_nestedparties list
 ;;
 
 type fix_instrumentextension = {
-    (** Number of repeating InstrAttrib group entries.*)
+    (* Number of repeating InstrAttrib group entries.*)
     f_InstrumentExtension_AttrbGrp : fix_rg_attrbgrp;
     (** Percent at risk due to lowest possible call.*)
     f_InstrumentExtension_PctAtRisk : fix_float_6 option;
@@ -825,7 +825,7 @@ type fix_instrument = {
 ;;
 
 type fix_rg_inner_parties = {
-    (** Used to identify class source of PartyID value (e.g. BIC). Required if PartyID is specified. Required if NoPartyIDs > 0.*)
+    (* Used to identify class source of PartyID value (e.g. BIC). Required if PartyID is specified. Required if NoPartyIDs > 0.*)
     f_Parties_PartyIDSource : fix_partyidsource option;
     (** Repeating group of Party sub-identifiers.*)
     f_Parties_PtysSubGrp : fix_rg_ptyssubgrp;
@@ -842,7 +842,7 @@ type fix_rg_parties = fix_rg_inner_parties list
 ;;
 
 type fix_instrumentleg = {
-    (** Specific to the <InstrumentLeg> (not in <Instrument>)*)
+    (* Specific to the <InstrumentLeg> (not in <Instrument>)*)
     f_InstrumentLeg_LegSide : string option;
     f_InstrumentLeg_LegSymbol : string option;
     f_InstrumentLeg_LegIssuer : string option;
@@ -990,7 +990,7 @@ type fix_rg_bidcomprspgrp = fix_rg_inner_bidcomprspgrp list
 ;;
 
 type fix_rg_inner_nestedparties3 = {
-    (** Identifies the type of Nested3PartyID (e.g. Executing Broker). Required if NoNested3PartyIDs > 0.*)
+    (* Identifies the type of Nested3PartyID (e.g. Executing Broker). Required if NoNested3PartyIDs > 0.*)
     f_NestedParties3_Nested3PartyRole : int option;
     (** Repeating group of Nested3Party sub-identifiers.*)
     f_NestedParties3_NstdPtys3SubGrp : fix_rg_nstdptys3subgrp;
@@ -1419,7 +1419,7 @@ type fix_rg_legordgrp = fix_rg_inner_legordgrp list
 ;;
 
 type fix_settlinstructionsdata = {
-    (** Required if AllocSettlInstType = 1 or 2*)
+    (* Required if AllocSettlInstType = 1 or 2*)
     f_SettlInstructionsData_SettlDeliveryType : fix_settldeliverytype option;
     (** Required (and must be > 0) if AllocSettlInstType = 2 (should not be populated otherwise)*)
     f_SettlInstructionsData_DlvyInstGrp : fix_rg_dlvyinstgrp;

@@ -520,7 +520,7 @@ let is_valid_monthyear ( my : fix_monthyear ) =
         | None -> true
         | Some d -> 0 <= d && d <= 31
     ) && (
-        (** You can only specify one of them, but not both. *)
+        (* You can only specify one of them, but not both. *)
         match my.monthyear_day, my.monthyear_week with
         | Some _, Some _ -> false
         | _, _ -> true
@@ -535,8 +535,8 @@ let monthyear_GreaterThan ( myOne: fix_monthyear) (myTwo : fix_monthyear ) =
     if myOne.monthyear_month < myTwo.monthyear_month then false else
     match myOne.monthyear_day, myTwo.monthyear_day with
     | None, None -> false
-    | Some d, None -> true
-    | None, Some d -> false
+    | Some _d, None -> true
+    | None, Some _d -> false
     | Some d_one, Some d_two -> d_one > d_two
 ;;
 
@@ -547,8 +547,8 @@ let monthyear_LessThan ( myOne: fix_monthyear) (myTwo : fix_monthyear ) =
     if myOne.monthyear_month > myTwo.monthyear_month then false else
     match myOne.monthyear_day, myTwo.monthyear_day with
     | None, None -> false
-    | Some d, None -> false
-    | None, Some d -> true
+    | Some _d, None -> false
+    | None, Some _d -> true
     | Some d_one, Some d_two -> d_one > d_two
 ;;
 
@@ -1031,7 +1031,7 @@ let duration_LessThan dur1 dur2 =
 ;;
 
 let duration_LessThanEqual dur1 dur2 = 
-    not (duration_GreaterThan dur2 dur2)
+    not (duration_GreaterThan dur1 dur2)
 ;;
 
 let convert_utctimestamp_milli_utctimeonly_milli (ts:fix_utctimestamp_milli) : (fix_utctimeonly_milli) = 

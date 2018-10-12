@@ -47,7 +47,6 @@ let full_app_field_tag_to_string = function
     | Full_Msg_SecurityType_Tag   -> "SecurityType_Tag"
     | Full_Msg_Side_Tag           -> "Side_Tag"
     | Full_Msg_Symbol_Tag         -> "Symbol_Tag"
-    | Full_Msg_Symbol_Tag         -> "Symbol_Tag"
     | Full_Msg_Text_Tag           -> "Text_Tag"
     | Full_Msg_TimeInForce_Tag    -> "TimeInForce_Tag"
     | Full_Msg_TransactTime_Tag   -> "TransactTime_Tag"

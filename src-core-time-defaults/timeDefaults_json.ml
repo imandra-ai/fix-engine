@@ -7,7 +7,6 @@
     timeDefaults_json.ml
     
 *)
-open Datetime;;
 open Datetime_json;;
 
 let utctimeonly_to_json = utctimeonly_milli_to_json

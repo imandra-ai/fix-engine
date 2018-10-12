@@ -1,16 +1,17 @@
 build:
   box:
-    id: ocaml/opam  
-    tag: debian-9_ocaml-4.05.0
+    id: ocaml/opam2
+    tag: debian-9-ocaml-4.06
     entrypoint: /usr/bin/sudo -u root --preserve-env opam config exec --
     cmd: /bin/bash
 
   steps:
     - script:
-        name: jbuilder make
+        name: dune make
         code: |          
           set -ex
           export OPAMROOT=/home/opam/.opam
           opam update
+          opam install dune
           make opam1-setup
           make

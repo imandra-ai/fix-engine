@@ -8,7 +8,6 @@
 
 *)
 
-open String
 open Yojson
 open Fix_engine_state
 open Datetime_json
