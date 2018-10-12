@@ -1,0 +1,46 @@
+(library
+  (name        fix_simulation)
+  (public_name fix_simulation)
+  (wrapped  false)
+  (modules (:standard \ server client))
+  (libraries 
+       lwt.unix
+        venue
+        fix_engine
+        core_pp
+        core_time_defaults
+        protocol_pp
+        conversions    
+  )
+)
+
+(executable
+  (name server)
+  (modules server)
+  (libraries 
+      lwt.unix
+      venue
+      fix_engine
+      fix_simulation
+      protocol_pp
+      conversions
+  )
+)
+
+(executable
+  (name client)
+  (modules client)
+  (libraries 
+      yojson
+      lwt.unix
+      venue
+      fix_engine
+      fix_simulation
+      conversions
+      protocol_pp
+      types_pp
+      cmdliner
+      ZMQ
+      lwt-zmq
+  )
+)

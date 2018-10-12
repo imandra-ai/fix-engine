@@ -9,9 +9,9 @@ license: "APACHE-2.0"
 dev-repo: "https://github.com/AestheticIntegration/fix-engine"
 doc: "https://AestheticIntegration.github.io/fix-engine/doc"
 available: [ ocaml-version >= "4.05" & < "4.06" ]
-build: [["jbuilder" "build" "-p" name "-j" jobs]]
+build: [["dune" "build" "-p" name "-j" jobs]]
 depends: [
-  "jbuilder" {build}
+  "dune" {build}
   "cmdliner"
   "lwt" {= "3.1.0"}
   "lwt-zmq"

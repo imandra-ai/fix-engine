@@ -1,0 +1,6 @@
+(library
+  (name        fix_engine)
+  (public_name fix_engine)
+  (wrapped  false)
+  (libraries protocol core_utils)
+)
