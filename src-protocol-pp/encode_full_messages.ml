@@ -8,12 +8,11 @@
 
 *)
 
-open Full_message_tags
 open Full_messages
 open Encode_base_types
-open Encode_datetime
 open Encode_full_tags
 open TimeDefaults_pp
+open Fix_version
 
 let req f x = Some (f x);;
 let opt f v = match v with Some x -> Some ( f x ) | None -> None;;
@@ -68,7 +67,7 @@ let get_body_length msg =
     let rec scan n msg = match msg with
         | ( "8", _ )::tl 
         | ( "9", _ )::tl -> scan n tl
-        | ("10", _ )::tl -> n
+        | ("10", _ )::_tl -> n
         | (  k , v )::tl -> n + scan String.(length k + length v + 2) tl
         | [] -> n in 
     scan 0 msg 
@@ -81,7 +80,7 @@ let get_checksum msg =
         chsum (String.length s - 1) 0 
     in
     let rec scan n msg = match msg with
-        | ("10", v )::tl -> n mod 256
+        | ("10", _v )::_tl -> n mod 256
         | (  k , v )::tl -> scan (checksum k + checksum v + 62 + n) tl
         | [] -> n mod 256 in 
     scan 0 msg 
@@ -89,7 +88,7 @@ let get_checksum msg =
 
 let prepare_packet msg_body =
     let encode_checksum = Printf.sprintf "%03u" in
-    let msg = [ ( "8"   , Fix_engine_utils.default_session_details.constant_begin_string )
+    let msg = [ ( "8"   , default_session_details.constant_begin_string )
               ; ( "9"   , get_body_length msg_body |> encode_int )
               ] @ msg_body
               in             
@@ -104,7 +103,7 @@ let encode_full_valid_msg x =
         encode_trailer       x.full_msg_trailer
         in
     let msg_body = msg_body
-        |> List.filter (fun (k,v) -> v <> None )
+        |> List.filter (fun (_k,v) -> v <> None )
         |> List.map    (fun (k,v) -> (k, match v with Some v -> v | None -> ""))
         in
     msg_body |> prepare_packet

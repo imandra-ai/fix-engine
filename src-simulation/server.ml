@@ -58,7 +58,6 @@ let do_timechange mailbox =
 ;;
 
 let rec heartbeat_thread mailbox =
-    let open Fix_engine_state in
     Lwt_unix.sleep (1.0) >>= fun () -> 
     do_timechange mailbox >>= fun () -> 
     heartbeat_thread mailbox
@@ -70,7 +69,7 @@ let f _ (inch, outch) =
         Lwt_io.close inch >>= fun () ->
         Lwt_io.close outch
         in
-    let mailbox, global_state = Fix_global_state.start engine_state State.init_model_state (send_msg outch) in 
+    let mailbox, _global_state = Fix_global_state.start engine_state State.init_model_state (send_msg outch) in 
     Lwt.catch ( fun () ->
         Lwt_io.printl "Received a connection." >>= fun () ->
         Lwt.join [

@@ -16,7 +16,7 @@ type fix_global_state = {
      fix_callback : Full_messages.full_top_level_msg -> unit Lwt.t 
 }
 
-let pp_incoming = function
+let _pp_incoming = function
   | FIX_Message ( ValidMsg             m ) -> 
       "FIX_Message (ValidMsg): " 
       ^ "\n - " ^ Yojson.pretty_to_string (Full_messages_json.full_msg_to_json m.full_msg_data)
@@ -66,16 +66,16 @@ let rec send_messages_list messages engine_state fix_callback pub_callback =
 let rec while_busy_loop state =
     let engine_state = state.engine_state in
     let engine_state = Fix_engine.one_step engine_state in
-    (** THEOREM : after one_step we can get either ontgoing internal
+    (* THEOREM : after one_step we can get either ontgoing internal
         or outgoing FIX message *)
     begin match ( engine_state.outgoing_fix_msg , engine_state.outgoing_int_msg) with
-        (** On outgoing FIX message we send it and clean outgoing slot.*)
+        (* On outgoing FIX message we send it and clean outgoing slot.*)
         | Some msg, None -> begin  
             state.fix_callback msg >>= fun () -> 
             let engine_state = { engine_state with outgoing_fix_msg = None } in
             Lwt.return { state with engine_state = engine_state } 
         end
-        | None, Some msg -> begin
+        | None, Some _msg -> begin
             let model_state = state.model_state in
             let model_state = match engine_state.outgoing_int_msg with
                 | Some ( OutIntMsg_ApplicationData data ) ->
@@ -88,7 +88,7 @@ let rec while_busy_loop state =
                     | Model_messages.FIX_TL_Normal m -> Model_messages.FIX_TL_PossibleResend m | m -> m in
                     let model_state = { model_state with State.incoming_msg = model_message } in
                     Venue.one_step model_state
-                | _ -> model_state (** TODO -- see what to do with other messages *)
+                | _ -> model_state (* TODO -- see what to do with other messages *)
                 in
             let engine_state = { engine_state with outgoing_int_msg = None } in
             send_messages_list 

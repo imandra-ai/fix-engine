@@ -13,7 +13,6 @@ open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_message_tags;;
 open Full_admin_tags;;
-open Full_app_messages;;
 open Full_messages;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
@@ -72,17 +71,17 @@ let run_retransmit ( engine : fix_engine_state ) =
                 fe_history_to_send = [];
                 outgoing_fix_msg = None;
         } else { 
-            (** We're in the zone: format and send out the message *)
+            (* We're in the zone: format and send out the message *)
             engine with 
                 fe_history_to_send = msgy::tail;
                 outgoing_fix_msg = Some ( ValidMsg (
                     make_resend_message (msgx, engine.fe_curr_time, engine.fe_retransmit_start_idx) 
                 ) );
         }
-    (** treting a special case when there is only one message in history *)
+    (* treating a special case when there is only one message in history *)
     | msg::[] ->
         if msg.full_msg_header.h_msg_seq_num < engine.fe_retransmit_start_idx then {
-            (** TODO: If we are here, then  history doesn't contain the requested messages.
+            (* TODO: If we are here, then  history doesn't contain the requested messages.
                 Investigate what is the correct behavior in htis case. ( Reject, probably? )*)
             engine with fe_history_to_send = []; outgoing_fix_msg = None;
         } else if engine.fe_retransmit_end_idx <> 0 && engine.fe_retransmit_end_idx < msg.full_msg_header.h_msg_seq_num then {
@@ -200,7 +199,7 @@ let initiate_Resend ( return_mode, request, engine : fix_engine_mode * full_msg_
 
 let attempt_sequence_reset (engine, msg_seq_num, new_seq_num : fix_engine_state * int * int ) = 
     if new_seq_num - 1 < engine.incoming_seq_num then 
-    (** The sequence reset can only increase the sequence number. If a sequence reset is attempting 
+    (* The sequence reset can only increase the sequence number. If a sequence reset is attempting 
         to decrease the next expected sequence number the message should be rejected and 
         treated as a serious error. *)
         let reject = {
@@ -213,7 +212,7 @@ let attempt_sequence_reset (engine, msg_seq_num, new_seq_num : fix_engine_state 
             srej_encoded_text      = None;
         } in 
         let engine' = session_reject ( reject , engine ) in
-        (** In this case I'm not sure what one has to do with the incoming_seq_num.
+        (* In this case I'm not sure what one has to do with the incoming_seq_num.
             Most logical thing seems to just not change it at all*)
         { engine' with incoming_seq_num = engine.incoming_seq_num }
     else {
@@ -224,47 +223,47 @@ let attempt_sequence_reset (engine, msg_seq_num, new_seq_num : fix_engine_state 
 (** We're operating in a normal mode. *)
 let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     let header = m.full_msg_header in
-    (** SequenceResets that dont have a GapFill flag get special treatment -- their 
+    (* SequenceResets that dont have a GapFill flag get special treatment -- their 
         sequence numbers are ignored entirely. *)
     match get_critical_reset_seq_num m.full_msg_data with 
     | Some new_seq_num ->  attempt_sequence_reset (engine, header.h_msg_seq_num, new_seq_num) | None -> 
-    (** In all other cases we first check sequence numbers / duplicate flags*)
+    (* In all other cases we first check sequence numbers / duplicate flags*)
     let msgtag = get_full_msg_tag m.full_msg_data in
-    (** Check msg header. If something is wrong - send the reject and start shutdown. *)
+    (* Check msg header. If something is wrong - send the reject and start shutdown. *)
     match validate_message_header ( engine, header, msgtag ) with 
     | Some engine -> engine | None ->
-    (** Performing squence number checks *)
+    (* Performing squence number checks *)
     let is_duplicate = header.h_msg_seq_num < (engine.incoming_seq_num + 1) in
     let possdup = match header.h_poss_dup_flag with Some true -> true | _ -> false in
     if is_duplicate && not possdup then 
-        (** Message is a duplicate, but no PossibleDuplicate flag -- we instantly logoff *)
+        (* Message is a duplicate, but no PossibleDuplicate flag -- we instantly logoff *)
         logoff_and_shutdown engine
     else if is_duplicate then 
-        (** Message is a duplicate and passed all checks -- ignore it. *)
+        (* Message is a duplicate and passed all checks -- ignore it. *)
         engine
     else if msg_is_sequence_gap ( engine, m.full_msg_header ) then {
-        (** We've detected a gap in messages. We therefore need to 
+        (* We've detected a gap in messages. We therefore need to 
             transition into GapDetected mode. We place the message into the cahce. *)
         engine with 
             fe_curr_mode = GapDetected;
             incoming_seq_num  = engine.incoming_seq_num + 1;
             fe_cache = [ m ];
     } else
-    (** Message sequence number is OK -- lets process its data *)
+    (* Message sequence number is OK -- lets process its data *)
     match m.full_msg_data with 
     | Full_FIX_Admin_Msg adm_msg ->
         begin 
             match adm_msg with 
-            | Full_Msg_Heartbeat hb          -> {
+            | Full_Msg_Heartbeat _hb          -> {
                 (* Update information about the last received message. *)
                     engine with 
                         incoming_seq_num = m.full_msg_header.h_msg_seq_num;
                         incoming_fix_msg = None;
                 }
-            | Full_Msg_Logon data           -> engine
-            | Full_Msg_Logoff data          -> logoff_and_shutdown ( engine )
-            | Full_Msg_Reject data          -> { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
-            | Full_Msg_Business_Reject data -> engine
+            | Full_Msg_Logon _data           -> engine
+            | Full_Msg_Logoff _data          -> logoff_and_shutdown ( engine )
+            | Full_Msg_Reject _data          -> { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
+            | Full_Msg_Business_Reject _data -> engine
             | Full_Msg_Resend_Request data  -> 
                 let engine = { engine with 
                     incoming_seq_num = m.full_msg_header.h_msg_seq_num
@@ -281,7 +280,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 }
         end
     | Full_FIX_App_Msg app_msg          -> 
-        (** We're processing an application type of message. We just need 
+        (* We're processing an application type of message. We just need 
         to append it to the list of outgoing application messages and 
         update the last seq number processed. *)
          
@@ -311,7 +310,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     TODO: We're ignoring all other messages -- check the specs if that is a correct behavior *)
 let run_wait_heartbeat ( msg, engine ) =
     match msg.full_msg_data with
-    | Full_FIX_Admin_Msg ( Full_Msg_Heartbeat d ) -> 
+    | Full_FIX_Admin_Msg ( Full_Msg_Heartbeat _d ) -> 
         let engine = {engine with fe_curr_mode = ActiveSession } in
         run_active_session  (msg , engine)
     | _ -> engine
@@ -339,7 +338,7 @@ let replay_single_msg ( m, engine : full_valid_fix_msg * fix_engine_state ) =
             outgoing_int_msg = Some ( OutIntMsg_ApplicationData app_msg );
             incoming_fix_msg = None;
         }
-    | Full_FIX_Admin_Msg msg -> {
+    | Full_FIX_Admin_Msg _msg -> {
         engine with 
             incoming_seq_num = m.full_msg_header.h_msg_seq_num;
         }
@@ -406,7 +405,7 @@ let rec add_to_cache ( m, cache : full_valid_fix_msg * full_valid_fix_msg list )
     Transition to CacheReplay when the cahce is complete. *)
 let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) = 
     match m.full_msg_data with 
-    | Full_FIX_Admin_Msg (Full_Msg_Logoff m) -> logoff_and_shutdown ( engine )
+    | Full_FIX_Admin_Msg (Full_Msg_Logoff _m) -> logoff_and_shutdown ( engine )
     | Full_FIX_Admin_Msg (Full_Msg_Resend_Request m) -> initiate_Resend ( Recovery, m, engine)
     | _ ->
     let new_cache = add_to_cache (m, engine.fe_cache) in 
@@ -425,7 +424,7 @@ let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 (** We've sent out a Logout message and are now waiting for a confirmation of logout. *) 
 let run_shutdown ( m, engine : full_valid_fix_msg * fix_engine_state ) = 
     match m.full_msg_data with 
-    | Full_FIX_Admin_Msg ( Full_Msg_Logoff m )          -> { engine with fe_curr_mode = NoActiveSession; }
+    | Full_FIX_Admin_Msg ( Full_Msg_Logoff _m )          -> { engine with fe_curr_mode = NoActiveSession; }
     | Full_FIX_Admin_Msg ( Full_Msg_Resend_Request m )  -> 
     (* Since after initiating a Logoff, we can still process Resend request. *)
         initiate_Resend ( ShutdownInitiated, m, engine)

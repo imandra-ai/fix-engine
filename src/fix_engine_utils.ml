@@ -12,24 +12,16 @@
 open Datetime;;
 open Full_admin_enums;;
 open Full_admin_messages;;
-open Full_app_messages;;
 open Full_messages;;
 open Full_message_tags;;
 open Full_admin_tags;;
 open Fix_engine_state;;
 open TimeDefaults;;
+open Fix_version;;
 (* @meta[imandra_ignore] off @end *)
 
-type session_details = {
-    constant_begin_string : string
-};;
 
-let default_session_details = {
-    constant_begin_string = "FIX.4.4" 
-};;
-
-
-(** Does the message have the right sequence number? *)
+(* Does the message have the right sequence number? *)
 (** If sequence number is too high, then we need to transfer into Recovery Mode
     and request the missing sequence to be retransmitted. *)
 let msg_is_sequence_gap ( engine, msg_header : fix_engine_state * fix_header ) = 
@@ -57,10 +49,10 @@ let get_historic_msg ( valid_msg : full_valid_fix_msg ) =
     | Full_FIX_Admin_Msg admin_msg ->
         begin
             match admin_msg with 
-            | Full_Msg_Reject m -> valid_msg
+            | Full_Msg_Reject _m -> valid_msg
             | _ -> gap_fill_msg
         end
-    | Full_FIX_App_Msg app_msg -> valid_msg
+    | Full_FIX_App_Msg _app_msg -> valid_msg
 ;; 
 
 (** This function returns a new sequence number if we got a SequenceReset without GapFill flag.
@@ -90,7 +82,7 @@ let get_critical_reset_seq_num (msg_data : full_msg_data ) =
     transmitted."  *)
 let combine_gapfill_msgs ( msgOne, msgTwo : full_msg_sequence_reset_data * full_msg_sequence_reset_data ) =
     let correct_next_seq = if msgOne.seqr_new_seq_no > msgTwo.seqr_new_seq_no then msgOne.seqr_new_seq_no else msgTwo.seqr_new_seq_no in {
-        seqr_gap_fill_flag = Some FIX_GapFillFlag_Y; (** We assume all of these SeqResetMessages are GapFill-type *)
+        seqr_gap_fill_flag = Some FIX_GapFillFlag_Y; (* We assume all of these SeqResetMessages are GapFill-type *)
         seqr_new_seq_no = correct_next_seq;
     }
 ;;
@@ -156,7 +148,7 @@ let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, curr_time, msg, 
     (* We're simply attaching the message data here. *)
     full_msg_data = msg;
 
-    (** Trailers would be augmented by raw OCaml printers/parsers. *)
+    (* Trailers would be augmented by raw OCaml printers/parsers. *)
     full_msg_trailer = {
         signature_length = None;
         signature        = None;
@@ -297,7 +289,7 @@ let create_business_reject_msg ( outbound_seq_num, target_comp_id, comp_id , cur
 (*** ********************************************************************************************************** *)
 
 (** A NO-OPeration *)
-let noop ( m, engine : full_valid_fix_msg * fix_engine_state ) = { 
+let noop ( _m, engine : full_valid_fix_msg * fix_engine_state ) = { 
     engine
         with incoming_fix_msg = None
 }
@@ -356,7 +348,7 @@ let hbeat_interval_null ( interval : fix_duration ) =
     returns None if no problems are found. *)
 let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * fix_header * full_msg_tag ) = 
     let curr_incoming_seq_num = engine.incoming_seq_num in 
-    let reject = { (** No orig_sending_time => create session reject *)
+    let reject = { (* No orig_sending_time => create session reject *)
             srej_msg_msg_seq_num   = msg_header.h_msg_seq_num;
             srej_msg_field_tag     = None;
             srej_msg_msg_type      = Some msg_tag;
@@ -366,19 +358,19 @@ let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * f
             srej_encoded_text      = None;
         } in
     match msg_header.h_poss_dup_flag with Some false | None -> None | Some true ->
-    (** Message header has a PossibleDuplicate flag => must have orig_sending_time *)
+    (* Message header has a PossibleDuplicate flag => must have orig_sending_time *)
     match msg_header.h_orig_sending_time with 
     | None -> 
-        let reject =  { reject with (** No orig_sending_time => create session reject *)
+        let reject =  { reject with 
             srej_msg_field_tag = Some (Full_Admin_Field_Tag Full_Msg_OrigSendingTime_Tag);
             srej_msg_reject_reason = Some RequiredTagMissing; 
-            (** TODO: rejection fix_string here *)
+            (* TODO: rejection fix_string here *)
             } in
         let engine = session_reject ( reject , engine ) in
         Some { engine with incoming_seq_num = curr_incoming_seq_num }
     | Some orig_sending_time ->
     if utctimestamp_LessThan  msg_header.h_sending_time  orig_sending_time   then
-        let reject = { reject with (** The sending_time is less than orig_sending_time -- reject and logout *)
+        let reject = { reject with
             srej_msg_field_tag = Some (Full_Admin_Field_Tag Full_Msg_OrigSendingTime_Tag);
             srej_msg_reject_reason = Some SendingTimeAccuracyProblem;
             } in

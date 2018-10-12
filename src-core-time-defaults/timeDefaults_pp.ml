@@ -7,7 +7,6 @@
     timeDefaults_pp.ml
     
 *)
-open Datetime;;
 open Encode_datetime;;
 
 let encode_UTCTimeOnly = encode_UTCTimeOnly_milli 

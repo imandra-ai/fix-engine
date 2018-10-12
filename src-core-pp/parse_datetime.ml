@@ -9,7 +9,6 @@
 *)
 
 open Datetime;;
-open Parse_base_types;;
 
 
 let parse_UTCDateOnly str =

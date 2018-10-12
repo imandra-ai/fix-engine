@@ -1,9 +1,0 @@
-(jbuild_version 1)
-
-(library
-  ( (name        protocol)
-    (public_name protocol)
-    (wrapped  false)
-    (libraries (protocol_exts))
-  )
-)

@@ -7,7 +7,6 @@
     base_types_json.ml 
 *)
 
-open Yojson;;
 open Numeric;;
 
 

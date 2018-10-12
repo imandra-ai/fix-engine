@@ -1,0 +1,7 @@
+(library
+  (name conversions)
+  (public_name conversions)
+  (wrapped false)
+  (flags (:standard -open Imandra_prelude))
+  (libraries venue_prelude core core_time_defaults protocol_exts venue_types)
+)

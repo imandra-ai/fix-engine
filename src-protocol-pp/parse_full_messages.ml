@@ -10,10 +10,8 @@
 
 open Full_message_tags
 open Full_messages
-open Parser_utils
 open Parser_utils.Parser
 open Parse_base_types
-open Parse_datetime
 open Parse_full_tags
 open TimeDefaults_parser
 
@@ -106,7 +104,7 @@ let check_first_three_tags ( msg : (string * string) list ) : string option =
 ;;
 
 let check_tags_are_integers ( msg : (string * string) list ) : bool =
-    List.for_all ( fun (k,v) ->
+    List.for_all ( fun (k,_v) ->
         try int_of_string k > 0 with _ -> false
     ) msg
 ;;
@@ -121,7 +119,7 @@ let valid_body_length ( msg : (string * string) list ) : bool =
         let rec scan n msg = match msg with
             | ( "8", _ )::tl 
             | ( "9", _ )::tl -> scan n tl
-            | ("10", _ )::tl -> n
+            | ("10", _ )::_tl -> n
             | (  k , v )::tl -> n + scan String.(length k + length v + 2) tl
             | [] -> n in 
         scan 0 msg 
@@ -144,7 +142,7 @@ let valid_checksum ( msg : (string * string) list ) : bool  =
         in
     let checksum, msg_checksum =
         let rec scan n msg = match msg with
-            | ("10", v )::tl -> ( n mod 256 , v )
+            | ("10", v )::_tl -> ( n mod 256 , v )
             | (  k , v )::tl -> scan (checksum k + checksum v + 62 + n) tl
             | [] -> ( n mod 256 , "") in 
         scan 0 msg
@@ -169,7 +167,7 @@ let make_session_reject reason tagstr msg =
     let msg_tag = List.assoc "35" msg |> parse_full_msg_tag in
     let field_tag = match msg_tag with 
         | None -> None 
-        | Some msg_tag -> parse_full_field_tag tagstr 
+        | Some _msg_tag -> parse_full_field_tag tagstr 
         in
     SessionRejectedMsg {
         srej_msg_msg_seq_num   = seq_num   ;

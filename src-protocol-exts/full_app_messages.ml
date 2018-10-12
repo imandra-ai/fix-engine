@@ -15,7 +15,7 @@ open TimeDefaults;;
  6. Reject orders
  7. Report post-trade fees calculations associated with a trade*)
 type full_fix_executionreport_data = {
-    (** OrderID is required to be unique for each chain of orders.*)
+    (* OrderID is required to be unique for each chain of orders.*)
     f_ExecutionReport_OrderID : string option;
     (** Can be used to provide order id used by exchange or executing system.*)
     f_ExecutionReport_SecondaryOrderID : string option;
@@ -255,7 +255,7 @@ type full_fix_executionreport_data = {
 
 (** The new order message type is used by institutions wishing to electronically submit securities and forex orders to a broker for execution.*)
 type full_fix_newordersingle_data = {
-    (** Unique identifier of the order as assigned by institution or by the intermediary (CIV term, not a hub/service bureau) with closest association with the investor.*)
+    (* Unique identifier of the order as assigned by institution or by the intermediary (CIV term, not a hub/service bureau) with closest association with the investor.*)
     f_NewOrderSingle_ClOrdID : string option;
     f_NewOrderSingle_SecondaryClOrdID : string option;
     f_NewOrderSingle_ClOrdLinkID : string option;
