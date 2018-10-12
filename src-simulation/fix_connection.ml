@@ -48,7 +48,7 @@ let read_int file =
     let () = close_in chn in
     int_of_string num
   with
-    exn -> 0
+    _exn -> 0
 ;;
 
 let read_seqns dir =
@@ -89,7 +89,6 @@ let do_timechange mailbox =
 (** Heartbeat thread  *)
 
 let rec heartbeat_thread mailbox =
-  let open Fix_engine_state in
   Lwt_unix.sleep (1.0) >>= fun () -> 
   do_timechange mailbox >>= fun () -> 
   heartbeat_thread mailbox
@@ -164,7 +163,7 @@ let create config (inch, outch) =
     dest_comp_id = engine_state.fe_target_comp_id;
     reset_seq_num = config.reset_seq
   } ) in  
-  let mailbox, global_state = 
+  let mailbox, _global_state = 
     Fix_global_state.start 
       ~pub:config.pub_callback 
       engine_state 

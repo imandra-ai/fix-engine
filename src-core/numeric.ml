@@ -2938,394 +2938,394 @@ let float_is_one_6 (f : fix_float_6)  : bool =
     )
 ;;
 
-let float_higher_precision_0_0 (f : fix_float_0) (x : fix_float_0)  : bool =
+let float_higher_precision_0_0 (_f : fix_float_0) (_x : fix_float_0)  : bool =
     false
 ;;
 
-let float_higher_precision_0_1 (f : fix_float_0) (x : fix_float_1)  : bool =
+let float_higher_precision_0_1 (_f : fix_float_0) (_x : fix_float_1)  : bool =
     false
 ;;
 
-let float_higher_precision_0_2 (f : fix_float_0) (x : fix_float_2)  : bool =
+let float_higher_precision_0_2 (_f : fix_float_0) (_x : fix_float_2)  : bool =
     false
 ;;
 
-let float_higher_precision_0_3 (f : fix_float_0) (x : fix_float_3)  : bool =
+let float_higher_precision_0_3 (_f : fix_float_0) (_x : fix_float_3)  : bool =
     false
 ;;
 
-let float_higher_precision_0_4 (f : fix_float_0) (x : fix_float_4)  : bool =
+let float_higher_precision_0_4 (_f : fix_float_0) (_x : fix_float_4)  : bool =
     false
 ;;
 
-let float_higher_precision_0_5 (f : fix_float_0) (x : fix_float_5)  : bool =
+let float_higher_precision_0_5 (_f : fix_float_0) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_higher_precision_0_6 (f : fix_float_0) (x : fix_float_6)  : bool =
+let float_higher_precision_0_6 (_f : fix_float_0) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_higher_precision_1_0 (f : fix_float_1) (x : fix_float_0)  : bool =
+let float_higher_precision_1_0 (_f : fix_float_1) (_x : fix_float_0)  : bool =
     true
 ;;
 
-let float_higher_precision_1_1 (f : fix_float_1) (x : fix_float_1)  : bool =
+let float_higher_precision_1_1 (_f : fix_float_1) (_x : fix_float_1)  : bool =
     false
 ;;
 
-let float_higher_precision_1_2 (f : fix_float_1) (x : fix_float_2)  : bool =
+let float_higher_precision_1_2 (_f : fix_float_1) (_x : fix_float_2)  : bool =
     false
 ;;
 
-let float_higher_precision_1_3 (f : fix_float_1) (x : fix_float_3)  : bool =
+let float_higher_precision_1_3 (_f : fix_float_1) (_x : fix_float_3)  : bool =
     false
 ;;
 
-let float_higher_precision_1_4 (f : fix_float_1) (x : fix_float_4)  : bool =
+let float_higher_precision_1_4 (_f : fix_float_1) (_x : fix_float_4)  : bool =
     false
 ;;
 
-let float_higher_precision_1_5 (f : fix_float_1) (x : fix_float_5)  : bool =
+let float_higher_precision_1_5 (_f : fix_float_1) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_higher_precision_1_6 (f : fix_float_1) (x : fix_float_6)  : bool =
+let float_higher_precision_1_6 (_f : fix_float_1) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_higher_precision_2_0 (f : fix_float_2) (x : fix_float_0)  : bool =
+let float_higher_precision_2_0 (_f : fix_float_2) (_x : fix_float_0)  : bool =
     true
 ;;
 
-let float_higher_precision_2_1 (f : fix_float_2) (x : fix_float_1)  : bool =
+let float_higher_precision_2_1 (_f : fix_float_2) (_x : fix_float_1)  : bool =
     true
 ;;
 
-let float_higher_precision_2_2 (f : fix_float_2) (x : fix_float_2)  : bool =
+let float_higher_precision_2_2 (_f : fix_float_2) (_x : fix_float_2)  : bool =
     false
 ;;
 
-let float_higher_precision_2_3 (f : fix_float_2) (x : fix_float_3)  : bool =
+let float_higher_precision_2_3 (_f : fix_float_2) (_x : fix_float_3)  : bool =
     false
 ;;
 
-let float_higher_precision_2_4 (f : fix_float_2) (x : fix_float_4)  : bool =
+let float_higher_precision_2_4 (_f : fix_float_2) (_x : fix_float_4)  : bool =
     false
 ;;
 
-let float_higher_precision_2_5 (f : fix_float_2) (x : fix_float_5)  : bool =
+let float_higher_precision_2_5 (_f : fix_float_2) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_higher_precision_2_6 (f : fix_float_2) (x : fix_float_6)  : bool =
+let float_higher_precision_2_6 (_f : fix_float_2) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_higher_precision_3_0 (f : fix_float_3) (x : fix_float_0)  : bool =
+let float_higher_precision_3_0 (_f : fix_float_3) (_x : fix_float_0)  : bool =
     true
 ;;
 
-let float_higher_precision_3_1 (f : fix_float_3) (x : fix_float_1)  : bool =
+let float_higher_precision_3_1 (_f : fix_float_3) (_x : fix_float_1)  : bool =
     true
 ;;
 
-let float_higher_precision_3_2 (f : fix_float_3) (x : fix_float_2)  : bool =
+let float_higher_precision_3_2 (_f : fix_float_3) (_x : fix_float_2)  : bool =
     true
 ;;
 
-let float_higher_precision_3_3 (f : fix_float_3) (x : fix_float_3)  : bool =
+let float_higher_precision_3_3 (_f : fix_float_3) (_x : fix_float_3)  : bool =
     false
 ;;
 
-let float_higher_precision_3_4 (f : fix_float_3) (x : fix_float_4)  : bool =
+let float_higher_precision_3_4 (_f : fix_float_3) (_x : fix_float_4)  : bool =
     false
 ;;
 
-let float_higher_precision_3_5 (f : fix_float_3) (x : fix_float_5)  : bool =
+let float_higher_precision_3_5 (_f : fix_float_3) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_higher_precision_3_6 (f : fix_float_3) (x : fix_float_6)  : bool =
+let float_higher_precision_3_6 (_f : fix_float_3) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_higher_precision_4_0 (f : fix_float_4) (x : fix_float_0)  : bool =
+let float_higher_precision_4_0 (_f : fix_float_4) (_x : fix_float_0)  : bool =
     true
 ;;
 
-let float_higher_precision_4_1 (f : fix_float_4) (x : fix_float_1)  : bool =
+let float_higher_precision_4_1 (_f : fix_float_4) (_x : fix_float_1)  : bool =
     true
 ;;
 
-let float_higher_precision_4_2 (f : fix_float_4) (x : fix_float_2)  : bool =
+let float_higher_precision_4_2 (_f : fix_float_4) (_x : fix_float_2)  : bool =
     true
 ;;
 
-let float_higher_precision_4_3 (f : fix_float_4) (x : fix_float_3)  : bool =
+let float_higher_precision_4_3 (_f : fix_float_4) (_x : fix_float_3)  : bool =
     true
 ;;
 
-let float_higher_precision_4_4 (f : fix_float_4) (x : fix_float_4)  : bool =
+let float_higher_precision_4_4 (_f : fix_float_4) (_x : fix_float_4)  : bool =
     false
 ;;
 
-let float_higher_precision_4_5 (f : fix_float_4) (x : fix_float_5)  : bool =
+let float_higher_precision_4_5 (_f : fix_float_4) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_higher_precision_4_6 (f : fix_float_4) (x : fix_float_6)  : bool =
+let float_higher_precision_4_6 (_f : fix_float_4) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_higher_precision_5_0 (f : fix_float_5) (x : fix_float_0)  : bool =
+let float_higher_precision_5_0 (_f : fix_float_5) (_x : fix_float_0)  : bool =
     true
 ;;
 
-let float_higher_precision_5_1 (f : fix_float_5) (x : fix_float_1)  : bool =
+let float_higher_precision_5_1 (_f : fix_float_5) (_x : fix_float_1)  : bool =
     true
 ;;
 
-let float_higher_precision_5_2 (f : fix_float_5) (x : fix_float_2)  : bool =
+let float_higher_precision_5_2 (_f : fix_float_5) (_x : fix_float_2)  : bool =
     true
 ;;
 
-let float_higher_precision_5_3 (f : fix_float_5) (x : fix_float_3)  : bool =
+let float_higher_precision_5_3 (_f : fix_float_5) (_x : fix_float_3)  : bool =
     true
 ;;
 
-let float_higher_precision_5_4 (f : fix_float_5) (x : fix_float_4)  : bool =
+let float_higher_precision_5_4 (_f : fix_float_5) (_x : fix_float_4)  : bool =
     true
 ;;
 
-let float_higher_precision_5_5 (f : fix_float_5) (x : fix_float_5)  : bool =
+let float_higher_precision_5_5 (_f : fix_float_5) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_higher_precision_5_6 (f : fix_float_5) (x : fix_float_6)  : bool =
+let float_higher_precision_5_6 (_f : fix_float_5) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_higher_precision_6_0 (f : fix_float_6) (x : fix_float_0)  : bool =
+let float_higher_precision_6_0 (_f : fix_float_6) (_x : fix_float_0)  : bool =
     true
 ;;
 
-let float_higher_precision_6_1 (f : fix_float_6) (x : fix_float_1)  : bool =
+let float_higher_precision_6_1 (_f : fix_float_6) (_x : fix_float_1)  : bool =
     true
 ;;
 
-let float_higher_precision_6_2 (f : fix_float_6) (x : fix_float_2)  : bool =
+let float_higher_precision_6_2 (_f : fix_float_6) (_x : fix_float_2)  : bool =
     true
 ;;
 
-let float_higher_precision_6_3 (f : fix_float_6) (x : fix_float_3)  : bool =
+let float_higher_precision_6_3 (_f : fix_float_6) (_x : fix_float_3)  : bool =
     true
 ;;
 
-let float_higher_precision_6_4 (f : fix_float_6) (x : fix_float_4)  : bool =
+let float_higher_precision_6_4 (_f : fix_float_6) (_x : fix_float_4)  : bool =
     true
 ;;
 
-let float_higher_precision_6_5 (f : fix_float_6) (x : fix_float_5)  : bool =
+let float_higher_precision_6_5 (_f : fix_float_6) (_x : fix_float_5)  : bool =
     true
 ;;
 
-let float_higher_precision_6_6 (f : fix_float_6) (x : fix_float_6)  : bool =
+let float_higher_precision_6_6 (_f : fix_float_6) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_equal_precision_0_0 (f : fix_float_0) (x : fix_float_0)  : bool =
+let float_equal_precision_0_0 (_f : fix_float_0) (_x : fix_float_0)  : bool =
     true
 ;;
 
-let float_equal_precision_0_1 (f : fix_float_0) (x : fix_float_1)  : bool =
+let float_equal_precision_0_1 (_f : fix_float_0) (_x : fix_float_1)  : bool =
     false
 ;;
 
-let float_equal_precision_0_2 (f : fix_float_0) (x : fix_float_2)  : bool =
+let float_equal_precision_0_2 (_f : fix_float_0) (_x : fix_float_2)  : bool =
     false
 ;;
 
-let float_equal_precision_0_3 (f : fix_float_0) (x : fix_float_3)  : bool =
+let float_equal_precision_0_3 (_f : fix_float_0) (_x : fix_float_3)  : bool =
     false
 ;;
 
-let float_equal_precision_0_4 (f : fix_float_0) (x : fix_float_4)  : bool =
+let float_equal_precision_0_4 (_f : fix_float_0) (_x : fix_float_4)  : bool =
     false
 ;;
 
-let float_equal_precision_0_5 (f : fix_float_0) (x : fix_float_5)  : bool =
+let float_equal_precision_0_5 (_f : fix_float_0) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_equal_precision_0_6 (f : fix_float_0) (x : fix_float_6)  : bool =
+let float_equal_precision_0_6 (_f : fix_float_0) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_equal_precision_1_0 (f : fix_float_1) (x : fix_float_0)  : bool =
+let float_equal_precision_1_0 (_f : fix_float_1) (_x : fix_float_0)  : bool =
     false
 ;;
 
-let float_equal_precision_1_1 (f : fix_float_1) (x : fix_float_1)  : bool =
+let float_equal_precision_1_1 (_f : fix_float_1) (_x : fix_float_1)  : bool =
     true
 ;;
 
-let float_equal_precision_1_2 (f : fix_float_1) (x : fix_float_2)  : bool =
+let float_equal_precision_1_2 (_f : fix_float_1) (_x : fix_float_2)  : bool =
     false
 ;;
 
-let float_equal_precision_1_3 (f : fix_float_1) (x : fix_float_3)  : bool =
+let float_equal_precision_1_3 (_f : fix_float_1) (_x : fix_float_3)  : bool =
     false
 ;;
 
-let float_equal_precision_1_4 (f : fix_float_1) (x : fix_float_4)  : bool =
+let float_equal_precision_1_4 (_f : fix_float_1) (_x : fix_float_4)  : bool =
     false
 ;;
 
-let float_equal_precision_1_5 (f : fix_float_1) (x : fix_float_5)  : bool =
+let float_equal_precision_1_5 (_f : fix_float_1) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_equal_precision_1_6 (f : fix_float_1) (x : fix_float_6)  : bool =
+let float_equal_precision_1_6 (_f : fix_float_1) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_equal_precision_2_0 (f : fix_float_2) (x : fix_float_0)  : bool =
+let float_equal_precision_2_0 (_f : fix_float_2) (_x : fix_float_0)  : bool =
     false
 ;;
 
-let float_equal_precision_2_1 (f : fix_float_2) (x : fix_float_1)  : bool =
+let float_equal_precision_2_1 (_f : fix_float_2) (_x : fix_float_1)  : bool =
     false
 ;;
 
-let float_equal_precision_2_2 (f : fix_float_2) (x : fix_float_2)  : bool =
+let float_equal_precision_2_2 (_f : fix_float_2) (_x : fix_float_2)  : bool =
     true
 ;;
 
-let float_equal_precision_2_3 (f : fix_float_2) (x : fix_float_3)  : bool =
+let float_equal_precision_2_3 (_f : fix_float_2) (_x : fix_float_3)  : bool =
     false
 ;;
 
-let float_equal_precision_2_4 (f : fix_float_2) (x : fix_float_4)  : bool =
+let float_equal_precision_2_4 (_f : fix_float_2) (_x : fix_float_4)  : bool =
     false
 ;;
 
-let float_equal_precision_2_5 (f : fix_float_2) (x : fix_float_5)  : bool =
+let float_equal_precision_2_5 (_f : fix_float_2) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_equal_precision_2_6 (f : fix_float_2) (x : fix_float_6)  : bool =
+let float_equal_precision_2_6 (_f : fix_float_2) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_equal_precision_3_0 (f : fix_float_3) (x : fix_float_0)  : bool =
+let float_equal_precision_3_0 (_f : fix_float_3) (_x : fix_float_0)  : bool =
     false
 ;;
 
-let float_equal_precision_3_1 (f : fix_float_3) (x : fix_float_1)  : bool =
+let float_equal_precision_3_1 (_f : fix_float_3) (_x : fix_float_1)  : bool =
     false
 ;;
 
-let float_equal_precision_3_2 (f : fix_float_3) (x : fix_float_2)  : bool =
+let float_equal_precision_3_2 (_f : fix_float_3) (_x : fix_float_2)  : bool =
     false
 ;;
 
-let float_equal_precision_3_3 (f : fix_float_3) (x : fix_float_3)  : bool =
+let float_equal_precision_3_3 (_f : fix_float_3) (_x : fix_float_3)  : bool =
     true
 ;;
 
-let float_equal_precision_3_4 (f : fix_float_3) (x : fix_float_4)  : bool =
+let float_equal_precision_3_4 (_f : fix_float_3) (_x : fix_float_4)  : bool =
     false
 ;;
 
-let float_equal_precision_3_5 (f : fix_float_3) (x : fix_float_5)  : bool =
+let float_equal_precision_3_5 (_f : fix_float_3) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_equal_precision_3_6 (f : fix_float_3) (x : fix_float_6)  : bool =
+let float_equal_precision_3_6 (_f : fix_float_3) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_equal_precision_4_0 (f : fix_float_4) (x : fix_float_0)  : bool =
+let float_equal_precision_4_0 (_f : fix_float_4) (_x : fix_float_0)  : bool =
     false
 ;;
 
-let float_equal_precision_4_1 (f : fix_float_4) (x : fix_float_1)  : bool =
+let float_equal_precision_4_1 (_f : fix_float_4) (_x : fix_float_1)  : bool =
     false
 ;;
 
-let float_equal_precision_4_2 (f : fix_float_4) (x : fix_float_2)  : bool =
+let float_equal_precision_4_2 (_f : fix_float_4) (_x : fix_float_2)  : bool =
     false
 ;;
 
-let float_equal_precision_4_3 (f : fix_float_4) (x : fix_float_3)  : bool =
+let float_equal_precision_4_3 (_f : fix_float_4) (_x : fix_float_3)  : bool =
     false
 ;;
 
-let float_equal_precision_4_4 (f : fix_float_4) (x : fix_float_4)  : bool =
+let float_equal_precision_4_4 (_f : fix_float_4) (_x : fix_float_4)  : bool =
     true
 ;;
 
-let float_equal_precision_4_5 (f : fix_float_4) (x : fix_float_5)  : bool =
+let float_equal_precision_4_5 (_f : fix_float_4) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_equal_precision_4_6 (f : fix_float_4) (x : fix_float_6)  : bool =
+let float_equal_precision_4_6 (_f : fix_float_4) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_equal_precision_5_0 (f : fix_float_5) (x : fix_float_0)  : bool =
+let float_equal_precision_5_0 (_f : fix_float_5) (_x : fix_float_0)  : bool =
     false
 ;;
 
-let float_equal_precision_5_1 (f : fix_float_5) (x : fix_float_1)  : bool =
+let float_equal_precision_5_1 (_f : fix_float_5) (_x : fix_float_1)  : bool =
     false
 ;;
 
-let float_equal_precision_5_2 (f : fix_float_5) (x : fix_float_2)  : bool =
+let float_equal_precision_5_2 (_f : fix_float_5) (_x : fix_float_2)  : bool =
     false
 ;;
 
-let float_equal_precision_5_3 (f : fix_float_5) (x : fix_float_3)  : bool =
+let float_equal_precision_5_3 (_f : fix_float_5) (_x : fix_float_3)  : bool =
     false
 ;;
 
-let float_equal_precision_5_4 (f : fix_float_5) (x : fix_float_4)  : bool =
+let float_equal_precision_5_4 (_f : fix_float_5) (_x : fix_float_4)  : bool =
     false
 ;;
 
-let float_equal_precision_5_5 (f : fix_float_5) (x : fix_float_5)  : bool =
+let float_equal_precision_5_5 (_f : fix_float_5) (_x : fix_float_5)  : bool =
     true
 ;;
 
-let float_equal_precision_5_6 (f : fix_float_5) (x : fix_float_6)  : bool =
+let float_equal_precision_5_6 (_f : fix_float_5) (_x : fix_float_6)  : bool =
     false
 ;;
 
-let float_equal_precision_6_0 (f : fix_float_6) (x : fix_float_0)  : bool =
+let float_equal_precision_6_0 (_f : fix_float_6) (_x : fix_float_0)  : bool =
     false
 ;;
 
-let float_equal_precision_6_1 (f : fix_float_6) (x : fix_float_1)  : bool =
+let float_equal_precision_6_1 (_f : fix_float_6) (_x : fix_float_1)  : bool =
     false
 ;;
 
-let float_equal_precision_6_2 (f : fix_float_6) (x : fix_float_2)  : bool =
+let float_equal_precision_6_2 (_f : fix_float_6) (_x : fix_float_2)  : bool =
     false
 ;;
 
-let float_equal_precision_6_3 (f : fix_float_6) (x : fix_float_3)  : bool =
+let float_equal_precision_6_3 (_f : fix_float_6) (_x : fix_float_3)  : bool =
     false
 ;;
 
-let float_equal_precision_6_4 (f : fix_float_6) (x : fix_float_4)  : bool =
+let float_equal_precision_6_4 (_f : fix_float_6) (_x : fix_float_4)  : bool =
     false
 ;;
 
-let float_equal_precision_6_5 (f : fix_float_6) (x : fix_float_5)  : bool =
+let float_equal_precision_6_5 (_f : fix_float_6) (_x : fix_float_5)  : bool =
     false
 ;;
 
-let float_equal_precision_6_6 (f : fix_float_6) (x : fix_float_6)  : bool =
+let float_equal_precision_6_6 (_f : fix_float_6) (_x : fix_float_6)  : bool =
     true
 ;;

@@ -93,18 +93,18 @@ let check_expected_compatible received expected =
     else
     expected |> Lwt_list.iter_s (fun (ek, ev) ->
         if (ek = "9") || (ek = "10") then Lwt.return_unit else
-        if (ek = "58") then Lwt.return_unit else (** NOTE: Ignoring Text<58> tag for now *)
+        if (ek = "58") then Lwt.return_unit else (* NOTE: Ignoring Text<58> tag for now *)
         if not ( List.mem_assoc ek received ) then
             Lwt_io.printf "  Error: expected key \"%s\" not present in the received message.\n" ek
         else begin
             let rv = List.assoc ek received in  
             if rv = ev then Lwt.return_unit else
             match Parse_datetime.parse_UTCTimestamp_milli rv, Parse_datetime.parse_UTCTimestamp_milli ev  with
-            | Some rt, Some et -> Lwt.return_unit 
+            | Some _rt, Some _et -> Lwt.return_unit 
             | _, _ -> Lwt_io.printf "  Error: for the key \"%s\" expected value was \"%s\", got \"%s\" instead.\n" ek ev rv           
         end
     ) >>= fun () ->
-    received |> Lwt_list.iter_s (fun (rk, rv) ->
+    received |> Lwt_list.iter_s (fun (rk, _rv) ->
         if not ( List.mem_assoc rk expected ) then    
            Lwt_io.printf "  Error: received a key \"%s\" not present in the expected message.\n" rk
         else Lwt.return_unit
@@ -168,7 +168,7 @@ let setup_client msgs =
             Lwt_list.iter_s perform_action msgs        
         end
     end 
-    begin fun x -> 
+    begin fun _x -> 
         Lwt_io.printl "Unhandled exception" >>= fun () -> 
         Lwt_io.flush_all ()
     end
@@ -179,7 +179,7 @@ let def_reader filename =
     let config_actions = parse_file filename in
     let rec scan = function
         | InitiateAction Connect :: tl -> setup_client tl
-        | ExpectAction Connect :: tl -> failwith "Not implemented"
+        | ExpectAction Connect :: _tl -> failwith "Not implemented"
         | _ :: tl -> scan tl
         | [] -> Lwt.return_unit
         in

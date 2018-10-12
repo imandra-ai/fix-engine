@@ -3,7 +3,7 @@ open Act_checks;;
 open Actions;;
 open State;;
 
-let receive_action_x (m_state : model_state) (action_data : m_action_fix_x)  =
+let receive_action_x (m_state : model_state) (_action_data : m_action_fix_x)  =
     m_state
 ;;
 

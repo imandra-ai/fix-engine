@@ -8,7 +8,6 @@
 
 *)
 
-open Full_admin_tags;;
 open Full_admin_messages;;
 open Encode_base_types;;
 open Encode_datetime;;

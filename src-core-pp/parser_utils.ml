@@ -156,15 +156,15 @@ module Parser = struct
     let rev_collect (lst: 'a t list) : 'a list t =
         let rec flatten acc = function
         | ParseSuccess x :: tl -> flatten (x::acc) tl
-        | UnknownMessageTag        x :: tl -> UnknownMessageTag  x
-        | RequiredTagMissing       x :: tl -> RequiredTagMissing x
-        | DuplicateTag             x :: tl -> DuplicateTag       x
-        | WrongValueFormat         x :: tl -> WrongValueFormat   x
-        | UndefinedTag             x :: tl -> UndefinedTag       x
-        | EmptyValue               x :: tl -> EmptyValue         x
-        | IncorrectNumInGroupCount x :: tl -> IncorrectNumInGroupCount x
-        | RepeatingGroupOutOfOrder x :: tl -> RepeatingGroupOutOfOrder x
-        | GarbledMessage             :: tl -> GarbledMessage
+        | UnknownMessageTag        x :: _tl -> UnknownMessageTag  x
+        | RequiredTagMissing       x :: _tl -> RequiredTagMissing x
+        | DuplicateTag             x :: _tl -> DuplicateTag       x
+        | WrongValueFormat         x :: _tl -> WrongValueFormat   x
+        | UndefinedTag             x :: _tl -> UndefinedTag       x
+        | EmptyValue               x :: _tl -> EmptyValue         x
+        | IncorrectNumInGroupCount x :: _tl -> IncorrectNumInGroupCount x
+        | RepeatingGroupOutOfOrder x :: _tl -> RepeatingGroupOutOfOrder x
+        | GarbledMessage             :: _tl -> GarbledMessage
         | [] -> ParseSuccess acc in
         flatten [] lst
 
@@ -246,7 +246,7 @@ module Parser = struct
             | [] -> [], [] | (v, following_msg)::tl -> ( (v,[])::tl, leading_msg @ following_msg ) in
         (* Check that every group have parsed cleanly *)
         let groups = groups |> List.map 
-            ( function (v, []) -> v | ( _ , (k , _ )::tl ) -> RepeatingGroupOutOfOrder k ) in
+            ( function (v, []) -> v | ( _ , (k , _ )::_tl ) -> RepeatingGroupOutOfOrder k ) in
         (* "Monadic flatten" the list and pass into the continuation with the rest of the message *)
         rev_collect groups >|>= f msg 
 
@@ -267,7 +267,7 @@ module Parser = struct
         | ParseSuccess _ -> 
             ( match msg with 
             | [] -> result 
-            | (tag,v)::tl -> UndefinedTag tag )
+            | (tag,_v)::_tl -> UndefinedTag tag )
         | _ -> result
 
     let rec get_top_and_last (l:'a list): ('a list * 'a option) = 

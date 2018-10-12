@@ -17,9 +17,9 @@ let zmq_publish socket msg =
     let rtime = Fix_connection.get_last_received_utctimestamp () in
     let ztime = Fix_connection.get_current_utctimstamp () in
     let stime = Fix_connection.get_last_received_sendingtime () in
-    let rtime = rtime |> Datetime_json.utctimestamp_to_json in
-    let ztime = ztime |> Datetime_json.utctimestamp_to_json in
-    let stime = stime |> Datetime_json.utctimestamp_to_json in
+    let rtime = rtime |> TimeDefaults_json.utctimestamp_to_json in
+    let ztime = ztime |> TimeDefaults_json.utctimestamp_to_json in
+    let stime = stime |> TimeDefaults_json.utctimestamp_to_json in
     let msg = match msg with
         | `Assoc pairs -> `Assoc (
 	    ( "received_fix" , rtime ) :: 
@@ -43,7 +43,7 @@ let rec zmq_rep_loop (socket, mailbox) =
         try  
             Json_to_action.json_to_fix_action (Yojson.Basic.from_string msg)
         with 
-            ex -> None
+            _ex -> None
         in
     match action with 
     | None -> (
@@ -89,7 +89,6 @@ let run_client fixhost fixport config zmqpub zmqrep =
     (* Creating the address *)
     let addr = Unix.( (gethostbyname fixhost).h_addr_list.(0) ) in      
     let addr = Unix.( ADDR_INET( addr , fixport ) ) in
-    (**)
     let () = [
         "(*********                   FIX Engine Client                           *********)";
         "(*********  (c)Copyright Aesthetic Integration Limited., 2014 - 2018     *********)\n";

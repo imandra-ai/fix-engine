@@ -183,8 +183,8 @@ let float_opt_to_json x = float_6_opt_to_json x;;
 
 
 let json_to_float_opt = json_to_float_6_opt;;
-(**
-  *  FIX_String
+(*
+  FIX_String
 *)
 
 let string_to_json x : json = 

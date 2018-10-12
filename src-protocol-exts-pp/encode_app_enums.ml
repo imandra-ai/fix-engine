@@ -532,7 +532,7 @@ let enncode_inner_CorporateAction (d)  =
     )
 ;;
 
-let rec encode_CorporateAction (d)  =
+let encode_CorporateAction (d)  =
     list_to_split (List.map enncode_inner_CorporateAction d) ' '
 ;;
 
@@ -785,7 +785,7 @@ let enncode_inner_ExecInst (d)  =
     )
 ;;
 
-let rec encode_ExecInst (d)  =
+let encode_ExecInst (d)  =
     list_to_split (List.map enncode_inner_ExecInst d) ' '
 ;;
 
@@ -862,7 +862,7 @@ let enncode_inner_FinancialStatus (d)  =
     )
 ;;
 
-let rec encode_FinancialStatus (d)  =
+let encode_FinancialStatus (d)  =
     list_to_split (List.map enncode_inner_FinancialStatus d) ' '
 ;;
 
@@ -1354,7 +1354,7 @@ let enncode_inner_OpenCloseSettlFlag (d)  =
     )
 ;;
 
-let rec encode_OpenCloseSettlFlag (d)  =
+let encode_OpenCloseSettlFlag (d)  =
     list_to_split (List.map enncode_inner_OpenCloseSettlFlag d) ' '
 ;;
 
@@ -1447,7 +1447,7 @@ let enncode_inner_OrderRestrictions (d)  =
     )
 ;;
 
-let rec encode_OrderRestrictions (d)  =
+let encode_OrderRestrictions (d)  =
     list_to_split (List.map enncode_inner_OrderRestrictions d) ' '
 ;;
 
@@ -1884,7 +1884,7 @@ let enncode_inner_QuoteCondition (d)  =
     )
 ;;
 
-let rec encode_QuoteCondition (d)  =
+let encode_QuoteCondition (d)  =
     list_to_split (List.map enncode_inner_QuoteCondition d) ' '
 ;;
 
@@ -2077,7 +2077,7 @@ let enncode_inner_Scope (d)  =
     )
 ;;
 
-let rec encode_Scope (d)  =
+let encode_Scope (d)  =
     list_to_split (List.map enncode_inner_Scope d) ' '
 ;;
 
@@ -2633,7 +2633,7 @@ let enncode_inner_TradeCondition (d)  =
     )
 ;;
 
-let rec encode_TradeCondition (d)  =
+let encode_TradeCondition (d)  =
     list_to_split (List.map enncode_inner_TradeCondition d) ' '
 ;;
 

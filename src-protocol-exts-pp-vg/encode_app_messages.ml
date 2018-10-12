@@ -1,1 +1,1 @@
-let encode_app_msg_data msg = [];;
+let encode_app_msg_data _msg = [];;

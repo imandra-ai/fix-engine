@@ -1,6 +1,4 @@
 (* Aesthetic Integration copyright 2018 *)
-open Datetime;;
-open Numeric;;
 
 type m_action_fix_x = {
     mod_f_x_x : int
