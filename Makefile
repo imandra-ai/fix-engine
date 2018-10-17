@@ -24,6 +24,8 @@ doc:
 	@echo "src-protocol-exts-pp-vg" > dune-ignore 
 	@echo "src-protocol-exts-vg" >> dune-ignore 
 	dune build @doc
+	mkdir -p _pages/doc
+	cp -r _build/default/_doc/_html/* _pages/doc/
 	rm dune-ignore
 
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
