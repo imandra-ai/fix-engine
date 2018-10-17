@@ -26,6 +26,7 @@ doc:
 	dune build @doc
 	mkdir -p _pages/doc
 	cp -r _build/default/_doc/_html/* _pages/doc/
+	rm -rf _pages/doc/odoc.css
 	rm dune-ignore
 
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
@@ -60,7 +61,7 @@ _opam:
 	opam install -y ocaml-base-compiler.4.05.0
 
 clean:
-	duneer clean
+	dune clean
 
 .PHONY: build build_vgs run run_server clean doc
 
