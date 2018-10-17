@@ -1,7 +1,7 @@
-      @charset "UTF-8";
+@charset "UTF-8";
 /* Copyright (c) 2016 Daniel C. Bünzli. All rights reserved.
    Distributed under the ISC license, see terms at the end of the file.
-   odoc v1.1.1 */
+   odoc 1.2.0 */
 
 /* Reset a few things. */
 
@@ -15,27 +15,20 @@ menu,nav,output,ruby,section,summary,time,mark,audio,video
   font-size:100%; font: inherit; line-height:inherit; vertical-align:baseline;
   text-align: inherit; color: inherit; background: transparent; }
 
-table { 
-  border-collapse: collapse; 
-  border-spacing: 0;
-}
+table { border-collapse: collapse; border-spacing: 0; }
 *,  *:before,  *:after { box-sizing: border-box; }
 
-body {
-  font-family: Helvetica, "DejaVu Sans", Arial, sans-serif;
+body
+{ font-family: Helvetica, "DejaVu Sans", Arial, sans-serif;
   font-weight: normal;
   font-size: 0.875rem;
   line-height:1.25rem;
   text-align: left;
-  width: 100%;
-  padding-top: 1rem;
-  padding-left: 3.75rem;
-  color: #222; 
-  background-color: #afafaf;
-  padding-bottom: 20em;
-  background: url("img/transition_docs_bottom.svg") 100% 100% / 1440px 220px repeat-x;
-  min-height: 100vh;
-}
+  min-width: 40ex;
+  max-width: 78ex;
+  padding: 1.25rem;
+  margin-left: 3.75rem;
+  color: #222; background: #FAFAFA; }
 
 /* Basic markup elements */
 
@@ -45,6 +38,8 @@ em { font-style: italic; }
 sup { vertical-align: super; }
 sub { vertical-align: sub; }
 sup, sub { font-size : 0.75rem; line-height: 0; margin-left: 0.2ex; }
+
+p, div, img { margin-top: 1.25rem; }
 
 ul, ol
 { margin-top: 0.625rem; margin-bottom: 0.625rem; list-style-position: outside }
@@ -62,37 +57,24 @@ li > *:first-child { margin-top: 0 }
 
 /* Links and anchors */
 
-a { 
-  text-decoration: none; color:#2C5CBD; 
-  background: #f7f7f7;
-}
-
-a:hover {
-  text-decoration: none;
-  background: #ffffff;
-}
-
+a { text-decoration:none; color:#2C5CBD; }
+a:hover { box-shadow:0 1px 0 0 #2C5CBD; }
 *:target /* Linked highlight */
-{ background-color: #EAEAE2;
-  box-shadow: 0 0 0 2px #EAEAE2, 0 0 0 3px #DDD; }
+{ background-color: #FFF8E5;
+  box-shadow: 0 0 0 2px #FFF8E5, 0 0 0 3px #DDD; }
 
 .spec:hover > a.anchor, /* FIXME remove */
 .anchored:hover a.anchor { visibility: visible; }
 
-a.anchor:before {
-  content: "#";
-}
-
-a.anchor:hover {}
-
-a.anchor { 
-  visibility: hidden; position: absolute; /* top: 0px; */
+a.anchor:before { content: "#" }
+a.anchor:hover {  box-shadow: none; text-decoration: underline }
+a.anchor
+{ visibility: hidden; position: absolute; /* top: 0px; */
   margin-left: -3ex;
   font-weight: normal;
   font-style: normal;
   padding-right: 1ex; padding-left: 1ex; /* To remain selectable */
-  color: #2C5CBD;
-}
+  color: #AAA; }
 
 .xref-unresolved { box-shadow:0 1px 0 0 red }
 
@@ -116,15 +98,10 @@ h3, .h8 { font-size: 1.125rem; }
 h2 + h3, .h7 + .h8 { margin-top: 0.625rem; }
 
 /* Preformatted and code */
-code {;
-  padding: 5px;
-  background: #f7f7f7;
-}
-code a {
-  background: #f7f7f7;
-}
+
 tt, code, pre
-{ font-family: Menlo, "DejaVu Sans Mono", "Bitstream Vera Sans Mono", monospace;
+{ font-family: Menlo, "DejaVu Sans Mono", "Bitstream Vera Sans Mono",
+  monospace;
   font-weight: normal;
   font-size: 0.75rem; }
 
@@ -240,27 +217,6 @@ h1 + .modules, h1 + .sel { margin-top: 0.625rem }
 { body { color: black; background: white; }
   body nav:first-child { visibility: hidden; }}
 
-
-/* AI Customs */
-.logo_fix_engine {
-  width: auto;
-  height: 6.44rem;
-}
-.logo_main {
-  width: auto;
-  height: 8.03rem;
-  margin-top: 1.24rem;
-}
-.space_after {
-  margin-bottom: 2rem;
-}
-nav {
-  background: url("img/imandra_fix_engine_documentation.svg") 0 1.26rem / auto 8.01rem;
-  padding-top: 11rem;
-  height: 12rem;
-  padding-left: 0;
-  background-repeat: no-repeat;
-}
 /*---------------------------------------------------------------------------
    Copyright (c) 2016 Daniel C. Bünzli
 
