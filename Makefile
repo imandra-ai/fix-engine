@@ -27,6 +27,7 @@ doc:
 	mkdir -p _pages/doc
 	cp -r _build/default/_doc/_html/* _pages/doc/
 	rm -rf _pages/doc/odoc.css
+	sed -i '' -e 's/<body>/<body><nav><\/nav>/g' _pages/doc/index.html
 	rm dune-ignore
 
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
