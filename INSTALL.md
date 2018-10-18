@@ -34,15 +34,15 @@ To update the documentation in the `gh-pages` branch, you can do the following:
 - stash the changes in the `doc` folder
 
 ```
-git add doc/*
+git add _pages/doc/*
 git stash
 ```
 
 - checkout gh-pages and apply the stash    
 
 ```
-git checkout gh-pages 
-git checkout stash -- doc
+git checkout gh-pages-src
+git checkout stash -- _pages
 git commit -m "Update documentation"
-git push origin gh-pages
+git push origin gh-pages-src
 ```

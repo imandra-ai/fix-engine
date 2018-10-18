@@ -9,6 +9,7 @@
         fix_engine
         core_pp
         core_time_defaults
+        core_time_defaults_pp
         protocol_pp
         conversions    
   )

@@ -2,5 +2,5 @@
   (name        protocol_exts_pp_vg)
   (public_name protocol_exts_pp_vg)
   (wrapped  false)
-  (libraries yojson core_pp core_time_defaults_pp protocol_exts_vg)
+  (libraries core_time_defaults yojson core_pp core_time_defaults_pp protocol_exts_vg)
 )
