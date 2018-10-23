@@ -2,5 +2,5 @@
   (name        core_pp)
   (public_name core_pp)
   (wrapped  false)
-  (libraries core yojson)
+  (libraries decoders-yojson decoders core yojson)
 )

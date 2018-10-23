@@ -10,7 +10,10 @@
 open Yojson;;
 open Datetime;;
 open Base_types_json;;
-module JU = Yojson.Basic.Util ;;
+module JU = Yojson.Basic.Util;;
+module D = Decoders_yojson.Basic.Decode;; 
+open D.Infix;;
+
 
 
 let filter_nulls =
@@ -29,6 +32,26 @@ let utctimestamp_milli_to_json ( ts : fix_utctimestamp_milli ) : json =
   ] |> filter_nulls in
   `Assoc list_assoc
 ;;
+
+let utctimestamp_milli_decoder : fix_utctimestamp_milli Decoders_yojson.Basic.Decode.decoder = 
+  (D.field "utc_timestamp_year" D.int) >>= (fun utc_timestamp_year -> 
+      (D.field "utc_timestamp_month" D.int) >>= (fun utc_timestamp_month ->
+          (D.field "utc_timestamp_day" D.int) >>= (fun utc_timestamp_day -> 
+              (D.field "utc_timestamp_hour" D.int) >>= (fun utc_timestamp_hour ->
+                  (D.field "utc_timestamp_minute" D.int) >>= (fun utc_timestamp_minute ->
+                      (D.field "utc_timestamp_second" D.int) >>= (fun utc_timestamp_second ->
+                          (D.maybe (D.field "utc_timestamp_millisec" D.int)) >>= (fun utc_timestamp_millisec ->
+                              D.succeed {
+                                utc_timestamp_year   
+                              ; utc_timestamp_month  
+                              ; utc_timestamp_day    
+                              ; utc_timestamp_hour   
+                              ; utc_timestamp_minute 
+                              ; utc_timestamp_second 
+                              ; utc_timestamp_millisec
+                              })))))));;
+
+
 
 let json_to_utctimestamp_milli_opt json = 
   match JU.(json |> member "utc_timestamp_year"   |> to_int_option ) with None -> None | Some utc_timestamp_year    ->
