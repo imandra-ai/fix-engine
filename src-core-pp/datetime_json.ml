@@ -34,22 +34,22 @@ let utctimestamp_milli_to_json ( ts : fix_utctimestamp_milli ) : json =
 ;;
 
 let utctimestamp_milli_decoder : fix_utctimestamp_milli Decoders_yojson.Basic.Decode.decoder = 
-  (D.field "utc_timestamp_year" D.int) >>= (fun utc_timestamp_year -> 
-      (D.field "utc_timestamp_month" D.int) >>= (fun utc_timestamp_month ->
-          (D.field "utc_timestamp_day" D.int) >>= (fun utc_timestamp_day -> 
-              (D.field "utc_timestamp_hour" D.int) >>= (fun utc_timestamp_hour ->
-                  (D.field "utc_timestamp_minute" D.int) >>= (fun utc_timestamp_minute ->
-                      (D.field "utc_timestamp_second" D.int) >>= (fun utc_timestamp_second ->
-                          (D.maybe (D.field "utc_timestamp_millisec" D.int)) >>= (fun utc_timestamp_millisec ->
-                              D.succeed {
-                                utc_timestamp_year   
-                              ; utc_timestamp_month  
-                              ; utc_timestamp_day    
-                              ; utc_timestamp_hour   
-                              ; utc_timestamp_minute 
-                              ; utc_timestamp_second 
-                              ; utc_timestamp_millisec
-                              })))))));;
+  (D.field "utc_timestamp_year" D.int) >>= fun utc_timestamp_year -> 
+  (D.field "utc_timestamp_month" D.int) >>= fun utc_timestamp_month ->
+  (D.field "utc_timestamp_day" D.int) >>= fun utc_timestamp_day -> 
+  (D.field "utc_timestamp_hour" D.int) >>= fun utc_timestamp_hour ->
+  (D.field "utc_timestamp_minute" D.int) >>= fun utc_timestamp_minute ->
+  (D.field "utc_timestamp_second" D.int) >>= fun utc_timestamp_second ->
+  D.maybe (D.field "utc_timestamp_millisec" D.int) >>= fun utc_timestamp_millisec ->
+  D.succeed {
+    utc_timestamp_year   
+  ; utc_timestamp_month  
+  ; utc_timestamp_day    
+  ; utc_timestamp_hour   
+  ; utc_timestamp_minute 
+  ; utc_timestamp_second 
+  ; utc_timestamp_millisec
+  };;
 
 let utctimestamp_micro_to_json ( ts : fix_utctimestamp_micro ) : json =
   let list_assoc = [
@@ -65,22 +65,22 @@ let utctimestamp_micro_to_json ( ts : fix_utctimestamp_micro ) : json =
 ;;
 
 let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.Decode.decoder = 
-  (D.field "utc_timestamp_year" D.int) >>= (fun utc_timestamp_year -> 
-      (D.field "utc_timestamp_month" D.int) >>= (fun utc_timestamp_month ->
-          (D.field "utc_timestamp_day" D.int) >>= (fun utc_timestamp_day -> 
-              (D.field "utc_timestamp_hour" D.int) >>= (fun utc_timestamp_hour ->
-                  (D.field "utc_timestamp_minute" D.int) >>= (fun utc_timestamp_minute ->
-                      (D.field "utc_timestamp_second" D.int) >>= (fun utc_timestamp_second ->
-                          (D.maybe (D.field "utc_timestamp_microsec" D.int)) >>= (fun utc_timestamp_microsec ->
-                              D.succeed {
-                                utc_timestamp_year   
-                              ; utc_timestamp_month  
-                              ; utc_timestamp_day    
-                              ; utc_timestamp_hour   
-                              ; utc_timestamp_minute 
-                              ; utc_timestamp_second 
-                              ; utc_timestamp_microsec
-                              })))))));;
+  (D.field "utc_timestamp_year" D.int) >>= fun utc_timestamp_year -> 
+  (D.field "utc_timestamp_month" D.int) >>= fun utc_timestamp_month ->
+  (D.field "utc_timestamp_day" D.int) >>= fun utc_timestamp_day -> 
+  (D.field "utc_timestamp_hour" D.int) >>= fun utc_timestamp_hour ->
+  (D.field "utc_timestamp_minute" D.int) >>= fun utc_timestamp_minute ->
+  (D.field "utc_timestamp_second" D.int) >>= fun utc_timestamp_second ->
+  D.maybe (D.field "utc_timestamp_microsec" D.int) >>= fun utc_timestamp_microsec ->
+  D.succeed {
+    utc_timestamp_year   
+  ; utc_timestamp_month  
+  ; utc_timestamp_day    
+  ; utc_timestamp_hour   
+  ; utc_timestamp_minute 
+  ; utc_timestamp_second 
+  ; utc_timestamp_microsec
+  };;
 
 let utctimestamp_milli_opt_to_json = function
   | None    -> `Null
@@ -105,20 +105,20 @@ let duration_to_json ( d : fix_duration ) =
 ;;
 
 let duration_decoder : fix_duration Decoders_yojson.Basic.Decode.decoder = 
-  (D.field "dur_years" D.int) >>= (fun dur_years -> 
-      (D.field "dur_months" D.int) >>= (fun dur_months ->
-          (D.field "dur_days" D.int) >>= (fun dur_days -> 
-              (D.field "dur_hours" D.int) >>= (fun dur_hours ->
-                  (D.field "dur_minutes" D.int) >>= (fun dur_minutes ->
-                      (D.field "dur_seconds" D.int) >>= (fun dur_seconds ->                        
-                          D.succeed {
-                            dur_years   
-                          ; dur_months  
-                          ; dur_days    
-                          ; dur_hours   
-                          ; dur_minutes 
-                          ; dur_seconds                            
-                          }))))));;
+  (D.field "dur_years" D.int) >>= fun dur_years -> 
+  (D.field "dur_months" D.int) >>= fun dur_months ->
+  (D.field "dur_days" D.int) >>= fun dur_days -> 
+  (D.field "dur_hours" D.int) >>= fun dur_hours ->
+  (D.field "dur_minutes" D.int) >>= fun dur_minutes ->
+  (D.field "dur_seconds" D.int) >>= fun dur_seconds ->                        
+  D.succeed {
+    dur_years   
+  ; dur_months  
+  ; dur_days    
+  ; dur_hours   
+  ; dur_minutes 
+  ; dur_seconds                            
+  };;
 
 let duration_opt_to_json = function
   | None   -> `Null
@@ -135,14 +135,14 @@ let localmktdate_to_json ( d : fix_localmktdate ) =
 ;;
 
 let localmktdate_decoder : fix_localmktdate Decoders_yojson.Basic.Decode.decoder = 
-  (D.field "localmktdate_year" D.int) >>= (fun localmktdate_year -> 
-      (D.field "localmktdate_month" D.int) >>= (fun localmktdate_month ->
-          (D.field "localmktdate_day" D.int) >>= (fun localmktdate_day ->                    
-              D.succeed {
-                localmktdate_year   
-              ; localmktdate_month  
-              ; localmktdate_day                           
-              })));;
+  (D.field "localmktdate_year" D.int) >>= fun localmktdate_year -> 
+  (D.field "localmktdate_month" D.int) >>= fun localmktdate_month ->
+  (D.field "localmktdate_day" D.int) >>= fun localmktdate_day ->                    
+  D.succeed {
+    localmktdate_year   
+  ; localmktdate_month  
+  ; localmktdate_day                           
+  };;
 
 let localmktdate_opt_to_json = function
   | None    -> `Null
@@ -159,14 +159,14 @@ let utcdateonly_to_json ( d : fix_utcdateonly ) =
 ;;
 
 let utcdateonly_decoder : fix_utcdateonly Decoders_yojson.Basic.Decode.decoder = 
-  (D.field "utc_dateonly_year" D.int) >>= (fun utc_dateonly_year -> 
-      (D.field "utc_dateonly_month" D.int) >>= (fun utc_dateonly_month ->
-          (D.field "utc_dateonly_day" D.int) >>= (fun utc_dateonly_day ->                    
-              D.succeed {
-                utc_dateonly_year   
-              ; utc_dateonly_month  
-              ; utc_dateonly_day                           
-              })));;
+  (D.field "utc_dateonly_year" D.int) >>= fun utc_dateonly_year -> 
+  (D.field "utc_dateonly_month" D.int) >>= fun utc_dateonly_month ->
+  (D.field "utc_dateonly_day" D.int) >>= fun utc_dateonly_day ->                    
+  D.succeed {
+    utc_dateonly_year   
+  ; utc_dateonly_month  
+  ; utc_dateonly_day                           
+  };;
 
 let utcdateonly_opt_to_json = function  
   | None    -> `Null
@@ -185,16 +185,16 @@ let utctimeonly_milli_to_json ( d : fix_utctimeonly_milli ) =
 ;;
 
 let utctimeonly_milli_decoder : fix_utctimeonly_milli Decoders_yojson.Basic.Decode.decoder = 
-  (D.field "utc_timeonly_hour" D.int) >>= (fun utc_timeonly_hour -> 
-      (D.field "utc_timeonly_minute" D.int) >>= (fun utc_timeonly_minute ->
-          (D.field "utc_timeonly_second" D.int) >>= (fun utc_timeonly_second ->                    
-              D.maybe (D.field "utc_timeonly_millisec" D.int) >>= (fun utc_timeonly_millisec ->     
-              D.succeed {
-                utc_timeonly_hour   
-              ; utc_timeonly_minute  
-              ; utc_timeonly_second
-              ; utc_timeonly_millisec                           
-              }))));;
+  (D.field "utc_timeonly_hour" D.int) >>= fun utc_timeonly_hour -> 
+  (D.field "utc_timeonly_minute" D.int) >>= fun utc_timeonly_minute ->
+  (D.field "utc_timeonly_second" D.int) >>= fun utc_timeonly_second ->                    
+  D.maybe (D.field "utc_timeonly_millisec" D.int) >>= fun utc_timeonly_millisec ->     
+  D.succeed {
+    utc_timeonly_hour   
+  ; utc_timeonly_minute  
+  ; utc_timeonly_second
+  ; utc_timeonly_millisec                           
+  };;
 
 let utctimeonly_milli_opt_to_json  = function
   | None    -> `Null
@@ -212,16 +212,16 @@ let utctimeonly_micro_to_json ( d : fix_utctimeonly_micro ) =
 ;;
 
 let utctimeonly_micro_decoder : fix_utctimeonly_micro Decoders_yojson.Basic.Decode.decoder = 
-  (D.field "utc_timeonly_hour" D.int) >>= (fun utc_timeonly_hour -> 
-      (D.field "utc_timeonly_minute" D.int) >>= (fun utc_timeonly_minute ->
-          (D.field "utc_timeonly_second" D.int) >>= (fun utc_timeonly_second ->                    
-              D.maybe (D.field "utc_timeonly_microsec" D.int) >>= (fun utc_timeonly_microsec ->     
-              D.succeed {
-                utc_timeonly_hour   
-              ; utc_timeonly_minute  
-              ; utc_timeonly_second
-              ; utc_timeonly_microsec                           
-              }))));;
+  (D.field "utc_timeonly_hour" D.int) >>= fun utc_timeonly_hour -> 
+  (D.field "utc_timeonly_minute" D.int) >>= fun utc_timeonly_minute ->
+  (D.field "utc_timeonly_second" D.int) >>= fun utc_timeonly_second ->                    
+  D.maybe (D.field "utc_timeonly_microsec" D.int) >>= fun utc_timeonly_microsec ->     
+  D.succeed {
+    utc_timeonly_hour   
+  ; utc_timeonly_minute  
+  ; utc_timeonly_second
+  ; utc_timeonly_microsec                           
+  };;
 
 let utctimeonly_micro_opt_to_json  = function
   | None    -> `Null
@@ -238,13 +238,13 @@ let week_to_json = function
 
 let week_decoder : fix_week Decoders_yojson.Basic.Decode.decoder = 
   D.string >>= (fun w -> 
-  match w with
-     | "Week1" -> D.succeed (Week_1)
-     | "Week2" -> D.succeed (Week_2)
-     | "Week3" -> D.succeed (Week_3)
-     | "Week4" -> D.succeed (Week_4)
-     | "Week5" -> D.succeed (Week_5)
-     | x -> D.fail (x^" is not a valid Week encoding."));;
+      match w with
+      | "Week1" -> D.succeed (Week_1)
+      | "Week2" -> D.succeed (Week_2)
+      | "Week3" -> D.succeed (Week_3)
+      | "Week4" -> D.succeed (Week_4)
+      | "Week5" -> D.succeed (Week_5)
+      | x -> D.fail (x^" is not a valid Week encoding."));;
 
 let week_opt_to_json = function
   | None    -> `Null
@@ -262,16 +262,16 @@ let monthyear_to_json ( d : fix_monthyear) =
 ;;
 
 let monthyear : fix_monthyear Decoders_yojson.Basic.Decode.decoder = 
-  (D.field "monthyear_year" D.int) >>= (fun monthyear_year -> 
-      (D.field "monthyear_month" D.int) >>= (fun monthyear_month ->
-          D.maybe (D.field "monthyear_day" D.int) >>= (fun monthyear_day ->    
-           D.maybe (D.field "monthyear_week" week_decoder) >>= (fun monthyear_week ->                         
-              D.succeed {
-                monthyear_year   
-              ; monthyear_month  
-              ; monthyear_day
-              ; monthyear_week
-              }))));;
+  (D.field "monthyear_year" D.int) >>= fun monthyear_year -> 
+  (D.field "monthyear_month" D.int) >>= fun monthyear_month ->
+  D.maybe (D.field "monthyear_day" D.int) >>= fun monthyear_day ->    
+  D.maybe (D.field "monthyear_week" week_decoder) >>= fun monthyear_week ->                         
+  D.succeed {
+    monthyear_year   
+  ; monthyear_month  
+  ; monthyear_day
+  ; monthyear_week
+  };;
 
 let monthyear_opt_to_json = function
   | None    -> `Null

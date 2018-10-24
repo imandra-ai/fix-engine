@@ -59,12 +59,12 @@ let float_0_opt_to_json = function
 ;;
 
 let float_0_decoder : Numeric.fix_float_0 Decoders_yojson.Basic.Decode.decoder =
-  D.field "Precision" D.int >>= (fun p ->
-      if (p <> 0) then 
-        D.fail "Precision must be 0 in float_0 json encoding." else 
-        D.field "Number" D.int >>= (fun x -> 
-            D.succeed 
-              Numeric.(float_Create_0 x)));;
+  D.field "Precision" D.int >>= fun p ->
+  if (p <> 0) then 
+    D.fail "Precision must be 0 in float_0 json encoding." else 
+    D.field "Number" D.int >>= fun x -> 
+    D.succeed 
+      Numeric.(float_Create_0 x);;
 
 let float_1_to_json : fix_float_1 -> json = function
   | Float_1 x ->
@@ -80,12 +80,12 @@ let float_1_opt_to_json = function
 ;;
 
 let float_1_decoder : Numeric.fix_float_1 Decoders_yojson.Basic.Decode.decoder =
-  D.field "Precision" D.int >>= (fun p ->
-      if (p <> 1) then 
-        D.fail "Precision must be 1 in float_1 json encoding." else 
-        D.field "Number" D.int >>= (fun x -> 
-            D.succeed 
-              Numeric.(float_Create_1 x)));;
+  D.field "Precision" D.int >>= fun p ->
+  if (p <> 1) then 
+    D.fail "Precision must be 1 in float_1 json encoding." else 
+    D.field "Number" D.int >>= fun x -> 
+    D.succeed 
+      Numeric.(float_Create_1 x);;
 
 let float_2_to_json : fix_float_2 -> json = function
   | Float_2 x ->
@@ -101,12 +101,12 @@ let float_2_opt_to_json = function
 ;;
 
 let float_2_decoder : Numeric.fix_float_2 Decoders_yojson.Basic.Decode.decoder =
-  D.field "Precision" D.int >>= (fun p ->
-      if (p <> 2) then 
-        D.fail "Precision must be 2 in float_2 json encoding." else 
-        D.field "Number" D.int >>= (fun x -> 
-            D.succeed 
-              Numeric.(float_Create_2 x)));;
+  D.field "Precision" D.int >>= fun p ->
+  if (p <> 2) then 
+    D.fail "Precision must be 2 in float_2 json encoding." else 
+    D.field "Number" D.int >>= fun x -> 
+    D.succeed 
+      Numeric.(float_Create_2 x);;
 
 
 let float_3_to_json : fix_float_3 -> json = function
@@ -123,12 +123,12 @@ let float_3_opt_to_json = function
 ;;
 
 let float_3_decoder : Numeric.fix_float_3 Decoders_yojson.Basic.Decode.decoder =
-  D.field "Precision" D.int >>= (fun p ->
-      if (p <> 3) then 
-        D.fail "Precision must be 3 in float_3 json encoding." else 
-        D.field "Number" D.int >>= (fun x -> 
-            D.succeed 
-              Numeric.(float_Create_3 x)));;
+  D.field "Precision" D.int >>= fun p ->
+  if (p <> 3) then 
+    D.fail "Precision must be 3 in float_3 json encoding." else 
+    D.field "Number" D.int >>= fun x -> 
+    D.succeed 
+      Numeric.(float_Create_3 x);;
 
 
 let float_4_to_json : fix_float_4 -> json = function
@@ -145,12 +145,12 @@ let float_4_opt_to_json = function
 ;;
 
 let float_4_decoder : Numeric.fix_float_4 Decoders_yojson.Basic.Decode.decoder =
-  D.field "Precision" D.int >>= (fun p ->
-      if (p <> 4) then 
-        D.fail "Precision must be 4 in float_4 json encoding." else 
-        D.field "Number" D.int >>= (fun x -> 
-            D.succeed 
-              Numeric.(float_Create_4 x)));;
+  D.field "Precision" D.int >>= fun p ->
+  if (p <> 4) then 
+    D.fail "Precision must be 4 in float_4 json encoding." else 
+    D.field "Number" D.int >>= fun x -> 
+    D.succeed 
+      Numeric.(float_Create_4 x);;
 
 
 let float_5_to_json : fix_float_5-> json = function
@@ -167,12 +167,12 @@ let float_5_opt_to_json = function
 ;;
 
 let float_5_decoder : Numeric.fix_float_5 Decoders_yojson.Basic.Decode.decoder =
-  D.field "Precision" D.int >>= (fun p ->
-      if (p <> 5) then 
-        D.fail "Precision must be 5 in float_5 json encoding." else 
-        D.field "Number" D.int >>= (fun x -> 
-            D.succeed 
-              Numeric.(float_Create_5 x)));;
+  D.field "Precision" D.int >>= fun p ->
+  if (p <> 5) then 
+    D.fail "Precision must be 5 in float_5 json encoding." else 
+    D.field "Number" D.int >>= fun x -> 
+    D.succeed 
+      Numeric.(float_Create_5 x);;
 
 
 let float_6_to_json : fix_float_6 -> json = function
@@ -189,12 +189,12 @@ let float_6_opt_to_json = function
 ;;
 
 let float_6_decoder : Numeric.fix_float_6 Decoders_yojson.Basic.Decode.decoder =
-  D.field "Precision" D.int >>= (fun p ->
-      if (p <> 6) then 
-        D.fail "Precision must be 6 in float_6 json encoding." else 
-        D.field "Number" D.int >>= (fun x -> 
-            D.succeed 
-              Numeric.(float_Create_6 x)));;
+  D.field "Precision" D.int >>= fun p ->
+  if (p <> 6) then 
+    D.fail "Precision must be 6 in float_6 json encoding." else 
+    D.field "Number" D.int >>= fun x -> 
+    D.succeed 
+      Numeric.(float_Create_6 x);;
 
 
 let float_to_json x = float_6_to_json x;;
