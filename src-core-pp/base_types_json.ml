@@ -24,7 +24,7 @@ let int_opt_to_json : int option -> json = function
   | Some x -> int_to_json x
 ;;
 
-let to_int_decoder : int Decoders_yojson.Basic.Decode.decoder = 
+let int_decoder : int Decoders_yojson.Basic.Decode.decoder = 
   D.int;;
 
 
@@ -37,7 +37,7 @@ let char_opt_to_json = function
   | None -> `Null
   | Some x -> `String x;;
 
-let to_char_decoder : string Decoders_yojson.Basic.Decode.decoder =
+let char_decoder : string Decoders_yojson.Basic.Decode.decoder =
   D.string;;
 
 
@@ -202,7 +202,7 @@ let float_to_json x = float_6_to_json x;;
 let float_opt_to_json x = float_6_opt_to_json x;;
 
 
-let json_to_float_decoder = float_6_decoder;;
+let float_decoder = float_6_decoder;;
 (*
   FIX_String
 *)
@@ -216,7 +216,7 @@ let string_opt_to_json = function
   | Some x -> string_to_json x
 ;;
 
-let json_to_string_decoder : string Decoders_yojson.Basic.Decode.decoder =
+let string_decoder : string Decoders_yojson.Basic.Decode.decoder =
   D.string
 ;;
 
@@ -234,7 +234,7 @@ let symbol_opt_to_json = function
   | Some x -> symbol_to_json x
 ;;
 
-let json_to_symbol_decoder : string Decoders_yojson.Basic.Decode.decoder =
+let symbol_decoder : string Decoders_yojson.Basic.Decode.decoder =
   D.string
 ;;
 
@@ -248,7 +248,7 @@ let bool_to_json : bool -> json = function
   | false -> `String "false" 
 ;;
 
-let json_to_bool_decoder : bool Decoders_yojson.Basic.Decode.decoder =
+let bool_decoder : bool Decoders_yojson.Basic.Decode.decoder =
   D.bool;;
 
 let bool_opt_to_json : bool option -> json = function
