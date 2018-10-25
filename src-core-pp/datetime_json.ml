@@ -261,7 +261,7 @@ let monthyear_to_json ( d : fix_monthyear) =
   `Assoc list_assoc
 ;;
 
-let monthyear : fix_monthyear Decoders_yojson.Basic.Decode.decoder = 
+let monthyear_decoder : fix_monthyear Decoders_yojson.Basic.Decode.decoder = 
   (D.field "monthyear_year" D.int) >>= fun monthyear_year -> 
   (D.field "monthyear_month" D.int) >>= fun monthyear_month ->
   D.maybe (D.field "monthyear_day" D.int) >>= fun monthyear_day ->    
