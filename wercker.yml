@@ -12,6 +12,6 @@ build:
           set -ex
           export OPAMROOT=/home/opam/.opam
           opam update
-          opam install dune
+          opam install dune decoders-yojson decoders
           make opam1-setup
           make

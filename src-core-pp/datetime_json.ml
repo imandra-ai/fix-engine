@@ -10,7 +10,10 @@
 open Yojson;;
 open Datetime;;
 open Base_types_json;;
-module JU = Yojson.Basic.Util ;;
+module JU = Yojson.Basic.Util;;
+module D = Decoders_yojson.Basic.Decode;; 
+open D.Infix;;
+
 
 
 let filter_nulls =
@@ -30,23 +33,23 @@ let utctimestamp_milli_to_json ( ts : fix_utctimestamp_milli ) : json =
   `Assoc list_assoc
 ;;
 
-let json_to_utctimestamp_milli_opt json = 
-  match JU.(json |> member "utc_timestamp_year"   |> to_int_option ) with None -> None | Some utc_timestamp_year    ->
-  match JU.(json |> member "utc_timestamp_month"  |> to_int_option ) with None -> None | Some utc_timestamp_month   ->
-  match JU.(json |> member "utc_timestamp_day"    |> to_int_option ) with None -> None | Some utc_timestamp_day     ->
-  match JU.(json |> member "utc_timestamp_hour"   |> to_int_option ) with None -> None | Some utc_timestamp_hour    ->
-  match JU.(json |> member "utc_timestamp_minute" |> to_int_option ) with None -> None | Some utc_timestamp_minute  ->
-  match JU.(json |> member "utc_timestamp_second" |> to_int_option ) with None -> None | Some utc_timestamp_second  ->
-    let utc_timestamp_millisec = JU.(json |> member "utc_timestamp_millisec" |> to_int_option ) in 
-    Some { utc_timestamp_year   
-         ; utc_timestamp_month  
-         ; utc_timestamp_day    
-         ; utc_timestamp_hour   
-         ; utc_timestamp_minute 
-         ; utc_timestamp_second 
-         ; utc_timestamp_millisec
-         }
-;;
+let utctimestamp_milli_decoder : fix_utctimestamp_milli Decoders_yojson.Basic.Decode.decoder = 
+  (D.field "utc_timestamp_year" D.int) >>= fun utc_timestamp_year -> 
+  (D.field "utc_timestamp_month" D.int) >>= fun utc_timestamp_month ->
+  (D.field "utc_timestamp_day" D.int) >>= fun utc_timestamp_day -> 
+  (D.field "utc_timestamp_hour" D.int) >>= fun utc_timestamp_hour ->
+  (D.field "utc_timestamp_minute" D.int) >>= fun utc_timestamp_minute ->
+  (D.field "utc_timestamp_second" D.int) >>= fun utc_timestamp_second ->
+  D.maybe (D.field "utc_timestamp_millisec" D.int) >>= fun utc_timestamp_millisec ->
+  D.succeed {
+    utc_timestamp_year   
+  ; utc_timestamp_month  
+  ; utc_timestamp_day    
+  ; utc_timestamp_hour   
+  ; utc_timestamp_minute 
+  ; utc_timestamp_second 
+  ; utc_timestamp_millisec
+  };;
 
 let utctimestamp_micro_to_json ( ts : fix_utctimestamp_micro ) : json =
   let list_assoc = [
@@ -61,23 +64,23 @@ let utctimestamp_micro_to_json ( ts : fix_utctimestamp_micro ) : json =
   `Assoc list_assoc
 ;;
 
-let json_to_utctimestamp_micro_opt json = 
-  match JU.(json |> member "utc_timestamp_year"   |> to_int_option ) with None -> None | Some utc_timestamp_year    ->
-  match JU.(json |> member "utc_timestamp_month"  |> to_int_option ) with None -> None | Some utc_timestamp_month   ->
-  match JU.(json |> member "utc_timestamp_day"    |> to_int_option ) with None -> None | Some utc_timestamp_day     ->
-  match JU.(json |> member "utc_timestamp_hour"   |> to_int_option ) with None -> None | Some utc_timestamp_hour    ->
-  match JU.(json |> member "utc_timestamp_minute" |> to_int_option ) with None -> None | Some utc_timestamp_minute  ->
-  match JU.(json |> member "utc_timestamp_second" |> to_int_option ) with None -> None | Some utc_timestamp_second  ->
-    let utc_timestamp_microsec = JU.(json |> member "utc_timestamp_microsec" |> to_int_option ) in 
-    Some { utc_timestamp_year   
-         ; utc_timestamp_month  
-         ; utc_timestamp_day    
-         ; utc_timestamp_hour   
-         ; utc_timestamp_minute 
-         ; utc_timestamp_second 
-         ; utc_timestamp_microsec
-         }
-;;
+let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.Decode.decoder = 
+  (D.field "utc_timestamp_year" D.int) >>= fun utc_timestamp_year -> 
+  (D.field "utc_timestamp_month" D.int) >>= fun utc_timestamp_month ->
+  (D.field "utc_timestamp_day" D.int) >>= fun utc_timestamp_day -> 
+  (D.field "utc_timestamp_hour" D.int) >>= fun utc_timestamp_hour ->
+  (D.field "utc_timestamp_minute" D.int) >>= fun utc_timestamp_minute ->
+  (D.field "utc_timestamp_second" D.int) >>= fun utc_timestamp_second ->
+  D.maybe (D.field "utc_timestamp_microsec" D.int) >>= fun utc_timestamp_microsec ->
+  D.succeed {
+    utc_timestamp_year   
+  ; utc_timestamp_month  
+  ; utc_timestamp_day    
+  ; utc_timestamp_hour   
+  ; utc_timestamp_minute 
+  ; utc_timestamp_second 
+  ; utc_timestamp_microsec
+  };;
 
 let utctimestamp_milli_opt_to_json = function
   | None    -> `Null
@@ -101,21 +104,21 @@ let duration_to_json ( d : fix_duration ) =
   `Assoc list_assoc
 ;;
 
-let json_to_duration_opt json = 
-  match JU.(json |> member "dur_years"   |> to_int_option ) with None -> None | Some dur_years    ->
-  match JU.(json |> member "dur_months"  |> to_int_option ) with None -> None | Some dur_months   ->
-  match JU.(json |> member "dur_days"    |> to_int_option ) with None -> None | Some dur_days     ->
-  match JU.(json |> member "dur_hours"   |> to_int_option ) with None -> None | Some dur_hours    ->
-  match JU.(json |> member "dur_minutes" |> to_int_option ) with None -> None | Some dur_minutes  ->
-  match JU.(json |> member "dur_seconds" |> to_int_option ) with None -> None | Some dur_seconds  ->
-    Some { dur_years   
-         ; dur_months 
-         ; dur_days
-         ; dur_hours
-         ; dur_minutes
-         ; dur_seconds
-         }
-;;
+let duration_decoder : fix_duration Decoders_yojson.Basic.Decode.decoder = 
+  (D.field "dur_years" D.int) >>= fun dur_years -> 
+  (D.field "dur_months" D.int) >>= fun dur_months ->
+  (D.field "dur_days" D.int) >>= fun dur_days -> 
+  (D.field "dur_hours" D.int) >>= fun dur_hours ->
+  (D.field "dur_minutes" D.int) >>= fun dur_minutes ->
+  (D.field "dur_seconds" D.int) >>= fun dur_seconds ->                        
+  D.succeed {
+    dur_years   
+  ; dur_months  
+  ; dur_days    
+  ; dur_hours   
+  ; dur_minutes 
+  ; dur_seconds                            
+  };;
 
 let duration_opt_to_json = function
   | None   -> `Null
@@ -131,21 +134,20 @@ let localmktdate_to_json ( d : fix_localmktdate ) =
   `Assoc list_assoc
 ;;
 
-let json_to_localmktdate_opt json = 
-  match JU.(json |> member "localmktdate_year"   |> to_int_option ) with None -> None | Some localmktdate_year    ->
-  match JU.(json |> member "localmktdate_month"  |> to_int_option ) with None -> None | Some localmktdate_month   ->
-  match JU.(json |> member "localmktdate_day"    |> to_int_option ) with None -> None | Some localmktdate_day     ->
-    Some { localmktdate_year;
-           localmktdate_month;
-           localmktdate_day
-         }
-;;
+let localmktdate_decoder : fix_localmktdate Decoders_yojson.Basic.Decode.decoder = 
+  (D.field "localmktdate_year" D.int) >>= fun localmktdate_year -> 
+  (D.field "localmktdate_month" D.int) >>= fun localmktdate_month ->
+  (D.field "localmktdate_day" D.int) >>= fun localmktdate_day ->                    
+  D.succeed {
+    localmktdate_year   
+  ; localmktdate_month  
+  ; localmktdate_day                           
+  };;
 
 let localmktdate_opt_to_json = function
   | None    -> `Null
   | Some x  -> localmktdate_to_json x
 ;;
-
 
 let utcdateonly_to_json ( d : fix_utcdateonly ) =  
   let list_assoc = [
@@ -156,15 +158,15 @@ let utcdateonly_to_json ( d : fix_utcdateonly ) =
   `Assoc list_assoc
 ;;
 
-let json_to_utcdateonly_opt json = 
-  match JU.(json |> member "utc_dateonly_year"   |> to_int_option ) with None -> None | Some utc_dateonly_year    ->
-  match JU.(json |> member "utc_dateonly_month"  |> to_int_option ) with None -> None | Some utc_dateonly_month   ->
-  match JU.(json |> member "utc_dateonly_day"    |> to_int_option ) with None -> None | Some utc_dateonly_day     ->
-    Some { utc_dateonly_year;
-           utc_dateonly_month;
-           utc_dateonly_day
-         }
-;;
+let utcdateonly_decoder : fix_utcdateonly Decoders_yojson.Basic.Decode.decoder = 
+  (D.field "utc_dateonly_year" D.int) >>= fun utc_dateonly_year -> 
+  (D.field "utc_dateonly_month" D.int) >>= fun utc_dateonly_month ->
+  (D.field "utc_dateonly_day" D.int) >>= fun utc_dateonly_day ->                    
+  D.succeed {
+    utc_dateonly_year   
+  ; utc_dateonly_month  
+  ; utc_dateonly_day                           
+  };;
 
 let utcdateonly_opt_to_json = function  
   | None    -> `Null
@@ -182,17 +184,17 @@ let utctimeonly_milli_to_json ( d : fix_utctimeonly_milli ) =
   `Assoc list_assoc
 ;;
 
-let json_to_utctimeonly_milli_opt json = 
-  match JU.(json |> member "utc_timesonly_hour"   |> to_int_option ) with None -> None | Some utc_timeonly_hour    ->
-  match JU.(json |> member "utc_timesonly_minute" |> to_int_option ) with None -> None | Some utc_timeonly_minute  ->
-  match JU.(json |> member "utc_timesonly_second" |> to_int_option ) with None -> None | Some utc_timeonly_second  ->
-    let utc_timeonly_millisec = JU.(json |> member "utc_timeonly_millisec" |> to_int_option ) in 
-    Some { utc_timeonly_hour   
-         ; utc_timeonly_minute 
-         ; utc_timeonly_second 
-         ; utc_timeonly_millisec
-         }
-;;
+let utctimeonly_milli_decoder : fix_utctimeonly_milli Decoders_yojson.Basic.Decode.decoder = 
+  (D.field "utc_timeonly_hour" D.int) >>= fun utc_timeonly_hour -> 
+  (D.field "utc_timeonly_minute" D.int) >>= fun utc_timeonly_minute ->
+  (D.field "utc_timeonly_second" D.int) >>= fun utc_timeonly_second ->                    
+  D.maybe (D.field "utc_timeonly_millisec" D.int) >>= fun utc_timeonly_millisec ->     
+  D.succeed {
+    utc_timeonly_hour   
+  ; utc_timeonly_minute  
+  ; utc_timeonly_second
+  ; utc_timeonly_millisec                           
+  };;
 
 let utctimeonly_milli_opt_to_json  = function
   | None    -> `Null
@@ -209,17 +211,17 @@ let utctimeonly_micro_to_json ( d : fix_utctimeonly_micro ) =
   `Assoc list_assoc
 ;;
 
-let json_to_utctimeonly_micro_opt json = 
-  match JU.(json |> member "utc_timesonly_hour"   |> to_int_option ) with None -> None | Some utc_timeonly_hour    ->
-  match JU.(json |> member "utc_timesonly_minute" |> to_int_option ) with None -> None | Some utc_timeonly_minute  ->
-  match JU.(json |> member "utc_timesonly_second" |> to_int_option ) with None -> None | Some utc_timeonly_second  ->
-    let utc_timeonly_microsec = JU.(json |> member "utc_timeonly_microsec" |> to_int_option ) in 
-    Some { utc_timeonly_hour   
-         ; utc_timeonly_minute 
-         ; utc_timeonly_second 
-         ; utc_timeonly_microsec
-         }
-;;
+let utctimeonly_micro_decoder : fix_utctimeonly_micro Decoders_yojson.Basic.Decode.decoder = 
+  (D.field "utc_timeonly_hour" D.int) >>= fun utc_timeonly_hour -> 
+  (D.field "utc_timeonly_minute" D.int) >>= fun utc_timeonly_minute ->
+  (D.field "utc_timeonly_second" D.int) >>= fun utc_timeonly_second ->                    
+  D.maybe (D.field "utc_timeonly_microsec" D.int) >>= fun utc_timeonly_microsec ->     
+  D.succeed {
+    utc_timeonly_hour   
+  ; utc_timeonly_minute  
+  ; utc_timeonly_second
+  ; utc_timeonly_microsec                           
+  };;
 
 let utctimeonly_micro_opt_to_json  = function
   | None    -> `Null
@@ -234,22 +236,20 @@ let week_to_json = function
   | Week_5 -> `String "Week5"
 ;;
 
-let json_to_week_opt json = 
-  match JU.(json |> to_string_option ) with None -> None | Some w ->
-    (match w with
-     | "Week1" -> Some Week_1
-     | "Week2" -> Some Week_2
-     | "Week3" -> Some Week_3
-     | "Week4" -> Some Week_4
-     | "Week5" -> Some Week_5
-     | _ -> None)
-;;
+let week_decoder : fix_week Decoders_yojson.Basic.Decode.decoder = 
+  D.string >>= (fun w -> 
+      match w with
+      | "Week1" -> D.succeed (Week_1)
+      | "Week2" -> D.succeed (Week_2)
+      | "Week3" -> D.succeed (Week_3)
+      | "Week4" -> D.succeed (Week_4)
+      | "Week5" -> D.succeed (Week_5)
+      | x -> D.fail (x^" is not a valid Week encoding."));;
 
 let week_opt_to_json = function
   | None    -> `Null
   | Some x  -> week_to_json x
 ;;
-
 
 let monthyear_to_json ( d : fix_monthyear) = 
   let list_assoc = [
@@ -261,17 +261,17 @@ let monthyear_to_json ( d : fix_monthyear) =
   `Assoc list_assoc
 ;;
 
-let json_to_monthyear_opt json = 
-  match JU.(json |> member "monthyear_year"   |> to_int_option ) with None -> None | Some monthyear_year    ->
-  match JU.(json |> member "monthyear_month"  |> to_int_option ) with None -> None | Some monthyear_month   ->
-    let monthyear_day =  JU.(json |> member "monthyear_day"    |> to_int_option ) in
-    let monthyear_week =  JU.(json |> member "monthyear_week"    |> json_to_week_opt )in
-    Some {monthyear_year;
-          monthyear_month;
-          monthyear_day;
-          monthyear_week
-         }
-;;
+let monthyear_decoder : fix_monthyear Decoders_yojson.Basic.Decode.decoder = 
+  (D.field "monthyear_year" D.int) >>= fun monthyear_year -> 
+  (D.field "monthyear_month" D.int) >>= fun monthyear_month ->
+  D.maybe (D.field "monthyear_day" D.int) >>= fun monthyear_day ->    
+  D.maybe (D.field "monthyear_week" week_decoder) >>= fun monthyear_week ->                         
+  D.succeed {
+    monthyear_year   
+  ; monthyear_month  
+  ; monthyear_day
+  ; monthyear_week
+  };;
 
 let monthyear_opt_to_json = function
   | None    -> `Null
