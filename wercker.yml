@@ -11,7 +11,7 @@ build:
           cp jekyll-resources/rouge-lexers/ipl.rb /usr/local/bundle/gems/rouge-2.2.1/lib/rouge/lexers/ipl.rb
           cp jekyll-resources/rouge-lexers/iml.rb /usr/local/bundle/gems/rouge-2.2.1/lib/rouge/lexers/iml.rb
           mkdir _site
-          jekyll build
+          JEKYLL_ENV=production jekyll build
           touch _site/.nojekyll
 
 deploy-docs:
