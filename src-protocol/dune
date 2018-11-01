@@ -2,5 +2,5 @@
   (name        protocol)
   (public_name protocol)
   (wrapped  false)
-  (libraries core_time_defaults protocol_exts)
+  (libraries core_time_defaults fix-engine.protocol_exts)
 )
