@@ -22,11 +22,11 @@ let create_session_msg   t = t.initmsg
 
 
 let get_current_utctimstamp () =    
-  let open Datetime in
+  let open TimeDefaults in
   let dtime = Unix.gettimeofday () in 
   let tm = Unix.gmtime dtime in
   let msec = int_of_float (1000000. *. (dtime -. floor dtime)) in
-  TimeDefaults.make_utctimestamp (tm.Unix.tm_year + 1900)
+  make_utctimestamp (tm.Unix.tm_year + 1900)
     (tm.Unix.tm_mon + 1) tm.Unix.tm_mday tm.Unix.tm_hour
     tm.Unix.tm_min tm.Unix.tm_sec  (Some msec)
 ;;
