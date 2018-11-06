@@ -26,14 +26,11 @@ let get_current_utctimstamp () =
   let dtime = Unix.gettimeofday () in 
   let tm = Unix.gmtime dtime in
   let msec = int_of_float (1000000. *. (dtime -. floor dtime)) in
-  {  utc_timestamp_year   = tm.Unix.tm_year + 1900
-  ;  utc_timestamp_month  = tm.Unix.tm_mon + 1
-  ;  utc_timestamp_day    = tm.Unix.tm_mday
-  ;  utc_timestamp_hour   = tm.Unix.tm_hour
-  ;  utc_timestamp_minute = tm.Unix.tm_min
-  ;  utc_timestamp_second = tm.Unix.tm_sec
-  ;  utc_timestamp_millisec = Some (msec)
-}
+  TimeDefaults.make_utctimestamp (tm.Unix.tm_year + 1900)
+    (tm.Unix.tm_mon + 1) tm.Unix.tm_mday tm.Unix.tm_hour
+    tm.Unix.tm_min tm.Unix.tm_sec  (Some msec)
+;;
+
 
 let last_received_utctimestamp = ref ( get_current_utctimstamp() )
 let get_last_received_utctimestamp () = ! last_received_utctimestamp 
