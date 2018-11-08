@@ -2,4 +2,5 @@
   (name        core_utils)
   (public_name core_utils)
   (wrapped  false)
+  (libraries venue_types)
 )
