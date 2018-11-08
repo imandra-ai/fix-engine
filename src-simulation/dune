@@ -7,6 +7,7 @@
        lwt.unix
         venue
         fix-engine.fix_engine
+        fix-engine.core_utils
         fix-engine.core_pp
         fix-engine.core_time_defaults
         fix-engine.core_time_defaults_pp
