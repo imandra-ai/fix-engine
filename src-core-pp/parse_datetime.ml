@@ -124,8 +124,10 @@ let parse_MonthYear str =
     }
 ;;
 
-
 let parse_Duration str =
+(* P1 = days etc... *)
+
+
     let parse_int ( str : string ) : int option = 
         try  Some(int_of_string str) 
         with _ -> None

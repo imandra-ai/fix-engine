@@ -1,7 +1,7 @@
 (library
   (name protocol_exts)
-  (public_name protocol_exts)
+  (public_name fix-engine.protocol_exts)
   (wrapped false)
-  (flags (:standard -open Imandra_prelude))
-  (libraries venue_prelude core core_time_defaults)
+  (flags (:standard -open Imandra_prelude -w +a-4-29-42-44-48-50-58-32-60@8 -safe-string))
+  (libraries fix-engine.venue_prelude fix-engine.core fix-engine.core_time_defaults)
 )
