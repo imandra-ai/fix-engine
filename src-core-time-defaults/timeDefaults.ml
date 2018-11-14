@@ -10,6 +10,12 @@
 
 open Datetime;;
 
+type milli_micro = Milli | Micro
+;;
+
+let default_time_precision = Milli
+;;
+
 type fix_utctimestamp =  fix_utctimestamp_milli
 ;;
 
