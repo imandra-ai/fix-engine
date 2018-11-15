@@ -1069,3 +1069,41 @@ let convert_utctimestamp_micro_utctimeonly_milli (ts:fix_utctimestamp_micro) : (
         utc_timeonly_millisec  = ts.utc_timestamp_microsec
     }
 ;;
+
+let convert_utctimestamp_micro_localmktdate (ts:fix_utctimestamp_micro) : (fix_localmktdate) = {
+    localmktdate_year  = ts.utc_timestamp_year;
+    localmktdate_month = ts.utc_timestamp_month;
+    localmktdate_day   = ts.utc_timestamp_day;
+};;
+
+let convert_utctimestamp_milli_localmktdate (ts:fix_utctimestamp_milli) : (fix_localmktdate) = {
+    localmktdate_year  = ts.utc_timestamp_year;
+    localmktdate_month = ts.utc_timestamp_month;
+    localmktdate_day   = ts.utc_timestamp_day;
+};;
+
+let convert_utctimestamp_micro_dateonly (ts:fix_utctimestamp_micro) : (fix_utcdateonly) = {
+    utc_dateonly_year  = ts.utc_timestamp_year;
+    utc_dateonly_month = ts.utc_timestamp_month;
+    utc_dateonly_day   = ts.utc_timestamp_day;
+};;
+
+let convert_utctimestamp_milli_localmktdate (ts:fix_utctimestamp_milli) : (fix_utcdateonly) = {
+   utc_dateonly_year  = ts.utc_timestamp_year;
+    utc_dateonly_month = ts.utc_timestamp_month;
+    utc_dateonly_day   = ts.utc_timestamp_day;
+};;
+
+let convert_utctimestamp_micro_dateonly (ts:fix_utctimestamp_micro) : (fix_monthyear) = {
+    monthyear_year  = ts.utc_timestamp_year;
+    monthyear_month = ts.utc_timestamp_month;
+    monthyear_day   = Some ts.utc_timestamp_day;
+    monthyear_week  = None;
+};;
+
+let convert_utctimestamp_micro_dateonly (ts:fix_utctimestamp_milli) : (fix_monthyear) = {
+    monthyear_year  = ts.utc_timestamp_year;
+    monthyear_month = ts.utc_timestamp_month;
+    monthyear_day   = Some ts.utc_timestamp_day;
+    monthyear_week  = None;
+};;
