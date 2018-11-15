@@ -20,24 +20,10 @@ let get_fix_thread       t = t.fix
 let get_input_mailbox    t = t.mailbox 
 let create_session_msg   t = t.initmsg
 
-
-let get_current_utctimestamp () =    
-  let open TimeDefaults in
-  let dtime = Unix.gettimeofday () in 
-  let tm = Unix.gmtime dtime in
-  let msec = int_of_float 
-    (match default_time_precision with Milli -> 1000. | Micro -> 1000000.
-    *. (dtime -. floor dtime)) in
-  make_utctimestamp (tm.Unix.tm_year + 1900)
-    (tm.Unix.tm_mon + 1) tm.Unix.tm_mday tm.Unix.tm_hour
-    tm.Unix.tm_min tm.Unix.tm_sec  (Some msec)
-;;
-
-
-let last_received_utctimestamp = ref ( get_current_utctimestamp() )
+let last_received_utctimestamp = ref ( Fix_connection_utils.get_current_utctimestamp() )
 let get_last_received_utctimestamp () = ! last_received_utctimestamp 
 
-let last_received_sendingtime = ref ( get_current_utctimestamp() )
+let last_received_sendingtime = ref ( Fix_connection_utils.get_current_utctimestamp() )
 let get_last_received_sendingtime () = ! last_received_sendingtime
 
 let read_int file =
@@ -67,7 +53,7 @@ let make_engine_state session_dir config =
   ; fe_sender_location_id = config.host_id
   ; fe_on_behalf_of_comp_id = config.on_behalf_id
   ; fe_target_comp_id = config.target_id
-  ; fe_curr_time = get_current_utctimestamp ()
+  ; fe_curr_time = Fix_connection_utils.get_current_utctimestamp ()
   ; fe_max_num_logons_sent = 10
   ; fe_application_up = true
   ; incoming_seq_num = inseq
@@ -79,7 +65,7 @@ let (>>=) = Lwt.(>>=)
 (** Timechange thread  *)
 
 let do_timechange mailbox =
-  let time = get_current_utctimestamp () in
+  let time = Fix_connection_utils.get_current_utctimestamp () in
   let timechange = Fix_engine_state.IncIntMsg_TimeChange time in
   let timechange = Fix_global_state.Internal_Message timechange in
   Lwt_mvar.put mailbox timechange
@@ -122,7 +108,7 @@ let fix_thread session_dir inch mailbox =
   let filename = Filename.(concat session_dir "fix.log") in 
   Message_stream.from_channel ~verbose:true inch
   |> Lwt_stream.iter_s ( fun msg ->
-    let () = last_received_utctimestamp := (get_current_utctimestamp ()) in
+    let () = last_received_utctimestamp := (Fix_connection_utils.get_current_utctimestamp ()) in
     let str = msg |> List.map (fun (k,v) -> k ^ "=" ^ v)
                   |> String.concat "|" 
                   |> fun s -> s ^ "|\n"
