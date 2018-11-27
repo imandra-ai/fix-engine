@@ -175,11 +175,3 @@ let parse_Duration (str:string) : fix_duration option =
      | _,_ -> None)
   else None 
 ;;
-
-
-(* 
-This pattern data type is defined as follows: Dx = tenor expression for "days", e.g. "D5", 
-where "x" is any integer > 0 Mx = tenor expression for "months", e.g. "M3", where "x" is any integer > 0 
-Wx = tenor expression for "weeks", e.g. "W13", where "x" is any integer > 0 Yx = tenor expression for "years", 
-e.g. "Y1", where "x" is any integer > 0
-*)
