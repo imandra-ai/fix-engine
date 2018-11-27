@@ -8,7 +8,6 @@ type config =
   ; pub_callback   : (Model_messages.model_msg -> unit Lwt.t) option  
   }
 
-val get_current_utctimstamp : unit -> TimeDefaults.fix_utctimestamp
 val get_last_received_utctimestamp : unit -> TimeDefaults.fix_utctimestamp
 val get_last_received_sendingtime : unit -> TimeDefaults.fix_utctimestamp
 
