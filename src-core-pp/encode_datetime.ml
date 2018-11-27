@@ -9,8 +9,6 @@
 *)
 
 open Datetime;;
-open Encode_base_types;;
-
 
 let encode_UTCDateOnly x : string =
     Printf.sprintf "%04u%02u%02u" 
@@ -95,7 +93,6 @@ let encode_MonthYear x : string =
         | None -> ym
     end
 ;;
-
 
 let encode_Duration (x : fix_duration) : string =
     let days = (normalise_duration x).dur_seconds / (60*60*24) in
