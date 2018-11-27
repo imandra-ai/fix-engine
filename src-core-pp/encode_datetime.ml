@@ -97,6 +97,7 @@ let encode_MonthYear x : string =
 ;;
 
 
-let encode_Duration x : string =
-    duration_to_seconds x |> encode_int
+let encode_Duration (x : fix_duration) : string =
+    let days = (normalise_duration x).dur_seconds / (60*60*24) in
+    "D"^(string_of_int days)
 ;;
