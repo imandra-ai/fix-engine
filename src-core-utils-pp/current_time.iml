@@ -24,7 +24,7 @@ let get_current_utctimestamp_micro () : fix_utctimestamp_micro =
   let open Datetime in
   let dtime = Caml_unix.gettimeofday () in 
   let tm = Caml_unix.gmtime dtime in
-  let msec = Z.of_float (Real.to_float (1000. *. ((Q.of_float dtime) -. (Q.of_float (floor dtime))))) in
+  let msec = Z.of_float (Real.to_float (1000000. *. ((Q.of_float dtime) -. (Q.of_float (floor dtime))))) in
   make_utctimestamp_micro (Z.of_int tm.Caml_unix.tm_year + 1900) ((Z.of_int tm.Caml_unix.tm_mon) + 1) (Z.of_int tm.Caml_unix.tm_mday) (Z.of_int tm.Caml_unix.tm_hour) (Z.of_int tm.Caml_unix.tm_min)
     (Z.of_int tm.Caml_unix.tm_sec) (Some (msec))
 ;;
