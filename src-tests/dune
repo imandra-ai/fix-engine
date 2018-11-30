@@ -1,13 +1,35 @@
+(rule
+  (targets config_parser.ml)
+  (deps config_parser.iml)
+   (action
+    (with-stdout-to config_parser.ml
+       (run imandra-extract config_parser.iml))))
+
+(rule
+  (targets test_cache.ml)
+  (deps test_cache.iml)
+   (action
+    (with-stdout-to test_cache.ml
+       (run imandra-extract test_cache.iml))))
+
+(rule
+  (targets test_runner.ml)
+  (deps test_runner.iml)
+   (action
+    (with-stdout-to test_runner.ml
+       (run imandra-extract test_runner.iml))))
+
 (library
   (name        test)
   (public_name fix-engine.test)
   (wrapped  false)
   (modules test_cache)
-  (libraries yojson fix-engine.protocol_pp fix-engine.core_printer)
+  (flags (:standard -open Imandra_prelude))
+  (libraries imandra-prelude yojson protocol_pp core_printer)
 )
 
 (executable
   (name test_runner) 
-  (libraries threads cmdliner lwt.unix fix-engine.fix_simulation fix-engine.protocol_pp fix-engine.core_printer)
+  (libraries threads cmdliner lwt.unix fix_simulation protocol_pp core_printer)
   (modules test_runner config_parser)
 )
