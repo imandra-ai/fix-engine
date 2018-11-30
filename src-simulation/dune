@@ -33,13 +33,6 @@
     (with-stdout-to server.ml
        (run imandra-extract server.iml))))
 
-(rule
-  (targets fix_connection_utils.ml)
-  (deps fix_connection_utils.iml)
-   (action
-     (with-stdout-to fix_connection_utils.ml
-         (run imandra-extract fix_connection_utils.iml))))
-
 (library
   (name        fix_simulation)
   (public_name fix-engine.fix_simulation)

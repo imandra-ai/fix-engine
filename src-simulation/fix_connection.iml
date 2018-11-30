@@ -20,10 +20,10 @@ let get_fix_thread       t = t.fix
 let get_input_mailbox    t = t.mailbox 
 let create_session_msg   t = t.initmsg
 
-let last_received_utctimestamp = ref ( Fix_connection_utils.get_current_utctimestamp() )
+let last_received_utctimestamp = ref (  (TimeDefaults_current_time.get_current_utctimestamp ())  )
 let get_last_received_utctimestamp () = ! last_received_utctimestamp 
 
-let last_received_sendingtime = ref ( Fix_connection_utils.get_current_utctimestamp() )
+let last_received_sendingtime = ref (  (TimeDefaults_current_time.get_current_utctimestamp ())  )
 let get_last_received_sendingtime () = ! last_received_sendingtime
 
 let read_int file =
@@ -33,16 +33,16 @@ let read_int file =
     let () = close_in chn in
     int_of_string num
   with
-    _exn -> 0
+    _exn -> 0i
 ;;
 
 let read_seqns dir =
-  if not(Sys.file_exists dir) then 
-    let () = Unix.(mkdir dir 0o775) in (0,0)  
+  if not(Caml_sys.file_exists dir) then 
+    let () = Caml_unix.(mkdir dir (Z.to_int 0o775)) in (0,0)  
   else
     let seqin  = read_int Filename.(concat dir "seqin" ) in
     let seqout = read_int Filename.(concat dir "seqout") in
-    (seqin, seqout)
+    (Z.of_int seqin, Z.of_int seqout)
 ;;
 
 let make_engine_state session_dir config =
@@ -53,7 +53,7 @@ let make_engine_state session_dir config =
   ; fe_sender_location_id = config.host_id
   ; fe_on_behalf_of_comp_id = config.on_behalf_id
   ; fe_target_comp_id = config.target_id
-  ; fe_curr_time = Fix_connection_utils.get_current_utctimestamp ()
+  ; fe_curr_time = TimeDefaults_current_time.get_current_utctimestamp ()
   ; fe_max_num_logons_sent = 10
   ; fe_application_up = true
   ; incoming_seq_num = inseq
@@ -65,7 +65,7 @@ let (>>=) = Lwt.(>>=)
 (** Timechange thread  *)
 
 let do_timechange mailbox =
-  let time = Fix_connection_utils.get_current_utctimestamp () in
+  let time = TimeDefaults_current_time.get_current_utctimestamp () in
   let timechange = Fix_engine_state.IncIntMsg_TimeChange time in
   let timechange = Fix_global_state.Internal_Message timechange in
   Lwt_mvar.put mailbox timechange
@@ -74,7 +74,7 @@ let do_timechange mailbox =
 (** Heartbeat thread  *)
 
 let rec heartbeat_thread mailbox =
-  Lwt_unix.sleep (1.0) >>= fun () -> 
+  Lwt_unix.sleep (Q.to_float 1.0) >>= fun () -> 
   do_timechange mailbox >>= fun () -> 
   heartbeat_thread mailbox
 ;;
@@ -82,7 +82,7 @@ let rec heartbeat_thread mailbox =
 
 let write_seqn session_dir fname msg =
   let open Full_messages in
-  if msg == Garbled then Lwt.return_unit else
+  if msg = Garbled then Lwt.return_unit else
   let seqn = match msg with 
     | ValidMsg data -> data.full_msg_header.h_msg_seq_num
     | SessionRejectedMsg data -> data.srej_msg_msg_seq_num                       
@@ -91,11 +91,11 @@ let write_seqn session_dir fname msg =
     in
     let filename = Filename.(concat session_dir fname) in 
     Lwt_io.(open_file ~mode:output filename) >>= fun fch ->
-    Lwt_io.write fch (string_of_int seqn) >>= fun () ->
+    Lwt_io.write fch (String.of_int seqn) >>= fun () ->
     Lwt_io.close fch
 ;;
 
-let log_flags = Unix.[O_WRONLY; O_APPEND; O_CREAT];;
+let log_flags = Caml_unix.[O_WRONLY; O_APPEND; O_CREAT];;
 let store_senging_time msg = 
     let open Full_messages in
     match msg with 
@@ -108,7 +108,7 @@ let fix_thread session_dir inch mailbox =
   let filename = Filename.(concat session_dir "fix.log") in 
   Message_stream.from_channel ~verbose:true inch
   |> Lwt_stream.iter_s ( fun msg ->
-    let () = last_received_utctimestamp := (Fix_connection_utils.get_current_utctimestamp ()) in
+    let () = last_received_utctimestamp := (TimeDefaults_current_time.get_current_utctimestamp ()) in
     let str = msg |> List.map (fun (k,v) -> k ^ "=" ^ v)
                   |> String.concat "|" 
                   |> fun s -> s ^ "|\n"
@@ -129,7 +129,7 @@ let send_msg session_dir outch fmsg =
   match fmsg with
   | Full_messages.ValidMsg msg -> begin
     let wire = Encode_full_messages.encode_full_valid_msg msg in
-    let log = String.map (function '\001' -> '|' | c -> c) wire ^ "\n" in
+    let log = Caml.String.map (function '\001' -> '|' | c -> c) wire ^ "\n" in
     Lwt_io.(open_file ~flags:log_flags ~mode:output filename) >>= fun fch ->              
     Lwt_io.write fch log                      >>= fun () ->
     Lwt_io.close fch                          >>= fun () ->    

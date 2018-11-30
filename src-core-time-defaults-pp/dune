@@ -19,11 +19,17 @@
     (with-stdout-to timeDefaults_json.ml
        (run imandra-extract timeDefaults_json.iml))))
 
+(rule
+  (targets timeDefaults_current_time.ml)
+  (deps timeDefaults_current_time.iml)
+   (action
+    (with-stdout-to timeDefaults_current_time.ml
+       (run imandra-extract timeDefaults_current_time.iml))))
 
 (library
   (name        core_time_defaults_pp)
   (public_name fix-engine.core_time_defaults_pp)
   (wrapped  false)
   (flags :standard -open Imandra_prelude -warn-error -a)
-  (libraries core_pp core_time_defaults core yojson imandra-prelude )
+  (libraries core_pp core_time_defaults core yojson imandra-prelude core_utils_pp)
 )

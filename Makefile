@@ -3,7 +3,7 @@
 build:
 	@echo "src-protocol-exts-pp-vg" > dune-ignore 
 	@echo "src-protocol-exts-vg" >> dune-ignore 
-	dune build @install
+	dune build --profile release @install
 	rm dune-ignore
 
 build_vgs:
@@ -11,19 +11,19 @@ build_vgs:
 	@echo "src-protocol-exts" >> dune-ignore 
 	@echo "src-model" >> dune-ignore 
 	@echo "src-simulation" >> dune-ignore 
-	dune build @install
+	dune build --profile release @install
 	rm dune-ignore
 
 build_tests:
 	@echo "src-protocol-exts-pp-vg" > dune-ignore 
 	@echo "src-protocol-exts-vg" >> dune-ignore 
-	dune build src-tests/test_runner.bc 
+	dune build --profile release src-tests/test_runner.bc 
 	rm dune-ignore
 
 doc:
 	@echo "src-protocol-exts-pp-vg" > dune-ignore 
 	@echo "src-protocol-exts-vg" >> dune-ignore 
-	dune build @doc
+	dune build --profile release @doc
 	mkdir -p _pages/doc
 	cp -r _build/default/_doc/_html/* _pages/doc/
 	rm -rf _pages/doc/odoc.css
@@ -36,13 +36,13 @@ module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 server:
 	@echo "src-protocol-exts-pp-vg" > dune-ignore 
 	@echo "src-protocol-exts-vg" >> dune-ignore 
-	dune build src-simulation/server.bc
+	dune build --profile release src-simulation/server.bc
 	rm dune-ignore
 
 client:
 	@echo "src-protocol-exts-pp-vg" > dune-ignore 
 	@echo "src-protocol-exts-vg" >> dune-ignore 
-	dune build src-simulation/client.bc
+	dune build --profile release src-simulation/client.bc
 	rm dune-ignore
 
 # opam1-setup - for running in Wercker. Assumes the correct switch is already installed and selected.
