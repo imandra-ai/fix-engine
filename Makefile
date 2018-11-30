@@ -1,49 +1,41 @@
 # Makefile
 #
 build:
-	@echo "src-protocol-exts-pp-vg" > dune-ignore 
-	@echo "src-protocol-exts-vg" >> dune-ignore 
+	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
 	dune build --profile release @install
-	rm dune-ignore
+	rm dune
 
 build_vgs:
-	@echo "src-protocol-exts-pp" > dune-ignore
-	@echo "src-protocol-exts" >> dune-ignore 
-	@echo "src-model" >> dune-ignore 
-	@echo "src-simulation" >> dune-ignore 
+    @echo "(ignored_subdirs (src-protocol-exts src-protocol-exts-pp src-model src-simulation))" > dune
 	dune build --profile release @install
-	rm dune-ignore
+	rm dune
 
 build_tests:
-	@echo "src-protocol-exts-pp-vg" > dune-ignore 
-	@echo "src-protocol-exts-vg" >> dune-ignore 
+	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
 	dune build --profile release src-tests/test_runner.bc 
-	rm dune-ignore
+	rm dune
 
 doc:
-	@echo "src-protocol-exts-pp-vg" > dune-ignore 
-	@echo "src-protocol-exts-vg" >> dune-ignore 
+	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
 	dune build --profile release @doc
 	mkdir -p _pages/doc
 	cp -r _build/default/_doc/_html/* _pages/doc/
 	rm -rf _pages/doc/odoc.css
 	sed -i '' -e 's/<body>/<body><nav><\/nav>/g' _pages/doc/index.html
-	rm dune-ignore
+	rm dune
 
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 	sed -e 's/rotate=90;//g' "$<" | dot -Tsvg -o $@
 
 server:
-	@echo "src-protocol-exts-pp-vg" > dune-ignore 
-	@echo "src-protocol-exts-vg" >> dune-ignore 
+	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
 	dune build --profile release src-simulation/server.bc
-	rm dune-ignore
+	rm dune
 
 client:
-	@echo "src-protocol-exts-pp-vg" > dune-ignore 
-	@echo "src-protocol-exts-vg" >> dune-ignore 
+	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
 	dune build --profile release src-simulation/client.bc
-	rm dune-ignore
+	rm dune
 
 # opam1-setup - for running in Wercker. Assumes the correct switch is already installed and selected.
 opam1-setup:
