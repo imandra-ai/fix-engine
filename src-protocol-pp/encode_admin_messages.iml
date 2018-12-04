@@ -34,7 +34,7 @@ let encode_msg_types msg =
 
 let encode_msg_logon_data msg =
     [ ( "98"  , req encode_encryption_method msg.ln_encrypt_method            )
-    ; ( "108" , req encode_int               msg.ln_heartbeat_interval        )
+    ; ( "108" , req encode_Duration          msg.ln_heartbeat_interval        )
     ; ( "95"  , opt encode_int               msg.ln_raw_data_length           )
     ; ( "96"  , opt encode_string            msg.ln_raw_data                  )
     ; ( "141" , opt encode_bool              msg.ln_reset_seq_num_flag        )

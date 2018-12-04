@@ -99,8 +99,8 @@ type fix_engine_state = {
 
     fe_last_time_data_sent  : fix_utctimestamp;             (** Last time we sent out data to the corresponding engine *)
     fe_last_data_received   : fix_utctimestamp;             (** Last time we received a heartbeat or other message. *)
-    fe_heartbeat_interval   : int;                 (** Negotiated heartbeat interval. *)
-    fe_testreq_interval     : int;                 (** Interval used to 'pad' heartbeat interval before a TestRequest message is sent out. *)
+    fe_heartbeat_interval   : fix_duration;                 (** Negotiated heartbeat interval. *)
+    fe_testreq_interval     : fix_duration;                 (** Interval used to 'pad' heartbeat interval before a TestRequest message is sent out. *)
 
     fe_retransmit_start_idx : int;                          (** Starting index of the retransmitting history. *)
     fe_retransmit_end_idx   : int;                          (** Ending index ... *)
@@ -148,9 +148,9 @@ let init_fix_engine_state = {
     fe_history              = [];
 
     fe_last_data_received   = make_utctimestamp 2017 1 1 0 1 0 None;
-    fe_heartbeat_interval   = 30; (* 30 seconds *)
+    fe_heartbeat_interval   = make_duration 0 0 0 0 0 30; (* 30 seconds *)
     fe_last_time_data_sent  = make_utctimestamp 2017 1 1 0 1 0 None;
-    fe_testreq_interval     = 30;
+    fe_testreq_interval     = make_duration 0 0 0 0 0 30;
 
     fe_history_to_send      = [];
     fe_retransmit_start_idx = 0;
@@ -193,7 +193,7 @@ let is_state_valid ( engine : fix_engine_state ) =
     is_valid_utctimestamp ( engine.fe_curr_time ) && 
     is_valid_utctimestamp ( engine.fe_last_time_data_sent ) && 
     is_valid_utctimestamp ( engine.fe_last_data_received ) &&
-    is_valid_heartbeat_duration ( engine.fe_heartbeat_interval ) &&
-    is_valid_heartbeat_duration ( engine.fe_testreq_interval )
+    is_valid_duration ( engine.fe_heartbeat_interval ) &&
+    is_valid_duration ( engine.fe_testreq_interval )
 ;;
 

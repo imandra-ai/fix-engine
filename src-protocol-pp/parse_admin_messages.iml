@@ -15,6 +15,7 @@ open Parse_base_types;;
 open Parse_datetime;;
 open Parse_admin_enums;;
 open Parse_full_tags;;
+open Datetime;;
 
 
 let parse_msg_heartbeat_data msg = (
@@ -47,9 +48,10 @@ let parse_msg_logon_data msg = (
     opt msg "464" parse_bool              @@ fun msg ln_test_message_indicator    ->
     opt msg "553" parse_string            @@ fun msg ln_username                  ->
     opt msg "554" parse_string            @@ fun msg ln_password                  -> 
+    let ln_heartbeat_interval = (seconds_to_duration ln_heartbeat_interval) in
     ParseSuccess 
     { ln_encrypt_method             
-    ; ln_heartbeat_interval         
+    ; ln_heartbeat_interval    
     ; ln_raw_data_length            
     ; ln_raw_data                   
     ; ln_reset_seq_num_flag         
