@@ -1,7 +1,78 @@
+(rule
+  (targets act_checks.ml)
+  (deps act_checks.iml)
+   (action
+    (with-stdout-to act_checks.ml
+       (run imandra-extract act_checks.iml))))
+
+(rule
+  (targets act_process.ml)
+  (deps act_process.iml)
+   (action
+    (with-stdout-to act_process.ml
+       (run imandra-extract act_process.iml))))
+
+
+(rule
+  (targets msg_check_fields.ml)
+  (deps msg_check_fields.iml)
+   (action
+    (with-stdout-to msg_check_fields.ml
+       (run imandra-extract msg_check_fields.iml))))
+
+(rule
+  (targets msg_check_types.ml)
+  (deps msg_check_types.iml)
+   (action
+    (with-stdout-to msg_check_types.ml
+       (run imandra-extract msg_check_types.iml))))
+
+(rule
+  (targets msg_check_validate.ml)
+  (deps msg_check_validate.iml)
+   (action
+    (with-stdout-to msg_check_validate.ml
+       (run imandra-extract msg_check_validate.iml))))
+
+(rule
+  (targets msg_defaults.ml)
+  (deps msg_defaults.iml)
+   (action
+    (with-stdout-to msg_defaults.ml
+       (run imandra-extract msg_defaults.iml))))
+
+(rule
+  (targets msg_process.ml)
+  (deps msg_process.iml)
+   (action
+    (with-stdout-to msg_process.ml
+       (run imandra-extract msg_process.iml))))
+
+(rule
+  (targets msg_receive.ml)
+  (deps msg_receive.iml)
+   (action
+    (with-stdout-to msg_receive.ml
+       (run imandra-extract msg_receive.iml))))
+
+(rule
+  (targets msg_reject.ml)
+  (deps msg_reject.iml)
+   (action
+    (with-stdout-to msg_reject.ml
+       (run imandra-extract msg_reject.iml))))
+
+(rule
+  (targets venue.ml)
+  (deps venue.iml)
+   (action
+    (with-stdout-to venue.ml
+       (run imandra-extract venue.iml))))
+
 (library
   (name venue)
   (public_name fix-engine.venue)
   (wrapped false)
   (flags (:standard -open Imandra_prelude))
-  (libraries fix-engine.venue_prelude fix-engine.core fix-engine.core_time_defaults fix-engine.venue_types)
+  (libraries core core_time_defaults venue_types imandra-prelude)
 )

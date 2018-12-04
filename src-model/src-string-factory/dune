@@ -1,7 +1,35 @@
+(rule
+  (targets model_enum_names.ml)
+  (deps model_enum_names.iml)
+   (action
+    (with-stdout-to model_enum_names.ml
+       (run imandra-extract model_enum_names.iml))))
+
+(rule
+  (targets string_assoc_common.ml)
+  (deps string_assoc_common.iml)
+   (action
+    (with-stdout-to string_assoc_common.ml
+       (run imandra-extract string_assoc_common.iml))))
+
+(rule
+  (targets string_assoc.ml)
+  (deps string_assoc.iml)
+   (action
+    (with-stdout-to string_assoc.ml
+       (run imandra-extract string_assoc.iml))))
+
+(rule
+  (targets string_checks.ml)
+  (deps string_checks.iml)
+   (action
+    (with-stdout-to string_checks.ml
+       (run imandra-extract string_checks.iml))))
+
 (library
   (name string_factory)
   (public_name fix-engine.string_factory)
   (wrapped false)
   (flags (:standard -open Imandra_prelude))
-  (libraries fix-engine.venue_prelude fix-engine.venue_types)
+  (libraries venue_types imandra-prelude)
 )

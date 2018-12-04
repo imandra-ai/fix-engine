@@ -1,0 +1,211 @@
+(** Parser for full administrative messages. *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2018
+
+    parse_full_messages.ml
+
+*)
+
+open Full_message_tags
+open Full_messages
+open Parser_utils.Parser
+open Parse_base_types
+open Parse_full_tags
+open TimeDefaults_parser
+
+
+let parse_msg_data msg_tag msg =
+    match msg_tag with
+    | Full_Admin_Msg_Tag msg_tag -> Parse_admin_messages.parse_admin_msg_data msg_tag msg
+                                 >>= fun x -> ParseSuccess ( Full_FIX_Admin_Msg x )
+    | Full_App_Msg_Tag   msg_tag -> Parse_app_messages.parse_app_msg_data     msg_tag msg
+                                 >>= fun x -> ParseSuccess ( Full_FIX_App_Msg x )
+;;
+
+let parse_header msg = 
+    req msg "8"   parse_string        @@ fun msg h_begin_string                ->
+    req msg "9"   parse_int           @@ fun msg h_body_length                 ->
+    req msg "49"  parse_string        @@ fun msg h_sender_comp_id              ->
+    req msg "56"  parse_string        @@ fun msg h_target_comp_id              ->
+    req msg "34"  parse_int           @@ fun msg h_msg_seq_num                 ->
+    req msg "52"  parse_UTCTimestamp  @@ fun msg h_sending_time                ->   
+    opt msg "115" parse_string        @@ fun msg h_on_behalf_of_comp_id        -> 
+    opt msg "128" parse_string        @@ fun msg h_deliver_to_comp_id          ->  
+    opt msg "90"  parse_int           @@ fun msg h_secure_data_len             ->   
+    opt msg "91"  parse_int           @@ fun msg h_secure_data                 ->   
+    opt msg "50"  parse_string        @@ fun msg h_sender_sub_id               ->   
+    opt msg "142" parse_string        @@ fun msg h_sender_location_id          ->  
+    opt msg "57"  parse_string        @@ fun msg h_target_sub_id               ->   
+    opt msg "143" parse_string        @@ fun msg h_target_location_id          ->  
+    opt msg "116" parse_string        @@ fun msg h_on_behalf_of_sub_id         ->  
+    opt msg "114" parse_string        @@ fun msg h_on_behalf_of_location_id    ->  
+    opt msg "129" parse_string        @@ fun msg h_deliver_to_sub_id           ->  
+    opt msg "145" parse_string        @@ fun msg h_deliver_to_location_id      ->  
+    opt msg "43"  parse_bool          @@ fun msg h_poss_dup_flag               ->    
+    opt msg "97"  parse_bool          @@ fun msg h_poss_resend                 ->    
+    opt msg "122" parse_UTCTimestamp  @@ fun msg h_orig_sending_time           ->  
+    opt msg "212" parse_int           @@ fun msg h_xml_data_len                ->  
+    opt msg "213" parse_int           @@ fun msg h_xml_data                    ->  
+    opt msg "347" parse_int           @@ fun msg h_message_enconding           ->  
+    opt msg "369" parse_int           @@ fun msg h_last_msg_seq_num_processed  ->  
+    opt msg "627" parse_int           @@ fun msg h_no_hops                     -> 
+    ParseSuccess    
+    { h_begin_string                   
+    ; h_body_length                    
+    ; h_sender_comp_id                
+    ; h_target_comp_id                
+    ; h_msg_seq_num                   
+    ; h_on_behalf_of_comp_id        
+    ; h_deliver_to_comp_id           
+    ; h_secure_data_len               
+    ; h_secure_data                   
+    ; h_sender_sub_id                 
+    ; h_sender_location_id           
+    ; h_target_sub_id                 
+    ; h_target_location_id           
+    ; h_on_behalf_of_sub_id          
+    ; h_on_behalf_of_location_id     
+    ; h_deliver_to_sub_id            
+    ; h_deliver_to_location_id       
+    ; h_poss_dup_flag                  
+    ; h_poss_resend                    
+    ; h_sending_time                  
+    ; h_orig_sending_time            
+    ; h_xml_data_len                 
+    ; h_xml_data                     
+    ; h_message_enconding            
+    ; h_last_msg_seq_num_processed   
+    ; h_no_hops                         
+    } , msg
+;;
+
+let parse_trailer msg =  
+    opt msg "93" parse_int  @@ fun msg signature_length ->
+    opt msg "89" parse_int  @@ fun msg signature        ->
+    req msg "10" parse_int  @@ fun msg check_sum        -> 
+    ParseSuccess 
+    { signature_length
+    ; signature       
+    ; check_sum       
+    } , msg
+;;
+
+
+
+let check_first_three_tags ( msg : (string * string) list ) : string option =
+    if List.hd msg |> fst <> "8" then Some "8" else
+    let msg = List.tl msg in
+    if List.hd msg |> fst <> "9" then Some "9" else
+    let msg = List.tl msg in
+    if List.hd msg |> fst <> "35" then Some "35" else
+    None
+;;
+
+let check_tags_are_integers ( msg : (string * string) list ) : bool =
+    List.for_all ( fun (k,_v) ->
+        try Z.of_string k > 0 with _ -> false
+    ) msg
+;;
+
+
+(**  Checks that the message contains BodyLength<9> field as a second entry 
+     in the message. And that the value equals to the number of bytes between 
+     BodyLength<9> and CheckSum<10> entries in the message.
+*)
+let valid_body_length ( msg : (string * string) list ) : bool =
+    let body_length =
+        let rec scan n msg = match msg with
+            | ( "8", _ )::tl 
+            | ( "9", _ )::tl -> scan n tl
+            | ("10", _ )::_tl -> n
+            | (  k , v )::tl -> n + scan String.(length k + length v + 2) tl
+            | [] -> n in 
+        scan 0 msg 
+        in
+    match msg with 
+        | ("8", _ ) :: ("9", bl) :: _ -> 
+            ( try body_length = Z.of_string bl with _ -> false )
+        | _ -> false
+;;
+
+(**  Verifies the checksum (sum of all bytes mod 256) of all bytes in 
+    the message up to the CheckSum<10> entry. Returns true if the computed 
+    checksum is equal to the value of CheckSum<10>.
+*)
+let valid_checksum ( msg : (string * string) list ) : bool  =
+    let checksum s = 
+        let rec chsum i v =
+            if i < 0 then v else chsum (i - 1) (Z.of_int (Char.code s.[Z.to_int i]) + v)  in
+        chsum (String.length s - 1) 0 
+        in
+    let checksum, msg_checksum =
+        let rec scan n msg = match msg with
+            | ("10", v )::_tl -> ( n mod 256 , v )
+            | (  k , v )::tl -> scan (checksum k + checksum v + 62 + n) tl
+            | [] -> ( n mod 256 , "") in 
+        scan 0 msg
+        in
+    try checksum = Z.of_string msg_checksum with _ -> false
+;;
+
+(**
+    Runs basic message intergrity checks. Returns ParseSuccess ()  on success.
+*)
+let message_basic_check msg = 
+    match check_first_three_tags msg with Some tag -> RequiredTagMissing tag | None ->
+    if not (check_tags_are_integers msg ) then GarbledMessage else  
+    if not (valid_checksum          msg ) then GarbledMessage else  
+    if not (valid_body_length       msg ) then GarbledMessage else  
+    ParseSuccess ()
+;;
+
+let make_session_reject reason tagstr msg =
+    if not (List.mem_assoc "34" msg ) then Garbled else
+    match ( List.assoc "34" msg) with None -> Garbled | Some x -> 
+       (match parse_int x with None -> Garbled | Some seq_num ->
+            (match ( List.assoc "35" msg) with None -> Garbled | Some y -> (let msg_tag = parse_full_msg_tag y in
+            let field_tag = match msg_tag with 
+                | None -> None 
+                | Some _msg_tag -> parse_full_field_tag tagstr 
+            in
+            SessionRejectedMsg {
+                srej_msg_msg_seq_num   = seq_num   ;
+                srej_msg_field_tag     = field_tag ;     
+                srej_msg_msg_type      = msg_tag;
+                srej_msg_reject_reason = Some reason ;
+                srej_text              = None ;              
+                srej_encoded_text_len  = None ;
+                srej_encoded_text      = None ;      
+    })))
+;;
+
+let parse_top_level_msg msg =
+    let parse_result = begin 
+    message_basic_check msg >>= fun () ->
+    let header_and_trailer, msg = 
+        block msg parse_header  @@ fun msg full_msg_header   ->
+        block msg parse_trailer @@ fun msg full_msg_trailer  ->
+        ParseSuccess (full_msg_header, full_msg_trailer), msg 
+        in
+    header_and_trailer >>= fun (full_msg_header , full_msg_trailer) ->
+    let msg_tag_str, msg = Parser_utils.take "35" msg in
+    match msg_tag_str with None -> GarbledMessage | Some msg_tag_str -> 
+    match ( msg_tag_str |> parse_full_msg_tag ) with None -> UnknownMessageTag msg_tag_str | Some msg_tag ->
+    parse_msg_data  msg_tag msg >>= fun full_msg_data -> ParseSuccess 
+    { full_msg_header
+    ; full_msg_data
+    ; full_msg_trailer
+    } end in match parse_result with
+        | ParseSuccess msg       -> ValidMsg msg
+        | GarbledMessage         -> Garbled 
+        | UnknownMessageTag        tagstr -> make_session_reject Full_admin_enums.InvalidMsgType tagstr msg
+        | RequiredTagMissing       tagstr -> make_session_reject Full_admin_enums.RequiredTagMissing tagstr msg
+        | DuplicateTag             tagstr -> make_session_reject Full_admin_enums.TagAppearsMoreThanOnce tagstr msg
+        | WrongValueFormat         tagstr -> make_session_reject Full_admin_enums.IncorrectDataFormatForValue tagstr msg
+        | UndefinedTag             tagstr -> make_session_reject Full_admin_enums.TagNotDefinedForThisMessageType tagstr msg
+        | IncorrectNumInGroupCount tagstr -> make_session_reject Full_admin_enums.IncorrectNumInGroupCountForRepeatingGroup tagstr msg
+        | RepeatingGroupOutOfOrder tagstr -> make_session_reject Full_admin_enums.RepeatingGroupFieldsOutOfOrder tagstr msg
+        | EmptyValue         tag -> make_session_reject Full_admin_enums.TagSecifiedWithoutAValue tag msg
+;;

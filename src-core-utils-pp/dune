@@ -1,0 +1,15 @@
+(rule
+  (targets current_time.ml)
+  (deps current_time.iml)
+   (action
+    (with-stdout-to current_time.ml
+       (run imandra-extract current_time.iml))))
+
+
+(library
+  (name        core_utils_pp)
+  (public_name fix-engine.core_utils_pp)
+  (wrapped  false)
+  (flags :standard -open Imandra_prelude -warn-error -a)
+  (libraries imandra-prelude core)
+)

@@ -10,8 +10,13 @@ build:
         name: dune make
         code: |          
           set -ex
+          apt-get update && apt-get install -y libgmp-dev zlib1g-dev
           export OPAMROOT=/home/opam/.opam
           opam update
-          opam install dune decoders-yojson decoders
+          opam install dune
           make opam1-setup
+          curl -s "https://storage.googleapis.com/imandra-installer/install.sh" > /home/opam/install.sh
+          echo -e "/usr/local/bin\n" | sh /home/opam/install.sh -n
+          export PATH=/usr/local/bin/:$PATH
+          opam pin add https://github.com/AestheticIntegration/imandra-prelude.git
           make
