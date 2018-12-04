@@ -40,7 +40,7 @@ let msg_type_to_json msg =
 (** *)
 let full_msg_logon_to_json x = 
     [ ( "EncryptMethod"        , encryption_method_to_json x.ln_encrypt_method            )
-    ; ( "HeartBtInt"           , duration_to_json       x.ln_heartbeat_interval        )
+    ; ( "HeartBtInt"           , int_to_json               x.ln_heartbeat_interval        )
     ; ( "RawDataLength"        , int_opt_to_json           x.ln_raw_data_length           )
     ; ( "RawData"              , string_opt_to_json        x.ln_raw_data                  )
     ; ( "ResetSeqNumFlag"      , bool_opt_to_json          x.ln_reset_seq_num_flag        )

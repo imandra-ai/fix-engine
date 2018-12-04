@@ -38,7 +38,7 @@ let parse_msg_logon_data msg = (
     repeating msg "384" parse_msg_types   @@ fun msg ln_msg_types                 ->
     check_duplicate_tags msg              @@ fun ()                               ->
     req msg "98"  parse_encryption_method @@ fun msg ln_encrypt_method            ->
-    req msg "108" parse_Duration          @@ fun msg ln_heartbeat_interval        ->
+    req msg "108" parse_int               @@ fun msg ln_heartbeat_interval        ->
     opt msg "95"  parse_int               @@ fun msg ln_raw_data_length           ->
     opt msg "96"  parse_string            @@ fun msg ln_raw_data                  ->
     opt msg "141" parse_bool              @@ fun msg ln_reset_seq_num_flag        ->

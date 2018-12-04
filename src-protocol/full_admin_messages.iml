@@ -33,7 +33,7 @@ type full_msg_types_inner_rg = {
 (** Logon message data. *)
 type full_msg_logon_data = {
     ln_encrypt_method                     : fix_encryption_method;            (** Tag  98 *)
-    ln_heartbeat_interval                 : fix_duration;                     (** Tag 108 *)
+    ln_heartbeat_interval                 : int;                     (** Tag 108 *)
     ln_raw_data_length                    : int option;                       (** Tag  95 *)
     ln_raw_data                           : string option;                (** Tag  96 *)
     ln_reset_seq_num_flag                 : bool option;                      (** Tag 141 *)

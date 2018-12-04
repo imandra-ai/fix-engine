@@ -903,6 +903,10 @@ let is_valid_duration ( dur : fix_duration ) =
     0 <= s && s <= 59
 ;;
 
+let is_valid_heartbeat_duration ( dur :int ) =
+    0 <= dur
+;;
+
 let normalise_duration (d:fix_duration):fix_duration = 
     let carry_secs  = calculate_carry d.dur_seconds 60 0 in
     let new_minute  = if carry_secs.carry_over then ( d.dur_minutes + 1)  else d.dur_minutes in 
