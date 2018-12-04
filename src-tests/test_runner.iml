@@ -1,24 +1,9 @@
 open Config_parser
-open Datetime
+open TimeDefaults_current_time
+open TimeDefaults
+open TimeDefaults_parser
 
 let (>>=) = Lwt.(>>=);;
-
-
-let get_current_utctimstamp ?offset:(offset=0) () =    
-    let open Datetime in
-    let dtime = Caml_unix.gettimeofday () in 
-    let dtime = (Q.of_float dtime) +. (1000. *. (Real.of_int offset)) in
-    let tm = Caml_unix.gmtime (Q.to_float dtime) in
-    let msec =  Z.of_float (Q.to_float (1000. *. dtime -. (Q.of_float (floor (Q.to_float dtime))))) in
-    {   utc_timestamp_year   = (Z.of_int tm.Caml_unix.tm_year) + 1900
-    ;   utc_timestamp_month  = (Z.of_int tm.Caml_unix.tm_mon) + 1
-    ;   utc_timestamp_day    = (Z.of_int tm.Caml_unix.tm_mday)
-    ;   utc_timestamp_hour   = (Z.of_int tm.Caml_unix.tm_hour)
-    ;   utc_timestamp_minute = (Z.of_int tm.Caml_unix.tm_min)
-    ;   utc_timestamp_second = (Z.of_int tm.Caml_unix.tm_sec)
-    ;   utc_timestamp_millisec = Some (msec)
-    }
-;;
 
 let msg_to_string msg =
     msg |> List.map (fun (a,b) -> a ^ "=" ^ b)
@@ -56,15 +41,15 @@ let prepare_packet msg =
 
 let prepare_message msg (src, tagret)=
     let id x = x in
-    let time = get_current_utctimstamp () in
+    let time = get_current_utctimestamp () in
     let fill_placeholder (k,v) = 
         if String.length v < 5 then (k,v) else
         if (match String.sub v 0 5 with None -> true | Some x -> x <> "<TIME") then (k,v) else 
         begin
             let adds = Scanf.sscanf v "<TIME%s@>" id in
             let adds = if adds = "" then 0 else (Z.of_int (Scanf.sscanf adds "%d" id)) in
-            let time = get_current_utctimstamp ~offset:adds () 
-                       |> normalise_utctimestamp_milli in
+            let time = get_current_utctimestamp ~offset:adds () 
+                       |> normalise_utctimestamp in
             ( k , Core_printer.fix_utctimestamp_to_string time ) 
         end in
     let fill_empty_ts (k,v) =
@@ -100,7 +85,7 @@ let check_expected_compatible received expected =
         else begin
             let rv = Caml.List.assoc ek received in  
             if rv = ev then Lwt.return_unit else
-            match Parse_datetime.parse_UTCTimestamp_milli rv, Parse_datetime.parse_UTCTimestamp_milli ev  with
+            match parse_UTCTimestamp rv, parse_UTCTimestamp ev  with
             | Some _rt, Some _et -> Lwt.return_unit 
             | _, _ -> Lwt_io.printf "  Error: for the key \"%s\" expected value was \"%s\", got \"%s\" instead.\n" ek ev rv           
         end

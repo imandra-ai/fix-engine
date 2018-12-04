@@ -68,6 +68,12 @@ let utctimeonly_GreaterThan = utctimeonly_GreaterThan_milli_milli
 let utctimeonly_GreaterThanEqual = utctimeonly_GreaterThanEqual_milli_milli
 ;;
 
+let normalise_utctimestamp = normalise_utctimestamp_milli
+;;
+
+let normalise_utctimeonly = normalise_utctimeonly_milli
+;;
+
 
 
 
