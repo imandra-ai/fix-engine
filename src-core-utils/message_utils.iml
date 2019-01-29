@@ -1,7 +1,9 @@
-open Model_messages
+(* Aesthetic Integration copyright 2018 *)
+open Model_messages;;
 
-let get_resend_message (msg:model_top_level_msg):model_top_level_msg = 
-  match msg with
-  | Model_messages.FIX_TL_Normal m -> Model_messages.FIX_TL_PossibleResend m 
-  | m -> m
+let get_resend_message (msg)  =
+    (match msg with
+        | FIX_TL_Normal m -> (FIX_TL_PossibleResend m)
+        | m -> m
+    )
 ;;

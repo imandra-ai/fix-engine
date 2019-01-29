@@ -3,12 +3,12 @@
   (deps timeDefaults.iml)
    (action
     (with-stdout-to timeDefaults.ml
-       (run imandra-extract timeDefaults.iml))))
-
+       (run imandra-extract  timeDefaults.iml))))
+       
 (library
-  (name        core_time_defaults)
+  (name core_time_defaults)
   (public_name fix-engine.core_time_defaults)
-  (wrapped  false)
-  (flags :standard -open Imandra_prelude -warn-error -a)
-  (libraries core imandra-prelude)
+  (wrapped false)
+  (flags (:standard -open Imandra_prelude -warn-error -a))
+  (libraries imandra-prelude core)
 )

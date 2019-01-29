@@ -1,0 +1,37 @@
+(* Aesthetic Integration copyright 2018 *)
+open Decoders_yojson.Basic.Decode;;
+open Decoders_yojson.Basic.Decode.Infix;;
+open Model_app_enums;;
+open Model_enum_names;;
+
+let mod_enum_side_decoder  : model_fix_side decoder =
+    string >>= (fun x -> (match string_to_mod_side_opt x with
+        | None -> (fail "Unknown enum (Side) encoding.")
+        | Some y -> (succeed y)
+    )
+    )
+;;
+
+let mod_enum_ordtype_decoder  : model_fix_ordtype decoder =
+    string >>= (fun x -> (match string_to_mod_ordtype_opt x with
+        | None -> (fail "Unknown enum (OrdType) encoding.")
+        | Some y -> (succeed y)
+    )
+    )
+;;
+
+let mod_enum_ordstatus_decoder  : model_fix_ordstatus decoder =
+    string >>= (fun x -> (match string_to_mod_ordstatus_opt x with
+        | None -> (fail "Unknown enum (OrdStatus) encoding.")
+        | Some y -> (succeed y)
+    )
+    )
+;;
+
+let mod_enum_exectype_decoder  : model_fix_exectype decoder =
+    string >>= (fun x -> (match string_to_mod_exectype_opt x with
+        | None -> (fail "Unknown enum (ExecType) encoding.")
+        | Some y -> (succeed y)
+    )
+    )
+;;

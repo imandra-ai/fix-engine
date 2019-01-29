@@ -1,35 +1,35 @@
 (rule
-  (targets full_app_enums.ml)
-  (deps full_app_enums.iml)
-   (action
-    (with-stdout-to full_app_enums.ml
-       (run imandra-extract full_app_enums.iml))))
-
-(rule
-  (targets full_app_messages.ml)
-  (deps full_app_messages.iml)
-   (action
-    (with-stdout-to full_app_messages.ml
-       (run imandra-extract full_app_messages.iml))))
-
-(rule
   (targets full_app_records.ml)
   (deps full_app_records.iml)
    (action
     (with-stdout-to full_app_records.ml
-       (run imandra-extract full_app_records.iml))))
-
+       (run imandra-extract  full_app_records.iml))))
+       
+(rule
+  (targets full_app_enums.ml)
+  (deps full_app_enums.iml)
+   (action
+    (with-stdout-to full_app_enums.ml
+       (run imandra-extract  full_app_enums.iml))))
+       
 (rule
   (targets full_app_tags.ml)
   (deps full_app_tags.iml)
    (action
     (with-stdout-to full_app_tags.ml
-       (run imandra-extract full_app_tags.iml))))
-
+       (run imandra-extract  full_app_tags.iml))))
+       
+(rule
+  (targets full_app_messages.ml)
+  (deps full_app_messages.iml)
+   (action
+    (with-stdout-to full_app_messages.ml
+       (run imandra-extract  full_app_messages.iml))))
+       
 (library
   (name protocol_exts)
   (public_name fix-engine.protocol_exts)
   (wrapped false)
-  (flags (:standard -open Imandra_prelude))
-  (libraries imandra-prelude core core_time_defaults)
+  (flags (:standard -open Imandra_prelude -warn-error -a))
+  (libraries imandra-prelude core)
 )

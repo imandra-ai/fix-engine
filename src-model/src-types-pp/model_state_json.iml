@@ -1,0 +1,14 @@
+(* Aesthetic Integration copyright 2018 *)
+open Model_actions_json;;
+open Model_messages_json;;
+open State;;
+open Yojson;;
+
+let model_state_to_json (m_state)  : json =
+    `Assoc (("incoming_action",(match m_state.incoming_action with
+        | None -> `Null
+        | Some x -> (json_of_fix_action x)
+    )
+    ) :: (("incoming_msg",json_of_top_level_msg m_state.incoming_msg) :: (("outgoing_msgs",`List (List.map (fun y -> json_of_model_msg y
+    ) m_state.outgoing_msgs)) :: [])))
+;;
