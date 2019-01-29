@@ -24,6 +24,6 @@ let send_msg (msg : model_msg) (m_state : model_state)  =
 type internal_states_types = int list
 ;;
 
-let get_internal_states_types (_m_state : model_state)  : internal_states_types =
+let get_internal_states_types (m_state : model_state)  : internal_states_types =
     []
 ;;

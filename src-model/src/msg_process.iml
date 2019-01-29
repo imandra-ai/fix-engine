@@ -29,7 +29,7 @@ let process_msg (m_state : model_state) (msg : model_top_level_msg)  =
             | _ -> m_state
         )
         )
-        | FIX_TL_PossibleResend _d -> m_state
+        | FIX_TL_PossibleResend d -> m_state
         | FIX_TL_None -> m_state
     )
 ;;

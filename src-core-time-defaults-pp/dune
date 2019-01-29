@@ -3,33 +3,33 @@
   (deps timeDefaults_parser.iml)
    (action
     (with-stdout-to timeDefaults_parser.ml
-       (run imandra-extract timeDefaults_parser.iml))))
-
+       (run imandra-extract  timeDefaults_parser.iml))))
+       
 (rule
   (targets timeDefaults_pp.ml)
   (deps timeDefaults_pp.iml)
    (action
     (with-stdout-to timeDefaults_pp.ml
-       (run imandra-extract timeDefaults_pp.iml))))
-
-(rule
-  (targets timeDefaults_json.ml)
-  (deps timeDefaults_json.iml)
-   (action
-    (with-stdout-to timeDefaults_json.ml
-       (run imandra-extract timeDefaults_json.iml))))
-
+       (run imandra-extract  timeDefaults_pp.iml))))
+       
 (rule
   (targets timeDefaults_current_time.ml)
   (deps timeDefaults_current_time.iml)
    (action
     (with-stdout-to timeDefaults_current_time.ml
-       (run imandra-extract timeDefaults_current_time.iml))))
-
+       (run imandra-extract  timeDefaults_current_time.iml))))
+       
+(rule
+  (targets timeDefaults_json.ml)
+  (deps timeDefaults_json.iml)
+   (action
+    (with-stdout-to timeDefaults_json.ml
+       (run imandra-extract  timeDefaults_json.iml))))
+       
 (library
-  (name        core_time_defaults_pp)
+  (name core_time_defaults_pp)
   (public_name fix-engine.core_time_defaults_pp)
-  (wrapped  false)
-  (flags :standard -open Imandra_prelude -warn-error -a)
-  (libraries core_pp core_time_defaults core yojson imandra-prelude core_utils_pp)
+  (wrapped false)
+  (flags (:standard -open Imandra_prelude -warn-error -a))
+  (libraries imandra-prelude core_pp core_utils_pp)
 )

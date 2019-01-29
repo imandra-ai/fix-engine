@@ -1,0 +1,20 @@
+(* Aesthetic Integration copyright 2018 *)
+open Model_tags;;
+
+let tag_to_message (x)  =
+    (match x with
+        | "D" -> (Some M_Msg_NewOrderSingle_Tag)
+        | _ -> None
+    )
+;;
+
+let tag_to_field (x)  =
+    (match x with
+        | "40" -> (Some M_Field_OrdType_Tag)
+        | "55" -> (Some M_Field_Symbol_Tag)
+        | "11" -> (Some M_Field_ClOrdID_Tag)
+        | "60" -> (Some M_Field_TransactTime_Tag)
+        | "54" -> (Some M_Field_Side_Tag)
+        | _ -> None
+    )
+;;
