@@ -81,8 +81,8 @@ let rec while_busy_loop state =
             ( match engine_state.outgoing_int_msg with
                 | Some ( OutIntMsg_ApplicationData data ) ->
                     let model_message = Type_converter.convert_full_to_model_fix data in
-                    ( match model_message , state.pub_callback with  
-                      | FIX_TL_Normal m , Some f -> f false m 
+                    ( match (Message_utils.get_normal_message model_message) , state.pub_callback with  
+                      | Some m , Some f -> f false m 
                       | _ -> Lwt.return_unit 
                     ) >>= fun () ->
                     let model_state = { model_state with State.incoming_msg = model_message } in
