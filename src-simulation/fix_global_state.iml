@@ -10,7 +10,7 @@ type incoming_event =
 (** Global state contains a fix_engine state and model_state *)
 type fix_global_state = {
          incoming : incoming_event Lwt_mvar.t;
-     pub_callback : (Model_messages.model_msg -> unit Lwt.t) option;    
+     pub_callback : (bool -> Model_messages.model_msg -> unit Lwt.t) option;    
      engine_state : Fix_engine_state.fix_engine_state;
       model_state : State.model_state;
      fix_callback : Full_messages.full_top_level_msg -> unit Lwt.t 
@@ -48,20 +48,58 @@ let rec send_all_outgoing_fix engine_state fix_callback =
 
 (** Iterating over a list of model messages, pass each into fix_eigine and
     send anything that fix_engine produces *)
-let rec send_messages_list messages engine_state fix_callback pub_callback =
+let rec send_messages_list messages engine_state fix_callback ( pub_callback : (bool -> Model_messages.model_msg -> unit Lwt.t) option) =
     let open Fix_engine_state in
     match messages with 
     | [] -> Lwt.return engine_state 
     | hd::tl -> (
-        ( match pub_callback with None -> Lwt.return_unit | Some f -> f hd ) >>= fun () ->
         let data = Type_converter.convert_model_to_full_fix hd in
         let msg = IncIntMsg_ApplicationData data in
         let engine_state = { engine_state with incoming_int_msg = Some msg } in
         let engine_state = Fix_engine.one_step engine_state in
+        ( match pub_callback with None -> Lwt.return_unit | Some f -> f true hd ) >>= fun () ->
         send_all_outgoing_fix engine_state fix_callback >>= fun engine_state ->
         send_messages_list tl engine_state fix_callback pub_callback
     )
 ;;
+
+
+let m_field_tag_pp =
+    let open Model_tags in
+    function
+    | M_Field_ExecID_Tag                      -> "ExecID"
+    | M_Field_CxlRejResponseTo_Tag            -> "CxlRejResponseTo"
+    | M_Field_PartyRole_Tag                   -> "PartyRole"
+    | M_Field_ExecTransType_Tag               -> "ExecTransType"
+    | M_Field_MIC_Tag                         -> "MIC"
+    | M_Field_PartyID_Tag                     -> "PartyID"
+    | M_Field_TransactTime_Tag                -> "TransactTime"
+    | M_Field_NoPartyIDs_Tag                  -> "NoPartyIDs"
+    | M_Field_LeavesQty_Tag                   -> "LeavesQty"
+    | M_Field_NoClearingEntries_Tag           -> "NoClearingEntries"
+    | M_Field_Rule80A_Tag                     -> "Rule80A"
+    | M_Field_CxlRejReason_Tag                -> "CxlRejReason"
+    | M_Field_ErrorCode_Tag                   -> "ErrorCode"
+    | M_Field_TotalAffectedOrders_Tag         -> "TotalAffectedOrders"
+    | M_Field_CumQty_Tag                      -> "CumQty"
+    | M_Field_AvgPx_Tag                       -> "AvgPx"
+    | M_Field_OrdStatus_Tag                   -> "OrdStatus"
+    | M_Field_ExecType_Tag                    -> "ExecType"
+    | M_Field_Currency_Tag                    -> "Currency"
+    | M_Field_Symbol_Tag                      -> "Symbol"
+    | M_Field_MassCancelRequestType_Tag       -> "MassCancelRequestType"
+    | M_Field_Text_Tag                        -> "Text"
+    | M_Field_PartyIDSource_Tag               -> "PartyIDSource"
+    | M_Field_PartyRoleQualifier_Tag          -> "PartyRoleQualifier"
+
+let pp_model = 
+    let open Model_messages in
+    function
+    | FIX_TL_Normal _ -> "Normal"
+    | FIX_TL_Req_Field_Missing x -> "Field missing" ^ m_field_tag_pp x.field_missing_data_field
+    | FIX_TL_PossibleResend _ -> "Poss resend" 
+    | FIX_TL_None -> "None"
+
 
 let rec while_busy_loop state =
     let engine_state = state.engine_state in
@@ -77,18 +115,23 @@ let rec while_busy_loop state =
         end
         | None, Some _msg -> begin
             let model_state = state.model_state in
-            let model_state = match engine_state.outgoing_int_msg with
+            ( match engine_state.outgoing_int_msg with
                 | Some ( OutIntMsg_ApplicationData data ) ->
                     let model_message = Type_converter.convert_full_to_model_fix data in
+                    Lwt_io.printf "model incoming message: %s\n" (pp_model model_message) >>= fun () -> 
+                    ( match model_message , state.pub_callback with  
+                      | FIX_TL_Normal m , Some f -> f false m 
+                      | _ -> Lwt.return_unit 
+                    ) >>= fun () ->
                     let model_state = { model_state with State.incoming_msg = model_message } in
-                    Venue.one_step model_state
+                    Lwt.return @@ Venue.one_step model_state
                 | Some ( OutIntMsg_ResendApplicationData data ) ->
                     let model_message = Type_converter.convert_full_to_model_fix data in
                     let model_message = Message_utils.get_resend_message model_message in     
                     let model_state = { model_state with State.incoming_msg = model_message } in
-                    Venue.one_step model_state
-                | _ -> model_state (* TODO -- see what to do with other messages *)
-                in
+                    Lwt.return @@ Venue.one_step model_state
+                | _ -> Lwt.return model_state (* TODO -- see what to do with other messages *)
+            ) >>= fun model_state ->    
             let engine_state = { engine_state with outgoing_int_msg = None } in
             send_messages_list 
                 model_state.State.outgoing_msgs 

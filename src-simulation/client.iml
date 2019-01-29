@@ -8,11 +8,14 @@
     
 *)
 
+module J = Yojson.Basic
+module D = Decoders_yojson.Basic.Decode
+
 let (>>=) = Lwt.(>>=);;
 
 let ctime = TimeDefaults_current_time.get_current_utctimestamp;;
 
-let zmq_publish socket msg =
+let zmq_publish socket out msg =
     let msg = Model_messages_json.json_of_model_msg msg in
     let rtime = Fix_connection.get_last_received_utctimestamp () in
     let ztime = TimeDefaults_current_time.get_current_utctimestamp () in
@@ -20,11 +23,15 @@ let zmq_publish socket msg =
     let rtime = rtime |> TimeDefaults_json.utctimestamp_to_json in
     let ztime = ztime |> TimeDefaults_json.utctimestamp_to_json in
     let stime = stime |> TimeDefaults_json.utctimestamp_to_json in
+    let tpair = 
+        if out then ( "sent_fix"     , ztime )
+               else ( "received_fix" , rtime )
+    in
     let msg = match msg with
         | `Assoc pairs -> `Assoc (
-	    ( "received_fix" , rtime ) :: 
-            ( "sent_zmq"     , ztime ) :: 
-            ( "SendingTime"  , stime ) :: pairs )
+	    tpair :: 
+        ( "sent_zmq"     , ztime ) :: 
+        ( "SendingTime"  , stime ) :: pairs )
         | other -> other in
     let msg = Yojson.to_string msg in
     Lwt_zmq.Socket.send socket msg  
@@ -39,17 +46,12 @@ let rec zmq_rep_loop (socket, mailbox) =
         Lwt_zmq.Socket.(send socket "UP") >>= fun () ->
         zmq_rep_loop (socket, mailbox) 
     else
-    let action =
-        try  
-            Json_to_action.json_to_fix_action (Yojson.Basic.from_string msg)
-        with 
-            _ex -> None
-        in
-    match action with 
-    | None -> (
+    let json = J.from_string msg in
+    match D.decode_value Json_to_action.fix_action_decoder json with
+    | Error _ -> (
         Lwt_zmq.Socket.(send socket "REJECTED") >>= fun () ->
         zmq_rep_loop (socket, mailbox) )   
-    | Some action -> (
+    | Ok action -> (
         Lwt_mvar.put mailbox (Fix_global_state.ModelAction action) >>= fun () ->
         Lwt_zmq.Socket.(send socket "ACKED") >>= fun () ->
         zmq_rep_loop (socket, mailbox) )
@@ -87,7 +89,7 @@ let run_client fixhost fixport config zmqpub zmqrep =
     let () = ZMQ.Socket.bind zmqrepsocket zmqrep in    
     let zmqrepsocket = Lwt_zmq.Socket.of_socket zmqrepsocket in
     (* Creating the address *)
-    let addr = Caml_unix.( (gethostbyname fixhost).h_addr_list.(0i) ) in      
+    let addr = Caml_unix.( (gethostbyname fixhost).h_addr_list.(0) ) in      
     let addr = Caml_unix.( ADDR_INET( addr , fixport ) ) in
     let () = [
         "(*********                   FIX Engine Client                           *********)";

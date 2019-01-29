@@ -5,7 +5,7 @@ type config = {
   target_id      : string;
   timer          : float;
   reset_seq      : bool;  
-  pub_callback   : (Model_messages.model_msg -> unit Lwt.t) option;
+  pub_callback   : (bool -> Model_messages.model_msg -> unit Lwt.t) option;
 }
 
 type t = {
