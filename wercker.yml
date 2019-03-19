@@ -12,6 +12,7 @@ build:
           set -ex
           apt-get update && apt-get install -y libgmp-dev zlib1g-dev
           export OPAMROOT=/home/opam/.opam
+          opam repo set-url default https://opam.ocaml.org
           opam update
           opam install dune decoders-yojson decoders
           make opam1-setup
