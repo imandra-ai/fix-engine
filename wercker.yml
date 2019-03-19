@@ -12,7 +12,7 @@ build:
           set -ex
           apt-get update && apt-get install -y libgmp-dev zlib1g-dev
           export OPAMROOT=/home/opam/.opam
-          opam update
+          opam repo set-url default https://opam.ocaml.org
           opam install dune decoders-yojson decoders
           make opam1-setup
           curl -s "https://storage.googleapis.com/imandra-installer/install.sh" > /home/opam/install.sh
