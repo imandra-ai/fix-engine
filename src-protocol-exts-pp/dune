@@ -100,6 +100,6 @@
   (name protocol_exts_pp)
   (public_name fix-engine.protocol_exts_pp)
   (wrapped false)
-  (flags (:standard -open Imandra_prelude -warn-error -a))
+  (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
   (libraries imandra-prelude core_pp protocol_exts yojson)
 )

@@ -2,22 +2,22 @@
 #
 build:
 	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
-	dune build --profile release @install
+	dune build @install
 	rm dune
 
 build_vgs:
 	@echo "(ignored_subdirs (src-protocol-exts src-protocol-exts-pp src-model src-simulation))" > dune
-	dune build --profile release @install
+	dune build @install
 	rm dune
 
 build_tests:
 	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
-	dune build --profile release src-tests/test_runner.bc 
+	dune build src-tests/test_runner.bc 
 	rm dune
 
 doc:
 	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
-	dune build --profile release @doc
+	dune build @doc
 	mkdir -p _pages/doc
 	cp -r _build/default/_doc/_html/* _pages/doc/
 	rm -rf _pages/doc/odoc.css
@@ -29,12 +29,12 @@ module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 
 server:
 	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
-	dune build --profile release src-simulation/server.bc
+	dune build src-simulation/server.bc
 	rm dune
 
 client:
 	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
-	dune build --profile release src-simulation/client.bc
+	dune build  src-simulation/client.bc
 	rm dune
 
 # opam1-setup - for running in Wercker. Assumes the correct switch is already installed and selected.

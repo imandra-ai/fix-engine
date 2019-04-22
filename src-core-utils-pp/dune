@@ -10,6 +10,6 @@
   (name        core_utils_pp)
   (public_name fix-engine.core_utils_pp)
   (wrapped  false)
-  (flags :standard -open Imandra_prelude -warn-error -a)
+  (flags :standard -open Imandra_prelude -warn-error -A+8+39)
   (libraries imandra-prelude core)
 )

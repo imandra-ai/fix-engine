@@ -23,6 +23,6 @@
   (name conversions)
   (public_name fix-engine.conversions)
   (wrapped false)
-  (flags (:standard -open Imandra_prelude -warn-error -a))
+  (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
   (libraries imandra-prelude core protocol_exts venue_types)
 )
