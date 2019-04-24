@@ -37,6 +37,6 @@
   (name string_factory)
   (public_name fix-engine.string_factory)
   (wrapped false)
-  (flags (:standard -open Imandra_prelude -warn-error -a))
+  (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
   (libraries imandra-prelude venue_types)
 )

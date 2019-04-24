@@ -38,7 +38,7 @@
   (public_name fix-engine.fix_simulation)
   (wrapped  false)
   (modules (:standard \ server client))
-  (flags (:standard -open Imandra_prelude -open Unix))
+  (flags (:standard -open Imandra_prelude -open Unix -warn-error -A+8+39))
   (libraries 
        lwt.unix
         venue

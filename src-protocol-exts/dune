@@ -30,6 +30,6 @@
   (name protocol_exts)
   (public_name fix-engine.protocol_exts)
   (wrapped false)
-  (flags (:standard -open Imandra_prelude -warn-error -a))
+  (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
   (libraries imandra-prelude core)
 )

@@ -114,6 +114,6 @@
   (name        protocol_pp)
   (public_name fix-engine.protocol_pp)
   (wrapped  false)
-  (flags (:standard -open Imandra_prelude))
+  (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
   (libraries imandra-prelude core_time_defaults_pp yojson protocol_exts_pp protocol fix_engine core_utils)
 )

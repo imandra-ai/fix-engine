@@ -9,6 +9,6 @@
   (name        core_printer)
   (public_name fix-engine.core_printer)
   (wrapped  false)
-  (flags :standard -open Imandra_prelude -warn-error -a)
+  (flags :standard -open Imandra_prelude -warn-error -A+8+39)
   (libraries core_pp core_time_defaults_pp core yojson imandra-prelude )
 )

@@ -38,6 +38,6 @@
   (name        protocol)
   (public_name fix-engine.protocol)
   (wrapped  false)
-  (flags (:standard -open Imandra_prelude))
+  (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
   (libraries imandra-prelude core_time_defaults protocol_exts)
 )
