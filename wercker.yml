@@ -19,5 +19,4 @@ build:
           curl -s "https://storage.googleapis.com/imandra-installer/install.sh" > /home/opam/install.sh
           echo -e "/usr/local/bin\n" | sh /home/opam/install.sh -n
           export PATH=/usr/local/bin/:$PATH
-          opam pin add https://github.com/AestheticIntegration/imandra-prelude.git
           make

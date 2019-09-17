@@ -80,5 +80,5 @@
   (public_name fix-engine.venue)
   (wrapped false)
   (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
-  (libraries imandra-prelude core venue_types)
+  (libraries imandra-base.prelude core venue_types)
 )
