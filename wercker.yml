@@ -8,6 +8,7 @@ build:
   steps:
     - script:
         name: dune make
+        command-timeout: 60
         code: |          
           set -ex
           apt-get update && apt-get install -y libgmp-dev zlib1g-dev
