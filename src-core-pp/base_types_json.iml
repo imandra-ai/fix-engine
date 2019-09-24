@@ -244,8 +244,8 @@ let symbol_decoder : string Decoders_yojson.Basic.Decode.decoder =
 *)
 
 let bool_to_json : bool -> json = function
-  | true  -> `String "true" 
-  | false -> `String "false" 
+  | true  -> `Bool true 
+  | false -> `Bool false 
 ;;
 
 let bool_decoder : bool Decoders_yojson.Basic.Decode.decoder =
