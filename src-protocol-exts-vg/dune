@@ -31,5 +31,5 @@
   (public_name fix-engine.protocol_exts_vg)
   (wrapped  false)
   (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
-  (libraries imandra-prelude core core_time_defaults)
+  (libraries imandra-base.prelude core core_time_defaults)
 )
