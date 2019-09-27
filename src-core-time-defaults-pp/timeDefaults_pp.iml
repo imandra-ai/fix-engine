@@ -1,6 +1,9 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-core-pp/encode_datetime.iml"]
 open Encode_datetime;;
 
 let encode_UTCTimestamp = encode_UTCTimestamp_milli;;
 
 let encode_UTCTimeOnly = encode_UTCTimeOnly_milli;;
+[@@@logic]

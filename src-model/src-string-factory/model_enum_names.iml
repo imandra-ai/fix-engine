@@ -1,4 +1,6 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-types/model_app_enums.iml"]
 open Model_app_enums;;
 
 let mod_side_to_string (d)  =
@@ -174,3 +176,4 @@ let string_to_mod_exectype_opt (d)  =
         | _ -> (None)
     )
 ;;
+[@@@logic]

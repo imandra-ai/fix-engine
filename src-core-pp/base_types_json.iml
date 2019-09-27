@@ -6,9 +6,12 @@
 
     base_types_json.ml 
 *)
-
+[@@@program]
 open Yojson;;
+[@@@import "../src-core/numeric.iml"]
 open Numeric;;
+[@@@require "decoders-yojson"]
+open Decoders_yojson.Basic.Decode;;
 module JU = Yojson.Basic.Util;;
 module D = Decoders_yojson.Basic.Decode;; 
 open D.Infix;;
@@ -255,3 +258,4 @@ let bool_opt_to_json : bool option -> json = function
   | None   -> `Null
   | Some x -> bool_to_json x 
 ;;
+[@@@logic]

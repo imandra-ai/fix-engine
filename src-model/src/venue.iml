@@ -1,7 +1,11 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "act_process.iml"]
 open Act_process;;
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+[@@@import "msg_process.iml"]
 open Msg_process;;
+[@@@import "../src-types/state.iml"]
 open State;;
 
 let one_step (m_state : model_state)  =

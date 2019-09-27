@@ -1,4 +1,5 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
 
 let assign_defaults_ExecutionReport (msg_data : mod_executionreport_data)  =

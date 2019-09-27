@@ -7,10 +7,16 @@
     parse_app_records.ml
 
 *)
+[@@@program]
+[@@@import "../src-core-pp/parser_utils.iml"]
 open Parser_utils.Parser;;
+[@@@import "../src-protocol-exts-vg/full_app_records.iml"]
 open Full_app_records;;
+[@@@import "../src-core-pp/parse_base_types.iml"]
 open Parse_base_types;;
+[@@@import "../src-core-pp/parse_datetime.iml"]
 open Parse_datetime;;
+[@@@import "parse_app_enums.iml"]
 open Parse_app_enums;;
 
 
@@ -28,3 +34,4 @@ let parse_Instrument msg =
     ; f_Instrument_SymbolSfx   
     },msg) 
 ;;
+[@@@logic]

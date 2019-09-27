@@ -1,4 +1,6 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-protocol-exts/full_app_enums.iml"]
 open Full_app_enums;;
 open Yojson;;
 
@@ -5512,3 +5514,4 @@ let exchange_opt_to_json (d)  : json =
         | Some d -> (exchange_to_json d)
     )
 ;;
+[@@@logic]

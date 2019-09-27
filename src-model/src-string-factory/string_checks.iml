@@ -1,5 +1,8 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-types/actions.iml"]
 open Actions;;
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
 
 let isAction (str : string)  =
@@ -214,3 +217,4 @@ let name_of_msg (x)  =
         | FIX_TL_None -> "Msg:None"
     )
 ;;
+[@@@logic]

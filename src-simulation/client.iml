@@ -7,10 +7,15 @@
     client.ml
     
 *)
-
+[@@@program]
 module J = Yojson.Basic
+[@@@require "decoders-yojson"]
 module D = Decoders_yojson.Basic.Decode
-
+[@@@require "lwt"]
+[@@@import "../src-core-time-defaults-pp/timeDefaults_current_time.iml"]
+[@@@import "../src-model/src-types-pp/model_messages_json.iml"]
+[@@@import "fix_connection.iml"]
+[@@@import "../src-core-time-defaults-pp/timeDefaults_json.iml"]
 let (>>=) = Lwt.(>>=);;
 
 let ctime = TimeDefaults_current_time.get_current_utctimestamp;;
@@ -151,3 +156,4 @@ let () =
     let config = Term.(const mkconfig $ compid $ hostid $ targetid $ reset ) in
     Term.exit @@ Term.eval (Term. (const run_client $ fixhost $ fixport $ config $ zmqpub $ zmqrep ), info)
 ;;
+[@@@logic]

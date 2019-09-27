@@ -7,14 +7,21 @@
     fix_engine_transitions.ml
     
 *)
-
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
+[@@@import "../src-protocol/full_admin_enums.iml"]
 open Full_admin_enums;;
+[@@@import "../src-protocol/full_admin_messages.iml"]
 open Full_admin_messages;;
+[@@@import "../src-protocol/full_message_tags.iml"]
 open Full_message_tags;;
+[@@@import "../src-protocol/full_admin_tags.iml"]
 open Full_admin_tags;;
+[@@@import "../src-protocol/full_messages.iml"]
 open Full_messages;;
+[@@@import "fix_engine_state.iml"]
 open Fix_engine_state;;
+[@@@import "fix_engine_utils.iml"]
 open Fix_engine_utils;;
 
 (** In many abnormal cases we need to send out the Logout messages and

@@ -1,4 +1,5 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
 
 type milli_micro =

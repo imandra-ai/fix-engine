@@ -1,10 +1,18 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-protocol-exts/full_app_messages.iml"]
 open Full_app_messages;;
+[@@@import "../src-protocol-exts/full_app_tags.iml"]
 open Full_app_tags;;
+[@@@import "parse_app_enums.iml"]
 open Parse_app_enums;;
+[@@@import "parse_app_records.iml"]
 open Parse_app_records;;
+[@@@import "../src-core-pp/parse_base_types.iml"]
 open Parse_base_types;;
+[@@@import "../src-core-pp/parse_datetime.iml"]
 open Parse_datetime;;
+[@@@import "../src-core-pp/parser_utils.iml"]
 open Parser_utils.Parser;;
 
 let parse_ExecutionReport (msg)  =
@@ -455,3 +463,4 @@ let parse_app_msg_data (msg_tag) (msg)  =
         ))
     )
 ;;
+[@@@logic]

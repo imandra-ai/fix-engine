@@ -1,8 +1,13 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@require "decoders-yojson"]
 open Decoders_yojson.Basic.Decode;;
 open Decoders_yojson.Basic.Decode.Infix;;
+[@@@import "json_to_action.iml"]
 open Json_to_action;;
+[@@@import "json_to_message.iml"]
 open Json_to_message;;
+[@@@import "../src-types/state.iml"]
 open State;;
 
 let model_state_decoder  : model_state decoder =
@@ -15,3 +20,4 @@ let model_state_decoder  : model_state decoder =
     )
     )
 ;;
+[@@@logic]

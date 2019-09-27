@@ -1,9 +1,16 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../../src-core-pp/base_types_json.iml"]
 open Base_types_json;;
+[@@@import "../../src-core-pp/datetime_json.iml"]
 open Datetime_json;;
+[@@@import "../../src-protocol-exts-pp/json_generator_utils.iml"]
 open Json_generator_utils;;
+[@@@import "model_enums_json.iml"]
 open Model_enums_json;;
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+[@@@import "model_tags_json.iml"]
 open Model_tags_json;;
 open Yojson;;
 
@@ -34,3 +41,4 @@ let json_of_top_level_msg (x)  : json =
         | FIX_TL_None -> `Null
     )
 ;;
+[@@@logic]

@@ -1,5 +1,8 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-protocol-exts/full_app_enums.iml"]
 open Full_app_enums;;
+[@@@import "../src-core-pp/parser_utils.iml"]
 open Parser_utils.Parser;;
 
 let parse_week (str)  =
@@ -3192,3 +3195,4 @@ let parse_Exchange (str)  =
         | _ -> (None)
     )
 ;;
+[@@@logic]

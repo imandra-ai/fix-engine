@@ -8,7 +8,8 @@
     
 *)
 
-
+[@@@program]
+[@@@import "../src-protocol-exts-vg/full_app_enums.iml"]
 open Full_app_enums;;
 
 let parse_pricetype = function 
@@ -269,3 +270,4 @@ let parse_Exchange ( str ) =
         | "SHSC" -> (Some (FIX_Exchange_SHSC))
         | _ -> (None)
 ;;
+[@@@logic]

@@ -7,11 +7,15 @@
     full_messages.ml
 
 *)
-
+[@@@import "full_message_tags.iml"]
 open Full_message_tags;;
+[@@@import "full_admin_enums.iml"]
 open Full_admin_enums;;
+[@@@import "full_admin_messages.iml"]
 open Full_admin_messages;;
+[@@@import "../src-protocol-exts/full_app_messages.iml"]
 open Full_app_messages;;
+[@@@import "../src-core-time-defaults/timeDefaults.iml"]
 open TimeDefaults;;
 
 

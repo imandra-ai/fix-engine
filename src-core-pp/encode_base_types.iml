@@ -6,7 +6,8 @@
 
     base_types_json.ml 
 *)
-
+[@@@program]
+[@@@import "../src-core/numeric.iml"]
 open Numeric;;
 
 
@@ -31,3 +32,4 @@ let encode_bool : bool -> string = function
     | true  -> "Y" 
     | false -> "N" 
 ;;
+[@@@logic]

@@ -7,12 +7,19 @@
     parse_full_messages.ml
 
 *)
-
+[@@@program]
+[@@@import "../src-protocol/full_messages.iml"]
 open Full_messages
+[@@@import "../src-core-pp/encode_base_types.iml"]
 open Encode_base_types
+[@@@import "encode_full_tags.iml"]
 open Encode_full_tags
+[@@@import "../src-core-time-defaults-pp/timeDefaults_pp.iml"]
 open TimeDefaults_pp
+[@@@import "../src-core-utils/fix_version.iml"]
 open Fix_version
+[@@@import "encode_admin_messages.iml"]
+[@@@import "../src-protocol-exts-pp/encode_app_messages.iml"]
 
 let req f x = Some (f x);;
 let opt f v = match v with Some x -> Some ( f x ) | None -> None;;
@@ -110,3 +117,4 @@ let encode_full_valid_msg x =
              |> List.map ( fun(k,v) -> k^"="^v )
              |> List.fold_left ( fun a s -> a ^ s ^ "\001" ) ""
 ;;
+[@@@logic]

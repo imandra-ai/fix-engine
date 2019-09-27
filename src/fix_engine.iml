@@ -7,11 +7,15 @@
     fix_engine.ml
     
 *)
-
+[@@@import "../src-protocol/full_messages.iml"]
 open Full_messages;;
+[@@@import "fix_engine_state.iml"]
 open Fix_engine_state;;
+[@@@import "fix_engine_utils.iml"]
 open Fix_engine_utils;;
+[@@@import "fix_engine_transitions.iml"]
 open Fix_engine_transitions;;
+[@@@import "../src-core-time-defaults/timeDefaults.iml"]
 open TimeDefaults;;
 
 (** Process incoming internal transition message. *)

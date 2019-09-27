@@ -1,4 +1,6 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-protocol-exts/full_app_tags.iml"]
 open Full_app_tags;;
 
 let parse_app_msg_tag (tag)  =
@@ -387,3 +389,4 @@ let parse_app_field_tag (tag)  =
         | _ -> (None)
     )
 ;;
+[@@@logic]

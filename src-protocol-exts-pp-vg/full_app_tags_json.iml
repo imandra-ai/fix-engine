@@ -7,8 +7,9 @@
     full_app_tags_json.ml
     
 *)
-
+[@@@program]
 open Yojson;;
+[@@@import "../src-protocol-exts-vg/full_app_tags.iml"]
 open Full_app_tags;;
 
 
@@ -63,3 +64,4 @@ let full_app_msg_tag_opt_to_json = function None -> `Null  | Some x -> full_app_
 let full_app_field_tag_to_json x : json = `String ( full_app_field_tag_to_string x ) ;; 
 
 let full_app_field_tag_opt_to_json  = function None -> `Null | Some x -> full_app_field_tag_to_json x ;;
+[@@@logic]

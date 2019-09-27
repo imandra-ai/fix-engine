@@ -1,11 +1,19 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+[@@@import "msg_check_fields.iml"]
 open Msg_check_fields;;
+[@@@import "msg_check_types.iml"]
 open Msg_check_types;;
+[@@@import "msg_check_validate.iml"]
 open Msg_check_validate;;
+[@@@import "msg_defaults.iml"]
 open Msg_defaults;;
+[@@@import "msg_receive.iml"]
 open Msg_receive;;
+[@@@import "msg_reject.iml"]
 open Msg_reject;;
+[@@@import "../src-types/state.iml"]
 open State;;
 
 let process_NewOrderSingle (m_state : model_state) (msg_data : mod_newordersingle_data)  =

@@ -7,9 +7,12 @@
     core_printer.ml
     
 *)
-
+[@@@program]
+[@@@import "../src-core-pp/encode_base_types.iml"]
 open Encode_base_types;;
+[@@@import "../src-core-pp/encode_datetime.iml"]
 open Encode_datetime;;
+[@@@import "../src-core-time-defaults-pp/timeDefaults_pp.iml"]
 open TimeDefaults_pp;;
 
 let fix_float_0_to_string x =
@@ -79,3 +82,4 @@ let fix_monthyear_to_string x =
 let fix_duration_to_string x =
   encode_Duration x
 ;;
+[@@@logic]

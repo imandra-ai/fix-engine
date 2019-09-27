@@ -1,3 +1,15 @@
+[@@@program]
+[@@@require "lwt"]
+[@@@import "../src-protocol/full_messages.iml"]
+[@@@import "../src/fix_engine_state.iml"]
+[@@@import "../src-model/src-types/actions.iml"]
+[@@@import "../src-model/src-types/model_messages.iml"]
+[@@@import "../src-model/src-types/state.iml"]
+[@@@import "../src-protocol-pp/full_messages_json.iml"]
+[@@@import "../src/fix_engine.iml"]
+[@@@import "../src-model/src-conversions/type_converter.iml"]
+[@@@import "../src-model/src/venue.iml"]
+[@@@import "../src-core-utils/message_utils.iml"]
 let (>>=) = Lwt.(>>=)
 
 
@@ -152,3 +164,4 @@ let start ?pub:(pub_callback=None) init_engine init_model fix_callback =
     } in
     ( state.incoming , main_loop state )
 ;;
+[@@@logic]

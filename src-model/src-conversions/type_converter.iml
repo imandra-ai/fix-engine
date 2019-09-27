@@ -1,8 +1,13 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "enum_converter.iml"]
 open Enum_converter;;
+[@@@import "../../src-protocol-exts/full_app_messages.iml"]
 open Full_app_messages;;
+[@@@import "../../src-protocol-exts/full_app_records.iml"]
 open Full_app_records;;
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+[@@@import "../src-types/model_tags.iml"]
 open Model_tags;;
 
 let convert__full_to_model_ExecutionReport (msg : full_fix_executionreport_data)  =

@@ -1,7 +1,11 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "../../src-core/datetime.iml"]
 open Datetime;;
+[@@@import "model_app_enums.iml"]
 open Model_app_enums;;
+[@@@import "model_tags.iml"]
 open Model_tags;;
+[@@@import "../../src-core/numeric.iml"]
 open Numeric;;
 
 type mod_executionreport_data = {

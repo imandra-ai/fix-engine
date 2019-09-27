@@ -1,5 +1,7 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "../../src-core/datetime.iml"]
 open Datetime;;
+[@@@import "../../src-core/numeric.iml"]
 open Numeric;;
 
 type m_action_fix_x = {

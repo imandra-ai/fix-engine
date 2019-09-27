@@ -8,8 +8,9 @@
 
 *)
 
-
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
+[@@@import "full_app_enums.iml"]
 open Full_app_enums;;
 
 

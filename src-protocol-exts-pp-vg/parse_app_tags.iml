@@ -7,7 +7,8 @@
     parse_app_tags.ml
 
 *)
-
+[@@@program]
+[@@@import "../src-protocol-exts-vg/full_app_tags.iml"]
 open Full_app_tags;;
 
 
@@ -51,3 +52,4 @@ let parse_app_field_tag = function
     | "65"  -> Some Full_Msg_SymbolSfx_Tag   
     |  _  -> None
 ;;
+[@@@logic]

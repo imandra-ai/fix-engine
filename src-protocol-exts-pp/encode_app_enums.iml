@@ -1,5 +1,8 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-protocol-exts/full_app_enums.iml"]
 open Full_app_enums;;
+[@@@import "../src-core-pp/parser_utils.iml"]
 open Parser_utils.Parser;;
 
 let encode_week (d)  =
@@ -2852,3 +2855,4 @@ let encode_Exchange (d)  =
         | FIX_Exchange_SHSC -> "SHSC"
     )
 ;;
+[@@@logic]

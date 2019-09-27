@@ -1,8 +1,13 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@require "decoders-yojson"]
 open Decoders_yojson.Basic.Decode;;
 open Decoders_yojson.Basic.Decode.Infix;;
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+[@@@import "../src-string-factory/model_tag_names.iml"]
 open Model_tag_names;;
+[@@@import "../src-types/model_tags.iml"]
 open Model_tags;;
 
 let message_tag_decoder  : m_msg_tag decoder =
@@ -29,3 +34,4 @@ let field_missing_data_decoder  : field_missing_data decoder =
     )
     )
 ;;
+[@@@logic]

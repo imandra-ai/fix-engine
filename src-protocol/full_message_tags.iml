@@ -7,8 +7,9 @@
     full_admin_messages.ml
 
 *)
-
+[@@@import "../src-protocol-exts/full_app_tags.iml"]
 open Full_app_tags;;
+[@@@import "full_admin_tags.iml"]
 open Full_admin_tags;;
 
 

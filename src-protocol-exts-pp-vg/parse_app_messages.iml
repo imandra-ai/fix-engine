@@ -8,13 +8,20 @@
 
 *)
 
-
+[@@@program]
+[@@@import "../src-core-pp/parser_utils.iml"]
 open Parser_utils.Parser;;
+[@@@import "../src-protocol-exts-vg/full_app_tags.iml"]
 open Full_app_tags;;
+[@@@import "../src-protocol-exts-vg/full_app_messages.iml"]
 open Full_app_messages;;
+[@@@import "../src-core-pp/parse_base_types.iml"]
 open Parse_base_types;;
+[@@@import "parse_app_enums.iml"]
 open Parse_app_enums;;
+[@@@import "parse_app_records.iml"]
 open Parse_app_records;;
+[@@@import "../src-core-time-defaults-pp/timeDefaults_parser.iml"]
 open TimeDefaults_parser;;
 
 
@@ -168,3 +175,4 @@ let parse_app_msg_data msg_tag msg =
   | Full_Msg_NewOrderSingle_Tag            -> ((>>=) (fst (parse_msg_new_order_single_data  msg)) (fun f -> ParseSuccess (Full_Msg_NewOrderSingle f)))          
   | Full_Msg_CancelReject_Tag              -> ((>>=) (fst (parse_msg_cancel_reject_data  msg)) (fun f -> ParseSuccess (Full_Msg_CancelReject f)))
 ;;
+[@@@logic]

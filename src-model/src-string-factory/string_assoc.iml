@@ -1,4 +1,6 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "string_assoc_common.iml"]
 open String_assoc_common;;
 
 module StringAssoc = struct
@@ -26,3 +28,4 @@ module StringAssoc = struct
        with Not_found -> raise (No_match s)
 
 end;;
+[@@@logic]

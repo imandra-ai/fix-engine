@@ -7,7 +7,8 @@
     parse_admin_enums.ml
 
 *)
-
+[@@@program]
+[@@@import "../src-protocol/full_admin_enums.iml"]
 open Full_admin_enums;;
 
 
@@ -70,3 +71,4 @@ let encode_MsgDirection ( d ) =
         | FIX_MsgDirection_Receive -> "R"
     )
 ;;
+[@@@logic]

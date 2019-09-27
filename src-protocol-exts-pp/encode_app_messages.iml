@@ -1,9 +1,16 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "encode_app_enums.iml"]
 open Encode_app_enums;;
+[@@@import "encode_app_records.iml"]
 open Encode_app_records;;
+[@@@import "../src-core-pp/encode_base_types.iml"]
 open Encode_base_types;;
+[@@@import "../src-core-pp/encode_datetime.iml"]
 open Encode_datetime;;
+[@@@import "encode_utils.iml"]
 open Encode_utils;;
+[@@@import "../src-protocol-exts/full_app_messages.iml"]
 open Full_app_messages;;
 
 let encode_ExecutionReport (msg)  =
@@ -20,3 +27,4 @@ let encode_app_msg_data (msg)  =
         | FIX_Full_Msg_NewOrderSingle msg -> (encode_NewOrderSingle msg)
     )
 ;;
+[@@@logic]

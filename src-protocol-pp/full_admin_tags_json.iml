@@ -7,8 +7,9 @@
     full_admin_tags_json.ml
 
 *)
-
+[@@@program]
 open Yojson;;
+[@@@import "../src-protocol/full_admin_tags.iml"]
 open Full_admin_tags;;
 
 
@@ -88,3 +89,4 @@ let full_admin_msg_tag_opt_to_json = function None -> `Null | Some x -> full_adm
 let full_admin_field_tag_to_json x : json = `String (full_admin_field_tag_to_string x );;
 
 let full_admin_field_tag_opt_to_json = function None -> `Null | Some x -> full_admin_field_tag_to_json x ;;
+[@@@logic]

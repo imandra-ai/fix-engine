@@ -7,14 +7,22 @@
     parse_admin_messages.ml
 
 *)
-
+[@@@program]
+[@@@import "../src-protocol/full_admin_tags.iml"]
 open Full_admin_tags;;
+[@@@import "../src-protocol/full_admin_messages.iml"]
 open Full_admin_messages;;
+[@@@import "../src-core-pp/parser_utils.iml"]
 open Parser_utils.Parser;;
+[@@@import "../src-core-pp/parse_base_types.iml"]
 open Parse_base_types;;
+[@@@import "../src-core-pp/parse_datetime.iml"]
 open Parse_datetime;;
+[@@@import "parse_admin_enums.iml"]
 open Parse_admin_enums;;
+[@@@import "parse_full_tags.iml"]
 open Parse_full_tags;;
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
 
 
@@ -167,3 +175,4 @@ let parse_admin_msg_data msg_tag msg =
     | Full_Msg_Logon_Tag            -> parse_msg_logon_data           msg >>= fun x -> ParseSuccess ( Full_Msg_Logon           x )       
     | Full_Msg_Business_Reject_Tag  -> parse_msg_business_reject_data msg >>= fun x -> ParseSuccess ( Full_Msg_Business_Reject x )
 ;;
+[@@@logic]

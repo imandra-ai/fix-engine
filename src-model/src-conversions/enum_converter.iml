@@ -1,5 +1,7 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "../../src-protocol-exts/full_app_enums.iml"]
 open Full_app_enums;;
+[@@@import "../src-types/model_app_enums.iml"]
 open Model_app_enums;;
 
 let convert__full_to_model_Side (f : fix_side)  =

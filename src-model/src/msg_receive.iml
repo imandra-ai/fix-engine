@@ -1,7 +1,11 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "../src-types/model_app_enums.iml"]
 open Model_app_enums;;
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+[@@@import "../../src-core/numeric.iml"]
 open Numeric;;
+[@@@import "../src-types/state.iml"]
 open State;;
 
 let receive_message_NewOrderSingle (m_state : model_state) (msg_data : mod_newordersingle_data)  =

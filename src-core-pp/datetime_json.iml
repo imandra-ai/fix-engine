@@ -6,9 +6,11 @@
 
     datetime_json.ml 
 *)
-
+[@@@program]
 open Yojson;;
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
+[@@@import "base_types_json.iml"]
 open Base_types_json;;
 module JU = Yojson.Basic.Util;;
 module D = Decoders_yojson.Basic.Decode;; 
@@ -277,3 +279,4 @@ let monthyear_opt_to_json = function
   | None    -> `Null
   | Some x  -> monthyear_to_json x
 ;;
+[@@@logic]

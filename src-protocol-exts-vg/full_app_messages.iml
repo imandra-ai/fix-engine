@@ -7,11 +7,15 @@
     full_app_messages.ml
 
 *)
-
+[@@@import "../src-core/numeric.iml"]
 open Numeric;;
+[@@@import "full_app_enums.iml"]
 open Full_app_enums;;
+[@@@import "full_app_tags.iml"]
 open Full_app_tags;;
+[@@@import "full_app_records.iml"]
 open Full_app_records;;
+[@@@import "../src-core-time-defaults/timeDefaults.iml"]
 open TimeDefaults;;
 
 (** New Order Single message data. {{: http://www.onixs.biz/fix-dictionary/4.4/msgType_D_68.html} More details. } *)

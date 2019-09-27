@@ -1,4 +1,6 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-types/model_tags.iml"]
 open Model_tags;;
 
 let tag_to_message (x)  =
@@ -18,3 +20,4 @@ let tag_to_field (x)  =
         | _ -> None
     )
 ;;
+[@@@logic]

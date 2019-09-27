@@ -1,6 +1,10 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "model_actions_json.iml"]
 open Model_actions_json;;
+[@@@import "model_messages_json.iml"]
 open Model_messages_json;;
+[@@@import "../src-types/state.iml"]
 open State;;
 open Yojson;;
 
@@ -12,3 +16,4 @@ let model_state_to_json (m_state)  : json =
     ) :: (("incoming_msg",json_of_top_level_msg m_state.incoming_msg) :: (("outgoing_msgs",`List (List.map (fun y -> json_of_model_msg y
     ) m_state.outgoing_msgs)) :: [])))
 ;;
+[@@@logic]

@@ -7,13 +7,21 @@
     parse_full_messages.ml
 
 *)
-
+[@@@program]
+[@@@import "../src-protocol/full_message_tags.iml"]
 open Full_message_tags
+[@@@import "../src-protocol/full_messages.iml"]
 open Full_messages
+[@@@import "../src-core-pp/parser_utils.iml"]
 open Parser_utils.Parser
+[@@@import "../src-core-pp/parse_base_types.iml"]
 open Parse_base_types
+[@@@import "parse_full_tags.iml"]
 open Parse_full_tags
+[@@@import "../src-core-time-defaults-pp/timeDefaults_parser.iml"]
 open TimeDefaults_parser
+[@@@import "parse_admin_messages.iml"]
+[@@@import "../src-protocol-exts-pp/parse_app_messages.iml"]
 
 
 let parse_msg_data msg_tag msg =
@@ -209,3 +217,4 @@ let parse_top_level_msg msg =
         | RepeatingGroupOutOfOrder tagstr -> make_session_reject Full_admin_enums.RepeatingGroupFieldsOutOfOrder tagstr msg
         | EmptyValue         tag -> make_session_reject Full_admin_enums.TagSecifiedWithoutAValue tag msg
 ;;
+[@@@logic]

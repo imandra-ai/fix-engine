@@ -8,11 +8,8 @@
     fix_pp_main.ml
 
 *)
-
-:program
-
-#use "topfind";;
-#require "yojson";;
+(* 
+[@@@program]
 
 open String;;
 open Yojson;;
@@ -30,3 +27,4 @@ open Yojson;;
 :load src-pp/fix_app_msg_json.ml
 :load src-pp/fix_msg_json.ml
 :load src-pp/fix_engine_json.ml
+*)

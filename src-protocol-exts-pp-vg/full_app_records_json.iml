@@ -8,11 +8,15 @@
     
 *)
 
-
+[@@@program]
 open Yojson;;
+[@@@import "../src-protocol-exts-vg/full_app_records.iml"]
 open Full_app_records;;
+[@@@import "../src-core-pp/base_types_json.iml"]
 open Base_types_json;;
+[@@@import "../src-core-pp/datetime_json.iml"]
 open Datetime_json;;
+[@@@import "full_app_enums_json.iml"]
 open Full_app_enums_json;;
 
 
@@ -30,3 +34,4 @@ let instrument_to_json x : json =
     ; ( "SymbolSfx"    , string_opt_to_json       x.f_Instrument_SymbolSfx    )
     ] 
 ;;
+[@@@logic]

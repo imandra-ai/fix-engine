@@ -1,6 +1,9 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
+[@@@import "full_app_enums.iml"]
 open Full_app_enums;;
+[@@@import "../src-core/numeric.iml"]
 open Numeric;;
 
 type fix_rg_inner_logonmsgtypes = {

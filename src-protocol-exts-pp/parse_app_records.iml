@@ -1,8 +1,14 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-protocol-exts/full_app_records.iml"]
 open Full_app_records;;
+[@@@import "parse_app_enums.iml"]
 open Parse_app_enums;;
+[@@@import "../src-core-pp/parse_base_types.iml"]
 open Parse_base_types;;
+[@@@import "../src-core-pp/parse_datetime.iml"]
 open Parse_datetime;;
+[@@@import "../src-core-pp/parser_utils.iml"]
 open Parser_utils.Parser;;
 
 let parse_LogonMsgTypes (msg)  =
@@ -2673,3 +2679,4 @@ let parse_AllocGrp (msg)  =
     )
     )
 ;;
+[@@@logic]

@@ -7,13 +7,19 @@
     fix_engine_json.ml
 
 *)
-
+[@@@program]
 open Yojson
+[@@@import "../src/fix_engine_state.iml"]
 open Fix_engine_state
+[@@@import "../src-core-pp/datetime_json.iml"]
 open Datetime_json
+[@@@import "../src-core-pp/base_types_json.iml"]
 open Base_types_json
+[@@@import "../src-protocol-exts-pp/full_app_messages_json.iml"]
 open Full_app_messages_json
+[@@@import "full_messages_json.iml"]
 open Full_messages_json
+[@@@import "../src-core-time-defaults-pp/timeDefaults_json.iml"]
 open TimeDefaults_json
 
 
@@ -95,3 +101,4 @@ let engine_state_to_str s =
 let print_states states = 
     String.concat "\n" (List.map engine_state_to_str states)
 ;;
+[@@@logic]

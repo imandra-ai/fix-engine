@@ -1,5 +1,7 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "../../src-core/imandra_utils.iml"]
 open Imandra_utils;;
+[@@@import "../src-types/model_tags.iml"]
 open Model_tags;;
 
 exception Ipl_rg_exception 

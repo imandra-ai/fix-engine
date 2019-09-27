@@ -8,7 +8,8 @@
     
 *)
 
-
+[@@@program]
+[@@@import "../src-core/datetime.iml"]
 open Datetime
 
 let get_current_utctimestamp_milli ?offset:(offset=0) () : fix_utctimestamp_milli =    
@@ -55,3 +56,4 @@ let get_current_localmktdate () : fix_localmktdate =
   convert_utctimestamp_milli_localmktdate
     (get_current_utctimestamp_milli ())
 ;;
+[@@@logic]

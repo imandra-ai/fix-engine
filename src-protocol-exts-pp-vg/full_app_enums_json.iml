@@ -7,8 +7,9 @@
     full_app_enums_json.ml
     
 *)
-
+[@@@program]
 open Yojson;;
+[@@@import "../src-protocol-exts-vg/full_app_enums.iml"]
 open Full_app_enums;;
 
 
@@ -324,3 +325,4 @@ let exchange_opt_to_json ( d ) : json =
         | None -> (`Null)
         | Some d -> (exchange_to_json d)
 ;;
+[@@@logic]

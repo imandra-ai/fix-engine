@@ -7,7 +7,8 @@
     parse_admin_tags.ml
 
 *)
-
+[@@@program]
+[@@@import "../src-protocol/full_admin_tags.iml"]
 open Full_admin_tags;;
 
 
@@ -77,5 +78,5 @@ let encode_admin_field_tag = function
     | Full_Msg_NoHops_Tag                 ->  "627"       
     | Full_Msg_NextExpectedMsgSeqNum_Tag  ->  "789"          
 ;;
-
+[@@@logic]
 

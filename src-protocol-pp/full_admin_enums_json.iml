@@ -7,8 +7,9 @@
     full_admin_enums_json.ml
 
 *)
-
+[@@@program]
 open Yojson;;
+[@@@import "../src-protocol/full_admin_enums.iml"]
 open Full_admin_enums;;
 
 
@@ -107,3 +108,4 @@ let encryption_method_opt_to_json      = function None -> `Null | Some x -> encr
 
 (** *)
 let msgdirection_opt_to_json           = function None -> `Null | Some x -> msgdirection_to_json           x ;; 
+[@@@logic]

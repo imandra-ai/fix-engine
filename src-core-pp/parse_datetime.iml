@@ -7,7 +7,8 @@
     parse_datetime.ml
     
 *)
-
+[@@@program]
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
 
 
@@ -176,3 +177,4 @@ let parse_Duration (str:string) : fix_duration option =
      | _,_ -> None)
   else None 
 ;;
+[@@@logic]

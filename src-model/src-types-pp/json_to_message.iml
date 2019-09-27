@@ -1,10 +1,17 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../../src-core-pp/base_types_json.iml"]
 open Base_types_json;;
+[@@@import "../../src-core-pp/datetime_json.iml"]
 open Datetime_json;;
+[@@@require "decoders-yojson"]
 open Decoders_yojson.Basic.Decode;;
 open Decoders_yojson.Basic.Decode.Infix;;
+[@@@import "json_to_enum.iml"]
 open Json_to_enum;;
+[@@@import "json_to_model_tag.iml"]
 open Json_to_model_tag;;
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
 
 let mod_message_executionreport_decoder  : mod_executionreport_data decoder =
@@ -72,3 +79,4 @@ let top_level_message_decoder  : model_top_level_msg decoder =
     )
     )
 ;;
+[@@@logic]

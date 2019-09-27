@@ -1,8 +1,13 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
+[@@@import "full_app_enums.iml"]
 open Full_app_enums;;
+[@@@import "full_app_records.iml"]
 open Full_app_records;;
+[@@@import "full_app_tags.iml"]
 open Full_app_tags;;
+[@@@import "../src-core/numeric.iml"]
 open Numeric;;
 
 (** The execution report message is used to:

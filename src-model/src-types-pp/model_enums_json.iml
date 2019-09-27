@@ -1,4 +1,6 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-string-factory/model_enum_names.iml"]
 open Model_enum_names;;
 open Yojson;;
 
@@ -45,3 +47,4 @@ let mod_exectype_opt_to_json (d)  : json =
         | Some d -> (mod_exectype_to_json d)
     )
 ;;
+[@@@logic]

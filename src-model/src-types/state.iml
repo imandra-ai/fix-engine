@@ -1,5 +1,7 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "actions.iml"]
 open Actions;;
+[@@@import "model_messages.iml"]
 open Model_messages;;
 
 type model_state = {

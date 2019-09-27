@@ -1,7 +1,11 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@require "decoders-yojson"]
 open Decoders_yojson.Basic.Decode;;
 open Decoders_yojson.Basic.Decode.Infix;;
+[@@@import "../src-types/model_app_enums.iml"]
 open Model_app_enums;;
+[@@@import "../src-string-factory/model_enum_names.iml"]
 open Model_enum_names;;
 
 let mod_enum_side_decoder  : model_fix_side decoder =
@@ -35,3 +39,4 @@ let mod_enum_exectype_decoder  : model_fix_exectype decoder =
     )
     )
 ;;
+[@@@logic]

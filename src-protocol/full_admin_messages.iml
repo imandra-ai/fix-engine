@@ -7,10 +7,13 @@
     full_admin_messages.ml
 
 *)
-
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
+[@@@import "full_admin_enums.iml"]
 open Full_admin_enums;;
+[@@@import "full_admin_tags.iml"]
 open Full_admin_tags;;
+[@@@import "full_message_tags.iml"]
 open Full_message_tags;;
 
 (**

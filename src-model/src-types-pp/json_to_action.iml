@@ -1,7 +1,12 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-types/actions.iml"]
 open Actions;;
+[@@@import "../../src-core-pp/base_types_json.iml"]
 open Base_types_json;;
+[@@@import "../../src-core-pp/datetime_json.iml"]
 open Datetime_json;;
+[@@@require "decoders-yojson"]
 open Decoders_yojson.Basic.Decode;;
 open Decoders_yojson.Basic.Decode.Infix;;
 
@@ -20,3 +25,4 @@ let fix_action_decoder  : fix_action decoder =
     )
     )
 ;;
+[@@@logic]

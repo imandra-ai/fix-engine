@@ -7,12 +7,18 @@
     parse_admin_messages.ml
 
 *)
-
+[@@@program]
+[@@@import "../src-protocol/full_admin_messages.iml"]
 open Full_admin_messages;;
+[@@@import "../src-core-pp/encode_base_types.iml"]
 open Encode_base_types;;
+[@@@import "../src-core-pp/encode_datetime.iml"]
 open Encode_datetime;;
+[@@@import "encode_admin_enums.iml"]
 open Encode_admin_enums;;
+[@@@import "encode_full_tags.iml"]
 open Encode_full_tags;; 
+[@@@import "src-core/datetime.iml"]
 open Datetime;;
 
 let req f x = Some (f x);;
@@ -111,3 +117,4 @@ let encode_admin_msg_data msg =
     | Full_Msg_Logon           msg -> encode_msg_logon_data           msg        
     | Full_Msg_Business_Reject msg -> encode_msg_business_reject_data msg 
 ;;
+[@@@logic]

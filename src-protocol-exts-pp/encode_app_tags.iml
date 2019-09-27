@@ -1,4 +1,6 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@program]
+[@@@import "../src-protocol-exts/full_app_tags.iml"]
 open Full_app_tags;;
 
 let encode_app_msg_tag (d)  =
@@ -385,3 +387,4 @@ let encode_app_field_tag (d)  =
         | Full_Field_NoTradingSessions_Tag -> ("386")
     )
 ;;
+[@@@logic]

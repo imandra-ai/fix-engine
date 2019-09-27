@@ -7,9 +7,12 @@
     parse_full_tags.ml
 
 *)
-
+[@@@program]
+[@@@import "../src-protocol/full_message_tags.iml"]
 open Full_message_tags;;
+[@@@import "../src-protocol-exts-pp/encode_app_tags.iml"]
 open Encode_app_tags;; 
+[@@@import "encode_admin_tags.iml"]
 open Encode_admin_tags;;
 
 
@@ -25,3 +28,4 @@ let encode_full_field_tag tag =
         | Full_Admin_Field_Tag tag -> encode_admin_field_tag tag
         | Full_App_Field_Tag   tag -> encode_app_field_tag tag
 ;;
+[@@@logic]

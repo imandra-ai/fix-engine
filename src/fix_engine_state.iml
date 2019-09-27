@@ -8,11 +8,15 @@
     
 *)
 
-
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
+[@@@import "../src-protocol/full_admin_enums.iml"]
 open Full_admin_enums;;
+[@@@import "../src-protocol-exts/full_app_messages.iml"]
 open Full_app_messages;;
+[@@@import "../src-protocol/full_messages.iml"]
 open Full_messages;;
+[@@@import "../src-core-time-defaults/timedefaults.iml"]
 open TimeDefaults;;
 
 (** Define set of actions + data for manual intervention by the user. *)

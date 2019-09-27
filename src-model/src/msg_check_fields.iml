@@ -1,6 +1,9 @@
 (* Aesthetic Integration copyright 2018 *)
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+[@@@import "msg_check_types.iml"]
 open Msg_check_types;;
+[@@@import "../src-types/state.iml"]
 open State;;
 
 let check_fields_NewOrderSingle (msg_data : mod_newordersingle_data) (m_state : model_state)  =
