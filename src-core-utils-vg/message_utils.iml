@@ -1,0 +1,9 @@
+(* Aesthetic Integration copyright 2018 *)
+
+let get_resend_message (msg)  =
+    msg
+;;
+
+let get_normal_message (_msg) = 
+   None
+;;
