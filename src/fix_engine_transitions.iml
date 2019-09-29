@@ -367,16 +367,19 @@ let run_cache_replay ( engine : fix_engine_state ) =
         { engine with fe_cache = xs }
 ;;
 
+let no_seq_gap_measure l =
+    Ordinal.of_int (List.length l);;
 
 (** Check to make sure there're no sequence gaps *)
-let rec no_seq_gaps ( msg_list, last_seq_num : full_valid_fix_msg list * int) = 
+let rec no_seq_gaps (msg_list:full_valid_fix_msg list) (last_seq_num : int) = 
     match msg_list with
     | [] -> true
     | x::xs ->
         if x.full_msg_header.h_msg_seq_num <> ( last_seq_num + 1 ) then 
             false
         else
-            no_seq_gaps ( xs, x.full_msg_header.h_msg_seq_num )
+            no_seq_gaps  xs x.full_msg_header.h_msg_seq_num
+    [@@measure no_seq_gap_measure msg_list]
 ;;
 
 (** 
@@ -392,7 +395,7 @@ let is_cache_complete ( cache, last_seq_processed : full_valid_fix_msg list * in
     | x::xs ->
         begin 
             let correct_seq_num = x.full_msg_header.h_msg_seq_num = last_seq_processed in 
-            let no_gaps = no_seq_gaps ( xs, x.full_msg_header.h_msg_seq_num ) in 
+            let no_gaps = no_seq_gaps xs x.full_msg_header.h_msg_seq_num  in 
             correct_seq_num && no_gaps
         end
 ;;

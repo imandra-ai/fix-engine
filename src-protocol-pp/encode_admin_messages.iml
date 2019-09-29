@@ -18,7 +18,7 @@ open Encode_datetime;;
 open Encode_admin_enums;;
 [@@@import "encode_full_tags.iml"]
 open Encode_full_tags;; 
-[@@@import "src-core/datetime.iml"]
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
 
 let req f x = Some (f x);;

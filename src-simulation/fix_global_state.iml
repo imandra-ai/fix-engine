@@ -1,5 +1,6 @@
 [@@@program]
 [@@@require "lwt"]
+[@@@require "lwt.unix"]
 [@@@import "../src-protocol/full_messages.iml"]
 [@@@import "../src/fix_engine_state.iml"]
 [@@@import "../src-model/src-types/actions.iml"]
@@ -128,7 +129,7 @@ let rec main_loop state =
     let open Fix_engine_state in
     Lwt_mvar.take state.incoming >>= fun incoming ->
 (*    Lwt_io.printf "Main_loop received incoming : %s\n" (pp_incoming incoming) >>= fun () -> *)
-    Lwt_io.flush_all () >>= fun () ->
+    Lwt_io.flush_all () >>= fun () -> 
     match incoming with 
         | Terminate -> Lwt.return_unit
         | Internal_Message msg -> 

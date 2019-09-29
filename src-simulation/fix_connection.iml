@@ -1,3 +1,15 @@
+[@@@program]
+[@@@require "lwt"]
+[@@@require "lwt.unix"]
+[@@@import "../src-core-time-defaults-pp/timeDefaults_current_time.iml"]
+[@@@import "../src-model/src-types/model_messages.iml"]
+[@@@import "fix_global_state.iml"]
+[@@@import "../src/fix_engine_state.iml"]
+[@@@import "message_stream.iml"]
+[@@@import "../src-protocol-pp/parse_full_messages.iml"]
+[@@@import "../src-protocol-pp/encode_full_messages.iml"]
+
+
 type config = {
   comp_id        : string;
   host_id        : string option;
@@ -161,3 +173,4 @@ let create config (inch, outch) =
     initmsg = initmsg
   }
 ;;  
+[@@@logic]
