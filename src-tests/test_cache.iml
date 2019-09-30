@@ -7,11 +7,18 @@
     test_cache.ml
     
 *)
+[@@@program]
+[@@@import "../src-protocol/full_admin_messages.iml"]
 open Full_admin_messages
+[@@@import "../src-protocol/full_messages.iml"]
 open Full_messages
+[@@@import "../src/fix_engine_transitions.iml"]
 open Fix_engine_transitions
+[@@@import "../src/fix_engine_utils.iml"]
 open Fix_engine_utils
+[@@@import "../src-core-time-defaults/timeDefaults.iml"]
 open TimeDefaults
+[@@@import "../src-protocol-pp/full_messages_json.iml"]
 
 
 
@@ -74,4 +81,4 @@ check_cache([
     make_fix_msg (4);
     make_fix_msg (5);
 ], 0);;
-
+[@@@logic]

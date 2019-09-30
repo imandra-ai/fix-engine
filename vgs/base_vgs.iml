@@ -8,12 +8,17 @@
     fix_base_vgs.ml
 *)
 
-
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
+[@@@import "../src/fix_engine.iml"]
 open Fix_engine;;
+[@@@import "../src/fix_engine_state.iml"]
 open Fix_engine_state;;
+[@@@import "../src/fix_engine_utils.iml"]
 open Fix_engine_utils;;
+[@@@import "../src-protocol/full_admin_messages.iml"]
 open Full_admin_messages;;
+[@@@import "../src-protocol/full_messages.iml"]
 open Full_messages;;
 
 

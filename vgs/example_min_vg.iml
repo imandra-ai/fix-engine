@@ -2,7 +2,10 @@
 
 (* First, we try to verify a false VG and extract a counterexample. *)
 
-verify foo ( state : fix_engine_state ) =
+open Fix_engine
+open Fix_engine_state
+(* 
+verify ( fun (state : fix_engine_state) -> 
   let incoming_biz_rejected =
     match state.incoming_fix_msg with
     | Some x -> not (x.reject_flags.garbled)
@@ -31,9 +34,9 @@ verify foo ( state : fix_engine_state ) =
     && state.fe_curr_mode = ActiveSession *)
     && no_incoming_msgs)
   ==>
-    result_biz_reject
+    result_biz_reject)
 ;;
-
+*)
 (* Note that we now have a counterexample bound to CX.state.
 
    Let's `minimize' some aspect of this counterexample.  In doing so,
@@ -47,15 +50,16 @@ verify foo ( state : fix_engine_state ) =
    was introduced when we ran the verify statement above.
 
    For example, the following evaluates to false: *)
-
-foo CX.state;;
+(* 
+foo CX.state;; *)
 
 (* We can use foo to minimize our counterexample. *)
 
+(*
 :shadow off
-
+*)
 (* First, we define a little `minimizer.' *)
-
+(*
 let minimize_state s i =
   match i with
     0 -> { s with fe_curr_time      = 1 }
@@ -67,10 +71,10 @@ let minimize_state s i =
   | 6 -> { s with fe_heartbeat_interval = 1 }
   | _ -> s
 ;;
-
+*)
 (* Now, we execute it, only keeping `minimizations' that maintain our
    state's counterexample status. *)
-
+(*
 let minimize_state_vg vg_test s =
   let s = ref s in
   for i = 0 to 6 do
@@ -80,11 +84,11 @@ let minimize_state_vg vg_test s =
        then s := s'
   done;
   !s
-;;
-
+;; *)
+(* 
 :shadow on
 
-minimize_state_vg foo CX.state;;
+minimize_state_vg foo CX.state;; *)
 
 (* Result:
 

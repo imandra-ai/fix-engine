@@ -8,15 +8,16 @@
     fix_seqreset_reset.ml
 
 *)
-
-open Imandra_pervasives;;
+[@@@import "../src-core/datetime.iml"]
 open Datetime;;
-open Base_types;;
+[@@@import "../src/fix_engine.iml"]
 open Fix_engine;;
+[@@@import "../src/fix_engine_state.iml"]
+open Fix_engine_state
+[@@@import "../src-protocol/full_admin_messages.iml"]
 open Full_admin_messages;;
-open Full_session_core;;
+[@@@import "../src-protocol/full_messages.iml"]
 open Full_messages;;
-
 
 (** **************************************************************************************** *)
 (** 
@@ -29,7 +30,7 @@ open Full_messages;;
 
 *)
 (** **************************************************************************************** *)
-
+(*
 let inc_msg_seqreset_reset ( m : full_top_level_msg option ) =
     match m with 
     | None -> false
@@ -49,13 +50,13 @@ let inc_msg_seqreset_reset ( m : full_top_level_msg option ) =
     )
     | _ -> false
 ;;
-
+*)
 let state_updated ( engine, new_seq_num : fix_engine_state * int ) =
     engine.incoming_seq_num = new_seq_num &&
     engine.fe_curr_mode = ActiveSession && 
     engine.fe_cache = []
 ;;
-
+(*
 let out_of_seq_seqreset_processed ( engine, new_seq_num : fix_engine_state * int ) = 
     let engine' = one_step ( engine ) in
     (   inc_msg_seqreset_reset ( engine.incoming_fix_msg ) && 
@@ -65,7 +66,7 @@ let out_of_seq_seqreset_processed ( engine, new_seq_num : fix_engine_state * int
         state_updated ( engine', new_seq_num )
     )
 ;;
-
+*)
 (** **************************************************************************************** *)
 (** 
 

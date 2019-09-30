@@ -57,23 +57,24 @@
 *)
 (** **************************************************************************************** *)
 
-
+[@@@import "../src/fix_engine_state.iml"]
+open Fix_engine_state
 (** VG.3.1*)
-verify transitions_to_logoff_correctly ( engine : fix_engine ) = 
-    true
+verify ( fun ( engine : fix_engine_state ) ->
+    true)
 ;;
 
 (** VG.3.2 *)
-verify cannot_send_messages_when_logoff ( engine : fix_engine ) = 
-    true
+verify  (fun  (engine : fix_engine_state ) ->
+    true)
 ;;
 
 (** VG.3.3 *)
-verify gap ( engine : fix_engine ) =
-    true
+verify (fun  (engine : fix_engine_state ) ->
+    true)
 ;;
 
 (** VG.3.4 *)
-verify after_gap_refill_logoff ( engine : fix_engine ) = 
-    true
+verify  ( fun (engine : fix_engine_state ) ->
+    true)
 ;;

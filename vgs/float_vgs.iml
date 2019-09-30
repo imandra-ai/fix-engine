@@ -1,3 +1,4 @@
+[@@@import "../src-core/numeric.iml"]
 open Numeric;;
 
 theorem float_LT_GT_elim (x,y) =

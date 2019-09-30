@@ -1,7 +1,24 @@
+[@@@program]
+[@@@import "config_parser.iml"]
 open Config_parser
+[@@@import "../src-core-time-defaults-pp/timeDefaults_current_time.iml"]
 open TimeDefaults_current_time
+[@@@import "../src-core-time-defaults/timeDefaults.iml"]
 open TimeDefaults
+[@@@import "../src-core-time-defaults-pp/timeDefaults_parser.iml"]
 open TimeDefaults_parser
+[@@@require "lwt"]
+[@@@require "lwt.unix"]
+[@@@import "../src-core-pp/encode_base_types.iml"]
+[@@@import "../src-protocol-pp/encode_full_messages.iml"]
+[@@@import "../src-core-printer/core_printer.iml"]
+[@@@import "../src-protocol/full_message_tags.iml"]
+[@@@import "../src-core-pp/parser_utils.iml"]
+[@@@import "../src-protocol-pp/parse_full_tags.iml"]
+[@@@import "../src-protocol-pp/full_admin_tags_json.iml"]
+[@@@import "../src-protocol-exts-pp/full_app_tags_json.iml"]
+[@@@import "../src-simulation/message_stream.iml"]
+[@@@require "cmdliner"]
 
 let (>>=) = Lwt.(>>=);;
 
@@ -175,7 +192,6 @@ let def_reader filename =
     end |> Lwt_main.run
 ;;
 
-
 let () = 
     let open Cmdliner in
     let doc = "Tests a FIX server following a *.def script file." in
@@ -184,4 +200,5 @@ let () =
         in
     let def_fname = Arg.(value & pos 0i string "" & info []) in
     Term.exit @@ Term.eval (Term. (const def_reader $ def_fname ), info)
-;;
+;; 
+[@@@logic]
