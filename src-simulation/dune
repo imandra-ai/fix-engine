@@ -1,9 +1,9 @@
 (rule
-  (targets client.ml)
-  (deps client.iml)
+  (targets client_utils.ml)
+  (deps client_utils.iml)
    (action
-    (with-stdout-to client.ml
-       (run imandra-extract client.iml))))
+    (with-stdout-to client_utils.ml
+       (run imandra-extract client_utils.iml))))
 
 (rule
   (targets fix_connection.ml)
@@ -27,11 +27,11 @@
        (run imandra-extract message_stream.iml))))
   
 (rule
-  (targets server.ml)
-  (deps server.iml)
+  (targets server_utils.ml)
+  (deps server_utils.iml)
    (action
-    (with-stdout-to server.ml
-       (run imandra-extract server.iml))))
+    (with-stdout-to server_utils.ml
+       (run imandra-extract server_utils.iml))))
 
 (library
   (name        fix_simulation)
@@ -47,9 +47,11 @@
         core_pp
         core_time_defaults
         core_time_defaults_pp
+        types_pp
         protocol_pp
-        conversions    
-        imandra-base.prelude
+        conversions   
+        lwt-zmq 
+        imandra-base.prelude      
   )
 )
 
@@ -58,11 +60,6 @@
   (modules server)
   (libraries 
       lwt.unix
-      venue
-      fix_engine
-      fix_simulation
-      protocol_pp
-      conversions
       imandra-base.prelude
   )
 )
@@ -73,15 +70,7 @@
   (libraries 
       yojson
       lwt.unix
-      venue
-      fix_engine
-      fix_simulation
-      conversions
-      protocol_pp
-      types_pp
       cmdliner
-      ZMQ
-      lwt-zmq
       imandra-base.prelude
   )
 )
