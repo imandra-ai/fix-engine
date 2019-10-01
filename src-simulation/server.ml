@@ -9,7 +9,7 @@
 *)
 
 let server_thread =
-    let addr = Caml_unix.( ADDR_INET( inet_addr_loopback , 9880 ) ) in
+    let addr = Unix.( ADDR_INET( inet_addr_loopback , 9880 ) ) in
     let _server = Lwt_io.establish_server_with_client_address addr Server_utils.f in
     print_endline "Started server on localhost:9880 ...";
     fst (Lwt.wait ())

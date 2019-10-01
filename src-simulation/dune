@@ -51,7 +51,7 @@
         protocol_pp
         conversions   
         lwt-zmq 
-        imandra-base.prelude      
+        imandra-base.prelude   
   )
 )
 
@@ -59,8 +59,9 @@
   (name server)
   (modules server)
   (libraries 
+      lwt
       lwt.unix
-      imandra-base.prelude
+      unix
   )
 )
 
@@ -68,9 +69,6 @@
   (name client)
   (modules client)
   (libraries 
-      yojson
-      lwt.unix
       cmdliner
-      imandra-base.prelude
   )
 )
