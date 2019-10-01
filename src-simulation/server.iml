@@ -85,6 +85,6 @@ let server_thread =
 ;;
 
 
-"Lwt_main.run server_thread"
+Lwt_main.run server_thread
 ;;
 [@@@logic]
