@@ -59,8 +59,8 @@
   (name server)
   (modules server)
   (libraries 
-      lwt
       lwt.unix
+      fix_simulation
       unix
   )
 )
@@ -70,5 +70,6 @@
   (modules client)
   (libraries 
       cmdliner
+      fix_simulation
   )
 )
