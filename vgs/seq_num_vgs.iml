@@ -106,14 +106,14 @@ let incoming_msg_wrong_seq_num ( state : fix_engine_state ) =
     | Some f                -> not (f) )
 ;;
 
-verify out_of_seq_leads_to_recovery ( state : fix_engine_state ) =
+verify  (fun  (state : fix_engine_state ) ->
     let state' = one_step ( state ) in ( 
     state.fe_curr_mode = ActiveSession && 
     state.incoming_seq_num = 1 && 
     state.fe_cache = [] &&
     state.incoming_int_msg = None &&
     incoming_msg_wrong_seq_num ( state ) ) 
-    ==> (state'.fe_curr_mode = Recovery)
+    ==> (state'.fe_curr_mode = Recovery))
 ;;
 
 
