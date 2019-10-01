@@ -76,5 +76,4 @@ let f _ (inch, outch) =
         ]
     ) ( fun _ -> close_channels () )
 ;;
-
 [@@@logic]
