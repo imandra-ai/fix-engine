@@ -17,7 +17,7 @@ open TimeDefaults_parser
 [@@@import "../src-protocol-pp/parse_full_tags.iml"]
 [@@@import "../src-protocol-pp/full_admin_tags_json.iml"]
 [@@@import "../src-protocol-exts-pp/full_app_tags_json.iml"]
-[@@@import "../src-simulation/message_stream.iml"]
+[@@@import "../src-simulation-utils/message_stream.iml"]
 [@@@require "cmdliner"]
 
 let (>>=) = Lwt.(>>=);;
@@ -192,13 +192,4 @@ let def_reader filename =
     end |> Lwt_main.run
 ;;
 
-let () = 
-    let open Cmdliner in
-    let doc = "Tests a FIX server following a *.def script file." in
-    let info = 
-        Term.info "test_runner" ~version:"%%VERSION%%" ~doc ~exits:Term.default_exits 
-        in
-    let def_fname = Arg.(value & pos 0i string "" & info []) in
-    Term.exit @@ Term.eval (Term. (const def_reader $ def_fname ), info)
-;; 
 [@@@logic]

@@ -6,13 +6,14 @@ build:
 	rm dune
 
 build_vgs:
-	@echo "(ignored_subdirs (src-protocol-exts src-protocol-exts-pp src-model src-simulation src-core-utils))" > dune
+	@echo "(ignored_subdirs (src-protocol-exts src-protocol-exts-pp src-model src-simulation src-simulation-utils src-core-utils))" > dune
 	dune build @install
 	rm dune
 
 build_tests:
 	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg src-core-utils-vg))" > dune
 	dune build src-tests/test_runner.bc 
+	dune build src-tests/test_cache.bc
 	rm dune
 
 doc:

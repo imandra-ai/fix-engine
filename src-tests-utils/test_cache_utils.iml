@@ -42,13 +42,6 @@ let cache = [
     make_fix_msg (15);
 ];;
 
-print_string "The old cache:\n";;
-print_string ( Yojson.pretty_to_string ( Full_messages_json.full_msg_list_to_json (cache) ));;
-
-print_string "\n\nThe new cache\n";;
-let new_cache = add_to_cache (make_fix_msg (12), cache);;
-print_string ( Yojson.pretty_to_string ( Full_messages_json.full_msg_list_to_json (new_cache) ));;
-
 (** Can we transition correctly? *)
 let check_cache (c, idx) = 
     if is_cache_complete (c, idx) then
@@ -57,28 +50,35 @@ let check_cache (c, idx) =
         print_endline "\nCache incomplete"
 ;;
 
-pe "\nShould be fine - since 0th we have everything";;
-check_cache([
+let new_cache_fix_msg = make_fix_msg (12)
+;;
+
+let test_cache_index = 0
+;;
+
+let cache1 = [
     make_fix_msg (1);
     make_fix_msg (2);
     make_fix_msg (3);
     make_fix_msg (4);
-], 0);;
+]
+;;
 
-pe "\nFails - missing 5-9";;
-check_cache([
+let cache2 = [
     make_fix_msg (1);
     make_fix_msg (2);
     make_fix_msg (3);
     make_fix_msg (4);
     make_fix_msg (10);
-], 0);;
+]
+;;
 
-pe "\nFails - missing 1st";; 
-check_cache([
+let cache3 = [
     make_fix_msg (2);
     make_fix_msg (3);
     make_fix_msg (4);
     make_fix_msg (5);
-], 0);;
+]
+;;
+
 [@@@logic]
