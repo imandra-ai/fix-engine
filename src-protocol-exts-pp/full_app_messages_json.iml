@@ -1,16 +1,16 @@
-(* Aesthetic Integration copyright 2018 *)
-[@@@program]
+(* Aesthetic Integration copyright 2019 *)
 [@@@import "../src-core-pp/base_types_json.iml"]
-open Base_types_json;;
 [@@@import "../src-core-pp/datetime_json.iml"]
-open Datetime_json;;
 [@@@import "full_app_enums_json.iml"]
-open Full_app_enums_json;;
 [@@@import "../src-protocol-exts/full_app_messages.iml"]
-open Full_app_messages;;
 [@@@import "full_app_records_json.iml"]
-open Full_app_records_json;;
 [@@@import "json_generator_utils.iml"]
+[@@@program]
+open Base_types_json;;
+open Datetime_json;;
+open Full_app_enums_json;;
+open Full_app_messages;;
+open Full_app_records_json;;
 open Json_generator_utils;;
 open Yojson;;
 

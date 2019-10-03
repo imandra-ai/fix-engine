@@ -55,11 +55,11 @@
        (run imandra-extract  msg_receive.iml))))
        
 (rule
-  (targets repeatingGroupConsistencyChecks.ml)
-  (deps repeatingGroupConsistencyChecks.iml)
+  (targets repeating_group_consistency_checks.ml)
+  (deps repeating_group_consistency_checks.iml)
    (action
-    (with-stdout-to repeatingGroupConsistencyChecks.ml
-       (run imandra-extract  repeatingGroupConsistencyChecks.iml))))
+    (with-stdout-to repeating_group_consistency_checks.ml
+       (run imandra-extract  repeating_group_consistency_checks.iml))))
        
 (rule
   (targets act_process.ml)

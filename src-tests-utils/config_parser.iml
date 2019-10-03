@@ -1,5 +1,5 @@
-[@@@program]
 [@@@import "../src-core-pp/parser_utils.iml"]
+[@@@program]
 type action = 
     | Connect 
     | Disconnect

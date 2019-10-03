@@ -1,5 +1,12 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
 
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    fix_utils.iml
+    
+*)
 type session_details = {
     constant_begin_string : string
 }

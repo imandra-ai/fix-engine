@@ -1,7 +1,15 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    state.iml
+    
+*)
 [@@@import "actions.iml"]
-open Actions;;
 [@@@import "model_messages.iml"]
+open Actions;;
 open Model_messages;;
 
 type model_state = {

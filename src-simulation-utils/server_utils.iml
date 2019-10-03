@@ -10,7 +10,7 @@
 [@@@program]
 [@@@require "lwt"]
 [@@@require "lwt.unix"]
-[@@@import "../src-core-time-defaults-pp/timeDefaults_current_time.iml"]
+[@@@import "../src-core-time-defaults-pp/time_defaults_current_time.iml"]
 [@@@import "../src/fix_engine_state.iml"]
 [@@@import "../src-protocol/full_messages.iml"]
 [@@@import "../src-protocol-pp/encode_full_messages.iml"]
@@ -24,7 +24,7 @@ let engine_state =
     { init_fix_engine_state with
     fe_comp_id = "IMANDRA";
     fe_target_comp_id = "BANZAI";
-    fe_curr_time = TimeDefaults_current_time.get_current_utctimestamp ();
+    fe_curr_time = Time_defaults_current_time.get_current_utctimestamp ();
     fe_max_num_logons_sent = 10;
     fe_application_up = true }
 ;;  
@@ -44,7 +44,7 @@ let send_msg outch msg =
 ;;
 
 let do_timechange mailbox =
-    let time = TimeDefaults_current_time.get_current_utctimestamp () in
+    let time = Time_defaults_current_time.get_current_utctimestamp () in
     let timechange = Fix_engine_state.IncIntMsg_TimeChange time in
     let timechange = Fix_global_state.Internal_Message timechange in
     Lwt_mvar.put mailbox timechange

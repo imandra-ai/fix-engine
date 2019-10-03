@@ -1,8 +1,8 @@
 (* Basic Datetime VGs *)
 [@@@import "../src-core/datetime.iml"]
+[@@@import "../src-core-time-defaults/time_defaults.iml"]
 open Datetime;;
-[@@@import "../src-core-time-defaults/timeDefaults.iml"]
-open TimeDefaults
+open Time_defaults
 
 theorem utc_gt_transitive (x,y,z) =
  utctimestamp_GreaterThan x y 

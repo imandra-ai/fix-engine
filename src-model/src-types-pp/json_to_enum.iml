@@ -1,11 +1,19 @@
-(* Aesthetic Integration copyright 2018 *)
-[@@@program]
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    json_to_enum.iml
+    
+*)
 [@@@require "decoders-yojson"]
+[@@@import "../src-types/model_app_enums.iml"]
+[@@@import "../src-string-factory/model_enum_names.iml"]
+[@@@program]
 open Decoders_yojson.Basic.Decode;;
 open Decoders_yojson.Basic.Decode.Infix;;
-[@@@import "../src-types/model_app_enums.iml"]
 open Model_app_enums;;
-[@@@import "../src-string-factory/model_enum_names.iml"]
 open Model_enum_names;;
 
 let mod_enum_side_decoder  : model_fix_side decoder =

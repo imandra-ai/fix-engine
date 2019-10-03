@@ -1,7 +1,15 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    repeating_groups_converter.iml
+    
+*)
 [@@@import "../../src-core/imandra_utils.iml"]
-open Imandra_utils;;
 [@@@import "../src-types/model_tags.iml"]
+open Imandra_utils;;
 open Model_tags;;
 
 exception Ipl_rg_exception 

@@ -1,5 +1,12 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
 
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    message_utils.iml
+    
+*)
 let get_resend_message (msg)  =
     msg
 ;;

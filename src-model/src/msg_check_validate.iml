@@ -1,9 +1,17 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    message_check_validate.iml
+    
+*)
 [@@@import "../src-types/model_messages.iml"]
-open Model_messages;;
 [@@@import "msg_check_types.iml"]
-open Msg_check_types;;
 [@@@import "../src-types/state.iml"]
+open Model_messages;;
+open Msg_check_types;;
 open State;;
 
 let check_validate_NewOrderSingle (msg_data : mod_newordersingle_data) (m_state : model_state)  =

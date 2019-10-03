@@ -2,21 +2,21 @@
 (*** 
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Copyright (c) 2014 - 2019
     
     full_app_records_json.ml
     
 *)
 
+[@@@import "../src-protocol-exts-vg/full_app_records.iml"]
+[@@@import "../src-core-pp/base_types_json.iml"]
+[@@@import "../src-core-pp/datetime_json.iml"]
+[@@@import "full_app_enums_json.iml"]
 [@@@program]
 open Yojson;;
-[@@@import "../src-protocol-exts-vg/full_app_records.iml"]
 open Full_app_records;;
-[@@@import "../src-core-pp/base_types_json.iml"]
 open Base_types_json;;
-[@@@import "../src-core-pp/datetime_json.iml"]
 open Datetime_json;;
-[@@@import "full_app_enums_json.iml"]
 open Full_app_enums_json;;
 
 

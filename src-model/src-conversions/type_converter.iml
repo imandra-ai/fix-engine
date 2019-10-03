@@ -1,13 +1,21 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    type_converter.iml
+    
+*)
 [@@@import "enum_converter.iml"]
-open Enum_converter;;
 [@@@import "../../src-protocol-exts/full_app_messages.iml"]
-open Full_app_messages;;
 [@@@import "../../src-protocol-exts/full_app_records.iml"]
-open Full_app_records;;
 [@@@import "../src-types/model_messages.iml"]
-open Model_messages;;
 [@@@import "../src-types/model_tags.iml"]
+open Enum_converter;;
+open Full_app_messages;;
+open Full_app_records;;
+open Model_messages;;
 open Model_tags;;
 
 let convert__full_to_model_ExecutionReport (msg : full_fix_executionreport_data)  =

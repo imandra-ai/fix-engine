@@ -1,14 +1,10 @@
-[@@@program]
-[@@@import "config_parser.iml"]
-open Config_parser
-[@@@import "../src-core-time-defaults-pp/timeDefaults_current_time.iml"]
-open TimeDefaults_current_time
-[@@@import "../src-core-time-defaults/timeDefaults.iml"]
-open TimeDefaults
-[@@@import "../src-core-time-defaults-pp/timeDefaults_parser.iml"]
-open TimeDefaults_parser
 [@@@require "lwt"]
 [@@@require "lwt.unix"]
+[@@@require "cmdliner"]
+[@@@import "config_parser.iml"]
+[@@@import "../src-core-time-defaults-pp/time_defaults_current_time.iml"]
+[@@@import "../src-core-time-defaults/time_defaults.iml"]
+[@@@import "../src-core-time-defaults-pp/time_defaults_parser.iml"]
 [@@@import "../src-core-pp/encode_base_types.iml"]
 [@@@import "../src-protocol-pp/encode_full_messages.iml"]
 [@@@import "../src-core-printer/core_printer.iml"]
@@ -18,7 +14,11 @@ open TimeDefaults_parser
 [@@@import "../src-protocol-pp/full_admin_tags_json.iml"]
 [@@@import "../src-protocol-exts-pp/full_app_tags_json.iml"]
 [@@@import "../src-simulation-utils/message_stream.iml"]
-[@@@require "cmdliner"]
+[@@@program]
+open Config_parser
+open Time_defaults_current_time
+open Time_defaults
+open Time_defaults_parser
 
 let (>>=) = Lwt.(>>=);;
 

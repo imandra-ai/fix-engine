@@ -2,15 +2,15 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Copyright (c) 2014 - 2019
 
-    base_types_json.ml 
+    base_types_json.iml 
 *)
+[@@@require "decoders-yojson"]
+[@@@import "../src-core/numeric.iml"]
 [@@@program]
 open Yojson;;
-[@@@import "../src-core/numeric.iml"]
 open Numeric;;
-[@@@require "decoders-yojson"]
 module JU = Yojson.Basic.Util;;
 module D = Decoders_yojson.Basic.Decode;; 
 open D.Infix;;

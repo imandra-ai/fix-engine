@@ -6,7 +6,7 @@ build:
 	rm dune
 
 build_vgs:
-	@echo "(ignored_subdirs (src-protocol-exts src-protocol-exts-pp src-model src-simulation src-simulation-utils src-core-utils))" > dune
+	@echo "(ignored_subdirs (src-protocol-exts src-protocol-exts-pp src-model src-simulation src-simulation-utils src-core-utils src-tests-utils))" > dune
 	dune build @install
 	rm dune
 

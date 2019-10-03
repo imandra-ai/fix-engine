@@ -1,6 +1,6 @@
-(* Aesthetic Integration copyright 2018 *)
-[@@@program]
+(* Aesthetic Integration copyright 2019 *)
 [@@@import "../src-protocol-exts/full_app_tags.iml"]
+[@@@program]
 open Full_app_tags;;
 open Yojson;;
 

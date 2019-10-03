@@ -1,13 +1,20 @@
-(* Aesthetic Integration copyright 2018 *)
-[@@@program]
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    json_to_model_tag.iml
+    
+*)
 [@@@require "decoders-yojson"]
+[@@@program]
+[@@@import "../src-types/model_messages.iml"]
+[@@@import "../src-string-factory/model_tag_names.iml"]
+[@@@import "../src-types/model_tags.iml"]
 open Decoders_yojson.Basic.Decode;;
 open Decoders_yojson.Basic.Decode.Infix;;
-[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
-[@@@import "../src-string-factory/model_tag_names.iml"]
 open Model_tag_names;;
-[@@@import "../src-types/model_tags.iml"]
 open Model_tags;;
 
 let message_tag_decoder  : m_msg_tag decoder =

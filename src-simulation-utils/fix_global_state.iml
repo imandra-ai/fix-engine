@@ -1,4 +1,3 @@
-[@@@program]
 [@@@require "lwt"]
 [@@@require "lwt.unix"]
 [@@@import "../src-protocol/full_messages.iml"]
@@ -11,6 +10,7 @@
 [@@@import "../src-model/src-conversions/type_converter.iml"]
 [@@@import "../src-model/src/venue.iml"]
 [@@@import "../src-core-utils/message_utils.iml"]
+[@@@program]
 let (>>=) = Lwt.(>>=)
 
 

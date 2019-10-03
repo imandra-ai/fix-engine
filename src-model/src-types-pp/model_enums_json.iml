@@ -1,6 +1,13 @@
-(* Aesthetic Integration copyright 2018 *)
-[@@@program]
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    model_enums_json.iml
+    
+*)
 [@@@import "../src-string-factory/model_enum_names.iml"]
+[@@@program]
 open Model_enum_names;;
 open Yojson;;
 

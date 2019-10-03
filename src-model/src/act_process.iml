@@ -1,9 +1,17 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    act_ptocess.iml
+    
+*)
 [@@@import "act_checks.iml"]
-open Act_checks;;
 [@@@import "../src-types/actions.iml"]
-open Actions;;
 [@@@import "../src-types/state.iml"]
+open Act_checks;;
+open Actions;;
 open State;;
 
 let receive_action_x (m_state : model_state) (action_data : m_action_fix_x)  =

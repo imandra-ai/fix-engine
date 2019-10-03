@@ -1,8 +1,8 @@
-(* Aesthetic Integration copyright 2018 *)
-[@@@program]
+(* Aesthetic Integration copyright 2019 *)
 [@@@import "../src-protocol-exts/full_app_enums.iml"]
-open Full_app_enums;;
 [@@@import "../src-core-pp/parser_utils.iml"]
+[@@@program]
+open Full_app_enums;;
 open Parser_utils.Parser;;
 
 let parse_week (str)  =

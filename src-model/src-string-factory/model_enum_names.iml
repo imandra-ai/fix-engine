@@ -1,6 +1,14 @@
-(* Aesthetic Integration copyright 2018 *)
-[@@@program]
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    model_enum_names.iml
+    
+*)
 [@@@import "../src-types/model_app_enums.iml"]
+[@@@program]
 open Model_app_enums;;
 
 let mod_side_to_string (d)  =

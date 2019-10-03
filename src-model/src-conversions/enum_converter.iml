@@ -1,7 +1,15 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    enum_converter.iml
+    
+*)
 [@@@import "../../src-protocol-exts/full_app_enums.iml"]
-open Full_app_enums;;
 [@@@import "../src-types/model_app_enums.iml"]
+open Full_app_enums;;
 open Model_app_enums;;
 
 let convert__full_to_model_Side (f : fix_side)  =

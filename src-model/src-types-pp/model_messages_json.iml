@@ -1,16 +1,23 @@
-(* Aesthetic Integration copyright 2018 *)
-[@@@program]
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    model_messages_json.iml
+    
+*)
 [@@@import "../../src-core-pp/base_types_json.iml"]
-open Base_types_json;;
 [@@@import "../../src-core-pp/datetime_json.iml"]
-open Datetime_json;;
 [@@@import "../../src-protocol-exts-pp/json_generator_utils.iml"]
-open Json_generator_utils;;
 [@@@import "model_enums_json.iml"]
-open Model_enums_json;;
 [@@@import "../src-types/model_messages.iml"]
-open Model_messages;;
 [@@@import "model_tags_json.iml"]
+[@@@program]
+open Base_types_json;;
+open Datetime_json;;
+open Json_generator_utils;;
+open Model_enums_json;;
+open Model_messages;;
 open Model_tags_json;;
 open Yojson;;
 

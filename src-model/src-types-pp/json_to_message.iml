@@ -1,17 +1,24 @@
-(* Aesthetic Integration copyright 2018 *)
-[@@@program]
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    json_to_message.iml
+    
+*)
 [@@@import "../../src-core-pp/base_types_json.iml"]
-open Base_types_json;;
 [@@@import "../../src-core-pp/datetime_json.iml"]
+[@@@import "json_to_enum.iml"]
+[@@@import "json_to_model_tag.iml"]
+[@@@import "../src-types/model_messages.iml"]
+[@@@program]
+open Base_types_json;;
 open Datetime_json;;
-[@@@require "decoders-yojson"]
 open Decoders_yojson.Basic.Decode;;
 open Decoders_yojson.Basic.Decode.Infix;;
-[@@@import "json_to_enum.iml"]
 open Json_to_enum;;
-[@@@import "json_to_model_tag.iml"]
 open Json_to_model_tag;;
-[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
 
 let mod_message_executionreport_decoder  : mod_executionreport_data decoder =

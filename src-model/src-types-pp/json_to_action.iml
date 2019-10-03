@@ -1,12 +1,19 @@
-(* Aesthetic Integration copyright 2018 *)
-[@@@program]
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    json_to_action.iml
+    
+*)
 [@@@import "../src-types/actions.iml"]
-open Actions;;
 [@@@import "../../src-core-pp/base_types_json.iml"]
-open Base_types_json;;
 [@@@import "../../src-core-pp/datetime_json.iml"]
+[@@@program]
+open Actions;;
+open Base_types_json;;
 open Datetime_json;;
-[@@@require "decoders-yojson"]
 open Decoders_yojson.Basic.Decode;;
 open Decoders_yojson.Basic.Decode.Infix;;
 

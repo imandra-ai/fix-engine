@@ -1,13 +1,21 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    message_reject.iml
+    
+*)
 [@@@import "../src-types/model_app_enums.iml"]
-open Model_app_enums;;
 [@@@import "../src-types/model_messages.iml"]
-open Model_messages;;
 [@@@import "../src-types/model_tags.iml"]
-open Model_tags;;
 [@@@import "../../src-core/numeric.iml"]
-open Numeric;;
 [@@@import "../src-types/state.iml"]
+open Model_app_enums;;
+open Model_messages;;
+open Model_tags;;
+open Numeric;;
 open State;;
 
 let reject_NewOrderSingle_missingfield (m_state : model_state) (reject_text : string)  =

@@ -1,7 +1,15 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Aesthetic Integration Limited
+    Copyright (c) 2014 - 2019
+
+    actions.iml
+    
+*)
 [@@@import "../../src-core/datetime.iml"]
-open Datetime;;
 [@@@import "../../src-core/numeric.iml"]
+open Datetime;;
 open Numeric;;
 
 type m_action_fix_x = {

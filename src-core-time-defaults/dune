@@ -1,9 +1,9 @@
 (rule
-  (targets timeDefaults.ml)
-  (deps timeDefaults.iml)
+  (targets time_defaults.ml)
+  (deps time_defaults.iml)
    (action
-    (with-stdout-to timeDefaults.ml
-       (run imandra-extract  timeDefaults.iml))))
+    (with-stdout-to time_defaults.ml
+       (run imandra-extract  time_defaults.iml))))
        
 (library
   (name core_time_defaults)

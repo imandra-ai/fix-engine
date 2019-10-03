@@ -7,32 +7,31 @@
     client_utils.iml
     
 *)
-[@@@program]
-module J = Yojson.Basic
-[@@@require "decoders-yojson"]
-module D = Decoders_yojson.Basic.Decode
 [@@@require "lwt"]
 [@@@require "lwt.unix"]
 [@@@require "lwt-zmq"]
 [@@@require "cmdliner"]
-[@@@import "../src-core-time-defaults-pp/timeDefaults_current_time.iml"]
+[@@@import "../src-core-time-defaults-pp/time_defaults_current_time.iml"]
 [@@@import "../src-model/src-types-pp/model_messages_json.iml"]
 [@@@import "fix_connection.iml"]
-[@@@import "../src-core-time-defaults-pp/timeDefaults_json.iml"]
+[@@@import "../src-core-time-defaults-pp/time_defaults_json.iml"]
 [@@@import "../src-model/src-types-pp/json_to_action.iml"]
 [@@@import "fix_global_state.iml"]
+[@@@program]
+module J = Yojson.Basic
+module D = Decoders_yojson.Basic.Decode
 let (>>=) = Lwt.(>>=);;
 
-let ctime = TimeDefaults_current_time.get_current_utctimestamp;;
+let ctime = Time_defaults_current_time.get_current_utctimestamp;;
 
 let zmq_publish socket out msg =
     let msg = Model_messages_json.json_of_model_msg msg in
     let rtime = Fix_connection.get_last_received_utctimestamp () in
-    let ztime = TimeDefaults_current_time.get_current_utctimestamp () in
+    let ztime = Time_defaults_current_time.get_current_utctimestamp () in
     let stime = Fix_connection.get_last_received_sendingtime () in
-    let rtime = rtime |> TimeDefaults_json.utctimestamp_to_json in
-    let ztime = ztime |> TimeDefaults_json.utctimestamp_to_json in
-    let stime = stime |> TimeDefaults_json.utctimestamp_to_json in
+    let rtime = rtime |> Time_defaults_json.utctimestamp_to_json in
+    let ztime = ztime |> Time_defaults_json.utctimestamp_to_json in
+    let stime = stime |> Time_defaults_json.utctimestamp_to_json in
     let tpair = 
         if out then ( "sent_fix"     , ztime )
                else ( "received_fix" , rtime )

@@ -1,7 +1,8 @@
 (* A simple example showing how Imandra counterexamples can be minimized. *)
 
 (* First, we try to verify a false VG and extract a counterexample. *)
-
+[@@@import "../src/fix_engine.iml"]
+[@@@import "../src/fix_engine_state.iml"]
 open Fix_engine
 open Fix_engine_state
 (* 

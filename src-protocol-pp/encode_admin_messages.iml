@@ -2,23 +2,23 @@
 (***
 
     Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Copyright (c) 2014 - 2019
     
     parse_admin_messages.ml
 
 *)
-[@@@program]
 [@@@import "../src-protocol/full_admin_messages.iml"]
-open Full_admin_messages;;
 [@@@import "../src-core-pp/encode_base_types.iml"]
-open Encode_base_types;;
 [@@@import "../src-core-pp/encode_datetime.iml"]
-open Encode_datetime;;
 [@@@import "encode_admin_enums.iml"]
-open Encode_admin_enums;;
 [@@@import "encode_full_tags.iml"]
-open Encode_full_tags;; 
 [@@@import "../src-core/datetime.iml"]
+[@@@program]
+open Full_admin_messages;;
+open Encode_base_types;;
+open Encode_datetime;;
+open Encode_admin_enums;;
+open Encode_full_tags;; 
 open Datetime;;
 
 let req f x = Some (f x);;

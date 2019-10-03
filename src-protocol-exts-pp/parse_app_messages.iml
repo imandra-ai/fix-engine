@@ -1,18 +1,18 @@
-(* Aesthetic Integration copyright 2018 *)
-[@@@program]
+(* Aesthetic Integration copyright 2019 *)
 [@@@import "../src-protocol-exts/full_app_messages.iml"]
-open Full_app_messages;;
 [@@@import "../src-protocol-exts/full_app_tags.iml"]
-open Full_app_tags;;
 [@@@import "parse_app_enums.iml"]
-open Parse_app_enums;;
 [@@@import "parse_app_records.iml"]
-open Parse_app_records;;
 [@@@import "../src-core-pp/parse_base_types.iml"]
-open Parse_base_types;;
 [@@@import "../src-core-pp/parse_datetime.iml"]
-open Parse_datetime;;
 [@@@import "../src-core-pp/parser_utils.iml"]
+[@@@program]
+open Full_app_messages;;
+open Full_app_tags;;
+open Parse_app_enums;;
+open Parse_app_records;;
+open Parse_base_types;;
+open Parse_datetime;;
 open Parser_utils.Parser;;
 
 let parse_ExecutionReport (msg)  =
