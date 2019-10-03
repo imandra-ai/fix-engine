@@ -15,8 +15,8 @@ build:
           export OPAMROOT=/home/opam/.opam
           opam repo set-url default https://opam.ocaml.org
           opam update
-          curl -s "https://storage.googleapis.com/imandra-installer/install.sh" > /home/opam/install.sh
-          opam exec --switch=/usr/local/var/imandra -- make opam1-setup
+          curl -s "https://storage.googleapis.com/imandra-installer/install.sh" > /home/opam/install.sh          
           echo -e "/usr/local/bin\n" | sh /home/opam/install.sh -n
+          opam exec --switch=/usr/local/var/imandra -- make opam1-setup
           export PATH=/usr/local/bin/:$PATH
           opam exec --switch=/usr/local/var/imandra -- make 
