@@ -1,11 +1,11 @@
 no-response-timeout: 60
+command-timeout: 60
 build:
   box:
     id: ocaml/opam2
     tag: debian-9-ocaml-4.06
     entrypoint: /usr/bin/sudo -u root --preserve-env opam config exec --
     cmd: /bin/bash
-  command-timeout: 60
   steps:
     - script:
         name: dune make       
