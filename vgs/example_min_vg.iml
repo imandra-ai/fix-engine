@@ -5,7 +5,7 @@
 [@@@import "../src/fix_engine_state.iml"]
 open Fix_engine
 open Fix_engine_state
-(* 
+(*
 verify ( fun (state : fix_engine_state) -> 
   let incoming_biz_rejected =
     match state.incoming_fix_msg with

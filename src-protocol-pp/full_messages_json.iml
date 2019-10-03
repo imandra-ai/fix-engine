@@ -1,7 +1,7 @@
 (** Implementation of the 'full' FIX messages. *)
 (***
 
-    Aesthetic Integration Limited
+    Imandra Inc.
     Copyright (c) 2014 - 2019
 
     full_messages_json.ml

@@ -1,7 +1,7 @@
 (** JSON printers for engine model state. *)
 (***
     
-    Aesthetic Integration Limited
+    Imandra Inc.
     Copyright (c) 2014 - 2019
 
     fix_engine_json.ml

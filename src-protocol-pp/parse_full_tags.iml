@@ -1,8 +1,8 @@
 (** Parser for full message tags. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
     parse_full_tags.ml
 

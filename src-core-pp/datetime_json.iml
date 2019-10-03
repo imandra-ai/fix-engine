@@ -1,7 +1,7 @@
 (** JSON printers/parsers for datetime types. *)
 (***
 
-    Aesthetic Integration Limited
+    Imandra Inc.
     Copyright (c) 2014 - 2019
 
     datetime_json.iml 

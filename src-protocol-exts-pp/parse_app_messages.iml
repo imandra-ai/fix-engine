@@ -1,4 +1,4 @@
-(* Aesthetic Integration copyright 2019 *)
+(* Imandra Inc. copyright 2019 *)
 [@@@import "../src-protocol-exts/full_app_messages.iml"]
 [@@@import "../src-protocol-exts/full_app_tags.iml"]
 [@@@import "parse_app_enums.iml"]

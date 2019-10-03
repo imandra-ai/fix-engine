@@ -1,4 +1,4 @@
-(* Aesthetic Integration copyright 2019 *)
+(* Imandra Inc. copyright 2019 *)
 [@@@import "../src-core-pp/base_types_json.iml"]
 [@@@import "../src-core-pp/datetime_json.iml"]
 [@@@import "full_app_enums_json.iml"]

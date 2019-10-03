@@ -1,4 +1,4 @@
-(* Aesthetic Integration copyright 2019 *)
+(* Imandra Inc. copyright 2019 *)
 
 type fix_week =
     | FIX_week_noweek 

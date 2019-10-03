@@ -1,3 +1,11 @@
+(***
+    
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    fix_global_state.iml
+    
+*)
 [@@@require "lwt"]
 [@@@require "lwt.unix"]
 [@@@import "../src-protocol/full_messages.iml"]

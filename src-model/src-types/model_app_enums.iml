@@ -1,4 +1,4 @@
-(* Aesthetic Integration copyright 2018 *)
+(* Imandra Inc. copyright 2019 *)
 
 type model_fix_side =
     | MOD_FIX_Side_Buy 
