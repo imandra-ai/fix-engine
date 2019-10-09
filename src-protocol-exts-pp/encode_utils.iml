@@ -1,4 +1,7 @@
-(* Aesthetic Integration copyright 2018 *)
+(* Imandra Inc. copyright 2019 *)
+[@@@import "../src-core-pp/encode_base_types.iml"]
+[@@@import "../src-core-pp/encode_datetime.iml"]
+[@@@program]
 open Encode_base_types;;
 open Encode_datetime;;
 
@@ -20,3 +23,4 @@ let enc_repeat (f) (tag) (lst)  =
         ) [])))
     )
 ;;
+[@@@logic]

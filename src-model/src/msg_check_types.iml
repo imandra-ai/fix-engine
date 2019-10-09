@@ -1,5 +1,12 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
 
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    message_check_fields.iml
+    
+*)
 type field_state = {
     is_invalid : bool;
     field_text : string

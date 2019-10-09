@@ -1,12 +1,14 @@
 (** JSON printers/parsers for datetime types. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
-    datetime_json.ml 
+    datetime_json.iml 
 *)
-
+[@@@import "../src-core/datetime.iml"]
+[@@@import "base_types_json.iml"]
+[@@@program]
 open Yojson;;
 open Datetime;;
 open Base_types_json;;
@@ -277,3 +279,4 @@ let monthyear_opt_to_json = function
   | None    -> `Null
   | Some x  -> monthyear_to_json x
 ;;
+[@@@logic]

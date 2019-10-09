@@ -1,13 +1,14 @@
 
 (*** 
     
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
     full_admin_enums_json.ml
 
 *)
-
+[@@@import "../src-protocol/full_admin_enums.iml"]
+[@@@program]
 open Yojson;;
 open Full_admin_enums;;
 
@@ -107,3 +108,4 @@ let encryption_method_opt_to_json      = function None -> `Null | Some x -> encr
 
 (** *)
 let msgdirection_opt_to_json           = function None -> `Null | Some x -> msgdirection_to_json           x ;; 
+[@@@logic]

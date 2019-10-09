@@ -1,4 +1,12 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    model_tags.iml
+    
+*)
 
 type m_field_tag =
     | M_Field_OrdType_Tag 

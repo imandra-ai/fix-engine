@@ -1,30 +1,30 @@
 (rule
-  (targets timeDefaults_parser.ml)
-  (deps timeDefaults_parser.iml)
+  (targets time_defaults_parser.ml)
+  (deps time_defaults_parser.iml)
    (action
-    (with-stdout-to timeDefaults_parser.ml
-       (run imandra-extract  timeDefaults_parser.iml))))
+    (with-stdout-to time_defaults_parser.ml
+       (run imandra-extract  time_defaults_parser.iml))))
        
 (rule
-  (targets timeDefaults_pp.ml)
-  (deps timeDefaults_pp.iml)
+  (targets time_defaults_pp.ml)
+  (deps time_defaults_pp.iml)
    (action
-    (with-stdout-to timeDefaults_pp.ml
-       (run imandra-extract  timeDefaults_pp.iml))))
+    (with-stdout-to time_defaults_pp.ml
+       (run imandra-extract  time_defaults_pp.iml))))
        
 (rule
-  (targets timeDefaults_current_time.ml)
-  (deps timeDefaults_current_time.iml)
+  (targets time_defaults_current_time.ml)
+  (deps time_defaults_current_time.iml)
    (action
-    (with-stdout-to timeDefaults_current_time.ml
-       (run imandra-extract  timeDefaults_current_time.iml))))
+    (with-stdout-to time_defaults_current_time.ml
+       (run imandra-extract  time_defaults_current_time.iml))))
        
 (rule
-  (targets timeDefaults_json.ml)
-  (deps timeDefaults_json.iml)
+  (targets time_defaults_json.ml)
+  (deps time_defaults_json.iml)
    (action
-    (with-stdout-to timeDefaults_json.ml
-       (run imandra-extract  timeDefaults_json.iml))))
+    (with-stdout-to time_defaults_json.ml
+       (run imandra-extract  time_defaults_json.iml))))
        
 (library
   (name core_time_defaults_pp)

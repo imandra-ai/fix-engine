@@ -1,21 +1,27 @@
 (** 
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
     VGs covering behaviour of Heartbeat message ( Vol 2, page 16 ).
 
     fix_heartbeat_vgs.ml
 
 *)
-
+[@@@import "../src-core/datetime.iml"]
+[@@@import "../src/fix_engine.iml"]
+[@@@import "../src/fix_engine_state.iml"]
+[@@@import "../src/fix_engine_utils.iml"]
+[@@@import "../src-protocol/full_admin_messages.iml"]
+[@@@import "../src-protocol/full_messages.iml"]
+[@@@import "../src-core-time-defaults/time_defaults.iml"]
 open Datetime;;
 open Fix_engine;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
 open Full_admin_messages;;
 open Full_messages;;
-
+open Time_defaults;;
 
 (*** *************************************************************************************** *)
 (**

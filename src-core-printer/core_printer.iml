@@ -1,16 +1,19 @@
 (** Printers for core types appearing in messages *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
     core_printer.ml
     
 *)
-
+[@@@import "../src-core-pp/encode_base_types.iml"]
+[@@@import "../src-core-pp/encode_datetime.iml"]
+[@@@import "../src-core-time-defaults-pp/time_defaults_pp.iml"]
+[@@@program]
 open Encode_base_types;;
 open Encode_datetime;;
-open TimeDefaults_pp;;
+open Time_defaults_pp;;
 
 let fix_float_0_to_string x =
   encode_float_0 x
@@ -79,3 +82,4 @@ let fix_monthyear_to_string x =
 let fix_duration_to_string x =
   encode_Duration x
 ;;
+[@@@logic]

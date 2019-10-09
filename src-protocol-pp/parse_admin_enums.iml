@@ -1,13 +1,14 @@
 
 (*** 
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
     
     parse_admin_enums.ml
 
 *)
-
+[@@@import "../src-protocol/full_admin_enums.iml"]
+[@@@program]
 open Full_admin_enums;;
 
 
@@ -76,4 +77,4 @@ let parse_MsgDirection ( str ) =
         | _ -> (None)
     )
 ;;
-
+[@@@logic]

@@ -1,3 +1,5 @@
+[@@@import "../src-core-pp/parser_utils.iml"]
+[@@@program]
 type action = 
     | Connect 
     | Disconnect
@@ -51,5 +53,5 @@ let parse_file filename =
         |> List.filter (fun x -> x <> None)
         |> List.map (function Some x -> x | None -> failwith "Internal error in parse_file.")
 ;;
- 
+[@@@logic]
  

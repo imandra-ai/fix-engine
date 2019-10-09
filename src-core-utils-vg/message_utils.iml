@@ -1,0 +1,16 @@
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    message_utils.iml
+    
+*)
+let get_resend_message (msg)  =
+    msg
+;;
+
+let get_normal_message (_msg) = 
+   None
+;;

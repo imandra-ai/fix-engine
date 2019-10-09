@@ -1,4 +1,15 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    string_checks.iml
+    
+*)
+[@@@import "../src-types/actions.iml"]
+[@@@import "../src-types/model_messages.iml"]
+[@@@program]
 open Actions;;
 open Model_messages;;
 
@@ -214,3 +225,4 @@ let name_of_msg (x)  =
         | FIX_TL_None -> "Msg:None"
     )
 ;;
+[@@@logic]

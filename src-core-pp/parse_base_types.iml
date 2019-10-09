@@ -1,12 +1,13 @@
 (** Parsers for base types. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
-    datetime_json.ml 
+    datetime_json.iml 
 *)
-
+[@@@import "../src-core/numeric.iml"]
+[@@@program]
 open Numeric;;
 
 let parse_string (str : string) : string option = 
@@ -49,3 +50,4 @@ let parse_float (str: string) : Numeric.fix_float_6 option =
     Some (Float_6 (Z.of_int whole * 1000000 + Z.of_int fraction * pow10 (6 - frlen)))
     else None
 ;;
+[@@@logic]

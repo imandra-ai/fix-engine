@@ -1,4 +1,10 @@
-(* Aesthetic Integration copyright 2018 *)
+(* Imandra Inc. copyright 2019 *)
+[@@@import "../src-protocol-exts/full_app_records.iml"]
+[@@@import "parse_app_enums.iml"]
+[@@@import "../src-core-pp/parse_base_types.iml"]
+[@@@import "../src-core-pp/parse_datetime.iml"]
+[@@@import "../src-core-pp/parser_utils.iml"]
+[@@@program]
 open Full_app_records;;
 open Parse_app_enums;;
 open Parse_base_types;;
@@ -2673,3 +2679,4 @@ let parse_AllocGrp (msg)  =
     )
     )
 ;;
+[@@@logic]

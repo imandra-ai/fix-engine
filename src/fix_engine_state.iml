@@ -1,19 +1,23 @@
 (** FIX 4.4 engine state type. *)
 (***
     
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
-    fix_engine_state.ml
+    fix_engine_state.iml
     
 *)
 
-
+[@@@import "../src-core/datetime.iml"]
+[@@@import "../src-protocol/full_admin_enums.iml"]
+[@@@import "../src-protocol-exts/full_app_messages.iml"]
+[@@@import "../src-protocol/full_messages.iml"]
+[@@@import "../src-core-time-defaults/time_defaults.iml"]
 open Datetime;;
 open Full_admin_enums;;
 open Full_app_messages;;
 open Full_messages;;
-open TimeDefaults;;
+open Time_defaults;;
 
 (** Define set of actions + data for manual intervention by the user. *)
 type manual_int_data = {

@@ -27,8 +27,8 @@
        (run imandra-extract full_app_tags.iml))))
 
 (library
-  (name        protocol_exts_vg)
-  (public_name fix-engine.protocol_exts_vg)
+  (name        protocol_exts)
+  (public_name fix-engine.protocol_exts)
   (wrapped  false)
   (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
   (libraries imandra-base.prelude core core_time_defaults)

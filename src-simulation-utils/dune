@@ -1,0 +1,56 @@
+(rule
+  (targets client_utils.ml)
+  (deps client_utils.iml)
+   (action
+    (with-stdout-to client_utils.ml
+       (run imandra-extract client_utils.iml))))
+
+(rule
+  (targets fix_connection.ml)
+  (deps fix_connection.iml)
+   (action
+    (with-stdout-to fix_connection.ml
+       (run imandra-extract fix_connection.iml))))
+
+(rule
+  (targets fix_global_state.ml)
+  (deps fix_global_state.iml)
+   (action
+    (with-stdout-to fix_global_state.ml
+       (run imandra-extract fix_global_state.iml))))
+
+(rule
+  (targets message_stream.ml)
+  (deps message_stream.iml)
+   (action
+    (with-stdout-to message_stream.ml
+       (run imandra-extract message_stream.iml))))
+  
+(rule
+  (targets server_utils.ml)
+  (deps server_utils.iml)
+   (action
+    (with-stdout-to server_utils.ml
+       (run imandra-extract server_utils.iml))))
+
+(library
+  (name        fix_simulation_utils)
+  (public_name fix-engine.fix_simulation_utils)
+  (wrapped  false)
+  (flags (:standard -open Imandra_prelude -open Unix -warn-error -A+8+39))
+  (libraries 
+       lwt.unix
+        venue
+        fix_engine
+        core_utils
+        core_pp
+        core_time_defaults
+        core_time_defaults_pp
+        types_pp
+        protocol_pp
+        conversions   
+        lwt-zmq 
+        imandra-base.prelude   
+  )
+)
+

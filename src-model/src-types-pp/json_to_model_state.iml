@@ -1,4 +1,16 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    json_to_model_state.iml
+    
+*)
+[@@@import "json_to_action.iml"]
+[@@@import "json_to_message.iml"]
+[@@@import "../src-types/state.iml"]
+[@@@program]
 open Decoders_yojson.Basic.Decode;;
 open Decoders_yojson.Basic.Decode.Infix;;
 open Json_to_action;;
@@ -15,3 +27,4 @@ let model_state_decoder  : model_state decoder =
     )
     )
 ;;
+[@@@logic]

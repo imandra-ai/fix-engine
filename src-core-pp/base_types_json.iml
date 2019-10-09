@@ -1,12 +1,14 @@
 (** JSON printers/parsers for base FIX types. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
-    base_types_json.ml 
+    base_types_json.iml 
 *)
-
+[@@@require "decoders-yojson"]
+[@@@import "../src-core/numeric.iml"]
+[@@@program]
 open Yojson;;
 open Numeric;;
 module JU = Yojson.Basic.Util;;
@@ -255,3 +257,4 @@ let bool_opt_to_json : bool option -> json = function
   | None   -> `Null
   | Some x -> bool_to_json x 
 ;;
+[@@@logic]

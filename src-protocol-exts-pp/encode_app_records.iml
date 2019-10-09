@@ -1,4 +1,10 @@
-(* Aesthetic Integration copyright 2018 *)
+(* Imandra Inc. copyright 2019 *)
+[@@@import "encode_app_enums.iml"]
+[@@@import "../src-core-pp/encode_base_types.iml"]
+[@@@import "../src-core-pp/encode_datetime.iml"]
+[@@@import "encode_utils.iml"]
+[@@@import "../src-protocol-exts/full_app_records.iml"]
+[@@@program]
 open Encode_app_enums;;
 open Encode_base_types;;
 open Encode_datetime;;
@@ -424,3 +430,4 @@ let encode_SettlInstGrp (msg)  =
 let encode_AllocGrp (msg)  =
     (@) (encode_SettlInstructionsData msg.f_AllocGrp_SettlInstructionsData) ((@) (encode_CommissionData msg.f_AllocGrp_CommissionData) ((@) (("79",enc_opt encode_string msg.f_AllocGrp_AllocAccount) :: (("661",enc_opt encode_int msg.f_AllocGrp_AllocAcctIDSource) :: (("573",enc_opt encode_MatchStatus msg.f_AllocGrp_MatchStatus) :: (("366",enc_opt encode_float_6 msg.f_AllocGrp_AllocPrice) :: (("80",enc_opt encode_float_6 msg.f_AllocGrp_AllocQty) :: (("467",enc_opt encode_string msg.f_AllocGrp_IndividualAllocID) :: (("81",enc_opt encode_ProcessCode msg.f_AllocGrp_ProcessCode) :: (("208",enc_opt encode_NotifyBrokerOfCredit msg.f_AllocGrp_NotifyBrokerOfCredit) :: (("209",enc_opt encode_AllocHandlInst msg.f_AllocGrp_AllocHandlInst) :: (("161",enc_opt encode_string msg.f_AllocGrp_AllocText) :: (("360",enc_opt encode_int msg.f_AllocGrp_EncodedAllocTextLen) :: (("361",enc_opt encode_string msg.f_AllocGrp_EncodedAllocText) :: (("153",enc_opt encode_float_6 msg.f_AllocGrp_AllocAvgPx) :: (("154",enc_opt encode_float_6 msg.f_AllocGrp_AllocNetMoney) :: (("119",enc_opt encode_float_6 msg.f_AllocGrp_SettlCurrAmt) :: (("737",enc_opt encode_float_6 msg.f_AllocGrp_AllocSettlCurrAmt) :: (("120",enc_opt encode_Currency msg.f_AllocGrp_SettlCurrency) :: (("736",enc_opt encode_Currency msg.f_AllocGrp_AllocSettlCurrency) :: (("155",enc_opt encode_float msg.f_AllocGrp_SettlCurrFxRate) :: (("156",enc_opt encode_SettlCurrFxRateCalc msg.f_AllocGrp_SettlCurrFxRateCalc) :: (("742",enc_opt encode_float_6 msg.f_AllocGrp_AllocAccruedInterestAmt) :: (("741",enc_opt encode_float_6 msg.f_AllocGrp_AllocInterestAtMaturity) :: (("780",enc_opt encode_AllocSettlInstType msg.f_AllocGrp_AllocSettlInstType) :: []))))))))))))))))))))))) ((@) (enc_repeat encode_ClrInstGrp "576" msg.f_AllocGrp_ClrInstGrp) ((@) (enc_repeat encode_MiscFeesGrp "136" msg.f_AllocGrp_MiscFeesGrp) ((@) (enc_repeat encode_NestedParties "539" msg.f_AllocGrp_NestedParties) [])))))
 ;;
+[@@@logic]

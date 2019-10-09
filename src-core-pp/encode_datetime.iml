@@ -1,13 +1,15 @@
 (** Parsers for datetime types. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
-    parse_datetime.ml
+    parse_datetime.iml
     
 *)
-
+[@@@import "../src-core/datetime.iml"]
+[@@@import "encode_base_types.iml"]
+[@@@program]
 open Datetime;;
 open Encode_base_types;;
 
@@ -102,3 +104,4 @@ let encode_Duration (x : fix_duration) : string =
     (duration_to_seconds x) / (60*60*24) in
   "D"^(Z.to_string days)
 ;;
+[@@@logic]

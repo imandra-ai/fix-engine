@@ -1,18 +1,19 @@
 # Makefile
 #
 build:
-	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
+	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg src-core-utils-vg))" > dune
 	dune build @install
 	rm dune
 
 build_vgs:
-	@echo "(ignored_subdirs (src-protocol-exts src-protocol-exts-pp src-model src-simulation))" > dune
+	@echo "(ignored_subdirs (src-protocol-exts src-protocol-exts-pp src-model src-simulation src-simulation-utils src-core-utils src-tests-utils))" > dune
 	dune build @install
 	rm dune
 
 build_tests:
-	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
+	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg src-core-utils-vg))" > dune
 	dune build src-tests/test_runner.bc 
+	dune build src-tests/test_cache.bc
 	rm dune
 
 doc:
@@ -28,12 +29,12 @@ module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 	sed -e 's/rotate=90;//g' "$<" | dot -Tsvg -o $@
 
 server:
-	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
+	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg src-core-utils-vg))" > dune
 	dune build src-simulation/server.bc
 	rm dune
 
 client:
-	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg))" > dune
+	@echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg src-core-utils-vg))" > dune
 	dune build  src-simulation/client.bc
 	rm dune
 

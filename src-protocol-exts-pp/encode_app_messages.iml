@@ -1,4 +1,11 @@
-(* Aesthetic Integration copyright 2018 *)
+(* Imandra Inc. copyright 2019 *)
+[@@@import "encode_app_enums.iml"]
+[@@@import "encode_app_records.iml"]
+[@@@import "../src-core-pp/encode_base_types.iml"]
+[@@@import "../src-core-pp/encode_datetime.iml"]
+[@@@import "encode_utils.iml"]
+[@@@import "../src-protocol-exts/full_app_messages.iml"]
+[@@@program]
 open Encode_app_enums;;
 open Encode_app_records;;
 open Encode_base_types;;
@@ -20,3 +27,4 @@ let encode_app_msg_data (msg)  =
         | FIX_Full_Msg_NewOrderSingle msg -> (encode_NewOrderSingle msg)
     )
 ;;
+[@@@logic]

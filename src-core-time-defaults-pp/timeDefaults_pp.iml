@@ -1,6 +1,0 @@
-(* Aesthetic Integration copyright 2018 *)
-open Encode_datetime;;
-
-let encode_UTCTimestamp = encode_UTCTimestamp_milli;;
-
-let encode_UTCTimeOnly = encode_UTCTimeOnly_milli;;

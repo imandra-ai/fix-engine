@@ -1,4 +1,15 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    message_check_validate.iml
+    
+*)
+[@@@import "../src-types/model_messages.iml"]
+[@@@import "msg_check_types.iml"]
+[@@@import "../src-types/state.iml"]
 open Model_messages;;
 open Msg_check_types;;
 open State;;

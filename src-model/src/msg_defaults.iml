@@ -1,4 +1,13 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    message_defaults.iml
+    
+*)
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
 
 let assign_defaults_ExecutionReport (msg_data : mod_executionreport_data)  =

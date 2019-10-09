@@ -1,13 +1,14 @@
 
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
     
     full_app_enums_json.ml
     
 *)
-
+[@@@import "../src-protocol-exts-vg/full_app_enums.iml"]
+[@@@program]
 open Yojson;;
 open Full_app_enums;;
 
@@ -324,3 +325,4 @@ let exchange_opt_to_json ( d ) : json =
         | None -> (`Null)
         | Some d -> (exchange_to_json d)
 ;;
+[@@@logic]

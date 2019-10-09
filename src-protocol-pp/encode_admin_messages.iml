@@ -1,13 +1,19 @@
 (** Parse full administrative messages. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
     
     parse_admin_messages.ml
 
 *)
-
+[@@@import "../src-protocol/full_admin_messages.iml"]
+[@@@import "../src-core-pp/encode_base_types.iml"]
+[@@@import "../src-core-pp/encode_datetime.iml"]
+[@@@import "encode_admin_enums.iml"]
+[@@@import "encode_full_tags.iml"]
+[@@@import "../src-core/datetime.iml"]
+[@@@program]
 open Full_admin_messages;;
 open Encode_base_types;;
 open Encode_datetime;;
@@ -111,3 +117,4 @@ let encode_admin_msg_data msg =
     | Full_Msg_Logon           msg -> encode_msg_logon_data           msg        
     | Full_Msg_Business_Reject msg -> encode_msg_business_reject_data msg 
 ;;
+[@@@logic]

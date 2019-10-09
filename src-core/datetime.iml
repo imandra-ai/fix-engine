@@ -1,10 +1,10 @@
 (** Implementation of the date/time types and operations. *) 
 (**
     
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
-    datetime.ml
+    datetime.iml
 *)
 
 (** Helper function that determines wether the year is a leap year *)

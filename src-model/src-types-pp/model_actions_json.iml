@@ -1,4 +1,16 @@
-(* Aesthetic Integration copyright 2018 *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    model_actions_json.iml
+    
+*)
+[@@@import "../src-types/actions.iml"]
+[@@@import "../../src-core-pp/base_types_json.iml"]
+[@@@import "../../src-core-pp/datetime_json.iml"]
+[@@@import "../../src-protocol-exts-pp/json_generator_utils.iml"]
+[@@@program]
 open Actions;;
 open Base_types_json;;
 open Datetime_json;;
@@ -14,3 +26,4 @@ let json_of_fix_action (x)  : json =
         | FIX_Action_x x -> (`Assoc (("tag",`String "x") :: (("data",mod_act_x_to_json x) :: [])))
     )
 ;;
+[@@@logic]

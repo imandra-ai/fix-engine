@@ -1,12 +1,13 @@
 (** JSON printers/parsers for base FIX types. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
-    base_types_json.ml 
+    base_types_json.iml 
 *)
-
+[@@@import "../src-core/numeric.iml"]
+[@@@program]
 open Numeric;;
 
 
@@ -31,3 +32,4 @@ let encode_bool : bool -> string = function
     | true  -> "Y" 
     | false -> "N" 
 ;;
+[@@@logic]

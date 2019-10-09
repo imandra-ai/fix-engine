@@ -1,17 +1,24 @@
 (** Parser for full administrative messages. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
     parse_full_messages.ml
 
 *)
-
+[@@@import "../src-protocol/full_messages.iml"]
+[@@@import "../src-core-pp/encode_base_types.iml"]
+[@@@import "encode_full_tags.iml"]
+[@@@import "../src-core-time-defaults-pp/time_defaults_pp.iml"]
+[@@@import "../src-core-utils/fix_version.iml"]
+[@@@import "encode_admin_messages.iml"]
+[@@@import "../src-protocol-exts-pp/encode_app_messages.iml"]
+[@@@program]
 open Full_messages
 open Encode_base_types
 open Encode_full_tags
-open TimeDefaults_pp
+open Time_defaults_pp
 open Fix_version
 
 let req f x = Some (f x);;
@@ -110,3 +117,4 @@ let encode_full_valid_msg x =
              |> List.map ( fun(k,v) -> k^"="^v )
              |> List.fold_left ( fun a s -> a ^ s ^ "\001" ) ""
 ;;
+[@@@logic]

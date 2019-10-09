@@ -1,3 +1,24 @@
+(***
+    
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    fix_global_state.iml
+    
+*)
+[@@@require "lwt"]
+[@@@require "lwt.unix"]
+[@@@import "../src-protocol/full_messages.iml"]
+[@@@import "../src/fix_engine_state.iml"]
+[@@@import "../src-model/src-types/actions.iml"]
+[@@@import "../src-model/src-types/model_messages.iml"]
+[@@@import "../src-model/src-types/state.iml"]
+[@@@import "../src-protocol-pp/full_messages_json.iml"]
+[@@@import "../src/fix_engine.iml"]
+[@@@import "../src-model/src-conversions/type_converter.iml"]
+[@@@import "../src-model/src/venue.iml"]
+[@@@import "../src-core-utils/message_utils.iml"]
+[@@@program]
 let (>>=) = Lwt.(>>=)
 
 
@@ -116,7 +137,7 @@ let rec main_loop state =
     let open Fix_engine_state in
     Lwt_mvar.take state.incoming >>= fun incoming ->
 (*    Lwt_io.printf "Main_loop received incoming : %s\n" (pp_incoming incoming) >>= fun () -> *)
-    Lwt_io.flush_all () >>= fun () ->
+    Lwt_io.flush_all () >>= fun () -> 
     match incoming with 
         | Terminate -> Lwt.return_unit
         | Internal_Message msg -> 
@@ -152,3 +173,4 @@ let start ?pub:(pub_callback=None) init_engine init_model fix_callback =
     } in
     ( state.incoming , main_loop state )
 ;;
+[@@@logic]

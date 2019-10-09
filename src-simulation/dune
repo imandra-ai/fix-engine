@@ -1,69 +1,10 @@
-(rule
-  (targets client.ml)
-  (deps client.iml)
-   (action
-    (with-stdout-to client.ml
-       (run imandra-extract client.iml))))
-
-(rule
-  (targets fix_connection.ml)
-  (deps fix_connection.iml)
-   (action
-    (with-stdout-to fix_connection.ml
-       (run imandra-extract fix_connection.iml))))
-
-(rule
-  (targets fix_global_state.ml)
-  (deps fix_global_state.iml)
-   (action
-    (with-stdout-to fix_global_state.ml
-       (run imandra-extract fix_global_state.iml))))
-
-(rule
-  (targets message_stream.ml)
-  (deps message_stream.iml)
-   (action
-    (with-stdout-to message_stream.ml
-       (run imandra-extract message_stream.iml))))
-  
-(rule
-  (targets server.ml)
-  (deps server.iml)
-   (action
-    (with-stdout-to server.ml
-       (run imandra-extract server.iml))))
-
-(library
-  (name        fix_simulation)
-  (public_name fix-engine.fix_simulation)
-  (wrapped  false)
-  (modules (:standard \ server client))
-  (flags (:standard -open Imandra_prelude -open Unix -warn-error -A+8+39))
-  (libraries 
-       lwt.unix
-        venue
-        fix_engine
-        core_utils
-        core_pp
-        core_time_defaults
-        core_time_defaults_pp
-        protocol_pp
-        conversions    
-        imandra-base.prelude
-  )
-)
-
 (executable
   (name server)
   (modules server)
   (libraries 
       lwt.unix
-      venue
-      fix_engine
-      fix_simulation
-      protocol_pp
-      conversions
-      imandra-base.prelude
+      fix_simulation_utils
+      unix
   )
 )
 
@@ -71,17 +12,7 @@
   (name client)
   (modules client)
   (libraries 
-      yojson
-      lwt.unix
-      venue
-      fix_engine
-      fix_simulation
-      conversions
-      protocol_pp
-      types_pp
       cmdliner
-      ZMQ
-      lwt-zmq
-      imandra-base.prelude
+      fix_simulation_utils
   )
 )

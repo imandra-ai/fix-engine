@@ -1,13 +1,21 @@
 (** Parse full administrative messages. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
     
     parse_admin_messages.ml
 
 *)
-
+[@@@import "../src-protocol/full_admin_tags.iml"]
+[@@@import "../src-protocol/full_admin_messages.iml"]
+[@@@import "../src-core-pp/parser_utils.iml"]
+[@@@import "../src-core-pp/parse_base_types.iml"]
+[@@@import "../src-core-pp/parse_datetime.iml"]
+[@@@import "parse_admin_enums.iml"]
+[@@@import "parse_full_tags.iml"]
+[@@@import "../src-core/datetime.iml"]
+[@@@program]
 open Full_admin_tags;;
 open Full_admin_messages;;
 open Parser_utils.Parser;;
@@ -167,3 +175,4 @@ let parse_admin_msg_data msg_tag msg =
     | Full_Msg_Logon_Tag            -> parse_msg_logon_data           msg >>= fun x -> ParseSuccess ( Full_Msg_Logon           x )       
     | Full_Msg_Business_Reject_Tag  -> parse_msg_business_reject_data msg >>= fun x -> ParseSuccess ( Full_Msg_Business_Reject x )
 ;;
+[@@@logic]

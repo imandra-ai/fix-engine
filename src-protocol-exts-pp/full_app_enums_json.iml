@@ -1,4 +1,6 @@
-(* Aesthetic Integration copyright 2018 *)
+(* Imandra Inc. copyright 2019 *)
+[@@@import "../src-protocol-exts/full_app_enums.iml"]
+[@@@program]
 open Full_app_enums;;
 open Yojson;;
 
@@ -5512,3 +5514,4 @@ let exchange_opt_to_json (d)  : json =
         | Some d -> (exchange_to_json d)
     )
 ;;
+[@@@logic]

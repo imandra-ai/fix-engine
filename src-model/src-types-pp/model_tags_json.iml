@@ -1,4 +1,14 @@
-(* Aesthetic Integration copyright 2018 *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    model_tags_json.iml
+    
+*)
+[@@@import "../src-types/model_messages.iml"]
+[@@@import "../src-types/model_tags.iml"]
+[@@@program]
 open Model_messages;;
 open Model_tags;;
 open Yojson;;
@@ -22,3 +32,4 @@ let json_of_model_field_tag (x : m_field_tag)  : json =
 let json_of_req_field_missing (x : field_missing_data)  : json =
     `Assoc (("m_msg_tag",json_of_model_msg_tag x.field_missing_data_msg) :: (("m_field_tag",json_of_model_field_tag x.field_missing_data_field) :: []))
 ;;
+[@@@logic]

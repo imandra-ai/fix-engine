@@ -1,4 +1,16 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    model_messages.iml
+    
+*)
+[@@@import "../../src-core/datetime.iml"]
+[@@@import "model_app_enums.iml"]
+[@@@import "model_tags.iml"]
+[@@@import "../../src-core/numeric.iml"]
 open Datetime;;
 open Model_app_enums;;
 open Model_tags;;

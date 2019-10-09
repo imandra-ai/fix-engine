@@ -1,4 +1,17 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    type_converter.iml
+    
+*)
+[@@@import "enum_converter.iml"]
+[@@@import "../../src-protocol-exts/full_app_messages.iml"]
+[@@@import "../../src-protocol-exts/full_app_records.iml"]
+[@@@import "../src-types/model_messages.iml"]
+[@@@import "../src-types/model_tags.iml"]
 open Enum_converter;;
 open Full_app_messages;;
 open Full_app_records;;

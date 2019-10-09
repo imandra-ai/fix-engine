@@ -1,4 +1,14 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    string_assoc.iml
+    
+*)
+[@@@import "string_assoc_common.iml"]
+[@@@program]
 open String_assoc_common;;
 
 module StringAssoc = struct
@@ -26,3 +36,4 @@ module StringAssoc = struct
        with Not_found -> raise (No_match s)
 
 end;;
+[@@@logic]

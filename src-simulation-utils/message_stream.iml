@@ -1,4 +1,13 @@
+(***
+    
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
+    message_stream.iml
+    
+*)[@@@require "lwt"]
+[@@@require "lwt.unix"]
+[@@@program]
 let (>>=) = Lwt.(>>=);;
 
 let split_into_key_value (spliton : char) ( stream : char Lwt_stream.t ) : (string * string) Lwt_stream.t =
@@ -47,4 +56,4 @@ let from_channel ?(verbose=false) ?(spliton='\001') inch =
         |> split_into_key_value spliton
         |> split_into_messages verbose
 ;;
-
+[@@@logic]

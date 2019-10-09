@@ -1,13 +1,14 @@
 (** Parse full administrative tags. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
     
     parse_admin_tags.ml
 
 *)
-
+[@@@import "../src-protocol/full_admin_tags.iml"]
+[@@@program]
 open Full_admin_tags;;
 
 
@@ -78,5 +79,5 @@ let parse_admin_field_tag = function
     | "789" -> Some Full_Msg_NextExpectedMsgSeqNum_Tag          
     |    _  -> None
 ;;
-
+[@@@logic]
 

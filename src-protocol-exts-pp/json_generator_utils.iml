@@ -1,4 +1,5 @@
-(* Aesthetic Integration copyright 2018 *)
+(* Imandra Inc. copyright 2019 *)
+[@@@program]
 open Yojson;;
 
 let assoc_filter_nulls (x)  : json =
@@ -12,3 +13,4 @@ let rg_for_json (f) (lst)  : json =
         | lst -> (`List (List.map f lst))
     )
 ;;
+[@@@logic]

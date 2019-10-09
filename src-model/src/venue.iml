@@ -1,4 +1,16 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    venue.iml
+    
+*)
+[@@@import "act_process.iml"]
+[@@@import "../src-types/model_messages.iml"]
+[@@@import "msg_process.iml"]
+[@@@import "../src-types/state.iml"]
 open Act_process;;
 open Model_messages;;
 open Msg_process;;

@@ -1,13 +1,22 @@
 (** FIX 4.4 engine server implementation. *)
 (***
     
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
-    server.ml
+    server_utils.iml
     
 *)
-
+[@@@program]
+[@@@require "lwt"]
+[@@@require "lwt.unix"]
+[@@@import "../src-core-time-defaults-pp/time_defaults_current_time.iml"]
+[@@@import "../src/fix_engine_state.iml"]
+[@@@import "../src-protocol/full_messages.iml"]
+[@@@import "../src-protocol-pp/encode_full_messages.iml"]
+[@@@import "../src-protocol-pp/parse_full_messages.iml"]
+[@@@import "fix_global_state.iml"]
+[@@@import "message_stream.iml"]
 let (>>=) = Lwt.(>>=);;
 
 let engine_state = 
@@ -15,7 +24,7 @@ let engine_state =
     { init_fix_engine_state with
     fe_comp_id = "IMANDRA";
     fe_target_comp_id = "BANZAI";
-    fe_curr_time = TimeDefaults_current_time.get_current_utctimestamp ();
+    fe_curr_time = Time_defaults_current_time.get_current_utctimestamp ();
     fe_max_num_logons_sent = 10;
     fe_application_up = true }
 ;;  
@@ -35,7 +44,7 @@ let send_msg outch msg =
 ;;
 
 let do_timechange mailbox =
-    let time = TimeDefaults_current_time.get_current_utctimestamp () in
+    let time = Time_defaults_current_time.get_current_utctimestamp () in
     let timechange = Fix_engine_state.IncIntMsg_TimeChange time in
     let timechange = Fix_global_state.Internal_Message timechange in
     Lwt_mvar.put mailbox timechange
@@ -67,14 +76,4 @@ let f _ (inch, outch) =
         ]
     ) ( fun _ -> close_channels () )
 ;;
-
-let server_thread =
-    let addr = Caml_unix.( ADDR_INET( inet_addr_loopback , 9880i ) ) in
-    let _server = Lwt_io.establish_server_with_client_address addr f in
-    print_endline "Started server on localhost:9880 ...";
-    fst (Lwt.wait ())
-;;
-
-
-Lwt_main.run server_thread
-;;
+[@@@logic]

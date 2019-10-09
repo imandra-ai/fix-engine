@@ -70,9 +70,9 @@
 
 
 (library
-  (name        protocol_exts_pp_vg)
-  (public_name fix-engine.protocol_exts_pp_vg)
+  (name        protocol_exts_pp)
+  (public_name fix-engine.protocol_exts_pp)
   (wrapped  false)
   (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
-  (libraries imandra-base.prelude core_time_defaults yojson core_pp core_time_defaults_pp protocol_exts_vg)
+  (libraries imandra-base.prelude core_time_defaults yojson core_pp core_time_defaults_pp protocol_exts)
 )

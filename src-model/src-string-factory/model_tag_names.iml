@@ -1,4 +1,14 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    model_tag_names.iml
+    
+*)
+[@@@import "../src-types/model_tags.iml"]
+[@@@program]
 open Model_tags;;
 
 let tag_to_message (x)  =
@@ -18,3 +28,4 @@ let tag_to_field (x)  =
         | _ -> None
     )
 ;;
+[@@@logic]

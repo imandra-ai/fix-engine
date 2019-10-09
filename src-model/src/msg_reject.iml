@@ -1,4 +1,17 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    message_reject.iml
+    
+*)
+[@@@import "../src-types/model_app_enums.iml"]
+[@@@import "../src-types/model_messages.iml"]
+[@@@import "../src-types/model_tags.iml"]
+[@@@import "../../src-core/numeric.iml"]
+[@@@import "../src-types/state.iml"]
 open Model_app_enums;;
 open Model_messages;;
 open Model_tags;;

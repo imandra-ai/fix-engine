@@ -1,4 +1,6 @@
-(* Aesthetic Integration copyright 2018 *)
+(* Imandra Inc. copyright 2019 *)
+[@@@import "../src-protocol-exts/full_app_tags.iml"]
+[@@@program]
 open Full_app_tags;;
 open Yojson;;
 
@@ -408,3 +410,4 @@ let full_app_field_tag_opt_to_json (tag)  : json =
         | Some tag -> (full_app_field_tag_to_json tag)
     )
 ;;
+[@@@logic]

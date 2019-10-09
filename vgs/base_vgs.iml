@@ -1,14 +1,19 @@
 (**
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
     Verification goals: base vgs.
 
     fix_base_vgs.ml
 *)
 
-
+[@@@import "../src-core/datetime.iml"]
+[@@@import "../src/fix_engine.iml"]
+[@@@import "../src/fix_engine_state.iml"]
+[@@@import "../src/fix_engine_utils.iml"]
+[@@@import "../src-protocol/full_admin_messages.iml"]
+[@@@import "../src-protocol/full_messages.iml"]
 open Datetime;;
 open Fix_engine;;
 open Fix_engine_state;;

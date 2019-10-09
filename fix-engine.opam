@@ -16,4 +16,6 @@ depends: [
   "lwt-zmq"
   "yojson"
   "zmq"
+  "decoders"
+  "decoders-yojson"
 ]

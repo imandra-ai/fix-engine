@@ -1,14 +1,15 @@
 (** Current Time functions *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
    fiv_verion.ml
     
 *)
 
-
+[@@@import "../src-core/datetime.iml"]
+[@@@program]
 open Datetime
 
 let get_current_utctimestamp_milli ?offset:(offset=0) () : fix_utctimestamp_milli =    
@@ -55,3 +56,4 @@ let get_current_localmktdate () : fix_localmktdate =
   convert_utctimestamp_milli_localmktdate
     (get_current_utctimestamp_milli ())
 ;;
+[@@@logic]

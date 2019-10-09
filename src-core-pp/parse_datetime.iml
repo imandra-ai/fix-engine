@@ -1,13 +1,14 @@
 (** Parsers for datetime types. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 201
 
     parse_datetime.ml
     
 *)
-
+[@@@import "../src-core/datetime.iml"]
+[@@@program]
 open Datetime;;
 
 
@@ -176,3 +177,4 @@ let parse_Duration (str:string) : fix_duration option =
      | _,_ -> None)
   else None 
 ;;
+[@@@logic]

@@ -1,4 +1,14 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    action_checks.iml
+    
+*)
+[@@@import "../src-types/actions.iml"]
+[@@@import "../src-types/state.iml"]
 open Actions;;
 open State;;
 

@@ -1,7 +1,7 @@
 (** 
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
     VGs covering behaviour of Reject message ( Vol 2 ).
 
@@ -9,11 +9,16 @@
 
 *)
 
-open Imandra_pervasives;;
+(* open Imandra_pervasives;; *)
+[@@@import "../src-core/datetime.iml"]
+[@@@import "../src/fix_engine.iml"]
+[@@@import "../src/fix_engine_state.iml"]
+[@@@import "../src-protocol/full_admin_messages.iml"]
+[@@@import "../src-protocol/full_messages.iml"]
 open Datetime;;
 open Fix_engine;;
+open Fix_engine_state
 open Full_admin_messages;;
-open Full_session_core;;
 open Full_messages;;
 
 (** **************************************************************************************** *)
@@ -47,7 +52,7 @@ let outbound_is_reject_or_app ( m : full_top_level_msg option ) =
     | _                         -> false
 ;;
 
-verify reject_only_admin_msg_retransmitted ( engine : fix_engine_state ) =
+verify (fun (engine : fix_engine_state ) ->
     let engine' = one_step ( engine ) in 
 
     ( engine.fe_curr_mode = Retransmit && 
@@ -58,5 +63,5 @@ verify reject_only_admin_msg_retransmitted ( engine : fix_engine_state ) =
         (engine'.outgoing_fix_msg = None ||
         outbound_is_reject_or_app ( engine'.outgoing_fix_msg )) || 
         ( engine'.outgoing_fix_msg = None &&
-            engine'.fe_curr_mode <> Retransmit ))
+            engine'.fe_curr_mode <> Retransmit )))
 ;;

@@ -1,13 +1,16 @@
 (** Full messages - administrative. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
     
     full_admin_messages.ml
 
 *)
-
+[@@@import "../src-core/datetime.iml"]
+[@@@import "full_admin_enums.iml"]
+[@@@import "full_admin_tags.iml"]
+[@@@import "full_message_tags.iml"]
 open Datetime;;
 open Full_admin_enums;;
 open Full_admin_tags;;

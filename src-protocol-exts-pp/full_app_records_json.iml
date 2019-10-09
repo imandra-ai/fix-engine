@@ -1,4 +1,10 @@
-(* Aesthetic Integration copyright 2018 *)
+(* Imandra Inc. copyright 2019 *)
+[@@@import "../src-core-pp/base_types_json.iml"]
+[@@@import "../src-core-pp/datetime_json.iml"]
+[@@@import "full_app_enums_json.iml"]
+[@@@import "../src-protocol-exts/full_app_records.iml"]
+[@@@import "json_generator_utils.iml"]
+[@@@program]
 open Base_types_json;;
 open Datetime_json;;
 open Full_app_enums_json;;
@@ -845,3 +851,4 @@ let allocgrp_to_string (d)  =
 let allocgrp_to_json (x)  : json =
     assoc_filter_nulls (("CommissionData",commissiondata_to_json x.f_AllocGrp_CommissionData) :: (("SettlInstructionsData",settlinstructionsdata_to_json x.f_AllocGrp_SettlInstructionsData) :: (("NoAllocs",int_opt_to_json x.f_AllocGrp_NoAllocs) :: (("AllocAccount",string_opt_to_json x.f_AllocGrp_AllocAccount) :: (("AllocAcctIDSource",int_opt_to_json x.f_AllocGrp_AllocAcctIDSource) :: (("MatchStatus",matchstatus_opt_to_json x.f_AllocGrp_MatchStatus) :: (("AllocPrice",float_6_opt_to_json x.f_AllocGrp_AllocPrice) :: (("AllocQty",float_6_opt_to_json x.f_AllocGrp_AllocQty) :: (("IndividualAllocID",string_opt_to_json x.f_AllocGrp_IndividualAllocID) :: (("ProcessCode",processcode_opt_to_json x.f_AllocGrp_ProcessCode) :: (("NotifyBrokerOfCredit",notifybrokerofcredit_opt_to_json x.f_AllocGrp_NotifyBrokerOfCredit) :: (("AllocHandlInst",allochandlinst_opt_to_json x.f_AllocGrp_AllocHandlInst) :: (("AllocText",string_opt_to_json x.f_AllocGrp_AllocText) :: (("EncodedAllocTextLen",int_opt_to_json x.f_AllocGrp_EncodedAllocTextLen) :: (("EncodedAllocText",string_opt_to_json x.f_AllocGrp_EncodedAllocText) :: (("AllocAvgPx",float_6_opt_to_json x.f_AllocGrp_AllocAvgPx) :: (("AllocNetMoney",float_6_opt_to_json x.f_AllocGrp_AllocNetMoney) :: (("SettlCurrAmt",float_6_opt_to_json x.f_AllocGrp_SettlCurrAmt) :: (("AllocSettlCurrAmt",float_6_opt_to_json x.f_AllocGrp_AllocSettlCurrAmt) :: (("SettlCurrency",currency_opt_to_json x.f_AllocGrp_SettlCurrency) :: (("AllocSettlCurrency",currency_opt_to_json x.f_AllocGrp_AllocSettlCurrency) :: (("SettlCurrFxRate",float_opt_to_json x.f_AllocGrp_SettlCurrFxRate) :: (("SettlCurrFxRateCalc",settlcurrfxratecalc_opt_to_json x.f_AllocGrp_SettlCurrFxRateCalc) :: (("AllocAccruedInterestAmt",float_6_opt_to_json x.f_AllocGrp_AllocAccruedInterestAmt) :: (("AllocInterestAtMaturity",float_6_opt_to_json x.f_AllocGrp_AllocInterestAtMaturity) :: (("AllocSettlInstType",allocsettlinsttype_opt_to_json x.f_AllocGrp_AllocSettlInstType) :: (("NestedParties",rg_for_json nestedparties_to_json x.f_AllocGrp_NestedParties) :: (("MiscFeesGrp",rg_for_json miscfeesgrp_to_json x.f_AllocGrp_MiscFeesGrp) :: (("ClrInstGrp",rg_for_json clrinstgrp_to_json x.f_AllocGrp_ClrInstGrp) :: [])))))))))))))))))))))))))))))
 ;;
+[@@@logic]

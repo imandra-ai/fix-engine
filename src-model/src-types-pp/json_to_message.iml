@@ -1,4 +1,18 @@
-(* Aesthetic Integration copyright 2018 *)
+(** Time defaults for a particular FIX implementation *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    json_to_message.iml
+    
+*)
+[@@@import "../../src-core-pp/base_types_json.iml"]
+[@@@import "../../src-core-pp/datetime_json.iml"]
+[@@@import "json_to_enum.iml"]
+[@@@import "json_to_model_tag.iml"]
+[@@@import "../src-types/model_messages.iml"]
+[@@@program]
 open Base_types_json;;
 open Datetime_json;;
 open Decoders_yojson.Basic.Decode;;
@@ -72,3 +86,4 @@ let top_level_message_decoder  : model_top_level_msg decoder =
     )
     )
 ;;
+[@@@logic]

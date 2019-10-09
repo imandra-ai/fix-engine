@@ -1,13 +1,16 @@
 (** Parser for full message tags. *)
 (***
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
     parse_full_tags.ml
 
 *)
-
+[@@@import "../src-protocol/full_message_tags.iml"]
+[@@@import "../src-protocol-exts-pp/parse_app_tags.iml"]
+[@@@import "parse_admin_tags.iml"]
+[@@@program]
 open Full_message_tags;;
 open Parse_app_tags;; 
 open Parse_admin_tags;;
@@ -33,3 +36,4 @@ let parse_full_field_tag str =
             | None   -> None 
         end
 ;;
+[@@@logic]

@@ -1,12 +1,18 @@
 
 (*** 
 
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
     
     parse_app_records.ml
 
 *)
+[@@@import "../src-core-pp/parser_utils.iml"]
+[@@@import "../src-protocol-exts-vg/full_app_records.iml"]
+[@@@import "../src-core-pp/parse_base_types.iml"]
+[@@@import "../src-core-pp/parse_datetime.iml"]
+[@@@import "parse_app_enums.iml"]
+[@@@program]
 open Parser_utils.Parser;;
 open Full_app_records;;
 open Parse_base_types;;
@@ -28,3 +34,4 @@ let parse_Instrument msg =
     ; f_Instrument_SymbolSfx   
     },msg) 
 ;;
+[@@@logic]

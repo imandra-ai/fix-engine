@@ -1,4 +1,15 @@
-(* Aesthetic Integration copyright 2018 *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    model_state_json.iml
+    
+*)
+[@@@import "model_actions_json.iml"]
+[@@@import "model_messages_json.iml"]
+[@@@import "../src-types/state.iml"]
+[@@@program]
 open Model_actions_json;;
 open Model_messages_json;;
 open State;;
@@ -12,3 +23,4 @@ let model_state_to_json (m_state)  : json =
     ) :: (("incoming_msg",json_of_top_level_msg m_state.incoming_msg) :: (("outgoing_msgs",`List (List.map (fun y -> json_of_model_msg y
     ) m_state.outgoing_msgs)) :: [])))
 ;;
+[@@@logic]

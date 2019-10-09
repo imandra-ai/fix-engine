@@ -1,4 +1,18 @@
-(* Aesthetic Integration copyright 2018 *)
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
+
+    model_messages_json.iml
+    
+*)
+[@@@import "../../src-core-pp/base_types_json.iml"]
+[@@@import "../../src-core-pp/datetime_json.iml"]
+[@@@import "../../src-protocol-exts-pp/json_generator_utils.iml"]
+[@@@import "model_enums_json.iml"]
+[@@@import "../src-types/model_messages.iml"]
+[@@@import "model_tags_json.iml"]
+[@@@program]
 open Base_types_json;;
 open Datetime_json;;
 open Json_generator_utils;;
@@ -34,3 +48,4 @@ let json_of_top_level_msg (x)  : json =
         | FIX_TL_None -> `Null
     )
 ;;
+[@@@logic]

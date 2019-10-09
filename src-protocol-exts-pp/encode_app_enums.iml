@@ -1,4 +1,7 @@
-(* Aesthetic Integration copyright 2018 *)
+(* Imandra Inc. copyright 2019 *)
+[@@@import "../src-protocol-exts/full_app_enums.iml"]
+[@@@import "../src-core-pp/parser_utils.iml"]
+[@@@program]
 open Full_app_enums;;
 open Parser_utils.Parser;;
 
@@ -2852,3 +2855,4 @@ let encode_Exchange (d)  =
         | FIX_Exchange_SHSC -> "SHSC"
     )
 ;;
+[@@@logic]

@@ -1,14 +1,22 @@
 (** FIX 4.4 engine utility functions. *)
 (***
     
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2017
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
-    fix_engine_utils.ml
+    fix_engine_utils.iml
     
 *)
 
-(* @meta[imandra_ignore] on @end *)
+[@@@import "../src-core/datetime.iml"]
+[@@@import "../src-protocol/full_admin_enums.iml"]
+[@@@import "../src-protocol/full_admin_messages.iml"]
+[@@@import "../src-protocol/full_messages.iml"]
+[@@@import "../src-protocol/full_message_tags.iml"]
+[@@@import "../src-protocol/full_admin_tags.iml"]
+[@@@import "fix_engine_state.iml"]
+[@@@import "../src-core-time-defaults/time_defaults.iml"]
+[@@@import "../src-core-utils/fix_version.iml"]
 open Datetime;;
 open Full_admin_enums;;
 open Full_admin_messages;;
@@ -16,9 +24,8 @@ open Full_messages;;
 open Full_message_tags;;
 open Full_admin_tags;;
 open Fix_engine_state;;
-open TimeDefaults;;
+open Time_defaults;;
 open Fix_version;;
-(* @meta[imandra_ignore] off @end *)
 
 
 (* Does the message have the right sequence number? *)

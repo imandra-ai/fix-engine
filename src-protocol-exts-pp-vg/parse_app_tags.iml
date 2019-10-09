@@ -1,13 +1,14 @@
 (** Parser for application tags. *)
 (***
     
-    Aesthetic Integration Limited
-    Copyright (c) 2014 - 2018
+    Imandra Inc.
+    Copyright (c) 2014 - 2019
 
     parse_app_tags.ml
 
 *)
-
+[@@@import "../src-protocol-exts-vg/full_app_tags.iml"]
+[@@@program]
 open Full_app_tags;;
 
 
@@ -51,3 +52,4 @@ let parse_app_field_tag = function
     | "65"  -> Some Full_Msg_SymbolSfx_Tag   
     |  _  -> None
 ;;
+[@@@logic]
