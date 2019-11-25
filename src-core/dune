@@ -11,13 +11,6 @@
    (action
     (with-stdout-to datetime.ml
        (run imandra-extract  datetime.iml))))
-       
-(rule
-  (targets imandra_utils.ml)
-  (deps imandra_utils.iml)
-   (action
-    (with-stdout-to imandra_utils.ml
-       (run imandra-extract  imandra_utils.iml))))
 
 (library
   (name        core)

@@ -7,9 +7,7 @@
     repeating_groups_converter.iml
     
 *)
-[@@@import "../../src-core/imandra_utils.iml"]
 [@@@import "../src-types/model_tags.iml"]
-open Imandra_utils;;
 open Model_tags;;
 
 exception Ipl_rg_exception 
