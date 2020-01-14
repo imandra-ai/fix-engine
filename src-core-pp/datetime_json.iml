@@ -22,7 +22,7 @@ let filter_nulls =
   List.filter (function ( _, `Null ) -> false | _ -> true )
 ;;
 
-let utctimestamp_milli_to_json ( ts : fix_utctimestamp_milli ) : json =
+let utctimestamp_milli_to_json ( ts : fix_utctimestamp_milli )  =
   let list_assoc = [
     ( "utc_timestamp_year"     , int_to_json ts.utc_timestamp_year                     );
     ( "utc_timestamp_month"    , int_to_json ts.utc_timestamp_month                    );
@@ -53,7 +53,7 @@ let utctimestamp_milli_decoder : fix_utctimestamp_milli Decoders_yojson.Basic.De
   ; utc_timestamp_millisec
   };;
 
-let utctimestamp_micro_to_json ( ts : fix_utctimestamp_micro ) : json =
+let utctimestamp_micro_to_json ( ts : fix_utctimestamp_micro )  =
   let list_assoc = [
     ( "utc_timestamp_year"     , int_to_json ts.utc_timestamp_year                     );
     ( "utc_timestamp_month"    , int_to_json ts.utc_timestamp_month                    );
