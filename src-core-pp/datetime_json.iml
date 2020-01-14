@@ -18,8 +18,8 @@ open D.Infix;;
 
 
 
-let filter_nulls =
-  List.filter (function ( _, `Null ) -> false | _ -> true )
+let filter_nulls x =
+  List.filter (function ( _, `Null ) -> false | _ -> true ) x
 ;;
 
 let utctimestamp_milli_to_json ( ts : fix_utctimestamp_milli )  =
