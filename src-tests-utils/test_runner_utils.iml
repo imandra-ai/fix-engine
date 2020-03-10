@@ -130,14 +130,14 @@ let perform_action  (instream, outch) act =
     match act with 
     | InitiateMessage msg -> begin
             let msgtype, seqnum = get_type_and_seqnum msg in
-            let msg = prepare_message msg ("BANZAI", "IMANDRA") in
+            let msg = prepare_message msg ("CLIENT", "EXCHANGE") in
             Lwt_io.write outch msg >>= fun () ->
             Lwt_io.flush outch >>= fun () ->
             let logstring = ("Initiated #" ^ seqnum ^ " \"" ^ msgtype ^ "\"  (" ^ msg ^ ")" ) in
             Lwt_io.printl logstring
         end
     | ExpectMessage msg -> begin 
-            let msg = prepare_message msg ("IMANDRA", "BANZAI") in
+            let msg = prepare_message msg ("EXCHANGE", "CLIENT") in
             Lwt_io.printl ( "Expecting: " ^ msg) >>= fun () ->
             Lwt_stream.next instream >>= fun rmsg ->
             Lwt_io.printl ( "Received: " ^ msg_to_string rmsg) >>= fun () ->
