@@ -1113,7 +1113,7 @@ let convert_utctimestamp_milli_monthyear (ts:fix_utctimestamp_milli) : (fix_mont
   monthyear_week  = None;
 };;
 
-let make_utcetimestamp_micro_timeonly_micro_dateonly 
+let make_utctimestamp_micro_timeonly_micro_dateonly 
     (to_:fix_utctimeonly_micro) 
     (do_:fix_utcdateonly) 
   : (fix_utctimestamp_micro) = 
@@ -1127,7 +1127,7 @@ let make_utcetimestamp_micro_timeonly_micro_dateonly
     utc_timestamp_year      = do_.utc_dateonly_year
   };;
 
-let make_utcetimestamp_milli_timeonly_milli_dateonly 
+let make_utctimestamp_milli_timeonly_milli_dateonly 
     (to_:fix_utctimeonly_milli) 
     (do_:fix_utcdateonly) 
   : (fix_utctimestamp_milli) = 
@@ -1141,7 +1141,7 @@ let make_utcetimestamp_milli_timeonly_milli_dateonly
     utc_timestamp_year      = do_.utc_dateonly_year
   };;
 
-let make_utcetimestamp_micro_timeonly_milli_dateonly 
+let make_utctimestamp_micro_timeonly_milli_dateonly 
     (to_:fix_utctimeonly_milli) 
     (do_:fix_utcdateonly) 
   : (fix_utctimestamp_micro) = 
@@ -1157,7 +1157,7 @@ let make_utcetimestamp_micro_timeonly_milli_dateonly
     utc_timestamp_year      = do_.utc_dateonly_year
   };;
 
-let make_utcetimestamp_milli_timeonly_micro_dateonly 
+let make_utctimestamp_milli_timeonly_micro_dateonly 
   (to_:fix_utctimeonly_micro) 
   (do_:fix_utcdateonly) 
 : (fix_utctimestamp_milli) = 
