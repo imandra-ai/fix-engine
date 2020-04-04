@@ -371,15 +371,17 @@ let no_seq_gap_measure l =
     Ordinal.of_int (List.length l);;
 
 (** Check to make sure there're no sequence gaps *)
-let rec no_seq_gaps (msg_list:full_valid_fix_msg list) (last_seq_num : int) = 
-    match msg_list with
-    | [] -> true
-    | x::xs ->
-        if x.full_msg_header.h_msg_seq_num <> ( last_seq_num + 1 ) then 
-            false
-        else
-            no_seq_gaps  xs x.full_msg_header.h_msg_seq_num
-    [@@measure no_seq_gap_measure msg_list]
+let rec no_seq_gaps (msg_list:full_valid_fix_msg list) (last : full_valid_fix_msg) = 
+  match msg_list with
+  | [] -> true
+  | h::tl ->
+    let expected_seq_num = match last.full_msg_data with
+      | Full_FIX_Admin_Msg (Full_Msg_Sequence_Reset seq_reset) -> seq_reset.seqr_new_seq_no
+      | _ ->  last.full_msg_header.h_msg_seq_num + 1
+      in
+    if h.full_msg_header.h_msg_seq_num <> expected_seq_num then false
+    else no_seq_gaps tl h
+  [@@measure no_seq_gap_measure msg_list]
 ;;
 
 (** 
@@ -390,15 +392,12 @@ let rec no_seq_gaps (msg_list:full_valid_fix_msg list) (last_seq_num : int) =
     2. The sequence IDs of the messages within cache are continuous (i.e. there're no gaps)
     3. First sequence ID (of the cache) is next message from the last one correctly processed. *)
 let is_cache_complete ( cache, last_seq_processed : full_valid_fix_msg list * int ) = 
-    match cache with
-    | [] -> false
-    | x::xs ->
-        begin 
-            let correct_seq_num = x.full_msg_header.h_msg_seq_num = last_seq_processed in 
-            let no_gaps = no_seq_gaps xs x.full_msg_header.h_msg_seq_num  in 
-            correct_seq_num && no_gaps
-        end
+  match cache with [] -> false | x::xs ->
+  let correct_seq_num = x.full_msg_header.h_msg_seq_num = last_seq_processed in 
+  let no_gaps = no_seq_gaps xs x in 
+  correct_seq_num && no_gaps
 ;;
+
 
 (** Add message to cache so that ordering is maintained. *)
 let rec add_to_cache ( m, cache : full_valid_fix_msg * full_valid_fix_msg list ) = 
