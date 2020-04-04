@@ -20,9 +20,9 @@ open Full_messages;;
 open Time_defaults;;
 
 (** Define set of actions + data for manual intervention by the user. *)
-type manual_int_data = {
-    session_reset           : bool;
-}
+type manual_int_data = 
+    | ResetSession
+    | IncrementOutSeq
 ;;
 
 (** Request to initiate a new session. *)
