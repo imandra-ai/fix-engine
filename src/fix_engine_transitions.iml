@@ -87,11 +87,7 @@ let run_retransmit ( engine : fix_engine_state ) =
         }
     (* treating a special case when there is only one message in history *)
     | msg::[] ->
-        if msg.full_msg_header.h_msg_seq_num < engine.fe_retransmit_start_idx then {
-            (* TODO: If we are here, then  history doesn't contain the requested messages.
-                Investigate what is the correct behavior in htis case. ( Reject, probably? )*)
-            engine with fe_history_to_send = []; outgoing_fix_msg = None;
-        } else if engine.fe_retransmit_end_idx <> 0 && engine.fe_retransmit_end_idx < msg.full_msg_header.h_msg_seq_num then {
+        if engine.fe_retransmit_end_idx <> 0 && engine.fe_retransmit_end_idx < msg.full_msg_header.h_msg_seq_num then {
             engine with fe_history_to_send = []; outgoing_fix_msg = None;
         } else {
             engine with
@@ -254,7 +250,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         engine with 
             fe_curr_mode = GapDetected;
             incoming_seq_num  = engine.incoming_seq_num + 1;
-            fe_cache = [ m ];
+            fe_cache = CacheMessage m :: [];
     } else
     (* Message sequence number is OK -- lets process its data *)
     match m.full_msg_data with 
@@ -337,19 +333,22 @@ let run_gap_detected ( engine : fix_engine_state ) =
 
 
 (** Here we can only handle a subset of the FIX messages. *)
-let replay_single_msg ( m, engine : full_valid_fix_msg * fix_engine_state ) =
-    match m.full_msg_data with 
-    | Full_FIX_App_Msg app_msg -> {
-        engine with 
-            incoming_seq_num = m.full_msg_header.h_msg_seq_num;
-            outgoing_int_msg = Some ( OutIntMsg_ApplicationData app_msg );
-            incoming_fix_msg = None;
-        }
-    | Full_FIX_Admin_Msg _msg -> {
-        engine with 
-            incoming_seq_num = m.full_msg_header.h_msg_seq_num;
-        }
+let replay_cached_msg ( m, engine : cache_entry * fix_engine_state ) =
+  match m with CacheGap(_, seqend) -> { engine with incoming_seq_num = seqend }
+  | CacheMessage m ->
+  match m.full_msg_data with
+  | Full_FIX_App_Msg app_msg ->
+    { engine with 
+      incoming_seq_num = m.full_msg_header.h_msg_seq_num
+    ; outgoing_int_msg = Some ( OutIntMsg_ApplicationData app_msg )
+    ; incoming_fix_msg = None;
+    }
+  | Full_FIX_Admin_Msg _ -> 
+    { engine with 
+      incoming_seq_num = m.full_msg_header.h_msg_seq_num
+    }
 ;; 
+
 
 (** Run the engine through the replay messages. This is used during recovery. 
 
@@ -357,32 +356,36 @@ let replay_single_msg ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     should be a Reject message. We need to ensure that this function cannot 
     lead to another Recovery state. *)
 let run_cache_replay ( engine : fix_engine_state ) =
-    match engine.fe_cache with 
-    | [] -> (* Nothing to process in cache, we've recovered *) {
-        engine with
-            fe_curr_mode = ActiveSession;
-        }
-    | x::xs -> 
-        let engine = replay_single_msg (x, engine) in
-        { engine with fe_cache = xs }
+  match engine.fe_cache with 
+  | [] -> (* Nothing to process in cache, we've recovered *) 
+    { engine with fe_curr_mode = ActiveSession }
+  | x::xs -> 
+    let engine = replay_cached_msg (x, engine) in
+    { engine with fe_cache = xs }    
 ;;
 
 let no_seq_gap_measure l =
     Ordinal.of_int (List.length l);;
 
+
+
 (** Check to make sure there're no sequence gaps *)
-let rec no_seq_gaps (msg_list:full_valid_fix_msg list) (last : full_valid_fix_msg) = 
-  match msg_list with
+let rec no_seq_gaps (cache:cache_entry list) (last_seq_num : int) = 
+  match cache with
   | [] -> true
-  | h::tl ->
-    let expected_seq_num = match last.full_msg_data with
-      | Full_FIX_Admin_Msg (Full_Msg_Sequence_Reset seq_reset) -> seq_reset.seqr_new_seq_no
-      | _ ->  last.full_msg_header.h_msg_seq_num + 1
-      in
-    if h.full_msg_header.h_msg_seq_num <> expected_seq_num then false
-    else no_seq_gaps tl h
+  | CacheGap(x,y)::tl   -> if x <> last_seq_num + 1 then false else no_seq_gaps tl y
+  | CacheMessage(m)::tl -> 
+    let x = m.full_msg_header.h_msg_seq_num in
+    if x <> last_seq_num + 1 then false else no_seq_gaps tl x
   [@@measure no_seq_gap_measure msg_list]
 ;;
+
+
+let cache_to_str cache = 
+  cache |> List.map (function 
+    | CacheGap (x,y) -> Z.to_string x ^ "->" ^ Z.to_string y
+    | CacheMessage m -> Z.to_string m.full_msg_header.h_msg_seq_num
+  ) |> String.concat " , "
 
 (** 
     Is cache valid so that we can transition from recovery?
@@ -391,21 +394,45 @@ let rec no_seq_gaps (msg_list:full_valid_fix_msg list) (last : full_valid_fix_ms
     1. It is non-empty
     2. The sequence IDs of the messages within cache are continuous (i.e. there're no gaps)
     3. First sequence ID (of the cache) is next message from the last one correctly processed. *)
-let is_cache_complete ( cache, last_seq_processed : full_valid_fix_msg list * int ) = 
-  match cache with [] -> false | x::xs ->
-  let correct_seq_num = x.full_msg_header.h_msg_seq_num = last_seq_processed in 
-  let no_gaps = no_seq_gaps xs x in 
+let is_cache_complete ( cache, last_seq_processed : cache_entry list * int ) = 
+  match cache with [] -> false | entry :: tl ->
+  let top_seq_num = match entry with  
+    | (CacheMessage x) -> x.full_msg_header.h_msg_seq_num  
+    | (CacheGap (x,_)) -> x 
+    in
+  let correct_seq_num = (top_seq_num = last_seq_processed) in
+  let no_gaps = no_seq_gaps tl top_seq_num in 
+  let () = print_endline @@ "is_cache_complete : " ^ cache_to_str cache in
+
+  let () = print_endline @@ "no_gaps = " ^ (if no_gaps then "T" else "F") in
   correct_seq_num && no_gaps
 ;;
 
 
 (** Add message to cache so that ordering is maintained. *)
-let rec add_to_cache ( m, cache : full_valid_fix_msg * full_valid_fix_msg list ) = 
-    match cache with 
-    | []    -> [ m ]
-    | [x]   -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then [ m; x ] else [ x; m ]
-    | x::xs -> if x.full_msg_header.h_msg_seq_num > m.full_msg_header.h_msg_seq_num then 
-                m::x::xs else ( x :: ( add_to_cache (m, xs) ) )
+let rec update_cache ( cache : cache_entry list ) (msg : cache_entry)  = 
+  let () = print_endline "update_cache" in
+  match (msg , cache) with
+  | msg   , [] -> msg :: [] 
+  | CacheMessage x , (CacheMessage m as msg' :: tl) -> 
+    let x = x.full_msg_header.h_msg_seq_num in
+    let m = m.full_msg_header.h_msg_seq_num in
+    if x < m then msg::msg'::tl    
+    else msg'::(update_cache tl msg) 
+  | CacheGap (x,y) , (CacheMessage m as msg' :: tl) -> 
+    let m = m.full_msg_header.h_msg_seq_num in
+    if y < m then msg :: msg' :: tl else 
+    if x <= m && m <= y then (update_cache tl msg) else
+    msg' :: (update_cache tl msg)
+  | CacheMessage x , (CacheGap(m,n)  :: tl) -> 
+    let x = x.full_msg_header.h_msg_seq_num in
+    if x < m then msg :: CacheGap(m,n) :: tl else 
+    if m <= x && x <= n then (update_cache tl (CacheGap(m,n))) else
+    CacheGap(m,n) :: (update_cache tl msg)
+  | CacheGap (x,y) , (CacheGap(m,n) :: tl) -> 
+    if y < m then CacheGap(x,y) :: CacheGap(m,n) :: tl else 
+    if n < x then CacheGap(m,n) :: (update_cache tl msg) else
+    update_cache tl (CacheGap(min m x, max n y))
 ;;
 
 (** We're in recovery mode. 
@@ -417,7 +444,17 @@ let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     | Full_FIX_Admin_Msg (Full_Msg_Logoff _m) -> logoff_and_shutdown ( engine )
     | Full_FIX_Admin_Msg (Full_Msg_Resend_Request m) -> initiate_Resend ( Recovery, m, engine)
     | _ ->
-    let new_cache = add_to_cache (m, engine.fe_cache) in 
+    let msg = match m with 
+    | { full_msg_header = { h_msg_seq_num; _ } 
+        ; full_msg_data = Full_FIX_Admin_Msg (Full_Msg_Sequence_Reset { seqr_new_seq_no; _ } ) 
+        ; _ } -> 
+        let () = print_endline "Gap update" in
+        CacheGap (h_msg_seq_num, seqr_new_seq_no)
+    | _ -> let () = print_endline "Message update" in CacheMessage(m)    
+    in
+    let () = print_endline @@ "updating cache ..." ^ cache_to_str engine.fe_cache in
+    let new_cache = update_cache engine.fe_cache msg in
+    let () = print_endline @@ "updated : " ^ cache_to_str new_cache in
     if is_cache_complete (new_cache, engine.incoming_seq_num) then {
         engine with 
             fe_cache = new_cache;
