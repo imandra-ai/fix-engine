@@ -9,12 +9,12 @@ let rec update_cache cache msg =
     if x < m then msg::(Msg m)::cache    
     else Msg(m)::(update_cache tl msg) 
   | Gap (x,y) , (Msg m :: tl) -> 
-    if y < m then msg :: (Msg m) :: tl else 
+    if y <= m then msg :: (Msg m) :: tl else 
     if x <= m && m <= y then (update_cache tl msg) else
     (Msg m) :: (update_cache tl msg)
   | Msg x , (Gap(m,n)  :: tl) -> 
     if x < m then msg :: Gap(m,n) :: tl else 
-    if m <= x && x <= n then (update_cache tl (Gap(m,n))) else
+    if m <= x && x < n then (update_cache tl (Gap(m,n))) else
     Gap(m,n) :: (update_cache tl msg)
   | Gap (x,y) , (Gap(m,n) :: tl) -> 
     if y < m then Gap(x,y) :: Gap(m,n) :: tl else 
