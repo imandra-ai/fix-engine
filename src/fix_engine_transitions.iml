@@ -334,7 +334,7 @@ let run_gap_detected ( engine : fix_engine_state ) =
 
 (** Here we can only handle a subset of the FIX messages. *)
 let replay_cached_msg ( m, engine : cache_entry * fix_engine_state ) =
-  match m with CacheGap(_, seqend) -> { engine with incoming_seq_num = seqend }
+  match m with CacheGap(_, seqend) -> { engine with incoming_seq_num = seqend - 1 }
   | CacheMessage m ->
   match m.full_msg_data with
   | Full_FIX_App_Msg app_msg ->
@@ -364,10 +364,6 @@ let run_cache_replay ( engine : fix_engine_state ) =
     { engine with fe_cache = xs }    
 ;;
 
-let no_seq_gap_measure l =
-    Ordinal.of_int (List.length l);;
-
-
 
 (** Check to make sure there're no sequence gaps *)
 let rec no_seq_gaps (cache:cache_entry list) (last_seq_num : int) = 
@@ -384,7 +380,6 @@ let rec no_seq_gaps (cache:cache_entry list) (last_seq_num : int) =
     let x = m.full_msg_header.h_msg_seq_num in
     if x <> last_seq_num + 1 then false else no_seq_gaps tl x
   )
-(*  [@@measure no_seq_gap_measure msg_list] *)
 ;;
 
 
@@ -393,14 +388,8 @@ let cache_to_str cache =
     | CacheGap (x,y) -> "(" ^ Z.to_string x ^ "->" ^ Z.to_string y ^ ")"
     | CacheMessage m -> "(" ^ Z.to_string m.full_msg_header.h_msg_seq_num ^ ")"
   ) |> String.concat " , "
+;;
 
-(** 
-    Is cache valid so that we can transition from recovery?
-
-    Cache is considered valid when:
-    1. It is non-empty
-    2. The sequence IDs of the messages within cache are continuous (i.e. there're no gaps)
-    3. First sequence ID (of the cache) is next message from the last one correctly processed. *)
 let is_cache_complete ( cache, last_seq_processed : cache_entry list * int ) = 
   match cache with [] -> false | entry :: tl ->
   let first_seq_num, next_seq_num = match entry with  
