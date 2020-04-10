@@ -1087,13 +1087,13 @@ let convert_utctimestamp_milli_localmktdate (ts:fix_utctimestamp_milli) : (fix_l
   localmktdate_day   = ts.utc_timestamp_day;
 };;
 
-let convert_utctimestamp_micro_dateonly (ts:fix_utctimestamp_micro) : (fix_utcdateonly) = {
+let convert_utctimestamp_micro_utcdateonly (ts:fix_utctimestamp_micro) : (fix_utcdateonly) = {
   utc_dateonly_year  = ts.utc_timestamp_year;
   utc_dateonly_month = ts.utc_timestamp_month;
   utc_dateonly_day   = ts.utc_timestamp_day;
 };;
 
-let convert_utctimestamp_milli_dateonly (ts:fix_utctimestamp_milli) : (fix_utcdateonly) = {
+let convert_utctimestamp_milli_utcdateonly (ts:fix_utctimestamp_milli) : (fix_utcdateonly) = {
   utc_dateonly_year  = ts.utc_timestamp_year;
   utc_dateonly_month = ts.utc_timestamp_month;
   utc_dateonly_day   = ts.utc_timestamp_day;
@@ -1113,7 +1113,7 @@ let convert_utctimestamp_milli_monthyear (ts:fix_utctimestamp_milli) : (fix_mont
   monthyear_week  = None;
 };;
 
-let make_utctimestamp_micro_timeonly_micro_dateonly 
+let make_utctimestamp_micro_utctimeonly_micro_utcdateonly 
     (to_:fix_utctimeonly_micro) 
     (do_:fix_utcdateonly) 
   : (fix_utctimestamp_micro) = 
@@ -1127,7 +1127,7 @@ let make_utctimestamp_micro_timeonly_micro_dateonly
     utc_timestamp_year      = do_.utc_dateonly_year
   };;
 
-let make_utctimestamp_milli_timeonly_milli_dateonly 
+let make_utctimestamp_milli_utctimeonly_milli_utcdateonly 
     (to_:fix_utctimeonly_milli) 
     (do_:fix_utcdateonly) 
   : (fix_utctimestamp_milli) = 
@@ -1141,7 +1141,7 @@ let make_utctimestamp_milli_timeonly_milli_dateonly
     utc_timestamp_year      = do_.utc_dateonly_year
   };;
 
-let make_utctimestamp_micro_timeonly_milli_dateonly 
+let make_utctimestamp_micro_utctimeonly_milli_utcdateonly 
     (to_:fix_utctimeonly_milli) 
     (do_:fix_utcdateonly) 
   : (fix_utctimestamp_micro) = 
@@ -1157,7 +1157,7 @@ let make_utctimestamp_micro_timeonly_milli_dateonly
     utc_timestamp_year      = do_.utc_dateonly_year
   };;
 
-let make_utctimestamp_milli_timeonly_micro_dateonly 
+let make_utctimestamp_milli_utctimeonly_micro_utcdateonly 
   (to_:fix_utctimeonly_micro) 
   (do_:fix_utcdateonly) 
 : (fix_utctimestamp_milli) = 

@@ -57,11 +57,11 @@ let normalise_utctimeonly = normalise_utctimeonly_milli;;
 
 let utctimestamp_duration_Add = utctimestamp_milli_duration_Add;;
 
-let make_utctimestamp_timeonly_dateonly = make_utctimestamp_milli_timeonly_milli_dateonly;;
+let make_utctimestamp_utctimeonly_utcdateonly = make_utctimestamp_milli_utctimeonly_milli_utcdateonly;;
 
-let convert_utctimestamp_timeonly = convert_utctimestamp_milli_utctimeonly_milli;;
+let convert_utctimestamp_utctimeonly = convert_utctimestamp_milli_utctimeonly_milli;;
 
-let convert_utctimestamp_dateonly = convert_utctimestamp_milli_dateonly;;
+let convert_utctimestamp_utcdateonly = convert_utctimestamp_milli_utcdateonly;;
 
 let convert_utctimestamp_localmktdate = convert_utctimestamp_milli_localmktdate;;
 
