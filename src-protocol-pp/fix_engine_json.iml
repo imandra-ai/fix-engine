@@ -37,13 +37,18 @@ let fix_engine_mode_to_string = function
     | WaitingForHeartbeat                               -> "WaitingForHeartbeat"
 ;;
 
+let manual_int_data_to_json x : json = match x with  
+    | ResetSession    -> `String "ResetSession" 
+    | IncrementOutSeq -> `String "IncrementOutSeq"
+
+
 (** These are the messages going in/out of the engine to the owner. *)
 let int_inc_msg_to_json x : json = match x with
     | IncIntMsg_TimeChange t                            -> `Assoc [ ( "TimeChange",         `Assoc [ ( "new_time"       , utctimestamp_to_json t )]             )]
     | IncIntMsg_CreateSession cs                        -> `Assoc [ ( "CreateSession",      `Assoc [ ( "dest_comp_id"   , `String cs.dest_comp_id )])]
     | IncIntMsg_EndSession                              -> `String "EndSession"
     | IncIntMsg_ApplicationData d                       -> `Assoc [ ( "ApplicationData",    `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
-    | IncIntMsg_ManualIntervention m                    -> `Assoc [ ( "ManualIntervention", `Assoc [ ( "reset"          , `Bool m.session_reset )]              )]
+    | IncIntMsg_ManualIntervention m                    -> `Assoc [ ( "ManualIntervention", manual_int_data_to_json m)]
 ;;
 
 let int_out_msg_to_json x : json = match x with

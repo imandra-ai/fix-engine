@@ -52,3 +52,5 @@ run_test ./defs/14f_IncorrectDataFormat.def
 run_test ./defs/14i_RepeatingGroupCountNotEqual.def
 run_test ./defs/14j_modified_OutOfOrderRepeatingGroupMembers.def
 
+run_test ./defs/Imandra1_SessionRejectedBadSeqn.def
+

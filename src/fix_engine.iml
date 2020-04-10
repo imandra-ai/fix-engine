@@ -125,11 +125,33 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
             | _ -> engine
         end
         
-    | IncIntMsg_ManualIntervention _mi -> {
-        engine with
-            incoming_int_msg            = None;
-            outgoing_int_msg            = Some OutIntMsg_Reject 
-        }
+    | IncIntMsg_ManualIntervention mi -> begin
+        print_endline @@ "ManualIntervention current seqout" ^ Z.to_string engine.outgoing_seq_num;
+        let engine = { engine with incoming_int_msg = None } in
+        match mi with 
+        | ResetSession -> { engine with outgoing_int_msg = Some OutIntMsg_Reject }
+        | IncrementOutSeq -> begin
+            (** This intervention is used when we want to send a custom-made message on wire
+            The outgoing seq number is increased - we also record this as a gap in history*)
+            let gap_fill_msg_data = Full_FIX_Admin_Msg ( 
+                Full_Msg_Sequence_Reset {
+                    seqr_new_seq_no = engine.outgoing_seq_num + 1;
+                    seqr_gap_fill_flag = Some FIX_GapFillFlag_Y;
+                } ) in
+            let msg = create_outbound_fix_msg (
+                engine.outgoing_seq_num, engine.fe_target_comp_id, 
+                engine.fe_comp_id, engine.fe_curr_time,     
+                gap_fill_msg_data, false
+            ) in 
+            { engine with 
+                fe_last_time_data_sent  = engine.fe_curr_time;
+                outgoing_fix_msg        = None; 
+                incoming_int_msg        = None;
+                outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                fe_history              = add_msg_to_history ( engine.fe_history, msg );
+            }
+        end
+    end
 
     | IncIntMsg_EndSession ->
         begin
