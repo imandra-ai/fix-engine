@@ -102,7 +102,7 @@ let prepare_packet msg_body =
     msg @ [ ( "10" , get_checksum msg |> Z.to_int |> encode_checksum )] 
 ;;
 
-let encode_full_valid_msg x =
+let packet_full_valid_msg x =
     let msgtag = get_full_msg_tag x.full_msg_data in
     let msg_body = 
         encode_header msgtag x.full_msg_header @
@@ -114,7 +114,12 @@ let encode_full_valid_msg x =
         |> List.map    (fun (k,v) -> (k, match v with Some v -> v | None -> ""))
         in
     msg_body |> prepare_packet
-             |> List.map ( fun(k,v) -> k^"="^v )
-             |> List.fold_left ( fun a s -> a ^ s ^ "\001" ) ""
 ;;
+
+let encode_full_valid_msg x =
+    x |> packet_full_valid_msg
+      |> List.map ( fun(k,v) -> k^"="^v )
+      |> List.fold_left ( fun a s -> a ^ s ^ "\001" ) ""
+;;
+
 [@@@logic]
