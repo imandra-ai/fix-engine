@@ -74,6 +74,10 @@ type fix_engine_mode =
     | WaitingForHeartbeat   (** Sent out TestRequest message.  *)
 ;;
 
+type cache_entry =
+  | CacheMessage of full_valid_fix_msg
+  | CacheGap of int * int
+
 (** Engine state structure containing all of the information required for it operate. *)
 type fix_engine_state = {
     fe_curr_status          : fix_engine_status;            (** Status. *)
@@ -98,7 +102,7 @@ type fix_engine_state = {
     incoming_fix_msg        : full_top_level_msg option;    (** Messages we will send out *)
     outgoing_fix_msg        : full_top_level_msg option;    (** Messages we receive *)
 
-    fe_cache                : full_valid_fix_msg list;      (** Maintain a cache of messages in case we detect out-of-sequence message(s). *)
+    fe_cache                : cache_entry list;             (** Maintain a cache of messages in case we detect out-of-sequence message(s). *)
     fe_history              : full_valid_fix_msg list;      (** We maintain history of our outgoing messages in case we're asked to retransmit. *)
 
     fe_last_time_data_sent  : fix_utctimestamp;             (** Last time we sent out data to the corresponding engine *)

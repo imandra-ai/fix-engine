@@ -53,4 +53,9 @@ run_test ./defs/14i_RepeatingGroupCountNotEqual.def
 run_test ./defs/14j_modified_OutOfOrderRepeatingGroupMembers.def
 
 run_test ./defs/Imandra1_SessionRejectedBadSeqn.def
+run_test ./defs/Imandra2_SeqResetWithGapFill.def
+run_test ./defs/Imandra3_CacheReplayApplication.def
+run_test ./defs/Imandra4_CacheReplayOutOfOrder.def
+run_test ./defs/Imandra5_SeqResetWithGapFillOvershoot.def
+run_test ./defs/Imandra6_CacheReplayAdminOnly.def
 
