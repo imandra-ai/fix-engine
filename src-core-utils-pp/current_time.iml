@@ -43,7 +43,7 @@ let get_current_utctimeonly_micro () : fix_utctimeonly_micro =
 ;;
 
 let get_current_utcdateonly () : fix_utcdateonly = 
-  convert_utctimestamp_milli_dateonly 
+  convert_utctimestamp_milli_utcdateonly 
     (get_current_utctimestamp_milli ())
 ;;
 
