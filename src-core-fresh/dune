@@ -1,0 +1,14 @@
+(rule
+  (targets fresh.ml)
+  (deps fresh.iml)
+   (action
+    (with-stdout-to fresh.ml
+       (run imandra-extract  fresh.iml))))
+
+(library
+  (name        core_fresh)
+  (public_name fix-engine.core_fresh)
+  (wrapped  false)
+  (flags :standard -open Imandra_prelude -warn-error -A+8+39)
+  (libraries imandra-base.prelude )
+)
