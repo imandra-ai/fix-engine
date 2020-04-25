@@ -10,5 +10,5 @@
   (public_name fix-engine.core_fresh)
   (wrapped  false)
   (flags :standard -open Imandra_prelude -warn-error -A+8+39)
-  (libraries imandra-base.prelude )
+  (libraries imandra-base.prelude core_time_defaults_pp core_utils_pp core core_time_defaults)
 )
