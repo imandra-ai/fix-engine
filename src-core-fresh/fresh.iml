@@ -6,7 +6,6 @@
 *)
 [@@@import "../src-core-time-defaults-pp/time_defaults_current_time.iml"];;
 [@@@import "../src-core-utils-pp/current_time.iml"];;
-[@@@import "../src-core/datetime.iml"];;
 [@@@import "../src-core/numeric.iml"];;
 [@@@import "../src-core-time-defaults/time_defaults.iml"];;
 [@@@program]
@@ -35,28 +34,12 @@ let incr_bool () =
   !count_bool
 ;;
 
-let incr_UTCTimestamp_milli () = 
-  Current_time.get_current_utctimestamp_milli ()
-;;
-
-let incr_UTCTimestamp_micro () = 
-  Current_time.get_current_utctimestamp_micro ()
-;;
-
 let incr_UTCTimestamp () = 
   Time_defaults_current_time.get_current_utctimestamp ()
 ;;
 
 let incr_UTCTimeOnly () = 
   Time_defaults.convert_utctimestamp_utctimeonly (incr_UTCTimestamp ())
-;;
-
-let incr_UTCTimeOnly_milli () = 
-  Datetime.convert_utctimestamp_milli_utctimeonly_milli (incr_UTCTimestamp_milli ())
-;;
-
-let incr_UTCTimeOnly_micro () = 
-  Datetime.convert_utctimestamp_micro_utctimeonly_micro (incr_UTCTimestamp_micro ())
 ;;
 
 let incr_LocalMktDate () = 
