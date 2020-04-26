@@ -7,12 +7,13 @@
 [@@@import "../src-core-time-defaults-pp/time_defaults_current_time.iml"];;
 [@@@import "../src-core-utils-pp/current_time.iml"];;
 [@@@import "../src-core/datetime.iml"];;
+[@@@import "../src-core/numeric.iml"];;
 [@@@import "../src-core-time-defaults/time_defaults.iml"];;
 [@@@program]
 
 let count_string = ref 0;; 
 let count_int = ref 0;;
-let count_float = ref 0.0;;
+let count_float = ref (Numeric.Float_6 0);;
 let count_bool = ref true;;
 
 let incr_string () = 
@@ -26,7 +27,7 @@ let incr_int () =
 ;;
 
 let incr_float () = 
-  count_float := !count_float +. 0.1;
+  count_float := Numeric.float_Add_6_6 !count_float (Numeric.Float_6 1);
   !count_float;;
 
 let incr_bool () = 
