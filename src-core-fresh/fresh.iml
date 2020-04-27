@@ -1,0 +1,35 @@
+(** fresh helper functions. *)
+(***
+    Imandra Inc.
+    Copyright (c) 2014 - 2020
+    fresh.iml
+*)
+[@@@import "../src-core-time-defaults-pp/time_defaults_current_time.iml"];;
+[@@@import "../src-core-utils-pp/current_time.iml"];;
+[@@@import "../src-core/numeric.iml"];;
+[@@@import "../src-core-time-defaults/time_defaults.iml"];;
+[@@@program]
+
+let count_string = ref 0;; 
+let count_int = ref 0;;
+let count_float = ref (Numeric.Float_6 0);;
+
+let incr_string () = 
+   count_string := !count_string + 1;
+   Z.to_string !count_string
+;;
+
+let incr_int () = 
+  count_int := !count_int + 1;
+  !count_int
+;;
+
+let incr_float () = 
+  count_float := Numeric.float_Add_6_6 !count_float (Numeric.Float_6 1);
+  !count_float;;
+
+let now_UTCTimestamp () = 
+  Time_defaults_current_time.get_current_utctimestamp ()
+;;
+
+[@@@logic]
