@@ -13,7 +13,6 @@
 let count_string = ref 0;; 
 let count_int = ref 0;;
 let count_float = ref (Numeric.Float_6 0);;
-let count_bool = ref true;;
 
 let incr_string () = 
    count_string := !count_string + 1;
@@ -29,29 +28,8 @@ let incr_float () =
   count_float := Numeric.float_Add_6_6 !count_float (Numeric.Float_6 1);
   !count_float;;
 
-let incr_bool () = 
-  count_bool := not !count_bool;
-  !count_bool
-;;
-
-let incr_UTCTimestamp () = 
+let now_UTCTimestamp () = 
   Time_defaults_current_time.get_current_utctimestamp ()
-;;
-
-let incr_UTCTimeOnly () = 
-  Time_defaults.convert_utctimestamp_utctimeonly (incr_UTCTimestamp ())
-;;
-
-let incr_LocalMktDate () = 
-  Time_defaults.convert_utctimestamp_localmktdate (incr_UTCTimestamp ())
-;;
-
-let incr_UTCDateOnly () = 
-  Time_defaults.convert_utctimestamp_utcdateonly (incr_UTCTimestamp ())
-;;
-
-let incr_MonthYear () = 
-  Time_defaults.convert_utctimestamp_monthyear (incr_UTCTimestamp ())
 ;;
 
 [@@@logic]
