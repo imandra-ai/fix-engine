@@ -5,30 +5,52 @@
     Copyright (c) 2014 - 2019
 
     state.iml
-    
+
 *)
 [@@@import "actions.iml"]
 [@@@import "model_messages.iml"]
 open Actions;;
 open Model_messages;;
 
-type model_state = {
-    incoming_action : fix_action option;
-    outgoing_msgs : model_msg list;
-    incoming_msg : model_top_level_msg
+
+type state_event_info = {
+    state_event_counter : int;
+    state_event_reject_text : string option
 }
 ;;
+
+type outgoing_msg_record = {
+    outgoing_msg_counter : int;
+    outgoing_msg_msg : model_msg
+}
+;;
+
+type model_state = {
+    incoming_action : fix_action option;
+    outgoing_msgs : outgoing_msg_record list;
+    incoming_msg : model_top_level_msg;
+    event_counter : int;
+    event_info : state_event_info list
+}
+;;
+
 
 let init_model_state = {
     incoming_action = None;
     outgoing_msgs = [];
-    incoming_msg = FIX_TL_None
+    incoming_msg = FIX_TL_None;
+    event_counter = 0;
+    event_info = []
 };;
 
 let send_msg (msg : model_msg) (m_state : model_state)  =
     { m_state with
-        outgoing_msgs = msg :: m_state.outgoing_msgs
+        outgoing_msgs = {
+            outgoing_msg_counter = m_state.event_counter;
+            outgoing_msg_msg = msg
+        } :: m_state.outgoing_msgs
     }
+    [@@macro]
 ;;
 
 type internal_states_types = int list
