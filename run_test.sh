@@ -1,3 +1,4 @@
+
 run_test () {
     echo "Runnning test $1"
     dune exec src-tests/test_runner.bc -- $1 | tr '\001' '|'
@@ -5,6 +6,8 @@ run_test () {
 
 trap "exit" INT TERM
 trap "kill 0" EXIT
+
+echo "(ignored_subdirs (src-protocol-exts-vg src-protocol-exts-pp-vg src-core-utils-vg))" > dune
 
 dune exec src-simulation/server.bc &
 sleep 1
@@ -46,3 +49,5 @@ run_test ./defs/7_ReceiveRejectMessage.def
 #run_test ./defs/8_AdminAndApplicationMessages.def
 run_test ./defs/8_OnlyAdminMessages.def
 #run_test ./defs/8_OnlyApplicationMessages.def
+
+rm dune
