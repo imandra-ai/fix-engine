@@ -13,6 +13,13 @@
        (run imandra-extract  repeating_groups_converter.iml))))
        
 (rule
+  (targets record_converter.ml)
+  (deps record_converter.iml)
+   (action
+    (with-stdout-to record_converter.ml
+       (run imandra-extract  record_converter.iml))))
+       
+(rule
   (targets type_converter.ml)
   (deps type_converter.iml)
    (action
@@ -24,5 +31,5 @@
   (public_name fix-engine.conversions)
   (wrapped false)
   (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
-  (libraries imandra-base.prelude core protocol_exts venue_types)
+  (libraries imandra-base.prelude protocol_exts venue_types)
 )

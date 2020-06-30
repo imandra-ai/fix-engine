@@ -1,25 +1,20 @@
-(** Time defaults for a particular FIX implementation *)
-(***
-
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    json_to_message.iml
-    
-*)
-[@@@import "../../src-core-pp/base_types_json.iml"]
-[@@@import "../../src-core-pp/datetime_json.iml"]
-[@@@import "json_to_enum.iml"]
-[@@@import "json_to_model_tag.iml"]
-[@@@import "../src-types/model_messages.iml"]
+(* Imandra Inc. copyright 2020 *)
 [@@@program]
+[@@@import "../../src-core-pp/base_types_json.iml"]
 open Base_types_json;;
+[@@@import "../../src-core-pp/datetime_json.iml"]
 open Datetime_json;;
+[@@@require "decoders-yojson"]
 open Decoders_yojson.Basic.Decode;;
+[@@@require "decoders-yojson"]
 open Decoders_yojson.Basic.Decode.Infix;;
+[@@@import "json_to_enum.iml"]
 open Json_to_enum;;
+[@@@import "json_to_model_tag.iml"]
 open Json_to_model_tag;;
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+
 
 let mod_message_executionreport_decoder  : mod_executionreport_data decoder =
     (maybe (field "Text" string_decoder)) >>= (fun mod_f_ExecutionReport_Text -> (field "Instrument.Symbol" string_decoder) >>= (fun mod_f_ExecutionReport_Instrument_Symbol -> (field "OrdStatus" mod_enum_ordstatus_decoder) >>= (fun mod_f_ExecutionReport_OrdStatus -> (field "CumQty" float_6_decoder) >>= (fun mod_f_ExecutionReport_CumQty -> (field "LeavesQty" float_6_decoder) >>= (fun mod_f_ExecutionReport_LeavesQty -> (field "Side" mod_enum_side_decoder) >>= (fun mod_f_ExecutionReport_Side -> (field "AvgPx" float_6_decoder) >>= (fun mod_f_ExecutionReport_AvgPx -> (field "ExecType" mod_enum_exectype_decoder) >>= (fun mod_f_ExecutionReport_ExecType -> (field "ExecID" string_decoder) >>= (fun mod_f_ExecutionReport_ExecID -> (field "OrderID" string_decoder) >>= (fun mod_f_ExecutionReport_OrderID -> (field "ClOrdID" string_decoder) >>= (fun mod_f_ExecutionReport_ClOrdID -> succeed {
@@ -46,6 +41,7 @@ let mod_message_executionreport_decoder  : mod_executionreport_data decoder =
     )
     )
     )
+    [@@macro]
 ;;
 
 let mod_message_newordersingle_decoder  : mod_newordersingle_data decoder =
@@ -61,6 +57,7 @@ let mod_message_newordersingle_decoder  : mod_newordersingle_data decoder =
     )
     )
     )
+    [@@macro]
 ;;
 
 let model_message_decoder  : model_msg decoder =
@@ -72,6 +69,7 @@ let model_message_decoder  : model_msg decoder =
         | d -> (fail ("Unknown Message ("^d^") in JSON decoding."))
     )
     )
+    [@@macro]
 ;;
 
 let top_level_message_decoder  : model_top_level_msg decoder =
@@ -85,5 +83,7 @@ let top_level_message_decoder  : model_top_level_msg decoder =
         | _ -> (succeed FIX_TL_None)
     )
     )
+    [@@macro]
 ;;
+
 [@@@logic]

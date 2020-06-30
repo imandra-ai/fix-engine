@@ -1,19 +1,16 @@
-(** Time defaults for a particular FIX implementation *)
-(***
-
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    message_defaults.iml
-    
-*)
+(* Imandra Inc. copyright 2020 *)
 [@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+[@@@import "../src-types/state.iml"]
+open State;;
 
-let assign_defaults_ExecutionReport (msg_data : mod_executionreport_data)  =
+
+let assign_defaults_ExecutionReport (msg_data : mod_executionreport_data) (m_state : model_state)  =
     msg_data
+    [@@macro]
 ;;
 
-let assign_defaults_NewOrderSingle (msg_data : mod_newordersingle_data)  =
+let assign_defaults_NewOrderSingle (msg_data : mod_newordersingle_data) (m_state : model_state)  =
     msg_data
+    [@@macro]
 ;;

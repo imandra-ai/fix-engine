@@ -13,18 +13,11 @@
        (run imandra-extract  model_tag_names.iml))))
        
 (rule
-  (targets model_enum_names.ml)
-  (deps model_enum_names.iml)
+  (targets enum_tag_assoc.ml)
+  (deps enum_tag_assoc.iml)
    (action
-    (with-stdout-to model_enum_names.ml
-       (run imandra-extract  model_enum_names.iml))))
-       
-(rule
-  (targets string_assoc_common.ml)
-  (deps string_assoc_common.iml)
-   (action
-    (with-stdout-to string_assoc_common.ml
-       (run imandra-extract  string_assoc_common.iml))))
+    (with-stdout-to enum_tag_assoc.ml
+       (run imandra-extract  enum_tag_assoc.iml))))
        
 (rule
   (targets string_assoc.ml)
@@ -32,6 +25,13 @@
    (action
     (with-stdout-to string_assoc.ml
        (run imandra-extract  string_assoc.iml))))
+       
+(rule
+  (targets string_assoc_common.ml)
+  (deps string_assoc_common.iml)
+   (action
+    (with-stdout-to string_assoc_common.ml
+       (run imandra-extract  string_assoc_common.iml))))
        
 (library
   (name string_factory)

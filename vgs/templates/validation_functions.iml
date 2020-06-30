@@ -2,4 +2,9 @@
 [@@@program]
 
 
+let validation_functions  =
+    []
+    [@@macro]
+;;
+
 [@@@logic]

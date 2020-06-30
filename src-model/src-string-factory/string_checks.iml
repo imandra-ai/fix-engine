@@ -1,37 +1,28 @@
-(** Time defaults for a particular FIX implementation *)
-(***
-
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    string_checks.iml
-    
-*)
-[@@@import "../src-types/actions.iml"]
-[@@@import "../src-types/model_messages.iml"]
+(* Imandra Inc. copyright 2020 *)
 [@@@program]
-open Actions;;
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+
 
 let isAction (str : string)  =
     (match str with
-        | "Actions.FIX_Action_x" -> true
         | _ -> false
     )
+    [@@macro]
 ;;
 
 let isActionData (str : string)  =
     (match str with
-        | "Actions.m_action_fix_x" -> true
         | _ -> false
     )
+    [@@macro]
 ;;
 
 let isActionField (str : string)  =
     (match str with
-        | "Actions.mod_f_x_x" -> true
         | _ -> false
     )
+    [@@macro]
 ;;
 
 let isModelFieldTag (str : string)  =
@@ -103,26 +94,29 @@ let isInternal (str : string)  =
     (match str with
         | _ -> false
     )
+    [@@macro]
 ;;
 
 let isInternalField (str : string)  =
     (match str with
         | _ -> false
     )
+    [@@macro]
 ;;
 
 let isAssignableField (str : string)  =
     (match str with
         | _ -> false
     )
+    [@@macro]
 ;;
 
 let isEnum (str : string)  =
     (match str with
         | "Model_app_enums.model_fix_side" -> true
-        | "Model_app_enums.model_fix_ordtype" -> true
-        | "Model_app_enums.model_fix_ordstatus" -> true
         | "Model_app_enums.model_fix_exectype" -> true
+        | "Model_app_enums.model_fix_ordstatus" -> true
+        | "Model_app_enums.model_fix_ordtype" -> true
         | _ -> false
     )
 ;;
@@ -145,38 +139,6 @@ let isEnumCase (str : string)  =
         | "Model_app_enums.MOD_FIX_Side_Redeem" -> true
         | "Model_app_enums.MOD_FIX_Side_Lend" -> true
         | "Model_app_enums.MOD_FIX_Side_Borrow" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_Market" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_Limit" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_Stop" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_StopLimit" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_WithOrWithout" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_LimitOrBetter" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_LimitWithOrWithout" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_OnBasis" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_PreviouslyQuoted" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_PreviouslyIndicated" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_ForexSwap" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_Funari" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_MarketIfTouched" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_MarketWithLeftOverAsLimit" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_PreviousFundValuationPoint" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_NextFundValuationPoint" -> true
-        | "Model_app_enums.MOD_FIX_OrdType_Pegged" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_New" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_PartiallyFilled" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_Filled" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_DoneForDay" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_Canceled" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_PendingCancel" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_Stopped" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_Rejected" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_Suspended" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_PendingNew" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_Calculated" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_Expired" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_AcceptedForBidding" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_PendingReplace" -> true
-        | "Model_app_enums.MOD_FIX_OrdStatus_Replaced" -> true
         | "Model_app_enums.MOD_FIX_ExecType_New" -> true
         | "Model_app_enums.MOD_FIX_ExecType_DoneForDay" -> true
         | "Model_app_enums.MOD_FIX_ExecType_Canceled" -> true
@@ -194,6 +156,38 @@ let isEnumCase (str : string)  =
         | "Model_app_enums.MOD_FIX_ExecType_TradeCorrect" -> true
         | "Model_app_enums.MOD_FIX_ExecType_TradeCancel" -> true
         | "Model_app_enums.MOD_FIX_ExecType_OrderStatus" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_New" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_PartiallyFilled" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_Filled" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_DoneForDay" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_Canceled" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_PendingCancel" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_Stopped" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_Rejected" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_Suspended" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_PendingNew" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_Calculated" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_Expired" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_AcceptedForBidding" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_PendingReplace" -> true
+        | "Model_app_enums.MOD_FIX_OrdStatus_Replaced" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_Market" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_Limit" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_Stop" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_StopLimit" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_WithOrWithout" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_LimitOrBetter" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_LimitWithOrWithout" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_OnBasis" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_PreviouslyQuoted" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_PreviouslyIndicated" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_ForexSwap" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_Funari" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_MarketIfTouched" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_MarketWithLeftOverAsLimit" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_PreviousFundValuationPoint" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_NextFundValuationPoint" -> true
+        | "Model_app_enums.MOD_FIX_OrdType_Pegged" -> true
         | _ -> false
     )
 ;;
@@ -202,27 +196,43 @@ let isRepeatingGroup (str : string)  =
     (match str with
         | _ -> false
     )
+    [@@macro]
 ;;
 
 let name_of_action (x)  =
-    (match x with
-        | FIX_Action_x _ -> "Action:x"
-    )
+    ""
+    [@@macro]
 ;;
 
 let name_of_model_msg (x)  =
     (match x with
-        | FIX_Msg_ExecutionReport _ -> "Msg:ExecutionReport"
-        | FIX_Msg_NewOrderSingle _ -> "Msg:NewOrderSingle"
+        | FIX_Msg_ExecutionReport _ -> "ExecutionReport"
+        | FIX_Msg_NewOrderSingle _ -> "NewOrderSingle"
+    )
+;;
+
+let fix_code_of_model_msg (m)  =
+    (match m with
+        | FIX_Msg_ExecutionReport _ -> "8"
+        | FIX_Msg_NewOrderSingle _ -> "D"
+    )
+;;
+
+let fix_code_of_model_msg_name (m)  =
+    (match m with
+        | "ExecutionReport" -> (Some "8")
+        | "NewOrderSingle" -> (Some "D")
+        | _ -> None
     )
 ;;
 
 let name_of_msg (x)  =
     (match x with
-        | FIX_TL_Normal d -> (name_of_model_msg d)
+        | FIX_TL_Normal d -> ((^) "Msg:" (name_of_model_msg d))
         | FIX_TL_Req_Field_Missing _ -> "Msg:Field_missing"
         | FIX_TL_PossibleResend _ -> "Msg:Possible_resend"
         | FIX_TL_None -> "Msg:None"
     )
 ;;
+
 [@@@logic]

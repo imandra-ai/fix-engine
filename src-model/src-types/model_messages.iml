@@ -1,54 +1,49 @@
-(** Time defaults for a particular FIX implementation *)
-(***
-
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    model_messages.iml
-    
-*)
+(* Imandra Inc. copyright 2020 *)
 [@@@import "../../src-core/datetime.iml"]
-[@@@import "model_app_enums.iml"]
-[@@@import "model_tags.iml"]
-[@@@import "../../src-core/numeric.iml"]
 open Datetime;;
+[@@@import "model_app_enums.iml"]
 open Model_app_enums;;
+[@@@import "model_tags.iml"]
 open Model_tags;;
+[@@@import "../../src-core/numeric.iml"]
 open Numeric;;
+[@@@import "../../src-core-time-defaults/time_defaults.iml"]
+open Time_defaults;;
+
 
 type mod_executionreport_data = {
-    (** Required for executions against electronically submitted orders which were assigned an ID by the institution or intermediary. Not required for orders manually entered by the broker or fund manager (for CIV orders).*)
+(** Required for executions against electronically submitted orders which were assigned an ID by the institution or intermediary. Not required for orders manually entered by the broker or fund manager (for CIV orders).*)
     mod_f_ExecutionReport_ClOrdID : string;
-    (** OrderID is required to be unique for each chain of orders.*)
+(** OrderID is required to be unique for each chain of orders.*)
     mod_f_ExecutionReport_OrderID : string;
-    (** Unique identifier of execution message as assigned by sell-side (broker, exchange, ECN) (will be 0 (zero) forExecType=I (Order Status)).*)
+(** Unique identifier of execution message as assigned by sell-side (broker, exchange, ECN) (will be 0 (zero) forExecType=I (Order Status)).*)
     mod_f_ExecutionReport_ExecID : string;
-    (** Describes the purpose of the execution report.*)
+(** Describes the purpose of the execution report.*)
     mod_f_ExecutionReport_ExecType : model_fix_exectype;
     mod_f_ExecutionReport_AvgPx : fix_float_6;
     mod_f_ExecutionReport_Side : model_fix_side;
-    (** Quantity open for further execution. If the OrdStatus is Canceled, DoneForTheDay, Expired, Calculated, or Rejected (in which case the order is no longer active) then LeavesQty could be 0, otherwise LeavesQty = OrderQty - CumQty.*)
+(** Quantity open for further execution. If the OrdStatus is Canceled, DoneForTheDay, Expired, Calculated, or Rejected (in which case the order is no longer active) then LeavesQty could be 0, otherwise LeavesQty = OrderQty - CumQty.*)
     mod_f_ExecutionReport_LeavesQty : fix_float_6;
-    (** Currently executed quantity for chain of orders.*)
+(** Currently executed quantity for chain of orders.*)
     mod_f_ExecutionReport_CumQty : fix_float_6;
-    (** Describes the current state of a CHAIN of orders, same scope as OrderQty, CumQty, LeavesQty, and AvgPx*)
+(** Describes the current state of a CHAIN of orders, same scope as OrderQty, CumQty, LeavesQty, and AvgPx*)
     mod_f_ExecutionReport_OrdStatus : model_fix_ordstatus;
-    (** Common, "human understood" representation of the security. SecurityID value can be specified if no symbol exists (e.g. non-exchange traded Collective Investment Vehicles)
-     Use "[N/A]" for products which do not have a symbol.*)
+(** Common, "human understood" representation of the security. SecurityID value can be specified if no symbol exists (e.g. non-exchange traded Collective Investment Vehicles)
+ Use "[N/A]" for products which do not have a symbol.*)
     mod_f_ExecutionReport_Instrument_Symbol : string;
     mod_f_ExecutionReport_Text : string option
 }
 ;;
 
 type mod_newordersingle_data = {
-    (** Unique identifier of the order as assigned by institution or by the intermediary (CIV term, not a hub/service bureau) with closest association with the investor.*)
+(** Unique identifier of the order as assigned by institution or by the intermediary (CIV term, not a hub/service bureau) with closest association with the investor.*)
     mod_f_NewOrderSingle_ClOrdID : string;
     mod_f_NewOrderSingle_Side : model_fix_side;
-    (** Time this order request was initiated/released by the trader, trading system, or intermediary.*)
+(** Time this order request was initiated/released by the trader, trading system, or intermediary.*)
     mod_f_NewOrderSingle_TransactTime : fix_utctimestamp_milli;
     mod_f_NewOrderSingle_OrdType : model_fix_ordtype;
-    (** Common, "human understood" representation of the security. SecurityID value can be specified if no symbol exists (e.g. non-exchange traded Collective Investment Vehicles)
-     Use "[N/A]" for products which do not have a symbol.*)
+(** Common, "human understood" representation of the security. SecurityID value can be specified if no symbol exists (e.g. non-exchange traded Collective Investment Vehicles)
+ Use "[N/A]" for products which do not have a symbol.*)
     mod_f_NewOrderSingle_Instrument_Symbol : string
 }
 ;;

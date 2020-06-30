@@ -1,8 +1,5 @@
-(***
+(* Imandra Inc. copyright 2020 *)
+[@@@program]
 
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
 
-    model_repeating_groups_json.iml
-    
-*)
+[@@@logic]

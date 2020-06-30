@@ -1,22 +1,15 @@
-(** Time defaults for a particular FIX implementation *)
-(***
-
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    message_reject.iml
-    
-*)
+(* Imandra Inc. copyright 2020 *)
 [@@@import "../src-types/model_app_enums.iml"]
-[@@@import "../src-types/model_messages.iml"]
-[@@@import "../src-types/model_tags.iml"]
-[@@@import "../../src-core/numeric.iml"]
-[@@@import "../src-types/state.iml"]
 open Model_app_enums;;
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+[@@@import "../src-types/model_tags.iml"]
 open Model_tags;;
+[@@@import "../../src-core/numeric.iml"]
 open Numeric;;
+[@@@import "../src-types/state.iml"]
 open State;;
+
 
 let reject_NewOrderSingle_missingfield (m_state : model_state) (reject_text : string)  =
     let msg_data_inner = {
@@ -31,9 +24,12 @@ let reject_NewOrderSingle_missingfield (m_state : model_state) (reject_text : st
         mod_f_ExecutionReport_OrderID = "None";
         mod_f_ExecutionReport_Side = MOD_FIX_Side_Buy;
         mod_f_ExecutionReport_Text = Some reject_text
-    } in
-    let m_state = send_msg (FIX_Msg_ExecutionReport msg_data_inner) m_state in
+    }
+    in
+    let m_state = send_msg (FIX_Msg_ExecutionReport msg_data_inner) m_state
+    in
     m_state
+    [@@macro]
 ;;
 
 let reject_NewOrderSingle_invalidfield (m_state : model_state) (msg_data : mod_newordersingle_data) (reject_text : string)  =
@@ -49,9 +45,12 @@ let reject_NewOrderSingle_invalidfield (m_state : model_state) (msg_data : mod_n
         mod_f_ExecutionReport_OrderID = msg_data.mod_f_NewOrderSingle_ClOrdID;
         mod_f_ExecutionReport_Side = MOD_FIX_Side_Buy;
         mod_f_ExecutionReport_Text = Some reject_text
-    } in
-    let m_state = send_msg (FIX_Msg_ExecutionReport msg_data_inner) m_state in
+    }
+    in
+    let m_state = send_msg (FIX_Msg_ExecutionReport msg_data_inner) m_state
+    in
     m_state
+    [@@macro]
 ;;
 
 let reject_NewOrderSingle_invalid (m_state : model_state) (msg_data : mod_newordersingle_data) (reject_text : string)  =
@@ -67,17 +66,46 @@ let reject_NewOrderSingle_invalid (m_state : model_state) (msg_data : mod_neword
         mod_f_ExecutionReport_OrderID = msg_data.mod_f_NewOrderSingle_ClOrdID;
         mod_f_ExecutionReport_Side = MOD_FIX_Side_Buy;
         mod_f_ExecutionReport_Text = Some reject_text
-    } in
-    let m_state = send_msg (FIX_Msg_ExecutionReport msg_data_inner) m_state in
+    }
+    in
+    let m_state = send_msg (FIX_Msg_ExecutionReport msg_data_inner) m_state
+    in
     m_state
+    [@@macro]
 ;;
 
 let reject_field_missing (m_state : model_state) (missing_info : field_missing_data)  =
     (match (missing_info.field_missing_data_msg,missing_info.field_missing_data_field) with
-        | (M_Msg_NewOrderSingle_Tag,M_Field_ClOrdID_Tag) -> (reject_NewOrderSingle_missingfield m_state "Field ClOrdID of Message NewOrderSingle is missing.")
-        | (M_Msg_NewOrderSingle_Tag,M_Field_Side_Tag) -> (reject_NewOrderSingle_missingfield m_state "Field Side of Message NewOrderSingle is missing.")
-        | (M_Msg_NewOrderSingle_Tag,M_Field_TransactTime_Tag) -> (reject_NewOrderSingle_missingfield m_state "Field TransactTime of Message NewOrderSingle is missing.")
-        | (M_Msg_NewOrderSingle_Tag,M_Field_OrdType_Tag) -> (reject_NewOrderSingle_missingfield m_state "Field OrdType of Message NewOrderSingle is missing.")
-        | (M_Msg_NewOrderSingle_Tag,M_Field_Symbol_Tag) -> (reject_NewOrderSingle_missingfield m_state "Field Symbol of Message NewOrderSingle is missing.")
+        | (M_Msg_NewOrderSingle_Tag,M_Field_ClOrdID_Tag) -> { (reject_NewOrderSingle_missingfield m_state "Field ClOrdID of Message NewOrderSingle is missing.") with
+            event_info = {
+                state_event_counter = m_state.event_counter;
+                state_event_reject_text = Some "Field ClOrdID of Message NewOrderSingle is missing."
+            } :: m_state.event_info
+        }
+        | (M_Msg_NewOrderSingle_Tag,M_Field_Side_Tag) -> { (reject_NewOrderSingle_missingfield m_state "Field Side of Message NewOrderSingle is missing.") with
+            event_info = {
+                state_event_counter = m_state.event_counter;
+                state_event_reject_text = Some "Field Side of Message NewOrderSingle is missing."
+            } :: m_state.event_info
+        }
+        | (M_Msg_NewOrderSingle_Tag,M_Field_TransactTime_Tag) -> { (reject_NewOrderSingle_missingfield m_state "Field TransactTime of Message NewOrderSingle is missing.") with
+            event_info = {
+                state_event_counter = m_state.event_counter;
+                state_event_reject_text = Some "Field TransactTime of Message NewOrderSingle is missing."
+            } :: m_state.event_info
+        }
+        | (M_Msg_NewOrderSingle_Tag,M_Field_OrdType_Tag) -> { (reject_NewOrderSingle_missingfield m_state "Field OrdType of Message NewOrderSingle is missing.") with
+            event_info = {
+                state_event_counter = m_state.event_counter;
+                state_event_reject_text = Some "Field OrdType of Message NewOrderSingle is missing."
+            } :: m_state.event_info
+        }
+        | (M_Msg_NewOrderSingle_Tag,M_Field_Symbol_Tag) -> { (reject_NewOrderSingle_missingfield m_state "Field Symbol of Message NewOrderSingle is missing.") with
+            event_info = {
+                state_event_counter = m_state.event_counter;
+                state_event_reject_text = Some "Field Symbol of Message NewOrderSingle is missing."
+            } :: m_state.event_info
+        }
+        | (_,_) -> m_state
     )
 ;;

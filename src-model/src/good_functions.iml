@@ -1,0 +1,7 @@
+(* Imandra Inc. copyright 2020 *)
+
+
+let good_string (x)  =
+    (&&) ((<>) x "Field Symbol of Message NewOrderSingle is missing.") ((&&) ((<>) x "Field OrdType of Message NewOrderSingle is missing.") ((&&) ((<>) x "Field TransactTime of Message NewOrderSingle is missing.") ((&&) ((<>) x "Field Side of Message NewOrderSingle is missing.") ((<>) x "Field ClOrdID of Message NewOrderSingle is missing."))))
+    [@@macro]
+;;

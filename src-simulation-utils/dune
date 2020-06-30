@@ -1,4 +1,11 @@
 (rule
+  (targets message_stream.ml)
+  (deps message_stream.iml)
+   (action
+    (with-stdout-to message_stream.ml
+       (run imandra-extract message_stream.iml))))
+  
+(rule
   (targets fix_io.ml)
   (deps fix_io.iml)
    (action

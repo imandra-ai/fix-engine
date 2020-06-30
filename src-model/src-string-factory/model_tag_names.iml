@@ -1,15 +1,8 @@
-(** Time defaults for a particular FIX implementation *)
-(***
-
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    model_tag_names.iml
-    
-*)
-[@@@import "../src-types/model_tags.iml"]
+(* Imandra Inc. copyright 2020 *)
 [@@@program]
+[@@@import "../src-types/model_tags.iml"]
 open Model_tags;;
+
 
 let tag_to_message (x)  =
     (match x with
@@ -20,12 +13,13 @@ let tag_to_message (x)  =
 
 let tag_to_field (x)  =
     (match x with
-        | "40" -> (Some M_Field_OrdType_Tag)
         | "55" -> (Some M_Field_Symbol_Tag)
-        | "11" -> (Some M_Field_ClOrdID_Tag)
         | "60" -> (Some M_Field_TransactTime_Tag)
         | "54" -> (Some M_Field_Side_Tag)
+        | "11" -> (Some M_Field_ClOrdID_Tag)
+        | "40" -> (Some M_Field_OrdType_Tag)
         | _ -> None
     )
 ;;
+
 [@@@logic]

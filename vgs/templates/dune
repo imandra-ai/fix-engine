@@ -1,0 +1,42 @@
+(rule
+  (targets validation_functions.ml)
+  (deps validation_functions.iml)
+   (action
+    (with-stdout-to validation_functions.ml
+       (run imandra-extract  validation_functions.iml))))
+       
+(rule
+  (targets scenario.ml)
+  (deps scenario.iml)
+   (action
+    (with-stdout-to scenario.ml
+       (run imandra-extract  scenario.iml))))
+       
+(rule
+  (targets basis_files.ml)
+  (deps basis_files.iml)
+   (action
+    (with-stdout-to basis_files.ml
+       (run imandra-extract  basis_files.iml))))
+       
+(rule
+  (targets template.ml)
+  (deps template.iml)
+   (action
+    (with-stdout-to template.ml
+       (run imandra-extract  template.iml))))
+       
+(rule
+  (targets scenario_type.ml)
+  (deps scenario_type.iml)
+   (action
+    (with-stdout-to scenario_type.ml
+       (run imandra-extract  scenario_type.iml))))
+       
+(library
+  (name templates)
+  (public_name fix-engine.templates)
+  (wrapped false)
+  (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
+  (libraries imandra-base.prelude venue venue_types)
+)

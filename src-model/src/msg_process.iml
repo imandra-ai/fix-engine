@@ -1,40 +1,47 @@
-(** Time defaults for a particular FIX implementation *)
-(***
-
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    message_process.iml
-    
-*)
+(* Imandra Inc. copyright 2020 *)
 [@@@import "../src-types/model_messages.iml"]
-[@@@import "msg_check_fields.iml"]
-[@@@import "msg_check_types.iml"]
-[@@@import "msg_check_validate.iml"]
-[@@@import "msg_defaults.iml"]
-[@@@import "msg_receive.iml"]
-[@@@import "msg_reject.iml"]
-[@@@import "../src-types/state.iml"]
 open Model_messages;;
+[@@@import "msg_check_fields.iml"]
 open Msg_check_fields;;
+[@@@import "msg_check_types.iml"]
 open Msg_check_types;;
+[@@@import "msg_check_validate.iml"]
 open Msg_check_validate;;
+[@@@import "msg_defaults.iml"]
 open Msg_defaults;;
+[@@@import "msg_receive.iml"]
 open Msg_receive;;
+[@@@import "msg_reject.iml"]
 open Msg_reject;;
+[@@@import "../src-types/state.iml"]
 open State;;
 
+
 let process_NewOrderSingle (m_state : model_state) (msg_data : mod_newordersingle_data)  =
-    let msg_data = assign_defaults_NewOrderSingle msg_data in
-    let field_check = check_fields_NewOrderSingle msg_data m_state in
-    if field_check.is_invalid then
-        (reject_NewOrderSingle_invalidfield m_state msg_data field_check.field_text)
+    let msg_data = assign_defaults_NewOrderSingle msg_data m_state
+    in
+    let field_check = check_fields_NewOrderSingle msg_data m_state
+    in
+    (if field_check.is_invalid then
+        { (reject_NewOrderSingle_invalidfield m_state msg_data field_check.field_text) with
+            event_info = {
+                state_event_counter = m_state.event_counter;
+                state_event_reject_text = Some field_check.field_text
+            } :: m_state.event_info
+        }
     else
-        let custom_reject = check_validate_NewOrderSingle msg_data m_state in
-        if custom_reject.validate_invalid then
-            (reject_NewOrderSingle_invalid m_state msg_data custom_reject.validate_text)
+        let custom_reject = check_validate_NewOrderSingle msg_data m_state
+        in
+        (if custom_reject.validate_invalid then
+            { (reject_NewOrderSingle_invalid m_state msg_data custom_reject.validate_text) with
+                event_info = {
+                    state_event_counter = m_state.event_counter;
+                    state_event_reject_text = Some custom_reject.validate_text
+                } :: m_state.event_info
+            }
         else
-            (receive_message_NewOrderSingle m_state msg_data)
+            (receive_message_NewOrderSingle m_state msg_data))
+        )
 ;;
 
 let process_msg (m_state : model_state) (msg : model_top_level_msg)  =
@@ -50,10 +57,22 @@ let process_msg (m_state : model_state) (msg : model_top_level_msg)  =
     )
 ;;
 
-let msg_NewOrderSingle_valid (msg_data : mod_newordersingle_data) (m_state : model_state)  =
-    let fields_result = check_fields_NewOrderSingle msg_data m_state in
-    let validate_result = check_validate_NewOrderSingle msg_data m_state in
+let msg_ExecutionReport_valid (msg_data : mod_executionreport_data) (m_state : model_state)  =
+    let fields_result = check_fields_ExecutionReport msg_data m_state
+    in
+    let validate_result = check_validate_ExecutionReport msg_data m_state
+    in
     (&&) (not fields_result.is_invalid) (not validate_result.validate_invalid)
+    [@@macro]
+;;
+
+let msg_NewOrderSingle_valid (msg_data : mod_newordersingle_data) (m_state : model_state)  =
+    let fields_result = check_fields_NewOrderSingle msg_data m_state
+    in
+    let validate_result = check_validate_NewOrderSingle msg_data m_state
+    in
+    (&&) (not fields_result.is_invalid) (not validate_result.validate_invalid)
+    [@@macro]
 ;;
 
 let is_message_valid (msg : model_msg) (m_state : model_state)  =
