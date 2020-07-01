@@ -33,7 +33,7 @@ let config box = Engine.{
     comp_id        = "IMANDRA"
   ; host_id        = None
   ; on_behalf_id   = None
-  ; target_id      = "BANZAI"
+  ; target_id      = "CLIENT"
   ; timer          = 3.0
   ; recv           = Lwt_mvar.put box
   }
