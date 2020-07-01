@@ -9,7 +9,7 @@ trap "kill 0" EXIT
 
 echo "(dirs :standard \ *-vg)" > dune
 
-dune exec src-simulation/test_server.bc > test_setver.log &
+dune exec src-simulation/test_server.bc > test_server.log &
 sleep 1
 
 run_test ./defs/10_MsgSeqNumEqual.def
