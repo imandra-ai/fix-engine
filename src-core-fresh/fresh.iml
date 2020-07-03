@@ -28,9 +28,10 @@ let incr_float () =
   count_float := Numeric.float_Add_6_6 !count_float (Numeric.Float_6 1);
   !count_float;;
 
-[@@@logic]
-
 let now_UTCTimestamp () = 
   Time_defaults_current_time.get_current_utctimestamp ()
-  [@@opaque]
+  [@@opaque] [@@logic]
 ;;
+
+[@@@logic]
+
