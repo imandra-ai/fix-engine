@@ -5,5 +5,5 @@
  (name imandra)
  (implementation
   (extension iml)
-  (preprocess  (system "opam exec -- ocamlrun imandra-extract %{input-file}")))
+  (preprocess  (system "/usr/local/bin/imandra-extract %{input-file}")))
  (interface (extension "imli")))
