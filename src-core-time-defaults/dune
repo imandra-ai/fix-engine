@@ -1,10 +1,5 @@
-(rule
-  (targets time_defaults.ml)
-  (deps time_defaults.iml)
-   (action
-    (with-stdout-to time_defaults.ml
-       (run imandra-extract  time_defaults.iml))))
-       
+
+
 (library
   (name core_time_defaults)
   (public_name fix-engine.core_time_defaults)

@@ -1,15 +1,8 @@
-(executable
-  (name test_server)
-  (modules test_server)
-  (libraries 
-    fix_simulation_utils
-  )
-)
 
 (executable
   (name server)
   (modules server)
-  (libraries 
+  (libraries
       cmdliner
       fix_simulation_utils
   )

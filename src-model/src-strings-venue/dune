@@ -1,10 +1,5 @@
-(rule
-  (targets model_enum_names.ml)
-  (deps model_enum_names.iml)
-   (action
-    (with-stdout-to model_enum_names.ml
-       (run imandra-extract  model_enum_names.iml))))
-       
+
+
 (library
   (name venue_strings_venue)
   (public_name fix-engine.venue_strings_venue)

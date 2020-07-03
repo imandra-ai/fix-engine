@@ -1,23 +1,4 @@
-(rule
-  (targets config_parser.ml)
-  (deps config_parser.iml)
-   (action
-    (with-stdout-to config_parser.ml
-       (run imandra-extract config_parser.iml))))
 
-(rule
-  (targets test_cache_utils.ml)
-  (deps test_cache_utils.iml)
-   (action
-    (with-stdout-to test_cache_utils.ml
-       (run imandra-extract test_cache_utils.iml))))
-
-(rule
-  (targets test_runner_utils.ml)
-  (deps test_runner_utils.iml)
-   (action
-    (with-stdout-to test_runner_utils.ml
-       (run imandra-extract test_runner_utils.iml))))
 
 (library
   (name        test_utils)

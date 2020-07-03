@@ -1,37 +1,4 @@
-(rule
-  (targets full_admin_enums.ml)
-  (deps full_admin_enums.iml)
-   (action
-    (with-stdout-to full_admin_enums.ml
-       (run imandra-extract full_admin_enums.iml))))
 
-(rule
-  (targets full_admin_messages.ml)
-  (deps full_admin_messages.iml)
-   (action
-    (with-stdout-to full_admin_messages.ml
-       (run imandra-extract full_admin_messages.iml))))
-
-(rule
-  (targets full_admin_tags.ml)
-  (deps full_admin_tags.iml)
-   (action
-    (with-stdout-to full_admin_tags.ml
-       (run imandra-extract full_admin_tags.iml))))
-
-(rule
-  (targets full_message_tags.ml)
-  (deps full_message_tags.iml)
-   (action
-    (with-stdout-to full_message_tags.ml
-       (run imandra-extract full_message_tags.iml))))
-
-(rule
-  (targets full_messages.ml)
-  (deps full_messages.iml)
-   (action
-    (with-stdout-to full_messages.ml
-       (run imandra-extract full_messages.iml))))
 
 
 (library

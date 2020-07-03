@@ -1,37 +1,3 @@
-(rule
-  (targets message_stream.ml)
-  (deps message_stream.iml)
-   (action
-    (with-stdout-to message_stream.ml
-       (run imandra-extract message_stream.iml))))
-  
-(rule
-  (targets fix_io.ml)
-  (deps fix_io.iml)
-   (action
-    (with-stdout-to fix_io.ml
-       (run imandra-extract fix_io.iml))))
-
-(rule
-  (targets session_manager.ml)
-  (deps session_manager.iml)
-   (action
-    (with-stdout-to session_manager.ml
-       (run imandra-extract session_manager.iml))))
-
-(rule
-  (targets engine.ml)
-  (deps engine.iml)
-   (action
-    (with-stdout-to engine.ml
-       (run imandra-extract engine.iml))))
-
-(rule
-  (targets model.ml)
-  (deps model.iml)
-   (action
-    (with-stdout-to model.ml
-       (run imandra-extract model.iml))))
 
 
 (library
@@ -39,7 +5,7 @@
   (public_name fix-engine.fix_simulation_utils)
   (wrapped  false)
   (flags (:standard -open Imandra_prelude -open Unix -warn-error -A+8+39))
-  (libraries 
+  (libraries
         lwt.unix
         venue
         fix_engine
@@ -49,9 +15,9 @@
         core_time_defaults_pp
         types_pp
         protocol_pp
-        conversions   
-        lwt-zmq 
-        imandra-base.prelude   
+        conversions
+        lwt-zmq
+        imandra-base.prelude
         imandra-client.lib
   )
 )

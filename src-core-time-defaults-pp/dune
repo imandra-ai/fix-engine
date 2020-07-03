@@ -1,31 +1,4 @@
-(rule
-  (targets time_defaults_parser.ml)
-  (deps time_defaults_parser.iml)
-   (action
-    (with-stdout-to time_defaults_parser.ml
-       (run imandra-extract  time_defaults_parser.iml))))
-       
-(rule
-  (targets time_defaults_pp.ml)
-  (deps time_defaults_pp.iml)
-   (action
-    (with-stdout-to time_defaults_pp.ml
-       (run imandra-extract  time_defaults_pp.iml))))
-       
-(rule
-  (targets time_defaults_current_time.ml)
-  (deps time_defaults_current_time.iml)
-   (action
-    (with-stdout-to time_defaults_current_time.ml
-       (run imandra-extract  time_defaults_current_time.iml))))
-       
-(rule
-  (targets time_defaults_json.ml)
-  (deps time_defaults_json.iml)
-   (action
-    (with-stdout-to time_defaults_json.ml
-       (run imandra-extract  time_defaults_json.iml))))
-       
+
 (library
   (name core_time_defaults_pp)
   (public_name fix-engine.core_time_defaults_pp)

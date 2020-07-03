@@ -1,17 +1,5 @@
-(rule
-  (targets fix_version.ml)
-  (deps fix_version.iml)
-   (action
-    (with-stdout-to fix_version.ml
-       (run imandra-extract  fix_version.iml))))
-       
-(rule
-  (targets message_utils.ml)
-  (deps message_utils.iml)
-   (action
-    (with-stdout-to message_utils.ml
-       (run imandra-extract  message_utils.iml))))
-       
+
+
 (library
   (name core_utils)
   (public_name fix-engine.core_utils)
