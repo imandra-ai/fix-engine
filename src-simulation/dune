@@ -1,3 +1,11 @@
+(executable
+  (name test_server)
+  (modules test_server)
+  (libraries
+      cmdliner
+      fix_simulation_utils
+  )
+)
 
 (executable
   (name server)
