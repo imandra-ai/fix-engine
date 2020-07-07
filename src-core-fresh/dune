@@ -1,9 +1,3 @@
-(rule
-  (targets fresh.ml)
-  (deps fresh.iml)
-   (action
-    (with-stdout-to fresh.ml
-       (run imandra-extract  fresh.iml))))
 
 (library
   (name        core_fresh)

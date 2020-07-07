@@ -1,16 +1,12 @@
-(***
-
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    model_internals_json.iml
-    
-*)
+(* Imandra Inc. copyright 2020 *)
 [@@@program]
 [@@@import "../src-types/state.iml"]
 open State;;
 
+
 let json_of_fix_internals (x : internal_states_types)  =
     `Assoc []
+    [@@macro]
 ;;
+
 [@@@logic]

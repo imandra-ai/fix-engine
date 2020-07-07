@@ -1,14 +1,8 @@
-(** Time defaults for a particular FIX implementation *)
-(***
-
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    repeating_groups_converter.iml
-    
-*)
+(* Imandra Inc. copyright 2020 *)
+[@@@program]
 [@@@import "../src-types/model_tags.iml"]
 open Model_tags;;
+
 
 exception Ipl_rg_exception 
 type rg_reject_type =
@@ -18,7 +12,9 @@ type rg_reject_type =
 
 let rec cap_length (d) (x) (h)  =
     (match d with
-        | [] -> (min x h)
+        | [] -> ((min) x h)
         | _ :: t -> (cap_length t ((+) x 1) h)
     )
 ;;
+
+[@@@logic]

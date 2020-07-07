@@ -1,22 +1,6 @@
-(** Time defaults for a particular FIX implementation *)
-(***
+(* Imandra Inc. copyright 2020 *)
 
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    actions.iml
-    
-*)
-[@@@import "../../src-core/datetime.iml"]
-[@@@import "../../src-core/numeric.iml"]
-open Datetime;;
-open Numeric;;
-
-type m_action_fix_x = {
-    mod_f_x_x : int
-}
-;;
 
 type fix_action =
-    | FIX_Action_x of m_action_fix_x
+    | EmptyAction 
 ;;

@@ -1,0 +1,48 @@
+(* Imandra Inc. copyright 2020 *)
+[@@@program]
+[@@@import "../../src-model/src-types/actions.iml"]
+open Actions;;
+[@@@import "../../src-model/src-types-pp/model_actions_json.iml"]
+open Model_actions_json;;
+[@@@import "../../src-model/src-types-pp/model_internals_json.iml"]
+open Model_internals_json;;
+[@@@import "../../src-model/src-types/model_messages.iml"]
+open Model_messages;;
+[@@@import "../../src-model/src-types-pp/model_messages_json.iml"]
+open Model_messages_json;;
+[@@@import "../../src-model/src-types/state.iml"]
+open State;;
+
+
+type step_message =
+    | Action of fix_action
+    | Incoming of model_msg
+    | Outgoing of outgoing_msg_record list
+;;
+
+type step = {
+    message : step_message;
+    internals : internal_states_types
+}
+;;
+
+let json_of_step_message (x : step_message)  =
+    (match x with
+        | Incoming d -> (`Assoc (("type",`String "Incoming") :: (("message",json_of_model_msg d) :: [])))
+        | Outgoing d -> (`Assoc (("type",`String "Outgoing") :: (("messages",`List (List.map (fun x -> json_of_model_msg x.outgoing_msg_msg
+        ) d)) :: [])))
+        | Action d -> (`Assoc (("type",`String "Action") :: (("action",json_of_fix_action d) :: [])))
+    )
+;;
+
+let json_of_step (x : step)  =
+    `Assoc (("internals",json_of_fix_internals x.internals) :: (("message",json_of_step_message x.message) :: []))
+    [@@macro]
+;;
+
+let json_of_steps (x : step list)  =
+    `List (List.map json_of_step x)
+    [@@macro]
+;;
+
+[@@@logic]

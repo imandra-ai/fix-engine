@@ -370,13 +370,9 @@ let rec no_seq_gaps (cache:cache_entry list) (last_seq_num : int) =
   match cache with
   | [] -> true
   | CacheGap(x,y)::tl   -> (
-    let () = print_endline @@ "CacheGap last=" ^ Z.to_string last_seq_num in
-    let () = flush_all () in
     if x <> last_seq_num + 1 then false else no_seq_gaps tl (y-1)
   )
   | CacheMessage(m)::tl -> (
-    let () = print_endline @@ "CacheMessage last=" ^ Z.to_string last_seq_num in
-    let () = flush_all () in
     let x = m.full_msg_header.h_msg_seq_num in
     if x <> last_seq_num + 1 then false else no_seq_gaps tl x
   )
@@ -398,15 +394,12 @@ let is_cache_complete ( cache, last_seq_processed : cache_entry list * int ) =
     in
   let correct_seq_num = (first_seq_num = last_seq_processed) in
   let no_gaps = no_seq_gaps tl next_seq_num in 
-  let () = print_endline @@ "is_cache_complete : " ^ cache_to_str cache in
-  let () = print_endline @@ "no_gaps (from " ^ Z.to_string next_seq_num ^ ") = " ^ (if no_gaps then "T" else "F") in
   correct_seq_num && no_gaps
 ;;
 
 
 (** Add message to cache so that ordering is maintained. *)
 let rec update_cache ( cache : cache_entry list ) (msg : cache_entry)  = 
-  let () = print_endline "update_cache" in
   match (msg , cache) with
   | msg   , [] -> msg :: [] 
   | CacheMessage x , (CacheMessage m as msg' :: tl) -> 
@@ -443,13 +436,10 @@ let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     | { full_msg_header = { h_msg_seq_num; _ } 
         ; full_msg_data = Full_FIX_Admin_Msg (Full_Msg_Sequence_Reset { seqr_new_seq_no; _ } ) 
         ; _ } -> 
-        let () = print_endline "Gap update" in
         CacheGap (h_msg_seq_num, seqr_new_seq_no)
-    | _ -> let () = print_endline "Message update" in CacheMessage(m)    
+    | _ -> CacheMessage(m)    
     in
-    let () = print_endline @@ "updating cache ..." ^ cache_to_str engine.fe_cache in
     let new_cache = update_cache engine.fe_cache msg in
-    let () = print_endline @@ "updated : " ^ cache_to_str new_cache in
     if is_cache_complete (new_cache, engine.incoming_seq_num) then {
         engine with 
             fe_cache = new_cache;

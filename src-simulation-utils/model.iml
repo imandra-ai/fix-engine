@@ -1,0 +1,101 @@
+[@@@require "lwt.unix"]
+
+
+module Internal : sig
+  type t
+  type event =
+    | FIXMessage of Fix_engine_state.fix_engine_int_inc_msg
+    | State of State.model_state
+
+  val start : recv:(event -> unit Lwt.t) -> (unit Lwt.t * t)
+
+  val terminate : t -> unit Lwt.t
+  val send_fix : t -> Fix_engine_state.fix_engine_int_out_msg -> unit Lwt.t
+  val send_act : t -> Actions.fix_action -> unit Lwt.t
+  val send_get_state : t -> unit Lwt.t
+
+end = struct
+
+  let (>>=) = Lwt.(>>=)
+
+  type event =
+    | FIXMessage of Fix_engine_state.fix_engine_int_inc_msg
+    | State of State.model_state
+
+  type send_event =
+    | FIX_message of Fix_engine_state.fix_engine_int_out_msg
+    | Action of Actions.fix_action
+    | GetState
+    | Terminate
+
+  type t =
+    { recv          : event -> unit Lwt.t
+    ; send_box      : send_event Lwt_mvar.t
+    }
+
+  let rec send_messages_list t messages  =
+    let open Fix_engine_state in
+    match messages with
+    | [] -> Lwt.return_unit
+    | hd::tl -> (
+        let data = Type_converter.convert_model_to_full_fix hd in
+        t.recv (FIXMessage (IncIntMsg_ApplicationData data)) >>= fun () ->
+        send_messages_list t tl
+    )
+
+  let rec main_loop t model_state =
+    Lwt_mvar.take t.send_box >>= fun incoming ->
+    ( match incoming with
+    | FIX_message ( OutIntMsg_ApplicationData data ) ->
+      let model_message = Type_converter.convert_full_to_model_fix data in
+      let model_state = State_utils.set_incoming model_state model_message in
+      Lwt.return @@ Venue.one_step model_state
+    | FIX_message ( OutIntMsg_ResendApplicationData data ) ->
+      let model_message = Type_converter.convert_full_to_model_fix data in
+      let model_message = Message_utils.get_resend_message model_message in
+      let model_state = State_utils.set_incoming model_state model_message in
+      Lwt.return @@ Venue.one_step model_state
+    | Action act -> begin
+      let good = Act_checks.is_action_valid act model_state in
+      Lwt_io.printl @@ (if good then "Action is good" else "Action no good") >>= fun () ->
+      let model_state = {model_state with State.incoming_action = Some act }  in
+      Lwt.return @@ Venue.one_step model_state
+    end
+    | GetState ->
+      t.recv (State model_state) >>= fun () ->
+      Lwt.return model_state
+    | _ -> Lwt.return model_state
+    ) >>= fun model_state ->
+    let open State in
+    let messages = State_utils.get_outgoing model_state |> List.map (fun x -> x.outgoing_msg_msg) in
+    send_messages_list t messages >>= fun () ->
+    let model_state = State_utils.set_outgoing model_state [] in
+    match incoming with
+    | Terminate -> Lwt.return_unit
+    | _ -> main_loop t model_state
+
+  let start ~recv =
+    let model_state = State.init_model_state in
+    let t =
+      { send_box = Lwt_mvar.create_empty ()
+      ; recv
+      } in
+    let thread = main_loop t model_state in
+    (thread, t)
+
+  let terminate t =
+    Lwt_mvar.put t.send_box Terminate
+
+  let send_fix t msg =
+    Lwt_mvar.put t.send_box @@ FIX_message msg
+
+  let send_act t act =
+    Lwt_mvar.put t.send_box @@ Action act
+
+  let send_get_state t =
+    Lwt_mvar.put t.send_box @@ GetState
+
+
+end
+
+include Internal

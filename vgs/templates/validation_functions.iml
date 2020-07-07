@@ -1,0 +1,10 @@
+(* Imandra Inc. copyright 2020 *)
+[@@@program]
+
+
+let validation_functions  =
+    []
+    [@@macro]
+;;
+
+[@@@logic]

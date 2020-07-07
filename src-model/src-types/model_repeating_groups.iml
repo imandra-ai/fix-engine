@@ -1,9 +1,2 @@
-(** Time defaults for a particular FIX implementation *)
-(***
+(* Imandra Inc. copyright 2020 *)
 
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    model_repeating_groups.iml
-    
-*)

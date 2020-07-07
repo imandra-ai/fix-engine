@@ -1,0 +1,39 @@
+(* Imandra Inc. copyright 2020 *)
+[@@@import "../../src-model/src-types/model_messages.iml"]
+open Model_messages;;
+[@@@import "scenario_type.iml"]
+open Scenario_type;;
+
+
+type t =
+    | Template_'any 
+;;
+
+let is_incoming (m)  =
+    (match m with
+        | FIX_Msg_NewOrderSingle _ -> true
+        | _ -> false
+    )
+;;
+
+let data (x : t)  =
+    (match x with
+        | Template_'any -> "'any"
+    )
+    [@@macro]
+;;
+
+let concrete (x : t) (c : event)  =
+    (match (x,c) with
+        | (Template_'any,Action _) -> true
+        | (Template_'any,Message m) -> (is_incoming m)
+        | _ -> false
+    )
+;;
+
+let to_string_hum (x : t)  =
+    (match x with
+        | Template_'any -> "Any event"
+    )
+    [@@macro]
+;;

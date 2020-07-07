@@ -1,18 +1,19 @@
 (executable
-  (name server)
-  (modules server)
-  (libraries 
-      lwt.unix
-      fix_simulation_utils
-      unix
-  )
-)
-
-(executable
-  (name client)
-  (modules client)
-  (libraries 
+  (name test_server)
+  (modules test_server)
+  (libraries
       cmdliner
       fix_simulation_utils
   )
 )
+
+(executable
+  (name server)
+  (modules server)
+  (libraries
+      cmdliner
+      fix_simulation_utils
+  )
+)
+
+

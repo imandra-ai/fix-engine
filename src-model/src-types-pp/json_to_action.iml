@@ -1,35 +1,19 @@
-(** Time defaults for a particular FIX implementation *)
-(***
-
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    json_to_action.iml
-    
-*)
-[@@@import "../src-types/actions.iml"]
-[@@@import "../../src-core-pp/base_types_json.iml"]
-[@@@import "../../src-core-pp/datetime_json.iml"]
+(* Imandra Inc. copyright 2020 *)
 [@@@program]
+[@@@import "../src-types/actions.iml"]
 open Actions;;
-open Base_types_json;;
-open Datetime_json;;
+[@@@require "decoders-yojson"]
 open Decoders_yojson.Basic.Decode;;
+[@@@require "decoders-yojson"]
 open Decoders_yojson.Basic.Decode.Infix;;
 
-let mod_action_x_decoder  : m_action_fix_x decoder =
-    (field "x" int_decoder) >>= (fun mod_f_x_x -> succeed {
-        mod_f_x_x = mod_f_x_x
-    }
-    )
-;;
 
 let fix_action_decoder  : fix_action decoder =
     (field "tag" string) >>= (fun x -> (match x with
-        | "x" -> ((field "data" mod_action_x_decoder) >>= (fun y -> succeed (FIX_Action_x y)
-        ))
         | d -> (fail ("Unknown Action ("^d^") in JSON decoding."))
     )
     )
+    [@@macro]
 ;;
+
 [@@@logic]

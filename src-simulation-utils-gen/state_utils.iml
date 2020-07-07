@@ -1,0 +1,13 @@
+[@@@import "../src-model/src-types/state.iml"];;
+
+open State
+open Model_messages
+
+let set_incoming (ms:model_state) (mm:model_top_level_msg) : model_state =
+    {ms with incoming_msg = mm};;
+
+let get_outgoing (ms:model_state) : outgoing_msg_record list =
+    ms.outgoing_msgs;;
+
+let set_outgoing (ms:model_state) (omds: outgoing_msg_record list) : model_state =
+    {ms with outgoing_msgs = omds};;

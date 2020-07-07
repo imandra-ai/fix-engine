@@ -1,8 +1,5 @@
-(***
+(* Imandra Inc. copyright 2020 *)
+[@@@program]
 
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
 
-    json_to_records.iml
-    
-*)
+[@@@logic]

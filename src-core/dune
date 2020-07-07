@@ -1,17 +1,3 @@
-(rule
-  (targets numeric.ml)
-  (deps numeric.iml)
-   (action
-    (with-stdout-to numeric.ml
-       (run imandra-extract  numeric.iml))))
-       
-(rule
-  (targets datetime.ml)
-  (deps datetime.iml)
-   (action
-    (with-stdout-to datetime.ml
-       (run imandra-extract  datetime.iml))))
-
 (library
   (name        core)
   (public_name fix-engine.core)

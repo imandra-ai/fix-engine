@@ -1,35 +1,31 @@
-(***
-
-    Imandra Inc.
-    Copyright (c) 2014 - 2019
-
-    model_tags_json.iml
-    
-*)
-[@@@import "../src-types/model_messages.iml"]
-[@@@import "../src-types/model_tags.iml"]
+(* Imandra Inc. copyright 2020 *)
 [@@@program]
+[@@@import "../src-types/model_messages.iml"]
 open Model_messages;;
+[@@@import "../src-types/model_tags.iml"]
 open Model_tags;;
-open Yojson;;
 
-let json_of_model_msg_tag (msg : m_msg_tag)  : json =
+
+let json_of_model_msg_tag (msg : m_msg_tag)  =
     (match msg with
+        | M_Msg_ExecutionReport_Tag -> (`String "8")
         | M_Msg_NewOrderSingle_Tag -> (`String "D")
     )
 ;;
 
-let json_of_model_field_tag (x : m_field_tag)  : json =
+let json_of_model_field_tag (x : m_field_tag)  =
     (match x with
-        | M_Field_OrdType_Tag -> (`String "40")
         | M_Field_Symbol_Tag -> (`String "55")
-        | M_Field_ClOrdID_Tag -> (`String "11")
         | M_Field_TransactTime_Tag -> (`String "60")
         | M_Field_Side_Tag -> (`String "54")
+        | M_Field_ClOrdID_Tag -> (`String "11")
+        | M_Field_OrdType_Tag -> (`String "40")
     )
 ;;
 
-let json_of_req_field_missing (x : field_missing_data)  : json =
+let json_of_req_field_missing (x : field_missing_data)  =
     `Assoc (("m_msg_tag",json_of_model_msg_tag x.field_missing_data_msg) :: (("m_field_tag",json_of_model_field_tag x.field_missing_data_field) :: []))
+    [@@macro]
 ;;
+
 [@@@logic]

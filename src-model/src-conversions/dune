@@ -1,28 +1,9 @@
-(rule
-  (targets enum_converter.ml)
-  (deps enum_converter.iml)
-   (action
-    (with-stdout-to enum_converter.ml
-       (run imandra-extract  enum_converter.iml))))
-       
-(rule
-  (targets repeating_groups_converter.ml)
-  (deps repeating_groups_converter.iml)
-   (action
-    (with-stdout-to repeating_groups_converter.ml
-       (run imandra-extract  repeating_groups_converter.iml))))
-       
-(rule
-  (targets type_converter.ml)
-  (deps type_converter.iml)
-   (action
-    (with-stdout-to type_converter.ml
-       (run imandra-extract  type_converter.iml))))
-       
+
+
 (library
   (name conversions)
   (public_name fix-engine.conversions)
   (wrapped false)
   (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
-  (libraries imandra-base.prelude core protocol_exts venue_types)
+  (libraries imandra-base.prelude protocol_exts venue_types)
 )
