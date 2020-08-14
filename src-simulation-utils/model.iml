@@ -47,11 +47,11 @@ end = struct
     Lwt_mvar.take t.send_box >>= fun incoming ->
     ( match incoming with
     | FIX_message ( OutIntMsg_ApplicationData data ) ->
-      let model_message = Type_converter.convert_full_to_model_fix data in
+      let model_message = Type_converter.convert_full_to_model_fix data model_state in
       let model_state = State_utils.set_incoming model_state model_message in
       Lwt.return @@ Venue.one_step model_state
     | FIX_message ( OutIntMsg_ResendApplicationData data ) ->
-      let model_message = Type_converter.convert_full_to_model_fix data in
+      let model_message = Type_converter.convert_full_to_model_fix data model_state in
       let model_message = Message_utils.get_resend_message model_message in
       let model_state = State_utils.set_incoming model_state model_message in
       Lwt.return @@ Venue.one_step model_state
