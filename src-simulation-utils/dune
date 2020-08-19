@@ -18,6 +18,7 @@
         conversions
         lwt-zmq
         imandra-base.prelude
+	simulation_utils_gen
   )
 )
 
