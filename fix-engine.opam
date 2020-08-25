@@ -13,9 +13,7 @@ depends: [
   "dune" {build}
   "cmdliner"
   "lwt" {= "3.2.0"}
-  "lwt-zmq"
   "yojson"
-  "zmq"
   "decoders"
   "decoders-yojson"
 ]
