@@ -10,6 +10,8 @@ open Full_app_records;;
 open Model_messages;;
 [@@@import "../src-types/model_tags.iml"]
 open Model_tags;;
+[@@@import "../src-types/state.iml"]
+open State;;
 
 
 let convert__full_to_model_ExecutionReport (msg : full_fix_executionreport_data)  =
@@ -69,7 +71,7 @@ let convert__full_to_model_NewOrderSingle (msg : full_fix_newordersingle_data)  
     )
 ;;
 
-let convert_full_to_model_fix (msg : full_app_msg_data)  =
+let convert_full_to_model_fix (msg : full_app_msg_data) (m_state:model_state) =
     (match msg with
         | FIX_Full_Msg_ExecutionReport msg_data -> (convert__full_to_model_ExecutionReport msg_data)
         | FIX_Full_Msg_NewOrderSingle msg_data -> (convert__full_to_model_NewOrderSingle msg_data)
