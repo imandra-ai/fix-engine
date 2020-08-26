@@ -16,9 +16,7 @@
         types_pp
         protocol_pp
         conversions
-        lwt-zmq
         imandra-base.prelude
-	simulation_utils_gen
+        simulation_utils_gen
   )
 )
-
