@@ -23,7 +23,7 @@ protocol.
 
 This README will give you a brief overview of the project. For further information please see:
 - Project homepage at https://fix.readme.io
-- Documentation at https://aestheticintegration.github.io/fix-engine/doc/
+- Documentation at https://aestheticintegration.github.io/fix-engine/
 
 ## Why
 
