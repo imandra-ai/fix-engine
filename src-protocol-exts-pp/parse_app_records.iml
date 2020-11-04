@@ -829,10 +829,10 @@ let parse_SettlParties (msg)  =
     )
 ;;
 
-let parse_Parties (msg)  =
-    opt msg "452" parse_PartyRole (fun msg f_Parties_PartyRole -> opt msg "447" parse_PartyIDSource (fun msg f_Parties_PartyIDSource -> opt msg "448" parse_string (fun msg f_Parties_PartyID -> opt msg "453" parse_int (fun msg f_Parties_NoPartyIDs -> repeating msg "802" parse_PtysSubGrp (fun msg f_Parties_PtysSubGrp -> (ParseSuccess {
+let parse_Parties (msg) (numEl) =
+    opt msg "452" parse_PartyRole (fun msg f_Parties_PartyRole -> opt msg "447" parse_PartyIDSource (fun msg f_Parties_PartyIDSource -> opt msg "448" parse_string (fun msg f_Parties_PartyID -> repeating msg "802" parse_PtysSubGrp (fun msg f_Parties_PtysSubGrp -> (ParseSuccess {
         f_Parties_PtysSubGrp = f_Parties_PtysSubGrp;
-        f_Parties_NoPartyIDs = f_Parties_NoPartyIDs;
+        f_Parties_NoPartyIDs = numEl
         f_Parties_PartyID = f_Parties_PartyID;
         f_Parties_PartyIDSource = f_Parties_PartyIDSource;
         f_Parties_PartyRole = f_Parties_PartyRole
@@ -841,10 +841,9 @@ let parse_Parties (msg)  =
     )
     )
     )
-    )
 ;;
 
-let parse_BidCompRspGrp (msg)  =
+let parse_BidCompRspGrp (msg) =
     opt msg "355" parse_string (fun msg f_BidCompRspGrp_EncodedText -> opt msg "354" parse_int (fun msg f_BidCompRspGrp_EncodedTextLen -> opt msg "58" parse_string (fun msg f_BidCompRspGrp_Text -> opt msg "625" parse_string (fun msg f_BidCompRspGrp_TradingSessionSubID -> opt msg "336" parse_string (fun msg f_BidCompRspGrp_TradingSessionID -> opt msg "64" parse_LocalMktDate (fun msg f_BidCompRspGrp_SettlDate -> opt msg "63" parse_SettlType (fun msg f_BidCompRspGrp_SettlType -> opt msg "430" parse_NetGrossInd (fun msg f_BidCompRspGrp_NetGrossInd -> opt msg "406" parse_float (fun msg f_BidCompRspGrp_FairValue -> opt msg "423" parse_PriceType (fun msg f_BidCompRspGrp_PriceType -> opt msg "44" parse_float (fun msg f_BidCompRspGrp_Price -> opt msg "54" parse_Side (fun msg f_BidCompRspGrp_Side -> opt msg "421" parse_Country (fun msg f_BidCompRspGrp_Country -> opt msg "66" parse_string (fun msg f_BidCompRspGrp_ListID -> opt msg "420" parse_int (fun msg f_BidCompRspGrp_NoBidComponents -> block msg parse_CommissionData (fun msg f_BidCompRspGrp_CommissionData -> (ParseSuccess {
         f_BidCompRspGrp_CommissionData = f_BidCompRspGrp_CommissionData;
         f_BidCompRspGrp_NoBidComponents = f_BidCompRspGrp_NoBidComponents;
