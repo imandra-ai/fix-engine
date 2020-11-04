@@ -225,9 +225,10 @@ module Parser = struct
       into the block parser. Performs a number of consistency checks on the parsed
       results. 
   *)
+
   let repeating ( msg : msg ) 
         ( tag : string )
-        ( block_parser : msg -> Z.t option -> 'a t * msg  )
+        ( block_parser : msg -> 'c option -> 'a t * msg  )
         ( f : msg  -> 'a list -> 'b t * msg ) =
       (* Finding where the repeating group starts *)
       let leading_msg, groups_msg = split_on_tag tag msg in
