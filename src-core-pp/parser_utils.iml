@@ -225,31 +225,32 @@ module Parser = struct
       into the block parser. Performs a number of consistency checks on the parsed
       results. 
   *)
+
   let repeating ( msg : msg ) 
-      ( tag : string )
-      ( block_parser : msg ->  'a t * msg  )
-      ( f : msg -> 'a list -> 'b t * msg ) =
-    (* Finding where the repeating group starts *)
-    let leading_msg, groups_msg = split_on_tag tag msg in
-    (* groups_msg starts with the NumInGroup tag, we parse it *)
-    opt groups_msg tag Parse_base_types.parse_int @@ fun groups_msg numInGroup ->
-    match numInGroup with 
-    | None -> ( ParseSuccess [] >|>= f msg )
-    | Some numInGroup ->
-      (* Break the list into a list of lists using the separator *)
-      let groups = cut_on_separator groups_msg in
-      (* Check that the length is correct *)
-      if List.length groups <> numInGroup then IncorrectNumInGroupCount tag >|>= f [] else
-        (* Pass each list into the block parser ( reverses the list ) *)
-        let groups : ('a t * (string * string) list) list = groups |> (fun x -> (List.rev  (List.map block_parser x))) in
-        (* Get the rest of the message from the last group entry *)
-        let groups, msg = match groups with 
-          | [] -> [], [] | (v, following_msg)::tl -> ( (v,[])::tl, leading_msg @ following_msg ) in
-        (* Check that every group have parsed cleanly *)
-        let groups = groups |> List.map 
-                       ( function (v, []) -> v | ( _ , (k , _ )::_tl ) -> RepeatingGroupOutOfOrder k ) in
-        (* "Monadic flatten" the list and pass into the continuation with the rest of the message *)
-        rev_collect groups >|>= f msg 
+        ( tag : string )
+        ( block_parser : msg -> Z.t option -> 'a t * msg  )
+        ( f : msg  -> 'a list -> 'b t * msg ) =
+      (* Finding where the repeating group starts *)
+      let leading_msg, groups_msg = split_on_tag tag msg in
+      (* groups_msg starts with the NumInGroup tag, we parse it *)
+      opt groups_msg tag Parse_base_types.parse_int @@ fun groups_msg numInGroup ->
+      match numInGroup with 
+      | None -> ( ParseSuccess [] >|>= f msg )
+      | Some numInGroup ->
+        (* Break the list into a list of lists using the separator *)
+        let groups = cut_on_separator groups_msg in
+        (* Check that the length is correct *)
+        if List.length groups <> numInGroup then IncorrectNumInGroupCount tag >|>= f []  else
+          (* Pass each list into the block parser ( reverses the list ) *)
+          let groups : ('a t * (string * string) list) list = groups |> (fun x -> (List.rev  (List.map (fun y -> block_parser y (Some numInGroup))x ))) in
+          (* Get the rest of the message from the last group entry *)
+          let groups, msg = match groups with 
+            | [] -> [], [] | (v, following_msg)::tl -> ( (v,[])::tl, leading_msg @ following_msg ) in
+          (* Check that every group have parsed cleanly *)
+          let groups = groups |> List.map 
+                         ( function (v, []) -> v | ( _ , (k , _ )::_tl ) -> RepeatingGroupOutOfOrder k ) in
+          (* "Monadic flatten" the list and pass into the continuation with the rest of the message *)
+          rev_collect groups >|>= f msg 
 
   (** Checks for duplicate tags in messages -- should be called after all the repeating groups are porcessed *)
   let check_duplicate_tags ( msg : msg )  
