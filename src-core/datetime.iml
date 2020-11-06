@@ -160,6 +160,24 @@ let normalise_utctimestamp_micro ( ts : fix_utctimestamp_micro ) =
   }
 ;;
 
+let normalise_utcdateonly ( ts : fix_utcdateonly ) =
+  let carry_secs  = calculate_carry ts.utc_timestamp_second 60 0 in
+  let new_minute  = if carry_secs.carry_over then ( ts.utc_timestamp_minute + 1)  else ts.utc_timestamp_minute in 
+  let carry_mins  = calculate_carry  new_minute            60 0  in
+  let new_hour    = if carry_mins.carry_over then ( ts.utc_timestamp_hour + 1 )   else ts.utc_timestamp_hour in 
+  let carry_hours = calculate_carry  new_hour               24 0 in 
+  let new_days    = if carry_hours.carry_over then ( ts.utc_timestamp_day + 1 )   else ts.utc_timestamp_day in 
+  let carry_days  = calculate_carry new_days (1 + (how_many_days ts.utc_timestamp_month ts.utc_timestamp_year )) 1 in
+  let new_months  = if carry_days.carry_over then ( ts.utc_timestamp_month + 1 )  else ts.utc_timestamp_month in
+  let carry_months = calculate_carry new_months            13 1 in 
+  let new_years   = if carry_months.carry_over then ( ts.utc_timestamp_year + 1 ) else ts.utc_timestamp_year in {
+    utc_dateonly_day      = carry_days.new_field;
+    utc_dateonly_month     = carry_months.new_field;
+    utc_dateonly_year      = new_years;
+  }
+;;
+
+
 (** Constructor for the UTC timestamp milli  *)
 let make_utctimestamp_milli ( year:int) (month:int) (day:int) (hour:int) (minute:int) (second:int) (millisec:int option) : fix_utctimestamp_milli = 
   normalise_utctimestamp_milli
