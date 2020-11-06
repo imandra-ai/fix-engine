@@ -30,7 +30,12 @@ let utctimestamp_milli_to_json ( ts : fix_utctimestamp_milli )  =
     ( "utc_timestamp_hour"     , int_to_json ts.utc_timestamp_hour                     );
     ( "utc_timestamp_minute"   , int_to_json ts.utc_timestamp_minute                   );
     ( "utc_timestamp_second"   , int_to_json ts.utc_timestamp_second                   );
-    ( "utc_timestamp_millisec" , int_opt_to_json ts.utc_timestamp_millisec      );
+    ( "utc_timestamp_millisec" , string_opt_to_json 
+        (match ts.utc_timestamp_millisec with
+         | None -> None 
+         | Some u -> Some (Z.to_string u)
+        )  
+    )
   ] |> filter_nulls in
   `Assoc list_assoc
 ;;
@@ -42,7 +47,11 @@ let utctimestamp_milli_decoder : fix_utctimestamp_milli Decoders_yojson.Basic.De
   (D.field "utc_timestamp_hour" int_decoder) >>= fun utc_timestamp_hour ->
   (D.field "utc_timestamp_minute" int_decoder) >>= fun utc_timestamp_minute ->
   (D.field "utc_timestamp_second" int_decoder) >>= fun utc_timestamp_second ->
-  D.maybe (D.field "utc_timestamp_millisec" int_decoder) >>= fun utc_timestamp_millisec ->
+  D.maybe (D.field "utc_timestamp_millisec" string_decoder) >>= fun utc_timestamp_millisec ->
+  let utc_timestamp_millisec = match
+      utc_timestamp_millisec with 
+  | None -> None 
+  | Some u -> Some (Z.of_string u) in
   D.succeed {
     utc_timestamp_year   
   ; utc_timestamp_month  
@@ -61,7 +70,12 @@ let utctimestamp_micro_to_json ( ts : fix_utctimestamp_micro )  =
     ( "utc_timestamp_hour"     , int_to_json ts.utc_timestamp_hour                     );
     ( "utc_timestamp_minute"   , int_to_json ts.utc_timestamp_minute                   );
     ( "utc_timestamp_second"   , int_to_json ts.utc_timestamp_second                   );
-    ( "utc_timestamp_microsec" , int_opt_to_json ts.utc_timestamp_microsec      );
+    ( "utc_timestamp_microsec" , string_opt_to_json 
+        (match ts.utc_timestamp_microsec with
+         | None -> None 
+         | Some u -> Some (Z.to_string u)
+        )  
+    )
   ] |> filter_nulls in
   `Assoc list_assoc
 ;;
@@ -73,7 +87,11 @@ let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.De
   (D.field "utc_timestamp_hour" int_decoder) >>= fun utc_timestamp_hour ->
   (D.field "utc_timestamp_minute" int_decoder) >>= fun utc_timestamp_minute ->
   (D.field "utc_timestamp_second" int_decoder) >>= fun utc_timestamp_second ->
-  D.maybe (D.field "utc_timestamp_microsec" int_decoder) >>= fun utc_timestamp_microsec ->
+  D.maybe (D.field "utc_timestamp_microsec" string_decoder) >>= fun utc_timestamp_microsec ->
+  let utc_timestamp_microsec = match
+      utc_timestamp_microsec with 
+  | None -> None 
+  | Some u -> Some (Z.of_string u) in
   D.succeed {
     utc_timestamp_year   
   ; utc_timestamp_month  
@@ -181,7 +199,12 @@ let utctimeonly_milli_to_json ( d : fix_utctimeonly_milli ) =
     ( "utc_timeonly_hour"     ,  int_to_json d.utc_timeonly_hour          );    
     ( "utc_timeonly_minute"   ,  int_to_json d.utc_timeonly_minute        );
     ( "utc_timeonly_second"   ,  int_to_json d.utc_timeonly_second        );
-    ( "utc_timeonly_millisec" ,  int_opt_to_json d.utc_timeonly_millisec  ) 
+    ( "utc_timeonly_millisec" , string_opt_to_json 
+        (match d.utc_timeonly_millisec with
+         | None -> None 
+         | Some u -> Some (Z.to_string u)
+        )  
+    ) 
   ] |> filter_nulls in
   `Assoc list_assoc
 ;;
@@ -190,7 +213,12 @@ let utctimeonly_milli_decoder : fix_utctimeonly_milli Decoders_yojson.Basic.Deco
   (D.field "utc_timeonly_hour" int_decoder) >>= fun utc_timeonly_hour -> 
   (D.field "utc_timeonly_minute" int_decoder) >>= fun utc_timeonly_minute ->
   (D.field "utc_timeonly_second" int_decoder) >>= fun utc_timeonly_second ->                    
-  D.maybe (D.field "utc_timeonly_millisec" int_decoder) >>= fun utc_timeonly_millisec ->     
+  D.maybe (D.field "utc_timeonly_millisec" string_decoder) >>= fun utc_timeonly_millisec ->
+  let utc_timeonly_millisec = match utc_timeonly_millisec
+    with 
+    | None -> None 
+    | Some u -> Some (Z.of_string u)
+  in
   D.succeed {
     utc_timeonly_hour   
   ; utc_timeonly_minute  
@@ -208,7 +236,12 @@ let utctimeonly_micro_to_json ( d : fix_utctimeonly_micro ) =
     ( "utc_timeonly_hour"     ,  int_to_json d.utc_timeonly_hour          );    
     ( "utc_timeonly_minute"   ,  int_to_json d.utc_timeonly_minute        );
     ( "utc_timeonly_second"   ,  int_to_json d.utc_timeonly_second        );
-    ( "utc_timeonly_microsec" ,  int_opt_to_json d.utc_timeonly_microsec  ) 
+    ( "utc_timeonly_microsec" , string_opt_to_json 
+        (match d.utc_timeonly_microsec with
+         | None -> None 
+         | Some u -> Some (Z.to_string u)
+        )  
+    )
   ] |> filter_nulls in
   `Assoc list_assoc
 ;;
@@ -217,7 +250,12 @@ let utctimeonly_micro_decoder : fix_utctimeonly_micro Decoders_yojson.Basic.Deco
   (D.field "utc_timeonly_hour" int_decoder) >>= fun utc_timeonly_hour -> 
   (D.field "utc_timeonly_minute" int_decoder) >>= fun utc_timeonly_minute ->
   (D.field "utc_timeonly_second" int_decoder) >>= fun utc_timeonly_second ->                    
-  D.maybe (D.field "utc_timeonly_microsec" int_decoder) >>= fun utc_timeonly_microsec ->     
+  D.maybe (D.field "utc_timeonly_microsec" string_decoder) >>= fun utc_timeonly_microsec ->     
+  let utc_timeonly_microsec = match utc_timeonly_microsec
+    with 
+    | None -> None 
+    | Some u -> Some (Z.of_string u)
+  in
   D.succeed {
     utc_timeonly_hour   
   ; utc_timeonly_minute  
