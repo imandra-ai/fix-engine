@@ -1,4 +1,6 @@
-box: jekyll/jekyll:3.6.2
+box:
+  id: jekyll/jekyll
+  tag: 3.6.2
   username: $DOCKER_HUB_USERNAME
   password: $DOCKER_HUB_PASSWORD
 
