@@ -1,4 +1,6 @@
 box: jekyll/jekyll:3.6.2
+username: $DOCKER_HUB_USERNAME
+password: $DOCKER_HUB_PASSWORD
 
 build:
   steps:
