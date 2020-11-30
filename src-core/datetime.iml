@@ -160,6 +160,7 @@ let normalise_utctimestamp_micro ( ts : fix_utctimestamp_micro ) =
   }
 ;;
 
+
 (** Constructor for the UTC timestamp milli  *)
 let make_utctimestamp_milli ( year:int) (month:int) (day:int) (hour:int) (minute:int) (second:int) (millisec:int option) : fix_utctimestamp_milli = 
   normalise_utctimestamp_milli
@@ -838,7 +839,6 @@ let make_utcdateonly ( year:int) (month:int) (day : int) = {
   utc_dateonly_month = month;
   utc_dateonly_day = day;
 };;
-
 
 let is_valid_utcdateonly ( d : fix_utcdateonly ) =
   0 <= d.utc_dateonly_year && d.utc_dateonly_year <= 9999 && 
