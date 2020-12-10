@@ -14,7 +14,7 @@
 [@@@import "full_messages_json.iml"]
 [@@@import "../src-core-time-defaults-pp/time_defaults_json.iml"]
 [@@@program]
-open Yojson
+open Yojson.Basic
 open Fix_engine_state
 open Datetime_json
 open Base_types_json
@@ -58,28 +58,28 @@ let int_out_msg_to_json x : json = match x with
 ;;
 
 let int_inc_msg_to_str i = 
-    Yojson.pretty_to_string (int_inc_msg_to_json i)
+   pretty_to_string (int_inc_msg_to_json i)
 ;;
 
 let int_out_msg_to_str i = 
-    Yojson.pretty_to_string (int_out_msg_to_json i)
+    pretty_to_string (int_out_msg_to_json i)
 ;;
 
 
-let int_inc_msg_opt_to_json : ( fix_engine_int_inc_msg option -> Yojson.json) = 
+let int_inc_msg_opt_to_json : ( fix_engine_int_inc_msg option -> json) = 
     function None -> `Null | Some i -> int_inc_msg_to_json (i)
 ;;
 
-let int_out_msg_opt_to_json : ( fix_engine_int_out_msg option -> Yojson.json) = 
+let int_out_msg_opt_to_json : ( fix_engine_int_out_msg option -> json) = 
     function None -> `Null | Some i -> int_out_msg_to_json (i)
 ;;
 
-let cache_entry_to_json : cache_entry -> Yojson.t = function
+let cache_entry_to_json : cache_entry -> json = function
   | CacheGap (x,y) -> `Assoc [ ("CacheGap" , `List[int_to_json x ; int_to_json y ] )]
   | CacheMessage m -> `Assoc [ ("CacheMessage" , full_valid_msg_to_json m ) ] 
 ;;
 
-let cache_entry_list_to_json  (l : cache_entry list) : Yojson.t = 
+let cache_entry_list_to_json  (l : cache_entry list) : json = 
   `List ( l |> List.map cache_entry_to_json )
 
 
@@ -107,7 +107,7 @@ let fix_engine_state_to_json s =
 
 
 let engine_state_to_str s =
-    Yojson.pretty_to_string (fix_engine_state_to_json s)
+    pretty_to_string (fix_engine_state_to_json s)
 ;;
 
 

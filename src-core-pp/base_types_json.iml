@@ -9,7 +9,7 @@
 [@@@require "decoders-yojson"]
 [@@@import "../src-core/numeric.iml"]
 [@@@program]
-open Yojson;;
+open Yojson.Basic;;
 open Numeric;;
 module JU = Yojson.Basic.Util;;
 module D = Decoders_yojson.Basic.Decode;; 

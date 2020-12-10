@@ -9,7 +9,7 @@
 [@@@import "../src-core/datetime.iml"]
 [@@@import "base_types_json.iml"]
 [@@@program]
-open Yojson;;
+open Yojson.Basic;;
 open Datetime;;
 open Base_types_json;;
 module JU = Yojson.Basic.Util;;

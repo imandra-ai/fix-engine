@@ -9,7 +9,7 @@
 *)
 [@@@import "../src-protocol/full_admin_enums.iml"]
 [@@@program]
-open Yojson;;
+open Yojson.Basic;;
 open Full_admin_enums;;
 
 

@@ -13,7 +13,7 @@
 [@@@import "../src-core-pp/datetime_json.iml"]
 [@@@import "full_app_enums_json.iml"]
 [@@@program]
-open Yojson;;
+open Yojson.Basic;;
 open Full_app_records;;
 open Base_types_json;;
 open Datetime_json;;

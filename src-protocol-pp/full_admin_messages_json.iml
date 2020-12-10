@@ -13,7 +13,7 @@
 [@@@import "full_admin_enums_json.iml"]
 [@@@import "../src-protocol-pp/full_message_tags_json.iml"]
 [@@@program]
-open Yojson;;
+open Yojson.Basic;;
 open Full_admin_messages;;
 open Base_types_json;;
 open Datetime_json;;

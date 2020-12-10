@@ -1,6 +1,6 @@
 (* Imandra Inc. copyright 2019 *)
 [@@@program]
-open Yojson;;
+open Yojson.Basic;;
 
 let assoc_filter_nulls (x)  : json =
     `Assoc (List.filter (function (_,`Null) -> false |_ -> true

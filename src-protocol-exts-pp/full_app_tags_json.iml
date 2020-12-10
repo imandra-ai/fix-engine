@@ -2,7 +2,7 @@
 [@@@import "../src-protocol-exts/full_app_tags.iml"]
 [@@@program]
 open Full_app_tags;;
-open Yojson;;
+open Yojson.Basic;;
 
 let full_app_msg_tag_to_string (tag)  =
     (match tag with

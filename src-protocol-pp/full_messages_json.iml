@@ -15,7 +15,7 @@
 [@@@import "../src-protocol/full_messages.iml"]
 [@@@import "../src-core-time-defaults-pp/time_defaults_json.iml"]
 [@@@program]
-open Yojson;;
+open Yojson.Basic;;
 open Base_types_json;;
 open Full_message_tags_json;;
 open Full_admin_enums_json;;
