@@ -2,7 +2,7 @@
 [@@@import "../src-protocol-exts/full_app_enums.iml"]
 [@@@program]
 open Full_app_enums;;
-open Yojson;;
+open Yojson.Basic;;
 
 let week_to_string (d)  =
     (match d with

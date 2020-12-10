@@ -9,7 +9,7 @@
 *)
 [@@@import "../src-protocol-exts-vg/full_app_tags.iml"]
 [@@@program]
-open Yojson;;
+open Yojson.Basic;;
 open Full_app_tags;;
 
 
