@@ -118,8 +118,9 @@ let get_type_and_seqnum msg =
     let msgtype = try 
         let msgtype = Caml.List.assoc "35" msg in
         match Parse_full_tags.parse_full_msg_tag msgtype with None -> "?"
-        | Some ( Full_message_tags.Full_Admin_Msg_Tag tag) -> Full_admin_tags_json.full_admin_msg_tag_to_string tag 
-        | Some ( Full_message_tags.Full_App_Msg_Tag   tag) -> Full_app_tags_json.full_app_msg_tag_to_string tag
+        | Some ( Full_message_tags.Full_Admin_Msg_Tag   tag) -> Full_admin_tags_json.full_admin_msg_tag_to_string tag 
+        | Some ( Full_message_tags.Full_App_Msg_Tag     tag) -> Full_app_tags_json.full_app_msg_tag_to_string tag
+        | Some ( Full_message_tags.Full_Msg_Unknown_Tag tag) -> tag
     with _ -> "?" in
     let seqnum = try Caml.List.assoc "34" msg with _ -> "?" in 
     msgtype , seqnum
