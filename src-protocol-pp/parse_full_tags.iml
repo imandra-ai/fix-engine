@@ -17,23 +17,23 @@ open Parse_admin_tags;;
 
 
 let parse_full_msg_tag str = 
-    match parse_admin_msg_tag str with
-    | Some x -> Some (Full_Admin_Msg_Tag x)
+    Some (match parse_admin_msg_tag str with
+    | Some x -> Full_Admin_Msg_Tag x
     | None   -> begin 
         match parse_app_msg_tag str with
-        | Some x -> Some (Full_App_Msg_Tag x)
-        | None   -> None 
-    end
+        | Some x -> Full_App_Msg_Tag x
+        | None   -> Full_Msg_Unknown_Tag str
+    end)
 ;;
 
 
 let parse_full_field_tag str = 
-    match parse_admin_field_tag str with 
-        | Some x -> Some (Full_Admin_Field_Tag x)  
+    Some (match parse_admin_field_tag str with 
+        | Some x -> Full_Admin_Field_Tag x 
         | None  -> begin
             match parse_app_field_tag str with
-            | Some x -> Some (Full_App_Field_Tag x) 
-            | None   -> None 
-        end
+            | Some x -> Full_App_Field_Tag x
+            | None   -> Full_Field_Unknown_Tag str
+        end)
 ;;
 [@@@logic]
