@@ -1,9 +1,8 @@
 # FIX Engine Model
 ## Overview
 
-The development of the FIX Engine model began at [Aesthetic
-Integration](http://www.imandra.ai) (AI) as part of the [Imandra
-Markets](https://m.imandra.ai) product. The model consists of an
+The development of the FIX Engine model began at [Imandra Inc.](http://www.imandra.ai) (AI) as part of the [Imandra
+Markets](https://www.imandra.ai) product. The model consists of an
 executable formalisation of an administrative-level FIX engine, a
 sample application-level model and a set of verified precise
 statements about the engine's behaviour. The properties we verify are
@@ -21,9 +20,7 @@ industry, cutting down time and costs for connecting (and ensuring
 regulatory compliance of) the numerous systems relying on this
 protocol.
 
-This README will give you a brief overview of the project. For further information please see:
-- Project homepage at https://fix.readme.io
-- Documentation at https://aestheticintegration.github.io/fix-engine/
+This README will give you a brief overview of the project. For further information please seethe documentation page at https://docs.imandra.ai/fix-engine/
 
 ## Why
 
@@ -66,7 +63,7 @@ participant is a strong supporter of the language, with an active
 [blog](https://blogs.janestreet.com/category/ocaml/).
 
 IML stands for Imandra Modelling Language - it is a pure subset of
-OCaml for which AI has developed a mechanised formal semantics. This
+OCaml for which we have developed a mechanised formal semantics. This
 means that everything written in IML can be given a precise axiomatic
 (i.e., mathematical) representation, and Imandra can then be used to
 analyze and answer deep questions about the code. Although Imandra is
