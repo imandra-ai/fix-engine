@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html>
+<head>
+	  <meta charset="utf-8">
+	  <meta http-equiv="x-ua-compatible" content="ie=edge">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	  <title>Model Verification</title>
+
+	  <link rel="shortcut icon" type="image/x-icon" href="/fix-engine/favicon.ico">
+	  <link rel="stylesheet" href="/fix-engine/css/main.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather+Sans:300,300i,400,400i%7CMerriweather:300,300i,400,400i%7CRoboto+Slab:300,300i,400,400i">
+
+    <link rel="canonical" href="https://docs.imandra.ai//fix-engine/modelVerification/">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+	  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+	  <script type="text/javascript" src="/fix-engine/jekyll-resources/assets/js/copyFunctions.js"></script>
+
+    <script src="https://kit.fontawesome.com/4d352d3410.js" crossorigin="anonymous"></script>
+</head>
+
+
+<body>
+    <!-- <div class="background">
+        </div> -->
+    <div class="page-container">
+        <main class="main-content-column">
+            <header class="header">
+    <div class="top-row-container">
+
+        <div class="top-row">
+            <div id="toggler--left" class="side__left-menu-toggler">
+                <div class="side__toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <p class="side__toggle-text">Docs</p>
+            </div>
+
+            <div class="side__logo-container">
+                <a class="side__logo-link" href="https://docs.imandra.ai/">
+                    <img class="side__logo " src="/fix-engine/jekyll-resources/assets/img/imandra-gradient-logo-docs.svg" alt="Imandra Logo">
+                    <img class="side__logo--min " src="/fix-engine/jekyll-resources/assets/img/imandra-gradient-logo-min.svg" alt="Imandra Logo">
+                </a>
+            </div>
+
+            <div id="toggler--right" class="side__right-menu-toggler">
+                <p class="side__toggle-text">Pages</p>
+                <div class="side__toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <nav class="side__nav-container side__nav-container--hidden">
+                <ul class="side__nav-list" id="side-nav-menu">
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                            <a class="side__nav-link" href="/">Documentation Home</a>
+                    </li>
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                            <a class="side__nav-link" href="/imandra-docs">Imandra Core</a>
+                    </li>
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                            <a class="side__nav-link" href="/idf-py">Py IDF</a>
+                    </li>
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                            <a class="side__nav-link" href="/ipl">Imandra Protocol Language</a>
+                    </li>
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                            <a class="side__nav-link" href="/imandra-rule-synth">Imandra Rule Synth</a>
+                    </li>
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                        <a class="side__nav-link side__nav-link--active" href="/fix-engine">FIX Engine</a>
+                        <ul class="side__nav-list--sub-level-1">
+                            
+                            
+                                    
+                            
+                            
+                            
+                            
+                            
+                                    
+                                        
+                                    <li class="side__nav-list-item--sub-level-1 side__nav-list--sub-level-1--empty"><a class="side__nav-link" href="/fix-engine/references/">Formal Verification</a>
+                                        
+                                        
+                                        <ul class="side__nav-list--sub-level-2">
+                                            
+                                            
+                                            
+                                            
+                                        </ul>
+                                    </li>
+                                    
+                                    
+                            
+                            
+                            
+                            
+                            
+                                    
+                                        
+                                    <li class="side__nav-list-item--sub-level-1"><a class="side__nav-link" href="/fix-engine/testSuite/">Test Suite</a>
+                                        
+                                        
+                                        <ul class="side__nav-list--sub-level-2">
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/testSuite/#regionDecomposition">Region Decomposition
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/testSuite/#testSuiteGeneration">Test Suite Generation
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/testSuite/#currentTestPack">Current Test Pack
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                        </ul>
+                                    </li>
+                                    
+                                    
+                            
+                            
+                            
+                            
+                            
+                                    
+                                        
+                                    <li class="side__nav-list-item--sub-level-1"><a class="side__nav-link" href="/fix-engine/documentation/">Documentation</a>
+                                        
+                                        
+                                        <ul class="side__nav-list--sub-level-2">
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/documentation/#buildingInstructions">Building Instructions
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/documentation/#modellingStateMachines">Modelling State Machines
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/documentation/#MessageLifecycle">Message Lifecycle
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/documentation/#printersParsers">Printers and Parsers
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/_pages/doc/index.html" target="_blank">Technical Documentation</a></li>
+                                            
+                                        </ul>
+                                    </li>
+                                    
+                                    
+                            
+                            
+                            
+                            
+                            
+                            
+                                
+                            <li class="side__nav-list-item--sub-level-1"><a class="side__nav-link side__nav-link--active" href="/fix-engine/modelVerification/">Model Verification
+</a>
+                                
+                                
+                                <ul class="side__nav-list--sub-level-2 side__nav-list--sub-level-2--active">
+                                    
+                                            
+                                            
+                                            
+                                            
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#overviewAndStatus">Overview and Status
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#hearbeatMessages">Heartbeat Messages
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#logonMessages">Logon Messages
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#base">Base
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#rejectionLogic">Rejection Logic
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#sequenceNumberLogic">Sequence Number Logic
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#sequenceResetMessage">Sequence Reset Messages
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                        </ul>
+                                    </li>
+                                    
+                                    
+                                </ul>
+                            </li>
+                            
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+
+    <div class="template-header">
+        <div class="top-bar">
+            <div class="side__nav-search">
+                <input id="search" type="search" placeholder="Search">
+                <div class="side__nav-search-icon">
+                    <i class="fa fa-search"></i>
+                </div>
+            </div>
+
+            <nav class="top-bar__nav-container" id="top-menu">
+                <a href="#" class="top-bar__toggle">≡</a>
+                <div class="top-nav-bar__group ">
+                    <div class="top-nav-bar__nav nav-bar--blue top-nav-bar__nav--hidden">
+                        <ul class="top-nav-bar__links top-nav-bar__links--hidden-smaller-than-tablet">
+
+
+                            
+                            <li class="top-nav-bar__item top-nav-bar__item--flex">
+                                <a href="https://www.imandra.ai/" class="top-nav-bar__link">Home</a>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--applications">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Applications</p>
+                                <ul class="dropdown-content dropdown-content--applications">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--fv.svg" alt="Formal Verification" title="Formal Verification Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/app-fv">Formal Verification</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--mbse.svg" alt="Model-Based Software Engineering" title="Model-Based Software Engineering Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/app-mbse">Model-Based Software Engineering</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--si.svg" alt="IPL Demo Gallery" title="System Integration Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/app-si">System Integration</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--explore">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Explore</p>
+                                <ul class="dropdown-content dropdown-content--explore">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--core.svg" alt="Try Imandra" title="Try Imandra Icon">
+                                        <a class="dropdown__link" href="https://try.imandra.ai/">Try Online</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--demos.svg" alt="Imandra Demo Gallery" title="Imandra Demo Gallery Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/demos">Demo Gallery</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--demos.svg" alt="IPL Demo Gallery" title="IPL Gallery Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/ipl-gallery">IPL Gallery</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--docs">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Docs</p>
+                                <ul class="dropdown-content dropdown-content--docs">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--docs.svg" alt="Docs" title="Docs Icon">
+                                        <a class="dropdown__link" href="https://docs.imandra.ai/imandra-docs/">Imandra Core</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--docs.svg" alt="Docs" title="Docs Icon">
+                                        <a class="dropdown__link" href="https://docs.imandra.ai/idf-py/">PYIDF</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--docs.svg" alt="Docs" title="Docs Icon">
+                                        <a class="dropdown__link" href="https://docs.imandra.ai/ipl/">IPL</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--docs.svg" alt="Docs" title="Docs Icon">
+                                        <a class="dropdown__link" href="https://docs.imandra.ai/imandra-rule-synth/">Rule Synthesis</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--docs.svg" alt="Docs" title="Docs Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://docs.imandra.ai/fix-engine/">Fix Engine</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--products">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Products</p>
+                                <ul class="dropdown-content dropdown-content--products">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--core.svg" alt="Imandra Core" title="Imandra Core Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/core">Imandra Core</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--ipl.svg" alt="Imandra Protocol Language" title="Imandra Protocol Language Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/ipl-product">Imandra Protocol Language</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--systems.svg" alt="Imandra Markets - Systems" title="Imandra Markets - Systems Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/systems">Imandra Markets - Systems</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--connectivity.svg" alt="Imandra Markets - Connectivity" title="Imandra Markets - Connectivity Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/connectivity">Imandra Markets - Connectivity</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--autopilot.svg" alt="Imandra Markets - Autopilot" title="Imandra Markets - Autopilot Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/autopilot">Imandra Markets - Autopilot</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--industries">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Industries</p>
+                                <ul class="dropdown-content dropdown-content--industries">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--financial.svg" alt="Financial Markets" title="Financial Markets Icon">
+                                        <a class="dropdown__link " href="https://www.imandra.ai/markets">Financial Markets</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--autonomy.svg" alt="Autonomous Systems" title="Autonomous Systems Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/autonomy">Autonomous Systems</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--ml.svg" alt="Machine Learning" title="Machine Learning Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/ml">Machine Learning</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--government.svg" alt="Machine Learning" title="Machine Learning Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/government">Government and defense</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--media">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Media</p>
+                                <ul class="dropdown-content dropdown-content--media">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--media.svg" alt="Media" title="Media Icon">
+                                        <a class="dropdown__link " href="https://www.imandra.ai/media">Media</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--blog.svg" alt="Blog" title="Blog Icon">
+                                        <a class="dropdown__link dropdown__link--last " href="https://medium.com/imandra">Blog</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--company">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Company</p>
+                                <ul class="dropdown-content dropdown-content--company">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--about.svg" alt="About" title="About Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/about">About</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--careers.svg" alt=" Careers" title="Careers Icon">
+                                        <a class="dropdown__link dropdown__link--bottom" href="https://www.imandra.ai/careers">Careers</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--research.svg" alt="Research" title="Research Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/research">Research</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        
+
+        <div class="template-header__image-container">
+            <a class="template-header__image" href="/fix-engine">
+                <img class="site-specific-image" src="/fix-engine/assets/img/site_specific_image_v_2.svg">
+            </a>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        document.getElementById('toggler--left').addEventListener('click', function () {
+            document.querySelector('.side__right-menu-toggler .side__toggle').classList.remove(
+                'side__toggle--active');
+            document.querySelector('.side__left-menu-toggler .side__toggle').classList.toggle(
+                'side__toggle--active');
+            document.getElementsByClassName('side__nav-container')[0].classList.toggle(
+                'side__nav-container--hidden');
+            document.getElementsByClassName('top-nav-bar__nav')[0].classList.add('top-nav-bar__nav--hidden');
+        });
+
+        document.getElementById('toggler--right').addEventListener('click', function () {
+            document.querySelector('.side__left-menu-toggler .side__toggle').classList.remove(
+                'side__toggle--active');
+            document.querySelector('.side__right-menu-toggler .side__toggle').classList.toggle(
+                'side__toggle--active');
+
+            document.getElementsByClassName('side__nav-container')[0].classList.add(
+                'side__nav-container--hidden');
+            document.getElementsByClassName('top-nav-bar__nav')[0].classList.toggle(
+                'top-nav-bar__nav--hidden');
+        });
+    </script>
+    <script type="text/javascript">
+        window.onload = function () {
+            var lastId,
+                sideMenu = $("#side-nav-menu"),
+                topMenu = $("#top-menu")
+            var topMenuHeight = topMenu.outerHeight() + 15,
+                // All list items
+                menuItems = sideMenu.find('a[href^="/fix-engine/modelVerification/#"]'),
+                // Anchors corresponding to menu items
+                scrollItems = menuItems.map(function () {
+                    var item = $(this).attr("href");
+                    var thisItem = item.substring(item.lastIndexOf("/") + 1, item.length)
+                    var linkedItem = $(thisItem)
+                    if (linkedItem.length) {
+                        return linkedItem;
+                    }
+                });
+
+            // Bind to scroll
+            $(window).scroll(function () {
+                // Get container scroll position
+                var fromTop = $(this).scrollTop() + topMenuHeight;;
+
+                // Get id of current scroll item
+                var cur = scrollItems.map(function () {
+                    if ($(this).offset().top < fromTop)
+                        return this;
+                });
+                cur = cur[cur.length - 1];
+
+                // Get the id of the current element
+
+                var id = cur && cur.length ? cur[0].id : "";
+
+                if (lastId != id) {
+
+                    // Set/remove active class
+                    if (lastId != null) {
+                        thisMenuItem = menuItems.filter('a[href^="/fix-engine/modelVerification/#' + lastId + '"]')
+                        $(thisMenuItem).removeClass("side__nav-link--within-page--active")
+                    }
+                    lastId = id;
+                    if (id != "") menuItems.filter('a[href^="/fix-engine/modelVerification/#' + id + '"]').addClass("side__nav-link--within-page--active");
+                }
+
+            });
+        }
+    </script>
+</header>
+            <article class="article__container">
+                
+
+<!--main-content-->
+
+<div class="main-content">
+    
+    
+    
+    <h2 id=modelVerification><p>Model Verification</p>
+</h2>
+    
+    <p>In this section we give examples of verification that have been carried out on the implementation. Please use the menu on the right to view the relevant sections.</p>
+
+    
+    
+    <h2 class="internalLink-padding"  id=overviewAndStatus ><p>Overview and Status</p>
+</h2>
+    
+    <p>In addition to the model source code, you will find a collection of Verification Goals (VGs). VGs are statements in IML expressing properties of the FIX engine model that we wish to verify. It’s important to note that IML is used for both building the model and describing the properties we wish to verify about it.</p>
+
+<p>Consider the following quote from Volume 2 of the FIX 4.4 specification:</p>
+<blockquote>
+  <p>When either end of a FIX connection has not sent any data for [HeartBtInt] seconds, it will transmit a Heartbeat message.</p>
+</blockquote>
+
+<p>One way to formalise that statement is to create two VGs:</p>
+<ul>
+  <li>VG.1.1 - any outbound message will result in an updated <code class="highlighter-rouge">fe_last_time_data_sent</code> field</li>
+  <li>VG.1.2 - any time update will result in check whether Heartbeat should be sent out</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="c">(* VG.1.1 *)</span>
+<span class="n">verify</span> <span class="n">last_time_data_sent_gets_updated</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="n">engine</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="o">&amp;&amp;</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="o">&lt;&gt;</span> <span class="nc">None</span>
+   <span class="o">==&gt;</span>
+  <span class="n">engine'</span><span class="o">.</span><span class="n">fe_last_time_data_sent</span> <span class="o">=</span> <span class="n">engine'</span><span class="o">.</span><span class="n">fe_curr_time</span>
+<span class="p">;;</span>
+
+<span class="c">(** VG.1.2 *)</span>
+<span class="k">let</span> <span class="n">outbound_msg_heartbeat</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">None</span>      <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span>  <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+      <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
+      <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">admin_msg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="k">match</span> <span class="n">admin_msg</span> <span class="k">with</span>
+        <span class="o">|</span> <span class="nc">Full_Msg_Hearbeat</span> <span class="n">_</span>        <span class="o">-&gt;</span> <span class="bp">true</span>
+        <span class="o">|</span> <span class="nc">Full_Msg_Test_Request</span> <span class="n">_</span>    <span class="o">-&gt;</span> <span class="bp">true</span>
+        <span class="o">|</span> <span class="n">_</span>                          <span class="o">-&gt;</span> <span class="bp">false</span>
+      <span class="p">)</span>
+      <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">time_update_received</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">last_time_data_sent</span><span class="o">,</span> <span class="n">hbeat_interval</span> <span class="o">:</span> <span class="n">fix_engine_int_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="n">fix_utctimestamp</span> <span class="o">*</span> <span class="n">fix_duration</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="n">mint</span> <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">mint</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">TimeChange</span> <span class="n">tc_data</span> <span class="o">-&gt;</span>
+       <span class="k">let</span> <span class="n">valid_time</span> <span class="o">=</span> <span class="n">utctimestamp_add</span> <span class="p">(</span> <span class="n">last_time_data_sent</span><span class="o">,</span> <span class="n">hbeat_interval</span> <span class="p">)</span> <span class="k">in</span>
+       <span class="n">utctimestamp_greaterThan</span> <span class="p">(</span> <span class="n">tc_data</span><span class="o">,</span> <span class="n">valid_time</span> <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="n">verify</span> <span class="n">hbeat_sent_if_no_data_received</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span> <span class="p">(</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span>
+    <span class="o">&amp;&amp;</span> <span class="n">is_int_message_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span>
+    <span class="o">&amp;&amp;</span> <span class="n">is_state_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span>
+    <span class="o">&amp;&amp;</span> <span class="n">time_update_received</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_int_msg</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_last_time_data_sent</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_heartbeat_interval</span> <span class="p">)</span> <span class="p">)</span>
+     <span class="o">==&gt;</span>
+    <span class="n">outbound_msg_heartbeat</span> <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<p>It’s important to note that the ‘translation’ of the English-prose statements into IML (or other mathematically precise formal languages) may not be unique. The inherent ambiguity of natural languages is a major reason why the efforts of formalising protocol specifications must be collaborative and industry-wide.</p>
+
+<p>Notice how this approach differs from traditional ‘testing’. In the statement above, we’re making a high-level claim about the model behaviour, and we can subject this claim to analysis over the entire system state-space. When Imandra analyses the model with respect to such a statement, it works to symbolically verify that the claim holds in <em>all</em> possible scenarios. When such a claim does not hold, Imandra works to construct a precise sequence of events (a “counterexample”) which exhibits a violation of the property.</p>
+
+<h3 id="vg-status">VG Status</h3>
+
+<p>For updates, see the Announcements page.</p>
+
+<p>Status as of May 21st, 2017:</p>
+
+<p><em>Base</em></p>
+<ul>
+  <li>[x] VG.1 :: <em>When in ActiveSession (normal mode) and receiving a non garbled and non session-level rejected message and the application is down. Such message would be sent back with a Business Reject.</em></li>
+  <li>[x] VG.2 :: <em>FIX session should be terminated if the incoming sequence number is less than expected and the PossDupFlag is not set.</em></li>
+  <li>[x] VG.3 :: <em>Messages that are garbled will be ignored (sequence counter will not be incremented).</em></li>
+  <li>[x] VG.4 :: <em>Session rejected messages are rejected with the right reason and counter is incremented</em></li>
+</ul>
+
+<p><em>Heartbeat Messages</em></p>
+<ul>
+  <li>[x] VG.1 :: <em>“When either end of a FIX connection has not sent any data for [HeartBtInt] seconds, it will transmit a Heartbeat message.”</em></li>
+  <li>[x] VG.2 :: <em>Non-garbled message updates the clock.</em></li>
+  <li>[x] VG.3 :: <em>“When either end of the connection has not received any data for (HeartBtInt + “some reasonable transmission time”) seconds, it will transmit a Test Request message.”</em></li>
+  <li>[x] VG.4 :: <em>“If there is still no Heartbeat message received after (HeartBtInt + ‘some reasonable transmission time’) seconds then the connection should be considered lost and corrective action be initiated.”</em></li>
+</ul>
+
+<p><em>Logon Messages</em></p>
+<ul>
+  <li>[x] VG.1 :: <em>“The logon message must be the first message sent by the application requesting to initiate a FIX session.”</em></li>
+  <li>[x] VG.2 :: *“The session acceptor must be prepared to immediately begin processing messages after receipt of the Logon.”</li>
+  <li>[x] VG.3 :: <em>“After authentication, the initiator and acceptor must synchronize their messages through interrogation of the MsgSeqNum field before sending any queued or new messages.”</em></li>
+  <li>[x] VG.4 ::  <em>“If the session acceptor has chosen to change the session encryption key, the session initiator must send a third Logon back to the other side in order to acknowledge the key change request.”</em></li>
+  <li>[x] VG.5 ::  <em>NextExpectedMsgSeqNum is used correctly.</em></li>
+</ul>
+
+<p><em>Logoff Messages</em></p>
+<ul>
+  <li>[ ] VG.1 :: * “Disconnection without the exchange of logout messages should be interpreted as an abnormal condition.”*</li>
+  <li>[ ] VG.2 :: <em>“Before actually closing the session, the logout initiator should wait for the opposite side to respond with a confirming logout message.”</em></li>
+  <li>[ ] VG.3 :: <em>“After sending the Logout message, the logout initiator should not send any messages unless requested to do so by the logout acceptor via a ResendRequest.”</em></li>
+</ul>
+
+<p><em>Sequence Reset Messages</em></p>
+<ul>
+  <li>[x] VG.1 :: <em>“When the incoming sequence number does not match the expected corrective processing is required. Note that the SeqReset-Reset message (used only to recover from a disaster vs. normal resend request processing) is an exception to this rule as it should be processed without regards to its MsgSeqNum.”</em></li>
+  <li>[ ] VG.2 ::  <em>“The Sequence Reset can only increase the sequence number. If a sequence reset is received attempting to decrease the next expected sequence number the message should be rejected and treated as a serious error.”</em></li>
+</ul>
+
+<p><em>Sequence Number Logic</em></p>
+<ul>
+  <li>[x] VG.1 :: <em>“Must always be the first message transmitted. Authenticate and accept the connection. After sending a Logon confirmation back, send a ResendRequest if a message gap was detected in the Logon sequence number.”</em></li>
+  <li>[x] VG.2 :: <em>Out of sequence message would result in state transitioning into Recovery mode.</em></li>
+  <li>[ ] VG.3 :: <em>“Ignore the incoming sequence number. The NewSeqNo field of the SeqReset message will contain the sequence number of the next message to be transmitted.”</em></li>
+  <li>[ ] VG.4 :: <em>Application messages that result in a gap, we’ll transition into gap fill state.</em></li>
+</ul>
+
+<p><em>Rejection Logic</em></p>
+<ul>
+  <li>[x] VG.1 :: * “During the gap fill process, certain administrative messages should not be retransmitted. Instead, a special SeqReset-GapFill message is generated.”*</li>
+</ul>
+
+    
+    
+    <h2 class="internalLink-padding"  id=hearbeatMessages ><p>Heartbeat Messages</p>
+</h2>
+    
+    <p>This section contains verification goals for Hearbeat messages.</p>
+<h3 id="heartbeat-vg1">Heartbeat VG.1</h3>
+<p>“When either end of a FIX connection has not sent any data for [HeartBtInt] seconds, it will transmit a Heartbeat message.”</p>
+
+<p>Notes: we transform this statement into 2 VGs:</p>
+<ul>
+  <li>VG.1.1 - any outbound message will result in an updated <code class="highlighter-rouge">fe_last_time_data_sent</code> field</li>
+  <li>VG.1.2 - any time update will result in check whether <code class="highlighter-rouge">Heartbeat</code> should be sent out</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="kr">verify</span> <span class="n">last_time_data_sent_gets_updated</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+ <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="o">&amp;&amp;</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="o">&lt;&gt;</span> <span class="nc">None</span> <span class="p">)</span>
+  <span class="o">==&gt;</span> <span class="p">(</span><span class="n">engine'</span><span class="o">.</span><span class="n">fe_last_time_data_sent</span> <span class="o">=</span> <span class="n">engine'</span><span class="o">.</span><span class="n">fe_curr_time</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">outbound_msg_heartbeat</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span><span class="o">=</span>
+ <span class="k">match</span> <span class="n">m</span> <span class="k">with</span> 
+ <span class="o">|</span> <span class="nc">None</span>  <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span>  <span class="o">-&gt;</span>
+ <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+ <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+  <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span> 
+  <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">admin_msg</span>  <span class="o">-&gt;</span> <span class="p">(</span>
+   <span class="k">match</span> <span class="n">admin_msg</span> <span class="k">with</span> 
+   <span class="o">|</span> <span class="nc">Full_Msg_Hearbeat</span> <span class="n">_</span>       <span class="o">-&gt;</span> <span class="bp">true</span>
+   <span class="o">|</span> <span class="nc">Full_Msg_Test_Request</span> <span class="n">_</span>   <span class="o">-&gt;</span> <span class="bp">true</span>
+   <span class="o">|</span> <span class="n">_</span>                         <span class="o">-&gt;</span> <span class="bp">false</span>
+   <span class="p">)</span>
+  <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="p">)</span>
+ <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">time_update_received</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">last_time_data_sent</span><span class="o">,</span> <span class="n">hbeat_interval</span> <span class="o">:</span> <span class="n">fix_engine_int_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="n">fix_utctimestamp</span> <span class="o">*</span> <span class="n">fix_duration</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+ <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="o">|</span> <span class="nc">Some</span> <span class="n">mint</span> <span class="o">-&gt;</span> 
+ <span class="k">match</span> <span class="n">mint</span> <span class="k">with</span> 
+ <span class="o">|</span> <span class="nc">TimeChange</span> <span class="n">tc_data</span> <span class="o">-&gt;</span> 
+  <span class="k">let</span> <span class="n">valid_time</span> <span class="o">=</span> <span class="n">utctimestamp_add</span> <span class="p">(</span> <span class="n">last_time_data_sent</span><span class="o">,</span> <span class="n">hbeat_interval</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="n">utctimestamp_greaterThan</span> <span class="p">(</span> <span class="n">tc_data</span><span class="o">,</span> <span class="n">valid_time</span> <span class="p">)</span>
+ <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="kr">verify</span> <span class="n">hbeat_sent_if_no_data_received</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span> <span class="p">(</span> 
+ <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span> <span class="o">&amp;&amp;</span> 
+ <span class="n">is_int_message_valid</span> <span class="p">(</span> <span class="n">engine</span><span class="p">)</span> <span class="o">&amp;&amp;</span> 
+ <span class="n">is_state_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> 
+ <span class="n">time_update_received</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_int_msg</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_last_time_data_sent</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_heartbeat_interval</span> <span class="p">)</span> <span class="p">)</span>
+ <span class="o">==&gt;</span> <span class="n">outbound_msg_heartbeat</span> <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="heartbeat-vg2">Heartbeat VG.2</h3>
+
+<p>Notes: there’s no mention of what constitutes a successful data - i.e. is it a non-garbled (but still rejected message)? We interpret this here as that a Non-garbled message results in update of data received.</p>
+
+<p>Also, it’s important to note that we would not process an incoming message if the engine is in a Retransmit or CacheReplay mode, hence we use <code class="highlighter-rouge">let incoming_processed = engine.incoming_fix_msg &lt;&gt; engine'.incoming_fix_msg</code></p>
+
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">incoming_is_not_garbled</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span> 
+ <span class="k">match</span> <span class="n">m</span> <span class="k">with</span> 
+ <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
+ <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+ <span class="o">|</span> <span class="nc">Garbled</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+<span class="p">;;</span>
+
+<span class="kr">verify</span> <span class="n">non_garbled_updates_clock</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span><span class="n">engine</span><span class="p">)</span> <span class="k">in</span> 
+ <span class="k">let</span> <span class="n">received_ts_correct</span> <span class="o">=</span>  <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_time</span> <span class="o">=</span> <span class="n">engine'</span><span class="o">.</span><span class="n">fe_last_data_received</span> <span class="p">)</span> <span class="k">in</span> 
+ <span class="k">let</span> <span class="n">incoming_processed</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_fix_msg</span> <span class="o">&lt;&gt;</span> <span class="n">engine'</span><span class="o">.</span><span class="n">incoming_fix_msg</span> <span class="k">in</span> 
+ <span class="p">(</span> <span class="n">incoming_is_not_garbled</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_fix_msg</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">incoming_processed</span><span class="p">)</span> <span class="o">==&gt;</span> <span class="n">received_ts_correct</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="heartbeat-vg3">Heartbeat VG.3</h3>
+
+<p>‘When either end of the connection has not received any data for (<code class="highlighter-rouge">HeartBtInt</code> + “some reasonable transmission time”) seconds, it will transmit a Test Request message.’</p>
+
+<p>Notes: ‘reasonable time’ is represented by a ‘duration’ type field <code class="highlighter-rouge">fe_testreq_interval</code>.</p>
+
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">no_heartbeats_received</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">data_received</span><span class="o">,</span> <span class="n">hbeat_interval</span><span class="o">,</span> <span class="n">pad_interval</span> <span class="o">:</span> <span class="n">fix_engine_int_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="n">fix_utctimestamp</span> <span class="o">*</span> <span class="n">fix_duration</span> <span class="o">*</span> <span class="n">fix_duration</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+ <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="o">|</span> <span class="nc">Some</span> <span class="n">mint</span> <span class="o">-&gt;</span> 
+ <span class="k">match</span> <span class="n">mint</span> <span class="k">with</span> 
+ <span class="o">|</span> <span class="nc">TimeChange</span> <span class="n">tc_data</span> <span class="o">-&gt;</span> 
+  <span class="k">let</span> <span class="n">valid_time</span> <span class="o">=</span> <span class="n">utctimestamp_add</span> <span class="p">(</span> <span class="n">data_received</span><span class="o">,</span> <span class="n">hbeat_interval</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">valid_time_padded</span> <span class="o">=</span> <span class="n">utctimestamp_add</span> <span class="p">(</span> <span class="n">valid_time</span><span class="o">,</span> <span class="n">pad_interval</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="n">utctimestamp_greaterThan</span> <span class="p">(</span> <span class="n">tc_data</span><span class="o">,</span> <span class="n">valid_time_padded</span> <span class="p">)</span>
+ <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">msg_is_test_request</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">match</span> <span class="n">m</span> <span class="k">with</span> 
+ <span class="o">|</span> <span class="nc">None</span>  <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
+ <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+ <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+  <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span> 
+  <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">admin_msg</span>  <span class="o">-&gt;</span> <span class="p">(</span>
+   <span class="k">match</span> <span class="n">admin_msg</span> <span class="k">with</span> 
+   <span class="o">|</span> <span class="nc">Full_Msg_Test_Request</span> <span class="n">_</span>  <span class="o">-&gt;</span> <span class="bp">true</span>
+   <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="p">)</span>
+  <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="p">)</span>
+ <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="kr">verify</span> <span class="n">test_request_sent_out</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="p">(</span> <span class="n">is_int_message_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+  <span class="n">is_state_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+  <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_status</span> <span class="o">=</span> <span class="nc">Normal</span> <span class="o">&amp;&amp;</span> 
+  <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span> <span class="o">&amp;&amp;</span> 
+  <span class="n">no_heartbeats_received</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_int_msg</span><span class="o">,</span>
+                            <span class="n">engine</span><span class="o">.</span><span class="n">fe_last_data_received</span><span class="o">,</span>
+                            <span class="n">engine</span><span class="o">.</span><span class="n">fe_heartbeat_interval</span><span class="o">,</span>
+                            <span class="n">engine</span><span class="o">.</span><span class="n">fe_testreq_interval</span> <span class="p">)</span> <span class="p">)</span>
+  <span class="o">==&gt;</span>
+  <span class="n">msg_is_test_request</span> <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="heartbeat-vg4">Heartbeat VG.4</h3>
+
+<p>“If there is still no Heartbeat message received after (HeartBtInt + “some reasonable transmission time”) seconds then the connection should be considered lost and corrective action be initiated.”</p>
+
+<p>Notes: note sure what ‘corrective action be initiated’ means, here we interpret it as meaning that a logoff message to be sent out, session closed and ‘status’ of the engine state set to <code class="highlighter-rouge">ConnTerminatedWithoutLogoff</code>.</p>
+
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">no_heartbeats_received_logoff</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">data_sent_out</span><span class="o">,</span> <span class="n">hbeat_interval</span><span class="o">,</span> <span class="n">pad_interval</span> <span class="o">:</span> <span class="n">fix_engine_int_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="n">fix_utctimestamp</span> <span class="o">*</span> <span class="n">fix_duration</span> <span class="o">*</span> <span class="n">fix_duration</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+ <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="o">|</span> <span class="nc">Some</span> <span class="n">mint</span> <span class="o">-&gt;</span> 
+ <span class="k">match</span> <span class="n">mint</span> <span class="k">with</span> 
+ <span class="o">|</span> <span class="nc">TimeChange</span> <span class="n">tc_data</span> <span class="o">-&gt;</span> 
+  <span class="k">let</span> <span class="n">valid_time</span> <span class="o">=</span> <span class="n">utctimestamp_add</span> <span class="p">(</span> <span class="n">data_sent_out</span><span class="o">,</span> <span class="n">hbeat_interval</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">valid_time_padded</span> <span class="o">=</span> <span class="n">utctimestamp_add</span> <span class="p">(</span> <span class="n">valid_time</span><span class="o">,</span> <span class="n">pad_interval</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="n">utctimestamp_greaterThan</span> <span class="p">(</span> <span class="n">tc_data</span><span class="o">,</span> <span class="n">valid_time_padded</span> <span class="p">)</span>
+ <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="kr">verify</span> <span class="n">no_response_logoff</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+ <span class="p">(</span><span class="n">is_int_message_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+  <span class="n">is_state_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+  <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">WaitingForHeartbeat</span> <span class="o">&amp;&amp;</span> 
+  <span class="n">no_heartbeats_received</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_int_msg</span><span class="o">,</span> 
+                            <span class="n">engine</span><span class="o">.</span><span class="n">fe_last_time_data_sent</span><span class="o">,</span>
+                            <span class="n">engine</span><span class="o">.</span><span class="n">fe_heartbeat_interval</span><span class="o">,</span>
+                            <span class="n">engine</span><span class="o">.</span><span class="n">fe_testreq_interval</span> <span class="p">)</span> <span class="p">)</span>
+  <span class="o">==&gt;</span>
+  <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">NoActiveSession</span> <span class="o">&amp;&amp;</span> 
+   <span class="n">engine'</span><span class="o">.</span><span class="n">fe_curr_status</span> <span class="o">=</span> <span class="nc">ConnTerminatedWithoutLogoff</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="heartbeat-vg5">Heartbeat VG.5</h3>
+
+<p>“If HeartBtInt is set to zero then no regular heartbeat messages will be generated. Note that a test request message can still be sent independent of the value of the <code class="highlighter-rouge">HeartBtInt</code>, which will force a Heartbeat message.”</p>
+
+<p>Notes: We implement ‘test request message can still be sent independent of the value of the HeartBtInt’ as internal message.</p>
+
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">field_null</span> <span class="p">(</span> <span class="n">f</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">match</span> <span class="n">f</span> <span class="k">with</span> 
+ <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+ <span class="o">|</span> <span class="nc">Some</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">hbeat_interval_null</span> <span class="p">(</span> <span class="n">interval</span> <span class="o">:</span> <span class="n">fix_duration</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="n">field_null</span> <span class="p">(</span> <span class="n">interval</span><span class="o">.</span><span class="n">dur_years</span> <span class="p">)</span>   <span class="o">&amp;&amp;</span>
+ <span class="n">field_null</span> <span class="p">(</span> <span class="n">interval</span><span class="o">.</span><span class="n">dur_months</span> <span class="p">)</span>  <span class="o">&amp;&amp;</span> 
+ <span class="n">field_null</span> <span class="p">(</span> <span class="n">interval</span><span class="o">.</span><span class="n">dur_days</span> <span class="p">)</span>    <span class="o">&amp;&amp;</span> 
+ <span class="n">field_null</span> <span class="p">(</span> <span class="n">interval</span><span class="o">.</span><span class="n">dur_hours</span> <span class="p">)</span>   <span class="o">&amp;&amp;</span>
+ <span class="n">field_null</span> <span class="p">(</span> <span class="n">interval</span><span class="o">.</span><span class="n">dur_minutes</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+ <span class="n">field_null</span> <span class="p">(</span> <span class="n">interval</span><span class="o">.</span><span class="n">dur_seconds</span> <span class="p">)</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">hbeat_sent_if_no_data_received_new</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span> 
+ <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span> <span class="o">&amp;&amp;</span> 
+  <span class="n">is_valid_utctimestamp</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_last_data_received</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> 
+  <span class="n">is_int_message_valid</span> <span class="p">(</span> <span class="n">engine</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">is_state_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> 
+  <span class="n">time_update_received</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_int_msg</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_last_data_received</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_heartbeat_interval</span> <span class="p">)</span> <span class="p">)</span>
+ <span class="o">==&gt;</span> <span class="n">outbound_msg_heartbeat</span> <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="heartbeat-vg6">Heartbeat VG.6</h3>
+
+<p>“Heartbeats issued as the result of <code class="highlighter-rouge">Test Request</code> must contain the <code class="highlighter-rouge">TestReqID</code> transmitted in the <code class="highlighter-rouge">Test Request</code> message. This is useful to verify that the Heartbeat is the result of the <code class="highlighter-rouge">Test Request</code> and not as the result of a regular timeout.”</p>
+
+<p>Note: that the sequence number of the <code class="highlighter-rouge">TestRequest</code> message must be correct so that the state does not transition into <code class="highlighter-rouge">Recovery</code>.</p>
+
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">msg_is_test_request_id</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">tr_id</span><span class="o">,</span> <span class="n">seq_num</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">match</span> <span class="n">m</span> <span class="k">with</span> 
+ <span class="o">|</span> <span class="nc">None</span>  <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
+ <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+ <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="n">seq_num</span> <span class="o">=</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_header</span><span class="o">.</span><span class="n">h_msg_seq_num</span> <span class="o">&amp;&amp;</span> <span class="p">(</span>
+  <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span> 
+  <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">admin_msg</span>  <span class="o">-&gt;</span> <span class="p">(</span>
+   <span class="k">match</span> <span class="n">admin_msg</span> <span class="k">with</span> 
+   <span class="o">|</span> <span class="nc">Full_Msg_Test_Request</span> <span class="n">data</span> <span class="o">-&gt;</span> <span class="n">data</span><span class="o">.</span><span class="n">test_req_id</span> <span class="o">=</span> <span class="n">tr_id</span>
+   <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="p">)</span>
+  <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="p">)</span>
+ <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">correct_hbeat_sent</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">tr_id</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+ <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
+   <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span> 
+   <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+    <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span> 
+    <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">admin_msg</span>  <span class="o">-&gt;</span> <span class="p">(</span>
+     <span class="k">match</span> <span class="n">admin_msg</span> <span class="k">with</span> 
+     <span class="o">|</span> <span class="nc">Full_Msg_Hearbeat</span> <span class="n">data</span> <span class="o">-&gt;</span>  <span class="p">(</span>
+      <span class="k">match</span> <span class="n">data</span><span class="o">.</span><span class="n">hb_test_req_id</span> <span class="k">with</span> 
+      <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+      <span class="o">|</span> <span class="nc">Some</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">tr_id</span>
+     <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+   <span class="p">)</span>
+  <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+ <span class="p">)</span>
+ <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="kr">verify</span> <span class="n">heartbeat_has_correct_id</span> <span class="p">(</span> <span class="n">test_req_id</span><span class="o">,</span> <span class="n">engine</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+ <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span> 
+ <span class="p">(</span> <span class="n">test_req_id</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> 
+   <span class="n">engine</span><span class="o">.</span><span class="n">incoming_int_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="o">&amp;&amp;</span> 
+   <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span> <span class="o">&amp;&amp;</span> 
+   <span class="n">engine</span><span class="o">.</span><span class="n">fe_application_up</span> <span class="o">&amp;&amp;</span> 
+   <span class="n">msg_is_test_request_id</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_fix_msg</span><span class="o">,</span> <span class="n">test_req_id</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_seq_num</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">)</span>
+    <span class="o">==&gt;</span> <span class="n">correct_hbeat_sent</span> <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span><span class="o">,</span> <span class="n">test_req_id</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+    
+    
+    <h2 class="internalLink-padding"  id=logonMessages ><p>Logon Messages</p>
+</h2>
+    
+    <p>This section describes verification goals for Logon messages.</p>
+<h3 id="logon-vg1">Logon VG.1</h3>
+
+<p>“The logon message must be the first message sent by the application requesting to initiate a FIX session.”</p>
+
+<p>Note: we augment this with requirement that the engine correctly sets the acceptor/initiator flag.</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">incoming_int_create_session</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">targetID</span> <span class="o">:</span> <span class="n">fix_engine_int_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">None</span>      <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span>  <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">CreateSession</span> <span class="n">data</span>    <span class="o">-&gt;</span> <span class="n">data</span><span class="o">.</span><span class="n">dest_comp_id</span> <span class="o">=</span> <span class="n">targetID</span>
+    <span class="o">|</span> <span class="n">_</span>                     <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">state_is_init</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">incoming_seq_num</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">outgoing_seq_num</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_initiator</span> <span class="o">=</span> <span class="nc">None</span> <span class="o">&amp;&amp;</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">NoActiveSession</span> <span class="o">&amp;&amp;</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_status</span> <span class="o">=</span> <span class="nc">Normal</span> <span class="o">&amp;&amp;</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_history</span> <span class="o">=</span> <span class="bp">[]</span> <span class="o">&amp;&amp;</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_cache</span> <span class="o">=</span> <span class="bp">[]</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">outbound_msg_logon</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">targetID</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">None</span>      <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span>  <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+    <span class="k">let</span> <span class="n">correct_target_id</span> <span class="o">=</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_header</span><span class="o">.</span><span class="n">h_target_comp_id</span> <span class="o">=</span> <span class="n">targetID</span> <span class="k">in</span>
+    <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">Full_FIX_App_Msg</span> <span class="n">_</span>        <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">amsg</span>   <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">amsg</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">Full_Msg_Logon</span> <span class="n">_</span>          <span class="o">-&gt;</span> <span class="n">correct_target_id</span>
+    <span class="o">|</span> <span class="n">_</span>                         <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span>             <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="n">verify</span> <span class="n">logon_msg_is_first</span> <span class="p">(</span> <span class="n">engine</span><span class="o">,</span> <span class="n">targetID</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+    <span class="p">(</span> <span class="n">state_is_init</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+    <span class="n">incoming_int_create_session</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_int_msg</span><span class="o">,</span> <span class="n">targetID</span> <span class="p">)</span> <span class="p">)</span> <span class="o">==&gt;</span>
+     <span class="p">(</span> <span class="n">outbound_msg_logon</span> <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span><span class="o">,</span> <span class="n">targetID</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+     <span class="n">engine'</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">LogonInitiated</span> <span class="o">&amp;&amp;</span>
+     <span class="n">engine'</span><span class="o">.</span><span class="n">fe_initiator</span> <span class="o">=</span> <span class="nc">Some</span> <span class="bp">true</span><span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="logon-vg2">Logon VG.2</h3>
+
+<p>“The session acceptor must be prepared to immediately begin processing messages after receipt of the Logon. The session initiator can choose to begin transmission of FIX messages before receipt of the confirmation Logon, however it is recommended that normal message delivery wait until after the return Logon is received to accommodate encryption key negotiation.”</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="c">(* Logon VG2.1 *)</span>
+<span class="k">let</span> <span class="n">waiting_for_logon_ack</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">LogonInitiated</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">int_app_msg_exists</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">fix_engine_int_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">None</span>      <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="o">|</span> <span class="nc">Some</span> <span class="n">_</span>    <span class="o">-&gt;</span> <span class="bp">true</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">no_msg_sent_until_logon_acked</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+    <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">LogonInitiated</span> <span class="o">&amp;&amp;</span> <span class="n">int_app_msg_exists</span> <span class="p">(</span> <span class="n">engine'</span> <span class="p">))</span>
+    <span class="o">==&gt;</span>
+    <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="p">)</span>
+<span class="p">;;</span>
+
+<span class="c">(* Logon VG2.2 *)</span>
+<span class="k">let</span> <span class="n">incoming_logon_ack</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">self_comp_id</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="k">let</span> <span class="n">valid_header</span> <span class="o">=</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_header</span><span class="o">.</span><span class="n">h_target_comp_id</span> <span class="o">=</span> <span class="n">self_comp_id</span> <span class="k">in</span>
+        <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
+        <span class="o">|</span> <span class="nc">Full_FIX_App_Msg</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+        <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">amsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+            <span class="k">match</span> <span class="n">amsg</span> <span class="k">with</span>
+            <span class="o">|</span> <span class="nc">Full_Msg_Logon</span> <span class="n">data</span> <span class="o">-&gt;</span> <span class="n">valid_header</span>
+            <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+         <span class="p">)</span>
+     <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="n">verify</span> <span class="n">receive_logon_ack</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+    <span class="p">(</span> <span class="n">incoming_logon_ack</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_fix_msg</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_comp_id</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+        <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">LogonInitiated</span> <span class="o">&amp;&amp;</span>
+        <span class="n">engine</span><span class="o">.</span><span class="n">fe_cache</span> <span class="o">=</span> <span class="bp">[]</span> <span class="o">&amp;&amp;</span>
+        <span class="n">is_state_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="o">==&gt;</span>
+    <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="logon-vg3">Logon VG.3</h3>
+
+<p>“After authentication, the initiator and acceptor must synchronize their messages through interrogation of the <code class="highlighter-rouge">MsgSeqNum</code> field before sending any queued or new messages. A comparison of the <code class="highlighter-rouge">MsgSeqNum</code> in the Logon message to the internally monitored next expected sequence number will indicate any message gaps. Likewise, the initiator can detect gaps by comparing the acknowledgment Logon message’s MsgSeqNum to the next expected value. The section on message recovery later in this document deals with message gap handling.”</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">logon_msg_out_of_sequence</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="bp">true</span>
+<span class="p">;;</span>
+
+<span class="n">verify</span> <span class="n">when_gap_detected_request_is_sent</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+
+    <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+
+    <span class="n">logon_msg_out_of_sequence</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span>
+        <span class="o">==&gt;</span>
+    <span class="p">(</span> <span class="n">test_request_sent</span> <span class="p">(</span> <span class="n">engine'</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">engine'</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">Recovery</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="logon-vg4">Logon VG.4</h3>
+
+<p>“If the session acceptor has chosen to change the session encryption key, the session initiator must send a third Logon back to the other side in order to acknowledge the key change request. This also allows the session acceptor to know when the session initiator has started to encrypt using the new session key. Both parties are responsible for infinite loop detection and prevention during this phase of the session.”</p>
+
+<p>Notes: we break up the statement into the following VGs:</p>
+<ul>
+  <li>4.1 - If a confirmation Logon is received with a different encryption key, then another Logon is sent back with the same key. Also, we increment the ‘fe_num_logons_sent’ counter.</li>
+  <li>4.2 - When the engine attempts to send out a Logon message when the count is violated, it would transition into error mode with status change.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">received_logon_diff_key</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">self_comp_id</span><span class="o">,</span> <span class="n">encrypt_method</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">fix_encryption_method</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+    <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="k">let</span> <span class="n">valid_header</span> <span class="o">=</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_header</span><span class="o">.</span><span class="n">h_target_comp_id</span> <span class="o">=</span> <span class="n">self_comp_id</span> <span class="k">in</span>
+        <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
+        <span class="o">|</span> <span class="nc">Full_FIX_App_Msg</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+        <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">amsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+            <span class="k">match</span> <span class="n">amsg</span> <span class="k">with</span>
+            <span class="o">|</span> <span class="nc">Full_Msg_Logon</span> <span class="n">data</span> <span class="o">-&gt;</span> <span class="n">valid_header</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">ln_encrypt_method</span> <span class="o">=</span> <span class="n">encrypt_method</span> <span class="p">)</span>
+            <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+         <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">logon_sent_out</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">encrypt_method</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="n">fix_encryption_method</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+    <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
+        <span class="o">|</span> <span class="nc">Full_FIX_App_Msg</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+        <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">amsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+            <span class="k">match</span> <span class="n">amsg</span> <span class="k">with</span>
+            <span class="o">|</span> <span class="nc">Full_Msg_Logon</span> <span class="n">data</span> <span class="o">-&gt;</span> <span class="n">data</span><span class="o">.</span><span class="n">ln_encrypt_method</span> <span class="o">=</span> <span class="n">encrypt_method</span>
+            <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+         <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="c">(** Logon VG.4.1 *)</span>
+<span class="n">verify</span> <span class="n">encrypt_key_different_logon_sent</span> <span class="p">(</span> <span class="n">engine</span><span class="o">,</span> <span class="n">new_encrypt_method</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="o">*</span> <span class="n">fix_encryption_method</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+    <span class="p">(</span>   <span class="n">engine</span><span class="o">.</span><span class="n">fe_cache</span> <span class="o">=</span> <span class="bp">[]</span> <span class="o">&amp;&amp;</span>
+        <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">LogonInitiated</span> <span class="o">&amp;&amp;</span>
+        <span class="n">engine</span><span class="o">.</span><span class="n">fe_encrypt_method</span> <span class="o">&lt;&gt;</span> <span class="n">new_encrypt_method</span> <span class="o">&amp;&amp;</span>
+        <span class="n">received_logon_diff_key</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_fix_msg</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_comp_id</span><span class="o">,</span> <span class="n">new_encrypt_method</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+        <span class="n">engine</span><span class="o">.</span><span class="n">fe_num_logons_sent</span> <span class="o">&lt;</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_max_num_logons_sent</span>
+    <span class="p">)</span> <span class="o">==&gt;</span> <span class="p">(</span>
+        <span class="n">logon_sent_out</span> <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span><span class="o">,</span> <span class="n">new_encrypt_method</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+        <span class="n">engine'</span><span class="o">.</span><span class="n">fe_encrypt_method</span> <span class="o">=</span> <span class="n">new_encrypt_method</span> <span class="o">&amp;&amp;</span>
+        <span class="n">engine'</span><span class="o">.</span><span class="n">fe_num_logons_sent</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_num_logons_sent</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">;;</span>
+
+<span class="c">(** Logon VG.4.2 *)</span>
+<span class="n">verify</span> <span class="n">max_num_logons_breached_error</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+    <span class="p">(</span> <span class="n">received_logon_diff_key</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+        <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_num_logons_sent</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_max_num_logons_sent</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="o">==&gt;</span>
+    <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">Error</span> <span class="o">&amp;&amp;</span>
+        <span class="n">engine'</span><span class="o">.</span><span class="n">fe_curr_status</span> <span class="o">=</span> <span class="nc">MaxNumLogonMsgsViolated</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="logon-vg5">Logon VG.5</h3>
+
+<blockquote>
+  <p><em>“<code class="highlighter-rouge">NextExpectedMsgSeqNum (789)</code> is used as follows:</em>
+<em>In its Logon request the session initiator supplies in <code class="highlighter-rouge">NextExpectedMsgSeqNum (789)</code> the value next expected from the session acceptor in MsgSeqNum (34). The outgoing header MsgSeqNum (34) of the Logon request is assigned the next-to-be-assigned sequence number as usual.</em></p>
+</blockquote>
+
+<p>The session acceptor validates the Logon request including that NextExpectedMsgSeqNum (789) does not represent a gap. It then constructs its Logon response with NextExpectedMsgSeqNum (789) containing the value next expected from the session initiator in MsgSeqNum (34) having incremented the number above the Logon request if that was the sequence expected. The outgoing header MsgSeqNum (34) is constructed as usual. The session initiator waits to begin sending application messages until it receives the Logon response. When it is received the initiator validates the response including that NextExpectedMsgSeqNum (789) does not represent a gap.</p>
+
+<p>Both sides react to NextExpectedMsgSeqNum (789) from its counterparty thus:</p>
+<ul>
+  <li>If equal to the next-to-be-assigned sequence, proceed sending new messages beginning with that number.</li>
+  <li>If lower than the next-to-be-assigned sequence, ‘recover’ (see ‘Message Recovery’) all messages from the the last message delivered prior to this Logon through the specified <code class="highlighter-rouge">NextExpectedMsgSeqNum (789)</code> sending them in order; then Gap Fill over the sequence number used in Logon and proceed sending newly queued messages with a sequence number one higher than the original Logon.</li>
+  <li>If higher than the next-to-be-assigned sequence, send Logout to abort the session.</li>
+</ul>
+
+<p>Neither side should generate a ResendRequest based on MsgSeqNum (34) of the incoming Logon message but should expect any gaps to be filled automatically. If a gap is produced by the Logon message MsgSeqNum (34), the receive logic should expect the gap to be filled automatically prior to receiving any messages with sequences above the gap.”</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">is_next_expected_msg_seq_num_present</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">next_seq_num</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+    <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
+        <span class="o">|</span> <span class="nc">Full_FIX_App_Msg</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+        <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">amsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+            <span class="k">match</span> <span class="n">amsg</span> <span class="k">with</span>
+            <span class="o">|</span> <span class="nc">Full_Msg_Logon</span> <span class="n">data</span> <span class="o">-&gt;</span>  <span class="p">(</span>
+                <span class="k">match</span> <span class="n">data</span><span class="o">.</span><span class="n">ln_next_expected_msg_seq_num</span> <span class="k">with</span>
+                <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+                <span class="o">|</span> <span class="nc">Some</span> <span class="n">seq_num</span> <span class="o">-&gt;</span> <span class="n">seq_num</span> <span class="o">=</span> <span class="n">next_seq_num</span>
+            <span class="p">)</span>
+            <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+         <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span></code></pre></figure>
+
+    
+    
+    <h2 class="internalLink-padding"  id=base ><p>Base</p>
+</h2>
+    
+    <h3 id="base-vg1">Base VG.1</h3>
+
+<blockquote>
+  <p><em>When in ActiveSession (normal mode) and receiving a non grabled and non session-level</em>
+<em>rejected message and the application is down. Such message would be sent back with a</em>
+<em>Business Reject.</em></p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">msg_is_biz_reject</span> <span class="o">=</span> <span class="k">function</span>  <span class="o">|</span> <span class="nc">Some</span> <span class="p">(</span><span class="nc">ValidMsg</span> <span class="n">msg_data</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="k">begin</span> <span class="k">match</span> <span class="n">msg_data</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
+      <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="p">(</span><span class="nc">Full_Msg_Business_Reject</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+      <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="k">end</span>
+  <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">msg_is_valid</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="p">(</span><span class="nc">ValidMsg</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+  <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="n">verify</span> <span class="n">app_down_get_biz_reject</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">incoming_biz_rejected</span> <span class="o">=</span> <span class="n">msg_is_valid</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_fix_msg</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">no_incoming_msgs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_int_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">state'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">result_biz_reject</span> <span class="o">=</span> <span class="n">msg_is_biz_reject</span> <span class="p">(</span> <span class="n">state'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_cache</span> <span class="o">=</span> <span class="bp">[]</span>
+    <span class="o">&amp;&amp;</span> <span class="n">incoming_biz_rejected</span> <span class="o">&amp;&amp;</span> <span class="n">not</span> <span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">fe_application_up</span><span class="p">)</span>
+    <span class="o">&amp;&amp;</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span> <span class="o">&amp;&amp;</span> <span class="n">no_incoming_msgs</span> <span class="p">)</span>
+  <span class="o">==&gt;</span>
+  <span class="n">result_biz_reject</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="base-vg2">Base VG.2</h3>
+
+<p>From Vol 2. Page 9:</p>
+<blockquote>
+  <p><em>In *ALL</em> cases except the Sequence Reset - message, the FIX session*
+<em>should be terminated if the incoming sequence number is less than expected and the</em>
+<em>PossDupFlag is not set. A Logout message with some descriptive text should be sent to the</em>
+<em>other side before closing the session.</em></p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">poss_dup_flag_not_set</span> <span class="p">(</span> <span class="n">flag</span> <span class="o">:</span> <span class="kt">bool</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="n">flag</span> <span class="o">=</span> <span class="nc">None</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">incoming_msg_not_valid</span> <span class="p">(</span> <span class="n">msg</span><span class="o">,</span> <span class="n">state_inc_seq_num</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="p">(</span><span class="nc">ValidMsg</span> <span class="n">vmsg</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="k">let</span> <span class="n">seq_num_incorrect</span> <span class="o">=</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_header</span><span class="o">.</span><span class="n">h_msg_seq_num</span> <span class="o">&lt;</span> <span class="n">state_inc_seq_num</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="n">msg_is_seq_reset</span> <span class="o">=</span>
+      <span class="k">begin</span> <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
+        <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="p">(</span><span class="nc">Full_Msg_Sequence_Reset</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+        <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+      <span class="k">end</span>
+    <span class="k">in</span>
+    <span class="p">(</span><span class="n">seq_num_incorrect</span> <span class="o">&amp;&amp;</span> <span class="n">msg_is_seq_reset</span>
+     <span class="o">&amp;&amp;</span> <span class="n">poss_dup_flag_not_set</span> <span class="p">(</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_header</span><span class="o">.</span><span class="n">h_poss_dup_flag</span> <span class="p">))</span>
+  <span class="o">|</span> <span class="n">_</span>   <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">msg_is_logout</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="p">(</span><span class="nc">ValidMsg</span> <span class="n">vmsg</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="k">begin</span> <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
+      <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="p">(</span><span class="nc">Full_Msg_Logoff</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+      <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="k">end</span>
+  <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="n">verify</span> <span class="n">less_seq_num_logout</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">no_incoming_int_msgs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_int_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">state_good</span> <span class="o">=</span> <span class="n">not</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_application_up</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">state'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">in</span>
+  <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_application_up</span> <span class="o">&amp;&amp;</span> <span class="n">no_incoming_int_msgs</span> <span class="o">&amp;&amp;</span> <span class="n">state_good</span> <span class="o">&amp;&amp;</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_cache</span> <span class="o">=</span> <span class="bp">[]</span> <span class="o">&amp;&amp;</span>
+    <span class="n">incoming_msg_not_valid</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_fix_msg</span><span class="o">,</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">)</span>
+  <span class="o">==&gt;</span> <span class="n">msg_is_logout</span> <span class="p">(</span> <span class="n">state'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="base-vg3">Base VG.3</h3>
+
+<blockquote>
+  <p><em>Messages that are garbled will be ignored (sequence counter will not be incremented).</em></p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">incoming_msg_garbled</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="p">(</span><span class="nc">Garbled</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+  <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="n">verify</span> <span class="n">garbled_are_ignored</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">state'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">msg_ignored</span> <span class="o">=</span> <span class="p">(</span> <span class="n">state'</span> <span class="o">=</span>  <span class="p">{</span> <span class="n">state</span> <span class="k">with</span> <span class="n">incoming_fix_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="p">}</span> <span class="p">)</span> <span class="k">in</span> 
+  <span class="k">let</span> <span class="n">no_internal_msgs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_int_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">no_cache_replay_or_retransmit</span> <span class="o">=</span> <span class="n">not</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">CacheReplay</span> <span class="o">||</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">Retransmit</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="p">(</span> <span class="n">incoming_msg_garbled</span> <span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">incoming_fix_msg</span><span class="p">)</span>
+    <span class="o">&amp;&amp;</span> <span class="n">no_cache_replay_or_retransmit</span>
+    <span class="o">&amp;&amp;</span> <span class="n">no_internal_msgs</span> <span class="p">)</span>
+  <span class="o">==&gt;</span> <span class="n">msg_ignored</span>
+<span class="p">;;</span></code></pre></figure>
+
+<h3 id="base-vg4">Base VG.4</h3>
+
+<blockquote>
+  <p><em>Session rejected messages are rejected with the right reason and counter is incremented.</em></p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">incoming_msg_session_reject</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="p">(</span><span class="nc">SessionRejectedMsg</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+  <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">msg_is_reject</span> <span class="o">=</span> <span class="k">function</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="p">(</span><span class="nc">ValidMsg</span> <span class="n">vmsg</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="k">begin</span> <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
+      <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="p">(</span><span class="nc">Full_Msg_Reject</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">true</span>
+      <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="k">end</span>
+  <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="c">(** Note that it's important to remember that a message may only be rejected if we're in ActiveSession state. 
+    It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or 
+    Retransmit modes. *)</span>
+<span class="n">verify</span> <span class="n">session_rejects_are_rejected</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">no_incoming_int_msgs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_int_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">incoming_rejected</span> <span class="o">=</span> <span class="n">incoming_msg_session_reject</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_fix_msg</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">state'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">msg_rejected</span> <span class="o">=</span> <span class="n">msg_is_reject</span> <span class="p">(</span> <span class="n">state'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">seq_num_updated</span> <span class="o">=</span> <span class="p">(</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">outgoing_seq_num</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">=</span> <span class="n">state'</span><span class="o">.</span><span class="n">outgoing_seq_num</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="p">(</span> <span class="n">no_incoming_int_msgs</span> <span class="o">&amp;&amp;</span> <span class="n">incoming_rejected</span> <span class="o">&amp;&amp;</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span><span class="p">)</span>
+  <span class="o">==&gt;</span>
+  <span class="p">(</span> <span class="n">msg_rejected</span> <span class="o">&amp;&amp;</span> <span class="n">seq_num_updated</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+    
+    
+    <h2 class="internalLink-padding"  id=rejectionLogic ><p>Rejection Logic</p>
+</h2>
+    
+    
+
+    
+    
+    <h2 class="internalLink-padding"  id=sequenceNumberLogic ><p>Sequence Number Logic</p>
+</h2>
+    
+    
+
+    
+    
+    <h2 class="internalLink-padding"  id=sequenceResetMessage ><p>Sequence Reset Messages</p>
+</h2>
+    
+    <h3 id="seq_reset-vg1">Seq_Reset VG.1</h3>
+
+<p>“When the incoming sequence number does not match the expected corrective processing is required. Note that the <code class="highlighter-rouge">SeqReset-Reset</code> message (used only to recover from a disaster vs. normal resend request processing) is an exception to this rule as it should be processed without regards to its <code class="highlighter-rouge">MsgSeqNum</code>.”</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">inc_msg_seqreset_reset</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">m</span> <span class="k">with</span> 
+    <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span> 
+        <span class="o">|</span> <span class="nc">Full_FIX_App_Msg</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+        <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">amsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+            <span class="k">match</span> <span class="n">amsg</span> <span class="k">with</span> 
+            <span class="o">|</span> <span class="nc">Full_Msg_Sequence_Reset</span> <span class="n">data</span> <span class="o">-&gt;</span> <span class="p">(</span>
+                <span class="c">(* A missing flag or flag = No tells us that message of the Reset mode. *)</span>
+                <span class="k">match</span> <span class="n">data</span><span class="o">.</span><span class="n">seqr_gap_fill_flag</span> <span class="k">with</span> <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="nc">Some</span> <span class="n">f</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="nc">FIX_No</span>
+             <span class="p">)</span>
+            <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+         <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">state_updated</span> <span class="p">(</span> <span class="n">engine</span><span class="o">,</span> <span class="n">new_seq_num</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">incoming_seq_num</span> <span class="o">=</span> <span class="n">new_seq_num</span> <span class="o">&amp;&amp;</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span> <span class="o">&amp;&amp;</span> 
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_cache</span> <span class="o">=</span> <span class="bp">[]</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">out_of_seq_seqreset_processed</span> <span class="p">(</span> <span class="n">engine</span><span class="o">,</span> <span class="n">new_seq_num</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span> 
+    <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+    <span class="p">(</span>   <span class="n">inc_msg_seqreset_reset</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_fix_msg</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> 
+        <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">&lt;&gt;</span> <span class="nc">NoActiveSession</span> <span class="o">&amp;&amp;</span> 
+        <span class="n">engine</span><span class="o">.</span><span class="n">fe_cache</span> <span class="o">=</span> <span class="bp">[]</span> 
+    <span class="p">)</span> <span class="o">==&gt;</span> <span class="p">(</span>
+        <span class="n">state_updated</span> <span class="p">(</span> <span class="n">engine'</span><span class="o">,</span> <span class="n">new_seq_num</span> <span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+    
+    
+</div>
+
+<!-- Sidebar - pageSbar.html -->
+<!-- <div class="sidebar-right">
+    <div class="sidebar-right__menu">
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h1" href="#">Model Verification</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="#overviewAndStatus">Overview and Status</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="#hearbeatMessages">Heartbeat Messages</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="#logonMessages">Logon Messages</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="#base">Base</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="#rejectionLogic">Rejection Logic</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="#sequenceNumberLogic">Sequence Number Logic</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="#sequenceResetMessage">Sequence Reset Messages</a>
+        
+        
+        
+    </div>
+</div> -->
+            </article>
+        </main>
+        </script>
+<footer class="footer">
+	<a class="copyrights" href="http://imandra.ai">&#9400; 2020 Imandra Inc. All rights reserved.</a>
+</footer>
+<script type="text/javascript"> docsearch({
+     apiKey: 'ff3a61a82b58783e62ebfbf51e50b0bc',
+     indexName: 'imandra',
+     inputSelector: '#search',
+     debug: false // Set debug to true if you want to inspect the dropdown
+ });
+</script>
+
+    </div>
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-116937440-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-116937440-1');
+</script>
+    
+</body>
+
+</html>

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html>
+<head>
+	  <meta charset="utf-8">
+	  <meta http-equiv="x-ua-compatible" content="ie=edge">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	  <title>Documentation</title>
+
+	  <link rel="shortcut icon" type="image/x-icon" href="/fix-engine/favicon.ico">
+	  <link rel="stylesheet" href="/fix-engine/css/main.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather+Sans:300,300i,400,400i%7CMerriweather:300,300i,400,400i%7CRoboto+Slab:300,300i,400,400i">
+
+    <link rel="canonical" href="https://docs.imandra.ai//fix-engine/documentation/">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+	  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+	  <script type="text/javascript" src="/fix-engine/jekyll-resources/assets/js/copyFunctions.js"></script>
+
+    <script src="https://kit.fontawesome.com/4d352d3410.js" crossorigin="anonymous"></script>
+</head>
+
+
+<body>
+    <!-- <div class="background">
+        </div> -->
+    <div class="page-container">
+        <main class="main-content-column">
+            <header class="header">
+    <div class="top-row-container">
+
+        <div class="top-row">
+            <div id="toggler--left" class="side__left-menu-toggler">
+                <div class="side__toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <p class="side__toggle-text">Docs</p>
+            </div>
+
+            <div class="side__logo-container">
+                <a class="side__logo-link" href="https://docs.imandra.ai/">
+                    <img class="side__logo " src="/fix-engine/jekyll-resources/assets/img/imandra-gradient-logo-docs.svg" alt="Imandra Logo">
+                    <img class="side__logo--min " src="/fix-engine/jekyll-resources/assets/img/imandra-gradient-logo-min.svg" alt="Imandra Logo">
+                </a>
+            </div>
+
+            <div id="toggler--right" class="side__right-menu-toggler">
+                <p class="side__toggle-text">Pages</p>
+                <div class="side__toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <nav class="side__nav-container side__nav-container--hidden">
+                <ul class="side__nav-list" id="side-nav-menu">
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                            <a class="side__nav-link" href="/">Documentation Home</a>
+                    </li>
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                            <a class="side__nav-link" href="/imandra-docs">Imandra Core</a>
+                    </li>
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                            <a class="side__nav-link" href="/idf-py">Py IDF</a>
+                    </li>
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                            <a class="side__nav-link" href="/ipl">Imandra Protocol Language</a>
+                    </li>
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                            <a class="side__nav-link" href="/imandra-rule-synth">Imandra Rule Synth</a>
+                    </li>
+                    
+                    
+                    <li class="side__nav-list-item">
+                        
+                        <a class="side__nav-link side__nav-link--active" href="/fix-engine">FIX Engine</a>
+                        <ul class="side__nav-list--sub-level-1">
+                            
+                            
+                                    
+                            
+                            
+                            
+                            
+                            
+                                    
+                                        
+                                    <li class="side__nav-list-item--sub-level-1 side__nav-list--sub-level-1--empty"><a class="side__nav-link" href="/fix-engine/references/">Formal Verification</a>
+                                        
+                                        
+                                        <ul class="side__nav-list--sub-level-2">
+                                            
+                                            
+                                            
+                                            
+                                        </ul>
+                                    </li>
+                                    
+                                    
+                            
+                            
+                            
+                            
+                            
+                                    
+                                        
+                                    <li class="side__nav-list-item--sub-level-1"><a class="side__nav-link" href="/fix-engine/testSuite/">Test Suite</a>
+                                        
+                                        
+                                        <ul class="side__nav-list--sub-level-2">
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/testSuite/#regionDecomposition">Region Decomposition
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/testSuite/#testSuiteGeneration">Test Suite Generation
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/testSuite/#currentTestPack">Current Test Pack
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                        </ul>
+                                    </li>
+                                    
+                                    
+                            
+                            
+                            
+                            
+                            
+                            
+                                
+                            <li class="side__nav-list-item--sub-level-1"><a class="side__nav-link side__nav-link--active" href="/fix-engine/documentation/">Documentation
+</a>
+                                
+                                
+                                <ul class="side__nav-list--sub-level-2 side__nav-list--sub-level-2--active">
+                                    
+                                            
+                                            
+                                            
+                                            
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/documentation/#buildingInstructions">Building Instructions
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/documentation/#modellingStateMachines">Modelling State Machines
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/documentation/#MessageLifecycle">Message Lifecycle
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/documentation/#printersParsers">Printers and Parsers
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/_pages/doc/index.html" target="_blank">Technical Documentation</a></li>
+                                            
+                                        </ul>
+                                    </li>
+                                    
+                                    
+                            
+                            
+                            
+                            
+                            
+                                    
+                                        
+                                    <li class="side__nav-list-item--sub-level-1"><a class="side__nav-link" href="/fix-engine/modelVerification/">Model Verification</a>
+                                        
+                                        
+                                        <ul class="side__nav-list--sub-level-2">
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#overviewAndStatus">Overview and Status
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#hearbeatMessages">Heartbeat Messages
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#logonMessages">Logon Messages
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#base">Base
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#rejectionLogic">Rejection Logic
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#sequenceNumberLogic">Sequence Number Logic
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                            
+                                            <li class="side__nav-list-item--sub-level-2 side__nav-list--sub-level-2--empty"><a class="side__nav-link--within-page" href="/fix-engine/modelVerification/#sequenceResetMessage">Sequence Reset Messages
+</a>
+                                                
+                                                
+                                            </li>
+                                            
+                                            
+                                            
+                                        </ul>
+                                    </li>
+                                    
+                                    
+                                </ul>
+                            </li>
+                            
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+
+    <div class="template-header">
+        <div class="top-bar">
+            <div class="side__nav-search">
+                <input id="search" type="search" placeholder="Search">
+                <div class="side__nav-search-icon">
+                    <i class="fa fa-search"></i>
+                </div>
+            </div>
+
+            <nav class="top-bar__nav-container" id="top-menu">
+                <a href="#" class="top-bar__toggle">≡</a>
+                <div class="top-nav-bar__group ">
+                    <div class="top-nav-bar__nav nav-bar--blue top-nav-bar__nav--hidden">
+                        <ul class="top-nav-bar__links top-nav-bar__links--hidden-smaller-than-tablet">
+
+
+                            
+                            <li class="top-nav-bar__item top-nav-bar__item--flex">
+                                <a href="https://www.imandra.ai/" class="top-nav-bar__link">Home</a>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--applications">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Applications</p>
+                                <ul class="dropdown-content dropdown-content--applications">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--fv.svg" alt="Formal Verification" title="Formal Verification Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/app-fv">Formal Verification</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--mbse.svg" alt="Model-Based Software Engineering" title="Model-Based Software Engineering Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/app-mbse">Model-Based Software Engineering</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--si.svg" alt="IPL Demo Gallery" title="System Integration Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/app-si">System Integration</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--explore">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Explore</p>
+                                <ul class="dropdown-content dropdown-content--explore">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--core.svg" alt="Try Imandra" title="Try Imandra Icon">
+                                        <a class="dropdown__link" href="https://try.imandra.ai/">Try Online</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--demos.svg" alt="Imandra Demo Gallery" title="Imandra Demo Gallery Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/demos">Demo Gallery</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--demos.svg" alt="IPL Demo Gallery" title="IPL Gallery Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/ipl-gallery">IPL Gallery</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--docs">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Docs</p>
+                                <ul class="dropdown-content dropdown-content--docs">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--docs.svg" alt="Docs" title="Docs Icon">
+                                        <a class="dropdown__link" href="https://docs.imandra.ai/imandra-docs/">Imandra Core</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--docs.svg" alt="Docs" title="Docs Icon">
+                                        <a class="dropdown__link" href="https://docs.imandra.ai/idf-py/">PYIDF</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--docs.svg" alt="Docs" title="Docs Icon">
+                                        <a class="dropdown__link" href="https://docs.imandra.ai/ipl/">IPL</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--docs.svg" alt="Docs" title="Docs Icon">
+                                        <a class="dropdown__link" href="https://docs.imandra.ai/imandra-rule-synth/">Rule Synthesis</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--docs.svg" alt="Docs" title="Docs Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://docs.imandra.ai/fix-engine/">Fix Engine</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--products">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Products</p>
+                                <ul class="dropdown-content dropdown-content--products">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--core.svg" alt="Imandra Core" title="Imandra Core Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/core">Imandra Core</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--ipl.svg" alt="Imandra Protocol Language" title="Imandra Protocol Language Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/ipl-product">Imandra Protocol Language</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--systems.svg" alt="Imandra Markets - Systems" title="Imandra Markets - Systems Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/systems">Imandra Markets - Systems</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--connectivity.svg" alt="Imandra Markets - Connectivity" title="Imandra Markets - Connectivity Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/connectivity">Imandra Markets - Connectivity</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--autopilot.svg" alt="Imandra Markets - Autopilot" title="Imandra Markets - Autopilot Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/autopilot">Imandra Markets - Autopilot</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--industries">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Industries</p>
+                                <ul class="dropdown-content dropdown-content--industries">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--financial.svg" alt="Financial Markets" title="Financial Markets Icon">
+                                        <a class="dropdown__link " href="https://www.imandra.ai/markets">Financial Markets</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--autonomy.svg" alt="Autonomous Systems" title="Autonomous Systems Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/autonomy">Autonomous Systems</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--ml.svg" alt="Machine Learning" title="Machine Learning Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/ml">Machine Learning</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--government.svg" alt="Machine Learning" title="Machine Learning Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/government">Government and defense</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--media">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Media</p>
+                                <ul class="dropdown-content dropdown-content--media">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--media.svg" alt="Media" title="Media Icon">
+                                        <a class="dropdown__link " href="https://www.imandra.ai/media">Media</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--blog.svg" alt="Blog" title="Blog Icon">
+                                        <a class="dropdown__link dropdown__link--last " href="https://medium.com/imandra">Blog</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="top-nav-bar__item top-nav-bar__item--group dropdown--company">
+                                <p class="top-nav-bar__link top-nav-bar__link--group" onclick="">Company</p>
+                                <ul class="dropdown-content dropdown-content--company">
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--about.svg" alt="About" title="About Icon">
+                                        <a class="dropdown__link" href="https://www.imandra.ai/about">About</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--careers.svg" alt=" Careers" title="Careers Icon">
+                                        <a class="dropdown__link dropdown__link--bottom" href="https://www.imandra.ai/careers">Careers</a>
+                                    </li>
+                                    <li class="dropdown__item dropdown__item--with-icon">
+                                        <img class="dropdown__icon" src="/fix-engine/jekyll-resources/assets/img/icon--menu--research.svg" alt="Research" title="Research Icon">
+                                        <a class="dropdown__link dropdown__link--last" href="https://www.imandra.ai/research">Research</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        
+
+        <div class="template-header__image-container">
+            <a class="template-header__image" href="/fix-engine">
+                <img class="site-specific-image" src="/fix-engine/assets/img/site_specific_image_v_2.svg">
+            </a>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        document.getElementById('toggler--left').addEventListener('click', function () {
+            document.querySelector('.side__right-menu-toggler .side__toggle').classList.remove(
+                'side__toggle--active');
+            document.querySelector('.side__left-menu-toggler .side__toggle').classList.toggle(
+                'side__toggle--active');
+            document.getElementsByClassName('side__nav-container')[0].classList.toggle(
+                'side__nav-container--hidden');
+            document.getElementsByClassName('top-nav-bar__nav')[0].classList.add('top-nav-bar__nav--hidden');
+        });
+
+        document.getElementById('toggler--right').addEventListener('click', function () {
+            document.querySelector('.side__left-menu-toggler .side__toggle').classList.remove(
+                'side__toggle--active');
+            document.querySelector('.side__right-menu-toggler .side__toggle').classList.toggle(
+                'side__toggle--active');
+
+            document.getElementsByClassName('side__nav-container')[0].classList.add(
+                'side__nav-container--hidden');
+            document.getElementsByClassName('top-nav-bar__nav')[0].classList.toggle(
+                'top-nav-bar__nav--hidden');
+        });
+    </script>
+    <script type="text/javascript">
+        window.onload = function () {
+            var lastId,
+                sideMenu = $("#side-nav-menu"),
+                topMenu = $("#top-menu")
+            var topMenuHeight = topMenu.outerHeight() + 15,
+                // All list items
+                menuItems = sideMenu.find('a[href^="/fix-engine/documentation/#"]'),
+                // Anchors corresponding to menu items
+                scrollItems = menuItems.map(function () {
+                    var item = $(this).attr("href");
+                    var thisItem = item.substring(item.lastIndexOf("/") + 1, item.length)
+                    var linkedItem = $(thisItem)
+                    if (linkedItem.length) {
+                        return linkedItem;
+                    }
+                });
+
+            // Bind to scroll
+            $(window).scroll(function () {
+                // Get container scroll position
+                var fromTop = $(this).scrollTop() + topMenuHeight;;
+
+                // Get id of current scroll item
+                var cur = scrollItems.map(function () {
+                    if ($(this).offset().top < fromTop)
+                        return this;
+                });
+                cur = cur[cur.length - 1];
+
+                // Get the id of the current element
+
+                var id = cur && cur.length ? cur[0].id : "";
+
+                if (lastId != id) {
+
+                    // Set/remove active class
+                    if (lastId != null) {
+                        thisMenuItem = menuItems.filter('a[href^="/fix-engine/documentation/#' + lastId + '"]')
+                        $(thisMenuItem).removeClass("side__nav-link--within-page--active")
+                    }
+                    lastId = id;
+                    if (id != "") menuItems.filter('a[href^="/fix-engine/documentation/#' + id + '"]').addClass("side__nav-link--within-page--active");
+                }
+
+            });
+        }
+    </script>
+</header>
+            <article class="article__container">
+                
+
+<!--main-content-->
+
+<div class="main-content">
+    
+    
+    
+    <h2 id=documentation><p>Documentation</p>
+</h2>
+    
+    <p>This section contains the details for building and running the implementation, and contains technical details about the source code. Please navigate this section using the menu on the right.</p>
+
+    
+    
+    <h2 class="internalLink-padding"  id=buildingInstructions ><p>Building Instructions</p>
+</h2>
+    
+    <h3 id="building-with-ocaml">Building with OCaml</h3>
+
+<p>We use the following versions of the compiler/packages in order to build the <code class="highlighter-rouge">fix-engine</code> code with OCaml:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">OCaml version 4.01.0
+<span class="nv">lwt</span><span class="o">=</span>2.6.0
+<span class="nv">yojson</span><span class="o">=</span>1.3
+<span class="nv">topkg</span><span class="o">=</span>0.9
+topkg-care<span class="o">=</span>0.9</code></pre></figure>
+
+<p>Currently, the  <code class="highlighter-rouge">fix-engine</code> repository contains two sets of application level messages: the folders <code class="highlighter-rouge">src-protocol-exts</code> and <code class="highlighter-rouge">src-protocol-exts-pp</code> are DSL-generated and contain all the application-level FIX messages that are present in the FIX specification. Folders <code class="highlighter-rouge">src-protocol-exts-vg</code> and <code class="highlighter-rouge">src-protocol-exts-pp-vg</code> are hand-written and contain a small subset of FIX messages – those are used in VGs and examples.</p>
+
+<p>In order to build the code with the “full” set of messages, just type <code class="highlighter-rouge">make</code>. To build with “VGs-compatible” messages, do <code class="highlighter-rouge">make build_vgs</code>.</p>
+<h3 id="testing-with-quickfixjbanzai-client">Testing with quickfixj/banzai client</h3>
+
+<p>The sever executable is built only with the “full” message set. You can start the server with</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">make run_server</code></pre></figure>
+
+<p>The server is listening on port 9880 in the acceptor mode, the default <code class="highlighter-rouge">SenderCompID</code> value is <code class="highlighter-rouge">IMANDRA</code> and the default value for <code class="highlighter-rouge">TargetCompID</code> is <code class="highlighter-rouge">BANZAI</code>.</p>
+
+<p>One can test the server with a “banzai” example client from the QuickfixJ software. Here’s how to checkout and build the QuickfixJ code</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">git clone https://github.com/quickfix-j/quickfixj.git
+<span class="nb">cd </span>quickfixj/
+git checkout QFJ_1_6_x
+vim quickfixj-examples/banzai/src/main/resources/quickfix/examples/banzai/banzai.cfg</code></pre></figure>
+
+<p>Edit the banzai.cfg file, so it looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>default]
+<span class="nv">FileStorePath</span><span class="o">=</span>target/data/banzai
+<span class="nv">ConnectionType</span><span class="o">=</span>initiator
+<span class="nv">SenderCompID</span><span class="o">=</span>BANZAI
+<span class="nv">TargetCompID</span><span class="o">=</span>IMANDRA
+<span class="nv">SocketConnectHost</span><span class="o">=</span>localhost
+<span class="nv">StartTime</span><span class="o">=</span>00:00:00
+<span class="nv">EndTime</span><span class="o">=</span>00:00:00
+<span class="nv">HeartBtInt</span><span class="o">=</span>30
+<span class="nv">ReconnectInterval</span><span class="o">=</span>60
+
+<span class="o">[</span>session]
+<span class="nv">BeginString</span><span class="o">=</span>FIX.4.4
+<span class="nv">SocketConnectPort</span><span class="o">=</span>9880</code></pre></figure>
+
+<p>We build the code with maven (running the test suite takes a lot of time, so we skip it):</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mvn install <span class="nt">-DskipTests</span>  </code></pre></figure>
+
+<p>Finally, we can start the client with:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">java <span class="nt">-jar</span> quickfixj-examples/banzai/target/quickfixj-examples-banzai-1.6.4-SNAPSHOT-standalone.jar</code></pre></figure>
+
+    
+    
+    <h2 class="internalLink-padding"  id=modellingStateMachines ><p>Modelling State Machines</p>
+</h2>
+    
+    <h3 id="introduction">Introduction</h3>
+
+<p>Our model consists of:</p>
+<ul>
+  <li>FIX dictionary definitions</li>
+  <li>State of the engine</li>
+  <li>Transition functions</li>
+  <li>Printers and parsers (generated for the FIX dictionary)</li>
+</ul>
+
+<h3 id="message-types">Message Types</h3>
+
+<h3 id="composition-with-application-model">Composition with Application Model</h3>
+
+    
+    
+    <h2 class="internalLink-padding"  id=MessageLifecycle ><p>Message Lifecycle</p>
+</h2>
+    
+    <p>There are 5 outcomes to an engine/venue model to receiving a message:</p>
+<ul>
+  <li>Ignored - cases when message is malformed (missing or out-of-order important tags, etc).</li>
+  <li>Session reject - pertains to violation of protocol requirements.</li>
+  <li>Business reject - there are 3 categories for such reject:
+    <ol>
+      <li>Venue is down (cannot accept any messages)</li>
+      <li>Message type is not supported by venue</li>
+      <li>Message lacks a field conditionally required by the FIX specification (note that this only applies to fields required by the FIX specification, NOT the custom venue requirements).</li>
+    </ol>
+  </li>
+</ul>
+
+<p>Message-specific reject - when an incoming message’s parameters are inconsistent with the state of the model (there ), it will respond with a rejection through a corresponding message. For example, New Order Single message would be rejected through Execution Report. Section below contains the ‘mapping’ of expected outgoing types of messages.
+Processed - message is accepted by the venue and results in a modified state.</p>
+<h3 id="message-ignored">Message Ignored</h3>
+
+<p>What constitutes a garbled message (message is ignored):</p>
+<ul>
+  <li>BeginString (tag #8)
+    <ul>
+      <li>is not the first tag in a message</li>
+      <li>not of the format 8=FIX.n.m.</li>
+    </ul>
+  </li>
+  <li>BodyLength (tag #9)
+    <ul>
+      <li>is not the second tag in a message</li>
+      <li>is not a properly formatted integer</li>
+      <li>does not contain the correct byte count.</li>
+    </ul>
+  </li>
+  <li>MsgType (tag #35)
+    <ul>
+      <li>is not the third tag in a message.</li>
+      <li>does not have a value</li>
+    </ul>
+  </li>
+  <li>Checksum (tag #10)
+    <ul>
+      <li>is not the last tag of the message</li>
+      <li>does not contain a properly formatted integer</li>
+      <li>is not equal to byte count of the message body
+MsgSeqNum(tag #34)</li>
+      <li>is missing</li>
+      <li>does not contain a properly formatted integer</li>
+    </ul>
+  </li>
+</ul>
+
+<p>If the MsgSeqNum(tag #34) is missing, a logout message should be sent terminating the FIX Connection, as this indicates a serious application error that is likely only circumvented by software modification.</p>
+
+<h3 id="session-reject">Session Reject</h3>
+
+<p>The session reject message should be issued when a message is received but cannot be properly processed due to a session-level rule violation. An example of when a reject may be appropriate would be the receipt of a message with invalid basic data (e.g. MsgType=&amp;) which successfully passes de-encryption, CheckSum and BodyLength checks. As a rule, messages should be forwarded to the trading application for business level rejections whenever possible.</p>
+
+<p>Rejected messages should be logged and the incoming sequence number incremented.</p>
+
+<p>Note: The receiving application should disregard any message that is garbled, cannot be parsed or fails a data integrity check. Processing of the next valid FIX message will cause detection of a sequence gap and a Resend Request will be generated. Logic should be included in the FIX engine to recognize the possible infinite resend loop, which may be encountered in this situation.</p>
+
+<p>Generation and receipt of a Reject message indicates a serious error that may be the result of faulty logic in either the sending or receiving application.</p>
+
+<p>If the sending application chooses to retransmit the rejected message, it should be assigned a new sequence number and sent with PossResend=Y.</p>
+
+<p>Whenever possible, it is strongly recommended that the cause of the failure be described in the Text field (e.g. INVALID DATA - FIELD 35).</p>
+
+<p>If an application-level message received fulfils session-level rules, it should then be processed at a business message-level. If this processing detects a rule violation, a business-level reject should be issued. Many business-level messages have specific “reject” messages, which should be used. All others can be rejected at a business-level via the Business Message Reject message. See Volume 1: “Business Message Reject” message.</p>
+
+<p>Note that in the event a business message is received, fulfils session-level rules, however, the message cannot be communicated to the business-level processing system, a Business Message Reject with BusinessRejectReason = “Application not available at this time” should be issued.</p>
+
+<p>Session Reject Reasons:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td> </td>
+      <td>Invalid tag number</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td> </td>
+      <td>Required tag missing</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td> </td>
+      <td>Tag not defined for this message type</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td> </td>
+      <td>Undefined Tag</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td> </td>
+      <td>Tag specified without a value</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td> </td>
+      <td>Value is incorrect (out of range) for this tag</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td> </td>
+      <td>Incorrect data format for value</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td> </td>
+      <td>Decryption problem</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td> </td>
+      <td>Signature problem</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td> </td>
+      <td>CompID problem</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td> </td>
+      <td>SendingTime accuracy problem</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td> </td>
+      <td>Invalid MsgType</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td> </td>
+      <td>XML Validation error</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td> </td>
+      <td>Tag appears more than once</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td> </td>
+      <td>Tag specified out of required order</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td> </td>
+      <td>Repeating group fields out of order</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td> </td>
+      <td>Incorrect NumInGroup count for repeating group</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td> </td>
+      <td>Non “data” value includes field delimiter (SOH character)</td>
+    </tr>
+    <tr>
+      <td>99</td>
+      <td> </td>
+      <td>Other (Note other session-level rule violations may exist in which case SessionRejectReason of Other may be used and further information may be in Text field.)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="when-to-send-a-session-reject-vs-when-to-ignore-the-message">When to send a session Reject vs. when to ignore the message</h3>
+
+<p>The following excerpt is taken from the Reject message definition within the FIX Protocol specification:
+Note: The receiving application should disregard any message that is garbled, cannot be parsed or fails a data integrity check. Processing of the next valid FIX message will cause detection of a sequence gap and a Resend Request will be generated. Logic should be included in the FIX engine to recognize the possible infinite resend loop, which may be encountered in this situation.</p>
+
+<p>The FIX Protocol takes the optimistic view; it presumes that a garbled message is received due to a transmission error rather than a FIX system problem. Therefore, if a Resend Request is sent the garbled message will be retransmitted correctly. If a message is not considered garbled then it is recommended that a session level Reject message be sent.</p>
+
+<h3 id="business-reject">Business Reject</h3>
+
+<p>The Business Message Reject message can reject an application-level message which fulfils session-level rules and cannot be rejected via any other means. Note if the message fails a session-level rule (e.g. body length is incorrect), a session-level Reject message should be issued.
+Instances when a Business Reject message is sent out for a message that fulfils session-level rules:</p>
+<ul>
+  <li>Cannot be communicated to the venue model.</li>
+  <li>It is not supported by the recipient.</li>
+  <li>Lacks a field conditionally required by the FIX specification. In this situation a Business Message Reject with BusinessRejectReason = “Conditionally Required Field Missing” can be issued if the system is unable to send the specific “reject” message listed above. One example would be a stop order missing StopPx. However, a Business Reject message MUST NOT be used to enforce proprietary rules more restrictive that those explicit in the FIX specification, such as a broker requiring an order to contain an Account, which the FIX specification considers an optional field.</li>
+</ul>
+
+<h3 id="message-specific-reject">Message-Specific Reject</h3>
+
+<p>There are two method of responding with a reject message:</p>
+<ul>
+  <li>Missing required field - a field may be identified as ‘required’ (using ‘req’ or ‘required’ keyword in front of the field name) or ‘optional’ (using ‘opt’ or ‘optional’ keywords in front of the name). By default, if the keyword is omitted, a field is considered optional. If a required field is missing (the arriving message does not contain it), a message would be rejected.</li>
+  <li>Field-reject - results from an inline ‘valid’ statement for an associated field.</li>
+  <li>Custom-reject - results from ‘validate’ statement that is not associated with any specific field and has an associated enum value.</li>
+</ul>
+
+<p>Recall the diagram at the beginning of this page. Here’s a fragment that’s relevant to the current discussion:</p>
+
+    
+    
+    <h2 class="internalLink-padding"  id=printersParsers ><p>Printers and Parsers</p>
+</h2>
+    
+    
+
+    
+    
+</div>
+
+<!-- Sidebar - pageSbar.html -->
+<!-- <div class="sidebar-right">
+    <div class="sidebar-right__menu">
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h1" href="#">Documentation</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="#buildingInstructions">Building Instructions</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="#modellingStateMachines">Modelling State Machines</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="#MessageLifecycle">Message Lifecycle</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="#printersParsers">Printers and Parsers</a>
+        
+        
+        
+        <a class="sidebar-right__menu-item sidebar-right__menu-item--h2" href="/fix-engine/_pages/doc/index.html" target="_blank">Technical Documentation</a>
+        
+    </div>
+</div> -->
+            </article>
+        </main>
+        </script>
+<footer class="footer">
+	<a class="copyrights" href="http://imandra.ai">&#9400; 2020 Imandra Inc. All rights reserved.</a>
+</footer>
+<script type="text/javascript"> docsearch({
+     apiKey: 'ff3a61a82b58783e62ebfbf51e50b0bc',
+     indexName: 'imandra',
+     inputSelector: '#search',
+     debug: false // Set debug to true if you want to inspect the dropdown
+ });
+</script>
+
+    </div>
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-116937440-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-116937440-1');
+</script>
+    
+</body>
+
+</html>

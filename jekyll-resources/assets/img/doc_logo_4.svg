@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40.73" height="16.55" viewBox="0 0 40.73 16.55">
+  <title>Asset 2</title>
+  <g id="cc7e87aa-f449-464e-8ed9-db043fa9dfd3" data-name="Layer 2">
+    <g id="183a25ba-9bd9-430d-99ff-b911ac35ef5a" data-name="Layer 1">
+      <g>
+        <path d="M40.09,15.49l-1.36-.12v-.54h.58v-1.5h-.58V11.88h.58v-1.5h-.58V9h.58V7.51h-.58V6.15h.58V4.65h-.58V3.24h.58V1.74h-.58V1.18l1.36-.12A.54.54,0,0,0,40,0H8.28a8.28,8.28,0,1,0,0,16.55H40A.54.54,0,0,0,40.09,15.49Z" style="fill: #27d798"/>
+        <g>
+          <path d="M8.32,15.83a7.55,7.55,0,0,1,0-15.1H40.73v1H8.32a6.55,6.55,0,0,0,0,13.1H40.73v1Z" style="fill: #fff"/>
+          <g>
+            <path d="M19.17,10.43V6.13a1.13,1.13,0,0,1,2.25,0h0v4.3a1.13,1.13,0,0,1-2.25,0Z" style="fill: #fff;fill-rule: evenodd"/>
+            <path d="M7.81,8.28a2.86,2.86,0,0,0,2.93,2.78,2.86,2.86,0,0,0,2.93-2.78,2.86,2.86,0,0,0-2.93-2.79A2.86,2.86,0,0,0,7.81,8.28Z" style="fill: #fff;fill-rule: evenodd"/>
+            <path d="M32.52,8.28a2.93,2.93,0,0,0-5.86,0,2.93,2.93,0,0,0,5.86,0Z" style="fill: #fff;fill-rule: evenodd"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

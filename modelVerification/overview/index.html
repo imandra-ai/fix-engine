@@ -1,0 +1,121 @@
+<p>In addition to the model source code, you will find a collection of Verification Goals (VGs). VGs are statements in IML expressing properties of the FIX engine model that we wish to verify. It’s important to note that IML is used for both building the model and describing the properties we wish to verify about it.</p>
+
+<p>Consider the following quote from Volume 2 of the FIX 4.4 specification:</p>
+<blockquote>
+  <p>When either end of a FIX connection has not sent any data for [HeartBtInt] seconds, it will transmit a Heartbeat message.</p>
+</blockquote>
+
+<p>One way to formalise that statement is to create two VGs:</p>
+<ul>
+  <li>VG.1.1 - any outbound message will result in an updated <code class="highlighter-rouge">fe_last_time_data_sent</code> field</li>
+  <li>VG.1.2 - any time update will result in check whether Heartbeat should be sent out</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="c">(* VG.1.1 *)</span>
+<span class="n">verify</span> <span class="n">last_time_data_sent_gets_updated</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+  <span class="n">engine</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="o">&amp;&amp;</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="o">&lt;&gt;</span> <span class="nc">None</span>
+   <span class="o">==&gt;</span>
+  <span class="n">engine'</span><span class="o">.</span><span class="n">fe_last_time_data_sent</span> <span class="o">=</span> <span class="n">engine'</span><span class="o">.</span><span class="n">fe_curr_time</span>
+<span class="p">;;</span>
+
+<span class="c">(** VG.1.2 *)</span>
+<span class="k">let</span> <span class="n">outbound_msg_heartbeat</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">None</span>      <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span>  <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+      <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
+      <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">admin_msg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="k">match</span> <span class="n">admin_msg</span> <span class="k">with</span>
+        <span class="o">|</span> <span class="nc">Full_Msg_Hearbeat</span> <span class="n">_</span>        <span class="o">-&gt;</span> <span class="bp">true</span>
+        <span class="o">|</span> <span class="nc">Full_Msg_Test_Request</span> <span class="n">_</span>    <span class="o">-&gt;</span> <span class="bp">true</span>
+        <span class="o">|</span> <span class="n">_</span>                          <span class="o">-&gt;</span> <span class="bp">false</span>
+      <span class="p">)</span>
+      <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">time_update_received</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">last_time_data_sent</span><span class="o">,</span> <span class="n">hbeat_interval</span> <span class="o">:</span> <span class="n">fix_engine_int_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="n">fix_utctimestamp</span> <span class="o">*</span> <span class="n">fix_duration</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="n">mint</span> <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">mint</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">TimeChange</span> <span class="n">tc_data</span> <span class="o">-&gt;</span>
+       <span class="k">let</span> <span class="n">valid_time</span> <span class="o">=</span> <span class="n">utctimestamp_add</span> <span class="p">(</span> <span class="n">last_time_data_sent</span><span class="o">,</span> <span class="n">hbeat_interval</span> <span class="p">)</span> <span class="k">in</span>
+       <span class="n">utctimestamp_greaterThan</span> <span class="p">(</span> <span class="n">tc_data</span><span class="o">,</span> <span class="n">valid_time</span> <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="n">verify</span> <span class="n">hbeat_sent_if_no_data_received</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span> <span class="p">(</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span>
+    <span class="o">&amp;&amp;</span> <span class="n">is_int_message_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span>
+    <span class="o">&amp;&amp;</span> <span class="n">is_state_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span>
+    <span class="o">&amp;&amp;</span> <span class="n">time_update_received</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_int_msg</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_last_time_data_sent</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_heartbeat_interval</span> <span class="p">)</span> <span class="p">)</span>
+     <span class="o">==&gt;</span>
+    <span class="n">outbound_msg_heartbeat</span> <span class="p">(</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>
+
+<p>It’s important to note that the ‘translation’ of the English-prose statements into IML (or other mathematically precise formal languages) may not be unique. The inherent ambiguity of natural languages is a major reason why the efforts of formalising protocol specifications must be collaborative and industry-wide.</p>
+
+<p>Notice how this approach differs from traditional ‘testing’. In the statement above, we’re making a high-level claim about the model behaviour, and we can subject this claim to analysis over the entire system state-space. When Imandra analyses the model with respect to such a statement, it works to symbolically verify that the claim holds in <em>all</em> possible scenarios. When such a claim does not hold, Imandra works to construct a precise sequence of events (a “counterexample”) which exhibits a violation of the property.</p>
+
+<h3 id="vg-status">VG Status</h3>
+
+<p>For updates, see the Announcements page.</p>
+
+<p>Status as of May 21st, 2017:</p>
+
+<p><em>Base</em></p>
+<ul>
+  <li>[x] VG.1 :: <em>When in ActiveSession (normal mode) and receiving a non garbled and non session-level rejected message and the application is down. Such message would be sent back with a Business Reject.</em></li>
+  <li>[x] VG.2 :: <em>FIX session should be terminated if the incoming sequence number is less than expected and the PossDupFlag is not set.</em></li>
+  <li>[x] VG.3 :: <em>Messages that are garbled will be ignored (sequence counter will not be incremented).</em></li>
+  <li>[x] VG.4 :: <em>Session rejected messages are rejected with the right reason and counter is incremented</em></li>
+</ul>
+
+<p><em>Heartbeat Messages</em></p>
+<ul>
+  <li>[x] VG.1 :: <em>“When either end of a FIX connection has not sent any data for [HeartBtInt] seconds, it will transmit a Heartbeat message.”</em></li>
+  <li>[x] VG.2 :: <em>Non-garbled message updates the clock.</em></li>
+  <li>[x] VG.3 :: <em>“When either end of the connection has not received any data for (HeartBtInt + “some reasonable transmission time”) seconds, it will transmit a Test Request message.”</em></li>
+  <li>[x] VG.4 :: <em>“If there is still no Heartbeat message received after (HeartBtInt + ‘some reasonable transmission time’) seconds then the connection should be considered lost and corrective action be initiated.”</em></li>
+</ul>
+
+<p><em>Logon Messages</em></p>
+<ul>
+  <li>[x] VG.1 :: <em>“The logon message must be the first message sent by the application requesting to initiate a FIX session.”</em></li>
+  <li>[x] VG.2 :: *“The session acceptor must be prepared to immediately begin processing messages after receipt of the Logon.”</li>
+  <li>[x] VG.3 :: <em>“After authentication, the initiator and acceptor must synchronize their messages through interrogation of the MsgSeqNum field before sending any queued or new messages.”</em></li>
+  <li>[x] VG.4 ::  <em>“If the session acceptor has chosen to change the session encryption key, the session initiator must send a third Logon back to the other side in order to acknowledge the key change request.”</em></li>
+  <li>[x] VG.5 ::  <em>NextExpectedMsgSeqNum is used correctly.</em></li>
+</ul>
+
+<p><em>Logoff Messages</em></p>
+<ul>
+  <li>[ ] VG.1 :: * “Disconnection without the exchange of logout messages should be interpreted as an abnormal condition.”*</li>
+  <li>[ ] VG.2 :: <em>“Before actually closing the session, the logout initiator should wait for the opposite side to respond with a confirming logout message.”</em></li>
+  <li>[ ] VG.3 :: <em>“After sending the Logout message, the logout initiator should not send any messages unless requested to do so by the logout acceptor via a ResendRequest.”</em></li>
+</ul>
+
+<p><em>Sequence Reset Messages</em></p>
+<ul>
+  <li>[x] VG.1 :: <em>“When the incoming sequence number does not match the expected corrective processing is required. Note that the SeqReset-Reset message (used only to recover from a disaster vs. normal resend request processing) is an exception to this rule as it should be processed without regards to its MsgSeqNum.”</em></li>
+  <li>[ ] VG.2 ::  <em>“The Sequence Reset can only increase the sequence number. If a sequence reset is received attempting to decrease the next expected sequence number the message should be rejected and treated as a serious error.”</em></li>
+</ul>
+
+<p><em>Sequence Number Logic</em></p>
+<ul>
+  <li>[x] VG.1 :: <em>“Must always be the first message transmitted. Authenticate and accept the connection. After sending a Logon confirmation back, send a ResendRequest if a message gap was detected in the Logon sequence number.”</em></li>
+  <li>[x] VG.2 :: <em>Out of sequence message would result in state transitioning into Recovery mode.</em></li>
+  <li>[ ] VG.3 :: <em>“Ignore the incoming sequence number. The NewSeqNo field of the SeqReset message will contain the sequence number of the next message to be transmitted.”</em></li>
+  <li>[ ] VG.4 :: <em>Application messages that result in a gap, we’ll transition into gap fill state.</em></li>
+</ul>
+
+<p><em>Rejection Logic</em></p>
+<ul>
+  <li>[x] VG.1 :: * “During the gap fill process, certain administrative messages should not be retransmitted. Instead, a special SeqReset-GapFill message is generated.”*</li>
+</ul>

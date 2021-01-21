@@ -1,0 +1,39 @@
+<h3 id="seq_reset-vg1">Seq_Reset VG.1</h3>
+
+<p>“When the incoming sequence number does not match the expected corrective processing is required. Note that the <code class="highlighter-rouge">SeqReset-Reset</code> message (used only to recover from a disaster vs. normal resend request processing) is an exception to this rule as it should be processed without regards to its <code class="highlighter-rouge">MsgSeqNum</code>.”</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">inc_msg_seqreset_reset</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="n">m</span> <span class="k">with</span> 
+    <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+    <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
+    <span class="k">match</span> <span class="n">msg</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">ValidMsg</span> <span class="n">vmsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="k">match</span> <span class="n">vmsg</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span> 
+        <span class="o">|</span> <span class="nc">Full_FIX_App_Msg</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+        <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="n">amsg</span> <span class="o">-&gt;</span> <span class="p">(</span>
+            <span class="k">match</span> <span class="n">amsg</span> <span class="k">with</span> 
+            <span class="o">|</span> <span class="nc">Full_Msg_Sequence_Reset</span> <span class="n">data</span> <span class="o">-&gt;</span> <span class="p">(</span>
+                <span class="c">(* A missing flag or flag = No tells us that message of the Reset mode. *)</span>
+                <span class="k">match</span> <span class="n">data</span><span class="o">.</span><span class="n">seqr_gap_fill_flag</span> <span class="k">with</span> <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">true</span> <span class="o">|</span> <span class="nc">Some</span> <span class="n">f</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="nc">FIX_No</span>
+             <span class="p">)</span>
+            <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+         <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">state_updated</span> <span class="p">(</span> <span class="n">engine</span><span class="o">,</span> <span class="n">new_seq_num</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">incoming_seq_num</span> <span class="o">=</span> <span class="n">new_seq_num</span> <span class="o">&amp;&amp;</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span> <span class="o">&amp;&amp;</span> 
+    <span class="n">engine</span><span class="o">.</span><span class="n">fe_cache</span> <span class="o">=</span> <span class="bp">[]</span>
+<span class="p">;;</span>
+
+<span class="k">let</span> <span class="n">out_of_seq_seqreset_processed</span> <span class="p">(</span> <span class="n">engine</span><span class="o">,</span> <span class="n">new_seq_num</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span> 
+    <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
+    <span class="p">(</span>   <span class="n">inc_msg_seqreset_reset</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_fix_msg</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> 
+        <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">&lt;&gt;</span> <span class="nc">NoActiveSession</span> <span class="o">&amp;&amp;</span> 
+        <span class="n">engine</span><span class="o">.</span><span class="n">fe_cache</span> <span class="o">=</span> <span class="bp">[]</span> 
+    <span class="p">)</span> <span class="o">==&gt;</span> <span class="p">(</span>
+        <span class="n">state_updated</span> <span class="p">(</span> <span class="n">engine'</span><span class="o">,</span> <span class="n">new_seq_num</span> <span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">;;</span></code></pre></figure>

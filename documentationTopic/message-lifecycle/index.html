@@ -1,0 +1,199 @@
+<p>There are 5 outcomes to an engine/venue model to receiving a message:</p>
+<ul>
+  <li>Ignored - cases when message is malformed (missing or out-of-order important tags, etc).</li>
+  <li>Session reject - pertains to violation of protocol requirements.</li>
+  <li>Business reject - there are 3 categories for such reject:
+    <ol>
+      <li>Venue is down (cannot accept any messages)</li>
+      <li>Message type is not supported by venue</li>
+      <li>Message lacks a field conditionally required by the FIX specification (note that this only applies to fields required by the FIX specification, NOT the custom venue requirements).</li>
+    </ol>
+  </li>
+</ul>
+
+<p>Message-specific reject - when an incoming message’s parameters are inconsistent with the state of the model (there ), it will respond with a rejection through a corresponding message. For example, New Order Single message would be rejected through Execution Report. Section below contains the ‘mapping’ of expected outgoing types of messages.
+Processed - message is accepted by the venue and results in a modified state.</p>
+<h3 id="message-ignored">Message Ignored</h3>
+
+<p>What constitutes a garbled message (message is ignored):</p>
+<ul>
+  <li>BeginString (tag #8)
+    <ul>
+      <li>is not the first tag in a message</li>
+      <li>not of the format 8=FIX.n.m.</li>
+    </ul>
+  </li>
+  <li>BodyLength (tag #9)
+    <ul>
+      <li>is not the second tag in a message</li>
+      <li>is not a properly formatted integer</li>
+      <li>does not contain the correct byte count.</li>
+    </ul>
+  </li>
+  <li>MsgType (tag #35)
+    <ul>
+      <li>is not the third tag in a message.</li>
+      <li>does not have a value</li>
+    </ul>
+  </li>
+  <li>Checksum (tag #10)
+    <ul>
+      <li>is not the last tag of the message</li>
+      <li>does not contain a properly formatted integer</li>
+      <li>is not equal to byte count of the message body
+MsgSeqNum(tag #34)</li>
+      <li>is missing</li>
+      <li>does not contain a properly formatted integer</li>
+    </ul>
+  </li>
+</ul>
+
+<p>If the MsgSeqNum(tag #34) is missing, a logout message should be sent terminating the FIX Connection, as this indicates a serious application error that is likely only circumvented by software modification.</p>
+
+<h3 id="session-reject">Session Reject</h3>
+
+<p>The session reject message should be issued when a message is received but cannot be properly processed due to a session-level rule violation. An example of when a reject may be appropriate would be the receipt of a message with invalid basic data (e.g. MsgType=&amp;) which successfully passes de-encryption, CheckSum and BodyLength checks. As a rule, messages should be forwarded to the trading application for business level rejections whenever possible.</p>
+
+<p>Rejected messages should be logged and the incoming sequence number incremented.</p>
+
+<p>Note: The receiving application should disregard any message that is garbled, cannot be parsed or fails a data integrity check. Processing of the next valid FIX message will cause detection of a sequence gap and a Resend Request will be generated. Logic should be included in the FIX engine to recognize the possible infinite resend loop, which may be encountered in this situation.</p>
+
+<p>Generation and receipt of a Reject message indicates a serious error that may be the result of faulty logic in either the sending or receiving application.</p>
+
+<p>If the sending application chooses to retransmit the rejected message, it should be assigned a new sequence number and sent with PossResend=Y.</p>
+
+<p>Whenever possible, it is strongly recommended that the cause of the failure be described in the Text field (e.g. INVALID DATA - FIELD 35).</p>
+
+<p>If an application-level message received fulfils session-level rules, it should then be processed at a business message-level. If this processing detects a rule violation, a business-level reject should be issued. Many business-level messages have specific “reject” messages, which should be used. All others can be rejected at a business-level via the Business Message Reject message. See Volume 1: “Business Message Reject” message.</p>
+
+<p>Note that in the event a business message is received, fulfils session-level rules, however, the message cannot be communicated to the business-level processing system, a Business Message Reject with BusinessRejectReason = “Application not available at this time” should be issued.</p>
+
+<p>Session Reject Reasons:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td> </td>
+      <td>Invalid tag number</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td> </td>
+      <td>Required tag missing</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td> </td>
+      <td>Tag not defined for this message type</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td> </td>
+      <td>Undefined Tag</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td> </td>
+      <td>Tag specified without a value</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td> </td>
+      <td>Value is incorrect (out of range) for this tag</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td> </td>
+      <td>Incorrect data format for value</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td> </td>
+      <td>Decryption problem</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td> </td>
+      <td>Signature problem</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td> </td>
+      <td>CompID problem</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td> </td>
+      <td>SendingTime accuracy problem</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td> </td>
+      <td>Invalid MsgType</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td> </td>
+      <td>XML Validation error</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td> </td>
+      <td>Tag appears more than once</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td> </td>
+      <td>Tag specified out of required order</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td> </td>
+      <td>Repeating group fields out of order</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td> </td>
+      <td>Incorrect NumInGroup count for repeating group</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td> </td>
+      <td>Non “data” value includes field delimiter (SOH character)</td>
+    </tr>
+    <tr>
+      <td>99</td>
+      <td> </td>
+      <td>Other (Note other session-level rule violations may exist in which case SessionRejectReason of Other may be used and further information may be in Text field.)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="when-to-send-a-session-reject-vs-when-to-ignore-the-message">When to send a session Reject vs. when to ignore the message</h3>
+
+<p>The following excerpt is taken from the Reject message definition within the FIX Protocol specification:
+Note: The receiving application should disregard any message that is garbled, cannot be parsed or fails a data integrity check. Processing of the next valid FIX message will cause detection of a sequence gap and a Resend Request will be generated. Logic should be included in the FIX engine to recognize the possible infinite resend loop, which may be encountered in this situation.</p>
+
+<p>The FIX Protocol takes the optimistic view; it presumes that a garbled message is received due to a transmission error rather than a FIX system problem. Therefore, if a Resend Request is sent the garbled message will be retransmitted correctly. If a message is not considered garbled then it is recommended that a session level Reject message be sent.</p>
+
+<h3 id="business-reject">Business Reject</h3>
+
+<p>The Business Message Reject message can reject an application-level message which fulfils session-level rules and cannot be rejected via any other means. Note if the message fails a session-level rule (e.g. body length is incorrect), a session-level Reject message should be issued.
+Instances when a Business Reject message is sent out for a message that fulfils session-level rules:</p>
+<ul>
+  <li>Cannot be communicated to the venue model.</li>
+  <li>It is not supported by the recipient.</li>
+  <li>Lacks a field conditionally required by the FIX specification. In this situation a Business Message Reject with BusinessRejectReason = “Conditionally Required Field Missing” can be issued if the system is unable to send the specific “reject” message listed above. One example would be a stop order missing StopPx. However, a Business Reject message MUST NOT be used to enforce proprietary rules more restrictive that those explicit in the FIX specification, such as a broker requiring an order to contain an Account, which the FIX specification considers an optional field.</li>
+</ul>
+
+<h3 id="message-specific-reject">Message-Specific Reject</h3>
+
+<p>There are two method of responding with a reject message:</p>
+<ul>
+  <li>Missing required field - a field may be identified as ‘required’ (using ‘req’ or ‘required’ keyword in front of the field name) or ‘optional’ (using ‘opt’ or ‘optional’ keywords in front of the name). By default, if the keyword is omitted, a field is considered optional. If a required field is missing (the arriving message does not contain it), a message would be rejected.</li>
+  <li>Field-reject - results from an inline ‘valid’ statement for an associated field.</li>
+  <li>Custom-reject - results from ‘validate’ statement that is not associated with any specific field and has an associated enum value.</li>
+</ul>
+
+<p>Recall the diagram at the beginning of this page. Here’s a fragment that’s relevant to the current discussion:</p>

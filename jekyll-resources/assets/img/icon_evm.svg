@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 4</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="docs.imanda-copy-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-911.000000, -548.000000)">
+        <g id="Group-4" transform="translate(912.000000, 549.000000)" stroke="#20D9AF">
+            <path d="M23.9901499,47.8891724 C37.1014726,47.8891724 47.7302997,37.2603452 47.7302997,24.1490225 C47.7302997,11.0376998 37.1014726,0.40887266 23.9901499,0.40887266 C10.8788271,0.40887266 0.25,11.0376998 0.25,24.1490225 C0.25,37.2603452 10.8788271,47.8891724 23.9901499,47.8891724 Z" id="Base"></path>
+            <polygon id="Stroke-1" stroke-linecap="square" stroke-linejoin="bevel" points="12.5376183 22.9382233 23.7399896 5.27448557 34.9623817 22.9382233 23.75 30.1217698"></polygon>
+            <polygon id="Stroke-3" stroke-linecap="square" stroke-linejoin="bevel" points="12.5376183 26.1890346 23.75 33.5180897 34.9623817 26.1890346 23.75 41.5289256"></polygon>
+            <path d="M23.7399896,5.27441406 L23.7539896,30.1216983" id="Stroke-5" stroke-linecap="square" stroke-linejoin="bevel"></path>
+            <path d="M23.7501073,41.5289971 L23.7501073,33.5181612" id="Stroke-7" stroke-linecap="square" stroke-linejoin="bevel"></path>
+        </g>
+    </g>
+</svg>
