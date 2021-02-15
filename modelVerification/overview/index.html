@@ -11,8 +11,8 @@
   <li>VG.1.2 - any time update will result in check whether Heartbeat should be sent out</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="c">(* VG.1.1 *)</span>
-<span class="n">verify</span> <span class="n">last_time_data_sent_gets_updated</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="c">(* VG.1.1 *)</span>
+<span class="kr">verify</span> <span class="n">last_time_data_sent_gets_updated</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
   <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
   <span class="n">engine</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="o">&amp;&amp;</span> <span class="n">engine'</span><span class="o">.</span><span class="n">outgoing_fix_msg</span> <span class="o">&lt;&gt;</span> <span class="nc">None</span>
    <span class="o">==&gt;</span>
@@ -49,7 +49,7 @@
     <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
 <span class="p">;;</span>
 
-<span class="n">verify</span> <span class="n">hbeat_sent_if_no_data_received</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+<span class="kr">verify</span> <span class="n">hbeat_sent_if_no_data_received</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
   <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span> <span class="p">(</span>
     <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span>
     <span class="o">&amp;&amp;</span> <span class="n">is_int_message_valid</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span>
