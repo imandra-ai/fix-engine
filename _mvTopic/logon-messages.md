@@ -3,13 +3,13 @@ title: "Logon Messages"
 tag: logonMessages
 sequence: 4
 ---
-This section describes verification goals for Logon messages. 
+This section describes verification goals for Logon messages.
 ### Logon VG.1
 
 "The logon message must be the first message sent by the application requesting to initiate a FIX session."
 
 Note: we augment this with requirement that the engine correctly sets the acceptor/initiator flag.
-{% highlight ocaml %}
+{% highlight iml %}
 let incoming_int_create_session ( m, targetID : fix_engine_int_msg option * int ) =
     match m with
     | None      -> false
@@ -60,7 +60,7 @@ verify logon_msg_is_first ( engine, targetID : fix_engine_state * int ) =
 
 "The session acceptor must be prepared to immediately begin processing messages after receipt of the Logon. The session initiator can choose to begin transmission of FIX messages before receipt of the confirmation Logon, however it is recommended that normal message delivery wait until after the return Logon is received to accommodate encryption key negotiation."
 
-{% highlight ocaml %}
+{% highlight iml %}
 (* Logon VG2.1 *)
 let waiting_for_logon_ack ( engine : fix_engine_state ) =
     engine.fe_curr_mode = LogonInitiated
@@ -114,7 +114,7 @@ verify receive_logon_ack ( engine : fix_engine_state ) =
 
 "After authentication, the initiator and acceptor must synchronize their messages through interrogation of the `MsgSeqNum` field before sending any queued or new messages. A comparison of the `MsgSeqNum` in the Logon message to the internally monitored next expected sequence number will indicate any message gaps. Likewise, the initiator can detect gaps by comparing the acknowledgment Logon message’s MsgSeqNum to the next expected value. The section on message recovery later in this document deals with message gap handling."
 
-{% highlight ocaml %}
+{% highlight iml %}
 let logon_msg_out_of_sequence ( m : full_top_level_msg option ) =
     true
 ;;
@@ -138,7 +138,7 @@ Notes: we break up the statement into the following VGs:
 - 4.1 - If a confirmation Logon is received with a different encryption key, then another Logon is sent back with the same key. Also, we increment the 'fe_num_logons_sent' counter.
 - 4.2 - When the engine attempts to send out a Logon message when the count is violated, it would transition into error mode with status change.
 
-{% highlight ocaml %}
+{% highlight iml %}
 let received_logon_diff_key ( m, self_comp_id, encrypt_method : full_top_level_msg option * int * fix_encryption_method ) =
     match m with
     | None -> true
@@ -213,7 +213,7 @@ Both sides react to NextExpectedMsgSeqNum (789) from its counterparty thus:
 - If higher than the next-to-be-assigned sequence, send Logout to abort the session.
 
 Neither side should generate a ResendRequest based on MsgSeqNum (34) of the incoming Logon message but should expect any gaps to be filled automatically. If a gap is produced by the Logon message MsgSeqNum (34), the receive logic should expect the gap to be filled automatically prior to receiving any messages with sequences above the gap."
-{% highlight ocaml %}
+{% highlight iml %}
 let is_next_expected_msg_seq_num_present ( m, next_seq_num : full_top_level_msg option * int ) =
     match m with
     | None -> true

@@ -11,7 +11,7 @@ sequence: 5
 > *rejected message and the application is down. Such message would be sent back with a*
 > *Business Reject.*
 
-{% highlight ocaml %}
+{% highlight iml %}
 let msg_is_biz_reject = function  | Some (ValidMsg msg_data) ->
     begin match msg_data.full_msg_data with
       | Full_FIX_Admin_Msg (Full_Msg_Business_Reject _) -> true
@@ -37,7 +37,7 @@ verify app_down_get_biz_reject ( state : fix_engine_state ) =
   result_biz_reject
 ;;
 {% endhighlight %}
-  
+
 
 ### Base VG.2
 
@@ -46,7 +46,7 @@ From Vol 2. Page 9:
 > *should be terminated if the incoming sequence number is less than expected and the*
 > *PossDupFlag is not set. A Logout message with some descriptive text should be sent to the*
 > *other side before closing the session.*
-{% highlight ocaml %}
+{% highlight iml %}
 let poss_dup_flag_not_set ( flag : bool option ) =
   flag = None
 ;;
@@ -88,7 +88,7 @@ verify less_seq_num_logout ( state : fix_engine_state ) =
 ### Base VG.3
 
 > *Messages that are garbled will be ignored (sequence counter will not be incremented).*
-{% highlight ocaml %}
+{% highlight iml %}
 let incoming_msg_garbled = function
   | Some (Garbled) -> true
   | _ -> false
@@ -96,7 +96,7 @@ let incoming_msg_garbled = function
 
 verify garbled_are_ignored ( state : fix_engine_state ) =
   let state' = one_step (state) in
-  let msg_ignored = ( state' =  { state with incoming_fix_msg = None } ) in 
+  let msg_ignored = ( state' =  { state with incoming_fix_msg = None } ) in
   let no_internal_msgs = state.incoming_int_msg = None in
   let no_cache_replay_or_retransmit = not ( state.fe_curr_mode = CacheReplay || state.fe_curr_mode = Retransmit ) in
   ( incoming_msg_garbled (state.incoming_fix_msg)
@@ -109,7 +109,7 @@ verify garbled_are_ignored ( state : fix_engine_state ) =
 ### Base VG.4
 
 > *Session rejected messages are rejected with the right reason and counter is incremented.*
-{% highlight ocaml %}
+{% highlight iml %}
 let incoming_msg_session_reject = function
   | Some (SessionRejectedMsg _) -> true
   | _ -> false
@@ -124,8 +124,8 @@ let msg_is_reject = function
   | _ -> false
 ;;
 
-(** Note that it's important to remember that a message may only be rejected if we're in ActiveSession state. 
-    It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or 
+(** Note that it's important to remember that a message may only be rejected if we're in ActiveSession state.
+    It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or
     Retransmit modes. *)
 verify session_rejects_are_rejected ( state : fix_engine_state ) =
   let no_incoming_int_msgs = state.incoming_int_msg = None in
