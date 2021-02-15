@@ -1,10 +1,7 @@
-
-
-
 (library
-  (name        protocol)
-  (public_name fix-engine.protocol)
-  (wrapped  false)
-  (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
-  (libraries imandra-base.prelude core_time_defaults protocol_exts)
-)
+ (name protocol)
+ (public_name fix-engine.protocol)
+ (wrapped false)
+ (flags
+  (:standard -open Imandra_prelude -warn-error -A+8+39))
+ (libraries imandra-base.prelude core_time_defaults protocol_exts))

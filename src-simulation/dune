@@ -1,19 +1,12 @@
 (executable
-  (name test_server)
-  (modules test_server)
-  (libraries
-      cmdliner
-      fix_simulation_utils
-  )
-)
+ (name test_server)
+ (modules test_server)
+ (modes byte)
+ (libraries cmdliner fix_simulation_utils))
 
 (executable
-  (name server)
-  (modules server)
-  (libraries
-      cmdliner
-      fix_simulation_utils
-  )
-)
-
-
+ (name server)
+ (public_name fix-engine.server)
+ (modules server)
+ (modes byte)
+ (libraries cmdliner fix_simulation_utils))

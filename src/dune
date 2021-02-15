@@ -1,9 +1,6 @@
-
-
 (library
-  (name        fix_engine)
-  (public_name fix-engine.fix_engine)
-  (wrapped  false)
-  (flags :standard -open Imandra_prelude -warn-error -A+8+39)
-  (libraries imandra-base.prelude protocol core_utils)
-)
+ (name fix_engine)
+ (public_name fix-engine.fix_engine)
+ (wrapped false)
+ (flags :standard -open Imandra_prelude -warn-error -A+8+39)
+ (libraries imandra-base.prelude protocol core_utils))
