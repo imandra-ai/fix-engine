@@ -18,7 +18,8 @@ jobs:
         run: mkdir _site && touch _site/.nojekyll
       - name: Jekyll build
         run: docker run -v `pwd`:/srv/jekyll -e JEKYLL_ENV=production jekyll-build jekyll build
-      - name: ls
-        run: ls -lah
-      - name: ls _site
-        run: cd _site && ls -lah
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
