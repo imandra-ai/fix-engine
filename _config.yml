@@ -27,6 +27,7 @@ permalink: /:title/
 layouts_dir: /jekyll-resources/_layouts
 includes_dir: /jekyll-resources/_includes
 data_dir: /jekyll-resources/_data
+plugins_dir: ./jekyll-resources/_plugins
 sass:
   sass_dir: /jekyll-resources/_sass
 include: ['_pages']
