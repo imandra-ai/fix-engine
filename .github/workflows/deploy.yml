@@ -10,6 +10,15 @@ jobs:
     runs-on: ubuntu-16.04
     steps:
       - uses: actions/checkout@v2
-      - uses: helaili/jekyll-action@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: true
+      - name: Build Jekyll image
+        run: docker build -t jekyll-build .
+      - name: Make output dir
+        run: mkdir _site && touch _site/.nojekyll
+      - name: Jekyll build
+        run: docker run -v `pwd`:/srv/jekyll -e JEKYLL_ENV=production jekyll-build jekyll build
+      - name: ls
+        run: ls -lah
+      - name: ls _site
+        run: cd _site && ls -lah
