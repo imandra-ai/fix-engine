@@ -1,8 +1,6 @@
-
 (library
-  (name        core_pp)
-  (public_name fix-engine.core_pp)
-  (wrapped  false)
-  (flags :standard -open Imandra_prelude -warn-error -a)
-  (libraries decoders-yojson decoders core yojson imandra-base.prelude )
-)
+ (name core_pp)
+ (public_name fix-engine.core_pp)
+ (wrapped false)
+ (flags :standard -open Imandra_prelude -warn-error -a)
+ (libraries decoders-yojson decoders core yojson imandra-base.prelude))

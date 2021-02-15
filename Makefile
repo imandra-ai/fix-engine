@@ -12,7 +12,7 @@ build_server:
 	rm dune
 
 build_vgs:
-	@echo "(dirs :standard / src-protocol-exts src-protocol-exts-pp src-model src-simulation src-simulation-utils src-core-utils src-tests-utils)" > dune
+	@echo "(dirs :standard \ src-protocol-exts src-protocol-exts-pp src-model src-simulation src-simulation-utils src-core-utils src-tests-utils)" > dune
 	dune build @install
 	rm dune
 
@@ -23,7 +23,7 @@ build_tests:
 	rm dune
 
 doc:
-	@echo "(dirs :standard / src-protocol-exts-vg src-protocol-exts-pp-vg)" > dune
+	@echo "(dirs :standard \ src-protocol-exts-vg src-protocol-exts-pp-vg)" > dune
 	dune build @doc
 	mkdir -p _pages/doc
 	cp -r _build/default/_doc/_html/* _pages/doc/
@@ -49,6 +49,16 @@ opam2-setup: _opam
 _opam:
 	opam switch create . --empty
 	opam install -y ocaml-base-compiler.4.05.0
+
+format:
+	@echo "(dirs :standard \ *-vg)" > dune
+	dune build @fmt --auto-promote || true
+	rm dune
+
+format_vgs:
+	@echo "(dirs :standard \ src-protocol-exts src-protocol-exts-pp src-model src-simulation src-simulation-utils src-core-utils src-tests-utils)" > dune
+	dune build @fmt --auto-promote || true
+	rm dune
 
 clean:
 	dune clean

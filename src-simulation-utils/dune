@@ -1,22 +1,9 @@
-
-
 (library
-  (name        fix_simulation_utils)
-  (public_name fix-engine.fix_simulation_utils)
-  (wrapped  false)
-  (flags (:standard -open Imandra_prelude -open Unix -warn-error -A+8+39))
-  (libraries
-        lwt.unix
-        venue
-        fix_engine
-        core_utils
-        core_pp
-        core_time_defaults
-        core_time_defaults_pp
-        types_pp
-        protocol_pp
-        conversions
-        imandra-base.prelude
-        simulation_utils_gen
-  )
-)
+ (name fix_simulation_utils)
+ (public_name fix-engine.fix_simulation_utils)
+ (wrapped false)
+ (flags
+  (:standard -open Imandra_prelude -open Unix -warn-error -A+8+39))
+ (libraries lwt.unix venue fix_engine core_utils core_pp core_time_defaults
+   core_time_defaults_pp types_pp protocol_pp conversions
+   imandra-base.prelude simulation_utils_gen))

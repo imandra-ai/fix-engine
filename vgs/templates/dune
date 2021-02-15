@@ -1,9 +1,7 @@
-
-
 (library
-  (name templates)
-  (public_name fix-engine.templates)
-  (wrapped false)
-  (flags (:standard -open Imandra_prelude -warn-error -A+8+39))
-  (libraries imandra-base.prelude venue venue_types)
-)
+ (name templates)
+ (public_name fix-engine.templates)
+ (wrapped false)
+ (flags
+  (:standard -open Imandra_prelude -warn-error -A+8+39))
+ (libraries imandra-base.prelude venue venue_types))
