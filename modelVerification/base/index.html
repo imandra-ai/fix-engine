@@ -6,7 +6,7 @@
 <em>Business Reject.</em></p>
 </blockquote>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">msg_is_biz_reject</span> <span class="o">=</span> <span class="k">function</span>  <span class="o">|</span> <span class="nc">Some</span> <span class="p">(</span><span class="nc">ValidMsg</span> <span class="n">msg_data</span><span class="p">)</span> <span class="o">-&gt;</span>
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">msg_is_biz_reject</span> <span class="o">=</span> <span class="k">function</span>  <span class="o">|</span> <span class="nc">Some</span> <span class="p">(</span><span class="nc">ValidMsg</span> <span class="n">msg_data</span><span class="p">)</span> <span class="o">-&gt;</span>
     <span class="k">begin</span> <span class="k">match</span> <span class="n">msg_data</span><span class="o">.</span><span class="n">full_msg_data</span> <span class="k">with</span>
       <span class="o">|</span> <span class="nc">Full_FIX_Admin_Msg</span> <span class="p">(</span><span class="nc">Full_Msg_Business_Reject</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">true</span>
       <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
@@ -19,7 +19,7 @@
   <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
 <span class="p">;;</span>
 
-<span class="n">verify</span> <span class="n">app_down_get_biz_reject</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+<span class="kr">verify</span> <span class="n">app_down_get_biz_reject</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
   <span class="k">let</span> <span class="n">incoming_biz_rejected</span> <span class="o">=</span> <span class="n">msg_is_valid</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_fix_msg</span> <span class="p">)</span> <span class="k">in</span>
   <span class="k">let</span> <span class="n">no_incoming_msgs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_int_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="k">in</span>
   <span class="k">let</span> <span class="n">state'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">in</span>
@@ -41,7 +41,7 @@
 <em>other side before closing the session.</em></p>
 </blockquote>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">poss_dup_flag_not_set</span> <span class="p">(</span> <span class="n">flag</span> <span class="o">:</span> <span class="kt">bool</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">poss_dup_flag_not_set</span> <span class="p">(</span> <span class="n">flag</span> <span class="o">:</span> <span class="kt">bool</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
   <span class="n">flag</span> <span class="o">=</span> <span class="nc">None</span>
 <span class="p">;;</span>
 
@@ -69,7 +69,7 @@
   <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
 <span class="p">;;</span>
 
-<span class="n">verify</span> <span class="n">less_seq_num_logout</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+<span class="kr">verify</span> <span class="n">less_seq_num_logout</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
   <span class="k">let</span> <span class="n">no_incoming_int_msgs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_int_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="k">in</span>
   <span class="k">let</span> <span class="n">state_good</span> <span class="o">=</span> <span class="n">not</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_application_up</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">ActiveSession</span> <span class="p">)</span> <span class="k">in</span>
   <span class="k">let</span> <span class="n">state'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">in</span>
@@ -84,14 +84,14 @@
   <p><em>Messages that are garbled will be ignored (sequence counter will not be incremented).</em></p>
 </blockquote>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">incoming_msg_garbled</span> <span class="o">=</span> <span class="k">function</span>
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">incoming_msg_garbled</span> <span class="o">=</span> <span class="k">function</span>
   <span class="o">|</span> <span class="nc">Some</span> <span class="p">(</span><span class="nc">Garbled</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">true</span>
   <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
 <span class="p">;;</span>
 
-<span class="n">verify</span> <span class="n">garbled_are_ignored</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+<span class="kr">verify</span> <span class="n">garbled_are_ignored</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
   <span class="k">let</span> <span class="n">state'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">in</span>
-  <span class="k">let</span> <span class="n">msg_ignored</span> <span class="o">=</span> <span class="p">(</span> <span class="n">state'</span> <span class="o">=</span>  <span class="p">{</span> <span class="n">state</span> <span class="k">with</span> <span class="n">incoming_fix_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="p">}</span> <span class="p">)</span> <span class="k">in</span> 
+  <span class="k">let</span> <span class="n">msg_ignored</span> <span class="o">=</span> <span class="p">(</span> <span class="n">state'</span> <span class="o">=</span>  <span class="p">{</span> <span class="n">state</span> <span class="k">with</span> <span class="n">incoming_fix_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="p">}</span> <span class="p">)</span> <span class="k">in</span>
   <span class="k">let</span> <span class="n">no_internal_msgs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_int_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="k">in</span>
   <span class="k">let</span> <span class="n">no_cache_replay_or_retransmit</span> <span class="o">=</span> <span class="n">not</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">CacheReplay</span> <span class="o">||</span> <span class="n">state</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">Retransmit</span> <span class="p">)</span> <span class="k">in</span>
   <span class="p">(</span> <span class="n">incoming_msg_garbled</span> <span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">incoming_fix_msg</span><span class="p">)</span>
@@ -106,7 +106,7 @@
   <p><em>Session rejected messages are rejected with the right reason and counter is incremented.</em></p>
 </blockquote>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">incoming_msg_session_reject</span> <span class="o">=</span> <span class="k">function</span>
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">incoming_msg_session_reject</span> <span class="o">=</span> <span class="k">function</span>
   <span class="o">|</span> <span class="nc">Some</span> <span class="p">(</span><span class="nc">SessionRejectedMsg</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">true</span>
   <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
 <span class="p">;;</span>
@@ -120,10 +120,10 @@
   <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
 <span class="p">;;</span>
 
-<span class="c">(** Note that it's important to remember that a message may only be rejected if we're in ActiveSession state. 
-    It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or 
+<span class="c">(** Note that it's important to remember that a message may only be rejected if we're in ActiveSession state.
+    It would be otherwise ignore (if in NoActiveSession state) or not processed if the engine is in CacheReplay or
     Retransmit modes. *)</span>
-<span class="n">verify</span> <span class="n">session_rejects_are_rejected</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+<span class="kr">verify</span> <span class="n">session_rejects_are_rejected</span> <span class="p">(</span> <span class="n">state</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
   <span class="k">let</span> <span class="n">no_incoming_int_msgs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_int_msg</span> <span class="o">=</span> <span class="nc">None</span> <span class="k">in</span>
   <span class="k">let</span> <span class="n">incoming_rejected</span> <span class="o">=</span> <span class="n">incoming_msg_session_reject</span> <span class="p">(</span> <span class="n">state</span><span class="o">.</span><span class="n">incoming_fix_msg</span> <span class="p">)</span> <span class="k">in</span>
   <span class="k">let</span> <span class="n">state'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">in</span>
@@ -133,3 +133,4 @@
   <span class="o">==&gt;</span>
   <span class="p">(</span> <span class="n">msg_rejected</span> <span class="o">&amp;&amp;</span> <span class="n">seq_num_updated</span> <span class="p">)</span>
 <span class="p">;;</span></code></pre></figure>
+

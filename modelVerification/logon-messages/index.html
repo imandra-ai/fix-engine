@@ -5,7 +5,7 @@
 
 <p>Note: we augment this with requirement that the engine correctly sets the acceptor/initiator flag.</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">incoming_int_create_session</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">targetID</span> <span class="o">:</span> <span class="n">fix_engine_int_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">incoming_int_create_session</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">targetID</span> <span class="o">:</span> <span class="n">fix_engine_int_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
     <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
     <span class="o">|</span> <span class="nc">None</span>      <span class="o">-&gt;</span> <span class="bp">false</span>
     <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span>  <span class="o">-&gt;</span>
@@ -41,7 +41,7 @@
     <span class="o">|</span> <span class="n">_</span>             <span class="o">-&gt;</span> <span class="bp">false</span>
 <span class="p">;;</span>
 
-<span class="n">verify</span> <span class="n">logon_msg_is_first</span> <span class="p">(</span> <span class="n">engine</span><span class="o">,</span> <span class="n">targetID</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+<span class="kr">verify</span> <span class="n">logon_msg_is_first</span> <span class="p">(</span> <span class="n">engine</span><span class="o">,</span> <span class="n">targetID</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
     <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
     <span class="p">(</span> <span class="n">state_is_init</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
     <span class="n">incoming_int_create_session</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_int_msg</span><span class="o">,</span> <span class="n">targetID</span> <span class="p">)</span> <span class="p">)</span> <span class="o">==&gt;</span>
@@ -54,7 +54,7 @@
 
 <p>“The session acceptor must be prepared to immediately begin processing messages after receipt of the Logon. The session initiator can choose to begin transmission of FIX messages before receipt of the confirmation Logon, however it is recommended that normal message delivery wait until after the return Logon is received to accommodate encryption key negotiation.”</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="c">(* Logon VG2.1 *)</span>
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="c">(* Logon VG2.1 *)</span>
 <span class="k">let</span> <span class="n">waiting_for_logon_ack</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
     <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">LogonInitiated</span>
 <span class="p">;;</span>
@@ -91,7 +91,7 @@
     <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
 <span class="p">;;</span>
 
-<span class="n">verify</span> <span class="n">receive_logon_ack</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+<span class="kr">verify</span> <span class="n">receive_logon_ack</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
     <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
     <span class="p">(</span> <span class="n">incoming_logon_ack</span> <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">incoming_fix_msg</span><span class="o">,</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_comp_id</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
         <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">LogonInitiated</span> <span class="o">&amp;&amp;</span>
@@ -105,11 +105,11 @@
 
 <p>“After authentication, the initiator and acceptor must synchronize their messages through interrogation of the <code class="highlighter-rouge">MsgSeqNum</code> field before sending any queued or new messages. A comparison of the <code class="highlighter-rouge">MsgSeqNum</code> in the Logon message to the internally monitored next expected sequence number will indicate any message gaps. Likewise, the initiator can detect gaps by comparing the acknowledgment Logon message’s MsgSeqNum to the next expected value. The section on message recovery later in this document deals with message gap handling.”</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">logon_msg_out_of_sequence</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">logon_msg_out_of_sequence</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
     <span class="bp">true</span>
 <span class="p">;;</span>
 
-<span class="n">verify</span> <span class="n">when_gap_detected_request_is_sent</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+<span class="kr">verify</span> <span class="n">when_gap_detected_request_is_sent</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
 
     <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
 
@@ -128,7 +128,7 @@
   <li>4.2 - When the engine attempts to send out a Logon message when the count is violated, it would transition into error mode with status change.</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">received_logon_diff_key</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">self_comp_id</span><span class="o">,</span> <span class="n">encrypt_method</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">fix_encryption_method</span> <span class="p">)</span> <span class="o">=</span>
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">received_logon_diff_key</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">self_comp_id</span><span class="o">,</span> <span class="n">encrypt_method</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">fix_encryption_method</span> <span class="p">)</span> <span class="o">=</span>
     <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
     <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">true</span>
     <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
@@ -164,7 +164,7 @@
 <span class="p">;;</span>
 
 <span class="c">(** Logon VG.4.1 *)</span>
-<span class="n">verify</span> <span class="n">encrypt_key_different_logon_sent</span> <span class="p">(</span> <span class="n">engine</span><span class="o">,</span> <span class="n">new_encrypt_method</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="o">*</span> <span class="n">fix_encryption_method</span> <span class="p">)</span> <span class="o">=</span>
+<span class="kr">verify</span> <span class="n">encrypt_key_different_logon_sent</span> <span class="p">(</span> <span class="n">engine</span><span class="o">,</span> <span class="n">new_encrypt_method</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="o">*</span> <span class="n">fix_encryption_method</span> <span class="p">)</span> <span class="o">=</span>
     <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
     <span class="p">(</span>   <span class="n">engine</span><span class="o">.</span><span class="n">fe_cache</span> <span class="o">=</span> <span class="bp">[]</span> <span class="o">&amp;&amp;</span>
         <span class="n">engine</span><span class="o">.</span><span class="n">fe_curr_mode</span> <span class="o">=</span> <span class="nc">LogonInitiated</span> <span class="o">&amp;&amp;</span>
@@ -179,7 +179,7 @@
 <span class="p">;;</span>
 
 <span class="c">(** Logon VG.4.2 *)</span>
-<span class="n">verify</span> <span class="n">max_num_logons_breached_error</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
+<span class="kr">verify</span> <span class="n">max_num_logons_breached_error</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
     <span class="k">let</span> <span class="n">engine'</span> <span class="o">=</span> <span class="n">one_step</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="k">in</span>
     <span class="p">(</span> <span class="n">received_logon_diff_key</span> <span class="p">(</span> <span class="n">engine</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
         <span class="p">(</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_num_logons_sent</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">fe_max_num_logons_sent</span> <span class="p">)</span> <span class="p">)</span>
@@ -206,7 +206,7 @@
 
 <p>Neither side should generate a ResendRequest based on MsgSeqNum (34) of the incoming Logon message but should expect any gaps to be filled automatically. If a gap is produced by the Logon message MsgSeqNum (34), the receive logic should expect the gap to be filled automatically prior to receiving any messages with sequences above the gap.”</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">is_next_expected_msg_seq_num_present</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">next_seq_num</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
+<figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">is_next_expected_msg_seq_num_present</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">next_seq_num</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
     <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
     <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">true</span>
     <span class="o">|</span> <span class="nc">Some</span> <span class="n">msg</span> <span class="o">-&gt;</span>
@@ -226,3 +226,4 @@
     <span class="p">)</span>
     <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
 <span class="p">;;</span></code></pre></figure>
+
