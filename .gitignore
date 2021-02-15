@@ -8,3 +8,6 @@ module_graph.svg
 *.merlin
 *.install
 *jbuild-ignore
+.sass-cache/
+_site/
+jekyll-resources/

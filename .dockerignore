@@ -1,0 +1,7 @@
+_site/
+jekyll-resources/
+.sass-cache/
+_opam/
+_build/
+.merlin
+**/.merlin

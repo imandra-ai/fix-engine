@@ -3,6 +3,12 @@
 build:
 	@echo "(dirs :standard \ *-vg)" > dune
 	dune build @install
+	dune build src-simulation/server.bc
+	rm dune
+
+build_server:
+	@echo "(dirs :standard \ *-vg)" > dune
+	dune build src-simulation/server.bc
 	rm dune
 
 build_vgs:
@@ -12,7 +18,7 @@ build_vgs:
 
 build_tests:
 	@echo "(dirs :standard \ *-vg)" > dune
-	dune build src-tests/test_runner.bc 
+	dune build src-tests/test_runner.bc
 	dune build src-tests/test_cache.bc
 	rm dune
 
@@ -27,11 +33,6 @@ doc:
 
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 	sed -e 's/rotate=90;//g' "$<" | dot -Tsvg -o $@
-
-server:
-	@echo "(dirs :standard \ *-vg)" > dune
-	dune build src-simulation/server.bc
-	rm dune
 
 # opam1-setup - for running in Wercker. Assumes the correct switch is already installed and selected.
 opam1-setup:
@@ -51,6 +52,3 @@ _opam:
 
 clean:
 	dune clean
-
-.PHONY: build build_vgs run run_server clean doc
-
