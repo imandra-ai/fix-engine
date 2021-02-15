@@ -11,7 +11,7 @@ Consider the following quote from Volume 2 of the FIX 4.4 specification:
 One way to formalise that statement is to create two VGs:
 - VG.1.1 - any outbound message will result in an updated `fe_last_time_data_sent` field
 - VG.1.2 - any time update will result in check whether Heartbeat should be sent out
-{% highlight ocaml %}
+{% highlight iml %}
 
 (* VG.1.1 *)
 verify last_time_data_sent_gets_updated ( engine : fix_engine_state ) =
