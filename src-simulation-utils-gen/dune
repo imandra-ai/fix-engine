@@ -3,5 +3,5 @@
  (public_name fix-engine.fix_simulation_utils_gen)
  (wrapped false)
  (flags
-  (:standard -open Imandra_prelude -open Unix -warn-error -A+8+39))
+  (:standard -open Imandra_prelude -open Unix -warn-error -A+8+39 -alert -deprecated -w -33))
  (libraries venue_types))
