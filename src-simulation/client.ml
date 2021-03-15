@@ -1,11 +1,10 @@
 open Simulation_utils
 
-module Blocking = Make(M.Blocking_IO)
+module Blocking = Make(Blocking_IO)
 
 module Client = struct
   open Blocking
   open IO
-  open IO.M
 
   type client_config =
     { fixhost      : string
@@ -41,7 +40,7 @@ module Client = struct
   let init_socket addr port =
     let inet_addr = (Unix.gethostbyname addr).Unix.h_addr_list.(0) in
     let sockaddr = Unix.ADDR_INET (inet_addr, port) in
-    let sock = Unix.socket Unix.PF_INET Unix.SOCK_STREAM i in
+    let sock = Unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in
     Unix.connect sock sockaddr;
     let outchan = Unix.out_channel_of_descr sock in
     let inchan = Unix.in_channel_of_descr sock in
@@ -179,17 +178,21 @@ module Client = struct
     let seqout = engine_state.Fix_engine_state.outgoing_seq_num in
     Session_manager.save sessn (seqin, seqout)
 
-  let loop state () =
+  let loop init state () =
 
     let zmq_pub = zmq_publish state.zmqpubsocket in
 
-    let handle_model_ev, engine_handle = handlers ~zmq_pub ~outch:state.outch in
+    let handle_model_ev, engine_handle = handlers ~zmq_pub ~outch:state.outch () in
+
+    let model_state, engine_state = engine_handle (state.model_state, {state.engine_state with incoming_int_msg = Some init }) in
+
+    let state = { state with model_state; engine_state } in
 
     let rec loop state () =
       (* inbound actions from test manager *)
       match try_zmq_read state.zmqrepsocket with
       | Some act ->
-        let model_state, engine_state = handle_model_ev state (Action act) in
+        let model_state, engine_state = handle_model_ev (state.model_state, state.engine_state) (Action act) in
         loop { state with model_state; engine_state } ()
       | None ->
         (* inbound messages from FIX *)
@@ -207,7 +210,7 @@ module Client = struct
           let state = { state with model_state; engine_state } in
           loop state ()
         | None ->
-          (try Thread.delay 0.001p with Unix.Unix_error (Unix.EINTR,_,_)->());
+          (try Thread.delay 0.001 with Unix.Unix_error (Unix.EINTR,_,_)->());
           (* TODO: timechange heartbeat *)
           loop state ()
     in
@@ -223,7 +226,7 @@ module Client = struct
     let engine_state = Engine.make_engine_state seqns config in
     let state = { sessn; zmqrepsocket; zmqpubsocket; inch; outch; logdir = dir; model_state; sq; engine_state } in
     let _thread = fix_read_thread state in
-    loop state ()
+    loop init state ()
 
   let run_client client_config =
     (* Bringing up a ZMQ sockets *)

@@ -252,6 +252,8 @@ module Make(IO:IO) = struct
 
   let handlers ~zmq_pub ~outch () =
 
+    let open IO.M in
+
     let rec handle_model_ev (model_state, engine_state) ev =
       Model.(handle_ev ~zmq_pub model_state ev) >>= fun model_state ->
       let open State in
@@ -259,14 +261,14 @@ module Make(IO:IO) = struct
         State_utils.get_outgoing model_state
         |> List.map (fun x -> x.outgoing_msg_msg)
       in
-      send_messages_list messages >>= fun (model_state, engine_state) ->
+      send_messages_list (model_state, engine_state) messages >>= fun (model_state, engine_state) ->
       let model_state = State_utils.set_outgoing model_state [] in
-      if msg = Terminate then raise Exit;
+      (* if ev = Terminate then raise Exit; *)
       return (model_state, engine_state)
 
-    and engine_handle (model_state, engine_state) =
+    and engine_handle state =
       let fix_io_send = Fix_IO.write ~outch in
-      Engine.while_busy_loop ~fix_io_send ~handle_msg:(fun s m -> handle_model_ev s (FIX_Message m))
+      Engine.while_busy_loop ~fix_io_send ~handle_msg:(fun s m -> handle_model_ev s (FIX_message m)) state
       >>= fun (model_state, engine_state) ->
       let engine_state = { engine_state with fe_history = [] } in
       return (model_state, engine_state)

@@ -137,60 +137,60 @@ let perform_action  (instream, outch) act =
             let logstring = ("Initiated #" ^ seqnum ^ " \"" ^ msgtype ^ "\"  (" ^ msg ^ ")" ) in
             Lwt_io.printl logstring
         end
-    | ExpectMessage msg -> begin 
+    | ExpectMessage msg -> begin
             let msg = prepare_message msg ("IMANDRA", "CLIENT") in
             Lwt_io.printl ( "Expecting: " ^ msg) >>= fun () ->
             Lwt_stream.next instream >>= fun rmsg ->
             Lwt_io.printl ( "Received: " ^ msg_to_string rmsg) >>= fun () ->
-            msg |> Stream.of_string  
+            msg |> Stream.of_string
                 |> Parser_utils.split_into_key_value '\001'
                 |> Parser_utils.split_into_messages
                 |> Stream.next
-                |> check_expected_compatible rmsg 
+                |> check_expected_compatible rmsg
         end
     | ExpectAction Disconnect -> begin
             Lwt_io.printl ( "Disconnecting" ) >>= fun () ->
             Lwt_io.close outch >>= fun () ->
-            Lwt.return_unit    
+            Lwt.return_unit
         end
     | _ -> begin
             Lwt_io.printl ( "Unexpected action." ) >>= fun () ->
             Lwt_io.close outch >>= fun () ->
-            Lwt.return_unit    
+            Lwt.return_unit
         end
     end >>= fun () -> Lwt_unix.sleep 0.1p
 
-let setup_client msgs =
-    let addr = Caml_unix.( ADDR_INET( inet_addr_loopback , 9880i ) ) in
-    Lwt.catch begin fun () ->
-        Lwt_io.printl "Starting connection" >>= fun () -> 
-        let fd = Lwt_unix.(socket PF_INET SOCK_STREAM 0i ) in
-        Lwt_io.with_connection ~fd:fd addr begin fun (inch, outch) ->
-            Lwt_io.printl "Connnected to localhost:9880 ..." >>= fun() ->
-            let instream = Message_stream.from_channel inch in
-            let perform_action = perform_action (instream, outch) in
-            Lwt_list.iter_s perform_action msgs        
-        end
-    end 
-    begin fun _x -> 
-        Lwt_io.printl "Unhandled exception" >>= fun () -> 
-        Lwt_io.flush_all ()
-    end
-;;
+(* let setup_client msgs =
+ *     let addr = Caml_unix.( ADDR_INET( inet_addr_loopback , 9880i ) ) in
+ *     Lwt.catch begin fun () ->
+ *         Lwt_io.printl "Starting connection" >>= fun () ->
+ *         let fd = Lwt_unix.(socket PF_INET SOCK_STREAM 0i ) in
+ *         Lwt_io.with_connection ~fd:fd addr begin fun (inch, outch) ->
+ *             Lwt_io.printl "Connnected to localhost:9880 ..." >>= fun() ->
+ *             let instream = Message_stream.from_channel inch in
+ *             let perform_action = perform_action (instream, outch) in
+ *             Lwt_list.iter_s perform_action msgs
+ *         end
+ *     end
+ *     begin fun _x ->
+ *         Lwt_io.printl "Unhandled exception" >>= fun () ->
+ *         Lwt_io.flush_all ()
+ *     end
+ * ;; *)
 
-let def_reader filename =
-    begin
-    let config_actions = parse_file filename in
-    let rec scan = function
-        | InitiateAction Connect :: tl -> setup_client tl
-        | ExpectAction Connect :: _tl -> failwith "Not implemented"
-        | _ :: tl -> scan tl
-        | [] -> Lwt.return_unit
-        in
-    scan config_actions >>= fun () ->
-    Lwt_io.printl "Exiting" >>= fun () -> 
-    Lwt_io.flush_all () 
-    end |> Lwt_main.run
-;;
+(* let def_reader filename =
+ *     begin
+ *     let config_actions = parse_file filename in
+ *     let rec scan = function
+ *         | InitiateAction Connect :: tl -> setup_client tl
+ *         | ExpectAction Connect :: _tl -> failwith "Not implemented"
+ *         | _ :: tl -> scan tl
+ *         | [] -> Lwt.return_unit
+ *         in
+ *     scan config_actions >>= fun () ->
+ *     Lwt_io.printl "Exiting" >>= fun () ->
+ *     Lwt_io.flush_all ()
+ *     end |> Lwt_main.run
+ * ;; *)
 
 [@@@logic]
