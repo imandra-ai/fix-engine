@@ -1,4 +1,5 @@
 module Make(IO:M.IO) = struct
+  module IO = IO
 
   open IO
 
@@ -8,8 +9,8 @@ module Make(IO:M.IO) = struct
 
     type t =
       { dir : string
-      ; seqin  : Caml.Int.t
-      ; seqout : Caml.Int.t
+      ; seqin  : int
+      ; seqout : int
       }
 
     let read_int file =
@@ -17,9 +18,9 @@ module Make(IO:M.IO) = struct
         open_in file >>= fun chn ->
         input_line chn >>= fun num ->
         close_in chn >>= fun () ->
-        return (int_of_string num)
+        return (int_of_string num |> Z.of_int)
       with _exn ->
-        return 0
+        return Z.zero
 
     let read_seqns dir =
       read_int Filename.(concat dir "seqin" ) >>= fun seqin ->
@@ -43,10 +44,10 @@ module Make(IO:M.IO) = struct
       write_int state.dir "seqout" seqout
 
     let create ~reset ~dir =
-      let () = prepare_folder dir  in
+      let () = prepare_folder dir in
       read_seqns dir >>= fun state ->
       if reset then
-        return { state with seqin = 0; seqout = 0 }
+        return { state with seqin = Z.zero; seqout = Z.zero }
       else
         return state
 
@@ -143,7 +144,7 @@ module Make(IO:M.IO) = struct
 
   module Engine = struct
 
-    open M.IO
+    open IO.M
 
     let timechange () =
       (** Timechange poster  *)
@@ -154,7 +155,7 @@ module Make(IO:M.IO) = struct
       let engine_state = Fix_engine.one_step engine_state in
       (* This assumes that after one_step we can get either ontgoing internal or outgoing FIX message *)
       begin match ( engine_state.outgoing_fix_msg , engine_state.outgoing_int_msg) with
-        | Some msg, None ->
+        | Some (ValidMsg msg), None ->
           let wire = Encode_full_messages.packet_full_valid_msg msg in
           fix_io_send wire >>= fun () ->
           return model_state
@@ -165,7 +166,7 @@ module Make(IO:M.IO) = struct
       end >>= fun model_state ->
       let engine_state = { engine_state with outgoing_fix_msg = None ; outgoing_int_msg = None } in
       if Fix_engine_state.engine_state_busy engine_state then
-        while_busy_loop t (model_state, engine_state)
+        while_busy_loop ~fix_io_send ~handle_msg (model_state, engine_state)
       else
         return (model_state, engine_state)
 
@@ -184,7 +185,7 @@ module Make(IO:M.IO) = struct
       ; fe_on_behalf_of_comp_id = config.on_behalf_id
       ; fe_target_comp_id = config.target_id
       ; fe_curr_time = Time_defaults_current_time.get_current_utctimestamp ()
-      ; fe_max_num_logons_sent = 10
+      ; fe_max_num_logons_sent = Z.of_int 10
       ; fe_application_up = true
       ; incoming_seq_num = inseq
       ; outgoing_seq_num = outseq
@@ -197,12 +198,13 @@ end
 module Blocking = Make(M.Blocking_IO)
 
 module Client = struct
-
   open Blocking
+  open IO
+  open IO.M
 
   type client_config =
     { fixhost      : string
-    ; fixport      : int
+    ; fixport      : Caml.Int.t
     ; zmqpub       : string
     ; zmqrep       : string
     ; comp_id      : string
@@ -222,7 +224,7 @@ module Client = struct
     ; target_id
     }
 
-  let make_engine_config client_config box =
+  let make_engine_config client_config =
     let { comp_id ; host_id ; target_id ; on_behalf_id ; _ } = client_config in
     let open Engine in
     { comp_id
@@ -232,7 +234,7 @@ module Client = struct
     }
 
   let init_socket addr port =
-    let inet_addr = (Unix.gethostbyname addr).Unix.h_addr_list.(0) in
+    let inet_addr = (Unix.gethostbyname addr).Unix.h_addr_list.(Z.of_int 0) in
     let sockaddr = Unix.ADDR_INET (inet_addr, port) in
     let sock = Unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in
     Unix.connect sock sockaddr;
@@ -248,7 +250,7 @@ module Client = struct
     ; Printf.sprintf " - Internal messages are published on ZMQ socket %s" client_config.zmqpub
     ; Printf.sprintf " - Model actions are received on ZMQ socket %s" client_config.zmqrep
     ; "\n(*********************************************************************************)\n"
-    ] |> String.concat "\n" |> print_endline in
+    ] |> String.concat "\n" |> print_endline
 
   let session_folder config =
     let open Engine in
@@ -297,7 +299,7 @@ module Client = struct
       end
     | _ -> ()
 
-  let zmq_publish socket msg out =
+  let zmq_publish socket msg ~sending =
     let msg = Model_messages_json.json_of_model_msg msg in
     let rtime = get_last_received_utctimestamp () in
     let ztime = Time_defaults_current_time.get_current_utctimestamp () in
@@ -305,13 +307,13 @@ module Client = struct
     let rtime = rtime |> Time_defaults_json.utctimestamp_to_json in
     let ztime = ztime |> Time_defaults_json.utctimestamp_to_json in
     let stime = stime |> Time_defaults_json.utctimestamp_to_json in
-    let tpair = if out then ( "sent_fix" , ztime ) else ( "received_fix" , rtime ) in
+    let tpair = if sending then ( "sent_fix" , ztime ) else ( "received_fix" , rtime ) in
     let msg = match msg with
       | `Assoc pairs -> `Assoc ( tpair :: ( "sent_zmq" , ztime ) :: ( "SendingTime" , stime ) :: pairs )
       | other -> other
     in
-    let msg = Yojson.to_string msg in
-    Zmq.Socket.send socket msg
+    let msg = Yojson.Basic.to_string msg in
+    return @@ Zmq.Socket.send socket msg
 
   module SQ = struct
     type 'a t = {
@@ -352,13 +354,13 @@ module Client = struct
     ; logdir : string
     ; model_state : State.model_state
     ; engine_state : Fix_engine_state.fix_engine_state
-    ; sq : _ SQ.t
+    ; sq : Fix_IO.message SQ.t
     }
 
   let fix_read_thread state =
     Thread.create (fun () ->
         let rec loop () =
-          let msg = Fix_IO.get_message ~inch:state.inch [] in
+          Fix_IO.get_message ~inch:state.inch [] >>= fun msg ->
           SQ.push state.sq msg;
           loop ()
         in
@@ -371,13 +373,13 @@ module Client = struct
       Model.(handle_ev ~zmq_pub model_state (FIX_message msg))
     in
     let handle_act model_state act =
-      Model.(handle_ev ~zmq_pub model_state (Action msg))
+      Model.(handle_ev ~zmq_pub model_state (Action act))
     in
     let rec loop state () =
       match try_zmq_read state.zmqrepsocket with
       | Some act ->
-        let model_state = handle_act state.model_state act in
-        loop { state with model_state }
+        handle_act state.model_state act >>= fun model_state ->
+        loop { state with model_state } ()
       | None ->
         match SQ.try_take state.sq with
         | Some msg ->
@@ -389,13 +391,13 @@ module Client = struct
           let engine_handle = Engine.while_busy_loop ~fix_io_send ~handle_msg in
 
           let engine_state = { state.engine_state with incoming_fix_msg = Some msg } in
-          let model_state, engine_state = engine_handle (state.model_state, engine_state) in
+          engine_handle (state.model_state, engine_state) >>= fun (model_state, engine_state) ->
 
           (* do timechange TODO: factor *)
           let msg = Engine.timechange () in
 
-          let engine_state = {engine_state with incoming_int_msg = Some msg }
-          let model_state, engine_state = engine_handle (model_state, engine_state) in
+          let engine_state = {engine_state with incoming_int_msg = Some msg } in
+          engine_handle (model_state, engine_state) >>= fun (model_state, engine_state) ->
 
           let state = { state with model_state; engine_state } in
           loop state ()
@@ -404,19 +406,19 @@ module Client = struct
           (* TODO: timechange heartbeat *)
           loop state ()
     in
-    loop ()
+    loop state ()
 
   let run config (zmqrepsocket, zmqpubsocket) (inch, outch) =
     let dir = session_folder config in
-    let sessn = Session_manager.create ~reset:false ~dir in
     let init = Fix_engine_state.(IncIntMsg_CreateSession {dest_comp_id=config.target_id ; reset_seq_num=false} ) in
-    let model_state =  State.init_model_state in
-    let sq = SQ.create () in
+    let model_state = State.init_model_state in
+    let sq = SQ.make () in
+    Session_manager.create ~reset:false ~dir >>= fun sessn ->
     let seqns = Session_manager.get sessn in
     let engine_state = Engine.make_engine_state seqns config in
     let state = { sessn; zmqrepsocket; zmqpubsocket; inch; outch; logdir = dir; model_state; sq; engine_state } in
     let _thread = fix_read_thread state in
-    loop state
+    loop state ()
 
   let run_client client_config =
     (* Bringing up a ZMQ sockets *)
@@ -435,6 +437,7 @@ module Client = struct
 
     let () = banner client_config () in
 
-    run config (zmqrepsocket, zmqpubsocket) chans
+    try run config (zmqrepsocket, zmqpubsocket) chans with Exit ->
+      return ()
 
 end

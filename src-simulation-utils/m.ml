@@ -34,7 +34,10 @@ end
 
 let (%>) f g x = g (f x)
 
-module Blocking_IO : IO with module M = Invoke = struct
+module Blocking_IO : IO with module M = Invoke
+                         and type in_channel = in_channel
+                         and type out_channel = out_channel
+= struct
 
   module M = Invoke
 
