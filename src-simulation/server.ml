@@ -77,7 +77,7 @@ let session_folder config =
 
 let established : unit Lwt_mvar.t = Lwt_mvar.create_empty ()
 
-let with_catch_disconnect f =
+alet with_catch_disconnect f =
   Lwt.catch f (fun _ ->
       Lwt_io.printl "Client disconnected."
       >>= fun () -> Lwt_mvar.take established )
