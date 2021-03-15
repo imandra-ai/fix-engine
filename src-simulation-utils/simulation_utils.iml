@@ -85,8 +85,7 @@ module Make(IO:IO) = struct
       read_int Filename.(concat dir "seqout") >>= fun seqout ->
       return { dir; seqin; seqout }
 
-    (* todo *)
-    let prepare_folder dir =
+     let prepare_folder dir =
       if not(Caml_sys.file_exists dir) then
         Caml_unix.(mkdir dir (Z.to_int 0o775))
       else ()
@@ -250,5 +249,47 @@ module Make(IO:IO) = struct
       }
 
   end
+
+  let handlers ~zmq_pub ~outch () =
+
+    let rec handle_model_ev (model_state, engine_state) ev =
+      Model.(handle_ev ~zmq_pub model_state ev) >>= fun model_state ->
+      let open State in
+      let messages =
+        State_utils.get_outgoing model_state
+        |> List.map (fun x -> x.outgoing_msg_msg)
+      in
+      send_messages_list messages >>= fun (model_state, engine_state) ->
+      let model_state = State_utils.set_outgoing model_state [] in
+      if msg = Terminate then raise Exit;
+      return (model_state, engine_state)
+
+    and engine_handle (model_state, engine_state) =
+      let fix_io_send = Fix_IO.write ~outch in
+      Engine.while_busy_loop ~fix_io_send ~handle_msg:(fun s m -> handle_model_ev s (FIX_Message m))
+      >>= fun (model_state, engine_state) ->
+      let engine_state = { engine_state with fe_history = [] } in
+      return (model_state, engine_state)
+
+    and engine_handle_timechange state =
+      engine_handle state >>= fun (model_state, engine_state) ->
+      let msg = Engine.timechange () in
+      let engine_state = {engine_state with incoming_int_msg = Some msg } in
+      engine_handle state
+
+    and send_messages_list (model_state, engine_state) messages =
+      let open Fix_engine_state in
+      match messages with
+      | [] ->
+        return (model_state, engine_state)
+      | hd::tl ->
+        zmq_pub hd ~sending:true >>= fun () ->
+        let data = Type_converter.convert_model_to_full_fix hd in
+        let msg = IncIntMsg_ApplicationData data in
+        let engine_state = { engine_state with incoming_int_msg = Some msg } in
+        engine_handle_timechange (model_state, engine_state) >>= fun state ->
+        send_messages_list state tl
+    in
+    handle_model_ev, engine_handle_timechange
 
 end
