@@ -216,12 +216,12 @@ module Make(IO:IO) = struct
         | Some (ValidMsg msg), None ->
           let wire = Encode_full_messages.packet_full_valid_msg msg in
           fix_io_send wire >>= fun () ->
-          return model_state
+          return (model_state, engine_state)
         | None, Some msg ->
-          handle_msg model_state msg
-        | None, None -> return model_state
+          handle_msg (model_state, engine_state) msg
+        | None, None -> return (model_state, engine_state)
         |  _ -> failwith "Critical internal error in fix_engine model"
-      end >>= fun model_state ->
+      end >>= fun (model_state, engine_state) ->
       let engine_state = { engine_state with outgoing_fix_msg = None ; outgoing_int_msg = None } in
       if Fix_engine_state.engine_state_busy engine_state then
         while_busy_loop ~fix_io_send ~handle_msg (model_state, engine_state)

@@ -172,37 +172,79 @@ module Client = struct
         loop ()
       )
 
-  let loop state () =
+  let save_state_seqns state =
+    let engine_state = state.engine_state in
+    let sessn = state.sessn in
+    let seqin  = engine_state.Fix_engine_state.incoming_seq_num in
+    let seqout = engine_state.Fix_engine_state.outgoing_seq_num in
+    Session_manager.save sessn (seqin, seqout)
+
+
+  let handlers state =
+
     let zmq_pub = zmq_publish state.zmqpubsocket in
-    let handle_msg model_state msg =
-      Model.(handle_ev ~zmq_pub model_state (FIX_message msg))
+
+    let rec handle_model_ev (model_state, engine_state) ev =
+      let model_state = Model.(handle_ev ~zmq_pub model_state ev) in
+      let open State in
+      let messages =
+        State_utils.get_outgoing model_state
+        |> List.map (fun x -> x.outgoing_msg_msg)
+      in
+      let model_state, engine_state = send_messages_list messages in
+      let model_state = State_utils.set_outgoing model_state [] in
+      if msg = Terminate then raise Exit;
+      model_state, engine_state
+
+    and engine_handle (model_state, engine_state) =
+      let fix_io_send = Fix_IO.write ~outch:state.outch in
+      let model_state, engine_state =
+        Engine.while_busy_loop ~fix_io_send ~handle_msg:(fun s m -> handle_model_ev s (FIX_Message m))
+      in
+      let engine_state = { engine_state with fe_history = [] } in
+      model_state, engine_state
+
+    and engine_handle_timechange state =
+      let model_state, engine_state = engine_handle state in
+      let msg = Engine.timechange () in
+      let engine_state = {engine_state with incoming_int_msg = Some msg } in
+      engine_handle state
+
+    and send_messages_list (model_state, engine_state) messages =
+      let open Fix_engine_state in
+      match messages with
+      | [] -> model_state, engine_state
+      | hd::tl ->
+        let () = zmq_pub hd ~sending:true in
+        let data = Type_converter.convert_model_to_full_fix hd in
+        let msg = IncIntMsg_ApplicationData data in
+        let engine_state = { engine_state with incoming_int_msg = Some msg } in
+        let state = engine_handle_timechange (model_state, engine_state) in
+        send_messages_list state tl
     in
-    let handle_act model_state act =
-      Model.(handle_ev ~zmq_pub model_state (Action act))
-    in
+    handle_model_ev, engine_handle_timechange
+
+  let loop state () =
+    let handle_model_ev, engine_handle = handlers state in
+
     let rec loop state () =
+      (* inbound actions from test manager *)
       match try_zmq_read state.zmqrepsocket with
       | Some act ->
-        let model_state = handle_act state.model_state act in
-        loop { state with model_state } ()
+        let model_state, engine_state = handle_model_ev state (Action act) in
+        loop { state with model_state; engine_state } ()
       | None ->
+        (* inbound messages from FIX *)
         match SQ.try_take state.sq with
         | Some msg ->
+
+          let () = save_state_seqns state in
 
           let msg = Parse_full_messages.parse_top_level_msg msg in
           let () = update_times msg in
 
-          let fix_io_send = Fix_IO.write ~outch:state.outch in
-          let engine_handle = Engine.while_busy_loop ~fix_io_send ~handle_msg in
-
           let engine_state = { state.engine_state with incoming_fix_msg = Some msg } in
           let (model_state, engine_state) = engine_handle (state.model_state, engine_state) in
-
-          (* do timechange TODO: factor *)
-          let msg = Engine.timechange () in
-
-          let engine_state = {engine_state with incoming_int_msg = Some msg } in
-          let (model_state, engine_state) = engine_handle (model_state, engine_state) in
 
           let state = { state with model_state; engine_state } in
           loop state ()
