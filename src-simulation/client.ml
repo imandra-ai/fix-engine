@@ -188,12 +188,12 @@ module Client = struct
 
     let state = { state with model_state; engine_state } in
 
-    let rec loop state () =
+    let rec loop state ~tick () =
       (* inbound actions from test manager *)
       match try_zmq_read state.zmqrepsocket with
       | Some act ->
         let model_state, engine_state = handle_model_ev (state.model_state, state.engine_state) (Action act) in
-        loop { state with model_state; engine_state } ()
+        loop ~tick { state with model_state; engine_state } ()
       | None ->
         (* inbound messages from FIX *)
         match SQ.try_take state.sq with
@@ -208,13 +208,17 @@ module Client = struct
           let (model_state, engine_state) = engine_handle (state.model_state, engine_state) in
 
           let state = { state with model_state; engine_state } in
-          loop state ()
+          loop state ~tick:0.0 ()
         | None ->
           (try Thread.delay 0.001 with Unix.Unix_error (Unix.EINTR,_,_)->());
-          (* TODO: timechange heartbeat *)
-          loop state ()
+          if tick > 2.0 then (
+            let (model_state, engine_state) = engine_handle (state.model_state, state.engine_state) in
+            let state = { state with model_state; engine_state } in
+            loop state ~tick:0.0 ()
+          ) else
+            loop state ~tick:(tick +. 0.002) ()
     in
-    loop state ()
+    loop state ~tick:0.0 ()
 
   let run config (zmqrepsocket, zmqpubsocket) (inch, outch) =
     let dir = session_folder config in
