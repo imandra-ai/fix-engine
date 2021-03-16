@@ -212,6 +212,7 @@ module Client = struct
         | None ->
           (try Thread.delay 0.001 with Unix.Unix_error (Unix.EINTR,_,_)->());
           if tick > 2.0 then (
+            (* nothing to process, just do a timeupdate *)
             let (model_state, engine_state) = engine_handle (state.model_state, state.engine_state) in
             let state = { state with model_state; engine_state } in
             loop state ~tick:0.0 ()
@@ -252,3 +253,37 @@ module Client = struct
     try run config (zmqrepsocket, zmqpubsocket) chans with Exit -> ()
 
 end
+
+
+let () =
+  let open Cmdliner in
+  let fixhost = let doc = "FIX host address" in
+    Arg.(value & opt string "localhost" & info ["fix-host"] ~docv:"FIXHOST" ~doc)
+  in
+  let fixport = let doc = "Port for the FIX connection" in
+    Arg.(value & opt int 9880 & info ["fix-port"] ~docv:"FIXPORT" ~doc)
+  in
+  let compid = let doc = "FIX Client ID" in
+    Arg.(value & opt string "IMANDRA" & info ["compid"] ~docv:"COMPID" ~doc)
+  in
+  let hostid = let doc = "Host ID (will be sent as SenderLocationID<142>)" in
+    Arg.(value & opt string "LOGIN" & info ["hostid"] ~docv:"HOSTID" ~doc)
+  in
+  let targetid = let doc = "FIX Target ID" in
+    Arg.(value & opt string "TARGET" & info ["targetid"] ~docv:"TARGETID" ~doc)
+  in
+  let zmqpub =
+    let doc = "ZMQ PUB socket adress" in
+    Arg.(value & opt string "tcp://*:5000" & info ["zmq-pub"] ~docv:"ZMQPUBADDR" ~doc)
+  in
+  let zmqrep =
+    let doc = "ZMQ REP socket adress" in
+    Arg.(value & opt string "tcp://*:5001" & info ["zmq-rep"] ~docv:"ZMQREPADDR" ~doc)
+  in
+  let info = let doc = "FIX engine client, publishing all internal messages on ZMQ socket." in
+    Term.info "server" ~version:"%%VERSION%%" ~doc ~exits:Term.default_exits
+  in
+  let open Client in
+  let config = Term.(const make_client_config $ fixhost $ fixport $ zmqpub $ zmqrep $ compid $ hostid $ targetid ) in
+  Term.exit @@ Term.eval (Term. (const run_client $ config ), info)
+;;
