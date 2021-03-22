@@ -223,6 +223,7 @@ module Client = struct
 
   let run config (zmqrepsocket, zmqpubsocket) (inch, outch) =
     let dir = session_folder config in
+    let () = Fix_IO.set_logfile dir "fix.log" in
     let init = Fix_engine_state.(IncIntMsg_CreateSession {dest_comp_id=config.target_id ; reset_seq_num=false} ) in
     let model_state = State.init_model_state in
     let sq = SQ.make () in
