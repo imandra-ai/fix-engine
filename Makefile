@@ -4,6 +4,7 @@ build:
 	@echo "(dirs :standard \ *-vg)" > dune
 	dune build @install
 	dune build src-simulation/client.bc
+	dune build src-simulation/server.bc
 	rm dune
 
 build_server:

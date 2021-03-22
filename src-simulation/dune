@@ -4,12 +4,12 @@
 ;  (modes byte)
 ;  (libraries cmdliner fix_simulation_utils))
 
-; (executable
-;  (name server)
-;  (public_name fix-engine.server)
-;  (modules server)
-;  (modes byte)
-;  (libraries cmdliner fix_simulation_utils))
+(executable
+ (name server)
+ (public_name fix-engine.server)
+ (modules server)
+ (modes byte)
+ (libraries cmdliner lwt fix_simulation_utils))
 
 (executable
  (name client)

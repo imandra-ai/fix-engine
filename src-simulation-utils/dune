@@ -4,6 +4,6 @@
  (wrapped false)
  (flags
   (:standard -open Imandra_prelude -open Unix -warn-error -A+8+39 -alert -deprecated -w -33-58))
- (libraries venue fix_engine core_utils core_pp core_time_defaults
+ (libraries lwt.unix venue fix_engine core_utils core_pp core_time_defaults
    core_time_defaults_pp types_pp protocol_pp conversions
    imandra-base.prelude simulation_utils_gen))
