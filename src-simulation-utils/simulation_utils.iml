@@ -19,7 +19,8 @@ module type IO = sig
 
   type out_channel
 
-  val open_out : string -> out_channel M.t
+  val open_out    : string -> out_channel M.t
+  val open_append : string -> out_channel M.t
   val write_str : out_channel -> string -> unit M.t
   val close_out : out_channel -> unit M.t
 end
@@ -49,6 +50,7 @@ struct
   type nonrec out_channel = out_channel
 
   let open_out = open_out
+  let open_append = open_out_gen [Open_append; Open_creat] (Z.to_int 0o775) 
   let write_str oc s = Printf.fprintf oc "%s%!" s
   let close_out = close_out
 
@@ -75,6 +77,7 @@ struct
   type nonrec out_channel = Lwt_io.output_channel
 
   let open_out s = Lwt_io.open_file ~mode:Lwt_io.Output s
+  let open_append s = Lwt_io.open_file ~flags:Caml_unix.[O_APPEND; O_CREAT] ~mode:Lwt_io.Output s
   let write_str oc s = Lwt_io.write oc s >>= fun () -> Lwt_io.flush oc
   let close_out = Lwt_io.close
 
@@ -156,8 +159,8 @@ module Make(IO:IO) = struct
 
     let logfix msg =
       match !logfile with None -> return () | Some filename ->
-      let log = encode ~split:'|' msg in
-      open_out filename >>= fun fch ->
+      let log = encode ~split:'|' msg ^ "\n"in
+      open_append filename >>= fun fch ->
       write_str fch log >>= fun () ->
       close_out fch
 

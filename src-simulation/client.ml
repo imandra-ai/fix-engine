@@ -223,12 +223,12 @@ module Client = struct
 
   let run config (zmqrepsocket, zmqpubsocket) (inch, outch) =
     let dir = session_folder config in
+    let () = Fix_IO.set_logfile dir "fix.log" in
     let init = Fix_engine_state.(IncIntMsg_CreateSession {dest_comp_id=config.target_id ; reset_seq_num=false} ) in
     let model_state = State.init_model_state in
     let sq = SQ.make () in
     let sessn = Session_manager.create ~reset:false ~dir in
     let seqns = Session_manager.get sessn in
-    let () = Fix_IO.set_logfile dir "fix.log" in
     let engine_state = Engine.make_engine_state seqns config in
     let state = { sessn; zmqrepsocket; zmqpubsocket; inch; outch; logdir = dir; model_state; sq; engine_state } in
     let _thread = fix_read_thread state () in
