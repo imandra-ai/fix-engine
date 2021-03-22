@@ -54,7 +54,31 @@ struct
 
 end
 
-(* TODO: lwt *)
+module Lwt_IO :
+  IO with type 'a M.t = 'a Lwt.t
+      and type in_channel = Lwt_io.input_channel
+      and type out_channel = Lwt_io.output_channel
+=
+struct
+
+  module M = Lwt
+
+  open M
+
+  type nonrec in_channel = Lwt_io.input_channel
+
+  let open_in s = Lwt_io.open_file ~mode:Lwt_io.Input s
+  let input_line = Lwt_io.read_line
+  let input_char = Lwt_io.read_char
+  let close_in = Lwt_io.close
+
+  type nonrec out_channel = Lwt_io.output_channel
+
+  let open_out s = Lwt_io.open_file ~mode:Lwt_io.Output s
+  let write_str oc s = Lwt_io.write oc s >>= fun () -> Lwt_io.flush oc
+  let close_out = Lwt_io.close
+
+end
 
 module Make(IO:IO) = struct
   module IO = IO
