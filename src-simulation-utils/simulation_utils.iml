@@ -1,6 +1,7 @@
 module type SIG = sig
   type 'a t
 
+  val ( let* ) : 'a t -> ('a -> 'b t) -> 'b t
   val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
   val return : 'a -> 'a t
 
@@ -29,6 +30,7 @@ module Identity : SIG with type 'a t = 'a = struct
   type 'a t = 'a
 
   let (>>=) m f = f m
+  let (let*) = (>>=)
   let return x : 'a t = x
 end
 
@@ -63,7 +65,10 @@ module Lwt_IO :
 =
 struct
 
-  module M = Lwt
+  module M = struct
+    include Lwt
+    let (let*) = (>>=)
+  end
 
   open M
 
