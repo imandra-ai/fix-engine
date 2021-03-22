@@ -228,6 +228,7 @@ module Client = struct
     let sq = SQ.make () in
     let sessn = Session_manager.create ~reset:false ~dir in
     let seqns = Session_manager.get sessn in
+    let () = Fix_IO.set_logfile dir "fix.log" in
     let engine_state = Engine.make_engine_state seqns config in
     let state = { sessn; zmqrepsocket; zmqpubsocket; inch; outch; logdir = dir; model_state; sq; engine_state } in
     let _thread = fix_read_thread state () in

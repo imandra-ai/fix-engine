@@ -142,6 +142,25 @@ module Make(IO:IO) = struct
 
     type message = (string * string) list
 
+    let encode ~split msg =
+      let split = Caml.String.make 1i split in
+      msg
+      |> List.map ( fun(k,v) -> k^"="^v )
+      |> List.fold_left ( fun a s -> a ^ s ^ split ) ""
+
+    let logfile = ref None
+
+    let set_logfile dir fname =
+      let filename = Filename.(concat dir fname) in
+      logfile := (Some filename) 
+
+    let logfix msg =
+      match !logfile with None -> return () | Some filename ->
+      let log = encode ~split:'|' msg in
+      open_out filename >>= fun fch ->
+      write_str fch log >>= fun () ->
+      close_out fch
+
     (* Converts [ '5'; '2'; '='; 'A' ] to ("52" , "A" ) *)
     let extract_key_value (chlist : char list) : string * string =
       let buf = Buffer.create @@ Caml.List.length chlist in
@@ -152,12 +171,6 @@ module Make(IO:IO) = struct
           | [] -> ("","")
           | h::tl -> (h, String.concat "=" tl)
         )
-
-    let encode ~split msg =
-      let split = Caml.String.make 1i split in
-      msg
-      |> List.map ( fun(k,v) -> k^"="^v )
-      |> List.fold_left ( fun a s -> a ^ s ^ split ) ""
 
     let default_split = '\001'
 
@@ -173,10 +186,14 @@ module Make(IO:IO) = struct
       let msg = (k,v)::msg in
       if k <> "10" then
         get_message ~split ~inch msg
-      else
-        return @@ List.rev msg
+      else (
+        let msg = List.rev msg in
+        logfix msg >>= fun () ->
+        return msg
+      )
 
     let write ?(split=default_split) ~outch msg =
+      logfix msg >>= fun () ->
       let wire = encode ~split msg in
       write_str outch wire
 
