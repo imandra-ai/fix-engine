@@ -225,6 +225,27 @@ let attempt_sequence_reset (engine, msg_seq_num, new_seq_num : fix_engine_state 
     }
 ;;
 
+let make_shortcut_gap_fill engine seqr_new_seq_no =
+  let msg_data =
+    { seqr_gap_fill_flag = Some FIX_GapFillFlag_Y
+    ; seqr_new_seq_no
+    } in
+  let msg_data = Full_FIX_Admin_Msg ( Full_Msg_Sequence_Reset (msg_data)) in
+  let msg = create_outbound_fix_msg (
+    engine.outgoing_seq_num, engine.fe_target_comp_id,
+    engine.fe_comp_id, engine.fe_curr_time,
+    msg_data, false
+    ) in
+  { engine with
+    fe_last_time_data_sent  = engine.fe_curr_time
+  ; outgoing_fix_msg        = Some (ValidMsg ( msg ))
+  ; incoming_int_msg        = None
+  ; outgoing_seq_num        = engine.outgoing_seq_num + 1
+  }
+;;
+
+
+
 (** We're operating in a normal mode. *)
 let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     let header = m.full_msg_header in
@@ -269,10 +290,13 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
             | Full_Msg_Logoff _data          -> logoff_and_shutdown ( engine )
             | Full_Msg_Reject _data          -> { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
             | Full_Msg_Business_Reject _data -> engine
-            | Full_Msg_Resend_Request data  ->
+            | Full_Msg_Resend_Request data  -> begin
+                if engine.fe_history = [] then
+                make_shortcut_gap_fill engine data.rr_end_seq_num else
                 let engine = { engine with
                     incoming_seq_num = m.full_msg_header.h_msg_seq_num
                 } in initiate_Resend ( ActiveSession, data, engine )
+            end
             | Full_Msg_Sequence_Reset data  -> attempt_sequence_reset (engine, header.h_msg_seq_num, data.seqr_new_seq_no)
             | Full_Msg_Test_Request data    ->
                 let hearbeat_msg = create_heartbeat_msg ( engine, Some data.test_req_id ) in {
