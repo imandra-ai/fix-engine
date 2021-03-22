@@ -277,7 +277,7 @@ module Make(IO:IO) = struct
       engine_handle state >>= fun (model_state, engine_state) ->
       let msg = Engine.timechange () in
       let engine_state = {engine_state with incoming_int_msg = Some msg } in
-      engine_handle state
+      engine_handle (model_state, engine_state)
 
     and send_messages_list (model_state, engine_state) messages =
       let open Fix_engine_state in
