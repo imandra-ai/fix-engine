@@ -313,6 +313,7 @@ module Make(IO:IO) = struct
       send_messages_list (model_state, engine_state) messages >>= fun (model_state, engine_state) ->
       let model_state = State_utils.set_outgoing model_state [] in
       (* if ev = Terminate then raise Exit; *)
+      let model_state = { model_state with event_info = [] } in
       return (model_state, engine_state)
 
     and engine_handle state =
