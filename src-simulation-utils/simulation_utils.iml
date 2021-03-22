@@ -49,7 +49,7 @@ struct
   type nonrec out_channel = out_channel
 
   let open_out = open_out
-  let write_str oc s = Printf.fprintf oc "%s" s
+  let write_str oc s = Printf.fprintf oc "%s%!" s
   let close_out = close_out
 
 end
