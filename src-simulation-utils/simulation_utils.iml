@@ -221,7 +221,9 @@ module Make(IO:IO) = struct
           let model_message = Type_converter.convert_full_to_model_fix data in
           let model_state = State_utils.set_incoming model_state model_message in
           begin match model_message with
-            | FIX_TL_Normal msg -> msg_pub msg ~sending:false
+            | FIX_TL_Normal msg -> 
+            let msg = Msg_process.convert_inner model_state msg in
+            msg_pub msg ~sending:false
             | _ ->
               (* println "[Model error] Incoming message conversion failure"; *)
               return ()
