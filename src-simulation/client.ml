@@ -180,9 +180,9 @@ module Client = struct
 
   let loop init state () =
 
-    let zmq_pub = zmq_publish state.zmqpubsocket in
+    let msg_pub = zmq_publish state.zmqpubsocket in
 
-    let handle_model_ev, engine_handle = handlers ~zmq_pub ~outch:state.outch () in
+    let handle_model_ev, engine_handle = handlers ~msg_pub ~outch:state.outch () in
 
     let model_state, engine_state = engine_handle (state.model_state, {state.engine_state with incoming_int_msg = Some init }) in
 

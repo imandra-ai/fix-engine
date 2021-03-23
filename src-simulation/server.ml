@@ -45,8 +45,8 @@ module Server = struct
     Session_manager.save state.sessn (seqin, seqout)
 
   let loop state () =
-    let zmq_pub = fun _ ~sending:_ -> Lwt.return_unit in
-    let _, engine_handle = handlers ~zmq_pub ~outch:state.outch () in
+    let msg_pub = fun _ ~sending:_ -> Lwt.return_unit in
+    let _, engine_handle = handlers ~msg_pub ~outch:state.outch () in
     let rec loop state () =
       Lwt_mvar.take state.io_q >>= fun msg ->
       save_state_seqns state >>= fun () ->

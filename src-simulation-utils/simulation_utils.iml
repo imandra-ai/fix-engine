@@ -52,7 +52,7 @@ struct
   type nonrec out_channel = out_channel
 
   let open_out = open_out
-  let open_append = open_out_gen [Open_append; Open_creat] (Z.to_int 0o775) 
+  let open_append = open_out_gen [Open_append; Open_creat] (Z.to_int 0o775)
   let write_str oc s = Printf.fprintf oc "%s%!" s
   let close_out = close_out
 
@@ -160,7 +160,7 @@ module Make(IO:IO) = struct
 
     let set_logfile dir fname =
       let filename = Filename.(concat dir fname) in
-      logfile := (Some filename) 
+      logfile := (Some filename)
 
     let logfix msg =
       match !logfile with None -> return () | Some filename ->
@@ -215,13 +215,13 @@ module Make(IO:IO) = struct
       | FIX_message of Fix_engine_state.fix_engine_int_out_msg
       | Action of Actions.fix_action
 
-    let handle_ev ~zmq_pub model_state ev =
+    let handle_ev ~msg_pub model_state ev =
       begin match ev with
         | FIX_message (OutIntMsg_ApplicationData data) ->
           let model_message = Type_converter.convert_full_to_model_fix data in
           let model_state = State_utils.set_incoming model_state model_message in
           begin match model_message with
-            | FIX_TL_Normal msg -> zmq_pub msg ~sending:false
+            | FIX_TL_Normal msg -> msg_pub msg ~sending:false
             | _ ->
               (* println "[Model error] Incoming message conversion failure"; *)
               return ()
@@ -299,12 +299,12 @@ module Make(IO:IO) = struct
 
   end
 
-  let handlers ~zmq_pub ~outch () =
+  let handlers ~msg_pub ~outch () =
 
     let open IO.M in
 
     let rec handle_model_ev (model_state, engine_state) ev =
-      Model.(handle_ev ~zmq_pub model_state ev) >>= fun model_state ->
+      Model.(handle_ev ~msg_pub model_state ev) >>= fun model_state ->
       let open State in
       let messages =
         State_utils.get_outgoing model_state
@@ -335,7 +335,7 @@ module Make(IO:IO) = struct
       | [] ->
         return (model_state, engine_state)
       | hd::tl ->
-        zmq_pub hd ~sending:true >>= fun () ->
+        msg_pub hd ~sending:true >>= fun () ->
         let data = Type_converter.convert_model_to_full_fix hd in
         let msg = IncIntMsg_ApplicationData data in
         let engine_state = { engine_state with incoming_int_msg = Some msg } in
