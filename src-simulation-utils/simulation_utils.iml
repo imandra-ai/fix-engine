@@ -150,6 +150,11 @@ module Make(IO:IO) = struct
 
     type message = (string * string) list
 
+    let get_time_string () =
+      Time_defaults_current_time.get_current_utctimestamp ()
+      |> Time_defaults_pp.encode_UTCTimestamp
+
+
     let encode ~split msg =
       let split = Caml.String.make 1i split in
       msg
@@ -165,6 +170,7 @@ module Make(IO:IO) = struct
     let logfix msg =
       match !logfile with None -> return () | Some filename ->
       let log = encode ~split:'|' msg ^ "\n"in
+      let log = "[" ^ get_time_string () ^ "]: " ^ log in 
       open_append filename >>= fun fch ->
       write_str fch log >>= fun () ->
       close_out fch
