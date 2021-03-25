@@ -4,4 +4,4 @@
  (wrapped false)
  (flags
   (:standard -open Imandra_prelude -warn-error -A+8+39 -alert -deprecated -w -33-58))
- (libraries imandra-base.prelude core fix_engine))
+ (libraries imandra-prelude core fix_engine))

@@ -3,4 +3,4 @@
  (public_name fix-engine.core_pp)
  (wrapped false)
  (flags :standard -open Imandra_prelude -warn-error -A+8+39 -alert -deprecated -w -33-58)
- (libraries decoders-yojson decoders core yojson imandra-base.prelude))
+ (libraries decoders-yojson decoders core yojson imandra-prelude))

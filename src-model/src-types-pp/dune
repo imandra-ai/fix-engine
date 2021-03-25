@@ -4,5 +4,5 @@
  (wrapped false)
  (flags
   (:standard -open Imandra_prelude -warn-error -A+8+39 -alert -deprecated -w -33-58))
- (libraries imandra-base.prelude decoders-yojson core_pp protocol_exts_pp
+ (libraries imandra-prelude decoders-yojson core_pp protocol_exts_pp
    string_factory templates venue_strings_venue venue_types))
