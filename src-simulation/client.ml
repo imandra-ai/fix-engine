@@ -266,13 +266,13 @@ let () =
     Arg.(value & opt int 9880 & info ["fix-port"] ~docv:"FIXPORT" ~doc)
   in
   let compid = let doc = "FIX Client ID" in
-    Arg.(value & opt string "IMANDRA" & info ["compid"] ~docv:"COMPID" ~doc)
+    Arg.(value & opt string "CLIENT" & info ["compid"] ~docv:"COMPID" ~doc)
   in
   let hostid = let doc = "Host ID (will be sent as SenderLocationID<142>)" in
     Arg.(value & opt string "LOGIN" & info ["hostid"] ~docv:"HOSTID" ~doc)
   in
   let targetid = let doc = "FIX Target ID" in
-    Arg.(value & opt string "TARGET" & info ["targetid"] ~docv:"TARGETID" ~doc)
+    Arg.(value & opt string "IMANDRA" & info ["targetid"] ~docv:"TARGETID" ~doc)
   in
   let zmqpub =
     let doc = "ZMQ PUB socket adress" in
