@@ -3,6 +3,7 @@ module type SIG = sig
 
   val ( let* ) : 'a t -> ('a -> 'b t) -> 'b t
   val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
+  val catch : (unit -> 'a t) -> (exn -> 'a t) -> 'a t
   val return : 'a -> 'a t
 
 end
@@ -31,6 +32,7 @@ module Identity : SIG with type 'a t = 'a = struct
 
   let (>>=) m f = f m
   let (let*) = (>>=)
+  let catch f h = try f () with exn -> h exn
   let return x : 'a t = x
 end
 
@@ -104,13 +106,12 @@ module Make(IO:IO) = struct
       }
 
     let read_int file =
-      try
+      catch ( fun () ->
         open_in file >>= fun chn ->
         input_line chn >>= fun num ->
         close_in chn >>= fun () ->
         return (int_of_string num |> Z.of_int)
-      with _exn ->
-        return 0
+      ) ( fun _exn -> return 0)
 
     let read_seqns dir =
       read_int Filename.(concat dir "seqin" ) >>= fun seqin ->
