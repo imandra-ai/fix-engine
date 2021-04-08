@@ -24,31 +24,48 @@ let full_msg_types_inner_rg_decoder  : full_msg_types_inner_rg D.decoder =
   let open D in
   field "mtps_ref_msg_type" full_msg_tag_of_json >>= fun mtps_ref_msg_type -> 
   field "mtps_direction" full_admin_enum_fix_msgdirection_decoder >>= fun mtps_direction -> 
-     D.succeed {mtps_ref_msg_type;mtps_direction}
-;;
-(*
-(** *)
-let full_msg_logon_to_json x = 
-    [ ( "EncryptMethod"        , encryption_method_to_json x.ln_encrypt_method            )
-    ; ( "HeartBtInt"           , duration_to_json          x.ln_heartbeat_interval        )
-    ; ( "RawDataLength"        , int_opt_to_json           x.ln_raw_data_length           )
-    ; ( "RawData"              , string_opt_to_json        x.ln_raw_data                  )
-    ; ( "ResetSeqNumFlag"      , bool_opt_to_json          x.ln_reset_seq_num_flag        )
-    ; ( "NextExpectedMsgSeqNum", int_opt_to_json           x.ln_next_expected_msg_seq_num )
-    ; ( "MaxMessageSize"       , int_opt_to_json           x.ln_max_message_size          )
-    ; ( "TestMessageIndicator" , bool_opt_to_json          x.ln_test_message_indicator    )
-    ; ( "Username"             , string_opt_to_json        x.ln_username                  )
-    ; ( "Password"             , string_opt_to_json        x.ln_password                  )
-    ; ( "MsgTypes"             , rg msg_type_to_json       x.ln_msg_types                 )
-    ] |> assoc_filter_nulls 
+  D.succeed {mtps_ref_msg_type;mtps_direction}
 ;;
 
-(** *)
-let full_msg_logoff_to_json x = 
-    [ ( "EncodedText"    , int_opt_to_json    x.lo_encoded_text_len ) 
-    ; ( "EncodedTextLen" , string_opt_to_json x.lo_encoded_text     ) 
-    ] |> assoc_filter_nulls 
+let full_msg_logon_decoder : full_msg_logon_data D.decoder = 
+  let open D in 
+  field "EncryptMethod" full_admin_enum_fix_encryption_method_decoder >>= fun ln_encrypt_method ->
+  field "HeartBtInt" duration_decoder >>= fun ln_heartbeat_interval -> 
+  maybe (field "RawDataLength" int_decoder) >>= fun ln_raw_data_length -> 
+  maybe (field "RawData" string) >>= fun ln_raw_data ->
+  maybe (field "ResetSeqNumFlag" bool) >>= fun ln_reset_seq_num_flag -> 
+  maybe (field "NextExpectedMsgSeqNum" int) >>= fun ln_next_expected_msg_seq_num -> 
+  maybe (field "MaxMessageSize" int) >>= fun ln_max_message_size -> 
+  maybe (field "TestMessageIndicator" bool) >>= fun ln_test_message_indicator -> 
+  maybe (field "Username" string) >>= fun ln_username -> 
+  maybe (field "Password" string) >>= fun ln_password ->
+  list (field "MsgTypes" full_msg_types_inner_rg_decoder) >>= fun ln_msg_types -> 
+  D.succeed {
+    ln_encrypt_method
+  ; ln_heartbeat_interval
+  ; ln_raw_data_length
+  ; ln_raw_data
+  ; ln_reset_seq_num_flag 
+  ; ln_next_expected_msg_seq_num = Option.map Z.of_int ln_next_expected_msg_seq_num
+  ; ln_max_message_size = Option.map Z.of_int ln_max_message_size
+  ; ln_test_message_indicator
+  ; ln_username 
+  ; ln_password
+  ; ln_msg_types  
+  }
+
+let full_msg_logoff_decoder : full_msg_logoff_data D.decoder = 
+  let open D in 
+  (maybe (field "EncodedTextLen" int)) >>= fun lo_encoded_text_len -> 
+  (maybe (field "EncodedText" string)) >>= fun lo_encoded_text -> 
+  D.succeed {
+    lo_encoded_text_len = Option.map Z.of_int lo_encoded_text_len
+  ; lo_encoded_text
+  }
+
 ;;
+
+(*
 
 (** *)
 let full_msg_resend_request_to_json x = 
