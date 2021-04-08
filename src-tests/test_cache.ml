@@ -16,7 +16,7 @@ print_string "The old cache:\n"
 
 ;;
 print_string
-  (Yojson.pretty_to_string
+  (Yojson.Basic.pretty_to_string
      (Full_messages_json.full_msg_list_to_json Test_cache_utils.cache) )
 
 ;;
@@ -29,7 +29,7 @@ let new_cache =
 
 ;;
 print_string
-  (Yojson.pretty_to_string (Full_messages_json.full_msg_list_to_json new_cache))
+  (Yojson.Basic.pretty_to_string (Full_messages_json.full_msg_list_to_json new_cache))
 
 (* Can we transition correctly? *)
 (* make these fix_msgs in utils and import *)

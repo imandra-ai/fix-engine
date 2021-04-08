@@ -2,9 +2,11 @@
  (name test_runner)
  (libraries threads cmdliner lwt.unix fix_simulation_utils protocol_pp
    core_printer test_utils)
+ (modes byte)
  (modules test_runner))
 
 (executable
  (name test_cache)
  (libraries test_utils fix_engine)
+ (modes byte)
  (modules test_cache))
