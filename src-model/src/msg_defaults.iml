@@ -1,16 +1,23 @@
-(* Imandra Inc. copyright 2020 *)
-[@@@import "../src-types/model_messages.iml"]
-open Model_messages;;
-[@@@import "../src-types/state.iml"]
-open State;;
+(* Imandra Inc. copyright 2021 *)
+[@@@import "../src-types/model_app_enums.iml"]
+open Model_app_enums;;
 
 
-let assign_defaults_ExecutionReport (msg_data : mod_executionreport_data) (m_state : model_state)  =
-    msg_data
+let model_func_default_ExecInst_NewOrderSingle (() : unit)  : model_fix_execinst Set.t =
+    let return_ret_var = Map.const false
+    in
+    let return_loop_return_flag = false
+    in
+    let (return_ret_var,return_loop_return_flag) = ((let local_set_var:model_fix_execinst Set.t = Map.const false
+    in
+    let local_set_var = Map.add MOD_FIX_ExecInst_AllOrNone true local_set_var
+    in
+    let local_set_var = Map.add MOD_FIX_ExecInst_Held true local_set_var
+    in
+    local_set_var
+    ),true)
+    in
+    return_ret_var
     [@@macro]
 ;;
 
-let assign_defaults_NewOrderSingle (msg_data : mod_newordersingle_data) (m_state : model_state)  =
-    msg_data
-    [@@macro]
-;;
