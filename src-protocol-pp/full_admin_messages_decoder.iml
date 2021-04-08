@@ -62,65 +62,97 @@ let full_msg_logoff_decoder : full_msg_logoff_data D.decoder =
     lo_encoded_text_len = Option.map Z.of_int lo_encoded_text_len
   ; lo_encoded_text
   }
-
 ;;
 
-(*
-
-(** *)
-let full_msg_resend_request_to_json x = 
-    [ ( "BeginSeqNo", int_to_json x.rr_begin_seq_num ) 
-    ; ( "EndSeqNo"  , int_to_json x.rr_end_seq_num   ) 
-    ] |> assoc_filter_nulls 
+let full_msg_resent_request_decoder : full_msg_resend_request_data D.decoder = 
+  let open D in 
+  field "BeginSeqNo" int >>= fun rr_begin_seq_num -> 
+  field "EndSeqNo" int >>= fun rr_end_seq_num -> 
+  D.succeed {
+    rr_begin_seq_num = Z.of_int rr_begin_seq_num;
+    rr_end_seq_num =  Z.of_int rr_end_seq_num
+  }
 ;;
 
-(** *)
-let full_msg_reject_to_json x = 
-    [ ( "RefSeqNum"           , int_to_json                         x.sr_ref_seq_num           ) 
-    ; ( "RefTagID"            , full_field_tag_opt_to_json          x.sr_ref_tag_id            ) 
-    ; ( "RefMsgType"          , full_msg_tag_opt_to_json            x.sr_ref_msg_type          ) 
-    ; ( "SessionRejectReason" , session_reject_reason_opt_to_json   x.sr_session_reject_reason )
-    ; ( "Text"                , string_opt_to_json                  x.sr_text                  ) 
-    ; ( "EncodedTextLen"      , int_opt_to_json                     x.sr_encoded_text_len      ) 
-    ; ( "EncodedText"         , string_opt_to_json                  x.sr_encoded_text          ) 
-    ] |> assoc_filter_nulls 
+let full_msg_reject_decoder : full_msg_reject_data D.decoder = 
+  let open D in 
+  field "RefSeqNum" int >>= fun sr_ref_seq_num -> 
+  maybe (field  "RefTagID" full_field_tag_of_json) >>= fun sr_ref_tag_id -> 
+  maybe (field "RefMsgType" full_msg_tag_of_json) >>= fun sr_ref_msg_type -> 
+  maybe (field "SessionRejectReason" full_admin_enum_fix_session_reject_reason_decoder) >>= fun sr_session_reject_reason -> 
+  maybe (field "Text" string) >>= fun sr_text -> 
+  maybe (field "EncodedTextLen" int) >>= fun sr_encoded_text_len -> 
+  maybe (field "EncodedText" string) >>= fun sr_encoded_text  -> 
+  D.succeed 
+    { sr_ref_seq_num = Z.of_int sr_ref_seq_num
+    ; sr_ref_tag_id
+    ; sr_ref_msg_type
+    ; sr_session_reject_reason
+    ; sr_text
+    ; sr_encoded_text_len = Option.map Z.of_int sr_encoded_text_len
+    ; sr_encoded_text
+    }
 ;;
 
-(** *)
-let full_msg_sequence_reset_to_json x = 
-    [ ( "Sequence_Reset_GapFillFlag" , int_to_json             x.seqr_new_seq_no     )
-    ; ( "Sequence_Reset_NewSeqNo"    , gapFillFlag_opt_to_json x.seqr_gap_fill_flag  )
-    ] |> assoc_filter_nulls 
+let full_msg_sequence_reset_decoder : full_msg_sequence_reset_data D.decoder = 
+  let open D in 
+  field "Sequence_Reset_GapFillFlag" int >>= fun seqr_new_seq_no  -> 
+  maybe (field "Sequence_Reset_NewSeqNo" full_admin_enum_fix_gapfillflag_decoder) 
+  >>= fun seqr_gap_fill_flag -> 
+  D.succeed {
+    seqr_new_seq_no = Z.of_int seqr_new_seq_no
+  ; seqr_gap_fill_flag
+  }
 ;;
 
-(** *)
-let full_msg_test_request_to_json x = 
-    [ ( "Test_Request_TestReqID_Tag" , string_to_json x.test_req_id ) 
-    ] |> assoc_filter_nulls 
+let full_msg_test_request_decoder : full_msg_test_request_data D.decoder = 
+  let open D in 
+  field "Test_Request_TestReqID_Tag" string >>= fun test_req_id -> 
+  D.succeed {test_req_id}
 ;;
 
-(** *)
-let full_msg_business_reject_to_json x = 
-    [ ( "RefSeqNum"             , int_to_json                     x.br_ref_seq_num           ) 
-    ; ( "RefMsgType"            , full_msg_tag_to_json            x.br_ref_msg_type          ) 
-    ; ( "BusinessRejectRefID"   , full_field_tag_opt_to_json      x.br_ref_field_id          ) 
-    ; ( "BusinessRejectReason"  , business_reject_reason_to_json  x.br_business_reject_reason) 
-    ; ( "Text"                  , string_opt_to_json              x.br_text                  ) 
-    ; ( "EncodedTextLen"        , int_opt_to_json                 x.br_encoded_text_len      ) 
-    ; ( "EncodedText"           , string_opt_to_json              x.br_encoded_text          ) 
-    ] |> assoc_filter_nulls 
+let full_msg_business_reject_decoder : full_msg_business_reject_data D.decoder = 
+  let open D in 
+  field "RefSeqNum" int >>= fun br_ref_seq_num -> 
+  field "RefMsgType" full_msg_tag_of_json >>= fun br_ref_msg_type -> 
+  maybe (field "BusinessRejectRefID" full_field_tag_of_json) >>= fun br_ref_field_id -> 
+  field "BusinessRejectReason" full_admin_enum_fix_business_reject_reason_decoder >>= 
+  fun br_business_reject_reason -> 
+  maybe (field "Text" string) >>= fun br_text -> 
+  maybe (field "EncodedTextLen" int) >>= fun br_encoded_text_len -> 
+  maybe (field "EncodedText" string) >>= fun br_encoded_text -> 
+  D.succeed {
+      br_ref_seq_num = Z.of_int br_ref_seq_num
+    ; br_ref_msg_type
+    ; br_ref_field_id 
+    ; br_business_reject_reason
+    ; br_text 
+    ; br_encoded_text_len = Option.map Z.of_int br_encoded_text_len
+    ; br_encoded_text
+  }
 ;;
 
-(** *)
-let full_admin_msg_to_json x : json = match x with
-    | Full_Msg_Heartbeat        x -> `Assoc [ ( "Heartbeat"       , full_msg_heartbeat_to_json x       ) ]
-    | Full_Msg_Logon            x -> `Assoc [ ( "Logon"           , full_msg_logon_to_json x           ) ]
-    | Full_Msg_Logoff           x -> `Assoc [ ( "Logoff"          , full_msg_logoff_to_json x          ) ]
-    | Full_Msg_Reject           x -> `Assoc [ ( "Reject"          , full_msg_reject_to_json x          ) ]
-    | Full_Msg_Business_Reject  x -> `Assoc [ ( "Business_Reject" , full_msg_business_reject_to_json x ) ]
-    | Full_Msg_Resend_Request   x -> `Assoc [ ( "Resend_Request"  , full_msg_resend_request_to_json x  ) ]
-    | Full_Msg_Sequence_Reset   x -> `Assoc [ ( "Sequence_Reset"  , full_msg_sequence_reset_to_json x  ) ]
-    | Full_Msg_Test_Request     x -> `Assoc [ ( "Test_Request"    , full_msg_test_request_to_json x    ) ]
+let full_admin_msg_decoder : full_admin_msg_data D.decoder = 
+  let open D in 
+  single_field (
+    function 
+    | "Full_Msg_Heartbeat" -> full_msg_heartbeat_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Heartbeat m)
+    | "Full_Msg_Logon" -> full_msg_logon_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Logon m) 
+    | "Full_Msg_Logoff" -> full_msg_logoff_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Logoff m)
+    | "Full_Msg_Reject" -> full_msg_reject_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Reject m)
+    | "Full_Msg_Business_Reject" -> full_msg_business_reject_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Business_Reject m)
+    | "Full_Msg_Resend_Request" -> full_msg_resent_request_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Resend_Request m)
+    | "Full_Msg_Sequence_Reset" -> full_msg_sequence_reset_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Sequence_Reset m)
+    | "Full_Msg_Test_Request" -> full_msg_test_request_decoder >>=
+      fun m -> D.succeed (Full_Msg_Test_Request m)
+    | x -> D.fail @@ "Unknown admin message "^x
+  )
 ;;
 [@@@logic]
-*)

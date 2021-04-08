@@ -6,7 +6,7 @@ open Full_admin_enums;;
 
 module D = Decoders_yojson.Basic.Decode
 
-let string_to_execinst_opt  =
+let string_to_fix_session_reject_reason_opt  =
   function 
   | "InvalidTagNumber" -> Some InvalidTagNumber
   | "RequiredTagMissing" -> Some RequiredTagMissing
@@ -29,9 +29,9 @@ let string_to_execinst_opt  =
   | _ -> None
 ;;
 
-let full_admin_enum_execinst_decoder  : fix_session_reject_reason D.decoder =
+let full_admin_enum_fix_session_reject_reason_decoder  : fix_session_reject_reason D.decoder =
   let open D in 
-  string >>= fun x -> match string_to_execinst_opt x with
+  string >>= fun x -> match string_to_fix_session_reject_reason_opt x with
   | None -> fail "Unknown enum (fix_session_reject_reason) encoding."
   | Some y -> succeed y
 ;;

@@ -27,7 +27,7 @@ let full_msg_tag_of_json  : full_msg_tag D.decoder =
   | x -> D.fail @@ "Unknown full message tag " ^ x
 ;;
 
-let full_field_tag_to_json  : full_field_tag D.decoder =
+let full_field_tag_of_json  : full_field_tag D.decoder =
   let open D in 
   single_field @@ function
   | "Full_Admin_Field_Tag" ->  

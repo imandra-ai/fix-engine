@@ -114,7 +114,7 @@ type fix_header = {
     h_orig_sending_time               : fix_utctimestamp option;   (* Tag 122  *)
     h_xml_data_len                    : int option;      (* Tag 212  *)
     h_xml_data                        : int option;      (* Tag 213  *)
-    h_message_enconding               : int option;      (* Tag 347  *)
+    h_message_encoding               : int option;      (* Tag 347  *)
     h_last_msg_seq_num_processed      : int option;      (* Tag 369  *)
     h_no_hops                         : int option;      (* Tag 627  *)
 } 
