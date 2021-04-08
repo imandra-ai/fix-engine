@@ -4,4 +4,4 @@
  (wrapped false)
  (flags
   (:standard -open Imandra_prelude -warn-error -A+8+39 -alert -deprecated -w -33-58))
- (libraries imandra-base.prelude core core_time_defaults))
+ (libraries imandra-prelude core core_time_defaults))

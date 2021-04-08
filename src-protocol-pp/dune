@@ -4,5 +4,5 @@
  (wrapped false)
  (flags
   (:standard -open Imandra_prelude -warn-error -A+8+39 -alert -deprecated -w -33-58))
- (libraries imandra-base.prelude core_time_defaults_pp yojson
+ (libraries imandra-prelude core_time_defaults_pp yojson
    protocol_exts_pp protocol fix_engine core_utils))
