@@ -1,0 +1,16 @@
+(* Imandra Inc. copyright 2021 *)
+[@@@program]
+[@@@require "decoders-yojson"]
+open Decoders_yojson.Basic.Decode;;
+[@@@import "../src-protocol-exts/full_app_messages.iml"]
+open Full_app_messages;;
+
+
+let full_app_msg_of_json  : full_app_msg_data decoder =
+    single_field (fun x -> (match x with
+        | d -> (fail ("Unknown Message ("^d^") in JSON decoding."))
+    )
+    )
+;;
+
+[@@@logic]

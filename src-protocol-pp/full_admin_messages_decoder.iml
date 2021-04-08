@@ -22,7 +22,7 @@ let full_msg_heartbeat_decoder  : full_msg_heartbeat_data D.decoder =
 
 let full_msg_types_inner_rg_decoder  : full_msg_types_inner_rg D.decoder =
   let open D in
-  field "mtps_ref_msg_type" full_admin_msg_tag_of_json >>= fun mtps_ref_msg_type -> 
+  field "mtps_ref_msg_type" full_app_msg_tag_of_json >>= fun mtps_ref_msg_type -> 
   field "mtps_direction" full_admin_enum_fix_msgdirection_decoder >>= fun mtps_direction -> 
      D.succeed {mtps_ref_msg_type;mtps_direction}
 ;;
