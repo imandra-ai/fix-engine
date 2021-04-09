@@ -1,0 +1,111 @@
+(* Imandra Inc. copyright 2021 *)
+[@@@program]
+[@@@require "decoders-yojson"]
+[@@@import "../src-protocol/full_admin_tags.iml"]
+open Full_admin_tags;;
+
+module D = Decoders_yojson.Basic.Decode;;
+
+let full_admin_string_to_msg_tag   =
+  function
+  | "Heartbeat_Tag" -> Some Full_Msg_Heartbeat_Tag
+  | "Logon_Tag" -> Some Full_Msg_Logon_Tag
+  | "Logoff_Tag" -> Some Full_Msg_Logoff_Tag
+  | "Reject_Tag" -> Some Full_Msg_Reject_Tag
+  | "Business_Reject_Tag" -> Some Full_Msg_Business_Reject_Tag 
+  | "Resend_Request_Tag" -> Some Full_Msg_Resend_Request_Tag
+  | "Sequence_Reset_Tag" -> Some Full_Msg_Sequence_Reset_Tag 
+  | "Test_Request_Tag" -> Some Full_Msg_Test_Request_Tag
+  | _ -> (None)
+;;
+
+
+let full_admin_string_to_field_tag = 
+  function
+  | "BeginSeqNo" -> Some Full_Msg_BeginSeqNo_Tag
+  | "BeginString" -> Some Full_Msg_BeginString_Tag
+  | "BodyLength" -> Some Full_Msg_BodyLength_Tag              
+  | "CheckSum" -> Some Full_Msg_CheckSum_Tag                  
+  | "EndSeqNo" -> Some Full_Msg_EndSeqNo_Tag                  
+  | "MsgSeqNum" -> Some Full_Msg_MsgSeqNum_Tag               
+  | "NewSeqNo" -> Some Full_Msg_NewSeqNo_Tag                   
+  | "PossDupFlag" -> Some Full_Msg_PossDupFlag_Tag              
+  | "RefSeqNum" -> Some Full_Msg_RefSeqNum_Tag                
+  | "SenderCompID"-> Some Full_Msg_SenderCompID_Tag             
+  | "SenderSubID" -> Some Full_Msg_SenderSubID_Tag               
+  | "SendingTime" -> Some Full_Msg_SendingTime_Tag              
+  | "TargetCompID" -> Some Full_Msg_TargetCompID_Tag             
+  | "TargetSubID" -> Some Full_Msg_TargetSubID_Tag              
+  | "Text" -> Some Full_Msg_Text_Tag                    
+  | "Signature" -> Some Full_Msg_Signature_Tag                
+  | "SecureDataLen" -> Some Full_Msg_SecureDataLen_Tag            
+  | "SecureData" -> Some Full_Msg_SecureData_Tag              
+  | "SignatureLength" -> Some Full_Msg_SignatureLength_Tag           
+  | "RawDataLength" -> Some Full_Msg_RawDataLength_Tag             
+  | "RawData" -> Some Full_Msg_RawData_Tag                  
+  | "PossResend"  -> Some Full_Msg_PossResend_Tag               
+  | "EncryptMethod" -> Some Full_Msg_EncryptMethod_Tag             
+  | "HeartBtInt" -> Some Full_Msg_HeartBtInt_Tag              
+  | "TestReqID" -> Some Full_Msg_TestReqID_Tag               
+  | "OnBehalfOfLocationID" -> Some Full_Msg_OnBehalfOfLocationID_Tag      
+  | "OnBehalfOfCompID" -> Some Full_Msg_OnBehalfOfCompID_Tag         
+  | "OnBehalfOfSubID" -> Some Full_Msg_OnBehalfOfSubID_Tag         
+  | "OrigSendingTime" -> Some Full_Msg_OrigSendingTime_Tag          
+  | "GapFillFlag" -> Some Full_Msg_GapFillFlag_Tag              
+  | "DeliverToCompID" -> Some Full_Msg_DeliverToCompID_Tag           
+  | "DeliverToSubID" -> Some Full_Msg_DeliverToSubID_Tag           
+  | "ResetSeqNumFlag" -> Some Full_Msg_ResetSeqNumFlag_Tag          
+  | "SenderLocationID" ->  Some Full_Msg_SenderLocationID_Tag          
+  | "TargetLocationID" -> Some Full_Msg_TargetLocationID_Tag         
+  | "DeliverToLocationID" ->  Some Full_Msg_DeliverToLocationID_Tag      
+  | "XMLDataLen" -> Some Full_Msg_XMLDataLen_Tag                
+  | "XMLData" -> Some Full_Msg_XMLData_Tag                 
+  | "MessageEnconding" -> Some Full_Msg_MessageEnconding_Tag         
+  | "EncodedTextLen" -> Some Full_Msg_EncodedTextLen_Tag           
+  | "EncodedText" -> Some Full_Msg_EncodedText_Tag               
+  | "LastMsgSeqNumProcessed" -> Some Full_Msg_LastMsgSeqNumProcessed_Tag   
+  | "RefTagID" -> Some Full_Msg_RefTagID_Tag                 
+  | "RefMsgType" -> Some Full_Msg_RefMsgType_Tag                
+  | "SessionRejectReason" -> Some Full_Msg_SessionRejectReason_Tag       
+  | "BusinessRejectReason" -> Some Full_Msg_BusinessRejectReason_Tag     
+  | "MaxMessageSize" -> Some Full_Msg_MaxMessageSize_Tag           
+  | "TestMessageIndicator" -> Some Full_Msg_TestMessageIndicator_Tag     
+  | "Username" -> Some Full_Msg_Username_Tag                  
+  | "Password" -> Some Full_Msg_Password_Tag               
+  | "NoHops"   -> Some Full_Msg_NoHops_Tag                   
+  | "NextExpectedMsgSeqNum" -> Some Full_Msg_NextExpectedMsgSeqNum_Tag    
+  | _ -> None
+;;
+
+let full_admin_msg_tag_of_json  : full_admin_msg_tag D.decoder =
+  let open D in 
+  string >>= fun x -> 
+  match full_admin_string_to_msg_tag x with
+  | None -> fail @@ "Unknown Tag: "^x
+  | Some x -> succeed x  
+;;
+
+let full_app_msg_tag_opt_of_json  : full_admin_msg_tag option D.decoder =
+  let open D in 
+  maybe string >>= fun x -> match x with
+  | None -> succeed None
+  | Some x -> succeed @@ full_admin_string_to_msg_tag x
+;;
+
+let full_admin_field_tag_of_json  : full_admin_field_tag D.decoder =
+  let open D in 
+  string >>= fun x -> 
+  match full_admin_string_to_field_tag x with
+  | None -> fail @@ "Unknown Tag: "^x
+  | Some x -> succeed x
+;;
+
+let full_admim_field_tag_opt_of_json  : full_admin_field_tag option D.decoder =
+  let open D in 
+  maybe string >>= fun x -> 
+  match x with
+  | None -> succeed None
+  | Some x -> succeed @@ full_admin_string_to_field_tag x
+;;
+
+[@@@logic]

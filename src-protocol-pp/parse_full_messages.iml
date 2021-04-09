@@ -58,7 +58,7 @@ let parse_header msg =
     opt msg "122" parse_UTCTimestamp  @@ fun msg h_orig_sending_time           ->  
     opt msg "212" parse_int           @@ fun msg h_xml_data_len                ->  
     opt msg "213" parse_int           @@ fun msg h_xml_data                    ->  
-    opt msg "347" parse_int           @@ fun msg h_message_enconding           ->  
+    opt msg "347" parse_int           @@ fun msg h_message_encoding            ->  
     opt msg "369" parse_int           @@ fun msg h_last_msg_seq_num_processed  ->  
     opt msg "627" parse_int           @@ fun msg h_no_hops                     -> 
     ParseSuccess    
@@ -85,7 +85,7 @@ let parse_header msg =
     ; h_orig_sending_time            
     ; h_xml_data_len                 
     ; h_xml_data                     
-    ; h_message_enconding            
+    ; h_message_encoding            
     ; h_last_msg_seq_num_processed   
     ; h_no_hops                         
     } , msg

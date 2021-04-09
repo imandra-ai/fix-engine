@@ -56,7 +56,7 @@ let encode_header msg_tag msg =
     ; ( "122" , opt encode_UTCTimestamp  msg.h_orig_sending_time          )  
     ; ( "212" , opt encode_int           msg.h_xml_data_len               )  
     ; ( "213" , opt encode_int           msg.h_xml_data                   )  
-    ; ( "347" , opt encode_int           msg.h_message_enconding          )  
+    ; ( "347" , opt encode_int           msg.h_message_encoding           )  
     ; ( "369" , opt encode_int           msg.h_last_msg_seq_num_processed )  
     ; ( "627" , opt encode_int           msg.h_no_hops                    ) 
     ] 

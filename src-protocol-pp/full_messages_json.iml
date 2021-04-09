@@ -31,8 +31,8 @@ let assoc_filter_nulls l : json =
 
 
 let full_msg_to_json = function
-    | Full_FIX_Admin_Msg x -> full_admin_msg_to_json x
-    | Full_FIX_App_Msg   x -> full_app_msg_to_json x
+    | Full_FIX_Admin_Msg x -> `Assoc [("Full_FIX_Admin_Msg",full_admin_msg_to_json x)]
+    | Full_FIX_App_Msg   x -> `Assoc [("Full_FIX_App_Msg",full_app_msg_to_json x)]
 ;;
 
 
@@ -49,11 +49,12 @@ let session_rejected_msg_to_json x : json =
 
 
 let biz_rejected_msg_to_json x : json = 
-    [ ( "RefSeqNum"	            , int_to_json                     x.brej_msg_ref_seq_num   )
-    ; ( "RefMsgTyp"	            , full_msg_tag_to_json            x.brej_msg_msg_tag       )
-    ; ( "BusinessRejectReasoni" , business_reject_reason_to_json  x.brej_msg_reject_reason )
-    ; ( "Text"	                , string_opt_to_json              x.brej_msg_text          )
-    ; ( "EncodedText"	        , string_opt_to_json              x.brej_msg_encoded_text  )
+    [ ( "RefSeqNum"	            , int_to_json                    x.brej_msg_ref_seq_num   )
+    ; ( "RefMsgTyp"	            , full_msg_tag_to_json           x.brej_msg_msg_tag       )
+    ; ( "BusinessFieldTag"      , full_field_tag_opt_to_json     x.brej_msg_field_tag     )
+    ; ( "BusinessRejectReason"  , business_reject_reason_to_json x.brej_msg_reject_reason )
+    ; ( "Text"	                , string_opt_to_json             x.brej_msg_text          )
+    ; ( "EncodedText"	          , string_opt_to_json             x.brej_msg_encoded_text  )
     ] |> assoc_filter_nulls 
 ;;
 
@@ -81,7 +82,7 @@ let header_to_json x : json =
     ; ( "OrigSendingTime"       , utctimestamp_opt_to_json  x.h_orig_sending_time           )    
     ; ( "XmlDataLen"            , int_opt_to_json           x.h_xml_data_len                )    
     ; ( "XmlData"               , int_opt_to_json           x.h_xml_data                    )    
-    ; ( "MessageEncoding"       , int_opt_to_json           x.h_message_enconding           )    
+    ; ( "MessageEncoding"       , int_opt_to_json           x.h_message_encoding           )    
     ; ( "LastMsgSeqNumProcessed", int_opt_to_json           x.h_last_msg_seq_num_processed  )    
     ; ( "NoHops"                , int_opt_to_json           x.h_no_hops                     )    
     ] |> assoc_filter_nulls 

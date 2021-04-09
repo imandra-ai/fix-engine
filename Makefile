@@ -20,6 +20,7 @@ build_tests:
 	@echo "(dirs :standard \ *-vg)" > dune
 	dune build src-tests/test_runner.bc
 	dune build src-tests/test_cache.bc
+	dune build src-tests/test_roundtrip.bc
 	rm dune
 
 doc:

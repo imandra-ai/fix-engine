@@ -1,0 +1,158 @@
+(* Imandra Inc. copyright 2021 *)
+[@@@program]
+[@@@import "../src-core-pp/base_types_json.iml"]
+open Base_types_json;;
+[@@@import "../src-core-pp/datetime_json.iml"]
+open Datetime_json;;
+[@@@import "full_admin_enums_decoder.iml"]
+open Full_admin_enums_decoder;;
+[@@@import "../src-protocol/full_admin_messages.iml"]
+open Full_admin_messages;;
+[@@@import "full_message_tags_decoder.iml"]
+open Full_message_tags_decoder;;
+
+module D = Decoders_yojson.Basic.Decode;;
+
+let full_msg_heartbeat_decoder  : full_msg_heartbeat_data D.decoder =
+  let open D in
+  maybe @@ field "TestReqID" string >>= fun hb_test_req_id ->
+  D.succeed {hb_test_req_id}
+;;
+
+
+let full_msg_types_inner_rg_decoder  : full_msg_types_inner_rg D.decoder =
+  let open D in
+  field "mtps_ref_msg_type" full_msg_tag_of_json >>= fun mtps_ref_msg_type -> 
+  field "mtps_direction" full_admin_enum_fix_msgdirection_decoder >>= fun mtps_direction -> 
+  D.succeed {mtps_ref_msg_type;mtps_direction}
+;;
+
+let full_msg_logon_decoder : full_msg_logon_data D.decoder = 
+  let open D in 
+  field "EncryptMethod" full_admin_enum_fix_encryption_method_decoder >>= fun ln_encrypt_method ->
+  field "HeartBtInt" duration_decoder >>= fun ln_heartbeat_interval -> 
+  maybe (field "RawDataLength" int_decoder) >>= fun ln_raw_data_length -> 
+  maybe (field "RawData" string) >>= fun ln_raw_data ->
+  maybe (field "ResetSeqNumFlag" bool) >>= fun ln_reset_seq_num_flag -> 
+  maybe (field "NextExpectedMsgSeqNum" int) >>= fun ln_next_expected_msg_seq_num -> 
+  maybe (field "MaxMessageSize" int) >>= fun ln_max_message_size -> 
+  maybe (field "TestMessageIndicator" bool) >>= fun ln_test_message_indicator -> 
+  maybe (field "Username" string) >>= fun ln_username -> 
+  maybe (field "Password" string) >>= fun ln_password ->
+  list (field "MsgTypes" full_msg_types_inner_rg_decoder) >>= fun ln_msg_types -> 
+  D.succeed {
+    ln_encrypt_method
+  ; ln_heartbeat_interval
+  ; ln_raw_data_length
+  ; ln_raw_data
+  ; ln_reset_seq_num_flag 
+  ; ln_next_expected_msg_seq_num = Option.map Z.of_int ln_next_expected_msg_seq_num
+  ; ln_max_message_size = Option.map Z.of_int ln_max_message_size
+  ; ln_test_message_indicator
+  ; ln_username 
+  ; ln_password
+  ; ln_msg_types  
+  }
+
+let full_msg_logoff_decoder : full_msg_logoff_data D.decoder = 
+  let open D in 
+  (maybe (field "EncodedTextLen" int)) >>= fun lo_encoded_text_len -> 
+  (maybe (field "EncodedText" string)) >>= fun lo_encoded_text -> 
+  D.succeed {
+    lo_encoded_text_len = Option.map Z.of_int lo_encoded_text_len
+  ; lo_encoded_text
+  }
+;;
+
+let full_msg_resent_request_decoder : full_msg_resend_request_data D.decoder = 
+  let open D in 
+  field "BeginSeqNo" int >>= fun rr_begin_seq_num -> 
+  field "EndSeqNo" int >>= fun rr_end_seq_num -> 
+  D.succeed {
+    rr_begin_seq_num = Z.of_int rr_begin_seq_num;
+    rr_end_seq_num =  Z.of_int rr_end_seq_num
+  }
+;;
+
+let full_msg_reject_decoder : full_msg_reject_data D.decoder = 
+  let open D in 
+  field "RefSeqNum" int >>= fun sr_ref_seq_num -> 
+  maybe (field  "RefTagID" full_field_tag_of_json) >>= fun sr_ref_tag_id -> 
+  maybe (field "RefMsgType" full_msg_tag_of_json) >>= fun sr_ref_msg_type -> 
+  maybe (field "SessionRejectReason" full_admin_enum_fix_session_reject_reason_decoder) >>= fun sr_session_reject_reason -> 
+  maybe (field "Text" string) >>= fun sr_text -> 
+  maybe (field "EncodedTextLen" int) >>= fun sr_encoded_text_len -> 
+  maybe (field "EncodedText" string) >>= fun sr_encoded_text  -> 
+  D.succeed 
+    { sr_ref_seq_num = Z.of_int sr_ref_seq_num
+    ; sr_ref_tag_id
+    ; sr_ref_msg_type
+    ; sr_session_reject_reason
+    ; sr_text
+    ; sr_encoded_text_len = Option.map Z.of_int sr_encoded_text_len
+    ; sr_encoded_text
+    }
+;;
+
+let full_msg_sequence_reset_decoder : full_msg_sequence_reset_data D.decoder = 
+  let open D in 
+  field "Sequence_Reset_GapFillFlag" int >>= fun seqr_new_seq_no  -> 
+  maybe (field "Sequence_Reset_NewSeqNo" full_admin_enum_fix_gapfillflag_decoder) 
+  >>= fun seqr_gap_fill_flag -> 
+  D.succeed {
+    seqr_new_seq_no = Z.of_int seqr_new_seq_no
+  ; seqr_gap_fill_flag
+  }
+;;
+
+let full_msg_test_request_decoder : full_msg_test_request_data D.decoder = 
+  let open D in 
+  field "Test_Request_TestReqID_Tag" string >>= fun test_req_id -> 
+  D.succeed {test_req_id}
+;;
+
+let full_msg_business_reject_decoder : full_msg_business_reject_data D.decoder = 
+  let open D in 
+  field "RefSeqNum" int >>= fun br_ref_seq_num -> 
+  field "RefMsgType" full_msg_tag_of_json >>= fun br_ref_msg_type -> 
+  maybe (field "BusinessRejectRefID" full_field_tag_of_json) >>= fun br_ref_field_id -> 
+  field "BusinessRejectReason" full_admin_enum_fix_business_reject_reason_decoder >>= 
+  fun br_business_reject_reason -> 
+  maybe (field "Text" string) >>= fun br_text -> 
+  maybe (field "EncodedTextLen" int) >>= fun br_encoded_text_len -> 
+  maybe (field "EncodedText" string) >>= fun br_encoded_text -> 
+  D.succeed {
+      br_ref_seq_num = Z.of_int br_ref_seq_num
+    ; br_ref_msg_type
+    ; br_ref_field_id 
+    ; br_business_reject_reason
+    ; br_text 
+    ; br_encoded_text_len = Option.map Z.of_int br_encoded_text_len
+    ; br_encoded_text
+  }
+;;
+
+let full_admin_msg_decoder : full_admin_msg_data D.decoder = 
+  let open D in 
+  single_field (
+    function 
+    | "Heartbeat" -> full_msg_heartbeat_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Heartbeat m)
+    | "Logon" -> full_msg_logon_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Logon m) 
+    | "Logoff" -> full_msg_logoff_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Logoff m)
+    | "Reject" -> full_msg_reject_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Reject m)
+    | "Business_Reject" -> full_msg_business_reject_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Business_Reject m)
+    | "Resend_Request" -> full_msg_resent_request_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Resend_Request m)
+    | "Sequence_Reset" -> full_msg_sequence_reset_decoder >>= 
+      fun m -> D.succeed (Full_Msg_Sequence_Reset m)
+    | "Test_Request" -> full_msg_test_request_decoder >>=
+      fun m -> D.succeed (Full_Msg_Test_Request m)
+    | x -> D.fail @@ "Unknown admin message "^x
+  )
+;;
+[@@@logic]

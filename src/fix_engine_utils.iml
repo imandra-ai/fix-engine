@@ -7,7 +7,6 @@
     fix_engine_utils.iml
     
 *)
-
 [@@@import "../src-core/datetime.iml"]
 [@@@import "../src-protocol/full_admin_enums.iml"]
 [@@@import "../src-protocol/full_admin_messages.iml"]
@@ -147,7 +146,7 @@ let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, curr_time, msg, 
         h_orig_sending_time               = None;
         h_xml_data_len                    = None;
         h_xml_data                        = None;
-        h_message_enconding               = None;
+        h_message_encoding               = None;
         h_last_msg_seq_num_processed      = None;
         h_no_hops                         = None;
     };

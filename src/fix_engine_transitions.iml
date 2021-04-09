@@ -384,7 +384,7 @@ let cache_to_str cache =
     | CacheGap (x,y) -> "(" ^ Z.to_string x ^ "->" ^ Z.to_string y ^ ")"
     | CacheMessage m -> "(" ^ Z.to_string m.full_msg_header.h_msg_seq_num ^ ")"
   ) |> String.concat " , "
-;;
+[@@program];;
 
 let is_cache_complete ( cache, last_seq_processed : cache_entry list * int ) = 
   match cache with [] -> false | entry :: tl ->
