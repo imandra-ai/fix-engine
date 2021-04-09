@@ -10,3 +10,10 @@
  (libraries test_utils fix_engine)
  (modes byte)
  (modules test_cache))
+
+
+(executable
+ (name test_roundtrip)
+ (libraries test_utils fix_engine)
+ (modes byte)
+ (modules test_roundtrip))
