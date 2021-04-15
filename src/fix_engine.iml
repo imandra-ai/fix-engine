@@ -110,10 +110,8 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
             match engine.fe_curr_mode with 
             | ActiveSession | CacheReplay -> 
                 let app_msg_data = Full_FIX_App_Msg ad in
-                let msg = create_outbound_fix_msg (
-                    engine.outgoing_seq_num, engine.fe_target_comp_id, 
-                    engine.fe_comp_id, engine.fe_curr_time,     
-                    app_msg_data, false
+                let msg = create_outbound_fix_msg ( 
+                    engine, app_msg_data, false
                 ) in { 
                     engine with 
                         fe_last_time_data_sent  = engine.fe_curr_time;
@@ -138,10 +136,8 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
                     seqr_new_seq_no = engine.outgoing_seq_num + 1;
                     seqr_gap_fill_flag = Some FIX_GapFillFlag_Y;
                 } ) in
-            let msg = create_outbound_fix_msg (
-                engine.outgoing_seq_num, engine.fe_target_comp_id, 
-                engine.fe_comp_id, engine.fe_curr_time,     
-                gap_fill_msg_data, false
+            let msg = create_outbound_fix_msg ( 
+                engine, gap_fill_msg_data, false
             ) in 
             { engine with 
                 fe_last_time_data_sent  = engine.fe_curr_time;

@@ -92,6 +92,8 @@ type fix_engine_state = {
     fe_target_comp_id       : string;                       (** Target company ID *)
     fe_sender_location_id   : string option;                (** Location id string *)
     fe_on_behalf_of_comp_id : string option;                (** On behalf of string *)
+    fe_deliver_to_comp_id   : string option;                (** Deliver to string *)
+
 
     incoming_int_msg        : fix_engine_int_inc_msg option;(** Incoming internal messages (application). *)
     outgoing_int_msg        : fix_engine_int_out_msg option;(** These are messages we send back to our owner *)
@@ -142,6 +144,7 @@ let init_fix_engine_state = {
     fe_target_comp_id       = "TARGET";
     fe_sender_location_id   = None;
     fe_on_behalf_of_comp_id = None;
+    fe_deliver_to_comp_id   = None;
 
     incoming_int_msg        = None;                           
     outgoing_int_msg        = None;
