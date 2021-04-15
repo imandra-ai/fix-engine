@@ -121,17 +121,17 @@ let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix
 
 
 (** Create outbound FIX message with the appropriate header and trailer. *)
-let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, curr_time, msg, is_duplicate ) = {
+let create_outbound_fix_msg ( engine, msg, is_duplicate ) = {
     full_msg_header = {
         h_begin_string = default_session_details.constant_begin_string;
         h_body_length = 0;
-        h_msg_seq_num = osn + 1;
+        h_msg_seq_num = engine.outgoing_seq_num + 1;
         h_poss_dup_flag = if is_duplicate then Some is_duplicate else None;
-        h_target_comp_id = target_comp_id;
-        h_sender_comp_id = our_comp_id;
-        h_sending_time   = curr_time;
-        h_on_behalf_of_comp_id            = None;
-        h_deliver_to_comp_id              = None;
+        h_target_comp_id = engine.fe_target_comp_id;
+        h_sender_comp_id = engine.fe_comp_id;
+        h_sending_time   = engine.fe_curr_time;
+        h_on_behalf_of_comp_id = engine.fe_on_behalf_of_comp_id;
+        h_deliver_to_comp_id   = engine.fe_deliver_to_comp_id;
         h_secure_data_len                 = None;
         h_secure_data                     = None;
         h_sender_sub_id                   = None;
@@ -146,7 +146,7 @@ let create_outbound_fix_msg ( osn, target_comp_id, our_comp_id, curr_time, msg, 
         h_orig_sending_time               = None;
         h_xml_data_len                    = None;
         h_xml_data                        = None;
-        h_message_encoding               = None;
+        h_message_encoding                = None;
         h_last_msg_seq_num_processed      = None;
         h_no_hops                         = None;
     };
@@ -182,17 +182,7 @@ let create_logon_msg ( engine, reset_seq_num : fix_engine_state * bool ) =
             ln_msg_types                    = []
         } 
     ) in 
-    let msg = create_outbound_fix_msg ( 
-        engine.outgoing_seq_num, engine.fe_target_comp_id, 
-        engine.fe_comp_id, engine.fe_curr_time, 
-        msg_data, false 
-    ) in
-    { msg with full_msg_header = { 
-        msg.full_msg_header with 
-            h_on_behalf_of_comp_id  = engine.fe_on_behalf_of_comp_id; 
-            h_sender_location_id    = engine.fe_sender_location_id
-        } 
-    } 
+    create_outbound_fix_msg (engine, msg_data, false ) 
 ;;
 
 (** Create a Logoff message. *)
@@ -203,11 +193,7 @@ let create_logoff_msg ( engine : fix_engine_state ) =
             lo_encoded_text         = None;
         }
     ) in 
-    create_outbound_fix_msg ( 
-        engine.outgoing_seq_num, engine.fe_target_comp_id, 
-        engine.fe_comp_id, engine.fe_curr_time, 
-        msg_data, false 
-    ) 
+    create_outbound_fix_msg (engine, msg_data, false ) 
 ;;
 
 (** Create a heartbeat message *)
@@ -217,11 +203,7 @@ let create_heartbeat_msg ( engine, tr_id : fix_engine_state * string option) =
             hb_test_req_id = tr_id;
         }
     ) in 
-    create_outbound_fix_msg ( 
-        engine.outgoing_seq_num, engine.fe_target_comp_id, 
-        engine.fe_comp_id, engine.fe_curr_time, 
-        msg_data, false 
-    )
+    create_outbound_fix_msg (engine, msg_data, false ) 
 ;;
 
 (** Create Test Request message. *)
@@ -231,11 +213,7 @@ let create_test_request_msg ( engine : fix_engine_state ) =
             test_req_id = engine.last_test_req_id;
         }
     ) in
-    create_outbound_fix_msg ( 
-        engine.outgoing_seq_num, engine.fe_target_comp_id, 
-        engine.fe_comp_id, engine.fe_curr_time, 
-        msg_data, false 
-    ) 
+    create_outbound_fix_msg (engine, msg_data, false )  
 ;;
 
 (** Create Resend Request message. *)
@@ -246,18 +224,13 @@ let create_resend_request_msg ( engine : fix_engine_state ) =
              rr_end_seq_num   = 0  (*  (represents infinity)  *)            
         }
     ) in
-    create_outbound_fix_msg ( 
-        engine.outgoing_seq_num, engine.fe_target_comp_id, 
-        engine.fe_comp_id, engine.fe_curr_time, 
-        msg_data, false 
-    ) 
+    create_outbound_fix_msg (engine, msg_data, false ) 
 ;;
 
 
 
 (** Create session-rejection message. *)
-let create_session_reject_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, reject_info : 
-                                int * string * string * fix_utctimestamp * session_rejected_msg_data  ) = 
+let create_session_reject_msg ( engine , reject_info ) = 
     let msg_data = 
         Full_FIX_Admin_Msg (
             Full_Msg_Reject {
@@ -269,12 +242,12 @@ let create_session_reject_msg ( outbound_seq_num, target_comp_id, comp_id, curr_
                 sr_encoded_text_len         = reject_info.srej_encoded_text_len;
                 sr_encoded_text             = reject_info.srej_encoded_text
             } ) in
-    create_outbound_fix_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, msg_data, false )
+    create_outbound_fix_msg ( engine , msg_data, false )
 ;;
 
 (** Create business reject message.
     Note: the reason we're separating the ApplicationDown reason is that the parser would not have access to this information. *)
-let create_business_reject_msg ( outbound_seq_num, target_comp_id, comp_id , curr_time, reject_info: int * string * string * fix_utctimestamp * biz_rejected_msg_data ) =
+let create_business_reject_msg ( engine , reject_info  ) =
     let msg_data = 
         Full_FIX_Admin_Msg (
             Full_Msg_Business_Reject {
@@ -287,7 +260,7 @@ let create_business_reject_msg ( outbound_seq_num, target_comp_id, comp_id , cur
                 br_encoded_text           = None 
             }
     ) in 
-    create_outbound_fix_msg ( outbound_seq_num, target_comp_id, comp_id, curr_time, msg_data, false )
+    create_outbound_fix_msg ( engine , msg_data, false )
 ;;
 
 (*** ********************************************************************************************************** *)
@@ -303,11 +276,8 @@ let noop ( _m, engine : full_valid_fix_msg * fix_engine_state ) = {
 
 (** Convert the rejection information into an outbound BusinessReject message. *)
 let business_reject ( rejected_data, engine : biz_rejected_msg_data * fix_engine_state ) =
-    let reject_msg = create_business_reject_msg ( 
-        engine.outgoing_seq_num, engine.fe_target_comp_id, 
-        engine.fe_comp_id, engine.fe_curr_time, rejected_data 
-    ) in {
-        engine with
+    let reject_msg = create_business_reject_msg ( engine , rejected_data ) in 
+    {   engine with
             incoming_fix_msg        = None;
             fe_last_time_data_sent  = engine.fe_curr_time;
             outgoing_fix_msg        = Some ( ValidMsg ( reject_msg ));
@@ -327,8 +297,7 @@ let session_reject ( rejected_data, engine : session_rejected_msg_data * fix_eng
         else engine.incoming_seq_num
         in 
     let reject_msg = create_session_reject_msg ( 
-        engine.outgoing_seq_num, engine.fe_target_comp_id, 
-        engine.fe_comp_id, engine.fe_curr_time, rejected_data 
+        engine , rejected_data 
     ) in {
         engine with 
             incoming_fix_msg        = None;
