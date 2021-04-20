@@ -56,11 +56,13 @@ let full_msg_logon_decoder : full_msg_logon_data D.decoder =
 
 let full_msg_logoff_decoder : full_msg_logoff_data D.decoder = 
   let open D in 
+  (maybe (field "Text" string)) >>= fun lo_text -> 
   (maybe (field "EncodedTextLen" int)) >>= fun lo_encoded_text_len -> 
   (maybe (field "EncodedText" string)) >>= fun lo_encoded_text -> 
   D.succeed {
     lo_encoded_text_len = Option.map Z.of_int lo_encoded_text_len
   ; lo_encoded_text
+  ; lo_text
   }
 ;;
 

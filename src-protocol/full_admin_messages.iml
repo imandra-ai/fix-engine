@@ -53,8 +53,9 @@ type full_msg_logon_data = {
 
 (** Logoff message data. *)
 type full_msg_logoff_data = {
+    lo_text                               : string option;                    (** Tag 58 *)
     lo_encoded_text_len                   : int option;                       (** Tag 354 *)
-    lo_encoded_text                       : string option;                (** Tag 355 *)
+    lo_encoded_text                       : string option;                    (** Tag 355 *)
 }
 ;;
 

@@ -76,10 +76,12 @@ let parse_msg_logon_data msg = (
 
 let parse_msg_logoff_data msg = ( 
     check_duplicate_tags msg   @@ fun () ->
+    opt msg "58"  parse_string @@ fun msg lo_text             -> 
     opt msg "355" parse_int    @@ fun msg lo_encoded_text_len -> 
     opt msg "354" parse_string @@ fun msg lo_encoded_text     -> 
     ParseSuccess 
-    { lo_encoded_text_len 
+    { lo_text
+    ; lo_encoded_text_len 
     ; lo_encoded_text    
     } , msg
     ) |> check_unknown_tags

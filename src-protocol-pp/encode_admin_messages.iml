@@ -57,7 +57,8 @@ let encode_msg_logon_data msg =
 
 
 let encode_msg_logoff_data msg = 
-    [ ( "355" , opt encode_int    msg.lo_encoded_text_len ) 
+    [ ( "58"  , opt encode_string msg.lo_text             )
+    ; ( "355" , opt encode_int    msg.lo_encoded_text_len ) 
     ; ( "354" , opt encode_string msg.lo_encoded_text     ) 
     ]
 ;;
