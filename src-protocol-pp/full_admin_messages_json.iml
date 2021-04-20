@@ -60,8 +60,9 @@ let full_msg_logon_to_json x =
 
 (** *)
 let full_msg_logoff_to_json x = 
-    [ ( "EncodedTextLen"    , int_opt_to_json    x.lo_encoded_text_len ) 
-    ; ( "EncodedText" , string_opt_to_json x.lo_encoded_text    ) 
+    [ ( "Text"            , string_opt_to_json    x.lo_text          )
+    ; ( "EncodedTextLen"  , int_opt_to_json    x.lo_encoded_text_len ) 
+    ; ( "EncodedText"     , string_opt_to_json x.lo_encoded_text     ) 
     ] |> assoc_filter_nulls 
 ;;
 

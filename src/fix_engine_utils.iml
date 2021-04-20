@@ -189,6 +189,7 @@ let create_logon_msg ( engine, reset_seq_num : fix_engine_state * bool ) =
 let create_logoff_msg ( engine : fix_engine_state ) = 
     let msg_data = Full_FIX_Admin_Msg (
         Full_Msg_Logoff {
+            lo_text                 = None;
             lo_encoded_text_len     = None;
             lo_encoded_text         = None;
         }
