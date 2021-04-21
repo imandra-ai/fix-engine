@@ -32,30 +32,38 @@ run_test ./defs/14d_TagSpecifiedWithoutValue.def
 run_test ./defs/14f_IncorrectDataFormat.def
 run_test ./defs/14h_RepeatedTag.def
 run_test ./defs/14i_RepeatingGroupCountNotEqual.def
-# run_test ./defs/14j_modified_OutOfOrderRepeatingGroupMembers.def
+
+## run_test ./defs/14j_modified_OutOfOrderRepeatingGroupMembers.def
+
 run_test ./defs/1a_ValidLogonMsgSeqNumTooHigh.def
 run_test ./defs/1a_ValidLogonWithCorrectMsgSeqNum.def
 run_test ./defs/1d_InvalidLogonBadSendingTime.def
 run_test ./defs/1d_InvalidLogonLengthInvalid.def
 run_test ./defs/1d_InvalidLogonWrongBeginString.def
 run_test ./defs/1e_NotLogonMessage.def
-# run_test ./defs/20_SimultaneousResendRequest.def
+run_test ./defs/20_SimultaneousResendRequest.def
 run_test ./defs/2a_MsgSeqNumCorrect.def
 run_test ./defs/2b_MsgSeqNumTooHigh.def
 run_test ./defs/2c_MsgSeqNumTooLow.def
-# run_test ./defs/2d_GarbledMessage.def
+run_test ./defs/2d_GarbledMessage.def
 run_test ./defs/2e_PossDupAlreadyReceived.def
 run_test ./defs/2e_PossDupNotReceived.def
-
-## run_test ./defs/2f_PossDupOrigSendingTimeTooHigh.def
-## run_test ./defs/2g_PossDupNoOrigSendingTime.def
-## run_test ./defs/3c_GarbledMessage.def
+run_test ./defs/2f_PossDupOrigSendingTimeTooHigh.def
+run_test ./defs/2g_PossDupNoOrigSendingTime.def
+run_test ./defs/3c_GarbledMessage.def
 run_test ./defs/4a_NoDataSentDuringHeartBtInt.def
 run_test ./defs/4b_ReceivedTestRequest.def
 run_test ./defs/6_SendTestRequest.def
 run_test ./defs/7_ReceiveRejectMessage.def
-## run_test ./defs/8_AdminAndApplicationMessages.def
+run_test ./defs/8_AdminAndApplicationMessages.def
 run_test ./defs/8_OnlyAdminMessages.def
-## run_test ./defs/8_OnlyApplicationMessages.def
+run_test ./defs/8_OnlyApplicationMessages.def
+
+run_test ./defs/Imandra1_SessionRejectedBadSeqn.def
+run_test ./defs/Imandra2_SeqResetWithGapFill.def
+run_test ./defs/Imandra3_CacheReplayApplication.def
+run_test ./defs/Imandra4_CacheReplayOutOfOrder.def
+run_test ./defs/Imandra5_SeqResetWithGapFillOvershoot.def
+run_test ./defs/Imandra6_CacheReplayAdminOnly.def
 
 rm dune
