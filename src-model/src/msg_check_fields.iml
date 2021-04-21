@@ -93,7 +93,8 @@ let check_field_mod_f_NewOrderSingle_SpreadProportion (msg_data : mod_newordersi
 ;;
 
 let check_field_mod_f_NewOrderSingle_Parties_inner0 (msg_data : mod_newordersingle_data) (local_internal_state : fix_internal_state) (local_internal_fresh_state' : fix_internal_fresh_state')  =
-    (if (rg_forall_fun_Parties msg_data.mod_f_NewOrderSingle_Parties (fun lambda_e_Parties -> (&&) ((>) lambda_e_Parties.mod_f_Parties_PartyIndex 0) ((<) lambda_e_Parties.mod_f_Parties_PartyIndex 100)
+    (if (rg_forall_fun_Parties msg_data.mod_f_NewOrderSingle_Parties (fun lambda_e_Parties -> 
+    (&&) ((>) lambda_e_Parties.mod_f_Parties_PartyIndex 0) ((<) lambda_e_Parties.mod_f_Parties_PartyIndex 100)
     ) true) then
         fields_good_defrej
     else
@@ -104,7 +105,8 @@ let check_field_mod_f_NewOrderSingle_Parties_inner0 (msg_data : mod_newordersing
 ;;
 
 let check_field_mod_f_NewOrderSingle_Parties_inner1 (msg_data : mod_newordersingle_data) (local_internal_state : fix_internal_state) (local_internal_fresh_state' : fix_internal_fresh_state')  =
-    (if (rg_forall_fun_Parties msg_data.mod_f_NewOrderSingle_Parties (fun lambda_e_Parties -> (<>) lambda_e_Parties.mod_f_Parties_PartyID "N/A"
+    (if (rg_forall_fun_Parties msg_data.mod_f_NewOrderSingle_Parties (fun lambda_e_Parties -> 
+    (<>) lambda_e_Parties.mod_f_Parties_PartyID "N/A"
     ) true) then
         fields_good_defrej
     else

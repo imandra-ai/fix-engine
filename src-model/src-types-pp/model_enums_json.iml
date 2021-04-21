@@ -15,7 +15,8 @@ let mod_ordtype_to_json (d)  : json =
 ;;
 
 let mod_execinst_to_json (d)  : json =
-    `List (List.map (fun x -> `String (mod_execinst_to_string x)
+    `List (List.map (fun x -> 
+    `String (mod_execinst_to_string x)
     ) (get_model_enum_vals_ExecInst d list_model_vals_ExecInst))
 ;;
 

@@ -175,7 +175,8 @@ let side_to_string (d)  =
 ;;
 
 let execinst_to_json (d)  : json =
-    `List (List.map (fun x -> `String (execinst_to_string x)
+    `List (List.map (fun x -> 
+    `String (execinst_to_string x)
     ) d)
 ;;
 

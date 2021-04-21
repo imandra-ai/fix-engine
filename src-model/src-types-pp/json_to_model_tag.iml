@@ -15,7 +15,8 @@ open Model_tags;;
 
 
 let message_tag_decoder  : m_msg_tag decoder =
-    string >>= (fun x -> (match tag_to_message x with
+    string >>= (fun x -> 
+    (match tag_to_message x with
         | None -> (fail ("Unknown message tag ("^x^") in decoding"))
         | Some y -> (succeed y)
     )
@@ -23,7 +24,8 @@ let message_tag_decoder  : m_msg_tag decoder =
 ;;
 
 let field_tag_decoder  : m_field_tag decoder =
-    string >>= (fun x -> (match tag_to_field x with
+    string >>= (fun x -> 
+    (match tag_to_field x with
         | None -> (fail ("Unknown field tag ("^x^") in decoding"))
         | Some y -> (succeed y)
     )
@@ -31,7 +33,8 @@ let field_tag_decoder  : m_field_tag decoder =
 ;;
 
 let rg_tag_decoder  : repeating_group_defs option decoder =
-    (maybe string) >>= (fun x -> (match x with
+    (maybe string) >>= (fun x -> 
+    (match x with
         | None -> (succeed (None))
         | Some x -> ((match tag_to_rg x with
             | None -> (succeed (None))
@@ -43,7 +46,10 @@ let rg_tag_decoder  : repeating_group_defs option decoder =
 ;;
 
 let field_missing_data_decoder  : field_missing_or_invalid_data decoder =
-    (field "m_msg_tag" message_tag_decoder) >>= (fun msg -> (field "m_field_tag" field_tag_decoder) >>= (fun f -> (field "repeating_group_defs" rg_tag_decoder) >>= (fun s -> succeed {
+    (field "m_msg_tag" message_tag_decoder) >>= (fun msg -> 
+    (field "m_field_tag" field_tag_decoder) >>= (fun f -> 
+    (field "repeating_group_defs" rg_tag_decoder) >>= (fun s -> 
+    succeed {
         field_missing_or_invalid_data_field = f;
         field_missing_of_invalid_data_msg = msg;
         repeating_group_origin = s
