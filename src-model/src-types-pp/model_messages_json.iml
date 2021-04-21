@@ -23,7 +23,10 @@ let mod_newordersingle_opt_def_to_json (x)  : json =
         | None -> `Null
         | Some x -> (string_to_json x)
     )
-    ));(("Side",mod_side_to_json x.mod_def_opt_f_NewOrderSingle_Side));(("TransactTime",utctimestamp_milli_to_json x.mod_def_opt_f_NewOrderSingle_TransactTime));(("OrdType",mod_ordtype_to_json x.mod_def_opt_f_NewOrderSingle_OrdType));(("OrderQtyData.OrderQty",float_6_to_json x.mod_def_opt_f_NewOrderSingle_OrderQtyData_OrderQty));(("SpreadProportion",(match x.mod_def_opt_f_NewOrderSingle_SpreadProportion with
+    ));(("Side",mod_side_to_json x.mod_def_opt_f_NewOrderSingle_Side));(("TransactTime",let x = x.mod_def_opt_f_NewOrderSingle_TransactTime
+    in
+    utctimestamp_milli_to_json x
+    ));(("OrdType",mod_ordtype_to_json x.mod_def_opt_f_NewOrderSingle_OrdType));(("OrderQtyData.OrderQty",float_6_to_json x.mod_def_opt_f_NewOrderSingle_OrderQtyData_OrderQty));(("SpreadProportion",(match x.mod_def_opt_f_NewOrderSingle_SpreadProportion with
         | None -> `Null
         | Some x -> (float_to_json x)
     )
@@ -47,7 +50,10 @@ let mod_newordersingle_to_json (x)  : json =
         | None -> `Null
         | Some x -> (string_to_json x)
     )
-    ));(("Side",mod_side_to_json x.mod_f_NewOrderSingle_Side));(("TransactTime",utctimestamp_milli_to_json x.mod_f_NewOrderSingle_TransactTime));(("OrdType",mod_ordtype_to_json x.mod_f_NewOrderSingle_OrdType));(("OrderQtyData.OrderQty",float_6_to_json x.mod_f_NewOrderSingle_OrderQtyData_OrderQty));(("SpreadProportion",(match x.mod_f_NewOrderSingle_SpreadProportion with
+    ));(("Side",mod_side_to_json x.mod_f_NewOrderSingle_Side));(("TransactTime",let x = x.mod_f_NewOrderSingle_TransactTime
+    in
+    utctimestamp_milli_to_json x
+    ));(("OrdType",mod_ordtype_to_json x.mod_f_NewOrderSingle_OrdType));(("OrderQtyData.OrderQty",float_6_to_json x.mod_f_NewOrderSingle_OrderQtyData_OrderQty));(("SpreadProportion",(match x.mod_f_NewOrderSingle_SpreadProportion with
         | None -> `Null
         | Some x -> (float_to_json x)
     )

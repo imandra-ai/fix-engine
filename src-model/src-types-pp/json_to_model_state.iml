@@ -17,7 +17,9 @@ open State;;
 
 
 let outgoing_decoder  =
-    (field "outgoing_msg_counter" string) >>= (fun c -> (field "outgoing_msg_msg" model_message_decoder) >>= (fun m -> succeed {
+    (field "outgoing_msg_counter" string) >>= (fun c -> 
+    (field "outgoing_msg_msg" model_message_decoder) >>= (fun m -> 
+    succeed {
         outgoing_msg_counter = Z.of_string c;
         outgoing_msg_msg = m
     }
@@ -26,7 +28,9 @@ let outgoing_decoder  =
 ;;
 
 let state_info_decoder  =
-    (field "state_event_counter" string) >>= (fun c -> (maybe (field "state_event_reject_text" string)) >>= (fun m -> succeed {
+    (field "state_event_counter" string) >>= (fun c -> 
+    (maybe (field "state_event_reject_text" string)) >>= (fun m -> 
+    succeed {
         state_event_counter = Z.of_string c;
         state_event_reject_text = (match m with
             | None -> None
@@ -38,7 +42,14 @@ let state_info_decoder  =
 ;;
 
 let model_state_decoder  : model_state decoder =
-    (field "fresh_state'" internal_fresh_state'_decoder) >>= (fun f_internal_fresh_state' -> (field "state" internal_state_decoder) >>= (fun f_internal_state -> (field "incoming_action" (nullable fix_action_decoder)) >>= (fun incoming_action -> (field "event_counter" string) >>= (fun event_counter -> (field "incoming_msg" (nullable top_level_message_decoder)) >>= (fun incoming_msg -> (field "outgoing_msgs" (list outgoing_decoder)) >>= (fun outgoing_msgs -> (field "event_info" (list state_info_decoder)) >>= (fun event_info -> succeed {
+    (field "fresh_state'" internal_fresh_state'_decoder) >>= (fun f_internal_fresh_state' -> 
+    (field "state" internal_state_decoder) >>= (fun f_internal_state -> 
+    (field "incoming_action" (nullable fix_action_decoder)) >>= (fun incoming_action -> 
+    (field "event_counter" string) >>= (fun event_counter -> 
+    (field "incoming_msg" (nullable top_level_message_decoder)) >>= (fun incoming_msg -> 
+    (field "outgoing_msgs" (list outgoing_decoder)) >>= (fun outgoing_msgs -> 
+    (field "event_info" (list state_info_decoder)) >>= (fun event_info -> 
+    succeed {
         f_internal_state = f_internal_state;
         f_internal_fresh_state' = f_internal_fresh_state';
         incoming_action = incoming_action;

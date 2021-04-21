@@ -13,14 +13,20 @@ open Model_repeating_groups;;
 
 
 let ptyssubgrp_rg_decoder  : model_fix_inner_ptyssubgrp decoder =
-    (maybe (field "PartySubID" string_decoder)) >>= (fun mod_f_PtysSubGrp_PartySubID -> succeed {
+    (maybe (field "PartySubID" string_decoder)) >>= (fun mod_f_PtysSubGrp_PartySubID -> 
+    succeed {
         mod_f_PtysSubGrp_PartySubID = mod_f_PtysSubGrp_PartySubID
     }
     )
 ;;
 
 let mod_rg_ptyssubgrp_decoder  : model_fix_rec_ptyssubgrp decoder =
-    (maybe (field "4" ptyssubgrp_rg_decoder)) >>= (fun rg_PtysSubGrp_element_4 -> (maybe (field "3" ptyssubgrp_rg_decoder)) >>= (fun rg_PtysSubGrp_element_3 -> (maybe (field "2" ptyssubgrp_rg_decoder)) >>= (fun rg_PtysSubGrp_element_2 -> (maybe (field "1" ptyssubgrp_rg_decoder)) >>= (fun rg_PtysSubGrp_element_1 -> (maybe (field "0" ptyssubgrp_rg_decoder)) >>= (fun rg_PtysSubGrp_element_0 -> succeed {
+    (maybe (field "4" ptyssubgrp_rg_decoder)) >>= (fun rg_PtysSubGrp_element_4 -> 
+    (maybe (field "3" ptyssubgrp_rg_decoder)) >>= (fun rg_PtysSubGrp_element_3 -> 
+    (maybe (field "2" ptyssubgrp_rg_decoder)) >>= (fun rg_PtysSubGrp_element_2 -> 
+    (maybe (field "1" ptyssubgrp_rg_decoder)) >>= (fun rg_PtysSubGrp_element_1 -> 
+    (maybe (field "0" ptyssubgrp_rg_decoder)) >>= (fun rg_PtysSubGrp_element_0 -> 
+    succeed {
         rg_PtysSubGrp_element_0 = rg_PtysSubGrp_element_0;
         rg_PtysSubGrp_element_1 = rg_PtysSubGrp_element_1;
         rg_PtysSubGrp_element_2 = rg_PtysSubGrp_element_2;
@@ -35,7 +41,10 @@ let mod_rg_ptyssubgrp_decoder  : model_fix_rec_ptyssubgrp decoder =
 ;;
 
 let parties_rg_decoder  : model_fix_inner_parties decoder =
-    (field "PtysSubGrp" mod_rg_ptyssubgrp_decoder) >>= (fun mod_f_Parties_PtysSubGrp -> (field "PartyIndex" int_decoder) >>= (fun mod_f_Parties_PartyIndex -> (field "PartyID" string_decoder) >>= (fun mod_f_Parties_PartyID -> succeed {
+    (field "PtysSubGrp" mod_rg_ptyssubgrp_decoder) >>= (fun mod_f_Parties_PtysSubGrp -> 
+    (field "PartyIndex" int_decoder) >>= (fun mod_f_Parties_PartyIndex -> 
+    (field "PartyID" string_decoder) >>= (fun mod_f_Parties_PartyID -> 
+    succeed {
         mod_f_Parties_PartyID = mod_f_Parties_PartyID;
         mod_f_Parties_PartyIndex = mod_f_Parties_PartyIndex;
         mod_f_Parties_PtysSubGrp = mod_f_Parties_PtysSubGrp
@@ -46,7 +55,12 @@ let parties_rg_decoder  : model_fix_inner_parties decoder =
 ;;
 
 let mod_rg_parties_decoder  : model_fix_rec_parties decoder =
-    (maybe (field "4" parties_rg_decoder)) >>= (fun rg_Parties_element_4 -> (maybe (field "3" parties_rg_decoder)) >>= (fun rg_Parties_element_3 -> (maybe (field "2" parties_rg_decoder)) >>= (fun rg_Parties_element_2 -> (maybe (field "1" parties_rg_decoder)) >>= (fun rg_Parties_element_1 -> (maybe (field "0" parties_rg_decoder)) >>= (fun rg_Parties_element_0 -> succeed {
+    (maybe (field "4" parties_rg_decoder)) >>= (fun rg_Parties_element_4 -> 
+    (maybe (field "3" parties_rg_decoder)) >>= (fun rg_Parties_element_3 -> 
+    (maybe (field "2" parties_rg_decoder)) >>= (fun rg_Parties_element_2 -> 
+    (maybe (field "1" parties_rg_decoder)) >>= (fun rg_Parties_element_1 -> 
+    (maybe (field "0" parties_rg_decoder)) >>= (fun rg_Parties_element_0 -> 
+    succeed {
         rg_Parties_element_0 = rg_Parties_element_0;
         rg_Parties_element_1 = rg_Parties_element_1;
         rg_Parties_element_2 = rg_Parties_element_2;

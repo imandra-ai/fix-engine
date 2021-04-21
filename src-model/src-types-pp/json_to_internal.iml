@@ -27,7 +27,23 @@ open Time_defaults;;
 
 
 let internal_state_decoder  : fix_internal_state decoder =
-    (field "state.ExecType" mod_enum_exectype_decoder) >>= (fun mod_f_internal_state_ExecType -> (field "state.OrderID" string_decoder) >>= (fun mod_f_internal_state_OrderID -> (field "state.ExecInst" mod_enum_execinst_decoder) >>= (fun mod_f_internal_state_ExecInst -> (field "state.Parties" mod_rg_parties_decoder) >>= (fun mod_f_internal_state_Parties -> (maybe (field "state.SpreadProportion" float_decoder)) >>= (fun mod_f_internal_state_SpreadProportion -> (field "state.CumQty" float_6_decoder) >>= (fun mod_f_internal_state_CumQty -> (field "state.LeavesQty" float_6_decoder) >>= (fun mod_f_internal_state_LeavesQty -> (field "state.OrdType" mod_enum_ordtype_decoder) >>= (fun mod_f_internal_state_OrdType -> (field "state.OrdStatus" mod_enum_ordstatus_decoder) >>= (fun mod_f_internal_state_OrdStatus -> (field "state.OrderQtyData.OrderQty" float_6_decoder) >>= (fun mod_f_internal_state_OrderQtyData_OrderQty -> (maybe (field "state.Price" float_2_decoder)) >>= (fun mod_f_internal_state_Price -> (field "state.Side" mod_enum_side_decoder) >>= (fun mod_f_internal_state_Side -> (field "state.bestAsk" float_2_decoder) >>= (fun mod_f_internal_state_bestAsk -> (field "state.bestBid" float_2_decoder) >>= (fun mod_f_internal_state_bestBid -> (field "state.AvgPx" float_decoder) >>= (fun mod_f_internal_state_AvgPx -> (field "state.live_order" bool_decoder) >>= (fun mod_f_internal_state_live_order -> succeed {
+    (field "state.ExecType" mod_enum_exectype_decoder) >>= (fun mod_f_internal_state_ExecType -> 
+    (field "state.OrderID" string_decoder) >>= (fun mod_f_internal_state_OrderID -> 
+    (field "state.ExecInst" mod_enum_execinst_decoder) >>= (fun mod_f_internal_state_ExecInst -> 
+    (field "state.Parties" mod_rg_parties_decoder) >>= (fun mod_f_internal_state_Parties -> 
+    (maybe (field "state.SpreadProportion" float_decoder)) >>= (fun mod_f_internal_state_SpreadProportion -> 
+    (field "state.CumQty" float_6_decoder) >>= (fun mod_f_internal_state_CumQty -> 
+    (field "state.LeavesQty" float_6_decoder) >>= (fun mod_f_internal_state_LeavesQty -> 
+    (field "state.OrdType" mod_enum_ordtype_decoder) >>= (fun mod_f_internal_state_OrdType -> 
+    (field "state.OrdStatus" mod_enum_ordstatus_decoder) >>= (fun mod_f_internal_state_OrdStatus -> 
+    (field "state.OrderQtyData.OrderQty" float_6_decoder) >>= (fun mod_f_internal_state_OrderQtyData_OrderQty -> 
+    (maybe (field "state.Price" float_2_decoder)) >>= (fun mod_f_internal_state_Price -> 
+    (field "state.Side" mod_enum_side_decoder) >>= (fun mod_f_internal_state_Side -> 
+    (field "state.bestAsk" float_2_decoder) >>= (fun mod_f_internal_state_bestAsk -> 
+    (field "state.bestBid" float_2_decoder) >>= (fun mod_f_internal_state_bestBid -> 
+    (field "state.AvgPx" float_decoder) >>= (fun mod_f_internal_state_AvgPx -> 
+    (field "state.live_order" bool_decoder) >>= (fun mod_f_internal_state_live_order -> 
+    succeed {
         mod_f_internal_state_live_order = mod_f_internal_state_live_order;
         mod_f_internal_state_AvgPx = mod_f_internal_state_AvgPx;
         mod_f_internal_state_bestBid = mod_f_internal_state_bestBid;
@@ -64,7 +80,8 @@ let internal_state_decoder  : fix_internal_state decoder =
 ;;
 
 let internal_fresh_state'_decoder  : fix_internal_fresh_state' decoder =
-    (field "fresh_state'.seed_string" string_decoder) >>= (fun mod_f_internal_fresh_state'_seed_string -> succeed {
+    (field "fresh_state'.seed_string" string_decoder) >>= (fun mod_f_internal_fresh_state'_seed_string -> 
+    succeed {
         mod_f_internal_fresh_state'_seed_string = mod_f_internal_fresh_state'_seed_string
     }
     )

@@ -29,10 +29,7 @@ let convert__full_to_model_NewOrderSingle (msg : full_fix_newordersingle_data)  
         })
         | Rg_success_parties x -> let c_mod_f_NewOrderSingle_Parties = x
         in
-        let c_mod_f_NewOrderSingle_ExecInst = (match msg.f_NewOrderSingle_ExecInst with
-            | None -> None
-            | Some d -> (Some (convert__full_to_model_ExecInst d))
-        )
+        let c_mod_f_NewOrderSingle_ExecInst = Option.map convert__full_to_model_ExecInst msg.f_NewOrderSingle_ExecInst
         in
         (if ((=) c_mod_f_NewOrderSingle_ExecInst (Some (None))) then
             (FIX_TL_Req_Field_Invalid {
@@ -41,10 +38,7 @@ let convert__full_to_model_NewOrderSingle (msg : full_fix_newordersingle_data)  
                 repeating_group_origin = None
             })
         else
-            let c_mod_f_NewOrderSingle_ExecInst = (match c_mod_f_NewOrderSingle_ExecInst with
-                | Some Some x -> (Some x)
-                | _ -> (None)
-            )
+            let c_mod_f_NewOrderSingle_ExecInst = Option.flat_map id c_mod_f_NewOrderSingle_ExecInst
             in
             let c_mod_f_NewOrderSingle_Account = msg.f_NewOrderSingle_Account
             in

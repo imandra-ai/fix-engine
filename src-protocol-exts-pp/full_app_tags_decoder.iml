@@ -40,7 +40,8 @@ let full_app_string_to_field_tag (tag)  =
 ;;
 
 let full_app_msg_tag_of_json  : full_app_msg_tag decoder =
-    string >>= (fun x -> (match full_app_string_to_msg_tag x with
+    string >>= (fun x -> 
+    (match full_app_string_to_msg_tag x with
         | None -> (fail ("Unknown Tag: "^x))
         | Some x -> (succeed x)
     )
@@ -48,7 +49,8 @@ let full_app_msg_tag_of_json  : full_app_msg_tag decoder =
 ;;
 
 let full_app_msg_tag_opt_of_json  : full_app_msg_tag option decoder =
-    (maybe string) >>= (fun x -> (match x with
+    (maybe string) >>= (fun x -> 
+    (match x with
         | None -> (succeed None)
         | Some x -> (succeed (full_app_string_to_msg_tag x))
     )
@@ -56,7 +58,8 @@ let full_app_msg_tag_opt_of_json  : full_app_msg_tag option decoder =
 ;;
 
 let full_app_field_tag_of_json  : full_app_field_tag decoder =
-    string >>= (fun x -> (match full_app_string_to_field_tag x with
+    string >>= (fun x -> 
+    (match full_app_string_to_field_tag x with
         | None -> (fail ("Unknown Tag: "^x))
         | Some x -> (succeed x)
     )
@@ -64,7 +67,8 @@ let full_app_field_tag_of_json  : full_app_field_tag decoder =
 ;;
 
 let full_app_field_tag_opt_of_json  : full_app_field_tag option decoder =
-    (maybe string) >>= (fun x -> (match x with
+    (maybe string) >>= (fun x -> 
+    (match x with
         | None -> (succeed None)
         | Some x -> (succeed (full_app_string_to_field_tag x))
     )

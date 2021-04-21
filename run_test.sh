@@ -1,7 +1,14 @@
 
 run_test () {
     echo "Runnning test $1"
-    dune exec src-tests/test_runner.bc -- $1 | tr '\001' '|'
+    dune exec src-tests/test_runner.bc -- $1 | tr '\001' '|' > test.log
+    cat test.log
+    ! grep -i error test.log
+    FOUND_ERROR=$?
+    rm test.log
+    if [ $FOUND_ERROR -ne 0 ]; then
+        exit 1
+    fi
 }
 
 trap "exit" INT TERM
@@ -19,7 +26,7 @@ run_test ./defs/11a_NewSeqNoGreater.def
 run_test ./defs/11b_NewSeqNoEqual.def
 run_test ./defs/11c_NewSeqNoLess.def
 run_test ./defs/13b_UnsolicitedLogoutMessage.def
-# run_test ./defs/14b_RequiredFieldMissing.def
+run_test ./defs/14b_RequiredFieldMissing.def
 run_test ./defs/14c_TagNotDefinedForMsgType.def
 run_test ./defs/14d_TagSpecifiedWithoutValue.def
 run_test ./defs/14f_IncorrectDataFormat.def

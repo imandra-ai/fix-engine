@@ -177,7 +177,8 @@ let string_to_side_opt (d)  =
 ;;
 
 let full_enum_execinst_decoder  : fix_execinst list decoder =
-    list (string >>= (fun x -> (match string_to_execinst_opt x with
+    list (string >>= (fun x -> 
+    (match string_to_execinst_opt x with
         | None -> (fail "Unknown enum (ExecInst) encoding.")
         | Some y -> (succeed y)
     )
@@ -185,7 +186,8 @@ let full_enum_execinst_decoder  : fix_execinst list decoder =
 ;;
 
 let full_enum_exectype_decoder  : fix_exectype decoder =
-    string >>= (fun x -> (match string_to_exectype_opt x with
+    string >>= (fun x -> 
+    (match string_to_exectype_opt x with
         | None -> (fail "Unknown enum (ExecType) encoding.")
         | Some y -> (succeed y)
     )
@@ -193,7 +195,8 @@ let full_enum_exectype_decoder  : fix_exectype decoder =
 ;;
 
 let full_enum_ordstatus_decoder  : fix_ordstatus decoder =
-    string >>= (fun x -> (match string_to_ordstatus_opt x with
+    string >>= (fun x -> 
+    (match string_to_ordstatus_opt x with
         | None -> (fail "Unknown enum (OrdStatus) encoding.")
         | Some y -> (succeed y)
     )
@@ -201,7 +204,8 @@ let full_enum_ordstatus_decoder  : fix_ordstatus decoder =
 ;;
 
 let full_enum_ordtype_decoder  : fix_ordtype decoder =
-    string >>= (fun x -> (match string_to_ordtype_opt x with
+    string >>= (fun x -> 
+    (match string_to_ordtype_opt x with
         | None -> (fail "Unknown enum (OrdType) encoding.")
         | Some y -> (succeed y)
     )
@@ -209,7 +213,8 @@ let full_enum_ordtype_decoder  : fix_ordtype decoder =
 ;;
 
 let full_enum_partysubidtype_decoder  : fix_partysubidtype decoder =
-    string >>= (fun x -> (match string_to_partysubidtype_opt x with
+    string >>= (fun x -> 
+    (match string_to_partysubidtype_opt x with
         | None -> (fail "Unknown enum (PartySubIDType) encoding.")
         | Some y -> (succeed y)
     )
@@ -217,7 +222,8 @@ let full_enum_partysubidtype_decoder  : fix_partysubidtype decoder =
 ;;
 
 let full_enum_side_decoder  : fix_side decoder =
-    string >>= (fun x -> (match string_to_side_opt x with
+    string >>= (fun x -> 
+    (match string_to_side_opt x with
         | None -> (fail "Unknown enum (Side) encoding.")
         | Some y -> (succeed y)
     )
