@@ -32,9 +32,7 @@ run_test ./defs/14d_TagSpecifiedWithoutValue.def
 run_test ./defs/14f_IncorrectDataFormat.def
 run_test ./defs/14h_RepeatedTag.def
 run_test ./defs/14i_RepeatingGroupCountNotEqual.def
-
-## run_test ./defs/14j_modified_OutOfOrderRepeatingGroupMembers.def
-
+run_test ./defs/14j_modified_OutOfOrderRepeatingGroupMembers.def
 run_test ./defs/1a_ValidLogonMsgSeqNumTooHigh.def
 run_test ./defs/1a_ValidLogonWithCorrectMsgSeqNum.def
 run_test ./defs/1d_InvalidLogonBadSendingTime.def
@@ -58,7 +56,6 @@ run_test ./defs/7_ReceiveRejectMessage.def
 run_test ./defs/8_AdminAndApplicationMessages.def
 run_test ./defs/8_OnlyAdminMessages.def
 run_test ./defs/8_OnlyApplicationMessages.def
-
 run_test ./defs/Imandra1_SessionRejectedBadSeqn.def
 run_test ./defs/Imandra2_SeqResetWithGapFill.def
 run_test ./defs/Imandra3_CacheReplayApplication.def
