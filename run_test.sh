@@ -1,11 +1,17 @@
 
 run_test () {
     echo "Runnning test $1"
-    dune exec src-tests/test_runner.bc -- $1 | tr '\001' '|'
+    dune exec src-tests/test_runner.bc -- $1 | tr '\001' '|' > test.log
+    cat test.log
+    ! grep -i error test.log
+    FOUND_ERROR=$?
+    rm test.log
+    if [ $FOUND_ERROR -ne 0 ]; then
+        exit 1
+    fi
 }
 
 trap "exit" INT TERM
-trap "kill 0" EXIT
 
 echo "(dirs :standard \ *-vg)" > dune
 
@@ -49,5 +55,11 @@ run_test ./defs/7_ReceiveRejectMessage.def
 run_test ./defs/8_AdminAndApplicationMessages.def
 run_test ./defs/8_OnlyAdminMessages.def
 run_test ./defs/8_OnlyApplicationMessages.def
+run_test ./defs/Imandra1_SessionRejectedBadSeqn.def
+run_test ./defs/Imandra2_SeqResetWithGapFill.def
+run_test ./defs/Imandra3_CacheReplayApplication.def
+run_test ./defs/Imandra4_CacheReplayOutOfOrder.def
+run_test ./defs/Imandra5_SeqResetWithGapFillOvershoot.def
+run_test ./defs/Imandra6_CacheReplayAdminOnly.def
 
 rm dune

@@ -13,7 +13,9 @@ open Model_records;;
 
 
 let mod_action_bookstate_decoder  : m_action_fix_bookstate decoder =
-    (field "bestAsk" float_2_decoder) >>= (fun mod_f_bookState_bestAsk -> (field "bestBid" float_2_decoder) >>= (fun mod_f_bookState_bestBid -> succeed {
+    (field "bestAsk" float_2_decoder) >>= (fun mod_f_bookState_bestAsk -> 
+    (field "bestBid" float_2_decoder) >>= (fun mod_f_bookState_bestBid -> 
+    succeed {
         mod_f_bookState_bestBid = mod_f_bookState_bestBid;
         mod_f_bookState_bestAsk = mod_f_bookState_bestAsk
     }
@@ -22,7 +24,9 @@ let mod_action_bookstate_decoder  : m_action_fix_bookstate decoder =
 ;;
 
 let mod_action_fill_decoder  : m_action_fix_fill decoder =
-    (field "fill_qty" float_6_decoder) >>= (fun mod_f_fill_fill_qty -> (field "fill_price" float_2_decoder) >>= (fun mod_f_fill_fill_price -> succeed {
+    (field "fill_qty" float_6_decoder) >>= (fun mod_f_fill_fill_qty -> 
+    (field "fill_price" float_2_decoder) >>= (fun mod_f_fill_fill_price -> 
+    succeed {
         mod_f_fill_fill_price = mod_f_fill_fill_price;
         mod_f_fill_fill_qty = mod_f_fill_fill_qty
     }

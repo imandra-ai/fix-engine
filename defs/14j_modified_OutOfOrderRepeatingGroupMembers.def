@@ -11,9 +11,9 @@ E8=FIX.4.49=5635=A34=149=ISLD52=00000000-00:00:0056=TW98=0108=210=0
 #------------------------
 
 #New order message with an out of order AllocShares(80) tag.
-I8=FIX.4.435=D34=249=TW52=<TIME>56=ISLD11=ID21=140=154=138=200.0055=INTC78=279=acct1661=980=5080=4279=acct280=150661=960=<TIME>
+I8=FIX.4.435=D34=249=TW52=<TIME>56=ISLD11=ID40=154=138=200.00453=2448=Party110002=110002=2448=Party260=<TIME>
 # expect a reject, specifying  offending tag <80>
-E8=FIX.4.49=10335=334=249=ISLD52=00000000-00:00:0056=TW45=258=Out of order repeating group members371=80372=D373=1510=0
+E8=FIX.4.49=10335=334=249=ISLD52=00000000-00:00:0056=TW45=258=Out of order repeating group members371=10002372=D373=1510=0
 
 #------------------------
 # end message exchange

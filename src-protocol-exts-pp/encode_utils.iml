@@ -17,10 +17,26 @@ let enc_opt (f) (x)  =
     )
 ;;
 
+let enc_split_req (f) (x)  =
+    (match x with
+        | [] -> (None)
+        | _ -> (Some (f x))
+    )
+;;
+
+let enc_split_opt (f) (x)  =
+    (match x with
+        | None -> None
+        | Some [] -> None
+        | Some y -> (Some (f y))
+    )
+;;
+
 let enc_repeat (f) (tag) (lst)  =
     (match lst with
         | [] -> []
-        | lst -> ((tag,(lst |> List.length) |> (enc_req encode_int)) :: ((lst |> (List.map f)) |> (List.fold_left (fun m j -> (@) m j
+        | lst -> ((tag,(lst |> List.length) |> (enc_req encode_int)) :: ((lst |> (List.map f)) |> (List.fold_left (fun m j -> 
+        (@) m j
         ) [])))
     )
 ;;

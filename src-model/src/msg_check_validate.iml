@@ -77,7 +77,9 @@ let validate_NewOrderSingle_3 (msg_data : mod_newordersingle_data) (m_state : mo
     in
     let local_internal_state = m_state.f_internal_state
     in
-    make_cond_defrej (rg_forall_fun_Parties msg_data.mod_f_NewOrderSingle_Parties (fun lambda_e_Parties -> rg_forall_fun_PtysSubGrp lambda_e_Parties.mod_f_Parties_PtysSubGrp (fun lambda_e_PtysSubGrp -> (match lambda_e_PtysSubGrp.mod_f_PtysSubGrp_PartySubID with
+    make_cond_defrej (rg_forall_fun_Parties msg_data.mod_f_NewOrderSingle_Parties (fun lambda_e_Parties -> 
+    rg_forall_fun_PtysSubGrp lambda_e_Parties.mod_f_Parties_PtysSubGrp (fun lambda_e_PtysSubGrp -> 
+    (match lambda_e_PtysSubGrp.mod_f_PtysSubGrp_PartySubID with
         | Some cap_x -> ((<>) lambda_e_Parties.mod_f_Parties_PartyID cap_x)
         | None -> true
     )
