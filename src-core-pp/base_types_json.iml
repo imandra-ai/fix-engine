@@ -20,17 +20,17 @@ open D.Infix;;
 *)
 
 
-let int_safe_to_json x  =  `Assoc
+let int_to_json x  =  `Assoc
     [ ( "Type", `String "int")
     ; ( "Value"   , `String (Z.to_string x) )
     ];;
 
-let int_safe_opt_to_json  = function
+let int_opt_to_json  = function
   | None   -> `Null
-  | Some x -> int_safe_to_json x
+  | Some x -> int_to_json x
 ;;
 
-let int_safe_decoder : int Decoders_yojson.Basic.Decode.decoder =
+let int_decoder : int Decoders_yojson.Basic.Decode.decoder =
   D.field "Type" D.string >>= (fun x ->
       match x with
       | "int" -> D.field "Value" D.string >>= fun v -> D.succeed (Z.of_string v)
@@ -81,7 +81,7 @@ let float_1_to_json  = function
   | Float_1 x ->
     `Assoc
       [  ("Type", `String "float")
-      ; ( "Precision", `Int (Z.to_int 1) )
+      ; ( "Precision", int_to_json 1 )
       ; ( "Number"   , `String (Z.to_string x))
       ]
 ;;
@@ -103,7 +103,7 @@ let float_2_to_json  = function
   | Float_2 x ->
     `Assoc
       [ ("Type", `String "float")
-      ; ( "Precision", `Int (Z.to_int 2) )
+      ; ( "Precision", int_to_json 2)
       ; ( "Number"   , `String (Z.to_string x))
       ]
 ;;
@@ -126,7 +126,7 @@ let float_3_to_json  = function
   | Float_3 x ->
     `Assoc
       [ ( "Type", `String "float")
-      ; ( "Precision", `Int (Z.to_int 3) )
+      ; ( "Precision", int_to_json 3 )
       ; ( "Number"   , `String (Z.to_string x))
       ]
 ;;
@@ -148,7 +148,7 @@ let float_3_decoder : Numeric.fix_float_3 Decoders_yojson.Basic.Decode.decoder =
 let float_4_to_json = function
   | Float_4 x ->
     `Assoc
-      [ ( "Precision", `Int (Z.to_int 4))
+      [ ( "Precision", int_to_json 4)
       ; ( "Type", `String "float")
       ; ( "Number"   ,  `String (Z.to_string x))
       ]
@@ -171,7 +171,7 @@ let float_4_decoder : Numeric.fix_float_4 Decoders_yojson.Basic.Decode.decoder =
 let float_5_to_json  = function
   | Float_5 x ->
     `Assoc
-      [ ( "Precision", `Int (Z.to_int 5))
+      [ ( "Precision", int_to_json 5)
       ; ( "Type", `String "float")
       ; ( "Number"   , `String (Z.to_string x))
       ]
@@ -194,7 +194,7 @@ let float_5_decoder : Numeric.fix_float_5 Decoders_yojson.Basic.Decode.decoder =
 let float_6_to_json  = function
   | Float_6 x ->
     `Assoc
-      [ ( "Precision", `Int (Z.to_int 6))
+      [ ( "Precision", int_to_json 6)
       ; ( "Type", `String "float")
       ; ( "Number"   ,  `String (Z.to_string x))
       ]
