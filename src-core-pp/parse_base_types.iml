@@ -4,40 +4,40 @@
     Imandra Inc.
     Copyright (c) 2014 - 2019
 
-    datetime_json.iml 
+    datetime_json.iml
 *)
 [@@@import "../src-core/numeric.iml"]
 [@@@program]
 open Numeric;;
 
-let parse_string (str : string) : string option = 
+let parse_string (str : string) : string option =
    Some str
-;; 
+;;
 
-let parse_symbol (str : string) : string option = 
+let parse_symbol (str : string) : string option =
     Some str
 ;;
 
 let parse_char (str: string) : string option =
     Some str
 
-let parse_int ( str : string ) : int option = 
+let parse_int ( str : string ) : int option =
     if String.get str (Z.to_int 0) = '+' then None else
-    try 
+    try
         Some  (Z.of_int (int_of_string str))
     with _ -> None
 ;;
 
-let parse_bool ( str : string) : bool option = 
-    match str with 
-    | "Y" -> Some true 
-    | "N" -> Some false 
+let parse_bool ( str : string) : bool option =
+    match str with
+    | "Y" -> Some true
+    | "N" -> Some false
     | _ -> None
 ;;
 
 let rec pow10 n =
     if n <= 0 then 1 else 10 * pow10 (n-1)
-    
+
 (** Convert string to fix_float type. *)
 let parse_float (str: string) : Numeric.fix_float_6 option =
     if String.get str (Z.to_int 0) = '+' then None else
