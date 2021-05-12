@@ -4,7 +4,7 @@
     Imandra Inc.
     Copyright (c) 2014 - 2019
 
-    base_types_json.iml 
+    base_types_json.iml
 *)
 [@@@import "../src-core/numeric.iml"]
 [@@@program]
@@ -14,7 +14,7 @@ open Numeric;;
 let encode_int x = String.of_int x ;;
 let encode_char x = x ;;
 
-let encode_float_0 = function Float_0 x -> Printf.sprintf "%d" (Z.to_int x);;
+let encode_float_0 = function Float_0 x -> Printf.sprintf "%s" (Z.to_string x);;
 let encode_float_1 = function Float_1 x -> Printf.sprintf "%.1f" (Q.to_float ((Real.of_int x ) /. 10.0 ));;
 let encode_float_2 = function Float_2 x -> Printf.sprintf "%.2f" (Q.to_float ((Real.of_int x ) /. 100.0 ));;
 let encode_float_3 = function Float_3 x -> Printf.sprintf "%.3f" (Q.to_float ((Real.of_int x ) /. 1000.0 ));;
@@ -29,7 +29,7 @@ let encode_string x = x;;
 let encode_symbol x = x;;
 
 let encode_bool : bool -> string = function
-    | true  -> "Y" 
-    | false -> "N" 
+    | true  -> "Y"
+    | false -> "N"
 ;;
 [@@@logic]
