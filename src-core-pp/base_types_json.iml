@@ -59,7 +59,7 @@ let float_0_to_json  = function
   | Float_0 x ->
     `Assoc
       [ ("Type", `String "float")
-      ; ( "Precision", `Int (Z.to_int 0) )
+      ; ( "Precision", int_to_json 0 )
       ; ( "Number"   , `String (Z.to_string x))
       ]
 ;;
