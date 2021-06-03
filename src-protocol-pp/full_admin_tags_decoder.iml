@@ -10,12 +10,12 @@ let full_admin_string_to_msg_tag   =
   function
   | "Heartbeat_Tag" -> Some Full_Msg_Heartbeat_Tag
   | "Logon_Tag" -> Some Full_Msg_Logon_Tag
-  | "Logoff_Tag" -> Some Full_Msg_Logoff_Tag
+  | "Logoff_Tag" -> Some Full_Msg_Logout_Tag
   | "Reject_Tag" -> Some Full_Msg_Reject_Tag
-  | "Business_Reject_Tag" -> Some Full_Msg_Business_Reject_Tag
-  | "Resend_Request_Tag" -> Some Full_Msg_Resend_Request_Tag
-  | "Sequence_Reset_Tag" -> Some Full_Msg_Sequence_Reset_Tag
-  | "Test_Request_Tag" -> Some Full_Msg_Test_Request_Tag
+  | "Business_Reject_Tag" -> Some Full_Msg_BusinessMessageReject_Tag
+  | "Resend_Request_Tag" -> Some Full_Msg_ResendRequest_Tag
+  | "Sequence_Reset_Tag" -> Some Full_Msg_SequenceReset_Tag
+  | "Test_Request_Tag" -> Some Full_Msg_TestRequest_Tag
   | _ -> (None)
 ;;
 

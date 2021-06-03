@@ -14,13 +14,13 @@ open Full_admin_tags;;
 
 let encode_admin_msg_tag = function
     |   Full_Msg_Heartbeat_Tag       -> "0"
-    |   Full_Msg_Test_Request_Tag    -> "1"
-    |   Full_Msg_Resend_Request_Tag  -> "2"
+    |   Full_Msg_TestRequest_Tag    -> "1"
+    |   Full_Msg_ResendRequest_Tag  -> "2"
     |   Full_Msg_Reject_Tag          -> "3"
-    |   Full_Msg_Sequence_Reset_Tag  -> "4"
-    |   Full_Msg_Logoff_Tag          -> "5"
+    |   Full_Msg_SequenceReset_Tag  -> "4"
+    |   Full_Msg_Logout_Tag          -> "5"
     |   Full_Msg_Logon_Tag           -> "A"
-    |   Full_Msg_Business_Reject_Tag -> "j"
+    |   Full_Msg_BusinessMessageReject_Tag -> "j"
 ;;
 
 

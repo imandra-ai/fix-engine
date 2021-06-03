@@ -208,7 +208,7 @@ let attempt_sequence_reset (engine, msg_seq_num, new_seq_num : fix_engine_state 
         let reject = {
             srej_msg_msg_seq_num   = msg_seq_num;
             srej_msg_field_tag     = Some (Full_Admin_Field_Tag Full_Field_NewSeqNo_Tag);
-            srej_msg_msg_type      = Some (Full_Admin_Msg_Tag Full_Msg_Sequence_Reset_Tag);
+            srej_msg_msg_type      = Some (Full_Admin_Msg_Tag Full_Msg_SequenceReset_Tag);
             srej_msg_reject_reason = Some ValueIsIncorrect;
             srej_text              = None;
             srej_encoded_text_len  = None;
