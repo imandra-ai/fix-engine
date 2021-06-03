@@ -61,9 +61,9 @@ let parse_admin_field_tag = function
     | "142" -> Some Full_Field_SenderLocationID_Tag
     | "143" -> Some Full_Field_TargetLocationID_Tag
     | "145" -> Some Full_Field_DeliverToLocationID_Tag
-    | "212" -> Some Full_Field_XMLDataLen_Tag
-    | "213" -> Some Full_Field_XMLData_Tag
-    | "347" -> Some Full_Field_MessageEnconding_Tag
+    | "212" -> Some Full_Field_XmlDataLen_Tag
+    | "213" -> Some Full_Field_XmlData_Tag
+    | "347" -> Some Full_Field_MessageEncoding_Tag
     | "354" -> Some Full_Field_EncodedTextLen_Tag
     | "355" -> Some Full_Field_EncodedText_Tag
     | "369" -> Some Full_Field_LastMsgSeqNumProcessed_Tag
@@ -77,6 +77,10 @@ let parse_admin_field_tag = function
     | "554" -> Some Full_Field_Password_Tag
     | "627" -> Some Full_Field_NoHops_Tag
     | "789" -> Some Full_Field_NextExpectedMsgSeqNum_Tag
+    | "370" -> Some Full_Field_OnBehalfOfSendingTime_Tag
+    | "628" -> Some Full_Field_HopCompID_Tag
+    | "629" -> Some Full_Field_HopSendingTime_Tag
+    | "630" -> Some Full_Field_HopRefID_Tag
     |    _  -> None
 ;;
 [@@@logic]

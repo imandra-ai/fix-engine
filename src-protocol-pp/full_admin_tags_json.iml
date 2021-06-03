@@ -62,9 +62,9 @@ let full_admin_field_tag_to_string = function
     | Full_Field_SenderLocationID_Tag          -> "SenderLocationID"
     | Full_Field_TargetLocationID_Tag          -> "TargetLocationID"
     | Full_Field_DeliverToLocationID_Tag       -> "DeliverToLocationID"
-    | Full_Field_XMLDataLen_Tag                -> "XMLDataLen"
-    | Full_Field_XMLData_Tag                   -> "XMLData"
-    | Full_Field_MessageEnconding_Tag          -> "MessageEnconding"
+    | Full_Field_XmlDataLen_Tag                -> "XMLDataLen"
+    | Full_Field_XmlData_Tag                   -> "XMLData"
+    | Full_Field_MessageEncoding_Tag           -> "MessageEnconding"
     | Full_Field_EncodedTextLen_Tag            -> "EncodedTextLen"
     | Full_Field_EncodedText_Tag               -> "EncodedText"
     | Full_Field_LastMsgSeqNumProcessed_Tag    -> "LastMsgSeqNumProcessed"
@@ -78,6 +78,10 @@ let full_admin_field_tag_to_string = function
     | Full_Field_Password_Tag                  -> "Password"
     | Full_Field_NoHops_Tag                    -> "NoHops"
     | Full_Field_NextExpectedMsgSeqNum_Tag     -> "NextExpectedMsgSeqNum"
+    | Full_Field_OnBehalfOfSendingTime_Tag     -> "OnBehalfOfSendingTime"
+    | Full_Field_HopCompID_Tag                 -> "HopCompID"
+    | Full_Field_HopSendingTime_Tag            -> "HopSendingTime"
+    | Full_Field_HopRefID_Tag                  -> "HopRefID"
 ;;
 
 

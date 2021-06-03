@@ -61,9 +61,9 @@ let encode_admin_field_tag = function
     | Full_Field_SenderLocationID_Tag       ->  "142"
     | Full_Field_TargetLocationID_Tag       ->  "143"
     | Full_Field_DeliverToLocationID_Tag    ->  "145"
-    | Full_Field_XMLDataLen_Tag             ->  "212"
-    | Full_Field_XMLData_Tag                ->  "213"
-    | Full_Field_MessageEnconding_Tag       ->  "347"
+    | Full_Field_XmlDataLen_Tag             ->  "212"
+    | Full_Field_XmlData_Tag                ->  "213"
+    | Full_Field_MessageEncoding_Tag       ->   "347"
     | Full_Field_EncodedTextLen_Tag         ->  "354"
     | Full_Field_EncodedText_Tag            ->  "355"
     | Full_Field_LastMsgSeqNumProcessed_Tag ->  "369"
@@ -77,6 +77,10 @@ let encode_admin_field_tag = function
     | Full_Field_Password_Tag               ->  "554"
     | Full_Field_NoHops_Tag                 ->  "627"
     | Full_Field_NextExpectedMsgSeqNum_Tag  ->  "789"
+    | Full_Field_OnBehalfOfSendingTime_Tag  ->  "370"
+    | Full_Field_HopCompID_Tag              ->  "628"
+    | Full_Field_HopSendingTime_Tag         ->  "629"
+    | Full_Field_HopRefID_Tag               ->  "630"
 ;;
 [@@@logic]
 
