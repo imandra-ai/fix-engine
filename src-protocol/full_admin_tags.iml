@@ -11,14 +11,14 @@
 
 (** Admin message tags *)
 type full_admin_msg_tag =
-    | Full_Msg_Heartbeat_Tag
-    | Full_Msg_Logon_Tag
-    | Full_Msg_Logout_Tag
-    | Full_Msg_Reject_Tag
-    | Full_Msg_BusinessMessageReject_Tag
-    | Full_Msg_ResendRequest_Tag
-    | Full_Msg_SequenceReset_Tag
-    | Full_Msg_TestRequest_Tag
+  | Full_Msg_BusinessMessageReject_Tag
+  | Full_Msg_Heartbeat_Tag
+  | Full_Msg_Logon_Tag
+  | Full_Msg_Logout_Tag
+  | Full_Msg_Reject_Tag
+  | Full_Msg_ResendRequest_Tag
+  | Full_Msg_SequenceReset_Tag
+  | Full_Msg_TestRequest_Tag
 ;;
 
 (** Admin message fields tags *)
