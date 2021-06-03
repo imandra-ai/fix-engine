@@ -32,6 +32,7 @@ let full_admin_field_tag_to_string = function
     | Full_Field_CheckSum_Tag                  -> "CheckSum"
     | Full_Field_EndSeqNo_Tag                  -> "EndSeqNo"
     | Full_Field_MsgSeqNum_Tag                 -> "MsgSeqNum"
+    | Full_Field_MsgType_Tag                   -> "MsgType"
     | Full_Field_NewSeqNo_Tag                  -> "NewSeqNo"
     | Full_Field_PossDupFlag_Tag               -> "PossDupFlag"
     | Full_Field_RefSeqNum_Tag                 -> "RefSeqNum"

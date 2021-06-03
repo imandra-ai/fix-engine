@@ -43,6 +43,7 @@ let full_admin_string_to_field_tag =
   | "SignatureLength" -> Some Full_Field_SignatureLength_Tag
   | "RawDataLength" -> Some Full_Field_RawDataLength_Tag
   | "RawData" -> Some Full_Field_RawData_Tag
+  | "MsgType" -> Some Full_Field_MsgType_Tag
   | "PossResend"  -> Some Full_Field_PossResend_Tag
   | "EncryptMethod" -> Some Full_Field_EncryptMethod_Tag
   | "HeartBtInt" -> Some Full_Field_HeartBtInt_Tag

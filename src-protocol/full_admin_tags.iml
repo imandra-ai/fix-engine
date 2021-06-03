@@ -29,6 +29,7 @@ type full_admin_field_tag =
     | Full_Field_CheckSum_Tag
     | Full_Field_EndSeqNo_Tag
     | Full_Field_MsgSeqNum_Tag
+    | Full_Field_MsgType_Tag
     | Full_Field_NewSeqNo_Tag
     | Full_Field_PossDupFlag_Tag
     | Full_Field_RefSeqNum_Tag

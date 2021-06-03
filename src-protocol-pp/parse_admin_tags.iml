@@ -31,6 +31,7 @@ let parse_admin_field_tag = function
     | "10"  -> Some Full_Field_CheckSum_Tag
     | "16"  -> Some Full_Field_EndSeqNo_Tag
     | "34"  -> Some Full_Field_MsgSeqNum_Tag
+    | "35"  -> Some Full_Field_MsgType_Tag
     | "36"  -> Some Full_Field_NewSeqNo_Tag
     | "43"  -> Some Full_Field_PossDupFlag_Tag
     | "45"  -> Some Full_Field_RefSeqNum_Tag

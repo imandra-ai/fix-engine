@@ -32,6 +32,7 @@ let encode_admin_field_tag = function
     | Full_Field_EndSeqNo_Tag               ->  "16"
     | Full_Field_MsgSeqNum_Tag              ->  "34"
     | Full_Field_NewSeqNo_Tag               ->  "36"
+    | Full_Field_MsgType_Tag                ->  "35"
     | Full_Field_PossDupFlag_Tag            ->  "43"
     | Full_Field_RefSeqNum_Tag              ->  "45"
     | Full_Field_SenderCompID_Tag           ->  "49"
