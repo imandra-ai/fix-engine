@@ -7,7 +7,7 @@ open Full_admin_enums;;
 module D = Decoders_yojson.Basic.Decode
 
 let string_to_fix_session_reject_reason_opt  =
-  function 
+  function
   | "InvalidTagNumber" -> Some InvalidTagNumber
   | "RequiredTagMissing" -> Some RequiredTagMissing
   | "TagNotDefinedForThisMessageType" -> Some TagNotDefinedForThisMessageType
@@ -26,84 +26,85 @@ let string_to_fix_session_reject_reason_opt  =
   | "RepeatingGroupFieldsOutOfOrder" -> Some RepeatingGroupFieldsOutOfOrder
   | "IncorrectNumInGroupCountForRepeatingGroup" -> Some IncorrectNumInGroupCountForRepeatingGroup
   | "NonDataValueIncludesFieldDelimiter" -> Some NonDataValueIncludesFieldDelimiter
+  | "Other" -> Some Other
   | _ -> None
 ;;
 
 let full_admin_enum_fix_session_reject_reason_decoder  : fix_session_reject_reason D.decoder =
-  let open D in 
+  let open D in
   string >>= fun x -> match string_to_fix_session_reject_reason_opt x with
   | None -> fail "Unknown enum (fix_session_reject_reason) encoding."
   | Some y -> succeed y
 ;;
 
-let string_to_fix_business_reject_reason_opt = function 
-  | "ApplicationDown" -> Some ApplicationDown 
-  | "MessageTypeNotSupported" -> Some MessageTypeNotSupported 
-  | "FieldMissing" -> Some FieldMissing 
+let string_to_fix_business_reject_reason_opt = function
+  | "ApplicationDown" -> Some ApplicationDown
+  | "MessageTypeNotSupported" -> Some MessageTypeNotSupported
+  | "FieldMissing" -> Some FieldMissing
   | _ -> None
 ;;
 
 let full_admin_enum_fix_business_reject_reason_decoder  : fix_business_reject_reason D.decoder =
-  let open D in 
+  let open D in
   string >>= fun x -> match string_to_fix_business_reject_reason_opt x with
   | None -> fail "Unknown enum (fix_business_reject_reason) encoding."
   | Some y -> succeed y
 ;;
 
-let string_to_fix_app_reject_reason_opt = function 
+let string_to_fix_app_reject_reason_opt = function
   | "FIX_App_Reject_MissingReqField" -> Some FIX_App_Reject_MissingReqField
-  | "FIX_App_Reject_InvalidField" -> Some FIX_App_Reject_InvalidField 
+  | "FIX_App_Reject_InvalidField" -> Some FIX_App_Reject_InvalidField
   | "FIX_App_Reject_Custom" -> Some FIX_App_Reject_Custom
   | _ -> None
 ;;
 
 let full_admin_enum_fix_app_reject_reason_decoder  : fix_app_reject_reason D.decoder =
-  let open D in 
+  let open D in
   string >>= fun x -> match string_to_fix_app_reject_reason_opt x with
   | None -> fail "Unknown enum (fix_app_reject_reason) encoding."
   | Some y -> succeed y
 ;;
 
-let string_to_fix_gapfillflag_opt = function 
-  | "FIX_GapFillFlat_Y" -> Some FIX_GapFillFlag_Y 
-  | "FIX_GapFillFlag_N" -> Some FIX_GapFillFlag_N 
+let string_to_fix_gapfillflag_opt = function
+  | "FIX_GapFillFlat_Y" -> Some FIX_GapFillFlag_Y
+  | "FIX_GapFillFlag_N" -> Some FIX_GapFillFlag_N
   | _ -> None
 ;;
 
 
 let full_admin_enum_fix_gapfillflag_decoder  : fix_gapfillflag D.decoder =
-  let open D in 
+  let open D in
   string >>= fun x -> match string_to_fix_gapfillflag_opt x with
   | None -> fail "Unknown enum (fix_gapfillflag) encoding."
   | Some y -> succeed y
 ;;
 
-let string_to_fix_encryption_method_opt = function 
-  | "PKCS" -> Some PKCS          
-  | "DES_ECB" -> Some DES_ECB       
-  | "PKCS_DES" -> Some PKCS_DES      
-  | "PGP_DES" -> Some PGP_DES       
-  | "PGP_DES_MD5" -> Some PGP_DES_MD5   
-  | "PEM_DES_MD5" -> Some PEM_DES_MD5   
+let string_to_fix_encryption_method_opt = function
+  | "PKCS" -> Some PKCS
+  | "DES_ECB" -> Some DES_ECB
+  | "PKCS_DES" -> Some PKCS_DES
+  | "PGP_DES" -> Some PGP_DES
+  | "PGP_DES_MD5" -> Some PGP_DES_MD5
+  | "PEM_DES_MD5" -> Some PEM_DES_MD5
   | "NoEncryption" -> Some NoEncryption
-  | _ -> None 
+  | _ -> None
 ;;
 
 let full_admin_enum_fix_encryption_method_decoder  : fix_encryption_method D.decoder =
-  let open D in 
+  let open D in
   string >>= fun x -> match string_to_fix_encryption_method_opt x with
   | None -> fail "Unknown enum (fix_encryption_method) encoding."
   | Some y -> succeed y
 ;;
 
-let string_to_fix_msgdirection_opt = function 
-  | "FIX_MsgDirection_Send" -> Some FIX_MsgDirection_Send 
-  | "FIX_MsgDirection_Receive" -> Some FIX_MsgDirection_Receive 
-  | _ -> None 
+let string_to_fix_msgdirection_opt = function
+  | "FIX_MsgDirection_Send" -> Some FIX_MsgDirection_Send
+  | "FIX_MsgDirection_Receive" -> Some FIX_MsgDirection_Receive
+  | _ -> None
 ;;
 
 let full_admin_enum_fix_msgdirection_decoder  : fix_msgdirection D.decoder =
-  let open D in 
+  let open D in
   string >>= fun x -> match string_to_fix_msgdirection_opt x with
   | None -> fail "Unknown enum (fix_msgdirection) encoding."
   | Some y -> succeed y
