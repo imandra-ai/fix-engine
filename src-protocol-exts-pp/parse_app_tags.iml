@@ -29,6 +29,12 @@ let parse_app_field_tag (tag)  =
         | "151" -> (Some (Full_Field_LeavesQty_Tag))
         | "14" -> (Some (Full_Field_CumQty_Tag))
         | "58" -> (Some (Full_Field_Text_Tag))
+        | "38" -> (Some (Full_Field_OrderQty_Tag))
+        | "802" -> (Some (Full_Field_NoPartySubIDs_Tag))
+        | "523" -> (Some (Full_Field_PartySubID_Tag))
+        | "453" -> (Some (Full_Field_NoPartyIDs_Tag))
+        | "448" -> (Some (Full_Field_PartyID_Tag))
+        | "10002" -> (Some (Full_Field_PartyIndex_Tag))
         | _ -> (None)
     )
 ;;

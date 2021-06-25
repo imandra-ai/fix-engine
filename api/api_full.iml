@@ -1,0 +1,498 @@
+(* Imandra Inc. copyright 2021 *)
+[@@@import "../src-protocol-pp/encode_admin_tags.iml"]
+open Encode_admin_tags;;
+[@@@import "../src-protocol-exts-pp/encode_app_enums.iml"]
+open Encode_app_enums;;
+[@@@import "../src-protocol-exts-pp/encode_app_tags.iml"]
+open Encode_app_tags;;
+[@@@import "../src-protocol-pp/encode_full_tags.iml"]
+open Encode_full_tags;;
+[@@@import "../src-model/src-conversions/enum_converter.iml"]
+open Enum_converter;;
+[@@@import "../src-protocol/full_admin_tags.iml"]
+open Full_admin_tags;;
+[@@@import "../src-protocol-exts-pp/full_app_enums_decoder.iml"]
+open Full_app_enums_decoder;;
+[@@@import "../src-protocol-exts-pp/full_app_enums_json.iml"]
+open Full_app_enums_json;;
+[@@@import "../src-protocol-exts/full_app_messages.iml"]
+open Full_app_messages;;
+[@@@import "../src-protocol-exts-pp/full_app_messages_decoder.iml"]
+open Full_app_messages_decoder;;
+[@@@import "../src-protocol-exts-pp/full_app_messages_json.iml"]
+open Full_app_messages_json;;
+[@@@import "../src-protocol-exts/full_app_records.iml"]
+open Full_app_records;;
+[@@@import "../src-protocol-exts-pp/full_app_records_decoder.iml"]
+open Full_app_records_decoder;;
+[@@@import "../src-protocol-exts-pp/full_app_records_json.iml"]
+open Full_app_records_json;;
+[@@@import "../src-protocol-exts/full_app_tags.iml"]
+open Full_app_tags;;
+[@@@import "../src-protocol/full_message_tags.iml"]
+open Full_message_tags;;
+[@@@import "../src-model/src-types/model_app_enums.iml"]
+open Model_app_enums;;
+[@@@import "../src-model/src-strings-venue/model_enum_names.iml"]
+open Model_enum_names;;
+[@@@import "../src-model/src-types/model_tags.iml"]
+open Model_tags;;
+[@@@import "../src-protocol-pp/parse_admin_tags.iml"]
+open Parse_admin_tags;;
+[@@@import "../src-protocol-exts-pp/parse_app_enums.iml"]
+open Parse_app_enums;;
+[@@@import "../src-protocol-exts-pp/parse_app_tags.iml"]
+open Parse_app_tags;;
+[@@@import "../src-protocol-pp/parse_full_tags.iml"]
+open Parse_full_tags;;
+[@@@import "../src-model/src-conversions/repeating_groups_converter.iml"]
+open Repeating_groups_converter;;
+[@@@import "../src-model/src-conversions/type_converter.iml"]
+open Type_converter;;
+[@@@require "yojson"]
+open Yojson.Basic.Util;;
+
+
+let pp_msg_of_to_json to_json fmt x =
+    let open Format in
+    let f x = fprintf fmt x in
+    f "@[" ;
+    let () =
+      match to_json x with
+      | `Assoc kvs ->
+          pp_print_list
+            ~pp_sep:(fun fmt () -> fprintf fmt ",@ ")
+            (fun fmt (k, v) -> fprintf fmt "%s:%s" k (to_string v))
+            fmt
+            kvs
+      | v ->
+          f "%s" (to_string v)
+    in
+    f "@]"
+    [@@program]
+
+module Tag = struct
+  type t = 
+      | Admin_tag of full_admin_field_tag
+      | Tag of full_app_field_tag
+  ;;
+  let to_fix (x)  =
+      (match x with
+          | Admin_tag t -> (encode_admin_field_tag t)
+          | Tag t -> (encode_app_field_tag t)
+      )
+      [@@program]
+  ;;
+  let of_fix (x)  =
+      (match parse_admin_field_tag x with
+          | None -> let s = parse_app_field_tag x
+          in
+          Option.map (fun t -> 
+          Tag t
+          ) s
+          | Some t -> (Some (Admin_tag t))
+      )
+  ;;
+  let begin_string = Admin_tag Full_Field_BeginString_Tag [@@program];;
+  let body_length = Admin_tag Full_Field_BodyLength_Tag [@@program];;
+  let check_sum = Admin_tag Full_Field_CheckSum_Tag [@@program];;
+  let deliver_to_comp_id = Admin_tag Full_Field_DeliverToCompID_Tag [@@program];;
+  let deliver_to_location_id = Admin_tag Full_Field_DeliverToLocationID_Tag [@@program];;
+  let deliver_to_sub_id = Admin_tag Full_Field_DeliverToSubID_Tag [@@program];;
+  let hop_comp_id = Admin_tag Full_Field_HopCompID_Tag [@@program];;
+  let hop_ref_id = Admin_tag Full_Field_HopRefID_Tag [@@program];;
+  let hop_sending_time = Admin_tag Full_Field_HopSendingTime_Tag [@@program];;
+  let last_msg_seq_num_processed = Admin_tag Full_Field_LastMsgSeqNumProcessed_Tag [@@program];;
+  let message_encoding = Admin_tag Full_Field_MessageEncoding_Tag [@@program];;
+  let msg_seq_num = Admin_tag Full_Field_MsgSeqNum_Tag [@@program];;
+  let msg_type = Admin_tag Full_Field_MsgType_Tag [@@program];;
+  let no_hops = Admin_tag Full_Field_NoHops_Tag [@@program];;
+  let on_behalf_of_comp_id = Admin_tag Full_Field_OnBehalfOfCompID_Tag [@@program];;
+  let on_behalf_of_location_id = Admin_tag Full_Field_OnBehalfOfLocationID_Tag [@@program];;
+  let on_behalf_of_sub_id = Admin_tag Full_Field_OnBehalfOfSubID_Tag [@@program];;
+  let orig_sending_time = Admin_tag Full_Field_OrigSendingTime_Tag [@@program];;
+  let poss_dup_flag = Admin_tag Full_Field_PossDupFlag_Tag [@@program];;
+  let poss_resend = Admin_tag Full_Field_PossResend_Tag [@@program];;
+  let ref_seq_num = Admin_tag Full_Field_RefSeqNum_Tag [@@program];;
+  let secure_data = Admin_tag Full_Field_SecureData_Tag [@@program];;
+  let secure_data_len = Admin_tag Full_Field_SecureDataLen_Tag [@@program];;
+  let sender_comp_id = Admin_tag Full_Field_SenderCompID_Tag [@@program];;
+  let sender_location_id = Admin_tag Full_Field_SenderLocationID_Tag [@@program];;
+  let sender_sub_id = Admin_tag Full_Field_SenderSubID_Tag [@@program];;
+  let sending_time = Admin_tag Full_Field_SendingTime_Tag [@@program];;
+  let signature = Admin_tag Full_Field_Signature_Tag [@@program];;
+  let signature_length = Admin_tag Full_Field_SignatureLength_Tag [@@program];;
+  let target_comp_id = Admin_tag Full_Field_TargetCompID_Tag [@@program];;
+  let target_location_id = Admin_tag Full_Field_TargetLocationID_Tag [@@program];;
+  let target_sub_id = Admin_tag Full_Field_TargetSubID_Tag [@@program];;
+  let xml_data = Admin_tag Full_Field_XmlData_Tag [@@program];;
+  let xml_data_len = Admin_tag Full_Field_XmlDataLen_Tag [@@program];;
+  let account = Tag Full_Field_Account_Tag [@@macro];;
+  let cl_ord_id = Tag Full_Field_ClOrdID_Tag [@@macro];;
+  let cum_qty = Tag Full_Field_CumQty_Tag [@@macro];;
+  let exec_id = Tag Full_Field_ExecID_Tag [@@macro];;
+  let exec_inst = Tag Full_Field_ExecInst_Tag [@@macro];;
+  let exec_type = Tag Full_Field_ExecType_Tag [@@macro];;
+  let leaves_qty = Tag Full_Field_LeavesQty_Tag [@@macro];;
+  let no_party_ids = Tag Full_Field_NoPartyIDs_Tag [@@macro];;
+  let no_party_sub_ids = Tag Full_Field_NoPartySubIDs_Tag [@@macro];;
+  let ord_status = Tag Full_Field_OrdStatus_Tag [@@macro];;
+  let ord_type = Tag Full_Field_OrdType_Tag [@@macro];;
+  let order_id = Tag Full_Field_OrderID_Tag [@@macro];;
+  let order_qty = Tag Full_Field_OrderQty_Tag [@@macro];;
+  let party_id = Tag Full_Field_PartyID_Tag [@@macro];;
+  let party_index = Tag Full_Field_PartyIndex_Tag [@@macro];;
+  let party_sub_id = Tag Full_Field_PartySubID_Tag [@@macro];;
+  let price = Tag Full_Field_Price_Tag [@@macro];;
+  let side = Tag Full_Field_Side_Tag [@@macro];;
+  let spread_proportion = Tag Full_Field_SpreadProportion_Tag [@@macro];;
+  let text = Tag Full_Field_Text_Tag [@@macro];;
+  let transact_time = Tag Full_Field_TransactTime_Tag [@@macro];;
+end
+
+module Exec_inst = struct
+  type t = model_fix_execinst
+  ;;
+  let to_fix = encode_ExecInst [@@program];;
+  let of_fix = parse_ExecInst [@@program];;
+  let of_model (x)  =
+      convert__model_to_full_ExecInst x list_model_vals_ExecInst
+      [@@macro]
+  ;;
+  let to_model (x)  =
+      convert__full_to_model_ExecInst x
+      [@@macro]
+  ;;
+  let to_json = execinst_to_json [@@program];;
+  let of_json = full_enum_execinst_decoder [@@program];;
+end
+
+module Parties = struct
+  type t = fix_rg_inner_parties
+  ;;
+  let party_id (t)  =
+      t.f_Parties_PartyID
+      [@@macro]
+  ;;
+  let party_index (t)  =
+      t.f_Parties_PartyIndex
+      [@@macro]
+  ;;
+  let ptys_sub_grp (t)  =
+      t.f_Parties_PtysSubGrp
+      [@@macro]
+  ;;
+  let make ?party_id ?party_index ~ptys_sub_grp ()  : t =
+      {
+          f_Parties_PartyID = party_id;
+          f_Parties_PartyIndex = party_index;
+          f_Parties_PtysSubGrp = ptys_sub_grp
+      }
+      [@@ocamlformat "break-fun-decl=wrap"] [@@macro]
+  ;;
+  let pp (f) (x)  =
+      pp_msg_of_to_json parties_to_json f x
+      [@@program] [@@macro]
+  ;;
+  let to_json = parties_to_json [@@program];;
+  let of_json = full_rg_parties_decoder [@@program];;
+  let of_model = convert__model_to_full_Parties [@@macro];;
+  let to_model = convert__full_to_model_Parties [@@macro];;
+end
+
+module Ptys_sub_grp = struct
+  type t = fix_rg_inner_ptyssubgrp
+  ;;
+  let party_sub_id (t)  =
+      t.f_PtysSubGrp_PartySubID
+      [@@macro]
+  ;;
+  let make ?party_sub_id ()  : t =
+      {
+          f_PtysSubGrp_PartySubID = party_sub_id
+      }
+      [@@ocamlformat "break-fun-decl=wrap"] [@@macro]
+  ;;
+  let pp (f) (x)  =
+      pp_msg_of_to_json ptyssubgrp_to_json f x
+      [@@program] [@@macro]
+  ;;
+  let to_json = ptyssubgrp_to_json [@@program];;
+  let of_json = full_rg_ptyssubgrp_decoder [@@program];;
+  let of_model = convert__model_to_full_PtysSubGrp [@@macro];;
+  let to_model = convert__full_to_model_PtysSubGrp [@@macro];;
+end
+
+module Execution_report = struct
+  type t = full_fix_executionreport_data
+  ;;
+  let cum_qty (t)  =
+      t.f_ExecutionReport_CumQty
+      [@@macro]
+  ;;
+  let exec_id (t)  =
+      t.f_ExecutionReport_ExecID
+      [@@macro]
+  ;;
+  let exec_inst (t)  =
+      t.f_ExecutionReport_ExecInst
+      [@@macro]
+  ;;
+  let exec_type (t)  =
+      t.f_ExecutionReport_ExecType
+      [@@macro]
+  ;;
+  let leaves_qty (t)  =
+      t.f_ExecutionReport_LeavesQty
+      [@@macro]
+  ;;
+  let ord_status (t)  =
+      t.f_ExecutionReport_OrdStatus
+      [@@macro]
+  ;;
+  let order_id (t)  =
+      t.f_ExecutionReport_OrderID
+      [@@macro]
+  ;;
+  let order_qty (t)  =
+      t.f_ExecutionReport_OrderQtyData.f_OrderQtyData_OrderQty
+      [@@macro]
+  ;;
+  let parties (t)  =
+      t.f_ExecutionReport_Parties
+      [@@macro]
+  ;;
+  let side (t)  =
+      t.f_ExecutionReport_Side
+      [@@macro]
+  ;;
+  let text (t)  =
+      t.f_ExecutionReport_Text
+      [@@macro]
+  ;;
+  let make ?cum_qty ?exec_id ?exec_inst ?exec_type ?leaves_qty ?ord_status ?order_id ?order_qty ?side ?text ?no_party_ids ~parties ()  : t =
+      {
+          f_ExecutionReport_CumQty = cum_qty;
+          f_ExecutionReport_ExecID = exec_id;
+          f_ExecutionReport_ExecInst = exec_inst;
+          f_ExecutionReport_ExecType = exec_type;
+          f_ExecutionReport_LeavesQty = leaves_qty;
+          f_ExecutionReport_OrdStatus = ord_status;
+          f_ExecutionReport_OrderID = order_id;
+          f_ExecutionReport_OrderQtyData = {
+              f_OrderQtyData_OrderQty = order_qty
+          };
+          f_ExecutionReport_Parties = {
+              f_Parties_num_field = (match no_party_ids with
+                  | None -> (Some (List.length parties))
+                  | _ -> no_party_ids
+              );
+              f_Parties_entries = parties
+          };
+          f_ExecutionReport_Side = side;
+          f_ExecutionReport_Text = text
+      }
+      [@@ocamlformat "break-fun-decl=wrap"]
+  ;;
+  let pp (f) (x)  =
+      pp_msg_of_to_json executionreport_to_json f x
+      [@@program] [@@macro]
+  ;;
+  let to_json = executionreport_to_json [@@program];;
+  let of_json = full_message_executionreport_decoder [@@program];;
+  let of_model = convert__model_to_full_ExecutionReport [@@macro];;
+  let to_model = convert__full_to_model_ExecutionReport [@@macro];;
+end
+
+module New_order_single = struct
+  type t = full_fix_newordersingle_data
+  ;;
+  let account (t)  =
+      t.f_NewOrderSingle_Account
+      [@@macro]
+  ;;
+  let cl_ord_id (t)  =
+      t.f_NewOrderSingle_ClOrdID
+      [@@macro]
+  ;;
+  let exec_inst (t)  =
+      t.f_NewOrderSingle_ExecInst
+      [@@macro]
+  ;;
+  let ord_type (t)  =
+      t.f_NewOrderSingle_OrdType
+      [@@macro]
+  ;;
+  let order_qty (t)  =
+      t.f_NewOrderSingle_OrderQtyData.f_OrderQtyData_OrderQty
+      [@@macro]
+  ;;
+  let parties (t)  =
+      t.f_NewOrderSingle_Parties
+      [@@macro]
+  ;;
+  let price (t)  =
+      t.f_NewOrderSingle_Price
+      [@@macro]
+  ;;
+  let side (t)  =
+      t.f_NewOrderSingle_Side
+      [@@macro]
+  ;;
+  let spread_proportion (t)  =
+      t.f_NewOrderSingle_SpreadProportion
+      [@@macro]
+  ;;
+  let transact_time (t)  =
+      t.f_NewOrderSingle_TransactTime
+      [@@macro]
+  ;;
+  let make ?account ?cl_ord_id ?exec_inst ?ord_type ?order_qty ?price ?side ?spread_proportion ?transact_time ?no_party_ids ~parties ()  : t =
+      {
+          f_NewOrderSingle_Account = account;
+          f_NewOrderSingle_ClOrdID = cl_ord_id;
+          f_NewOrderSingle_ExecInst = exec_inst;
+          f_NewOrderSingle_OrdType = ord_type;
+          f_NewOrderSingle_OrderQtyData = {
+              f_OrderQtyData_OrderQty = order_qty
+          };
+          f_NewOrderSingle_Parties = {
+              f_Parties_num_field = (match no_party_ids with
+                  | None -> (Some (List.length parties))
+                  | _ -> no_party_ids
+              );
+              f_Parties_entries = parties
+          };
+          f_NewOrderSingle_Price = price;
+          f_NewOrderSingle_Side = side;
+          f_NewOrderSingle_SpreadProportion = spread_proportion;
+          f_NewOrderSingle_TransactTime = transact_time
+      }
+      [@@ocamlformat "break-fun-decl=wrap"]
+  ;;
+  let pp (f) (x)  =
+      pp_msg_of_to_json newordersingle_to_json f x
+      [@@program] [@@macro]
+  ;;
+  let to_json = newordersingle_to_json [@@program];;
+  let of_json = full_message_newordersingle_decoder [@@program];;
+  let of_model = convert__model_to_full_NewOrderSingle [@@macro];;
+  let to_model = convert__full_to_model_NewOrderSingle [@@macro];;
+end
+
+module Msg_type = struct
+  type admin = full_admin_msg_tag =
+      | Full_Msg_BusinessMessageReject_Tag 
+      | Full_Msg_Heartbeat_Tag 
+      | Full_Msg_Logon_Tag 
+      | Full_Msg_Logout_Tag 
+      | Full_Msg_Reject_Tag 
+      | Full_Msg_ResendRequest_Tag 
+      | Full_Msg_SequenceReset_Tag 
+      | Full_Msg_TestRequest_Tag 
+  ;;
+  let admin_to_string (x)  =
+      (match x with
+          | Full_Msg_BusinessMessageReject_Tag -> "BusinessMessageReject"
+          | Full_Msg_Heartbeat_Tag -> "Heartbeat"
+          | Full_Msg_Logon_Tag -> "Logon"
+          | Full_Msg_Logout_Tag -> "Logout"
+          | Full_Msg_Reject_Tag -> "Reject"
+          | Full_Msg_ResendRequest_Tag -> "ResendRequest"
+          | Full_Msg_SequenceReset_Tag -> "SequenceReset"
+          | Full_Msg_TestRequest_Tag -> "TestRequest"
+      )
+      [@@program]
+  ;;
+  type app = full_app_msg_tag =
+      | Full_Msg_NewOrderSingle_Tag 
+      | Full_Msg_ExecutionReport_Tag 
+  ;;
+  let app_to_string (x)  =
+      (match x with
+          | Full_Msg_NewOrderSingle_Tag -> "NewOrderSingle"
+          | Full_Msg_ExecutionReport_Tag -> "ExecutionReport"
+      )
+      [@@program]
+  ;;
+  type t = full_msg_tag =
+      | Full_Admin_Msg_Tag of admin
+      | Full_App_Msg_Tag of app
+      | Full_Msg_Unknown_Tag of string
+  ;;
+  let to_string (x)  =
+      (match x with
+          | Full_Admin_Msg_Tag x -> (admin_to_string x)
+          | Full_App_Msg_Tag x -> (app_to_string x)
+          | Full_Msg_Unknown_Tag s -> s
+      )
+  ;;
+  let admin (x)  =
+      Full_Admin_Msg_Tag x
+      [@@macro]
+  ;;
+  let business_message_reject = admin Full_Msg_BusinessMessageReject_Tag [@@macro];;
+  let heartbeat = admin Full_Msg_Heartbeat_Tag [@@macro];;
+  let logon = admin Full_Msg_Logon_Tag [@@macro];;
+  let logout = admin Full_Msg_Logout_Tag [@@macro];;
+  let reject = admin Full_Msg_Reject_Tag [@@macro];;
+  let resend_request = admin Full_Msg_ResendRequest_Tag [@@macro];;
+  let sequence_reset = admin Full_Msg_SequenceReset_Tag [@@macro];;
+  let test_request = admin Full_Msg_TestRequest_Tag [@@macro];;
+  let app (x)  =
+      Full_App_Msg_Tag x
+      [@@macro]
+  ;;
+  let execution_report = app Full_Msg_ExecutionReport_Tag [@@macro];;
+  let new_order_single = app Full_Msg_NewOrderSingle_Tag [@@macro];;
+  let of_model (x)  =
+      (match x with
+          | M_Msg_NewOrderSingle_Tag -> (app Full_Msg_NewOrderSingle_Tag)
+          | M_Msg_ExecutionReport_Tag -> (app Full_Msg_ExecutionReport_Tag)
+      )
+  ;;
+  let to_model (x)  =
+      (match x with
+          | Full_App_Msg_Tag Full_Msg_NewOrderSingle_Tag -> (Some M_Msg_NewOrderSingle_Tag)
+          | Full_App_Msg_Tag Full_Msg_ExecutionReport_Tag -> (Some M_Msg_ExecutionReport_Tag)
+          | _ -> None
+      )
+  ;;
+  let of_fix = parse_full_msg_tag [@@program];;
+  let to_fix = encode_full_msg_tag [@@program];;
+end
+
+type t = full_app_msg_data =
+    | FIX_Full_Msg_NewOrderSingle of New_order_single.t
+    | FIX_Full_Msg_ExecutionReport of Execution_report.t
+;;
+
+let execution_report (x)  =
+    FIX_Full_Msg_ExecutionReport x
+    [@@macro]
+;;
+
+let new_order_single (x)  =
+    FIX_Full_Msg_NewOrderSingle x
+    [@@macro]
+;;
+
+let pp (fmt) (m)  =
+    let f x = Format.fprintf fmt x
+    in
+    f "@[";
+    let () = (match m with
+        | FIX_Full_Msg_NewOrderSingle d -> f "NewOrderSingle@ ";
+        New_order_single.pp fmt d
+        | FIX_Full_Msg_ExecutionReport d -> f "ExecutionReport@ ";
+        Execution_report.pp fmt d
+    )
+    in
+    f "@]"
+    [@@program] [@@macro]
+;;
+
+let to_json = full_app_msg_to_json [@@program];;
+
+let of_json = full_app_msg_of_json [@@program];;
+

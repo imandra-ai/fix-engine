@@ -14,12 +14,10 @@ let encode_app_msg_tag (d)  =
 let encode_app_field_tag (d)  =
     (match d with
         | Full_Field_ClOrdID_Tag -> ("11")
-        | Full_Field_Parties_Tag -> ("")
         | Full_Field_Account_Tag -> ("1")
         | Full_Field_ExecInst_Tag -> ("18")
         | Full_Field_Side_Tag -> ("54")
         | Full_Field_TransactTime_Tag -> ("60")
-        | Full_Field_OrderQtyData_Tag -> ("")
         | Full_Field_OrdType_Tag -> ("40")
         | Full_Field_Price_Tag -> ("44")
         | Full_Field_SpreadProportion_Tag -> ("10001")
@@ -30,6 +28,12 @@ let encode_app_field_tag (d)  =
         | Full_Field_LeavesQty_Tag -> ("151")
         | Full_Field_CumQty_Tag -> ("14")
         | Full_Field_Text_Tag -> ("58")
+        | Full_Field_OrderQty_Tag -> ("38")
+        | Full_Field_NoPartySubIDs_Tag -> ("802")
+        | Full_Field_PartySubID_Tag -> ("523")
+        | Full_Field_NoPartyIDs_Tag -> ("453")
+        | Full_Field_PartyID_Tag -> ("448")
+        | Full_Field_PartyIndex_Tag -> ("10002")
     )
 ;;
 
@@ -50,6 +54,12 @@ let get_field_tag_name (d)  =
         | "151" -> ("LeavesQty")
         | "14" -> ("CumQty")
         | "58" -> ("Text")
+        | "38" -> ("OrderQty")
+        | "802" -> ("NoPartySubIDs")
+        | "523" -> ("PartySubID")
+        | "453" -> ("NoPartyIDs")
+        | "448" -> ("PartyID")
+        | "10002" -> ("PartyIndex")
         | _ -> ""
     )
 ;;

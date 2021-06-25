@@ -19,12 +19,10 @@ let full_app_string_to_msg_tag (tag)  =
 let full_app_string_to_field_tag (tag)  =
     (match tag with
         | "ClOrdID" -> (Some Full_Field_ClOrdID_Tag)
-        | "Parties" -> (Some Full_Field_Parties_Tag)
         | "Account" -> (Some Full_Field_Account_Tag)
         | "ExecInst" -> (Some Full_Field_ExecInst_Tag)
         | "Side" -> (Some Full_Field_Side_Tag)
         | "TransactTime" -> (Some Full_Field_TransactTime_Tag)
-        | "OrderQtyData" -> (Some Full_Field_OrderQtyData_Tag)
         | "OrdType" -> (Some Full_Field_OrdType_Tag)
         | "Price" -> (Some Full_Field_Price_Tag)
         | "SpreadProportion" -> (Some Full_Field_SpreadProportion_Tag)
@@ -35,6 +33,12 @@ let full_app_string_to_field_tag (tag)  =
         | "LeavesQty" -> (Some Full_Field_LeavesQty_Tag)
         | "CumQty" -> (Some Full_Field_CumQty_Tag)
         | "Text" -> (Some Full_Field_Text_Tag)
+        | "OrderQty" -> (Some Full_Field_OrderQty_Tag)
+        | "NoPartySubIDs" -> (Some Full_Field_NoPartySubIDs_Tag)
+        | "PartySubID" -> (Some Full_Field_PartySubID_Tag)
+        | "NoPartyIDs" -> (Some Full_Field_NoPartyIDs_Tag)
+        | "PartyID" -> (Some Full_Field_PartyID_Tag)
+        | "PartyIndex" -> (Some Full_Field_PartyIndex_Tag)
         | _ -> (None)
     )
 ;;

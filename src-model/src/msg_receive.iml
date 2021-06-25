@@ -33,7 +33,7 @@ let receive_message_NewOrderSingle (m_state : model_state) (msg_data : mod_newor
     in
     let local_internal_state = { local_internal_state with
         mod_f_internal_state_OrderID = local_1fresh;
-        mod_f_internal_state_ExecType = MOD_FIX_ExecType_New;
+        mod_f_internal_state_ExecType = FIX_ExecType_New;
         mod_f_internal_state_ExecInst = msg_data.mod_f_NewOrderSingle_ExecInst;
         mod_f_internal_state_OrdType = msg_data.mod_f_NewOrderSingle_OrdType;
         mod_f_internal_state_OrderQtyData_OrderQty = msg_data.mod_f_NewOrderSingle_OrderQtyData_OrderQty;
@@ -43,16 +43,16 @@ let receive_message_NewOrderSingle (m_state : model_state) (msg_data : mod_newor
         mod_f_internal_state_SpreadProportion = msg_data.mod_f_NewOrderSingle_SpreadProportion
     }
     in
-    let (local_internal_state) = (if ((=) msg_data.mod_f_NewOrderSingle_OrdType MOD_FIX_OrdType_StopSpread) then
+    let (local_internal_state) = (if ((=) msg_data.mod_f_NewOrderSingle_OrdType FIX_OrdType_StopSpread) then
         let (local_internal_state) = (match msg_data.mod_f_NewOrderSingle_SpreadProportion with
             | Some cap_x -> let (local_internal_state) = (if (not (float_Equal_2_6 local_internal_state.mod_f_internal_state_bestAsk (float_Create_6 (0)))) then
                 let (local_internal_state) = (if (float_GreaterThanEqual_6_2 cap_x (float_Div_2_2 (float_Sub_2_2 local_internal_state.mod_f_internal_state_bestAsk local_internal_state.mod_f_internal_state_bestBid) local_internal_state.mod_f_internal_state_bestAsk)) then
                     let local_internal_state = { local_internal_state with
-                        mod_f_internal_state_OrdStatus = MOD_FIX_OrdStatus_New
+                        mod_f_internal_state_OrdStatus = FIX_OrdStatus_New
                     }
                     in
                     let local_internal_state = { local_internal_state with
-                        mod_f_internal_state_ExecType = MOD_FIX_ExecType_New
+                        mod_f_internal_state_ExecType = FIX_ExecType_New
                     }
                     in
                     (local_internal_state)

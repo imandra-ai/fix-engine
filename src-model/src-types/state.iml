@@ -45,11 +45,11 @@ let init_fix_internal_state = {
     mod_f_internal_state_AvgPx = float_Create_6 (0);
     mod_f_internal_state_bestBid = float_Convert_6_2 (float_Create_6 (0));
     mod_f_internal_state_bestAsk = float_Convert_6_2 (float_Create_6 (0));
-    mod_f_internal_state_Side = MOD_FIX_Side_Buy;
+    mod_f_internal_state_Side = FIX_Side_Buy;
     mod_f_internal_state_Price = None;
     mod_f_internal_state_OrderQtyData_OrderQty = float_Create_6 (0);
-    mod_f_internal_state_OrdStatus = MOD_FIX_OrdStatus_PendingNew;
-    mod_f_internal_state_OrdType = MOD_FIX_OrdType_Market;
+    mod_f_internal_state_OrdStatus = FIX_OrdStatus_PendingNew;
+    mod_f_internal_state_OrdType = FIX_OrdType_Market;
     mod_f_internal_state_LeavesQty = float_Create_6 (0);
     mod_f_internal_state_CumQty = float_Create_6 (0);
     mod_f_internal_state_SpreadProportion = None;
@@ -62,7 +62,7 @@ let init_fix_internal_state = {
     };
     mod_f_internal_state_ExecInst = Map.const false;
     mod_f_internal_state_OrderID = "0";
-    mod_f_internal_state_ExecType = MOD_FIX_ExecType_PendingNew
+    mod_f_internal_state_ExecType = FIX_ExecType_PendingNew
 } [@@macro];;
 
 let init_fix_internal_fresh_state' = {

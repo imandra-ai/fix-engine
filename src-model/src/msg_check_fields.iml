@@ -43,7 +43,7 @@ let check_field_mod_f_NewOrderSingle_ClOrdID (msg_data : mod_newordersingle_data
 ;;
 
 let check_field_mod_f_NewOrderSingle_OrdType_inner0 (msg_data : mod_newordersingle_data) (local_internal_state : fix_internal_state) (local_internal_fresh_state' : fix_internal_fresh_state')  =
-    (if (List.mem msg_data.mod_f_NewOrderSingle_OrdType ([(MOD_FIX_OrdType_Limit);(MOD_FIX_OrdType_Market);(MOD_FIX_OrdType_StopSpread)])) then
+    (if (List.mem msg_data.mod_f_NewOrderSingle_OrdType ([(FIX_OrdType_Limit);(FIX_OrdType_Market);(FIX_OrdType_StopSpread)])) then
         fields_good_defrej
     else
         (is_fields_invalid_defrej {

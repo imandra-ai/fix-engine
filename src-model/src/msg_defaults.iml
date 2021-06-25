@@ -10,9 +10,9 @@ let model_func_default_ExecInst_NewOrderSingle (() : unit)  : model_fix_execinst
     in
     let (return_ret_var,return_loop_return_flag) = ((let local_set_var:model_fix_execinst Set.t = Map.const false
     in
-    let local_set_var = Map.add MOD_FIX_ExecInst_AllOrNone true local_set_var
+    let local_set_var = Map.add FIX_ExecInst_AllOrNone true local_set_var
     in
-    let local_set_var = Map.add MOD_FIX_ExecInst_Held true local_set_var
+    let local_set_var = Map.add FIX_ExecInst_Held true local_set_var
     in
     local_set_var
     ),true)

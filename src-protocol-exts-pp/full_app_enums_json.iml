@@ -1,7 +1,7 @@
 (* Imandra Inc. copyright 2021 *)
 [@@@program]
-[@@@import "../src-protocol-exts/full_app_enums.iml"]
-open Full_app_enums;;
+[@@@import "../src-model/src-types/model_app_enums.iml"]
+open Model_app_enums;;
 [@@@require "yojson"]
 open Yojson.Basic;;
 
@@ -48,7 +48,6 @@ let execinst_to_string (d)  =
         | FIX_ExecInst_IgnorePriceValidityChecks -> "IgnorePriceValidityChecks"
         | FIX_ExecInst_PegToLimitPrice -> "PegToLimitPrice"
         | FIX_ExecInst_WorkToTargetStrategy -> "WorkToTargetStrategy"
-        | FIX_INVALID_ExecInst s -> s
     )
 ;;
 
@@ -71,7 +70,6 @@ let exectype_to_string (d)  =
         | FIX_ExecType_TradeCorrect -> "TradeCorrect"
         | FIX_ExecType_TradeCancel -> "TradeCancel"
         | FIX_ExecType_OrderStatus -> "OrderStatus"
-        | FIX_INVALID_ExecType s -> s
     )
 ;;
 
@@ -92,7 +90,6 @@ let ordstatus_to_string (d)  =
         | FIX_OrdStatus_AcceptedForBidding -> "AcceptedForBidding"
         | FIX_OrdStatus_PendingReplace -> "PendingReplace"
         | FIX_OrdStatus_Replaced -> "Replaced"
-        | FIX_INVALID_OrdStatus s -> s
     )
 ;;
 
@@ -116,7 +113,6 @@ let ordtype_to_string (d)  =
         | FIX_OrdType_NextFundValuationPoint -> "NextFundValuationPoint"
         | FIX_OrdType_Pegged -> "Pegged"
         | FIX_OrdType_StopSpread -> "StopSpread"
-        | FIX_INVALID_OrdType s -> s
     )
 ;;
 
@@ -148,7 +144,6 @@ let partysubidtype_to_string (d)  =
         | FIX_PartySubIDType_Department -> "Department"
         | FIX_PartySubIDType_LocationDesk -> "LocationDesk"
         | FIX_PartySubIDType_PositionAccountType -> "PositionAccountType"
-        | FIX_INVALID_PartySubIDType s -> s
     )
 ;;
 
@@ -170,34 +165,51 @@ let side_to_string (d)  =
         | FIX_Side_Redeem -> "Redeem"
         | FIX_Side_Lend -> "Lend"
         | FIX_Side_Borrow -> "Borrow"
-        | FIX_INVALID_Side s -> s
     )
 ;;
 
 let execinst_to_json (d)  : json =
     `List (List.map (fun x -> 
-    `String (execinst_to_string x)
+    (match x with
+        | Ok x -> (`Assoc ([(("Ok",`String (execinst_to_string x)))]))
+        | Error s -> (`Assoc ([(("Error",`String s))]))
+    )
     ) d)
 ;;
 
 let exectype_to_json (d)  : json =
-    `String (exectype_to_string d)
+    (match d with
+        | Ok x -> (`Assoc ([(("Ok",`String (exectype_to_string x)))]))
+        | Error s -> (`Assoc ([(("Error",`String s))]))
+    )
 ;;
 
 let ordstatus_to_json (d)  : json =
-    `String (ordstatus_to_string d)
+    (match d with
+        | Ok x -> (`Assoc ([(("Ok",`String (ordstatus_to_string x)))]))
+        | Error s -> (`Assoc ([(("Error",`String s))]))
+    )
 ;;
 
 let ordtype_to_json (d)  : json =
-    `String (ordtype_to_string d)
+    (match d with
+        | Ok x -> (`Assoc ([(("Ok",`String (ordtype_to_string x)))]))
+        | Error s -> (`Assoc ([(("Error",`String s))]))
+    )
 ;;
 
 let partysubidtype_to_json (d)  : json =
-    `String (partysubidtype_to_string d)
+    (match d with
+        | Ok x -> (`Assoc ([(("Ok",`String (partysubidtype_to_string x)))]))
+        | Error s -> (`Assoc ([(("Error",`String s))]))
+    )
 ;;
 
 let side_to_json (d)  : json =
-    `String (side_to_string d)
+    (match d with
+        | Ok x -> (`Assoc ([(("Ok",`String (side_to_string x)))]))
+        | Error s -> (`Assoc ([(("Error",`String s))]))
+    )
 ;;
 
 let execinst_opt_to_json (d)  : json =

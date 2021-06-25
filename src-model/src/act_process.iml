@@ -34,21 +34,21 @@ let receive_action_fill (m_state : model_state) (action_data : m_action_fix_fill
     in
     let (local_internal_state) = (if ((=) local_internal_state.mod_f_internal_state_LeavesQty (float_Create_6 (0))) then
         let local_internal_state = { local_internal_state with
-            mod_f_internal_state_OrdStatus = MOD_FIX_OrdStatus_Filled
+            mod_f_internal_state_OrdStatus = FIX_OrdStatus_Filled
         }
         in
         let local_internal_state = { local_internal_state with
-            mod_f_internal_state_ExecType = MOD_FIX_ExecType_Trade
+            mod_f_internal_state_ExecType = FIX_ExecType_Trade
         }
         in
         (local_internal_state)
     else
         let local_internal_state = { local_internal_state with
-            mod_f_internal_state_OrdStatus = MOD_FIX_OrdStatus_PartiallyFilled
+            mod_f_internal_state_OrdStatus = FIX_OrdStatus_PartiallyFilled
         }
         in
         let local_internal_state = { local_internal_state with
-            mod_f_internal_state_ExecType = MOD_FIX_ExecType_Trade
+            mod_f_internal_state_ExecType = FIX_ExecType_Trade
         }
         in
         (local_internal_state)
@@ -96,9 +96,9 @@ let receive_action_bookState (m_state : model_state) (action_data : m_action_fix
         | Some cap_x -> (float_GreaterThanEqual_6_6 cap_x local_spread)
         | None -> false
     )
-    ) ((=) local_internal_state.mod_f_internal_state_OrdStatus MOD_FIX_OrdStatus_PendingNew)) then
+    ) ((=) local_internal_state.mod_f_internal_state_OrdStatus FIX_OrdStatus_PendingNew)) then
         let local_internal_state = { local_internal_state with
-            mod_f_internal_state_OrdStatus = MOD_FIX_OrdStatus_New
+            mod_f_internal_state_OrdStatus = FIX_OrdStatus_New
         }
         in
         (local_internal_state)

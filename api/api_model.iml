@@ -1,0 +1,783 @@
+(* Imandra Inc. copyright 2021 *)
+[@@@import "../src-protocol-exts-pp/encode_app_enums.iml"]
+open Encode_app_enums;;
+[@@@import "../src-model/src-conversions/enum_converter.iml"]
+open Enum_converter;;
+[@@@import "../src-model/src-types-pp/json_to_enum.iml"]
+open Json_to_enum;;
+[@@@import "../src-model/src-types-pp/json_to_message.iml"]
+open Json_to_message;;
+[@@@import "../src-model/src-types-pp/json_to_repeating_group.iml"]
+open Json_to_repeating_group;;
+[@@@import "../src-model/src-types/model_app_enums.iml"]
+open Model_app_enums;;
+[@@@import "../src-model/src-strings-venue/model_enum_names.iml"]
+open Model_enum_names;;
+[@@@import "../src-model/src-types-pp/model_enums_json.iml"]
+open Model_enums_json;;
+[@@@import "../src-model/src-types/model_messages.iml"]
+open Model_messages;;
+[@@@import "../src-model/src-types-pp/model_messages_json.iml"]
+open Model_messages_json;;
+[@@@import "../src-model/src-types/model_repeating_groups.iml"]
+open Model_repeating_groups;;
+[@@@import "../src-model/src-types-pp/model_repeating_groups_json.iml"]
+open Model_repeating_groups_json;;
+[@@@import "../src-model/src-types/model_tags.iml"]
+open Model_tags;;
+[@@@import "../src-protocol-exts-pp/parse_app_enums.iml"]
+open Parse_app_enums;;
+[@@@require "yojson"]
+open Yojson.Basic.Util;;
+
+
+let pp_msg_of_to_json to_json fmt x =
+    let open Format in
+    let f x = fprintf fmt x in
+    f "@[" ;
+    let () =
+      match to_json x with
+      | `Assoc kvs ->
+          pp_print_list
+            ~pp_sep:(fun fmt () -> fprintf fmt ",@ ")
+            (fun fmt (k, v) -> fprintf fmt "%s:%s" k (to_string v))
+            fmt
+            kvs
+      | v ->
+          f "%s" (to_string v)
+    in
+    f "@]"
+    [@@program]
+
+module Exec_inst = struct
+  type t = model_fix_execinst =
+      | FIX_ExecInst_NotHeld 
+      | FIX_ExecInst_Work 
+      | FIX_ExecInst_GoAlong 
+      | FIX_ExecInst_OverTheDay 
+      | FIX_ExecInst_Held 
+      | FIX_ExecInst_ParticipateDoNotInitiate 
+      | FIX_ExecInst_StrictScale 
+      | FIX_ExecInst_TryToScale 
+      | FIX_ExecInst_StayOnBidSide 
+      | FIX_ExecInst_StayOnOfferSide 
+      | FIX_ExecInst_NoCross 
+      | FIX_ExecInst_OKToCross 
+      | FIX_ExecInst_CallFirst 
+      | FIX_ExecInst_PercentOfVolume 
+      | FIX_ExecInst_DoNotIncrease 
+      | FIX_ExecInst_DoNotReduce 
+      | FIX_ExecInst_AllOrNone 
+      | FIX_ExecInst_ReinstateOnSystemFailure 
+      | FIX_ExecInst_InstitutionsOnly 
+      | FIX_ExecInst_ReinstateOnTradingHalt 
+      | FIX_ExecInst_CancelOnTradingHalt 
+      | FIX_ExecInst_LastPeg 
+      | FIX_ExecInst_MidPricePeg 
+      | FIX_ExecInst_NonNegotiable 
+      | FIX_ExecInst_OpeningPeg 
+      | FIX_ExecInst_MarketPeg 
+      | FIX_ExecInst_CancelOnSystemFailure 
+      | FIX_ExecInst_PrimaryPeg 
+      | FIX_ExecInst_Suspend 
+      | FIX_ExecInst_CustomerDisplayInstruction 
+      | FIX_ExecInst_Netting 
+      | FIX_ExecInst_PegToVWAP 
+      | FIX_ExecInst_TradeAlong 
+      | FIX_ExecInst_TryToStop 
+      | FIX_ExecInst_CancelIfNotBest 
+      | FIX_ExecInst_TrailingStopPeg 
+      | FIX_ExecInst_StrictLimit 
+      | FIX_ExecInst_IgnorePriceValidityChecks 
+      | FIX_ExecInst_PegToLimitPrice 
+      | FIX_ExecInst_WorkToTargetStrategy 
+  ;;
+  let all = [(FIX_ExecInst_AllOrNone);
+  (FIX_ExecInst_CallFirst);
+  (FIX_ExecInst_CancelIfNotBest);
+  (FIX_ExecInst_CancelOnSystemFailure);
+  (FIX_ExecInst_CancelOnTradingHalt);
+  (FIX_ExecInst_CustomerDisplayInstruction);
+  (FIX_ExecInst_DoNotIncrease);
+  (FIX_ExecInst_DoNotReduce);
+  (FIX_ExecInst_GoAlong);
+  (FIX_ExecInst_Held);
+  (FIX_ExecInst_IgnorePriceValidityChecks);
+  (FIX_ExecInst_InstitutionsOnly);
+  (FIX_ExecInst_LastPeg);
+  (FIX_ExecInst_MarketPeg);
+  (FIX_ExecInst_MidPricePeg);
+  (FIX_ExecInst_Netting);
+  (FIX_ExecInst_NoCross);
+  (FIX_ExecInst_NonNegotiable);
+  (FIX_ExecInst_NotHeld);
+  (FIX_ExecInst_OKToCross);
+  (FIX_ExecInst_OpeningPeg);
+  (FIX_ExecInst_OverTheDay);
+  (FIX_ExecInst_ParticipateDoNotInitiate);
+  (FIX_ExecInst_PegToLimitPrice);
+  (FIX_ExecInst_PegToVWAP);
+  (FIX_ExecInst_PercentOfVolume);
+  (FIX_ExecInst_PrimaryPeg);
+  (FIX_ExecInst_ReinstateOnSystemFailure);
+  (FIX_ExecInst_ReinstateOnTradingHalt);
+  (FIX_ExecInst_StayOnBidSide);
+  (FIX_ExecInst_StayOnOfferSide);
+  (FIX_ExecInst_StrictLimit);
+  (FIX_ExecInst_StrictScale);
+  (FIX_ExecInst_Suspend);
+  (FIX_ExecInst_TradeAlong);
+  (FIX_ExecInst_TrailingStopPeg);
+  (FIX_ExecInst_TryToScale);
+  (FIX_ExecInst_TryToStop);
+  (FIX_ExecInst_Work);
+  (FIX_ExecInst_WorkToTargetStrategy)] [@@macro];;
+  let to_string = mod_execinst_to_string [@@program];;
+  let of_string = string_to_mod_execinst_opt [@@program];;
+  let to_json = mod_execinst_to_json [@@program];;
+  let of_json = mod_enum_execinst_decoder [@@program];;
+  let pp = CCFormat.of_to_string to_string [@@program];;
+  let to_fix (x)  =
+      encode_ExecInst (convert__model_to_full_ExecInst x list_model_vals_ExecInst)
+      [@@program]
+  ;;
+  let of_fix = parse_ExecInst [@@program];;
+  let all_or_none = FIX_ExecInst_AllOrNone [@@macro];;
+  let call_first = FIX_ExecInst_CallFirst [@@macro];;
+  let cancel_if_not_best = FIX_ExecInst_CancelIfNotBest [@@macro];;
+  let cancel_on_system_failure = FIX_ExecInst_CancelOnSystemFailure [@@macro];;
+  let cancel_on_trading_halt = FIX_ExecInst_CancelOnTradingHalt [@@macro];;
+  let customer_display_instruction = FIX_ExecInst_CustomerDisplayInstruction [@@macro];;
+  let do_not_increase = FIX_ExecInst_DoNotIncrease [@@macro];;
+  let do_not_reduce = FIX_ExecInst_DoNotReduce [@@macro];;
+  let go_along = FIX_ExecInst_GoAlong [@@macro];;
+  let held = FIX_ExecInst_Held [@@macro];;
+  let ignore_price_validity_checks = FIX_ExecInst_IgnorePriceValidityChecks [@@macro];;
+  let institutions_only = FIX_ExecInst_InstitutionsOnly [@@macro];;
+  let last_peg = FIX_ExecInst_LastPeg [@@macro];;
+  let market_peg = FIX_ExecInst_MarketPeg [@@macro];;
+  let mid_price_peg = FIX_ExecInst_MidPricePeg [@@macro];;
+  let netting = FIX_ExecInst_Netting [@@macro];;
+  let no_cross = FIX_ExecInst_NoCross [@@macro];;
+  let non_negotiable = FIX_ExecInst_NonNegotiable [@@macro];;
+  let not_held = FIX_ExecInst_NotHeld [@@macro];;
+  let okto_cross = FIX_ExecInst_OKToCross [@@macro];;
+  let opening_peg = FIX_ExecInst_OpeningPeg [@@macro];;
+  let over_the_day = FIX_ExecInst_OverTheDay [@@macro];;
+  let participate_do_not_initiate = FIX_ExecInst_ParticipateDoNotInitiate [@@macro];;
+  let peg_to_limit_price = FIX_ExecInst_PegToLimitPrice [@@macro];;
+  let peg_to_vwap = FIX_ExecInst_PegToVWAP [@@macro];;
+  let percent_of_volume = FIX_ExecInst_PercentOfVolume [@@macro];;
+  let primary_peg = FIX_ExecInst_PrimaryPeg [@@macro];;
+  let reinstate_on_system_failure = FIX_ExecInst_ReinstateOnSystemFailure [@@macro];;
+  let reinstate_on_trading_halt = FIX_ExecInst_ReinstateOnTradingHalt [@@macro];;
+  let stay_on_bid_side = FIX_ExecInst_StayOnBidSide [@@macro];;
+  let stay_on_offer_side = FIX_ExecInst_StayOnOfferSide [@@macro];;
+  let strict_limit = FIX_ExecInst_StrictLimit [@@macro];;
+  let strict_scale = FIX_ExecInst_StrictScale [@@macro];;
+  let suspend = FIX_ExecInst_Suspend [@@macro];;
+  let trade_along = FIX_ExecInst_TradeAlong [@@macro];;
+  let trailing_stop_peg = FIX_ExecInst_TrailingStopPeg [@@macro];;
+  let try_to_scale = FIX_ExecInst_TryToScale [@@macro];;
+  let try_to_stop = FIX_ExecInst_TryToStop [@@macro];;
+  let work = FIX_ExecInst_Work [@@macro];;
+  let work_to_target_strategy = FIX_ExecInst_WorkToTargetStrategy [@@macro];;
+end
+
+module Exec_type = struct
+  type t = model_fix_exectype =
+      | FIX_ExecType_New 
+      | FIX_ExecType_DoneForDay 
+      | FIX_ExecType_Canceled 
+      | FIX_ExecType_Replaced 
+      | FIX_ExecType_PendingCancel 
+      | FIX_ExecType_Stopped 
+      | FIX_ExecType_Rejected 
+      | FIX_ExecType_Suspended 
+      | FIX_ExecType_PendingNew 
+      | FIX_ExecType_Calculated 
+      | FIX_ExecType_Expired 
+      | FIX_ExecType_Restated 
+      | FIX_ExecType_PendingReplace 
+      | FIX_ExecType_Trade 
+      | FIX_ExecType_TradeCorrect 
+      | FIX_ExecType_TradeCancel 
+      | FIX_ExecType_OrderStatus 
+  ;;
+  let all = [(FIX_ExecType_Calculated);
+  (FIX_ExecType_Canceled);
+  (FIX_ExecType_DoneForDay);
+  (FIX_ExecType_Expired);
+  (FIX_ExecType_New);
+  (FIX_ExecType_OrderStatus);
+  (FIX_ExecType_PendingCancel);
+  (FIX_ExecType_PendingNew);
+  (FIX_ExecType_PendingReplace);
+  (FIX_ExecType_Rejected);
+  (FIX_ExecType_Replaced);
+  (FIX_ExecType_Restated);
+  (FIX_ExecType_Stopped);
+  (FIX_ExecType_Suspended);
+  (FIX_ExecType_Trade);
+  (FIX_ExecType_TradeCancel);
+  (FIX_ExecType_TradeCorrect)] [@@macro];;
+  let to_string = mod_exectype_to_string [@@program];;
+  let of_string = string_to_mod_exectype_opt [@@program];;
+  let to_json = mod_exectype_to_json [@@program];;
+  let of_json = mod_enum_exectype_decoder [@@program];;
+  let pp = CCFormat.of_to_string to_string [@@program];;
+  let to_fix (x)  =
+      encode_ExecType (Ok x)
+      [@@program]
+  ;;
+  let of_fix = parse_ExecType [@@program];;
+  let calculated = FIX_ExecType_Calculated [@@macro];;
+  let canceled = FIX_ExecType_Canceled [@@macro];;
+  let done_for_day = FIX_ExecType_DoneForDay [@@macro];;
+  let expired = FIX_ExecType_Expired [@@macro];;
+  let new_ = FIX_ExecType_New [@@macro];;
+  let order_status = FIX_ExecType_OrderStatus [@@macro];;
+  let pending_cancel = FIX_ExecType_PendingCancel [@@macro];;
+  let pending_new = FIX_ExecType_PendingNew [@@macro];;
+  let pending_replace = FIX_ExecType_PendingReplace [@@macro];;
+  let rejected = FIX_ExecType_Rejected [@@macro];;
+  let replaced = FIX_ExecType_Replaced [@@macro];;
+  let restated = FIX_ExecType_Restated [@@macro];;
+  let stopped = FIX_ExecType_Stopped [@@macro];;
+  let suspended = FIX_ExecType_Suspended [@@macro];;
+  let trade = FIX_ExecType_Trade [@@macro];;
+  let trade_cancel = FIX_ExecType_TradeCancel [@@macro];;
+  let trade_correct = FIX_ExecType_TradeCorrect [@@macro];;
+end
+
+module Ord_status = struct
+  type t = model_fix_ordstatus =
+      | FIX_OrdStatus_New 
+      | FIX_OrdStatus_PartiallyFilled 
+      | FIX_OrdStatus_Filled 
+      | FIX_OrdStatus_DoneForDay 
+      | FIX_OrdStatus_Canceled 
+      | FIX_OrdStatus_PendingCancel 
+      | FIX_OrdStatus_Stopped 
+      | FIX_OrdStatus_Rejected 
+      | FIX_OrdStatus_Suspended 
+      | FIX_OrdStatus_PendingNew 
+      | FIX_OrdStatus_Calculated 
+      | FIX_OrdStatus_Expired 
+      | FIX_OrdStatus_AcceptedForBidding 
+      | FIX_OrdStatus_PendingReplace 
+      | FIX_OrdStatus_Replaced 
+  ;;
+  let all = [(FIX_OrdStatus_AcceptedForBidding);
+  (FIX_OrdStatus_Calculated);
+  (FIX_OrdStatus_Canceled);
+  (FIX_OrdStatus_DoneForDay);
+  (FIX_OrdStatus_Expired);
+  (FIX_OrdStatus_Filled);
+  (FIX_OrdStatus_New);
+  (FIX_OrdStatus_PartiallyFilled);
+  (FIX_OrdStatus_PendingCancel);
+  (FIX_OrdStatus_PendingNew);
+  (FIX_OrdStatus_PendingReplace);
+  (FIX_OrdStatus_Rejected);
+  (FIX_OrdStatus_Replaced);
+  (FIX_OrdStatus_Stopped);
+  (FIX_OrdStatus_Suspended)] [@@macro];;
+  let to_string = mod_ordstatus_to_string [@@program];;
+  let of_string = string_to_mod_ordstatus_opt [@@program];;
+  let to_json = mod_ordstatus_to_json [@@program];;
+  let of_json = mod_enum_ordstatus_decoder [@@program];;
+  let pp = CCFormat.of_to_string to_string [@@program];;
+  let to_fix (x)  =
+      encode_OrdStatus (Ok x)
+      [@@program]
+  ;;
+  let of_fix = parse_OrdStatus [@@program];;
+  let accepted_for_bidding = FIX_OrdStatus_AcceptedForBidding [@@macro];;
+  let calculated = FIX_OrdStatus_Calculated [@@macro];;
+  let canceled = FIX_OrdStatus_Canceled [@@macro];;
+  let done_for_day = FIX_OrdStatus_DoneForDay [@@macro];;
+  let expired = FIX_OrdStatus_Expired [@@macro];;
+  let filled = FIX_OrdStatus_Filled [@@macro];;
+  let new_ = FIX_OrdStatus_New [@@macro];;
+  let partially_filled = FIX_OrdStatus_PartiallyFilled [@@macro];;
+  let pending_cancel = FIX_OrdStatus_PendingCancel [@@macro];;
+  let pending_new = FIX_OrdStatus_PendingNew [@@macro];;
+  let pending_replace = FIX_OrdStatus_PendingReplace [@@macro];;
+  let rejected = FIX_OrdStatus_Rejected [@@macro];;
+  let replaced = FIX_OrdStatus_Replaced [@@macro];;
+  let stopped = FIX_OrdStatus_Stopped [@@macro];;
+  let suspended = FIX_OrdStatus_Suspended [@@macro];;
+end
+
+module Ord_type = struct
+  type t = model_fix_ordtype =
+      | FIX_OrdType_Market 
+      | FIX_OrdType_Limit 
+      | FIX_OrdType_Stop 
+      | FIX_OrdType_StopLimit 
+      | FIX_OrdType_WithOrWithout 
+      | FIX_OrdType_LimitOrBetter 
+      | FIX_OrdType_LimitWithOrWithout 
+      | FIX_OrdType_OnBasis 
+      | FIX_OrdType_PreviouslyQuoted 
+      | FIX_OrdType_PreviouslyIndicated 
+      | FIX_OrdType_ForexSwap 
+      | FIX_OrdType_Funari 
+      | FIX_OrdType_MarketIfTouched 
+      | FIX_OrdType_MarketWithLeftOverAsLimit 
+      | FIX_OrdType_PreviousFundValuationPoint 
+      | FIX_OrdType_NextFundValuationPoint 
+      | FIX_OrdType_Pegged 
+      | FIX_OrdType_StopSpread 
+  ;;
+  let all = [(FIX_OrdType_ForexSwap);
+  (FIX_OrdType_Funari);
+  (FIX_OrdType_Limit);
+  (FIX_OrdType_LimitOrBetter);
+  (FIX_OrdType_LimitWithOrWithout);
+  (FIX_OrdType_Market);
+  (FIX_OrdType_MarketIfTouched);
+  (FIX_OrdType_MarketWithLeftOverAsLimit);
+  (FIX_OrdType_NextFundValuationPoint);
+  (FIX_OrdType_OnBasis);
+  (FIX_OrdType_Pegged);
+  (FIX_OrdType_PreviousFundValuationPoint);
+  (FIX_OrdType_PreviouslyIndicated);
+  (FIX_OrdType_PreviouslyQuoted);
+  (FIX_OrdType_Stop);
+  (FIX_OrdType_StopLimit);
+  (FIX_OrdType_StopSpread);
+  (FIX_OrdType_WithOrWithout)] [@@macro];;
+  let to_string = mod_ordtype_to_string [@@program];;
+  let of_string = string_to_mod_ordtype_opt [@@program];;
+  let to_json = mod_ordtype_to_json [@@program];;
+  let of_json = mod_enum_ordtype_decoder [@@program];;
+  let pp = CCFormat.of_to_string to_string [@@program];;
+  let to_fix (x)  =
+      encode_OrdType (Ok x)
+      [@@program]
+  ;;
+  let of_fix = parse_OrdType [@@program];;
+  let forex_swap = FIX_OrdType_ForexSwap [@@macro];;
+  let funari = FIX_OrdType_Funari [@@macro];;
+  let limit = FIX_OrdType_Limit [@@macro];;
+  let limit_or_better = FIX_OrdType_LimitOrBetter [@@macro];;
+  let limit_with_or_without = FIX_OrdType_LimitWithOrWithout [@@macro];;
+  let market = FIX_OrdType_Market [@@macro];;
+  let market_if_touched = FIX_OrdType_MarketIfTouched [@@macro];;
+  let market_with_left_over_as_limit = FIX_OrdType_MarketWithLeftOverAsLimit [@@macro];;
+  let next_fund_valuation_point = FIX_OrdType_NextFundValuationPoint [@@macro];;
+  let on_basis = FIX_OrdType_OnBasis [@@macro];;
+  let pegged = FIX_OrdType_Pegged [@@macro];;
+  let previous_fund_valuation_point = FIX_OrdType_PreviousFundValuationPoint [@@macro];;
+  let previously_indicated = FIX_OrdType_PreviouslyIndicated [@@macro];;
+  let previously_quoted = FIX_OrdType_PreviouslyQuoted [@@macro];;
+  let stop = FIX_OrdType_Stop [@@macro];;
+  let stop_limit = FIX_OrdType_StopLimit [@@macro];;
+  let stop_spread = FIX_OrdType_StopSpread [@@macro];;
+  let with_or_without = FIX_OrdType_WithOrWithout [@@macro];;
+end
+
+module Party_sub_idtype = struct
+  type t = model_fix_partysubidtype =
+      | FIX_PartySubIDType_Firm 
+      | FIX_PartySubIDType_Person 
+      | FIX_PartySubIDType_System 
+      | FIX_PartySubIDType_Application 
+      | FIX_PartySubIDType_FullLegalNameOfFirm 
+      | FIX_PartySubIDType_PostalAddress 
+      | FIX_PartySubIDType_PhoneNumber 
+      | FIX_PartySubIDType_EmailAddress 
+      | FIX_PartySubIDType_ContactName 
+      | FIX_PartySubIDType_SecuritiesAccountNumber 
+      | FIX_PartySubIDType_RegistrationNumber 
+      | FIX_PartySubIDType_RegisteredAddressForConfirmation 
+      | FIX_PartySubIDType_RegulatoryStatus 
+      | FIX_PartySubIDType_RegistrationName 
+      | FIX_PartySubIDType_CashAccountNumber 
+      | FIX_PartySubIDType_BIC 
+      | FIX_PartySubIDType_CSDParticipantMemberCode 
+      | FIX_PartySubIDType_RegisteredAddress 
+      | FIX_PartySubIDType_FundAccountName 
+      | FIX_PartySubIDType_TelexNumber 
+      | FIX_PartySubIDType_FaxNumber 
+      | FIX_PartySubIDType_SecuritiesAccountName 
+      | FIX_PartySubIDType_CashAccountName 
+      | FIX_PartySubIDType_Department 
+      | FIX_PartySubIDType_LocationDesk 
+      | FIX_PartySubIDType_PositionAccountType 
+  ;;
+  let all = [(FIX_PartySubIDType_Application);
+  (FIX_PartySubIDType_BIC);
+  (FIX_PartySubIDType_CSDParticipantMemberCode);
+  (FIX_PartySubIDType_CashAccountName);
+  (FIX_PartySubIDType_CashAccountNumber);
+  (FIX_PartySubIDType_ContactName);
+  (FIX_PartySubIDType_Department);
+  (FIX_PartySubIDType_EmailAddress);
+  (FIX_PartySubIDType_FaxNumber);
+  (FIX_PartySubIDType_Firm);
+  (FIX_PartySubIDType_FullLegalNameOfFirm);
+  (FIX_PartySubIDType_FundAccountName);
+  (FIX_PartySubIDType_LocationDesk);
+  (FIX_PartySubIDType_Person);
+  (FIX_PartySubIDType_PhoneNumber);
+  (FIX_PartySubIDType_PositionAccountType);
+  (FIX_PartySubIDType_PostalAddress);
+  (FIX_PartySubIDType_RegisteredAddress);
+  (FIX_PartySubIDType_RegisteredAddressForConfirmation);
+  (FIX_PartySubIDType_RegistrationName);
+  (FIX_PartySubIDType_RegistrationNumber);
+  (FIX_PartySubIDType_RegulatoryStatus);
+  (FIX_PartySubIDType_SecuritiesAccountName);
+  (FIX_PartySubIDType_SecuritiesAccountNumber);
+  (FIX_PartySubIDType_System);
+  (FIX_PartySubIDType_TelexNumber)] [@@macro];;
+  let to_string = mod_partysubidtype_to_string [@@program];;
+  let of_string = string_to_mod_partysubidtype_opt [@@program];;
+  let to_json = mod_partysubidtype_to_json [@@program];;
+  let of_json = mod_enum_partysubidtype_decoder [@@program];;
+  let pp = CCFormat.of_to_string to_string [@@program];;
+  let to_fix (x)  =
+      encode_PartySubIDType (Ok x)
+      [@@program]
+  ;;
+  let of_fix = parse_PartySubIDType [@@program];;
+  let application = FIX_PartySubIDType_Application [@@macro];;
+  let bic = FIX_PartySubIDType_BIC [@@macro];;
+  let csdparticipant_member_code = FIX_PartySubIDType_CSDParticipantMemberCode [@@macro];;
+  let cash_account_name = FIX_PartySubIDType_CashAccountName [@@macro];;
+  let cash_account_number = FIX_PartySubIDType_CashAccountNumber [@@macro];;
+  let contact_name = FIX_PartySubIDType_ContactName [@@macro];;
+  let department = FIX_PartySubIDType_Department [@@macro];;
+  let email_address = FIX_PartySubIDType_EmailAddress [@@macro];;
+  let fax_number = FIX_PartySubIDType_FaxNumber [@@macro];;
+  let firm = FIX_PartySubIDType_Firm [@@macro];;
+  let full_legal_name_of_firm = FIX_PartySubIDType_FullLegalNameOfFirm [@@macro];;
+  let fund_account_name = FIX_PartySubIDType_FundAccountName [@@macro];;
+  let location_desk = FIX_PartySubIDType_LocationDesk [@@macro];;
+  let person = FIX_PartySubIDType_Person [@@macro];;
+  let phone_number = FIX_PartySubIDType_PhoneNumber [@@macro];;
+  let position_account_type = FIX_PartySubIDType_PositionAccountType [@@macro];;
+  let postal_address = FIX_PartySubIDType_PostalAddress [@@macro];;
+  let registered_address = FIX_PartySubIDType_RegisteredAddress [@@macro];;
+  let registered_address_for_confirmation = FIX_PartySubIDType_RegisteredAddressForConfirmation [@@macro];;
+  let registration_name = FIX_PartySubIDType_RegistrationName [@@macro];;
+  let registration_number = FIX_PartySubIDType_RegistrationNumber [@@macro];;
+  let regulatory_status = FIX_PartySubIDType_RegulatoryStatus [@@macro];;
+  let securities_account_name = FIX_PartySubIDType_SecuritiesAccountName [@@macro];;
+  let securities_account_number = FIX_PartySubIDType_SecuritiesAccountNumber [@@macro];;
+  let system = FIX_PartySubIDType_System [@@macro];;
+  let telex_number = FIX_PartySubIDType_TelexNumber [@@macro];;
+end
+
+module Side = struct
+  type t = model_fix_side =
+      | FIX_Side_Buy 
+      | FIX_Side_Sell 
+      | FIX_Side_BuyMinus 
+      | FIX_Side_SellPlus 
+      | FIX_Side_SellShort 
+      | FIX_Side_SellShortExempt 
+      | FIX_Side_Undisclosed 
+      | FIX_Side_Cross 
+      | FIX_Side_CrossShort 
+      | FIX_Side_CrossShortExempt 
+      | FIX_Side_AsDefined 
+      | FIX_Side_Opposite 
+      | FIX_Side_Subscribe 
+      | FIX_Side_Redeem 
+      | FIX_Side_Lend 
+      | FIX_Side_Borrow 
+  ;;
+  let all = [(FIX_Side_AsDefined);
+  (FIX_Side_Borrow);
+  (FIX_Side_Buy);
+  (FIX_Side_BuyMinus);
+  (FIX_Side_Cross);
+  (FIX_Side_CrossShort);
+  (FIX_Side_CrossShortExempt);
+  (FIX_Side_Lend);
+  (FIX_Side_Opposite);
+  (FIX_Side_Redeem);
+  (FIX_Side_Sell);
+  (FIX_Side_SellPlus);
+  (FIX_Side_SellShort);
+  (FIX_Side_SellShortExempt);
+  (FIX_Side_Subscribe);
+  (FIX_Side_Undisclosed)] [@@macro];;
+  let to_string = mod_side_to_string [@@program];;
+  let of_string = string_to_mod_side_opt [@@program];;
+  let to_json = mod_side_to_json [@@program];;
+  let of_json = mod_enum_side_decoder [@@program];;
+  let pp = CCFormat.of_to_string to_string [@@program];;
+  let to_fix (x)  =
+      encode_Side (Ok x)
+      [@@program]
+  ;;
+  let of_fix = parse_Side [@@program];;
+  let as_defined = FIX_Side_AsDefined [@@macro];;
+  let borrow = FIX_Side_Borrow [@@macro];;
+  let buy = FIX_Side_Buy [@@macro];;
+  let buy_minus = FIX_Side_BuyMinus [@@macro];;
+  let cross = FIX_Side_Cross [@@macro];;
+  let cross_short = FIX_Side_CrossShort [@@macro];;
+  let cross_short_exempt = FIX_Side_CrossShortExempt [@@macro];;
+  let lend = FIX_Side_Lend [@@macro];;
+  let opposite = FIX_Side_Opposite [@@macro];;
+  let redeem = FIX_Side_Redeem [@@macro];;
+  let sell = FIX_Side_Sell [@@macro];;
+  let sell_plus = FIX_Side_SellPlus [@@macro];;
+  let sell_short = FIX_Side_SellShort [@@macro];;
+  let sell_short_exempt = FIX_Side_SellShortExempt [@@macro];;
+  let subscribe = FIX_Side_Subscribe [@@macro];;
+  let undisclosed = FIX_Side_Undisclosed [@@macro];;
+end
+
+module Execution_report = struct
+  type t = mod_executionreport_data
+  ;;
+  let cum_qty (t)  =
+      t.mod_f_ExecutionReport_CumQty
+      [@@macro]
+  ;;
+  let exec_id (t)  =
+      t.mod_f_ExecutionReport_ExecID
+      [@@macro]
+  ;;
+  let exec_inst (t)  =
+      t.mod_f_ExecutionReport_ExecInst
+      [@@macro]
+  ;;
+  let exec_type (t)  =
+      t.mod_f_ExecutionReport_ExecType
+      [@@macro]
+  ;;
+  let leaves_qty (t)  =
+      t.mod_f_ExecutionReport_LeavesQty
+      [@@macro]
+  ;;
+  let ord_status (t)  =
+      t.mod_f_ExecutionReport_OrdStatus
+      [@@macro]
+  ;;
+  let order_id (t)  =
+      t.mod_f_ExecutionReport_OrderID
+      [@@macro]
+  ;;
+  let order_qty (t)  =
+      t.mod_f_ExecutionReport_OrderQtyData_OrderQty
+      [@@macro]
+  ;;
+  let parties (t)  =
+      t.mod_f_ExecutionReport_Parties
+      [@@macro]
+  ;;
+  let side (t)  =
+      t.mod_f_ExecutionReport_Side
+      [@@macro]
+  ;;
+  let text (t)  =
+      t.mod_f_ExecutionReport_Text
+      [@@macro]
+  ;;
+  let make ?text ~cum_qty ~exec_id ~exec_inst ~exec_type ~leaves_qty ~ord_status ~order_id ~order_qty ~parties ~side ()  : t =
+      {
+          mod_f_ExecutionReport_CumQty = cum_qty;
+          mod_f_ExecutionReport_ExecID = exec_id;
+          mod_f_ExecutionReport_ExecInst = exec_inst;
+          mod_f_ExecutionReport_ExecType = exec_type;
+          mod_f_ExecutionReport_LeavesQty = leaves_qty;
+          mod_f_ExecutionReport_OrdStatus = ord_status;
+          mod_f_ExecutionReport_OrderID = order_id;
+          mod_f_ExecutionReport_OrderQtyData_OrderQty = order_qty;
+          mod_f_ExecutionReport_Parties = parties;
+          mod_f_ExecutionReport_Side = side;
+          mod_f_ExecutionReport_Text = text
+      }
+      [@@ocamlformat "break-fun-decl=wrap"] [@@macro]
+  ;;
+  let pp (f) (x)  =
+      pp_msg_of_to_json mod_executionreport_to_json f x
+      [@@program] [@@macro]
+  ;;
+  let to_json = mod_executionreport_to_json [@@program];;
+  let of_json = mod_message_executionreport_decoder [@@program];;
+end
+
+module New_order_single = struct
+  type t = mod_newordersingle_data
+  ;;
+  let account (t)  =
+      t.mod_f_NewOrderSingle_Account
+      [@@macro]
+  ;;
+  let cl_ord_id (t)  =
+      t.mod_f_NewOrderSingle_ClOrdID
+      [@@macro]
+  ;;
+  let exec_inst (t)  =
+      t.mod_f_NewOrderSingle_ExecInst
+      [@@macro]
+  ;;
+  let ord_type (t)  =
+      t.mod_f_NewOrderSingle_OrdType
+      [@@macro]
+  ;;
+  let order_qty (t)  =
+      t.mod_f_NewOrderSingle_OrderQtyData_OrderQty
+      [@@macro]
+  ;;
+  let parties (t)  =
+      t.mod_f_NewOrderSingle_Parties
+      [@@macro]
+  ;;
+  let price (t)  =
+      t.mod_f_NewOrderSingle_Price
+      [@@macro]
+  ;;
+  let side (t)  =
+      t.mod_f_NewOrderSingle_Side
+      [@@macro]
+  ;;
+  let spread_proportion (t)  =
+      t.mod_f_NewOrderSingle_SpreadProportion
+      [@@macro]
+  ;;
+  let transact_time (t)  =
+      t.mod_f_NewOrderSingle_TransactTime
+      [@@macro]
+  ;;
+  let make ?account ?cl_ord_id ?price ?spread_proportion ~exec_inst ~ord_type ~order_qty ~parties ~side ~transact_time ()  : t =
+      {
+          mod_f_NewOrderSingle_Account = account;
+          mod_f_NewOrderSingle_ClOrdID = cl_ord_id;
+          mod_f_NewOrderSingle_ExecInst = exec_inst;
+          mod_f_NewOrderSingle_OrdType = ord_type;
+          mod_f_NewOrderSingle_OrderQtyData_OrderQty = order_qty;
+          mod_f_NewOrderSingle_Parties = parties;
+          mod_f_NewOrderSingle_Price = price;
+          mod_f_NewOrderSingle_Side = side;
+          mod_f_NewOrderSingle_SpreadProportion = spread_proportion;
+          mod_f_NewOrderSingle_TransactTime = transact_time
+      }
+      [@@ocamlformat "break-fun-decl=wrap"] [@@macro]
+  ;;
+  let pp (f) (x)  =
+      pp_msg_of_to_json mod_newordersingle_to_json f x
+      [@@program] [@@macro]
+  ;;
+  let to_json = mod_newordersingle_to_json [@@program];;
+  let of_json = mod_message_newordersingle_decoder [@@program];;
+end
+
+module Parties = struct
+  type t = model_fix_inner_parties
+  ;;
+  let party_id (t)  =
+      t.mod_f_Parties_PartyID
+      [@@macro]
+  ;;
+  let party_index (t)  =
+      t.mod_f_Parties_PartyIndex
+      [@@macro]
+  ;;
+  let ptys_sub_grp (t)  =
+      t.mod_f_Parties_PtysSubGrp
+      [@@macro]
+  ;;
+  let make ~party_id ~party_index ~ptys_sub_grp ()  : t =
+      {
+          mod_f_Parties_PartyID = party_id;
+          mod_f_Parties_PartyIndex = party_index;
+          mod_f_Parties_PtysSubGrp = ptys_sub_grp
+      }
+      [@@ocamlformat "break-fun-decl=wrap"] [@@macro]
+  ;;
+  let pp (f) (x)  =
+      pp_msg_of_to_json mod_parties_to_json f x
+      [@@program] [@@macro]
+  ;;
+  let to_json = mod_parties_to_json [@@program];;
+  let of_json = mod_rg_parties_decoder [@@program];;
+end
+
+module Ptys_sub_grp = struct
+  type t = model_fix_inner_ptyssubgrp
+  ;;
+  let party_sub_id (t)  =
+      t.mod_f_PtysSubGrp_PartySubID
+      [@@macro]
+  ;;
+  let make ?party_sub_id ()  : t =
+      {
+          mod_f_PtysSubGrp_PartySubID = party_sub_id
+      }
+      [@@ocamlformat "break-fun-decl=wrap"] [@@macro]
+  ;;
+  let pp (f) (x)  =
+      pp_msg_of_to_json mod_ptyssubgrp_to_json f x
+      [@@program] [@@macro]
+  ;;
+  let to_json = mod_ptyssubgrp_to_json [@@program];;
+  let of_json = mod_rg_ptyssubgrp_decoder [@@program];;
+end
+
+module Msg_type = struct
+  type t = m_msg_tag =
+      | M_Msg_NewOrderSingle_Tag 
+      | M_Msg_ExecutionReport_Tag 
+  ;;
+  let to_string (x)  =
+      (match x with
+          | M_Msg_ExecutionReport_Tag -> "ExecutionReport"
+          | M_Msg_NewOrderSingle_Tag -> "NewOrderSingle"
+      )
+      [@@program]
+  ;;
+  let execution_report = M_Msg_ExecutionReport_Tag [@@macro];;
+  let new_order_single = M_Msg_NewOrderSingle_Tag [@@macro];;
+end
+
+type t = model_msg =
+    | FIX_Msg_NewOrderSingle of New_order_single.t
+    | FIX_Msg_ExecutionReport of Execution_report.t
+;;
+
+let execution_report (x)  =
+    FIX_Msg_ExecutionReport x
+    [@@macro]
+;;
+
+let new_order_single (x)  =
+    FIX_Msg_NewOrderSingle x
+    [@@macro]
+;;
+
+let pp (fmt) (m)  =
+    let f x = Format.fprintf fmt x
+    in
+    f "@[";
+    let () = (match m with
+        | FIX_Msg_NewOrderSingle d -> f "NewOrderSingle@ ";
+        New_order_single.pp fmt d
+        | FIX_Msg_ExecutionReport d -> f "ExecutionReport@ ";
+        Execution_report.pp fmt d
+    )
+    in
+    f "@]"
+    [@@program] [@@macro]
+;;
+
+let msg_type_of_t (x)  =
+    (match x with
+        | FIX_Msg_NewOrderSingle _ -> Msg_type.new_order_single
+        | FIX_Msg_ExecutionReport _ -> Msg_type.execution_report
+    )
+;;
+
+let to_json = json_of_model_msg [@@program];;
+
+let of_json = model_message_decoder [@@program];;
+

@@ -115,7 +115,7 @@ let rg_count_parties (x : model_fix_rec_parties)  : int option =
         (Some y))
 ;;
 
-type repeating_group_defs =
+type repeating_group_defs = 
     | MOD_FIX_Repeating_Group_PtysSubGrp 
     | MOD_FIX_Repeating_Group_Parties 
 ;;

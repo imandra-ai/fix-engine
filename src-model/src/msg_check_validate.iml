@@ -24,15 +24,15 @@ let validate_NewOrderSingle_0 (msg_data : mod_newordersingle_data) (m_state : mo
     in
     let local_internal_state = m_state.f_internal_state
     in
-    make_cond_defrej ((&&) ((&&) ((<==>) ((=) msg_data.mod_f_NewOrderSingle_OrdType MOD_FIX_OrdType_Market) (not ((match msg_data.mod_f_NewOrderSingle_Price with
+    make_cond_defrej ((&&) ((&&) ((<==>) ((=) msg_data.mod_f_NewOrderSingle_OrdType FIX_OrdType_Market) (not ((match msg_data.mod_f_NewOrderSingle_Price with
         | Some _ -> true
         | None -> false
     )
-    ))) ((==>) ((=) msg_data.mod_f_NewOrderSingle_OrdType MOD_FIX_OrdType_Limit) ((match msg_data.mod_f_NewOrderSingle_Price with
+    ))) ((==>) ((=) msg_data.mod_f_NewOrderSingle_OrdType FIX_OrdType_Limit) ((match msg_data.mod_f_NewOrderSingle_Price with
         | Some _ -> true
         | None -> false
     )
-    ))) ((==>) ((=) msg_data.mod_f_NewOrderSingle_OrdType MOD_FIX_OrdType_StopSpread) ((match msg_data.mod_f_NewOrderSingle_Price with
+    ))) ((==>) ((=) msg_data.mod_f_NewOrderSingle_OrdType FIX_OrdType_StopSpread) ((match msg_data.mod_f_NewOrderSingle_Price with
         | Some _ -> true
         | None -> false
     )
@@ -47,7 +47,7 @@ let validate_NewOrderSingle_1 (msg_data : mod_newordersingle_data) (m_state : mo
     in
     let local_internal_state = m_state.f_internal_state
     in
-    make_cond_defrej ((<==>) ((=) msg_data.mod_f_NewOrderSingle_OrdType MOD_FIX_OrdType_StopSpread) ((match msg_data.mod_f_NewOrderSingle_SpreadProportion with
+    make_cond_defrej ((<==>) ((=) msg_data.mod_f_NewOrderSingle_OrdType FIX_OrdType_StopSpread) ((match msg_data.mod_f_NewOrderSingle_SpreadProportion with
         | Some _ -> true
         | None -> false
     )
@@ -62,7 +62,7 @@ let validate_NewOrderSingle_2 (msg_data : mod_newordersingle_data) (m_state : mo
     in
     let local_internal_state = m_state.f_internal_state
     in
-    make_cond_defrej ((==>) ((<>) msg_data.mod_f_NewOrderSingle_OrdType MOD_FIX_OrdType_Market) ((match msg_data.mod_f_NewOrderSingle_Price with
+    make_cond_defrej ((==>) ((<>) msg_data.mod_f_NewOrderSingle_OrdType FIX_OrdType_Market) ((match msg_data.mod_f_NewOrderSingle_Price with
         | Some cap_price -> (float_GreaterThan_2_6 cap_price (float_Create_6 (0)))
         | None -> false
     )

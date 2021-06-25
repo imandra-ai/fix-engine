@@ -29,7 +29,7 @@ let outgoing_decoder  =
 
 let state_info_decoder  =
     (field "state_event_counter" string) >>= (fun c -> 
-    (maybe (field "state_event_reject_text" string)) >>= (fun m -> 
+    (field_opt "state_event_reject_text" string) >>= (fun m -> 
     succeed {
         state_event_counter = Z.of_string c;
         state_event_reject_text = (match m with

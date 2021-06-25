@@ -21,8 +21,8 @@ let reject_NewOrderSingle_missingfield (m_state : model_state) (rej_info : rejec
     let local_internal_state = m_state.f_internal_state
     in
     let local_internal_state = { local_internal_state with
-        mod_f_internal_state_ExecType = MOD_FIX_ExecType_Rejected;
-        mod_f_internal_state_OrdStatus = MOD_FIX_OrdStatus_Rejected
+        mod_f_internal_state_ExecType = FIX_ExecType_Rejected;
+        mod_f_internal_state_OrdStatus = FIX_OrdStatus_Rejected
     }
     in
     let local_internal_fresh_state' = { local_internal_fresh_state' with
@@ -60,8 +60,8 @@ let reject_NewOrderSingle_invalidfield (m_state : model_state) (msg_data : mod_n
     let local_internal_state = m_state.f_internal_state
     in
     let local_internal_state = { local_internal_state with
-        mod_f_internal_state_ExecType = MOD_FIX_ExecType_Rejected;
-        mod_f_internal_state_OrdStatus = MOD_FIX_OrdStatus_Rejected
+        mod_f_internal_state_ExecType = FIX_ExecType_Rejected;
+        mod_f_internal_state_OrdStatus = FIX_OrdStatus_Rejected
     }
     in
     let local_internal_fresh_state' = { local_internal_fresh_state' with
@@ -99,8 +99,8 @@ let reject_NewOrderSingle_invalid (m_state : model_state) (msg_data : mod_neword
     let local_internal_state = m_state.f_internal_state
     in
     let local_internal_state = { local_internal_state with
-        mod_f_internal_state_ExecType = MOD_FIX_ExecType_Rejected;
-        mod_f_internal_state_OrdStatus = MOD_FIX_OrdStatus_Rejected
+        mod_f_internal_state_ExecType = FIX_ExecType_Rejected;
+        mod_f_internal_state_OrdStatus = FIX_OrdStatus_Rejected
     }
     in
     let local_internal_fresh_state' = { local_internal_fresh_state' with

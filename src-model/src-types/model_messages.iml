@@ -101,12 +101,12 @@ type mod_executionreport_data = {
 }
 ;;
 
-type model_msg =
+type model_msg = 
     | FIX_Msg_NewOrderSingle of mod_newordersingle_data
     | FIX_Msg_ExecutionReport of mod_executionreport_data
 ;;
 
-type model_msg_opt_def =
+type model_msg_opt_def = 
     | FIX_Msg_Def_Opt_NewOrderSingle of mod_newordersingle_defopt_data
     | FIX_Msg_Def_Opt_ExecutionReport of mod_executionreport_defopt_data
 ;;
@@ -132,7 +132,7 @@ type field_missing_or_invalid_data = {
 }
 ;;
 
-type model_top_level_msg =
+type model_top_level_msg = 
     | FIX_TL_Normal of model_msg_opt_def
     | FIX_TL_Req_Field_Missing of field_missing_or_invalid_data
     | FIX_TL_Req_Field_Invalid of field_missing_or_invalid_data
