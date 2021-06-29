@@ -14,17 +14,17 @@ type fix_orderqtydata = {
 ;;
 
 type fix_rg_inner_ptyssubgrp = {
-    f_PtysSubGrp_NoPartySubIDs : int option;
     f_PtysSubGrp_PartySubID : string option
 }
 ;;
 
-type fix_rg_ptyssubgrp = fix_rg_inner_ptyssubgrp list
+type fix_rg_ptyssubgrp = {
+    f_PtysSubGrp_entries : fix_rg_inner_ptyssubgrp list;
+    f_PtysSubGrp_num_field : int option
+}
 ;;
 
 type fix_rg_inner_parties = {
-(** Repeating group below should contain unique combinations of PartyID, PartyIDSource, and PartyRole*)
-    f_Parties_NoPartyIDs : int option;
 (** Used to identify source of PartyID. Required if PartyIDSource is specified. Required if NoPartyIDs > 0.*)
     f_Parties_PartyID : string option;
 (** Repeating group of Party sub-identifiers.*)
@@ -33,10 +33,13 @@ type fix_rg_inner_parties = {
 }
 ;;
 
-type fix_rg_parties = fix_rg_inner_parties list
+type fix_rg_parties = {
+    f_Parties_entries : fix_rg_inner_parties list;
+    f_Parties_num_field : int option
+}
 ;;
 
-type full_fix_app_record_data =
+type full_fix_app_record_data = 
     | FIX_Record_OrderQtyData of fix_orderqtydata
     | FIX_Record_PtysSubGrp of fix_rg_ptyssubgrp
     | FIX_Record_Parties of fix_rg_parties

@@ -7,25 +7,25 @@ open Model_repeating_groups;;
 open Model_tags;;
 
 
-type rg_reject_type_ptyssubgrp =
+type rg_reject_type_ptyssubgrp = 
     | Rg_success_ptyssubgrp of model_fix_rec_ptyssubgrp
     | Rg_missing_field_failure_ptyssubgrp of (m_field_tag*repeating_group_defs)
     | Rg_invalid_enum_failure_ptyssubgrp of (m_field_tag*repeating_group_defs)
 ;;
 
-type rg_reject_type_parties =
+type rg_reject_type_parties = 
     | Rg_success_parties of model_fix_rec_parties
     | Rg_missing_field_failure_parties of (m_field_tag*repeating_group_defs)
     | Rg_invalid_enum_failure_parties of (m_field_tag*repeating_group_defs)
 ;;
 
-type rg_reject_inner_type_ptyssubgrp =
+type rg_reject_inner_type_ptyssubgrp = 
     | Rg_inner_missing_field_failure_ptyssubgrp of (m_field_tag*repeating_group_defs)
     | Rg_inner_invalid_enum_failure_ptyssubgrp of (m_field_tag*repeating_group_defs)
     | Rg_inner_success_ptyssubgrp of model_fix_inner_ptyssubgrp
 ;;
 
-type rg_reject_inner_type_parties =
+type rg_reject_inner_type_parties = 
     | Rg_inner_missing_field_failure_parties of (m_field_tag*repeating_group_defs)
     | Rg_inner_invalid_enum_failure_parties of (m_field_tag*repeating_group_defs)
     | Rg_inner_success_parties of model_fix_inner_parties
@@ -38,17 +38,18 @@ let rec cap_length (d) (x) (h)  =
     )
 ;;
 
-let rec map_convert__model_to_full_RG_PtysSubGrp (d) (x)  =
+let rec map_convert__model_to_full_RG_PtysSubGrp (d) (x) (acc)  =
     (match d with
-        | [] -> []
-        | h :: t -> ((convert__model_to_full_RG_PtysSubGrp h x) :: (map_convert__model_to_full_RG_PtysSubGrp t x))
+        | [] -> {
+            f_PtysSubGrp_num_field = Some x;
+            f_PtysSubGrp_entries = acc
+        }
+        | h :: t -> (map_convert__model_to_full_RG_PtysSubGrp t x ((@) acc ([(convert__model_to_full_RG_PtysSubGrp h)])))
     ) and 
-convert__model_to_full_RG_PtysSubGrp (rec_in : model_fix_inner_ptyssubgrp) (len : int)  =
+convert__model_to_full_RG_PtysSubGrp (rec_in : model_fix_inner_ptyssubgrp)  =
     {
-        f_PtysSubGrp_PartySubID = rec_in.mod_f_PtysSubGrp_PartySubID;
-        f_PtysSubGrp_NoPartySubIDs = Some len
-    }
-    [@@macro] and 
+        f_PtysSubGrp_PartySubID = rec_in.mod_f_PtysSubGrp_PartySubID
+    } and 
 convert__model_to_full_PtysSubGrp (rec_in : model_fix_rec_ptyssubgrp)  =
     let d = []
     in
@@ -77,7 +78,7 @@ convert__model_to_full_PtysSubGrp (rec_in : model_fix_rec_ptyssubgrp)  =
         | Some x -> (x :: d)
     )
     in
-    map_convert__model_to_full_RG_PtysSubGrp d (cap_length d 0 5)
+    map_convert__model_to_full_RG_PtysSubGrp d (cap_length d 0 5) []
 ;;
 
 let rec convert__full_to_model_PtysSubGrp (rec_in : fix_rg_ptyssubgrp)  =
@@ -92,6 +93,8 @@ let rec convert__full_to_model_PtysSubGrp (rec_in : fix_rg_ptyssubgrp)  =
     let block0 = None
     in
     let t = rec_in
+    in
+    let t = t.f_PtysSubGrp_entries
     in
     (match t with
         | [] -> (Rg_success_ptyssubgrp {
@@ -186,22 +189,22 @@ convert__full_to_model_RG_PtysSubGrp (rec_in : fix_rg_inner_ptyssubgrp)  =
     Rg_inner_success_ptyssubgrp {
         mod_f_PtysSubGrp_PartySubID = c_mod_f_PtysSubGrp_PartySubID
     }
-    [@@macro]
 ;;
 
-let rec map_convert__model_to_full_RG_Parties (d) (x)  =
+let rec map_convert__model_to_full_RG_Parties (d) (x) (acc)  =
     (match d with
-        | [] -> []
-        | h :: t -> ((convert__model_to_full_RG_Parties h x) :: (map_convert__model_to_full_RG_Parties t x))
+        | [] -> {
+            f_Parties_num_field = Some x;
+            f_Parties_entries = acc
+        }
+        | h :: t -> (map_convert__model_to_full_RG_Parties t x ((@) acc ([(convert__model_to_full_RG_Parties h)])))
     ) and 
-convert__model_to_full_RG_Parties (rec_in : model_fix_inner_parties) (len : int)  =
+convert__model_to_full_RG_Parties (rec_in : model_fix_inner_parties)  =
     {
         f_Parties_PartyID = Some rec_in.mod_f_Parties_PartyID;
         f_Parties_PartyIndex = Some rec_in.mod_f_Parties_PartyIndex;
-        f_Parties_PtysSubGrp = convert__model_to_full_PtysSubGrp rec_in.mod_f_Parties_PtysSubGrp;
-        f_Parties_NoPartyIDs = Some len
-    }
-    [@@macro] and 
+        f_Parties_PtysSubGrp = convert__model_to_full_PtysSubGrp rec_in.mod_f_Parties_PtysSubGrp
+    } and 
 convert__model_to_full_Parties (rec_in : model_fix_rec_parties)  =
     let d = []
     in
@@ -230,7 +233,7 @@ convert__model_to_full_Parties (rec_in : model_fix_rec_parties)  =
         | Some x -> (x :: d)
     )
     in
-    map_convert__model_to_full_RG_Parties d (cap_length d 0 5)
+    map_convert__model_to_full_RG_Parties d (cap_length d 0 5) []
 ;;
 
 let rec convert__full_to_model_Parties (rec_in : fix_rg_parties)  =
@@ -245,6 +248,8 @@ let rec convert__full_to_model_Parties (rec_in : fix_rg_parties)  =
     let block0 = None
     in
     let t = rec_in
+    in
+    let t = t.f_Parties_entries
     in
     (match t with
         | [] -> (Rg_success_parties {

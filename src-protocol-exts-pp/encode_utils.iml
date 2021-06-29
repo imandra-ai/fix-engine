@@ -32,12 +32,17 @@ let enc_split_opt (f) (x)  =
     )
 ;;
 
-let enc_repeat (f) (tag) (lst)  =
+let enc_repeat (f) (tag) (len) (lst)  =
     (match lst with
         | [] -> []
-        | lst -> ((tag,(lst |> List.length) |> (enc_req encode_int)) :: ((lst |> (List.map f)) |> (List.fold_left (fun m j -> 
+        | lst -> let rst = (lst |> (List.map f)) |> (List.fold_left (fun m j -> 
         (@) m j
-        ) [])))
+        ) [])
+        in
+        (match len with
+            | None -> rst
+            | Some len -> ((tag,len |> (enc_req encode_int)) :: rst)
+        )
     )
 ;;
 

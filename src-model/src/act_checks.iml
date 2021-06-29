@@ -20,19 +20,19 @@ let is_valid_action_fill (action_data : m_action_fix_fill) (m_state : model_stat
     in
     let local_internal_state = m_state.f_internal_state
     in
-    (&&) ((==>) ((<>) local_internal_state.mod_f_internal_state_OrdType MOD_FIX_OrdType_Market) ((match local_internal_state.mod_f_internal_state_Price with
-        | Some cap_p -> ((if ((=) local_internal_state.mod_f_internal_state_Side MOD_FIX_Side_Buy) then
+    (&&) ((==>) ((<>) local_internal_state.mod_f_internal_state_OrdType FIX_OrdType_Market) ((match local_internal_state.mod_f_internal_state_Price with
+        | Some cap_p -> ((if ((=) local_internal_state.mod_f_internal_state_Side FIX_Side_Buy) then
             (float_LessThanEqual_2_2 action_data.mod_f_fill_fill_price cap_p)
         else
             (float_GreaterThanEqual_2_2 action_data.mod_f_fill_fill_price cap_p))
         )
         | None -> true
     )
-    )) ((&&) ((if ((=) local_internal_state.mod_f_internal_state_Side MOD_FIX_Side_Buy) then
+    )) ((&&) ((if ((=) local_internal_state.mod_f_internal_state_Side FIX_Side_Buy) then
         (float_GreaterThanEqual_2_2 action_data.mod_f_fill_fill_price local_internal_state.mod_f_internal_state_bestAsk)
     else
         (float_LessThanEqual_2_2 action_data.mod_f_fill_fill_price local_internal_state.mod_f_internal_state_bestBid))
-    ) ((&&) (float_GreaterThan_2_6 action_data.mod_f_fill_fill_price (float_Create_6 (0))) ((&&) (float_LessThanEqual_6_6 action_data.mod_f_fill_fill_qty local_internal_state.mod_f_internal_state_LeavesQty) ((&&) (float_GreaterThan_6_6 action_data.mod_f_fill_fill_qty (float_Create_6 (0))) ((&&) ((<>) local_internal_state.mod_f_internal_state_OrdStatus MOD_FIX_OrdStatus_PendingNew) true)))))
+    ) ((&&) (float_GreaterThan_2_6 action_data.mod_f_fill_fill_price (float_Create_6 (0))) ((&&) (float_LessThanEqual_6_6 action_data.mod_f_fill_fill_qty local_internal_state.mod_f_internal_state_LeavesQty) ((&&) (float_GreaterThan_6_6 action_data.mod_f_fill_fill_qty (float_Create_6 (0))) ((&&) ((<>) local_internal_state.mod_f_internal_state_OrdStatus FIX_OrdStatus_PendingNew) true)))))
 ;;
 
 let is_valid_action_bookState (action_data : m_action_fix_bookstate) (m_state : model_state)  =

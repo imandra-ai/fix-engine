@@ -12,133 +12,133 @@ let mod_bool_to_string (x)  =
 
 let mod_side_to_string (d)  =
     (match d with
-        | MOD_FIX_Side_Buy -> "Buy"
-        | MOD_FIX_Side_Sell -> "Sell"
-        | MOD_FIX_Side_BuyMinus -> "BuyMinus"
-        | MOD_FIX_Side_SellPlus -> "SellPlus"
-        | MOD_FIX_Side_SellShort -> "SellShort"
-        | MOD_FIX_Side_SellShortExempt -> "SellShortExempt"
-        | MOD_FIX_Side_Undisclosed -> "Undisclosed"
-        | MOD_FIX_Side_Cross -> "Cross"
-        | MOD_FIX_Side_CrossShort -> "CrossShort"
-        | MOD_FIX_Side_CrossShortExempt -> "CrossShortExempt"
-        | MOD_FIX_Side_AsDefined -> "AsDefined"
-        | MOD_FIX_Side_Opposite -> "Opposite"
-        | MOD_FIX_Side_Subscribe -> "Subscribe"
-        | MOD_FIX_Side_Redeem -> "Redeem"
-        | MOD_FIX_Side_Lend -> "Lend"
-        | MOD_FIX_Side_Borrow -> "Borrow"
+        | FIX_Side_Buy -> "Buy"
+        | FIX_Side_Sell -> "Sell"
+        | FIX_Side_BuyMinus -> "BuyMinus"
+        | FIX_Side_SellPlus -> "SellPlus"
+        | FIX_Side_SellShort -> "SellShort"
+        | FIX_Side_SellShortExempt -> "SellShortExempt"
+        | FIX_Side_Undisclosed -> "Undisclosed"
+        | FIX_Side_Cross -> "Cross"
+        | FIX_Side_CrossShort -> "CrossShort"
+        | FIX_Side_CrossShortExempt -> "CrossShortExempt"
+        | FIX_Side_AsDefined -> "AsDefined"
+        | FIX_Side_Opposite -> "Opposite"
+        | FIX_Side_Subscribe -> "Subscribe"
+        | FIX_Side_Redeem -> "Redeem"
+        | FIX_Side_Lend -> "Lend"
+        | FIX_Side_Borrow -> "Borrow"
     )
 ;;
 
 let mod_ordtype_to_string (d)  =
     (match d with
-        | MOD_FIX_OrdType_Market -> "Market"
-        | MOD_FIX_OrdType_Limit -> "Limit"
-        | MOD_FIX_OrdType_Stop -> "Stop"
-        | MOD_FIX_OrdType_StopLimit -> "StopLimit"
-        | MOD_FIX_OrdType_WithOrWithout -> "WithOrWithout"
-        | MOD_FIX_OrdType_LimitOrBetter -> "LimitOrBetter"
-        | MOD_FIX_OrdType_LimitWithOrWithout -> "LimitWithOrWithout"
-        | MOD_FIX_OrdType_OnBasis -> "OnBasis"
-        | MOD_FIX_OrdType_PreviouslyQuoted -> "PreviouslyQuoted"
-        | MOD_FIX_OrdType_PreviouslyIndicated -> "PreviouslyIndicated"
-        | MOD_FIX_OrdType_ForexSwap -> "ForexSwap"
-        | MOD_FIX_OrdType_Funari -> "Funari"
-        | MOD_FIX_OrdType_MarketIfTouched -> "MarketIfTouched"
-        | MOD_FIX_OrdType_MarketWithLeftOverAsLimit -> "MarketWithLeftOverAsLimit"
-        | MOD_FIX_OrdType_PreviousFundValuationPoint -> "PreviousFundValuationPoint"
-        | MOD_FIX_OrdType_NextFundValuationPoint -> "NextFundValuationPoint"
-        | MOD_FIX_OrdType_Pegged -> "Pegged"
-        | MOD_FIX_OrdType_StopSpread -> "StopSpread"
+        | FIX_OrdType_Market -> "Market"
+        | FIX_OrdType_Limit -> "Limit"
+        | FIX_OrdType_Stop -> "Stop"
+        | FIX_OrdType_StopLimit -> "StopLimit"
+        | FIX_OrdType_WithOrWithout -> "WithOrWithout"
+        | FIX_OrdType_LimitOrBetter -> "LimitOrBetter"
+        | FIX_OrdType_LimitWithOrWithout -> "LimitWithOrWithout"
+        | FIX_OrdType_OnBasis -> "OnBasis"
+        | FIX_OrdType_PreviouslyQuoted -> "PreviouslyQuoted"
+        | FIX_OrdType_PreviouslyIndicated -> "PreviouslyIndicated"
+        | FIX_OrdType_ForexSwap -> "ForexSwap"
+        | FIX_OrdType_Funari -> "Funari"
+        | FIX_OrdType_MarketIfTouched -> "MarketIfTouched"
+        | FIX_OrdType_MarketWithLeftOverAsLimit -> "MarketWithLeftOverAsLimit"
+        | FIX_OrdType_PreviousFundValuationPoint -> "PreviousFundValuationPoint"
+        | FIX_OrdType_NextFundValuationPoint -> "NextFundValuationPoint"
+        | FIX_OrdType_Pegged -> "Pegged"
+        | FIX_OrdType_StopSpread -> "StopSpread"
     )
 ;;
 
 let mod_execinst_to_string (d)  =
     (match d with
-        | MOD_FIX_ExecInst_NotHeld -> "NotHeld"
-        | MOD_FIX_ExecInst_Work -> "Work"
-        | MOD_FIX_ExecInst_GoAlong -> "GoAlong"
-        | MOD_FIX_ExecInst_OverTheDay -> "OverTheDay"
-        | MOD_FIX_ExecInst_Held -> "Held"
-        | MOD_FIX_ExecInst_ParticipateDoNotInitiate -> "ParticipateDoNotInitiate"
-        | MOD_FIX_ExecInst_StrictScale -> "StrictScale"
-        | MOD_FIX_ExecInst_TryToScale -> "TryToScale"
-        | MOD_FIX_ExecInst_StayOnBidSide -> "StayOnBidSide"
-        | MOD_FIX_ExecInst_StayOnOfferSide -> "StayOnOfferSide"
-        | MOD_FIX_ExecInst_NoCross -> "NoCross"
-        | MOD_FIX_ExecInst_OKToCross -> "OKToCross"
-        | MOD_FIX_ExecInst_CallFirst -> "CallFirst"
-        | MOD_FIX_ExecInst_PercentOfVolume -> "PercentOfVolume"
-        | MOD_FIX_ExecInst_DoNotIncrease -> "DoNotIncrease"
-        | MOD_FIX_ExecInst_DoNotReduce -> "DoNotReduce"
-        | MOD_FIX_ExecInst_AllOrNone -> "AllOrNone"
-        | MOD_FIX_ExecInst_ReinstateOnSystemFailure -> "ReinstateOnSystemFailure"
-        | MOD_FIX_ExecInst_InstitutionsOnly -> "InstitutionsOnly"
-        | MOD_FIX_ExecInst_ReinstateOnTradingHalt -> "ReinstateOnTradingHalt"
-        | MOD_FIX_ExecInst_CancelOnTradingHalt -> "CancelOnTradingHalt"
-        | MOD_FIX_ExecInst_LastPeg -> "LastPeg"
-        | MOD_FIX_ExecInst_MidPricePeg -> "MidPricePeg"
-        | MOD_FIX_ExecInst_NonNegotiable -> "NonNegotiable"
-        | MOD_FIX_ExecInst_OpeningPeg -> "OpeningPeg"
-        | MOD_FIX_ExecInst_MarketPeg -> "MarketPeg"
-        | MOD_FIX_ExecInst_CancelOnSystemFailure -> "CancelOnSystemFailure"
-        | MOD_FIX_ExecInst_PrimaryPeg -> "PrimaryPeg"
-        | MOD_FIX_ExecInst_Suspend -> "Suspend"
-        | MOD_FIX_ExecInst_CustomerDisplayInstruction -> "CustomerDisplayInstruction"
-        | MOD_FIX_ExecInst_Netting -> "Netting"
-        | MOD_FIX_ExecInst_PegToVWAP -> "PegToVWAP"
-        | MOD_FIX_ExecInst_TradeAlong -> "TradeAlong"
-        | MOD_FIX_ExecInst_TryToStop -> "TryToStop"
-        | MOD_FIX_ExecInst_CancelIfNotBest -> "CancelIfNotBest"
-        | MOD_FIX_ExecInst_TrailingStopPeg -> "TrailingStopPeg"
-        | MOD_FIX_ExecInst_StrictLimit -> "StrictLimit"
-        | MOD_FIX_ExecInst_IgnorePriceValidityChecks -> "IgnorePriceValidityChecks"
-        | MOD_FIX_ExecInst_PegToLimitPrice -> "PegToLimitPrice"
-        | MOD_FIX_ExecInst_WorkToTargetStrategy -> "WorkToTargetStrategy"
+        | FIX_ExecInst_NotHeld -> "NotHeld"
+        | FIX_ExecInst_Work -> "Work"
+        | FIX_ExecInst_GoAlong -> "GoAlong"
+        | FIX_ExecInst_OverTheDay -> "OverTheDay"
+        | FIX_ExecInst_Held -> "Held"
+        | FIX_ExecInst_ParticipateDoNotInitiate -> "ParticipateDoNotInitiate"
+        | FIX_ExecInst_StrictScale -> "StrictScale"
+        | FIX_ExecInst_TryToScale -> "TryToScale"
+        | FIX_ExecInst_StayOnBidSide -> "StayOnBidSide"
+        | FIX_ExecInst_StayOnOfferSide -> "StayOnOfferSide"
+        | FIX_ExecInst_NoCross -> "NoCross"
+        | FIX_ExecInst_OKToCross -> "OKToCross"
+        | FIX_ExecInst_CallFirst -> "CallFirst"
+        | FIX_ExecInst_PercentOfVolume -> "PercentOfVolume"
+        | FIX_ExecInst_DoNotIncrease -> "DoNotIncrease"
+        | FIX_ExecInst_DoNotReduce -> "DoNotReduce"
+        | FIX_ExecInst_AllOrNone -> "AllOrNone"
+        | FIX_ExecInst_ReinstateOnSystemFailure -> "ReinstateOnSystemFailure"
+        | FIX_ExecInst_InstitutionsOnly -> "InstitutionsOnly"
+        | FIX_ExecInst_ReinstateOnTradingHalt -> "ReinstateOnTradingHalt"
+        | FIX_ExecInst_CancelOnTradingHalt -> "CancelOnTradingHalt"
+        | FIX_ExecInst_LastPeg -> "LastPeg"
+        | FIX_ExecInst_MidPricePeg -> "MidPricePeg"
+        | FIX_ExecInst_NonNegotiable -> "NonNegotiable"
+        | FIX_ExecInst_OpeningPeg -> "OpeningPeg"
+        | FIX_ExecInst_MarketPeg -> "MarketPeg"
+        | FIX_ExecInst_CancelOnSystemFailure -> "CancelOnSystemFailure"
+        | FIX_ExecInst_PrimaryPeg -> "PrimaryPeg"
+        | FIX_ExecInst_Suspend -> "Suspend"
+        | FIX_ExecInst_CustomerDisplayInstruction -> "CustomerDisplayInstruction"
+        | FIX_ExecInst_Netting -> "Netting"
+        | FIX_ExecInst_PegToVWAP -> "PegToVWAP"
+        | FIX_ExecInst_TradeAlong -> "TradeAlong"
+        | FIX_ExecInst_TryToStop -> "TryToStop"
+        | FIX_ExecInst_CancelIfNotBest -> "CancelIfNotBest"
+        | FIX_ExecInst_TrailingStopPeg -> "TrailingStopPeg"
+        | FIX_ExecInst_StrictLimit -> "StrictLimit"
+        | FIX_ExecInst_IgnorePriceValidityChecks -> "IgnorePriceValidityChecks"
+        | FIX_ExecInst_PegToLimitPrice -> "PegToLimitPrice"
+        | FIX_ExecInst_WorkToTargetStrategy -> "WorkToTargetStrategy"
     )
 ;;
 
-let list_model_vals_ExecInst = [(MOD_FIX_ExecInst_NotHeld);
-(MOD_FIX_ExecInst_Work);
-(MOD_FIX_ExecInst_GoAlong);
-(MOD_FIX_ExecInst_OverTheDay);
-(MOD_FIX_ExecInst_Held);
-(MOD_FIX_ExecInst_ParticipateDoNotInitiate);
-(MOD_FIX_ExecInst_StrictScale);
-(MOD_FIX_ExecInst_TryToScale);
-(MOD_FIX_ExecInst_StayOnBidSide);
-(MOD_FIX_ExecInst_StayOnOfferSide);
-(MOD_FIX_ExecInst_NoCross);
-(MOD_FIX_ExecInst_OKToCross);
-(MOD_FIX_ExecInst_CallFirst);
-(MOD_FIX_ExecInst_PercentOfVolume);
-(MOD_FIX_ExecInst_DoNotIncrease);
-(MOD_FIX_ExecInst_DoNotReduce);
-(MOD_FIX_ExecInst_AllOrNone);
-(MOD_FIX_ExecInst_ReinstateOnSystemFailure);
-(MOD_FIX_ExecInst_InstitutionsOnly);
-(MOD_FIX_ExecInst_ReinstateOnTradingHalt);
-(MOD_FIX_ExecInst_CancelOnTradingHalt);
-(MOD_FIX_ExecInst_LastPeg);
-(MOD_FIX_ExecInst_MidPricePeg);
-(MOD_FIX_ExecInst_NonNegotiable);
-(MOD_FIX_ExecInst_OpeningPeg);
-(MOD_FIX_ExecInst_MarketPeg);
-(MOD_FIX_ExecInst_CancelOnSystemFailure);
-(MOD_FIX_ExecInst_PrimaryPeg);
-(MOD_FIX_ExecInst_Suspend);
-(MOD_FIX_ExecInst_CustomerDisplayInstruction);
-(MOD_FIX_ExecInst_Netting);
-(MOD_FIX_ExecInst_PegToVWAP);
-(MOD_FIX_ExecInst_TradeAlong);
-(MOD_FIX_ExecInst_TryToStop);
-(MOD_FIX_ExecInst_CancelIfNotBest);
-(MOD_FIX_ExecInst_TrailingStopPeg);
-(MOD_FIX_ExecInst_StrictLimit);
-(MOD_FIX_ExecInst_IgnorePriceValidityChecks);
-(MOD_FIX_ExecInst_PegToLimitPrice);
-(MOD_FIX_ExecInst_WorkToTargetStrategy)] [@@macro];;
+let list_model_vals_ExecInst = [(FIX_ExecInst_NotHeld);
+(FIX_ExecInst_Work);
+(FIX_ExecInst_GoAlong);
+(FIX_ExecInst_OverTheDay);
+(FIX_ExecInst_Held);
+(FIX_ExecInst_ParticipateDoNotInitiate);
+(FIX_ExecInst_StrictScale);
+(FIX_ExecInst_TryToScale);
+(FIX_ExecInst_StayOnBidSide);
+(FIX_ExecInst_StayOnOfferSide);
+(FIX_ExecInst_NoCross);
+(FIX_ExecInst_OKToCross);
+(FIX_ExecInst_CallFirst);
+(FIX_ExecInst_PercentOfVolume);
+(FIX_ExecInst_DoNotIncrease);
+(FIX_ExecInst_DoNotReduce);
+(FIX_ExecInst_AllOrNone);
+(FIX_ExecInst_ReinstateOnSystemFailure);
+(FIX_ExecInst_InstitutionsOnly);
+(FIX_ExecInst_ReinstateOnTradingHalt);
+(FIX_ExecInst_CancelOnTradingHalt);
+(FIX_ExecInst_LastPeg);
+(FIX_ExecInst_MidPricePeg);
+(FIX_ExecInst_NonNegotiable);
+(FIX_ExecInst_OpeningPeg);
+(FIX_ExecInst_MarketPeg);
+(FIX_ExecInst_CancelOnSystemFailure);
+(FIX_ExecInst_PrimaryPeg);
+(FIX_ExecInst_Suspend);
+(FIX_ExecInst_CustomerDisplayInstruction);
+(FIX_ExecInst_Netting);
+(FIX_ExecInst_PegToVWAP);
+(FIX_ExecInst_TradeAlong);
+(FIX_ExecInst_TryToStop);
+(FIX_ExecInst_CancelIfNotBest);
+(FIX_ExecInst_TrailingStopPeg);
+(FIX_ExecInst_StrictLimit);
+(FIX_ExecInst_IgnorePriceValidityChecks);
+(FIX_ExecInst_PegToLimitPrice);
+(FIX_ExecInst_WorkToTargetStrategy)] [@@macro];;
 
 let rec get_model_enum_vals_ExecInst (f) (x)  =
     (match x with
@@ -153,241 +153,241 @@ let rec get_model_enum_vals_ExecInst (f) (x)  =
 
 let mod_exectype_to_string (d)  =
     (match d with
-        | MOD_FIX_ExecType_New -> "New"
-        | MOD_FIX_ExecType_DoneForDay -> "DoneForDay"
-        | MOD_FIX_ExecType_Canceled -> "Canceled"
-        | MOD_FIX_ExecType_Replaced -> "Replaced"
-        | MOD_FIX_ExecType_PendingCancel -> "PendingCancel"
-        | MOD_FIX_ExecType_Stopped -> "Stopped"
-        | MOD_FIX_ExecType_Rejected -> "Rejected"
-        | MOD_FIX_ExecType_Suspended -> "Suspended"
-        | MOD_FIX_ExecType_PendingNew -> "PendingNew"
-        | MOD_FIX_ExecType_Calculated -> "Calculated"
-        | MOD_FIX_ExecType_Expired -> "Expired"
-        | MOD_FIX_ExecType_Restated -> "Restated"
-        | MOD_FIX_ExecType_PendingReplace -> "PendingReplace"
-        | MOD_FIX_ExecType_Trade -> "Trade"
-        | MOD_FIX_ExecType_TradeCorrect -> "TradeCorrect"
-        | MOD_FIX_ExecType_TradeCancel -> "TradeCancel"
-        | MOD_FIX_ExecType_OrderStatus -> "OrderStatus"
+        | FIX_ExecType_New -> "New"
+        | FIX_ExecType_DoneForDay -> "DoneForDay"
+        | FIX_ExecType_Canceled -> "Canceled"
+        | FIX_ExecType_Replaced -> "Replaced"
+        | FIX_ExecType_PendingCancel -> "PendingCancel"
+        | FIX_ExecType_Stopped -> "Stopped"
+        | FIX_ExecType_Rejected -> "Rejected"
+        | FIX_ExecType_Suspended -> "Suspended"
+        | FIX_ExecType_PendingNew -> "PendingNew"
+        | FIX_ExecType_Calculated -> "Calculated"
+        | FIX_ExecType_Expired -> "Expired"
+        | FIX_ExecType_Restated -> "Restated"
+        | FIX_ExecType_PendingReplace -> "PendingReplace"
+        | FIX_ExecType_Trade -> "Trade"
+        | FIX_ExecType_TradeCorrect -> "TradeCorrect"
+        | FIX_ExecType_TradeCancel -> "TradeCancel"
+        | FIX_ExecType_OrderStatus -> "OrderStatus"
     )
 ;;
 
 let mod_ordstatus_to_string (d)  =
     (match d with
-        | MOD_FIX_OrdStatus_New -> "New"
-        | MOD_FIX_OrdStatus_PartiallyFilled -> "PartiallyFilled"
-        | MOD_FIX_OrdStatus_Filled -> "Filled"
-        | MOD_FIX_OrdStatus_DoneForDay -> "DoneForDay"
-        | MOD_FIX_OrdStatus_Canceled -> "Canceled"
-        | MOD_FIX_OrdStatus_PendingCancel -> "PendingCancel"
-        | MOD_FIX_OrdStatus_Stopped -> "Stopped"
-        | MOD_FIX_OrdStatus_Rejected -> "Rejected"
-        | MOD_FIX_OrdStatus_Suspended -> "Suspended"
-        | MOD_FIX_OrdStatus_PendingNew -> "PendingNew"
-        | MOD_FIX_OrdStatus_Calculated -> "Calculated"
-        | MOD_FIX_OrdStatus_Expired -> "Expired"
-        | MOD_FIX_OrdStatus_AcceptedForBidding -> "AcceptedForBidding"
-        | MOD_FIX_OrdStatus_PendingReplace -> "PendingReplace"
-        | MOD_FIX_OrdStatus_Replaced -> "Replaced"
+        | FIX_OrdStatus_New -> "New"
+        | FIX_OrdStatus_PartiallyFilled -> "PartiallyFilled"
+        | FIX_OrdStatus_Filled -> "Filled"
+        | FIX_OrdStatus_DoneForDay -> "DoneForDay"
+        | FIX_OrdStatus_Canceled -> "Canceled"
+        | FIX_OrdStatus_PendingCancel -> "PendingCancel"
+        | FIX_OrdStatus_Stopped -> "Stopped"
+        | FIX_OrdStatus_Rejected -> "Rejected"
+        | FIX_OrdStatus_Suspended -> "Suspended"
+        | FIX_OrdStatus_PendingNew -> "PendingNew"
+        | FIX_OrdStatus_Calculated -> "Calculated"
+        | FIX_OrdStatus_Expired -> "Expired"
+        | FIX_OrdStatus_AcceptedForBidding -> "AcceptedForBidding"
+        | FIX_OrdStatus_PendingReplace -> "PendingReplace"
+        | FIX_OrdStatus_Replaced -> "Replaced"
     )
 ;;
 
 let mod_partysubidtype_to_string (d)  =
     (match d with
-        | MOD_FIX_PartySubIDType_Firm -> "Firm"
-        | MOD_FIX_PartySubIDType_Person -> "Person"
-        | MOD_FIX_PartySubIDType_System -> "System"
-        | MOD_FIX_PartySubIDType_Application -> "Application"
-        | MOD_FIX_PartySubIDType_FullLegalNameOfFirm -> "FullLegalNameOfFirm"
-        | MOD_FIX_PartySubIDType_PostalAddress -> "PostalAddress"
-        | MOD_FIX_PartySubIDType_PhoneNumber -> "PhoneNumber"
-        | MOD_FIX_PartySubIDType_EmailAddress -> "EmailAddress"
-        | MOD_FIX_PartySubIDType_ContactName -> "ContactName"
-        | MOD_FIX_PartySubIDType_SecuritiesAccountNumber -> "SecuritiesAccountNumber"
-        | MOD_FIX_PartySubIDType_RegistrationNumber -> "RegistrationNumber"
-        | MOD_FIX_PartySubIDType_RegisteredAddressForConfirmation -> "RegisteredAddressForConfirmation"
-        | MOD_FIX_PartySubIDType_RegulatoryStatus -> "RegulatoryStatus"
-        | MOD_FIX_PartySubIDType_RegistrationName -> "RegistrationName"
-        | MOD_FIX_PartySubIDType_CashAccountNumber -> "CashAccountNumber"
-        | MOD_FIX_PartySubIDType_BIC -> "BIC"
-        | MOD_FIX_PartySubIDType_CSDParticipantMemberCode -> "CSDParticipantMemberCode"
-        | MOD_FIX_PartySubIDType_RegisteredAddress -> "RegisteredAddress"
-        | MOD_FIX_PartySubIDType_FundAccountName -> "FundAccountName"
-        | MOD_FIX_PartySubIDType_TelexNumber -> "TelexNumber"
-        | MOD_FIX_PartySubIDType_FaxNumber -> "FaxNumber"
-        | MOD_FIX_PartySubIDType_SecuritiesAccountName -> "SecuritiesAccountName"
-        | MOD_FIX_PartySubIDType_CashAccountName -> "CashAccountName"
-        | MOD_FIX_PartySubIDType_Department -> "Department"
-        | MOD_FIX_PartySubIDType_LocationDesk -> "LocationDesk"
-        | MOD_FIX_PartySubIDType_PositionAccountType -> "PositionAccountType"
+        | FIX_PartySubIDType_Firm -> "Firm"
+        | FIX_PartySubIDType_Person -> "Person"
+        | FIX_PartySubIDType_System -> "System"
+        | FIX_PartySubIDType_Application -> "Application"
+        | FIX_PartySubIDType_FullLegalNameOfFirm -> "FullLegalNameOfFirm"
+        | FIX_PartySubIDType_PostalAddress -> "PostalAddress"
+        | FIX_PartySubIDType_PhoneNumber -> "PhoneNumber"
+        | FIX_PartySubIDType_EmailAddress -> "EmailAddress"
+        | FIX_PartySubIDType_ContactName -> "ContactName"
+        | FIX_PartySubIDType_SecuritiesAccountNumber -> "SecuritiesAccountNumber"
+        | FIX_PartySubIDType_RegistrationNumber -> "RegistrationNumber"
+        | FIX_PartySubIDType_RegisteredAddressForConfirmation -> "RegisteredAddressForConfirmation"
+        | FIX_PartySubIDType_RegulatoryStatus -> "RegulatoryStatus"
+        | FIX_PartySubIDType_RegistrationName -> "RegistrationName"
+        | FIX_PartySubIDType_CashAccountNumber -> "CashAccountNumber"
+        | FIX_PartySubIDType_BIC -> "BIC"
+        | FIX_PartySubIDType_CSDParticipantMemberCode -> "CSDParticipantMemberCode"
+        | FIX_PartySubIDType_RegisteredAddress -> "RegisteredAddress"
+        | FIX_PartySubIDType_FundAccountName -> "FundAccountName"
+        | FIX_PartySubIDType_TelexNumber -> "TelexNumber"
+        | FIX_PartySubIDType_FaxNumber -> "FaxNumber"
+        | FIX_PartySubIDType_SecuritiesAccountName -> "SecuritiesAccountName"
+        | FIX_PartySubIDType_CashAccountName -> "CashAccountName"
+        | FIX_PartySubIDType_Department -> "Department"
+        | FIX_PartySubIDType_LocationDesk -> "LocationDesk"
+        | FIX_PartySubIDType_PositionAccountType -> "PositionAccountType"
     )
 ;;
 
 let string_to_mod_side_opt (d)  =
     (match d with
-        | "Buy" -> (Some (MOD_FIX_Side_Buy))
-        | "Sell" -> (Some (MOD_FIX_Side_Sell))
-        | "BuyMinus" -> (Some (MOD_FIX_Side_BuyMinus))
-        | "SellPlus" -> (Some (MOD_FIX_Side_SellPlus))
-        | "SellShort" -> (Some (MOD_FIX_Side_SellShort))
-        | "SellShortExempt" -> (Some (MOD_FIX_Side_SellShortExempt))
-        | "Undisclosed" -> (Some (MOD_FIX_Side_Undisclosed))
-        | "Cross" -> (Some (MOD_FIX_Side_Cross))
-        | "CrossShort" -> (Some (MOD_FIX_Side_CrossShort))
-        | "CrossShortExempt" -> (Some (MOD_FIX_Side_CrossShortExempt))
-        | "AsDefined" -> (Some (MOD_FIX_Side_AsDefined))
-        | "Opposite" -> (Some (MOD_FIX_Side_Opposite))
-        | "Subscribe" -> (Some (MOD_FIX_Side_Subscribe))
-        | "Redeem" -> (Some (MOD_FIX_Side_Redeem))
-        | "Lend" -> (Some (MOD_FIX_Side_Lend))
-        | "Borrow" -> (Some (MOD_FIX_Side_Borrow))
+        | "Buy" -> (Some (FIX_Side_Buy))
+        | "Sell" -> (Some (FIX_Side_Sell))
+        | "BuyMinus" -> (Some (FIX_Side_BuyMinus))
+        | "SellPlus" -> (Some (FIX_Side_SellPlus))
+        | "SellShort" -> (Some (FIX_Side_SellShort))
+        | "SellShortExempt" -> (Some (FIX_Side_SellShortExempt))
+        | "Undisclosed" -> (Some (FIX_Side_Undisclosed))
+        | "Cross" -> (Some (FIX_Side_Cross))
+        | "CrossShort" -> (Some (FIX_Side_CrossShort))
+        | "CrossShortExempt" -> (Some (FIX_Side_CrossShortExempt))
+        | "AsDefined" -> (Some (FIX_Side_AsDefined))
+        | "Opposite" -> (Some (FIX_Side_Opposite))
+        | "Subscribe" -> (Some (FIX_Side_Subscribe))
+        | "Redeem" -> (Some (FIX_Side_Redeem))
+        | "Lend" -> (Some (FIX_Side_Lend))
+        | "Borrow" -> (Some (FIX_Side_Borrow))
         | _ -> (None)
     )
 ;;
 
 let string_to_mod_ordtype_opt (d)  =
     (match d with
-        | "Market" -> (Some (MOD_FIX_OrdType_Market))
-        | "Limit" -> (Some (MOD_FIX_OrdType_Limit))
-        | "Stop" -> (Some (MOD_FIX_OrdType_Stop))
-        | "StopLimit" -> (Some (MOD_FIX_OrdType_StopLimit))
-        | "WithOrWithout" -> (Some (MOD_FIX_OrdType_WithOrWithout))
-        | "LimitOrBetter" -> (Some (MOD_FIX_OrdType_LimitOrBetter))
-        | "LimitWithOrWithout" -> (Some (MOD_FIX_OrdType_LimitWithOrWithout))
-        | "OnBasis" -> (Some (MOD_FIX_OrdType_OnBasis))
-        | "PreviouslyQuoted" -> (Some (MOD_FIX_OrdType_PreviouslyQuoted))
-        | "PreviouslyIndicated" -> (Some (MOD_FIX_OrdType_PreviouslyIndicated))
-        | "ForexSwap" -> (Some (MOD_FIX_OrdType_ForexSwap))
-        | "Funari" -> (Some (MOD_FIX_OrdType_Funari))
-        | "MarketIfTouched" -> (Some (MOD_FIX_OrdType_MarketIfTouched))
-        | "MarketWithLeftOverAsLimit" -> (Some (MOD_FIX_OrdType_MarketWithLeftOverAsLimit))
-        | "PreviousFundValuationPoint" -> (Some (MOD_FIX_OrdType_PreviousFundValuationPoint))
-        | "NextFundValuationPoint" -> (Some (MOD_FIX_OrdType_NextFundValuationPoint))
-        | "Pegged" -> (Some (MOD_FIX_OrdType_Pegged))
-        | "StopSpread" -> (Some (MOD_FIX_OrdType_StopSpread))
+        | "Market" -> (Some (FIX_OrdType_Market))
+        | "Limit" -> (Some (FIX_OrdType_Limit))
+        | "Stop" -> (Some (FIX_OrdType_Stop))
+        | "StopLimit" -> (Some (FIX_OrdType_StopLimit))
+        | "WithOrWithout" -> (Some (FIX_OrdType_WithOrWithout))
+        | "LimitOrBetter" -> (Some (FIX_OrdType_LimitOrBetter))
+        | "LimitWithOrWithout" -> (Some (FIX_OrdType_LimitWithOrWithout))
+        | "OnBasis" -> (Some (FIX_OrdType_OnBasis))
+        | "PreviouslyQuoted" -> (Some (FIX_OrdType_PreviouslyQuoted))
+        | "PreviouslyIndicated" -> (Some (FIX_OrdType_PreviouslyIndicated))
+        | "ForexSwap" -> (Some (FIX_OrdType_ForexSwap))
+        | "Funari" -> (Some (FIX_OrdType_Funari))
+        | "MarketIfTouched" -> (Some (FIX_OrdType_MarketIfTouched))
+        | "MarketWithLeftOverAsLimit" -> (Some (FIX_OrdType_MarketWithLeftOverAsLimit))
+        | "PreviousFundValuationPoint" -> (Some (FIX_OrdType_PreviousFundValuationPoint))
+        | "NextFundValuationPoint" -> (Some (FIX_OrdType_NextFundValuationPoint))
+        | "Pegged" -> (Some (FIX_OrdType_Pegged))
+        | "StopSpread" -> (Some (FIX_OrdType_StopSpread))
         | _ -> (None)
     )
 ;;
 
 let string_to_mod_execinst_opt (d)  =
     (match d with
-        | "NotHeld" -> (Some (MOD_FIX_ExecInst_NotHeld))
-        | "Work" -> (Some (MOD_FIX_ExecInst_Work))
-        | "GoAlong" -> (Some (MOD_FIX_ExecInst_GoAlong))
-        | "OverTheDay" -> (Some (MOD_FIX_ExecInst_OverTheDay))
-        | "Held" -> (Some (MOD_FIX_ExecInst_Held))
-        | "ParticipateDoNotInitiate" -> (Some (MOD_FIX_ExecInst_ParticipateDoNotInitiate))
-        | "StrictScale" -> (Some (MOD_FIX_ExecInst_StrictScale))
-        | "TryToScale" -> (Some (MOD_FIX_ExecInst_TryToScale))
-        | "StayOnBidSide" -> (Some (MOD_FIX_ExecInst_StayOnBidSide))
-        | "StayOnOfferSide" -> (Some (MOD_FIX_ExecInst_StayOnOfferSide))
-        | "NoCross" -> (Some (MOD_FIX_ExecInst_NoCross))
-        | "OKToCross" -> (Some (MOD_FIX_ExecInst_OKToCross))
-        | "CallFirst" -> (Some (MOD_FIX_ExecInst_CallFirst))
-        | "PercentOfVolume" -> (Some (MOD_FIX_ExecInst_PercentOfVolume))
-        | "DoNotIncrease" -> (Some (MOD_FIX_ExecInst_DoNotIncrease))
-        | "DoNotReduce" -> (Some (MOD_FIX_ExecInst_DoNotReduce))
-        | "AllOrNone" -> (Some (MOD_FIX_ExecInst_AllOrNone))
-        | "ReinstateOnSystemFailure" -> (Some (MOD_FIX_ExecInst_ReinstateOnSystemFailure))
-        | "InstitutionsOnly" -> (Some (MOD_FIX_ExecInst_InstitutionsOnly))
-        | "ReinstateOnTradingHalt" -> (Some (MOD_FIX_ExecInst_ReinstateOnTradingHalt))
-        | "CancelOnTradingHalt" -> (Some (MOD_FIX_ExecInst_CancelOnTradingHalt))
-        | "LastPeg" -> (Some (MOD_FIX_ExecInst_LastPeg))
-        | "MidPricePeg" -> (Some (MOD_FIX_ExecInst_MidPricePeg))
-        | "NonNegotiable" -> (Some (MOD_FIX_ExecInst_NonNegotiable))
-        | "OpeningPeg" -> (Some (MOD_FIX_ExecInst_OpeningPeg))
-        | "MarketPeg" -> (Some (MOD_FIX_ExecInst_MarketPeg))
-        | "CancelOnSystemFailure" -> (Some (MOD_FIX_ExecInst_CancelOnSystemFailure))
-        | "PrimaryPeg" -> (Some (MOD_FIX_ExecInst_PrimaryPeg))
-        | "Suspend" -> (Some (MOD_FIX_ExecInst_Suspend))
-        | "CustomerDisplayInstruction" -> (Some (MOD_FIX_ExecInst_CustomerDisplayInstruction))
-        | "Netting" -> (Some (MOD_FIX_ExecInst_Netting))
-        | "PegToVWAP" -> (Some (MOD_FIX_ExecInst_PegToVWAP))
-        | "TradeAlong" -> (Some (MOD_FIX_ExecInst_TradeAlong))
-        | "TryToStop" -> (Some (MOD_FIX_ExecInst_TryToStop))
-        | "CancelIfNotBest" -> (Some (MOD_FIX_ExecInst_CancelIfNotBest))
-        | "TrailingStopPeg" -> (Some (MOD_FIX_ExecInst_TrailingStopPeg))
-        | "StrictLimit" -> (Some (MOD_FIX_ExecInst_StrictLimit))
-        | "IgnorePriceValidityChecks" -> (Some (MOD_FIX_ExecInst_IgnorePriceValidityChecks))
-        | "PegToLimitPrice" -> (Some (MOD_FIX_ExecInst_PegToLimitPrice))
-        | "WorkToTargetStrategy" -> (Some (MOD_FIX_ExecInst_WorkToTargetStrategy))
+        | "NotHeld" -> (Some (FIX_ExecInst_NotHeld))
+        | "Work" -> (Some (FIX_ExecInst_Work))
+        | "GoAlong" -> (Some (FIX_ExecInst_GoAlong))
+        | "OverTheDay" -> (Some (FIX_ExecInst_OverTheDay))
+        | "Held" -> (Some (FIX_ExecInst_Held))
+        | "ParticipateDoNotInitiate" -> (Some (FIX_ExecInst_ParticipateDoNotInitiate))
+        | "StrictScale" -> (Some (FIX_ExecInst_StrictScale))
+        | "TryToScale" -> (Some (FIX_ExecInst_TryToScale))
+        | "StayOnBidSide" -> (Some (FIX_ExecInst_StayOnBidSide))
+        | "StayOnOfferSide" -> (Some (FIX_ExecInst_StayOnOfferSide))
+        | "NoCross" -> (Some (FIX_ExecInst_NoCross))
+        | "OKToCross" -> (Some (FIX_ExecInst_OKToCross))
+        | "CallFirst" -> (Some (FIX_ExecInst_CallFirst))
+        | "PercentOfVolume" -> (Some (FIX_ExecInst_PercentOfVolume))
+        | "DoNotIncrease" -> (Some (FIX_ExecInst_DoNotIncrease))
+        | "DoNotReduce" -> (Some (FIX_ExecInst_DoNotReduce))
+        | "AllOrNone" -> (Some (FIX_ExecInst_AllOrNone))
+        | "ReinstateOnSystemFailure" -> (Some (FIX_ExecInst_ReinstateOnSystemFailure))
+        | "InstitutionsOnly" -> (Some (FIX_ExecInst_InstitutionsOnly))
+        | "ReinstateOnTradingHalt" -> (Some (FIX_ExecInst_ReinstateOnTradingHalt))
+        | "CancelOnTradingHalt" -> (Some (FIX_ExecInst_CancelOnTradingHalt))
+        | "LastPeg" -> (Some (FIX_ExecInst_LastPeg))
+        | "MidPricePeg" -> (Some (FIX_ExecInst_MidPricePeg))
+        | "NonNegotiable" -> (Some (FIX_ExecInst_NonNegotiable))
+        | "OpeningPeg" -> (Some (FIX_ExecInst_OpeningPeg))
+        | "MarketPeg" -> (Some (FIX_ExecInst_MarketPeg))
+        | "CancelOnSystemFailure" -> (Some (FIX_ExecInst_CancelOnSystemFailure))
+        | "PrimaryPeg" -> (Some (FIX_ExecInst_PrimaryPeg))
+        | "Suspend" -> (Some (FIX_ExecInst_Suspend))
+        | "CustomerDisplayInstruction" -> (Some (FIX_ExecInst_CustomerDisplayInstruction))
+        | "Netting" -> (Some (FIX_ExecInst_Netting))
+        | "PegToVWAP" -> (Some (FIX_ExecInst_PegToVWAP))
+        | "TradeAlong" -> (Some (FIX_ExecInst_TradeAlong))
+        | "TryToStop" -> (Some (FIX_ExecInst_TryToStop))
+        | "CancelIfNotBest" -> (Some (FIX_ExecInst_CancelIfNotBest))
+        | "TrailingStopPeg" -> (Some (FIX_ExecInst_TrailingStopPeg))
+        | "StrictLimit" -> (Some (FIX_ExecInst_StrictLimit))
+        | "IgnorePriceValidityChecks" -> (Some (FIX_ExecInst_IgnorePriceValidityChecks))
+        | "PegToLimitPrice" -> (Some (FIX_ExecInst_PegToLimitPrice))
+        | "WorkToTargetStrategy" -> (Some (FIX_ExecInst_WorkToTargetStrategy))
         | _ -> (None)
     )
 ;;
 
 let string_to_mod_exectype_opt (d)  =
     (match d with
-        | "New" -> (Some (MOD_FIX_ExecType_New))
-        | "DoneForDay" -> (Some (MOD_FIX_ExecType_DoneForDay))
-        | "Canceled" -> (Some (MOD_FIX_ExecType_Canceled))
-        | "Replaced" -> (Some (MOD_FIX_ExecType_Replaced))
-        | "PendingCancel" -> (Some (MOD_FIX_ExecType_PendingCancel))
-        | "Stopped" -> (Some (MOD_FIX_ExecType_Stopped))
-        | "Rejected" -> (Some (MOD_FIX_ExecType_Rejected))
-        | "Suspended" -> (Some (MOD_FIX_ExecType_Suspended))
-        | "PendingNew" -> (Some (MOD_FIX_ExecType_PendingNew))
-        | "Calculated" -> (Some (MOD_FIX_ExecType_Calculated))
-        | "Expired" -> (Some (MOD_FIX_ExecType_Expired))
-        | "Restated" -> (Some (MOD_FIX_ExecType_Restated))
-        | "PendingReplace" -> (Some (MOD_FIX_ExecType_PendingReplace))
-        | "Trade" -> (Some (MOD_FIX_ExecType_Trade))
-        | "TradeCorrect" -> (Some (MOD_FIX_ExecType_TradeCorrect))
-        | "TradeCancel" -> (Some (MOD_FIX_ExecType_TradeCancel))
-        | "OrderStatus" -> (Some (MOD_FIX_ExecType_OrderStatus))
+        | "New" -> (Some (FIX_ExecType_New))
+        | "DoneForDay" -> (Some (FIX_ExecType_DoneForDay))
+        | "Canceled" -> (Some (FIX_ExecType_Canceled))
+        | "Replaced" -> (Some (FIX_ExecType_Replaced))
+        | "PendingCancel" -> (Some (FIX_ExecType_PendingCancel))
+        | "Stopped" -> (Some (FIX_ExecType_Stopped))
+        | "Rejected" -> (Some (FIX_ExecType_Rejected))
+        | "Suspended" -> (Some (FIX_ExecType_Suspended))
+        | "PendingNew" -> (Some (FIX_ExecType_PendingNew))
+        | "Calculated" -> (Some (FIX_ExecType_Calculated))
+        | "Expired" -> (Some (FIX_ExecType_Expired))
+        | "Restated" -> (Some (FIX_ExecType_Restated))
+        | "PendingReplace" -> (Some (FIX_ExecType_PendingReplace))
+        | "Trade" -> (Some (FIX_ExecType_Trade))
+        | "TradeCorrect" -> (Some (FIX_ExecType_TradeCorrect))
+        | "TradeCancel" -> (Some (FIX_ExecType_TradeCancel))
+        | "OrderStatus" -> (Some (FIX_ExecType_OrderStatus))
         | _ -> (None)
     )
 ;;
 
 let string_to_mod_ordstatus_opt (d)  =
     (match d with
-        | "New" -> (Some (MOD_FIX_OrdStatus_New))
-        | "PartiallyFilled" -> (Some (MOD_FIX_OrdStatus_PartiallyFilled))
-        | "Filled" -> (Some (MOD_FIX_OrdStatus_Filled))
-        | "DoneForDay" -> (Some (MOD_FIX_OrdStatus_DoneForDay))
-        | "Canceled" -> (Some (MOD_FIX_OrdStatus_Canceled))
-        | "PendingCancel" -> (Some (MOD_FIX_OrdStatus_PendingCancel))
-        | "Stopped" -> (Some (MOD_FIX_OrdStatus_Stopped))
-        | "Rejected" -> (Some (MOD_FIX_OrdStatus_Rejected))
-        | "Suspended" -> (Some (MOD_FIX_OrdStatus_Suspended))
-        | "PendingNew" -> (Some (MOD_FIX_OrdStatus_PendingNew))
-        | "Calculated" -> (Some (MOD_FIX_OrdStatus_Calculated))
-        | "Expired" -> (Some (MOD_FIX_OrdStatus_Expired))
-        | "AcceptedForBidding" -> (Some (MOD_FIX_OrdStatus_AcceptedForBidding))
-        | "PendingReplace" -> (Some (MOD_FIX_OrdStatus_PendingReplace))
-        | "Replaced" -> (Some (MOD_FIX_OrdStatus_Replaced))
+        | "New" -> (Some (FIX_OrdStatus_New))
+        | "PartiallyFilled" -> (Some (FIX_OrdStatus_PartiallyFilled))
+        | "Filled" -> (Some (FIX_OrdStatus_Filled))
+        | "DoneForDay" -> (Some (FIX_OrdStatus_DoneForDay))
+        | "Canceled" -> (Some (FIX_OrdStatus_Canceled))
+        | "PendingCancel" -> (Some (FIX_OrdStatus_PendingCancel))
+        | "Stopped" -> (Some (FIX_OrdStatus_Stopped))
+        | "Rejected" -> (Some (FIX_OrdStatus_Rejected))
+        | "Suspended" -> (Some (FIX_OrdStatus_Suspended))
+        | "PendingNew" -> (Some (FIX_OrdStatus_PendingNew))
+        | "Calculated" -> (Some (FIX_OrdStatus_Calculated))
+        | "Expired" -> (Some (FIX_OrdStatus_Expired))
+        | "AcceptedForBidding" -> (Some (FIX_OrdStatus_AcceptedForBidding))
+        | "PendingReplace" -> (Some (FIX_OrdStatus_PendingReplace))
+        | "Replaced" -> (Some (FIX_OrdStatus_Replaced))
         | _ -> (None)
     )
 ;;
 
 let string_to_mod_partysubidtype_opt (d)  =
     (match d with
-        | "Firm" -> (Some (MOD_FIX_PartySubIDType_Firm))
-        | "Person" -> (Some (MOD_FIX_PartySubIDType_Person))
-        | "System" -> (Some (MOD_FIX_PartySubIDType_System))
-        | "Application" -> (Some (MOD_FIX_PartySubIDType_Application))
-        | "FullLegalNameOfFirm" -> (Some (MOD_FIX_PartySubIDType_FullLegalNameOfFirm))
-        | "PostalAddress" -> (Some (MOD_FIX_PartySubIDType_PostalAddress))
-        | "PhoneNumber" -> (Some (MOD_FIX_PartySubIDType_PhoneNumber))
-        | "EmailAddress" -> (Some (MOD_FIX_PartySubIDType_EmailAddress))
-        | "ContactName" -> (Some (MOD_FIX_PartySubIDType_ContactName))
-        | "SecuritiesAccountNumber" -> (Some (MOD_FIX_PartySubIDType_SecuritiesAccountNumber))
-        | "RegistrationNumber" -> (Some (MOD_FIX_PartySubIDType_RegistrationNumber))
-        | "RegisteredAddressForConfirmation" -> (Some (MOD_FIX_PartySubIDType_RegisteredAddressForConfirmation))
-        | "RegulatoryStatus" -> (Some (MOD_FIX_PartySubIDType_RegulatoryStatus))
-        | "RegistrationName" -> (Some (MOD_FIX_PartySubIDType_RegistrationName))
-        | "CashAccountNumber" -> (Some (MOD_FIX_PartySubIDType_CashAccountNumber))
-        | "BIC" -> (Some (MOD_FIX_PartySubIDType_BIC))
-        | "CSDParticipantMemberCode" -> (Some (MOD_FIX_PartySubIDType_CSDParticipantMemberCode))
-        | "RegisteredAddress" -> (Some (MOD_FIX_PartySubIDType_RegisteredAddress))
-        | "FundAccountName" -> (Some (MOD_FIX_PartySubIDType_FundAccountName))
-        | "TelexNumber" -> (Some (MOD_FIX_PartySubIDType_TelexNumber))
-        | "FaxNumber" -> (Some (MOD_FIX_PartySubIDType_FaxNumber))
-        | "SecuritiesAccountName" -> (Some (MOD_FIX_PartySubIDType_SecuritiesAccountName))
-        | "CashAccountName" -> (Some (MOD_FIX_PartySubIDType_CashAccountName))
-        | "Department" -> (Some (MOD_FIX_PartySubIDType_Department))
-        | "LocationDesk" -> (Some (MOD_FIX_PartySubIDType_LocationDesk))
-        | "PositionAccountType" -> (Some (MOD_FIX_PartySubIDType_PositionAccountType))
+        | "Firm" -> (Some (FIX_PartySubIDType_Firm))
+        | "Person" -> (Some (FIX_PartySubIDType_Person))
+        | "System" -> (Some (FIX_PartySubIDType_System))
+        | "Application" -> (Some (FIX_PartySubIDType_Application))
+        | "FullLegalNameOfFirm" -> (Some (FIX_PartySubIDType_FullLegalNameOfFirm))
+        | "PostalAddress" -> (Some (FIX_PartySubIDType_PostalAddress))
+        | "PhoneNumber" -> (Some (FIX_PartySubIDType_PhoneNumber))
+        | "EmailAddress" -> (Some (FIX_PartySubIDType_EmailAddress))
+        | "ContactName" -> (Some (FIX_PartySubIDType_ContactName))
+        | "SecuritiesAccountNumber" -> (Some (FIX_PartySubIDType_SecuritiesAccountNumber))
+        | "RegistrationNumber" -> (Some (FIX_PartySubIDType_RegistrationNumber))
+        | "RegisteredAddressForConfirmation" -> (Some (FIX_PartySubIDType_RegisteredAddressForConfirmation))
+        | "RegulatoryStatus" -> (Some (FIX_PartySubIDType_RegulatoryStatus))
+        | "RegistrationName" -> (Some (FIX_PartySubIDType_RegistrationName))
+        | "CashAccountNumber" -> (Some (FIX_PartySubIDType_CashAccountNumber))
+        | "BIC" -> (Some (FIX_PartySubIDType_BIC))
+        | "CSDParticipantMemberCode" -> (Some (FIX_PartySubIDType_CSDParticipantMemberCode))
+        | "RegisteredAddress" -> (Some (FIX_PartySubIDType_RegisteredAddress))
+        | "FundAccountName" -> (Some (FIX_PartySubIDType_FundAccountName))
+        | "TelexNumber" -> (Some (FIX_PartySubIDType_TelexNumber))
+        | "FaxNumber" -> (Some (FIX_PartySubIDType_FaxNumber))
+        | "SecuritiesAccountName" -> (Some (FIX_PartySubIDType_SecuritiesAccountName))
+        | "CashAccountName" -> (Some (FIX_PartySubIDType_CashAccountName))
+        | "Department" -> (Some (FIX_PartySubIDType_Department))
+        | "LocationDesk" -> (Some (FIX_PartySubIDType_LocationDesk))
+        | "PositionAccountType" -> (Some (FIX_PartySubIDType_PositionAccountType))
         | _ -> (None)
     )
 ;;

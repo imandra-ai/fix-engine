@@ -3,12 +3,12 @@
 open Model_records;;
 
 
-type fix_action =
+type fix_action = 
     | FIX_Action_fill of m_action_fix_fill
     | FIX_Action_bookState of m_action_fix_bookstate
 ;;
 
-type fix_model_record =
+type fix_model_record = 
     | EmptyRecords 
 ;;
 

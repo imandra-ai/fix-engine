@@ -25,7 +25,7 @@ let ptyssubgrp_to_string (_d)  =
 ;;
 
 let ptyssubgrp_to_json (x)  : json =
-    assoc_filter_nulls ([(("NoPartySubIDs",int_opt_to_json x.f_PtysSubGrp_NoPartySubIDs));(("PartySubID",string_opt_to_json x.f_PtysSubGrp_PartySubID))])
+    assoc_filter_nulls ([(("PartySubID",string_opt_to_json x.f_PtysSubGrp_PartySubID))])
 ;;
 
 let parties_to_string (_d)  =
@@ -33,7 +33,7 @@ let parties_to_string (_d)  =
 ;;
 
 let parties_to_json (x)  : json =
-    assoc_filter_nulls ([(("NoPartyIDs",int_opt_to_json x.f_Parties_NoPartyIDs));(("PartyID",string_opt_to_json x.f_Parties_PartyID));(("PartyIndex",int_opt_to_json x.f_Parties_PartyIndex));(("PtysSubGrp",rg_for_json ptyssubgrp_to_json x.f_Parties_PtysSubGrp))])
+    assoc_filter_nulls ([(("PartyID",string_opt_to_json x.f_Parties_PartyID));(("PartyIndex",int_opt_to_json x.f_Parties_PartyIndex));(("PtysSubGrp",`Assoc ([(("entries",rg_for_json ptyssubgrp_to_json x.f_Parties_PtysSubGrp.f_PtysSubGrp_entries));(("numField",int_opt_to_json x.f_Parties_PtysSubGrp.f_PtysSubGrp_num_field))])))])
 ;;
 
 [@@@logic]

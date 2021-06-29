@@ -2,6 +2,8 @@
 [@@@program]
 [@@@import "../src-protocol-exts/full_app_messages.iml"]
 open Full_app_messages;;
+[@@@import "../src-protocol-exts/full_app_records.iml"]
+open Full_app_records;;
 [@@@import "../src-protocol-exts/full_app_tags.iml"]
 open Full_app_tags;;
 [@@@import "../src-core/numeric.iml"]
@@ -19,7 +21,7 @@ open Parser_utils.Parser;;
 
 
 let parse_NewOrderSingle (msg)  =
-    (repeating msg "453" parse_Parties (fun msg f_NewOrderSingle_Parties -> 
+    (repeating msg "453" parse_Parties (fun msg (f_Parties_num_field,f_Parties_entries) -> 
     check_duplicate_tags msg (fun () -> 
     block msg parse_OrderQtyData (fun msg f_NewOrderSingle_OrderQtyData -> 
     opt msg "11" parse_string (fun msg f_NewOrderSingle_ClOrdID -> 
@@ -36,7 +38,10 @@ let parse_NewOrderSingle (msg)  =
     ) (fun msg f_NewOrderSingle_Price -> 
     opt msg "10001" parse_float (fun msg f_NewOrderSingle_SpreadProportion -> 
     (ParseSuccess {
-        f_NewOrderSingle_Parties = f_NewOrderSingle_Parties;
+        f_NewOrderSingle_Parties = {
+            f_Parties_num_field = f_Parties_num_field;
+            f_Parties_entries = f_Parties_entries
+        };
         f_NewOrderSingle_OrderQtyData = f_NewOrderSingle_OrderQtyData;
         f_NewOrderSingle_ClOrdID = f_NewOrderSingle_ClOrdID;
         f_NewOrderSingle_Account = f_NewOrderSingle_Account;
@@ -61,7 +66,7 @@ let parse_NewOrderSingle (msg)  =
 ;;
 
 let parse_ExecutionReport (msg)  =
-    (repeating msg "453" parse_Parties (fun msg f_ExecutionReport_Parties -> 
+    (repeating msg "453" parse_Parties (fun msg (f_Parties_num_field,f_Parties_entries) -> 
     check_duplicate_tags msg (fun () -> 
     block msg parse_OrderQtyData (fun msg f_ExecutionReport_OrderQtyData -> 
     opt msg "37" parse_string (fun msg f_ExecutionReport_OrderID -> 
@@ -74,7 +79,10 @@ let parse_ExecutionReport (msg)  =
     opt msg "14" parse_float (fun msg f_ExecutionReport_CumQty -> 
     opt msg "58" parse_string (fun msg f_ExecutionReport_Text -> 
     (ParseSuccess {
-        f_ExecutionReport_Parties = f_ExecutionReport_Parties;
+        f_ExecutionReport_Parties = {
+            f_Parties_num_field = f_Parties_num_field;
+            f_Parties_entries = f_Parties_entries
+        };
         f_ExecutionReport_OrderQtyData = f_ExecutionReport_OrderQtyData;
         f_ExecutionReport_OrderID = f_ExecutionReport_OrderID;
         f_ExecutionReport_ExecID = f_ExecutionReport_ExecID;

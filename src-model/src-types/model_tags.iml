@@ -1,7 +1,7 @@
 (* Imandra Inc. copyright 2021 *)
 
 
-type m_field_tag =
+type m_field_tag = 
     | M_Field_Side_Tag 
     | M_Field_TransactTime_Tag 
     | M_Field_OrdType_Tag 
@@ -17,7 +17,7 @@ type m_field_tag =
     | M_Field_CumQty_Tag 
 ;;
 
-type m_msg_tag =
+type m_msg_tag = 
     | M_Msg_NewOrderSingle_Tag 
     | M_Msg_ExecutionReport_Tag 
 ;;

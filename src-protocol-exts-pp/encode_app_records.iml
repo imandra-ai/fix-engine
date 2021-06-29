@@ -19,7 +19,7 @@ let encode_PtysSubGrp (msg)  =
 ;;
 
 let encode_Parties (msg)  =
-    (@) ([(("448",enc_opt encode_string msg.f_Parties_PartyID));(("10002",enc_opt encode_int msg.f_Parties_PartyIndex))]) ((@) (enc_repeat encode_PtysSubGrp "802" msg.f_Parties_PtysSubGrp) [])
+    (@) ([(("448",enc_opt encode_string msg.f_Parties_PartyID));(("10002",enc_opt encode_int msg.f_Parties_PartyIndex))]) ((@) (enc_repeat encode_PtysSubGrp "802" msg.f_Parties_PtysSubGrp.f_PtysSubGrp_num_field msg.f_Parties_PtysSubGrp.f_PtysSubGrp_entries) [])
 ;;
 
 [@@@logic]
