@@ -14,6 +14,10 @@ let parse_string (str : string) : string option =
    Some str
 ;;
 
+let parse_lstring (str:string) : LString.t option = 
+  Some (LString.of_string str)
+;;
+
 let parse_symbol (str : string) : string option =
     Some str
 ;;
