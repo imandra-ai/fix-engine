@@ -233,10 +233,22 @@ let string_opt_to_json = function
   | Some x -> string_to_json x
 ;;
 
+let lstring_to_json x  =
+  `String  (LString.to_string x)
+;;
+
+let lstring_opt_to_json = function
+  | None   -> `Null
+  | Some x -> lstring_to_json x
+;;
+
 let string_decoder : string Decoders_yojson.Basic.Decode.decoder =
   D.string
 ;;
 
+let lstring_decoder : LString.t Decoders_yojson.Basic.Decode.decoder =
+  D.string >>= fun x -> D.succeed (LString.of_string x)
+;;
 
 (**
   *  FIX_Symbol
