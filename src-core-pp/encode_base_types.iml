@@ -24,7 +24,7 @@ let encode_float_6 = function Float_6 x -> Printf.sprintf "%.6f" (Q.to_float ((R
 let encode_float x = encode_float_6 x;;
 
 
-
+let encode_lstring x = LString.to_string x;;
 let encode_string x = x;;
 let encode_symbol x = x;;
 
