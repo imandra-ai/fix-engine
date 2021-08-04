@@ -1,6 +1,6 @@
-[@@@import "itr_ast.iml"]
-
 [@@@program]
+[@@@import "itr_ast.iml"]
+[@@@import "../src-core-pp/encode_datetime.iml"]
 
 open Format
 open Itr_ast

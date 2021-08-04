@@ -1,6 +1,7 @@
-[@@@require "decoders-yojson"]
-
 [@@@program]
+[@@@require "decoders-yojson"]
+[@@@import "itr_ast.iml"]
+[@@@import "../src-core-pp/datetime_json.iml"]
 
 open Itr_ast
 open Decoders_yojson.Basic.Decode
