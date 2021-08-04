@@ -1,6 +1,6 @@
 (* Imandra Inc. copyright 2021 *)
 [@@@program]
-
+[@@@import "../src-core/datetime.iml"]
 module Map_extra (M : CCMap.S) = struct
   include M
 
