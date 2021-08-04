@@ -1,0 +1,367 @@
+[@@@require "decoders-yojson"]
+
+[@@@program]
+
+open Itr_ast
+open Decoders_yojson.Basic.Decode
+open Datetime_json
+
+let name_and_index_decoder : (string * int option) decoder =
+  let* name = field "name" string in
+  let* index = field "index" (nullable int) in
+  let index = match index with None -> None | Some i -> Some (Z.of_int i) in
+  succeed (name, index)
+
+
+let message_value_decoder : Message_value.t decoder =
+  let* var_name = field "var_name" (nullable string) in
+  let var = match var_name with None -> None | Some v -> Some (Var.mk v) in
+  let* field_path = field "field_path" (list name_and_index_decoder) in
+  let mv : Message_value.t = { var; field_path } in
+  succeed mv
+
+
+let connection_ref_decoder : Connection_ref.t decoder =
+  single_field (function
+      | "string" ->
+          let+ s = string in
+          Connection_ref.String s
+      | "var" ->
+          let+ s = string in
+          Connection_ref.Var (Var.mk s)
+      | s ->
+          fail @@ "unrecognised connection_ref: " ^ s)
+
+
+let template_decoder : Template.t decoder =
+  single_field (function
+      | "name" ->
+          let+ s = string in
+          Template.Name (s, s)
+      | "var" ->
+          let+ s = string in
+          Template.Var (Var.mk s, s)
+      | _ ->
+          fail "unrecognised template")
+
+
+let datetime_decoder : datetime decoder =
+  single_field (function
+      | "UTCTimestamp" ->
+          let+ u = utctimestamp_micro_decoder in
+          UTCTimestamp u
+      | "UTCTimeOnly" ->
+          let+ u = utctimeonly_micro_decoder in
+          UTCTimeOnly u
+      | "UTCDateOnly" ->
+          let+ u = utcdateonly_decoder in
+          UTCDateOnly u
+      | "LocalMktDate" ->
+          let+ u = localmktdate_decoder in
+          LocalMktDate u
+      | "MonthYear" ->
+          let+ u = monthyear_decoder in
+          MonthYear u
+      | s ->
+          fail @@ "unrecognised datetime: " ^ s)
+
+
+let rec literal_decoder () : literal decoder =
+  single_field (function
+      | "Bool" ->
+          let+ b = bool in
+          Bool b
+      | "Int" ->
+          let+ i = string in
+          Int (Z.of_string i)
+      | "String" ->
+          let+ s = string in
+          ( match String.sub s 1 (String.length s - 2) with
+          | None ->
+              String ""
+          | Some s ->
+              String s )
+      | "Unquoted_string" ->
+          let+ s = string in
+          String s
+      | "Float" ->
+          let+ q = float in
+          Float (Q.of_float q)
+      | "Coll" ->
+          let+ c = list (expr_decoder ()) in
+          Coll c
+      | "None" ->
+          succeed LiteralNone
+      | "Datetime" ->
+          let+ d = datetime_decoder in
+          Datetime d
+      | s ->
+          fail @@ "unrecognised literal: " ^ s)
+
+
+and value_decoder () : Itr_ast.value decoder =
+  single_field (function
+      | "Literal" ->
+          let+ l = literal_decoder () in
+          Literal l
+      | "Variable" ->
+          let+ v = string in
+          Variable (Var.mk v)
+      | "Message_value" ->
+          let+ mv = message_value_decoder in
+          MessageValue mv
+      | "Connection_ref" ->
+          let+ c = connection_ref_decoder in
+          ConnectionRef c
+      | "TODOHex" ->
+          let+ h = string in
+          TODOHex h
+      | "Now" ->
+          succeed Now
+      | "Counter" ->
+          succeed Counter
+      | "ObjectProperty" ->
+          let* obj = field "obj" (expr_decoder ()) in
+          let* index = field "index" (nullable int) in
+          let index = CCOpt.map (fun x -> Z.of_int x) index in
+          let* prop = field "prop" string in
+          succeed (ObjectProperty { obj; index; prop })
+      | "Funcall" ->
+          let* func = field "name" string in
+          let* args = field "args" (list (expr_decoder ())) in
+          succeed (Funcall { func; args })
+      | "Record_item" ->
+          let+ ri = record_item_decoder () in
+          Record_item ri
+      | s ->
+          fail @@ "unrecognised value:" ^ s)
+
+
+and expr_decoder () : expr decoder =
+  single_field (function
+      | "Value" ->
+          let+ v = value_decoder () in
+          Value v
+      | "Not" ->
+          let+ n = expr_decoder () in
+          Not n
+      | "Arrow" ->
+          let* condition = field "condition" (expr_decoder ()) in
+          let* assertion = field "assertion" (expr_decoder ()) in
+          succeed (Arrow { assertion; condition })
+      | "Or" ->
+          let* lhs = field "lhs" (expr_decoder ()) in
+          let* rhs = field "rhs" (expr_decoder ()) in
+          succeed (Or { lhs; rhs })
+      | "And" ->
+          let* lhs = field "lhs" (expr_decoder ()) in
+          let* rhs = field "rhs" (expr_decoder ()) in
+          succeed (And { lhs; rhs })
+      | "Eq" ->
+          let* lhs = field "lhs" (expr_decoder ()) in
+          let* rhs = field "rhs" (expr_decoder ()) in
+          succeed (Eq { lhs; rhs })
+      | "Like" ->
+          field
+            "Like"
+            (let* lhs = field "lhs" (expr_decoder ()) in
+             let* rhs = field "rhs" (expr_decoder ()) in
+             succeed (Like { lhs; rhs }))
+      | "Cmp" ->
+          let* lhs = field "lhs" (expr_decoder ()) in
+          let* op = field "op" string in
+          let* rhs = field "rhs" (expr_decoder ()) in
+          succeed (Cmp { lhs; op; rhs })
+      | "Add" ->
+          let* lhs = field "lhs" (expr_decoder ()) in
+          let* op = field "op" string in
+          let op =
+            match String.sub op 0 1 with None -> '+' | Some c -> c.[0i]
+          in
+          let* rhs = field "rhs" (expr_decoder ()) in
+          succeed (Add { lhs; op; rhs })
+      | "Mul" ->
+          let* lhs = field "lhs" (expr_decoder ()) in
+          let* op = field "op" string in
+          let op =
+            match String.sub op 0 1 with None -> '*' | Some c -> c.[0i]
+          in
+          let* rhs = field "rhs" (expr_decoder ()) in
+          succeed (Mul { lhs; op; rhs })
+      | "In" ->
+          let* el = field "el" (expr_decoder ()) in
+          let* set = field "set" (expr_decoder ()) in
+          succeed (In { el; set })
+      | s ->
+          fail @@ "unrecognised expr: " ^ s)
+
+
+and record_item_decoder () : record_item decoder =
+  single_field (function
+      | "Rec_value" ->
+          let+ v = expr_decoder () in
+          Rec_value v
+      | "Rec_record" ->
+          let+ is = record_decoder () in
+          Rec_record is
+      | "Rec_repeating_group" ->
+          let* num_in_group_field = field "num_in_group_field" string in
+          let* elements = field "elements" (list (record_decoder ())) in
+          succeed (Rec_repeating_group { num_in_group_field; elements })
+      | s ->
+          fail @@ "unrecognised record_item: " ^ s)
+
+
+and record_decoder () : record decoder =
+  field
+    "Record"
+    (let+ sm =
+       list
+         (let* name = field "name" string in
+          let* record_item = field "record_item" (record_item_decoder ()) in
+          succeed (name, record_item))
+     in
+     String_map.of_list sm)
+
+
+let expecting_decoder : expecting decoder =
+  let* modifier = field "modifier" (nullable string) in
+  let modifier =
+    CCOpt.map
+      (function "only supported" -> `Only_supported | _ -> `Only)
+      modifier
+  in
+  let* exprs = field "exprs" (list (expr_decoder ())) in
+  succeed { modifier; exprs }
+
+
+let tt_decoder : typed_term decoder =
+  field
+    "typed_term"
+    (let* name = field "name" string in
+     let* type_ = field "type" (nullable string) in
+     succeed { name; type_ })
+
+
+let rec instruction_decoder () : instruction decoder =
+  single_field (function
+      | "Break" ->
+          let+ _ = nullable string in
+          Break
+      | "Print" ->
+          let+ e = expr_decoder () in
+          Print e
+      | "Run" ->
+          let+ e = expr_decoder () in
+          Run e
+      | "Sleep" ->
+          let+ e = expr_decoder () in
+          Sleep e
+      | "Assert" ->
+          let+ e = expr_decoder () in
+          Assert e
+      | "Fail" ->
+          let+ e = nullable (expr_decoder ()) in
+          Fail e
+      | "Return" ->
+          let+ e = nullable (expr_decoder ()) in
+          Return e
+      | "Goto" ->
+          let+ g = string in
+          Goto g
+      | "Label" ->
+          let+ l = string in
+          Label l
+      | "Disonnect" ->
+          let+ s = connection_ref_decoder in
+          Disconnect s
+      | "Unset" ->
+          let+ v = value_decoder () in
+          Unset v
+      | "Cleanup" ->
+          let+ i = list (instruction_decoder ()) in
+          Cleanup i
+      | "OnExpired" ->
+          let+ i = list (instruction_decoder ()) in
+          OnExpired i
+      | "ForEach" ->
+          let* dataset = field "dataset" (expr_decoder ()) in
+          let* instructions =
+            field "instructions" (list (instruction_decoder ()))
+          in
+          succeed (ForEach { dataset; instructions })
+      | "Repeat" ->
+          let* ntimes = field "ntimes" (nullable (expr_decoder ())) in
+          let* instructions =
+            field "instructions" (list (instruction_decoder ()))
+          in
+          succeed (Repeat { ntimes; instructions })
+      | "Connect" ->
+          let* connection = field "connection" connection_ref_decoder in
+          let* timeout = field "timeout" (nullable (expr_decoder ())) in
+          let* block = field "block" bool in
+          succeed (Connect { connection; timeout; block })
+      | "Set" ->
+          let* prop = field "prop" string in
+          let* value = field "value" (expr_decoder ()) in
+          succeed (Set { prop; value })
+      | "Call" ->
+          let* variable = field "variable" (nullable string) in
+          let variable = CCOpt.map (fun v -> Var.mk v) variable in
+          let* call = field "call" (value_decoder ()) in
+          succeed (Call { variable; call })
+      | "Send" ->
+          let* variable = field "variable" (nullable string) in
+          let variable = CCOpt.map (fun v -> Var.mk v) variable in
+          let* template = field "template" template_decoder in
+          let* connection = field "connection" connection_ref_decoder in
+          let* using = field "using" (nullable string) in
+          let* withs = field "withs" (nullable (record_decoder ())) in
+          succeed (Send { variable; template; connection; using; withs })
+      | "ExpectingOf" ->
+          let* variable = field "variable" string in
+          let variable = Var.mk variable in
+          let* expecting = field "expecting" expecting_decoder in
+          succeed (ExpectingOf { variable; expecting })
+      | "Template" ->
+          let* variable = field "variable" (nullable string) in
+          let variable = CCOpt.map (fun v -> Var.mk v) variable in
+          let* template = field "template" template_decoder in
+          let* connection = field "connection" connection_ref_decoder in
+          let* using = field "using" (nullable string) in
+          succeed (Template { variable; template; connection; using })
+      | "Receive" ->
+          let* variable = field "variable" (nullable string) in
+          let variable = CCOpt.map (fun v -> Var.mk v) variable in
+          let* connection = field "connection" connection_ref_decoder in
+          let* timeout = field "timeout" (nullable (expr_decoder ())) in
+          let* where = field "where" (expr_decoder ()) in
+          let* expecting = field "expecting" (nullable expecting_decoder) in
+          succeed (Receive { variable; connection; timeout; where; expecting })
+      | "IfThenElse" ->
+          let* cond = field "cond" (expr_decoder ()) in
+          let* then_ = field "then" (list (instruction_decoder ())) in
+          let* else_ = field "else" (list (instruction_decoder ())) in
+          succeed (IfThenElse { cond; then_; else_ })
+      | "FunctionDef" ->
+          let* name = field "name" string in
+          let* args = field "args" (list tt_decoder) in
+          let* body = field "body" (list (instruction_decoder ())) in
+          succeed (FunctionDef { name; args; body })
+      | "Comment" ->
+          let+ comment = string in
+          Comment comment
+      | _ ->
+          fail "unrecognised instruction")
+
+
+let instructions_decoder :
+    (instruction list * Model_messages.model_msg_opt_def list) decoder =
+  let* instructions = field "instructions" (list (instruction_decoder ())) in
+  let* msgs =
+    field "msgs" (list Json_to_message.model_message_decoder_opt_def)
+  in
+  succeed (instructions, msgs)
+
+
+[@@@logic]
