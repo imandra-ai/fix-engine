@@ -1,6 +1,7 @@
-[@@@require "yojson"]
-
 [@@@program]
+[@@@require "yojson"]
+[@@@import "itr_ast.iml"]
+[@@@import "../src-core-pp/datetime_json.iml"]
 
 open Format
 open Itr_ast
