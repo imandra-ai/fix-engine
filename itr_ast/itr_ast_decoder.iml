@@ -216,7 +216,9 @@ and record_item_decoder () : record_item decoder =
       | "Rec_repeating_group" ->
           let* num_in_group_field = field "num_in_group_field" string in
           let* elements = field "elements" (list (record_decoder ())) in
-          succeed (Rec_repeating_group { num_in_group_field; elements })
+          let* name = field "name" string in
+          let* message_template = field "message_template" (nullable string) in
+          succeed (Rec_repeating_group { num_in_group_field; elements;name;message_template })
       | s ->
           fail @@ "unrecognised record_item: " ^ s)
 

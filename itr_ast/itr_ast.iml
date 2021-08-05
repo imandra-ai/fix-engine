@@ -197,7 +197,9 @@ and record_item =
   | Rec_value of expr
   | Rec_record of record
   | Rec_repeating_group of
-      { num_in_group_field : string
+      {name: string
+      ; message_template: string option
+      ; num_in_group_field : string
       ; elements : record list
       }
 
@@ -299,9 +301,9 @@ let map_record_item ~map_expr ~map_record = function
       Rec_value (map_expr expr)
   | Rec_record record ->
       Rec_record (map_record record)
-  | Rec_repeating_group { num_in_group_field; elements } ->
+  | Rec_repeating_group { num_in_group_field; elements; name; message_template } ->
       Rec_repeating_group
-        { num_in_group_field; elements = CCList.map map_record elements }
+        { num_in_group_field; name; message_template; elements = CCList.map map_record elements }
 
 
 let map_record ~map_record_item r = String_map.map map_record_item r
