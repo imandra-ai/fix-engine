@@ -91,6 +91,9 @@ let rec literal_decoder () : literal decoder =
       | "Coll" ->
           let+ c = list (expr_decoder ()) in
           Coll c
+      | "MapColl" ->
+          let+ c = list (expr_pair_decoder ()) in
+          MapColl c
       | "None" ->
           succeed LiteralNone
       | "Datetime" ->
@@ -98,6 +101,11 @@ let rec literal_decoder () : literal decoder =
           Datetime d
       | s ->
           fail @@ "unrecognised literal: " ^ s)
+
+and expr_pair_decoder () : (Itr_ast.expr * Itr_ast.expr) decoder =
+    let* key = field "key" (expr_decoder ()) in
+    let* value = field "value" (expr_decoder ()) in
+    succeed (key,value)
 
 
 and value_decoder () : Itr_ast.value decoder =
