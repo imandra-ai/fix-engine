@@ -35,11 +35,15 @@ let rec literal_to_json : literal -> t = function
       `Assoc [ ("Float", `Float (Q.to_float q)) ]
   | Coll l ->
       `Assoc [ ("Coll", `List (List.map expr_to_json l)) ]
+  | MapColl l ->
+      `Assoc [ ("MapColl", `List (List.map expr_pair_to_json l)) ]
   | LiteralNone ->
       `Assoc [ ("None", `String "None") ]
   | Datetime d ->
       `Assoc [ ("Datetime", datetime_to_json d) ]
 
+and expr_pair_to_json : expr * expr -> t = function
+  | e1,e2 -> `Assoc ["key",expr_to_json e1;"value",expr_to_json e2]
 
 and value_to_json : value -> t = function
   | Literal l ->

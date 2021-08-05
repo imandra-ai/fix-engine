@@ -125,6 +125,7 @@ type literal =
   | UnquotedString of string
   | Float of real
   | Coll of expr list
+  | MapColl of (expr*expr) list
   | LiteralNone
   | Datetime of datetime
 

@@ -34,6 +34,8 @@ let rec literal_pp (ppf : formatter) : literal -> unit = function
       fprintf ppf "%s" (Q.to_string q)
   | Coll l ->
       fprintf ppf "%a" CCFormat.(list ~sep:(return " ") expr_pp) l
+  | MapColl l ->
+        fprintf ppf "%a" CCFormat.(list ~sep:(return " ") expr_pair_pp) l
   | LiteralNone ->
       fprintf ppf "None"
   | Datetime d ->
@@ -94,7 +96,8 @@ and expr_pp (ppf : formatter) : expr -> unit = function
   | In { el; set } ->
       fprintf ppf "%a in %a" expr_pp_parens el expr_pp_parens set
 
-
+and expr_pair_pp ppf (e1,e2) =
+    fprintf ppf "%a -> %a" expr_pp e1 expr_pp e2
 and expr_pp_parens ppf e =
   match e with
   | Value _ | Not _ ->
