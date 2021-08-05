@@ -169,12 +169,16 @@ and record_item_to_json (item : record_item) =
       `Assoc [ ("Rec_value", expr_to_json value) ]
   | Rec_record items ->
       `Assoc [ ("Rec_record", record_to_json items) ]
-  | Rec_repeating_group { num_in_group_field; elements } ->
+  | Rec_repeating_group { num_in_group_field; elements; name;message_template } ->
       `Assoc
         [ ( "Rec_repeating_group"
           , `Assoc
               [ ("num_in_group_field", `String num_in_group_field)
               ; ("elements", `List (List.map record_to_json elements))
+              ; ("name", `String name)
+              ; ("message_template", match message_template with
+              | None -> `Null
+              | Some message_template -> `String message_template)
               ] )
         ]
 
