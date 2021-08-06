@@ -191,7 +191,7 @@ and expr =
       ; rhs : expr
       }
 
-and record = record_item String_map.t
+and record = {name:string;elements:record_item String_map.t}
 
 and record_item =
   | Rec_value of expr
@@ -246,14 +246,14 @@ and record_item_eq i1 i2 =
       expr_eq e1 e2
   | Rec_record r1, Rec_record r2 ->
       record_eq r1 r2
-  | ( Rec_repeating_group { num_in_group_field = n1; elements = elements1 }
-    , Rec_repeating_group { num_in_group_field = n2; elements = elements2 } ) ->
-      n1 = n2 && CCList.equal record_eq elements1 elements2
+  | ( Rec_repeating_group { name = nm1; num_in_group_field = n1; elements = elements1;_ }
+    , Rec_repeating_group { name = nm2; num_in_group_field = n2; elements = elements2;_ } ) ->
+      nm1 = nm2 && n1 = n2 && CCList.equal record_eq elements1 elements2
   | _ ->
       false
 
 
-and record_eq r1 r2 = String_map.equal record_item_eq r1 r2
+and record_eq r1 r2 = r1.name = r2.name && String_map.equal record_item_eq r1.elements r2.elements
 
 let map_value ~map_expr ~map_record_item = function
   | ObjectProperty { obj; index; prop } ->
@@ -301,7 +301,7 @@ let map_record_item ~map_expr ~map_record = function
         { num_in_group_field; name; message_template; elements = CCList.map map_record elements }
 
 
-let map_record ~map_record_item r = String_map.map map_record_item r
+let map_record ~map_record_item r = {name = r.name; elements = String_map.map map_record_item r.elements}
 
 let map f =
   let rec mri item =
@@ -474,16 +474,16 @@ let convert_timestamp_localmktdate date =
 
 let convert_timestamp_dateonly date = funcall "timestamp_to_dateonly" [ date ]
 
-let empty_record : record = String_map.empty
+let empty_record : record = {name = "";elements = String_map.empty}
 
 let rec map_value_in_record (path : string list) f (record : record) =
   match path with
   | [] ->
       record
   | [ field ] ->
-      record |> String_map.update field f
+      {name = record.name;elements = record.elements |> String_map.update field f}
   | field :: path ->
-      record
+      {name= record.name;elements = record.elements
       |> String_map.update field (fun entry ->
              let record =
                match entry with
@@ -492,7 +492,7 @@ let rec map_value_in_record (path : string list) f (record : record) =
                | _ ->
                    empty_record
              in
-             Some (Rec_record (map_value_in_record path f record)))
+             Some (Rec_record (map_value_in_record path f record)))}
 
 
 (** Given a record, return a list of paths to expressions that reference all the
@@ -513,7 +513,7 @@ let rec map_value_in_record (path : string list) f (record : record) =
 *)
 let rec flatten_record ?qualify_records (r : record) : (string list * expr) list
     =
-  r
+  r.elements
   |> String_map.to_list
   |> CCList.flat_map (fun (field, (item : record_item)) ->
          flatten_record_item ?qualify_records field item)
@@ -527,7 +527,7 @@ and flatten_record_item ?(qualify_records = true) field (i : record_item) =
       flatten_record ~qualify_records record
       |> CCList.map (fun (path, expr) ->
              if qualify_records then (field :: path, expr) else (path, expr))
-  | Rec_repeating_group { num_in_group_field; elements } ->
+  | Rec_repeating_group { num_in_group_field; elements;_ } ->
       elements
       |> CCList.mapi (fun i record ->
              flatten_record ~qualify_records record
@@ -701,12 +701,12 @@ module Value = struct
         exists_expr f e
     | Rec_record record ->
         exists_record f record
-    | Rec_repeating_group { num_in_group_field = _; elements } ->
+    | Rec_repeating_group { num_in_group_field = _; elements;_ } ->
         CCList.exists (exists_record f) elements
 
 
-  and exists_record f =
-    String_map.exists (fun _ record_item -> exists_record_item f record_item)
+  and exists_record f r =
+    String_map.exists (fun _ record_item -> exists_record_item f record_item) r.elements
 
 
   let rec exists_instruction f = function
