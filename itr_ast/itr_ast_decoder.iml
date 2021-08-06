@@ -222,17 +222,16 @@ and record_item_decoder () : record_item decoder =
       | s ->
           fail @@ "unrecognised record_item: " ^ s)
 
-
 and record_decoder () : record decoder =
   field
     "Record"
-    (let+ sm =
-       list
+    (let* elements = field "elements"
+       (list
          (let* name = field "name" string in
           let* record_item = field "record_item" (record_item_decoder ()) in
-          succeed (name, record_item))
-     in
-     String_map.of_list sm)
+          succeed (name, record_item))) in
+    let* name = field "name" string in
+    succeed {name;elements = String_map.of_list elements})
 
 
 let expecting_decoder : expecting decoder =
