@@ -121,7 +121,7 @@ and record_pp (ppf : formatter) (items : record) =
     ppf
     "{@;<1 2>@[<v>%a@]@,}"
     CCFormat.(list ~sep:(return "@,") pp_item)
-    (String_map.to_list items |> CCList.rev)
+    (String_map.to_list items.elements |> CCList.rev)
 
 
 and record_item_pp (ppf : formatter) (item : record_item) =
@@ -131,7 +131,7 @@ and record_item_pp (ppf : formatter) (item : record_item) =
       expr_pp ppf value
   | Rec_record items ->
       record_pp ppf items
-  | Rec_repeating_group { num_in_group_field; elements } ->
+  | Rec_repeating_group { num_in_group_field; elements;_ } ->
     ( match elements with
     | [] ->
         fprintf ppf "@[<v 2>%s@ [@[<v 1>@ {@,}@]@ ]@]" num_in_group_field
