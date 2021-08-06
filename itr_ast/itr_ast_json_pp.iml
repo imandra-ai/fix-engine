@@ -152,13 +152,16 @@ and expr_to_json : expr -> t = function
         ]
 
 
-and record_to_json (items : record) =
+and record_to_json (record : record) =
   let item_to_json ((name : string), (item : record_item)) =
     `Assoc [ ("name", `String name); ("record_item", record_item_to_json item) ]
   in
   `Assoc
     [ ( "Record"
-      , `List (List.map item_to_json (String_map.to_list items |> CCList.rev))
+      , `Assoc [
+      ("name",`String record.name);
+      ("elements",`List (List.map item_to_json (String_map.to_list record.elements |> CCList.rev)))
+      ]
       )
     ]
 
