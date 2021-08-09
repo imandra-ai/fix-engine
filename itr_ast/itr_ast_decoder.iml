@@ -91,6 +91,9 @@ let rec literal_decoder () : literal decoder =
       | "Coll" ->
           let+ c = list (expr_decoder ()) in
           Coll c
+      | "MapColl" ->
+          let+ c = list (expr_pair_decoder ()) in
+          MapColl c
       | "None" ->
           succeed LiteralNone
       | "Datetime" ->
@@ -98,6 +101,11 @@ let rec literal_decoder () : literal decoder =
           Datetime d
       | s ->
           fail @@ "unrecognised literal: " ^ s)
+
+and expr_pair_decoder () : (Itr_ast.expr * Itr_ast.expr) decoder =
+    let* key = field "key" (expr_decoder ()) in
+    let* value = field "value" (expr_decoder ()) in
+    succeed (key,value)
 
 
 and value_decoder () : Itr_ast.value decoder =
@@ -208,21 +216,22 @@ and record_item_decoder () : record_item decoder =
       | "Rec_repeating_group" ->
           let* num_in_group_field = field "num_in_group_field" string in
           let* elements = field "elements" (list (record_decoder ())) in
-          succeed (Rec_repeating_group { num_in_group_field; elements })
+          let* name = field "name" string in
+          let* message_template = field "message_template" (nullable string) in
+          succeed (Rec_repeating_group { num_in_group_field; elements;name;message_template })
       | s ->
           fail @@ "unrecognised record_item: " ^ s)
-
 
 and record_decoder () : record decoder =
   field
     "Record"
-    (let+ sm =
-       list
+    (let* elements = field "elements"
+       (list
          (let* name = field "name" string in
           let* record_item = field "record_item" (record_item_decoder ()) in
-          succeed (name, record_item))
-     in
-     String_map.of_list sm)
+          succeed (name, record_item))) in
+    let* name = field "name" string in
+    succeed {name;elements = String_map.of_list elements})
 
 
 let expecting_decoder : expecting decoder =

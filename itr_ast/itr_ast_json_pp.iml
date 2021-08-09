@@ -35,11 +35,15 @@ let rec literal_to_json : literal -> t = function
       `Assoc [ ("Float", `Float (Q.to_float q)) ]
   | Coll l ->
       `Assoc [ ("Coll", `List (List.map expr_to_json l)) ]
+  | MapColl l ->
+      `Assoc [ ("MapColl", `List (List.map expr_pair_to_json l)) ]
   | LiteralNone ->
       `Assoc [ ("None", `String "None") ]
   | Datetime d ->
       `Assoc [ ("Datetime", datetime_to_json d) ]
 
+and expr_pair_to_json : expr * expr -> t = function
+  | e1,e2 -> `Assoc ["key",expr_to_json e1;"value",expr_to_json e2]
 
 and value_to_json : value -> t = function
   | Literal l ->
@@ -148,13 +152,16 @@ and expr_to_json : expr -> t = function
         ]
 
 
-and record_to_json (items : record) =
+and record_to_json (record : record) =
   let item_to_json ((name : string), (item : record_item)) =
     `Assoc [ ("name", `String name); ("record_item", record_item_to_json item) ]
   in
   `Assoc
     [ ( "Record"
-      , `List (List.map item_to_json (String_map.to_list items |> CCList.rev))
+      , `Assoc [
+      ("name",`String record.name);
+      ("elements",`List (List.map item_to_json (String_map.to_list record.elements |> CCList.rev)))
+      ]
       )
     ]
 
@@ -165,12 +172,16 @@ and record_item_to_json (item : record_item) =
       `Assoc [ ("Rec_value", expr_to_json value) ]
   | Rec_record items ->
       `Assoc [ ("Rec_record", record_to_json items) ]
-  | Rec_repeating_group { num_in_group_field; elements } ->
+  | Rec_repeating_group { num_in_group_field; elements; name;message_template } ->
       `Assoc
         [ ( "Rec_repeating_group"
           , `Assoc
               [ ("num_in_group_field", `String num_in_group_field)
               ; ("elements", `List (List.map record_to_json elements))
+              ; ("name", `String name)
+              ; ("message_template", match message_template with
+              | None -> `Null
+              | Some message_template -> `String message_template)
               ] )
         ]
 
