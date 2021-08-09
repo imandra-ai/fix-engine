@@ -203,10 +203,6 @@ and record_item =
       ; elements : record list
       }
 
-type field = {
-        name:string;
-        value: record_item
-}
 
 let rec expr_eq e1 e2 =
   match (e1, e2) with
