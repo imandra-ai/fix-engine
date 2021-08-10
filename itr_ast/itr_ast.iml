@@ -578,6 +578,11 @@ type expecting =
   ; exprs : expr list
   }
 
+type field =
+ { name: string
+ ; value : expr
+ }
+
 type instruction =
   | Break
   | Print of expr
