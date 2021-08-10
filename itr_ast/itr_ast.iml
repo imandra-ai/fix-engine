@@ -580,7 +580,7 @@ type expecting =
 
 type field =
  { name: string
- ; value : expr
+ ; value : record_item
  }
 
 type instruction =
