@@ -206,6 +206,8 @@ let rec instruction_pp (ppf : formatter) : instruction -> unit =
         ntimes
         (list ~sep:(return "@,") instruction_pp)
         instructions
+  | Action _ ->
+        ()
   | Connect { connection; timeout; block } ->
       let noblock = if block then "" else "noblock" in
       fprintf
