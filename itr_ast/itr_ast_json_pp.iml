@@ -185,6 +185,8 @@ and record_item_to_json (item : record_item) =
               ] )
         ]
 
+let field_to_json (f:field ) =
+  `Assoc ["name",`String f.name;"value",record_item_to_json f.value]
 
 let rec instruction_to_json : instruction -> t = function
   | Break ->
@@ -197,6 +199,8 @@ let rec instruction_to_json : instruction -> t = function
       `Assoc [ ("Sleep", expr_to_json e) ]
   | Assert e ->
       `Assoc [ ("Assert", expr_to_json e) ]
+  | Action {name;fields} ->
+      `Assoc ["Action",`Assoc ["name",`String name;"fields",`List (List.map field_to_json fields)]]
   | Fail e ->
       `Assoc
         [ ("Fail", match e with None -> `Null | Some e -> expr_to_json e) ]
