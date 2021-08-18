@@ -252,6 +252,10 @@ let tt_decoder : typed_term decoder =
      let* type_ = field "type" (nullable string) in
      succeed { name; type_ })
 
+let field_decoder (): field decoder =
+    let* name = field "name" string in
+    let+ value = field "value" (record_item_decoder ()) in
+    {name;value}
 
 let rec instruction_decoder () : instruction decoder =
   single_field (function
@@ -267,6 +271,10 @@ let rec instruction_decoder () : instruction decoder =
       | "Sleep" ->
           let+ e = expr_decoder () in
           Sleep e
+      | "Action" ->
+          let* name = field "name" string in
+          let+ fields = field "fields" (list (field_decoder ())) in
+          Action {name;fields}
       | "Assert" ->
           let+ e = expr_decoder () in
           Assert e
