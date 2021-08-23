@@ -23,8 +23,8 @@ let rec loop (fixio_box, fixio) (engine_box, engine) (model_box, model) =
       >>= function
       | Engine.FIXMessage (Full_messages.ValidMsg msg) ->
           engine_to_fixio fixio msg
-      | Engine.Internal msg ->
-          Model.send_fix model msg
+      | Engine.OutFIXData (_,msg) ->
+          Model.send_fix model (OutIntMsg_ApplicationData msg) 
       | _ ->
           Lwt.return_unit )
     ; (Lwt_mvar.take fixio_box >>= fun msg -> fixio_to_engine engine msg)
