@@ -600,6 +600,7 @@ type instruction =
       }
   | Disconnect of Connection_ref.t
   | Action of {name:string;fields:field list}
+  | Message of {name:string;fields:field list}
   | Set of
       { prop : string
       ; value : expr
@@ -728,6 +729,8 @@ module Value = struct
     | Fail e | Return e | Connect { connection = _; timeout = e; block = _ } ->
         e |> CCOpt.exists (exists_expr f)
     | Action {fields;_} ->
+        CCList.exists (exists_record_item f) (List.map (fun x -> x.value) fields)
+    | Message {fields;_} ->
         CCList.exists (exists_record_item f) (List.map (fun x -> x.value) fields)
     | Send
         { variable = _

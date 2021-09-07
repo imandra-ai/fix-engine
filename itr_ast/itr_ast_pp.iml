@@ -208,6 +208,8 @@ let rec instruction_pp (ppf : formatter) : instruction -> unit =
         instructions
   | Action _ ->
         ()
+  | Message _ ->
+        ()
   | Connect { connection; timeout; block } ->
       let noblock = if block then "" else "noblock" in
       fprintf
