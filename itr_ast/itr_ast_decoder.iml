@@ -275,6 +275,10 @@ let rec instruction_decoder () : instruction decoder =
           let* name = field "name" string in
           let+ fields = field "fields" (list (field_decoder ())) in
           Action {name;fields}
+      | "Message" ->
+          let* name = field "name" string in
+          let+ fields = field "fields" (list (field_decoder ())) in
+          Message {name;fields}
       | "Assert" ->
           let+ e = expr_decoder () in
           Assert e

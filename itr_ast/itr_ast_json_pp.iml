@@ -201,6 +201,8 @@ let rec instruction_to_json : instruction -> t = function
       `Assoc [ ("Assert", expr_to_json e) ]
   | Action {name;fields} ->
       `Assoc ["Action",`Assoc ["name",`String name;"fields",`List (List.map field_to_json fields)]]
+  | Message {name;fields} ->
+      `Assoc ["Message",`Assoc ["name",`String name;"fields",`List (List.map field_to_json fields)]]
   | Fail e ->
       `Assoc
         [ ("Fail", match e with None -> `Null | Some e -> expr_to_json e) ]
