@@ -39,6 +39,8 @@ let rec literal_to_json : literal -> t = function
       `Assoc [ ("MapColl", `List (List.map expr_pair_to_json l)) ]
   | LiteralNone ->
       `Assoc [ ("None", `String "None") ]
+  | LiteralSome e ->
+      `Assoc [ ("Some", expr_to_json e) ]
   | Datetime d ->
       `Assoc [ ("Datetime", datetime_to_json d) ]
 

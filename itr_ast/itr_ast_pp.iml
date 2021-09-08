@@ -38,6 +38,8 @@ let rec literal_pp (ppf : formatter) : literal -> unit = function
         fprintf ppf "%a" CCFormat.(list ~sep:(return " ") expr_pair_pp) l
   | LiteralNone ->
       fprintf ppf "None"
+  | LiteralSome e ->
+      fprintf ppf "Some %a" expr_pp e
   | Datetime d ->
       fprintf ppf "%a" datetime_pp d
 

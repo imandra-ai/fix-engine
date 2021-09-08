@@ -127,6 +127,7 @@ type literal =
   | Coll of expr list
   | MapColl of (expr*expr) list
   | LiteralNone
+  | LiteralSome of expr
   | Datetime of datetime
 
 and value =
