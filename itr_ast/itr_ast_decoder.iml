@@ -96,6 +96,9 @@ let rec literal_decoder () : literal decoder =
           MapColl c
       | "None" ->
           succeed LiteralNone
+      | "Some" ->
+          let+ e = expr_decoder () in
+          LiteralSome e
       | "Datetime" ->
           let+ d = datetime_decoder in
           Datetime d
