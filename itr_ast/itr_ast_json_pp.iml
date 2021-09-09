@@ -322,7 +322,7 @@ let rec instruction_to_json : instruction -> t = function
               ; ("using", match using with None -> `Null | Some u -> `String u)
               ] )
         ]
-  | Receive { variable; connection; timeout; where; expecting } ->
+  | Receive { variable; connection; timeout; where; expecting; example } ->
       `Assoc
         [ ( "Receive"
           , `Assoc
@@ -346,6 +346,7 @@ let rec instruction_to_json : instruction -> t = function
                       `Null
                   | Some e ->
                       expecting_to_json e )
+              ; ("example", record_to_json example)
               ] )
         ]
   | IfThenElse { cond; then_; else_ } ->

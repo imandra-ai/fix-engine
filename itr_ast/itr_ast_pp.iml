@@ -260,7 +260,7 @@ let rec instruction_pp (ppf : formatter) : instruction -> unit =
         Connection_ref.pp
         connection
         using
-  | Receive { variable; connection; timeout; where; expecting } ->
+  | Receive { variable; connection; timeout; where; expecting; _ } ->
       let pp_space_opt pp fmt = function
         | None ->
             ()
