@@ -362,7 +362,8 @@ let rec instruction_decoder () : instruction decoder =
           let* timeout = field "timeout" (nullable (expr_decoder ())) in
           let* where = field "where" (expr_decoder ()) in
           let* expecting = field "expecting" (nullable expecting_decoder) in
-          succeed (Receive { variable; connection; timeout; where; expecting })
+          let+ example = field "example" (record_decoder ()) in
+          (Receive { variable; connection; timeout; where; expecting; example })
       | "IfThenElse" ->
           let* cond = field "cond" (expr_decoder ()) in
           let* then_ = field "then" (list (instruction_decoder ())) in

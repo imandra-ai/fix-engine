@@ -644,6 +644,7 @@ type instruction =
       ; timeout : expr option
       ; where : expr
       ; expecting : expecting option
+      ; example : record
       }
   | IfThenElse of
       { cond : expr
@@ -748,7 +749,7 @@ module Value = struct
         CCList.exists (exists_instruction f) is
     | ForEach { dataset = e; instructions = is } ->
         exists_expr f e || CCList.exists (exists_instruction f) is
-    | Receive { variable = _; connection = _; timeout; where; expecting } ->
+    | Receive { variable = _; connection = _; timeout; where; expecting;_ } ->
         CCOpt.exists (exists_expr f) timeout
         || exists_expr f where
         || CCOpt.exists
@@ -895,8 +896,8 @@ let send ?variable ~template ~to_ ?using ?values () =
 
 let expecting ?modifier exprs = { modifier; exprs }
 
-let receive ?variable ~from ?timeout ~where ?expecting () =
-  Receive { variable; connection = from; timeout; where; expecting }
+let receive ?variable ~from ?timeout ~where ?expecting ~example () =
+  Receive { variable; connection = from; timeout; where; expecting; example }
 
 
 let expectingOf ~variable ~expecting = ExpectingOf { variable; expecting }
