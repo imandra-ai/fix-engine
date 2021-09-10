@@ -604,7 +604,7 @@ type instruction =
   | Message of {name:string;fields:field list}
   | Set of
       { prop : string
-      ; value : expr
+      ; value : record_item
       }
   | Unset of value
   | Call of
@@ -726,8 +726,10 @@ module Value = struct
         exists f v
     | ExpectingOf { variable = _; expecting = { exprs = es; modifier = _ } } ->
         CCList.exists (exists_expr f) es
-    | Print e | Run e | Sleep e | Assert e | Set { prop = _; value = e } ->
+    | Print e | Run e | Sleep e | Assert e ->
         exists_expr f e
+    | Set { prop = _; value = e } ->
+        exists_record_item f e
     | Fail e | Return e | Connect { connection = _; timeout = e; block = _ } ->
         e |> CCOpt.exists (exists_expr f)
     | Action {fields;_} ->
@@ -761,7 +763,7 @@ module Value = struct
         || CCList.exists (exists_instruction f) else_
 end
 
-let append ~to_ e = Set { prop = to_; value = add (var to_) e }
+let append ~to_ e = Set { prop = to_; value = Rec_value (add (Value (Record_item (Rec_value (var to_)))) e )}
 
 (** Combine:
 
@@ -776,17 +778,17 @@ let rec combine_appends ~var = function
   | Set { prop = x1; value }
     :: Set
          { prop = x2
-         ; value = Add { lhs = Value (Variable (Var x3)); rhs; op = '+' }
+         ; value = Rec_value (Add { lhs = Value (Variable (Var x3)); rhs; op = '+' })
          }
        :: is
     when x1 = var && x2 = var && x3 = var ->
       let i =
         match value with
-        | Add { lhs = Value (Variable (Var x4)); rhs = value; op = '+' }
+        | Rec_value (Add { lhs = Value (Variable (Var x4)); rhs = value; op = '+' })
           when x4 = var ->
             append ~to_:var (add_eval value rhs)
         | _ ->
-            Set { prop = var; value = add value rhs }
+            Set { prop = var; value = Rec_value (add (Value (Record_item value)) rhs) }
       in
       combine_appends ~var (i :: is)
   | i :: is ->

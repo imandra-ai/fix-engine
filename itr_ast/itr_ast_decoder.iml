@@ -328,7 +328,7 @@ let rec instruction_decoder () : instruction decoder =
           succeed (Connect { connection; timeout; block })
       | "Set" ->
           let* prop = field "prop" string in
-          let* value = field "value" (expr_decoder ()) in
+          let* value = field "value" (record_item_decoder ()) in
           succeed (Set { prop; value })
       | "Call" ->
           let* variable = field "variable" (nullable string) in
