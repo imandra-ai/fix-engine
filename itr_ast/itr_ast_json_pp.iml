@@ -263,7 +263,7 @@ let rec instruction_to_json : instruction -> t = function
   | Set { prop; value } ->
       `Assoc
         [ ( "Set"
-          , `Assoc [ ("prop", `String prop); ("value", expr_to_json value) ] )
+          , `Assoc [ ("prop", `String prop); ("value", record_item_to_json value) ] )
         ]
   | Call { variable; call } ->
       `Assoc
