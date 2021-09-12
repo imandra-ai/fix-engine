@@ -50,7 +50,7 @@ let parse_header msg =
     opt msg "57"  parse_string        @@ fun msg h_target_sub_id               ->   
     opt msg "143" parse_string        @@ fun msg h_target_location_id          ->  
     opt msg "116" parse_string        @@ fun msg h_on_behalf_of_sub_id         ->  
-    opt msg "114" parse_string        @@ fun msg h_on_behalf_of_location_id    ->  
+    opt msg "144" parse_string        @@ fun msg h_on_behalf_of_location_id    ->  
     opt msg "129" parse_string        @@ fun msg h_deliver_to_sub_id           ->  
     opt msg "145" parse_string        @@ fun msg h_deliver_to_location_id      ->  
     opt msg "43"  parse_bool          @@ fun msg h_poss_dup_flag               ->    
