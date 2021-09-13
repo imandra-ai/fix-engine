@@ -17,6 +17,8 @@ let datetime_pp (ppf : formatter) : datetime -> unit = function
     fprintf ppf "%s" (encode_LocalMktDate d)
   | MonthYear d ->
     fprintf ppf "%s" (encode_MonthYear d)
+  | Duration d -> 
+    fprintf ppf "%s" (encode_Duration d)
 
 
 let rec literal_pp (ppf : formatter) : literal -> unit = function
