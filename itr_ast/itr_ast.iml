@@ -117,6 +117,7 @@ type datetime =
   | UTCDateOnly of Datetime.fix_utcdateonly
   | LocalMktDate of Datetime.fix_localmktdate
   | MonthYear of Datetime.fix_monthyear
+  | Duration of Datetime.fix_duration
 
 type literal =
   | Bool of bool

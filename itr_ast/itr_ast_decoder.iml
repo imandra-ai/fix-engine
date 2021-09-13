@@ -63,6 +63,9 @@ let datetime_decoder : datetime decoder =
       | "MonthYear" ->
           let+ u = monthyear_decoder in
           MonthYear u
+      | "Duration" ->
+          let+ u = duration_decoder in
+          Duration u
       | s ->
           fail @@ "unrecognised datetime: " ^ s)
 

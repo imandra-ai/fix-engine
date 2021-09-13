@@ -20,6 +20,8 @@ let datetime_to_json : datetime -> t = function
       `Assoc [ ("LocalMktDate", localmktdate_to_json d) ]
   | MonthYear d ->
       `Assoc [ ("MonthYear", monthyear_to_json d) ]
+  | Duration d ->
+      `Assoc [ ("Duration", duration_to_json d) ]
 
 
 let rec literal_to_json : literal -> t = function
