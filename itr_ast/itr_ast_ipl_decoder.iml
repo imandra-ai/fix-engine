@@ -8,139 +8,12 @@ open Parse_base_types;;
 open Parse_datetime;;
 
 
-module My_result = struct
-  type ('good, 'bad) t = ('good, 'bad) result = | Ok of 'good | Error of 'bad
-
-  let return x = Ok x
-  let map f e = match e with
-    | Ok x -> Ok (f x)
-    | Error s -> Error s
-  let map_err f e = match e with
-    | Ok _ as res -> res
-    | Error y -> Error (f y)
-  let flat_map f e = match e with
-    | Ok x -> f x
-    | Error s -> Error s
-
-  module Infix = struct
-    let (>|=) e f = map f e
-    let (>>=) e f = flat_map f e
-  end
-end
-
-
-module My_opt = struct
-  let return x = Some x
-  let map f = function None -> None | Some x -> Some (f x)
-  let flat_map f o = match o with
-    | None -> None
-    | Some x -> f x
-end
-
-module My_list = struct
-  let take n l =
-    let rec direct i n l = match l with
-      | [] -> []
-      | _ when i=0 -> safe n [] l
-      | x::l' ->
-        if n > 0
-        then x :: direct (i-1) (n-1) l'
-        else []
-    and safe n acc l = match l with
-      | [] -> List.rev acc
-      | _ when n=0 -> List.rev acc
-      | x::l' -> safe (n-1) (x::acc) l'
-    in
-    direct 500 n l
-
-  let map f l =
-    let rec direct f i l = match l with
-      | [] -> []
-      | [x] -> [f x]
-      | [x1;x2] -> let y1 = f x1 in [y1; f x2]
-      | [x1;x2;x3] -> let y1 = f x1 in let y2 = f x2 in [y1; y2; f x3]
-      | _ when i=0 -> CCList.rev (CCList.rev_map f l)
-      | x1::x2::x3::x4::l' ->
-        let y1 = f x1 in
-        let y2 = f x2 in
-        let y3 = f x3 in
-        let y4 = f x4 in
-        y1 :: y2 :: y3 :: y4 :: direct f (i-1) l'
-    in
-    direct f 500 l
-
-  let all_some l =
-    try Some (map (function Some x -> x | None -> raise Exit) l)
-    with Exit -> None
-
-  let mapi f l =
-    let r = ref 0 in
-    map
-      (fun x ->
-         let y = f !r x in
-         r := !r+1; y
-      ) l
-
-  let find_map f l =
-    let rec aux f = function
-      | [] -> None
-      | x::l' ->
-        match f x with
-          | Some _ as res -> res
-          | None -> aux f l'
-    in aux f l
-
-  let filter_map f l =
-    let rec recurse acc l = match l with
-      | [] -> List.rev acc
-      | x::l' ->
-        let acc' = match f x with | None -> acc | Some y -> y::acc in
-        recurse acc' l'
-    in recurse [] l
-
-  let fold_left = CCList.fold_left
-
-  let direct_depth_append_ = 10_000
-
-  let append l1 l2 =
-    let rec direct i l1 l2 = match l1 with
-      | [] -> l2
-      | _ when i=0 -> safe l1 l2
-      | x::l1' -> x :: direct (i-1) l1' l2
-    and safe l1 l2 =
-      CCList.rev_append (List.rev l1) l2
-    in
-    match l1 with
-    | [] -> l2
-    | [x] -> x::l2
-    | [x;y] -> x::y::l2
-    | _ -> direct direct_depth_append_ l1 l2
-
-  let (@) = append
-
-  let flat_map f l =
-    let rec aux f l kont = match l with
-      | [] -> kont []
-      | x::l' ->
-        let y = f x in
-        let kont' tail = match y with
-          | [] -> kont tail
-          | [x] -> kont (x :: tail)
-          | [x;y] -> kont (x::y::tail)
-          | l -> kont (append l tail)
-        in
-        aux f l' kont'
-    in
-    aux f l (fun l->l)
-end
-
-
 type 'value exposed_error =
   | Decoder_error of string * 'value option
   | Decoder_errors of 'value exposed_error list
   | Decoder_tag of string * 'value exposed_error
 
-type ('good, 'bad) result = ('good, 'bad) My_result.t = Ok of 'good | Error of 'bad
+type ('good, 'bad) result = ('good, 'bad) CCResult.t = Ok of 'good | Error of 'bad
 
 type ('value, 'a) exposed_runner_decoder = { run : 'value -> ('a, 'value exposed_error) result }
 
@@ -155,7 +28,7 @@ module RunnerDecoder  = struct
     | Decoder_error (msg, Some t) -> Format.fprintf fmt "@[%s, but got@ @[%a@]@]" msg pp t
     | Decoder_error (msg, None) -> Format.fprintf fmt "@[%s@]" msg
     | Decoder_errors errors ->
-      let errors_trunc = My_list.take 5 errors in
+      let errors_trunc = CCList.take 5i errors in
       let not_shown = List.length errors - 5 in
       Format.fprintf fmt "@[%a@ %s@]"
         (Format.pp_print_list ~pp_sep:Format.pp_print_space pp_error) errors_trunc
@@ -166,39 +39,48 @@ module RunnerDecoder  = struct
         pp_error error
 
 
-      let of_file _file =
+  let of_file _file =
 
-         Error "not supported"
+    Error "not supported"
 
-      let get_string = function
-        | Rec_value (Value (Literal (String value))) -> Some value
-        | _ -> None
+  let get_string = function
+    | Rec_value (Value (Literal (String value))) -> Some value
+    | _ -> None
 
-      let get_int = function
-        | Rec_value (Value (Literal (Int value))) -> Some value
-        | _ -> None
+  let get_int = function
+    | Rec_value (Value (Literal (Int value))) -> Some value
+    | _ -> None
 
-      let get_float = function
-        | Rec_value (Value (Literal (Float value))) -> Some value
-        | Rec_value (Value (Literal (Int value))) -> Some (Q.of_bigint value)
-        | _ -> None
+  let get_float = function
+    | Rec_value (Value (Literal (Float value))) -> Some value
+    | Rec_value (Value (Literal (Int value))) -> Some (Q.of_bigint value)
+    | _ -> None
 
-      let get_bool = function
-        |  Rec_value (Value (Literal (Bool value))) -> Some value
-        | _ -> None
+  let get_bool = function
+    |  Rec_value (Value (Literal (Bool value))) -> Some value
+    | _ -> None
 
-      let get_null = function
-        | _ -> None
+  let get_null = function
+    | _ -> None
 
-      let get_list : value -> value list option = function
-       (* | `List l -> Some l *)
-        | _ -> None
-    (* use this as record assoc?*)
-      let get_key_value_pairs : value -> (value * value) list option = function
-      (*   | `Assoc assoc -> Some (List.map (fun (key, value) -> (`String key, value)) assoc) *)
-        | _ -> None
+  let get_list : value -> value list option = function
+    | Rec_value (Value (Literal (Coll values))) -> Some values
+    | _ -> None
 
-      let to_list values = Rec_value (Value (Literal LiteralNone))
+  let get_set : value -> value Set.t option = function
+    | Rec_value (Value (Literal (Coll values))) -> Some (Set.of_list values)
+    | _ -> None
+
+  let get_map : value -> (value,value) Map.t option = function
+    | Rec_value (Value (Literal (MapColl (default,values)))) -> Some (Map.of_list ~default values)
+    | _ -> None
+
+  let get_key_value_pairs : value -> (value * value) list option = function
+    | Rec_record {elements;_} -> Some (List.map (fun (key,value) ->
+        (Rec_value (Value (Literal (String key))),value)) (String_map.to_list elements))
+    | _ -> None
+
+  let to_list values = Rec_value (Value (Literal (Coll values)))
 
   let string_of_error e : string =
     Format.asprintf "@[<2>%a@?@]" pp_error e
@@ -236,9 +118,9 @@ module RunnerDecoder  = struct
     aux (Ok []) results
 
   (* let of_string : string -> (value, error) result =
-    fun string ->
-    of_string string
-    |> My_result.map_err (fun msg ->
+     fun string ->
+     of_string string
+     |> My_result.map_err (fun msg ->
         (Decoder_tag ("Json parse error", Decoder_error (msg, None)))
       ) *)
 
@@ -261,7 +143,7 @@ module RunnerDecoder  = struct
     { run = fun input -> Ok input }
 
   let map f runner_decoder =
-    { run = fun input -> My_result.Infix.(runner_decoder.run input >|= f) }
+    { run = fun input -> CCResult.Infix.(runner_decoder.run input >|= f) }
 
   let apply : ('a -> 'b) runner_decoder -> 'a runner_decoder -> 'b runner_decoder =
     fun f runner_decoder ->
@@ -276,7 +158,7 @@ module RunnerDecoder  = struct
 
   let and_then (f : 'a -> 'b runner_decoder) (runner_decoder : 'a runner_decoder) : 'b runner_decoder =
     { run = fun input ->
-          My_result.Infix.(
+          CCResult.Infix.(
             runner_decoder.run input >>= fun result ->
             (f result).run input)
     }
@@ -309,8 +191,8 @@ module RunnerDecoder  = struct
           | Some () -> Ok None
           | None ->
             runner_decoder.run input
-            |> My_result.map My_opt.return
-            |> My_result.map_err (tag_error "Expected null or")
+            |> CCResult.map CCOpt.return
+            |> CCResult.map_err (tag_error "Expected null or")
     }
 
   let one_of : (string * 'a runner_decoder) list -> 'a runner_decoder =
@@ -359,13 +241,13 @@ module RunnerDecoder  = struct
           | None -> (fail "Expected a list").run t
           | Some values ->
             values
-            |> My_list.mapi (fun i x ->
+            |> CCList.mapi (fun i x ->
                 runner_decoder.run x
-                |> My_result.map_err
-                  (tag_error (Printf.sprintf "element %i" (Z.to_int i)))
+                |> CCResult.map_err
+                  (tag_error (Printf.sprintf "element %i" i))
               )
             |> combine_errors
-            |> My_result.map_err
+            |> CCResult.map_err
               (tag_errors "while decoding a list")
     }
 
@@ -374,13 +256,13 @@ module RunnerDecoder  = struct
     let rec go i = function
       | [] -> Ok []
       | v :: vs ->
-        My_result.Infix.(
+        CCResult.Infix.(
           runner_decoder.run v
-          |> My_result.map_err
+          |> CCResult.map_err
             (tag_error (Printf.sprintf "element %i" (Z.to_int i))) >>= function
           | Some x ->
             go (i + 1) vs >>= fun xs ->
-            My_result.return (x :: xs)
+            CCResult.return (x :: xs)
           | None -> go (i + 1) vs
         )
     in
@@ -390,7 +272,7 @@ module RunnerDecoder  = struct
           | None -> (fail "Expected a list").run t
           | Some values ->
             go 0 values
-            |> My_result.map_err (tag_error "while decoding a list")
+            |> CCResult.map_err (tag_error "while decoding a list")
     }
 
   let list_fold_left : ('a -> 'a runner_decoder) -> 'a -> 'a runner_decoder =
@@ -402,12 +284,12 @@ module RunnerDecoder  = struct
           | None -> (fail "Expected a list").run t
           | Some values ->
             values
-            |> My_result.Infix.(My_list.fold_left (fun (acc,i) el ->
+            |> CCResult.Infix.(CCList.fold_left (fun (acc,i) el ->
                 (acc >>= fun acc ->
                  (acc |> runner_decoder_func).run el
-                 |> My_result.map_err (tag_error (Printf.sprintf "element %i" i))),Z.to_int ((Z.of_int i)+1))
+                 |> CCResult.map_err (tag_error (Printf.sprintf "element %i" i))),Z.to_int ((Z.of_int i)+1))
               )  (Ok init,0i) |> fst
-            |> My_result.map_err (tag_error "while decoding a list")
+            |> CCResult.map_err (tag_error "while decoding a list")
     }
 
   let field : string -> 'a runner_decoder -> 'a runner_decoder =
@@ -416,7 +298,7 @@ module RunnerDecoder  = struct
         fun t ->
           let value =
             get_key_value_pairs t
-            |> My_opt.flat_map (My_list.find_map (fun (k, v) ->
+            |> CCOpt.flat_map (CCList.find_map (fun (k, v) ->
                 match get_string k with
                 | Some s when s = key -> Some v
                 | _ -> None
@@ -425,7 +307,7 @@ module RunnerDecoder  = struct
           match value with
           | Some value ->
             value_runner_decoder.run value
-            |> My_result.map_err (tag_error (Printf.sprintf "in field %S" key))
+            |> CCResult.map_err (tag_error (Printf.sprintf "in field %S" key))
           | None -> (fail (Printf.sprintf "Expected an object with an attribute %S" key)).run t
     }
 
@@ -435,7 +317,7 @@ module RunnerDecoder  = struct
         fun t ->
           let value =
             get_key_value_pairs t
-            |> My_opt.flat_map (My_list.find_map (fun (k, v) ->
+            |> CCOpt.flat_map (CCList.find_map (fun (k, v) ->
                 match get_string k with
                 | Some s when s = key -> Some v
                 | _ -> None
@@ -444,8 +326,8 @@ module RunnerDecoder  = struct
           match value with
           | Some value ->
             value_runner_decoder.run value
-            |> My_result.map (fun v -> Some v)
-            |> My_result.map_err (tag_error (Printf.sprintf "in field %S" key))
+            |> CCResult.map (fun v -> Some v)
+            |> CCResult.map_err (tag_error (Printf.sprintf "in field %S" key))
           | None -> Ok None
     }
 
@@ -458,7 +340,7 @@ module RunnerDecoder  = struct
             begin match get_string key with
               | Some key ->
                 (value_runner_decoder key).run value
-                |> My_result.map_err (tag_error (Printf.sprintf "in field %S" key))
+                |> CCResult.map_err (tag_error (Printf.sprintf "in field %S" key))
               | None -> (fail "Expected an object with a string key").run t
             end
           | _ -> (fail "Expected an object with a single attribute").run t
@@ -483,16 +365,16 @@ module RunnerDecoder  = struct
     { run =
         fun value ->
           match get_list value with
-        | Some (x :: rest) ->
-          My_result.Infix.(
-            head.run x
-            |> My_result.map_err (tag_error "while consuming a list element")
-            >>= fun x ->
-            (tail x).run (to_list rest)
-            |> My_result.map_err (tag_error "after consuming a list element")
-          )
-        | Some [] -> (fail "Expected a non-empty list").run value
-        | None -> (fail "Expected a list").run value
+          | Some (x :: rest) ->
+            CCResult.Infix.(
+              head.run x
+              |> CCResult.map_err (tag_error "while consuming a list element")
+              >>= fun x ->
+              (tail x).run (to_list rest)
+              |> CCResult.map_err (tag_error "after consuming a list element")
+            )
+          | Some [] -> (fail "Expected a non-empty list").run value
+          | None -> (fail "Expected a list").run value
     }
 
   let rec at : string list -> 'a runner_decoder -> 'a runner_decoder = fun path runner_decoder ->
@@ -510,7 +392,7 @@ module RunnerDecoder  = struct
             assoc
             |> List.map (fun (key, _) -> key_runner_decoder.run key)
             |> combine_errors
-            |> My_result.map_err
+            |> CCResult.map_err
               (tag_errors "Failed while decoding the keys of an object")
           | None -> (fail "Expected an object").run value
     }
@@ -524,14 +406,14 @@ module RunnerDecoder  = struct
           match get_key_value_pairs value with
           | Some assoc ->
             assoc
-            |> List.map
-              My_result.Infix.(fun (key_val, value_val) ->
+            |> CCList.map
+              CCResult.Infix.(fun (key_val, value_val) ->
                   key_runner_decoder.run key_val >>= fun key ->
                   value_runner_decoder.run value_val >|= fun value ->
                   (key, value)
                 )
             |> combine_errors
-            |> My_result.map_err
+            |> CCResult.map_err
               (tag_errors "Failed while decoding key-value pairs")
           | None -> (fail "Expected an object").run value
     }
@@ -545,13 +427,13 @@ module RunnerDecoder  = struct
           match get_key_value_pairs value with
           | Some assoc ->
             assoc
-            |> List.map
-              My_result.Infix.(fun (key_val, value_val) ->
+            |> CCList.map
+              CCResult.Infix.(fun (key_val, value_val) ->
                   key_runner_decoder.run key_val >>= fun key ->
                   (value_runner_decoder key).run value_val
                 )
             |> combine_errors
-            |> My_result.map_err
+            |> CCResult.map_err
               (tag_errors "Failed while decoding key-value pairs")
           | None -> (fail "Expected an object").run value
     }
