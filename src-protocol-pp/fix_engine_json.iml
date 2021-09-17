@@ -11,6 +11,7 @@
 [@@@import "../src-core-pp/datetime_json.iml"]
 [@@@import "../src-core-pp/base_types_json.iml"]
 [@@@import "../src-protocol-exts-pp/full_app_messages_json.iml"]
+[@@@import "../src-protocol-exts-pp/full_admin_messages_json.iml"]
 [@@@import "full_messages_json.iml"]
 [@@@import "../src-core-time-defaults-pp/time_defaults_json.iml"]
 [@@@program]
@@ -19,6 +20,7 @@ open Fix_engine_state
 open Datetime_json
 open Base_types_json
 open Full_app_messages_json
+open Full_admin_messages_json
 open Full_messages_json
 open Time_defaults_json
 
@@ -40,6 +42,9 @@ let fix_engine_mode_to_string = function
 let manual_int_data_to_json x : json = match x with  
     | ResetSession    -> `String "ResetSession" 
     | IncrementOutSeq -> `String "IncrementOutSeq"
+    | SendBusinessReject data -> `Assoc 
+      [ ( "IncrementOutSeq" , full_msg_business_reject_to_json data ) ]
+
 
 
 (** These are the messages going in/out of the engine to the owner. *)

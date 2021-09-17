@@ -39,8 +39,8 @@ let rec loop t =
       >>= function
       | Engine.FIXMessage (Full_messages.ValidMsg msg) ->
           engine_to_fixio t.fixio msg
-      | Engine.Internal msg ->
-          Model.send_fix t.model msg
+      | Engine.OutFIXData (_,msg) ->
+          Model.send_fix t.model (OutIntMsg_ApplicationData msg)
       | Engine.State state ->
           save_state_seqns t.sessn state
       | _ ->

@@ -2,7 +2,7 @@
 module Internal : sig 
   type t
   type event =
-    | Internal   of Fix_engine_state.fix_engine_int_out_msg
+    | OutFIXData of ( int * Full_app_messages.full_app_msg_data )
     | FIXMessage of Full_messages.full_top_level_msg
     | State      of Fix_engine_state.fix_engine_state
 
@@ -29,7 +29,7 @@ end = struct
     | GetState      
 
   type event =
-    | Internal   of Fix_engine_state.fix_engine_int_out_msg
+    | OutFIXData of ( int * Full_app_messages.full_app_msg_data )
     | FIXMessage of Full_messages.full_top_level_msg
     | State      of Fix_engine_state.fix_engine_state
 
@@ -39,14 +39,19 @@ end = struct
     ; timer         : float
     }
 
+  let extract_out_fix_data engine_state msg =
+    let open Fix_engine_state in
+    OutFIXData ( engine_state.incoming_seq_num , msg )
+
   (** Calls Fix_engine.one_step and pubs outgoing messages while busy *)  
   let rec while_busy_loop t engine_state  =
     let engine_state = Fix_engine.one_step engine_state in
     (* This assumes that after one_step we can get either ontgoing internal or outgoing FIX message *)
     begin match ( engine_state.outgoing_fix_msg , engine_state.outgoing_int_msg) with
       | Some msg, None -> t.recv ( FIXMessage msg )  
-      | None, Some msg -> t.recv ( Internal   msg ) 
-      | None, None     -> Lwt.return_unit
+      | None, Some (OutIntMsg_ApplicationData msg) -> t.recv ( extract_out_fix_data engine_state msg ) 
+      | None, Some _ 
+      | None, None   -> Lwt.return_unit
       |  _ -> Lwt.fail_with "Critical internal error in fix_engine model" 
     end >>= fun () ->
     let engine_state = { engine_state with outgoing_fix_msg = None ; outgoing_int_msg = None } in
