@@ -7,6 +7,9 @@ open Parse_base_types;;
 [@@@import "../src-core-pp/parse_datetime.iml"]
 open Parse_datetime;;
 
+(* This decoder stucture is based on the decoders and decoders-yojson project *)
+(* written by Matt Bray here https://mattjbray.github.io/ocaml-decoders/      *)
+
 
 type 'value exposed_error =
   | Decoder_error of string * 'value option
