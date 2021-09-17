@@ -17,7 +17,7 @@ let datetime_pp (ppf : formatter) : datetime -> unit = function
     fprintf ppf "%s" (encode_LocalMktDate d)
   | MonthYear d ->
     fprintf ppf "%s" (encode_MonthYear d)
-  | Duration d -> 
+  | Duration d ->
     fprintf ppf "%s" (encode_Duration d)
 
 
@@ -36,8 +36,8 @@ let rec literal_pp (ppf : formatter) : literal -> unit = function
     fprintf ppf "%s" (Q.to_string q)
   | Coll l ->
     fprintf ppf "%a" CCFormat.(list ~sep:(return " ") expr_pp) l
-  | MapColl l ->
-    fprintf ppf "%a" CCFormat.(list ~sep:(return " ") expr_pair_pp) l
+  | MapColl (d,l) ->
+    fprintf ppf "default:%a@, %a" expr_pp d CCFormat.(list ~sep:(return " ") expr_pair_pp) l
   | LiteralNone ->
     fprintf ppf "None"
   | LiteralSome e ->

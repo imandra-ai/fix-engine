@@ -64,15 +64,15 @@ module RunnerDecoder  = struct
     | _ -> None
 
   let get_list : value -> value list option = function
-    | Rec_value (Value (Literal (Coll values))) -> Some values
+    | Rec_value (Value (Literal (Coll values))) -> Some (List.map (fun x -> Rec_value x) values)
     | _ -> None
 
   let get_set : value -> value Set.t option = function
-    | Rec_value (Value (Literal (Coll values))) -> Some (Set.of_list values)
+    | Rec_value (Value (Literal (Coll values))) -> Some (Set.of_list ((List.map (fun x -> Rec_value x) values)))
     | _ -> None
 
   let get_map : value -> (value,value) Map.t option = function
-    | Rec_value (Value (Literal (MapColl (default,values)))) -> Some (Map.of_list ~default values)
+    | Rec_value (Value (Literal (MapColl (default,values)))) -> Some (Map.of_list ~default:(Rec_value default) (List.map (fun (x,y) -> (Rec_value x,Rec_value y)) values))
     | _ -> None
 
   let get_key_value_pairs : value -> (value * value) list option = function
@@ -80,7 +80,7 @@ module RunnerDecoder  = struct
         (Rec_value (Value (Literal (String key))),value)) (String_map.to_list elements))
     | _ -> None
 
-  let to_list values = Rec_value (Value (Literal (Coll values)))
+  let to_list values = Rec_value (Value (Literal (Coll (List.map (fun x -> Value (Record_item x)) values))))
 
   let string_of_error e : string =
     Format.asprintf "@[<2>%a@?@]" pp_error e
