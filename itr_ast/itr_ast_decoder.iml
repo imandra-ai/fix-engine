@@ -95,8 +95,9 @@ let rec literal_decoder () : literal decoder =
           let+ c = list (expr_decoder ()) in
           Coll c
       | "MapColl" ->
-          let+ c = list (expr_pair_decoder ()) in
-          MapColl c
+          let* d = field "default" (expr_decoder ()) in
+          let+ c = field "elements" (list (expr_pair_decoder ())) in
+          MapColl (d,c)
       | "None" ->
           succeed LiteralNone
       | "Some" ->

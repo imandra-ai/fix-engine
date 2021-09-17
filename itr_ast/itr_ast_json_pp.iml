@@ -37,8 +37,8 @@ let rec literal_to_json : literal -> t = function
       `Assoc [ ("Float", `Float (Q.to_float q)) ]
   | Coll l ->
       `Assoc [ ("Coll", `List (List.map expr_to_json l)) ]
-  | MapColl l ->
-      `Assoc [ ("MapColl", `List (List.map expr_pair_to_json l)) ]
+  | MapColl (d,l) ->
+      `Assoc [ ("MapColl", `Assoc["default",expr_to_json d;"elements",`List (List.map expr_pair_to_json l)]) ]
   | LiteralNone ->
       `Assoc [ ("None", `String "None") ]
   | LiteralSome e ->
