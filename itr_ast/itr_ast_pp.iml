@@ -35,13 +35,13 @@ let rec literal_pp (ppf : formatter) : literal -> unit = function
   | Float q ->
     fprintf ppf "%s" (Q.to_string q)
   | Coll l ->
-    fprintf ppf "%a" CCFormat.(list ~sep:(return " ") expr_pp) l
+    fprintf ppf "%a" CCFormat.(list ~sep:(return " ") record_item_pp) l
   | MapColl (d,l) ->
-    fprintf ppf "default:%a@, %a" expr_pp d CCFormat.(list ~sep:(return " ") expr_pair_pp) l
+    fprintf ppf "default:%a@, %a" record_item_pp d CCFormat.(list ~sep:(return " ") record_item_pair_pp) l
   | LiteralNone ->
     fprintf ppf "None"
   | LiteralSome e ->
-    fprintf ppf "Some %a" expr_pp e
+    fprintf ppf "Some %a" record_item_pp e
   | Datetime d ->
     fprintf ppf "%a" datetime_pp d
 
@@ -55,18 +55,14 @@ and value_pp (ppf : formatter) : value -> unit = function
     fprintf ppf "%a" Message_value.pp mv
   | ConnectionRef c ->
     fprintf ppf "%a" Connection_ref.pp c
-  | TODOHex h ->
-    fprintf ppf "%s" h
   | Now ->
     fprintf ppf "Now"
   | Counter ->
     fprintf ppf "Counter"
   | ObjectProperty op ->
-    fprintf ppf "%a%a.%s" expr_pp_parens op.obj opt_index_pp op.index op.prop
+    fprintf ppf "%a%a.%s" record_item_pp_parens op.obj opt_index_pp op.index op.prop
   | Funcall { func; args } ->
-    fprintf ppf "%s(%a)" func CCFormat.(list ~sep:(return ",") expr_pp) args
-  | Record_item ri ->
-    record_item_pp ppf ri
+    fprintf ppf "%s(%a)" func CCFormat.(list ~sep:(return ",") record_item_pp) args
 
 
 and opt_index_pp (ppf : formatter) : Z.t option -> unit = function
@@ -81,16 +77,12 @@ and expr_pp (ppf : formatter) : expr -> unit = function
     fprintf ppf "%a" value_pp v
   | Not e ->
     fprintf ppf "!%a" expr_pp_parens e
-  | Arrow { condition; assertion } ->
-    fprintf ppf "%a->%a" expr_pp_parens condition expr_pp_parens assertion
   | Or { lhs; rhs } ->
     fprintf ppf "%a || %a" expr_pp_parens lhs expr_pp_parens rhs
   | And { lhs; rhs } ->
     fprintf ppf "%a && %a" expr_pp_parens lhs expr_pp_parens rhs
   | Eq { lhs; rhs } ->
-    fprintf ppf "%a = %a" expr_pp_parens lhs expr_pp_parens rhs
-  | Like { lhs; rhs } ->
-    fprintf ppf "%a like %a" expr_pp_parens lhs expr_pp_parens rhs
+    fprintf ppf "%a = %a" record_item_pp_parens lhs record_item_pp_parens rhs
   | Cmp { lhs; op; rhs } ->
     fprintf ppf "%a %s %a" expr_pp_parens lhs op expr_pp_parens rhs
   | Add { lhs; op; rhs } ->
@@ -98,15 +90,15 @@ and expr_pp (ppf : formatter) : expr -> unit = function
   | Mul { lhs; op; rhs } ->
     fprintf ppf "%a %c %a" expr_pp_parens lhs op expr_pp_parens rhs
   | In { el; set } ->
-    fprintf ppf "%a in %a" expr_pp_parens el expr_pp_parens set
+    fprintf ppf "%a in %a" expr_pp_parens el value_pp set
 
-and expr_pair_pp ppf (e1,e2) =
-  fprintf ppf "%a -> %a" expr_pp e1 expr_pp e2
+and record_item_pair_pp ppf (e1,e2) =
+  fprintf ppf "%a -> %a" record_item_pp e1 record_item_pp e2
 and expr_pp_parens ppf e =
   match e with
   | Value _ | Not _ ->
     expr_pp ppf e
-  | Arrow _ | Or _ | And _ | Eq _ | Like _ | Cmp _ | Add _ | Mul _ | In _ ->
+  | Or _ | And _ | Eq _ | Cmp _ | Add _ | Mul _ | In _ ->
     fprintf ppf "(%a)" expr_pp e
 
 
