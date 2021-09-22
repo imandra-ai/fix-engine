@@ -50,6 +50,10 @@ module RunnerDecoder  = struct
     | Rec_value (Value (Literal (String value))) -> Some value
     | _ -> None
 
+  let get_lstring = function
+    | Rec_value (Value (Literal (String value))) -> Some (LString.of_string value)
+    | _ -> None
+
   let get_int = function
     | Rec_value (Value (Literal (Int value))) -> Some value
     | _ -> None
@@ -156,13 +160,6 @@ module RunnerDecoder  = struct
     in
     aux (Ok []) results
 
-  (* let of_string : string -> (value, error) result =
-     fun string ->
-     of_string string
-     |> My_result.map_err (fun msg ->
-        (Decoder_tag ("Json parse error", Decoder_error (msg, None)))
-      ) *)
-
   type 'a runner_decoder = (value, 'a) exposed_runner_decoder
 
   let succeed x =
@@ -259,6 +256,9 @@ module RunnerDecoder  = struct
 
   let string : string runner_decoder =
     primitive_runner_decoder get_string "Expected a string"
+
+  let lstring : LString.t runner_decoder =
+    primitive_runner_decoder get_lstring "Expected a string"
 
   let int : Z.t runner_decoder =
     primitive_runner_decoder get_int "Expected an int"
