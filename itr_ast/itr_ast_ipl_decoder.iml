@@ -63,6 +63,11 @@ module RunnerDecoder  = struct
     |  Rec_value (Value (Literal (Bool value))) -> Some value
     | _ -> None
 
+  let get_opt : value -> value option = function
+    | Rec_value (Value (Literal LiteralNone)) -> Some (Rec_value (Value (Literal LiteralNone)))
+    | Rec_value (Value (Literal (LiteralSome value))) -> Some value
+    | _ -> None
+
   let get_null = function
     | _ -> None
 
@@ -75,7 +80,7 @@ module RunnerDecoder  = struct
     | _ -> None
 
   let get_map : value -> (value,value) Map.t option = function
-    | Rec_value (Value (Literal (MapColl (default,values)))) -> Some (Map.of_list ~default:default values)
+    | Rec_value (Value (Literal (MapColl (def,values)))) -> Some (Map.of_list ~default:def values)
     | _ -> None
 
   let get_key_value_pairs : value -> (value * value) list option = function
@@ -100,6 +105,37 @@ module RunnerDecoder  = struct
     | Decoder_errors e1s, _ -> Decoder_errors (e1s @ [e2])
     | _, Decoder_errors e2s -> Decoder_errors ([e1] @ e2s )
     | _ -> Decoder_errors [e1; e2]
+
+  let combine_map_el_error
+      (keys : ('a, error) result list)
+      (values : ('b, error) result list)
+      (def : ('b,error) result) :
+    (('a *'b) list *'b, error list) result =
+    let rec aux combined keys values =
+      match keys,values with
+      | [],[] ->
+        (match combined with
+         | Ok (xs,def) -> Ok (List.rev xs,def)
+         | Error es -> Error (List.rev es))
+      | key :: keys_rest,value::values_rest ->
+        (let combined =
+           match key, value, combined with
+           | Ok k, Ok v, Ok (xs,def) -> Ok (((k,v) :: xs), def)
+           | Error ek, Error ev, Error es -> Error (ek::ev::es)
+           | _,Error ev, Error es -> Error (ev::es)
+           | Error ek,_, Error es -> Error (ek::es)
+           | Ok _,Ok _, Error es -> Error es
+           | Error ek, Error ev, Ok _ -> Error [ek;ev]
+           | Error ek,_,Ok _ -> Error [ek]
+           | _,Error ev,Ok _ -> Error [ev]
+         in
+         aux combined keys_rest values_rest)
+      | _ ->
+        Error [Decoder_error ("Inconsistent map and key value element numbers in map.",None)]
+    in
+    match def with
+    | Ok def -> aux (Ok ([],def)) keys values
+    | Error e -> aux (Error [e]) keys values
 
   let combine_errors (results : ('a, error) result list) : ('a list, error list) result =
     let rec aux combined =
@@ -235,6 +271,69 @@ module RunnerDecoder  = struct
 
   let null : unit runner_decoder =
     primitive_runner_decoder get_null "Expected a null"
+
+  let opt : 'a runner_decoder -> 'a option runner_decoder =
+    fun runner_decoder ->
+    {run = fun t ->
+        match get_opt t with
+        | None -> (fail "Expected on opt").run t
+        | Some value ->
+          let open CCResult in
+          runner_decoder.run value
+          |> CCResult.map_err (tag_error (Printf.sprintf "opt element"))
+          >|= fun x -> Some x
+    }
+
+
+  let set : 'a runner_decoder -> 'a Set.t runner_decoder =
+    fun runner_decoder ->
+    { run =
+        fun t ->
+          match get_set t with
+          | None -> (fail "Expected a set").run t
+          | Some values ->
+            let open CCResult in
+            CCList.mapi (fun i x ->
+                runner_decoder.run x
+                |> CCResult.map_err
+                  (tag_error (Printf.sprintf "element %i" i))
+              ) (Set.to_list values)
+            |> combine_errors
+            |> CCResult.map_err
+              (tag_errors "while decoding a set") >|=
+            Set.of_list
+    }
+
+  let mapf : 'a runner_decoder -> 'b runner_decoder -> ('a,'b) Map.t runner_decoder =
+    fun key_runner_decoder value_runner_decoder ->
+    { run =
+        fun t ->
+          match get_map t with
+          | None -> (fail "Expected a map").run t
+          | Some values ->
+            let open CCResult in
+            let values,def = Map.extract values in
+            let def =
+              value_runner_decoder.run def
+              |> CCResult.map_err
+                (tag_error (Printf.sprintf "default value")) in
+            let key_list = CCList.mapi (fun i k ->
+                key_runner_decoder.run k
+                |> CCResult.map_err
+                  (tag_error (Printf.sprintf "key element %i" i)))
+                (List.map fst values) in
+            let value_list =
+              CCList.mapi (fun i v ->
+                  value_runner_decoder.run v
+                  |> CCResult.map_err
+                    (tag_error (Printf.sprintf "key element %i" i)))
+                (List.map snd values) in
+            combine_map_el_error key_list value_list def |>
+            CCResult.map_err
+              (tag_errors "while decoding a map")  >|= fun (els,default) ->
+            Map.of_list ~default els
+    }
+
 
   let list : 'a runner_decoder -> 'a list runner_decoder =
     fun runner_decoder ->
