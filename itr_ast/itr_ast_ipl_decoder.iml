@@ -295,6 +295,39 @@ let int : Z.t runner_decoder =
 let float : Numeric.fix_float_6 runner_decoder =
   primitive_runner_decoder get_float "Expected a float"
 
+let float_0 : Numeric.fix_float_0 runner_decoder =
+  let open Infix in
+  primitive_runner_decoder get_float "Expected a float" >|=
+  Numeric.float_Convert_6_0
+
+let float_1 : Numeric.fix_float_1 runner_decoder =
+  let open Infix in
+  primitive_runner_decoder get_float "Expected a float" >|=
+  Numeric.float_Convert_6_1
+
+let float_2 : Numeric.fix_float_2 runner_decoder =
+  let open Infix in
+  primitive_runner_decoder get_float "Expected a float" >|=
+  Numeric.float_Convert_6_2
+
+let float_3 : Numeric.fix_float_3 runner_decoder =
+  let open Infix in
+  primitive_runner_decoder get_float "Expected a float" >|=
+  Numeric.float_Convert_6_3
+
+let float_4 : Numeric.fix_float_4 runner_decoder =
+  let open Infix in
+  primitive_runner_decoder get_float "Expected a float" >|=
+  Numeric.float_Convert_6_4
+
+let float_5 : Numeric.fix_float_5 runner_decoder =
+  let open Infix in
+  primitive_runner_decoder get_float "Expected a float" >|=
+  Numeric.float_Convert_6_5
+
+let float_6 : Numeric.fix_float_6 runner_decoder =
+  float
+
 let bool : bool runner_decoder =
   primitive_runner_decoder get_bool "Expected a bool"
 
@@ -314,7 +347,7 @@ let localmktdate : Datetime.fix_localmktdate runner_decoder =
   primitive_runner_decoder get_localmktdate "Expected a LocalMktDate"
 
 let duration : Datetime.fix_duration runner_decoder =
-primitive_runner_decoder get_duration "Expected a Duration"
+  primitive_runner_decoder get_duration "Expected a Duration"
 
 let null : unit runner_decoder =
   primitive_runner_decoder get_null "Expected a null"
