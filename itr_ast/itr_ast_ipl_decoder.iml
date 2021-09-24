@@ -297,32 +297,32 @@ let float : Numeric.fix_float_6 runner_decoder =
 
 let float_0 : Numeric.fix_float_0 runner_decoder =
   let open Infix in
-  primitive_runner_decoder get_float "Expected a float" >|=
+  float >|=
   Numeric.float_Convert_6_0
 
 let float_1 : Numeric.fix_float_1 runner_decoder =
   let open Infix in
-  primitive_runner_decoder get_float "Expected a float" >|=
+  float >|=
   Numeric.float_Convert_6_1
 
 let float_2 : Numeric.fix_float_2 runner_decoder =
   let open Infix in
-  primitive_runner_decoder get_float "Expected a float" >|=
+  float >|=
   Numeric.float_Convert_6_2
 
 let float_3 : Numeric.fix_float_3 runner_decoder =
   let open Infix in
-  primitive_runner_decoder get_float "Expected a float" >|=
+  float >|=
   Numeric.float_Convert_6_3
 
 let float_4 : Numeric.fix_float_4 runner_decoder =
   let open Infix in
-  primitive_runner_decoder get_float "Expected a float" >|=
+  float >|=
   Numeric.float_Convert_6_4
 
 let float_5 : Numeric.fix_float_5 runner_decoder =
   let open Infix in
-  primitive_runner_decoder get_float "Expected a float" >|=
+  float >|=
   Numeric.float_Convert_6_5
 
 let float_6 : Numeric.fix_float_6 runner_decoder =
@@ -334,8 +334,22 @@ let bool : bool runner_decoder =
 let utctimestamp : Datetime.fix_utctimestamp_micro runner_decoder =
   primitive_runner_decoder get_utctimestamp "Expected a UTCTimestamp"
 
+let utctimestamp_milli : Datetime.fix_utctimestamp_milli runner_decoder =
+  let open Infix in
+  utctimestamp >|= Datetime.convert_utctimestamp_micro_milli
+
+let utctimestamp_micro: Datetime.fix_utctimestamp_micro runner_decoder =
+  utctimestamp
+
 let utctimeonly : Datetime.fix_utctimeonly_micro runner_decoder =
   primitive_runner_decoder get_utctimeonly "Expected a UTCTimeonly"
+
+let utctimeonly_milli : Datetime.fix_utctimeonly_milli runner_decoder =
+  let open Infix in
+  utctimeonly >|= Datetime.convert_utctimeonly_micro_milli
+
+let utctimeonly_micro: Datetime.fix_utctimeonly_micro runner_decoder =
+  utctimeonly
 
 let utcdateonly : Datetime.fix_utcdateonly runner_decoder =
   primitive_runner_decoder get_utcdateonly "Expected a UTCDateonly"
