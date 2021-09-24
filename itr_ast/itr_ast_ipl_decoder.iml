@@ -57,8 +57,8 @@ let get_int = function
   | _ -> None
 
 let get_float = function
-  | Rec_value (Value (Literal (Float value))) -> Some value
-  | Rec_value (Value (Literal (Int value))) -> Some (Q.of_bigint value)
+  | Rec_value Value Literal Float s -> (parse_float (Real.to_string_approx s))
+  | Rec_value Value Literal Int s -> (parse_float ((^) (Z.to_string s) ".0"))
   | _ -> None
 
 let get_bool = function
@@ -89,6 +89,37 @@ let get_key_value_pairs : value -> (value * value) list option = function
   | Rec_record {elements;_} -> Some (List.map (fun (key,value) ->
       (Rec_value (Value (Literal (String key))),value)) (String_map.to_list elements))
   | _ -> None
+
+let get_utctimestamp = function
+  | Rec_value Value Literal Datetime UTCTimestamp s -> (Some s)
+  | _ -> None
+;;
+
+let get_utctimeonly = function
+  | Rec_value Value Literal Datetime UTCTimeOnly s -> (Some s)
+  | _ -> None
+;;
+
+let get_utcdateonly = function
+  | Rec_value Value Literal Datetime UTCDateOnly s -> (Some s)
+  | _ -> None
+;;
+
+let get_monthyear = function
+  | Rec_value Value Literal Datetime MonthYear s -> (Some s)
+  | _ -> None
+;;
+
+let get_localmktdate = function
+  | Rec_value Value Literal Datetime LocalMktDate s -> (Some s)
+  | _ -> None
+;;
+
+let get_duration = function
+  | Rec_value Value Literal Datetime Duration s -> (Some s)
+  | _ -> None
+;;
+
 
 let to_list values = Rec_value (Value (Literal (Coll values)))
 
@@ -261,11 +292,29 @@ let lstring : LString.t runner_decoder =
 let int : Z.t runner_decoder =
   primitive_runner_decoder get_int "Expected an int"
 
-let float : real runner_decoder =
+let float : Numeric.fix_float_6 runner_decoder =
   primitive_runner_decoder get_float "Expected a float"
 
 let bool : bool runner_decoder =
   primitive_runner_decoder get_bool "Expected a bool"
+
+let utctimestamp : Datetime.fix_utctimestamp_micro runner_decoder =
+  primitive_runner_decoder get_utctimestamp "Expected a UTCTimestamp"
+
+let utctimeonly : Datetime.fix_utctimeonly_micro runner_decoder =
+  primitive_runner_decoder get_utctimeonly "Expected a UTCTimeonly"
+
+let utcdateonly : Datetime.fix_utcdateonly runner_decoder =
+  primitive_runner_decoder get_utcdateonly "Expected a UTCDateonly"
+
+let monthyear : Datetime.fix_monthyear runner_decoder =
+  primitive_runner_decoder get_monthyear "Expected a Monthyear"
+
+let localmktdate : Datetime.fix_localmktdate runner_decoder =
+  primitive_runner_decoder get_localmktdate "Expected a LocalMktDate"
+
+let duration : Datetime.fix_duration runner_decoder =
+primitive_runner_decoder get_duration "Expected a Duration"
 
 let null : unit runner_decoder =
   primitive_runner_decoder get_null "Expected a null"
