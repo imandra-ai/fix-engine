@@ -36,7 +36,6 @@ let rec loop (fixio_box, fixio) (engine_box, engine) (model_box, model) =
       >>= function
       | Model.FIXMessage msg ->
         Lwt_io.printl "Model.FIXMessage" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
-        Lwt_io.printl (Fix_engine_json.int_inc_msg_to_str msg) >>= fun () ->
         Engine.send_int engine msg
       | _ ->
           Lwt.return_unit )
