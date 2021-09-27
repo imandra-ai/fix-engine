@@ -17,12 +17,6 @@ let engine_to_fixio fixio msg =
   log_fix_message "Out" wire >>= fun () -> Fix_io.send fixio wire
 
 
-let save_state_seqns sessn state =
-  let seqin = state.Fix_engine_state.incoming_seq_num in
-  let seqout = state.Fix_engine_state.outgoing_seq_num in
-  Session_manager.save sessn (seqin, seqout)
-
-
 type state =
   { fixio_box : Fix_io.message Lwt_mvar.t
   ; model_box : Model.event Lwt_mvar.t
@@ -30,7 +24,6 @@ type state =
   ; fixio : Fix_io.fix_io
   ; engine : Engine.t
   ; model : Model.t
-  ; sessn : Session_manager.t
   }
 
 let rec loop t =
@@ -41,8 +34,6 @@ let rec loop t =
           engine_to_fixio t.fixio msg
       | Engine.OutFIXData (_,msg) ->
           Model.send_fix t.model (OutIntMsg_ApplicationData msg)
-      | Engine.State state ->
-          save_state_seqns t.sessn state
       | _ ->
           Lwt.return_unit )
     ; (Lwt_mvar.take t.fixio_box >>= fun msg -> fixio_to_engine t.engine msg)
@@ -95,16 +86,14 @@ let f _ (inch, outch) =
     let model_box = Lwt_mvar.create_empty () in
     let fixio_box = Lwt_mvar.create_empty () in
     let config = config engine_box in
-    let dir = session_folder config in
-    let sessn = Session_manager.create ~reset:true ~dir in
-    let seqns = Session_manager.get sessn in
-    let enginethread, engine = Engine.start seqns ~config in
+    let session_dir = session_folder config in
+    let enginethread, engine = Engine.start ~reset:false ~session_dir ~config in
     let modelthread, model = Model.start ~recv:(Lwt_mvar.put model_box) in
     let iothread, fixio =
       Fix_io.start ~recv:(Lwt_mvar.put fixio_box) (inch, outch)
     in
     let state =
-      { engine; engine_box; fixio; fixio_box; model; model_box; sessn }
+      { engine; engine_box; fixio; fixio_box; model; model_box }
     in
     Lwt_mvar.put established ()
     >>= fun () ->
