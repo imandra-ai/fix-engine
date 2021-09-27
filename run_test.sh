@@ -15,7 +15,7 @@ trap "exit" INT TERM
 
 echo "(dirs :standard \ *-vg)" > dune
 
-dune exec src-simulation/test_server.bc > test_server.log &
+dune exec src-simulation/test_server.bc &
 sleep 1
 
 #run_test ./defs/10_MsgSeqNumEqual.def
@@ -58,7 +58,6 @@ sleep 1
 #run_test ./defs/Imandra1_SessionRejectedBadSeqn.def
 #run_test ./defs/Imandra2_SeqResetWithGapFill.def
 run_test ./defs/Imandra3_CacheReplayApplication.def
-cat test_server.log
 #run_test ./defs/Imandra4_CacheReplayOutOfOrder.def
 #run_test ./defs/Imandra5_SeqResetWithGapFillOvershoot.def
 #run_test ./defs/Imandra6_CacheReplayAdminOnly.def
