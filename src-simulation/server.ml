@@ -26,27 +26,44 @@ type state =
   ; model : Model.t
   }
 
-let rec loop t =
-  Lwt.pick
-    [ ( Lwt_mvar.take t.engine_box
-      >>= function
-      | Engine.FIXMessage (Full_messages.ValidMsg msg) ->
-          engine_to_fixio t.fixio msg
-      | Engine.OutFIXData (_,msg) ->
-          Model.send_fix t.model (OutIntMsg_ApplicationData msg)
-      | _ ->
-          Lwt.return_unit )
-    ; (Lwt_mvar.take t.fixio_box >>= fun msg -> fixio_to_engine t.engine msg)
-    ; ( Lwt_mvar.take t.model_box
-      >>= function
-      | Model.FIXMessage msg ->
-          Engine.send_int t.engine msg
-      | _ ->
-          Lwt.return_unit )
-    ]
-  >>= fun () -> loop t
+let receive_engine_box state = function
+  | Engine.FIXMessage (Full_messages.ValidMsg msg) -> 
+    engine_to_fixio state.fixio msg 
+  | Engine.FIXMessage (Full_messages.Garbled ) ->
+    Lwt_io.printl "Warning: Engine.FIXMessage Garbled" >>= fun () -> Lwt_io.flush_all ()
+  | Engine.FIXMessage (Full_messages.SessionRejectedMsg m ) ->
+    Lwt_io.printl "Warning: Engine.FIXMessage SessionRejectedMsg" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+    Lwt_io.printl (Full_messages_json.session_rejected_msg_to_json m |> Yojson.Basic.to_string) >>= fun () -> Lwt_io.flush_all ()
+  | Engine.FIXMessage (Full_messages.BusinessRejectedMsg m ) ->
+    Lwt_io.printl "Warning: Engine.FIXMessage BusinessRejectedMsg" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+    Lwt_io.printl (Full_messages_json.biz_rejected_msg_to_json m |> Yojson.Basic.to_string) >>= fun () -> Lwt_io.flush_all ()
+  | Engine.OutFIXData (_,msg) -> 
+    Model.send_fix state.model (OutIntMsg_ApplicationData msg)
+  | Engine.State _ -> 
+    Lwt_io.printl "Warning: unexpected Engine.State" >>= fun () -> Lwt_io.flush_all () 
 
+let receive_fixio_box state msg = 
+  log_fix_message "In " msg >>= fun () ->
+  let msg = Parse_full_messages.parse_top_level_msg msg in
+  Engine.send_fix state.engine msg
+    
+let receive_model_box state = function
+  | Model.FIXMessage msg -> Engine.send_int state.engine msg
+  | Model.State _ ->
+    Lwt_io.printl "Warning: Unexpected Model.State" >>= fun () -> Lwt_io.flush_all () 
 
+let loop state =
+  let rec loop_box box receiver =
+    Lwt_mvar.take box >>= fun x -> 
+    receiver state x >>= fun () ->
+    loop_box box receiver
+    in
+  Lwt.join
+  [ loop_box state.engine_box receive_engine_box
+  ; loop_box state.fixio_box  receive_fixio_box
+  ; loop_box state.model_box  receive_model_box
+  ]
+  
 let config box =
   Engine.
     { comp_id = "IMANDRA"
@@ -56,7 +73,6 @@ let config box =
     ; timer = 3.0
     ; recv = Lwt_mvar.put box
     }
-
 
 let session_folder config =
   let open Engine in
