@@ -92,16 +92,16 @@ let rec literal_decoder () : literal decoder =
           let+ q = float in
           Float (Q.of_float q)
       | "Coll" ->
-          let+ c = list (expr_decoder ()) in
+          let+ c = list (record_item_decoder ()) in
           Coll c
       | "MapColl" ->
-          let* d = field "default" (expr_decoder ()) in
-          let+ c = field "elements" (list (expr_pair_decoder ())) in
+          let* d = field "default" (record_item_decoder ()) in
+          let+ c = field "elements" (list (record_item_pair_decoder ())) in
           MapColl (d,c)
       | "None" ->
           succeed LiteralNone
       | "Some" ->
-          let+ e = expr_decoder () in
+          let+ e = record_item_decoder () in
           LiteralSome e
       | "Datetime" ->
           let+ d = datetime_decoder in
@@ -109,9 +109,9 @@ let rec literal_decoder () : literal decoder =
       | s ->
           fail @@ "unrecognised literal: " ^ s)
 
-and expr_pair_decoder () : (Itr_ast.expr * Itr_ast.expr) decoder =
-    let* key = field "key" (expr_decoder ()) in
-    let* value = field "value" (expr_decoder ()) in
+and record_item_pair_decoder () : (Itr_ast.record_item * Itr_ast.record_item) decoder =
+    let* key = field "key" (record_item_decoder ()) in
+    let* value = field "value" (record_item_decoder ()) in
     succeed (key,value)
 
 
@@ -129,26 +129,20 @@ and value_decoder () : Itr_ast.value decoder =
       | "Connection_ref" ->
           let+ c = connection_ref_decoder in
           ConnectionRef c
-      | "TODOHex" ->
-          let+ h = string in
-          TODOHex h
       | "Now" ->
           succeed Now
       | "Counter" ->
           succeed Counter
       | "ObjectProperty" ->
-          let* obj = field "obj" (expr_decoder ()) in
+          let* obj = field "obj" (record_item_decoder ()) in
           let* index = field "index" (nullable int) in
           let index = CCOpt.map (fun x -> Z.of_int x) index in
           let* prop = field "prop" string in
           succeed (ObjectProperty { obj; index; prop })
       | "Funcall" ->
           let* func = field "name" string in
-          let* args = field "args" (list (expr_decoder ())) in
+          let* args = field "args" (list (record_item_decoder ())) in
           succeed (Funcall { func; args })
-      | "Record_item" ->
-          let+ ri = record_item_decoder () in
-          Record_item ri
       | s ->
           fail @@ "unrecognised value:" ^ s)
 
@@ -161,10 +155,6 @@ and expr_decoder () : expr decoder =
       | "Not" ->
           let+ n = expr_decoder () in
           Not n
-      | "Arrow" ->
-          let* condition = field "condition" (expr_decoder ()) in
-          let* assertion = field "assertion" (expr_decoder ()) in
-          succeed (Arrow { assertion; condition })
       | "Or" ->
           let* lhs = field "lhs" (expr_decoder ()) in
           let* rhs = field "rhs" (expr_decoder ()) in
@@ -174,15 +164,9 @@ and expr_decoder () : expr decoder =
           let* rhs = field "rhs" (expr_decoder ()) in
           succeed (And { lhs; rhs })
       | "Eq" ->
-          let* lhs = field "lhs" (expr_decoder ()) in
-          let* rhs = field "rhs" (expr_decoder ()) in
+          let* lhs = field "lhs" (record_item_decoder ()) in
+          let* rhs = field "rhs" (record_item_decoder ()) in
           succeed (Eq { lhs; rhs })
-      | "Like" ->
-          field
-            "Like"
-            (let* lhs = field "lhs" (expr_decoder ()) in
-             let* rhs = field "rhs" (expr_decoder ()) in
-             succeed (Like { lhs; rhs }))
       | "Cmp" ->
           let* lhs = field "lhs" (expr_decoder ()) in
           let* op = field "op" string in
@@ -206,7 +190,7 @@ and expr_decoder () : expr decoder =
           succeed (Mul { lhs; op; rhs })
       | "In" ->
           let* el = field "el" (expr_decoder ()) in
-          let* set = field "set" (expr_decoder ()) in
+          let* set = field "set" (value_decoder ()) in
           succeed (In { el; set })
       | s ->
           fail @@ "unrecognised expr: " ^ s)

@@ -6,14 +6,14 @@ module Map_extra (M : CCMap.S) = struct
 
   let merge_keep_left m1 m2 =
     merge_safe m1 m2 ~f:(fun _ -> function
-      | `Left a -> Some a | `Right b -> Some b | `Both (a, _) -> Some a)
+        | `Left a -> Some a | `Right b -> Some b | `Both (a, _) -> Some a)
 
 
   let merge_all_keep_left = function
     | [] ->
-        empty
+      empty
     | m :: ms ->
-        CCList.fold_left merge_keep_left m ms
+      CCList.fold_left merge_keep_left m ms
 end
 
 module String_map = Map_extra (CCMap.Make (CCString))
@@ -49,11 +49,11 @@ module Message_value = struct
       , `List
           (List.map
              (fun (x, o) ->
-               `Assoc
-                 [ ("name", `String x)
-                 ; ( "index"
-                   , match o with None -> `Null | Some x -> `Int (Z.to_int x) )
-                 ])
+                `Assoc
+                  [ ("name", `String x)
+                  ; ( "index"
+                    , match o with None -> `Null | Some x -> `Int (Z.to_int x) )
+                  ])
              t.field_path) )
     in
     let ent = [ ("var_name", pre); post ] in
@@ -64,15 +64,15 @@ module Message_value = struct
     let open CCFormat in
     let index_pp fmt = function
       | s, None ->
-          fprintf fmt "%s" s
+        fprintf fmt "%s" s
       | s, Some index ->
-          fprintf fmt "%s[%i]" s (Z.to_int index)
+        fprintf fmt "%s[%i]" s (Z.to_int index)
     in
     let pp_var_opt fmt = function
       | None ->
-          ()
+        ()
       | Some v ->
-          fprintf fmt "%a." Var.pp v
+        fprintf fmt "%a." Var.pp v
     in
     fprintf
       fmt
@@ -95,18 +95,18 @@ module Connection_ref = struct
   let to_json t =
     match t with
     | String s ->
-        `Assoc [ ("string", `String s) ]
+      `Assoc [ ("string", `String s) ]
     | Var v ->
-        `Assoc [ ("var", `String (Var.name v)) ]
+      `Assoc [ ("var", `String (Var.name v)) ]
 
 
   let pp fmt t =
     let open CCFormat in
     let pp_inner fmt = function
       | String s ->
-          pp_string fmt s
+        pp_string fmt s
       | Var v ->
-          Var.pp fmt v
+        Var.pp fmt v
     in
     fprintf fmt "[%a]" pp_inner t
 end
@@ -125,10 +125,10 @@ type literal =
   | String of string
   | UnquotedString of string
   | Float of real
-  | Coll of expr list
-  | MapColl of expr * ((expr*expr) list)
+  | Coll of record_item list
+  | MapColl of record_item * ((record_item*record_item) list)
   | LiteralNone
-  | LiteralSome of expr
+  | LiteralSome of record_item
   | Datetime of datetime
 
 and value =
@@ -136,30 +136,24 @@ and value =
   | Variable of Var.t
   | MessageValue of Message_value.t
   | ConnectionRef of Connection_ref.t
-  | TODOHex of string
   | Now
   | Counter
   | ObjectProperty of
-      { obj : expr
+      { obj : record_item
       ; index : int option
       ; prop : string
       }
   | Funcall of
       { func : string
-      ; args : expr list
+      ; args : record_item list
       }
-  | Record_item of record_item
 
 and expr =
   | Value of value
   | Not of expr
   | In of
       { el : expr
-      ; set : expr
-      }
-  | Arrow of
-      { condition : expr
-      ; assertion : expr
+      ; set : value
       }
   | Or of
       { lhs : expr
@@ -170,12 +164,8 @@ and expr =
       ; rhs : expr
       }
   | Eq of
-      { lhs : expr
-      ; rhs : expr
-      }
-  | Like of
-      { lhs : expr
-      ; rhs : expr
+      { lhs : record_item
+      ; rhs : record_item
       }
   | Cmp of
       { lhs : expr
@@ -209,143 +199,127 @@ and record_item =
 let rec expr_eq e1 e2 =
   match (e1, e2) with
   | Value v1, Value v2 ->
-      value_eq v1 v2
+    value_eq v1 v2
   | Not e1, Not e2 ->
-      expr_eq e1 e2
-  | ( Arrow { condition = c1; assertion = a1 }
-    , Arrow { condition = c2; assertion = a2 } ) ->
-      expr_eq c1 c2 && expr_eq a1 a2
+    expr_eq e1 e2
   | Or { lhs = lhs1; rhs = rhs1 }, Or { lhs = lhs2; rhs = rhs2 }
-  | And { lhs = lhs1; rhs = rhs1 }, And { lhs = lhs2; rhs = rhs2 }
-  | Eq { lhs = lhs1; rhs = rhs1 }, Eq { lhs = lhs2; rhs = rhs2 }
-  | Like { lhs = lhs1; rhs = rhs1 }, Like { lhs = lhs2; rhs = rhs2 } ->
-      expr_eq lhs1 lhs2 && expr_eq rhs1 rhs2
+  | And { lhs = lhs1; rhs = rhs1 }, And { lhs = lhs2; rhs = rhs2 } ->
+    expr_eq lhs1 lhs2 && expr_eq rhs1 rhs2
+  | Eq { lhs = lhs1; rhs = rhs1 }, Eq { lhs = lhs2; rhs = rhs2 } ->
+    record_item_eq lhs1 lhs2 && record_item_eq rhs1 rhs2
   | ( Cmp { lhs = lhs1; rhs = rhs1; op = op1 }
     , Cmp { lhs = lhs2; rhs = rhs2; op = op2 } ) ->
-      op1 = op2 && expr_eq lhs1 lhs2 && expr_eq rhs1 rhs2
+    op1 = op2 && expr_eq lhs1 lhs2 && expr_eq rhs1 rhs2
   | ( Add { lhs = lhs1; rhs = rhs1; op = op1 }
     , Add { lhs = lhs2; rhs = rhs2; op = op2 } )
   | ( Mul { lhs = lhs1; rhs = rhs1; op = op1 }
     , Mul { lhs = lhs2; rhs = rhs2; op = op2 } ) ->
-      op1 = op2 && expr_eq lhs1 lhs2 && expr_eq rhs1 rhs2
+    op1 = op2 && expr_eq lhs1 lhs2 && expr_eq rhs1 rhs2
   | _ ->
-      false
+    false
 
 
 and value_eq v1 v2 =
   match (v1, v2) with
-  | Record_item i1, Record_item i2 ->
-      record_item_eq i1 i2
   | ( Funcall { func = func1; args = args1 }
     , Funcall { func = func2; args = args2 } ) ->
-      func1 = func2 && CCList.equal expr_eq args1 args2
+    func1 = func2 && CCList.equal record_item_eq args1 args2
   | _ ->
-      v1 = v2
+    v1 = v2
 
 
 and record_item_eq i1 i2 =
   match (i1, i2) with
   | Rec_value e1, Rec_value e2 ->
-      expr_eq e1 e2
+    expr_eq e1 e2
   | Rec_record r1, Rec_record r2 ->
-      record_eq r1 r2
+    record_eq r1 r2
   | ( Rec_repeating_group { name = nm1; num_in_group_field = n1; elements = elements1;_ }
     , Rec_repeating_group { name = nm2; num_in_group_field = n2; elements = elements2;_ } ) ->
-      nm1 = nm2 && n1 = n2 && CCList.equal record_eq elements1 elements2
+    nm1 = nm2 && n1 = n2 && CCList.equal record_eq elements1 elements2
   | _ ->
-      false
+    false
 
 
 and record_eq r1 r2 = r1.name = r2.name && String_map.equal record_item_eq r1.elements r2.elements
 
-let map_value ~map_expr ~map_record_item = function
-  | ObjectProperty { obj; index; prop } ->
-      ObjectProperty { obj = map_expr obj; index; prop }
-  | Funcall { func; args } ->
-      Funcall { func; args = CCList.map map_expr args }
-  | Record_item record_item ->
-      Record_item (map_record_item record_item)
-  | v ->
+let rec map_record_item ~map_expr:f = 
+  let map_value = function
+    | ObjectProperty { obj; index; prop } ->
+      ObjectProperty { obj = map_record_item obj ~map_expr:f; index; prop }
+    | Funcall { func; args } ->
+      Funcall { func; args = CCList.map (map_record_item ~map_expr:f) args}
+    | v ->
       v
-
-
-let map_expr ~map_expr:f ~map_value = function
-  | Value v ->
+  in 
+  let map_expr = function
+    | Value v ->
       Value (map_value v)
-  | Not e ->
+    | Not e ->
       Not (f e)
-  | Arrow { condition; assertion } ->
-      Arrow { condition = f condition; assertion = f assertion }
-  | Or { lhs; rhs } ->
+    | Or { lhs; rhs } ->
       Or { lhs = f lhs; rhs = f rhs }
-  | And { lhs; rhs } ->
+    | And { lhs; rhs } ->
       And { lhs = f lhs; rhs = f rhs }
-  | Eq { lhs; rhs } ->
-      Eq { lhs = f lhs; rhs = f rhs }
-  | Like { lhs; rhs } ->
-      Like { lhs = f lhs; rhs = f rhs }
-  | Cmp { lhs; op; rhs } ->
+    | Eq { lhs; rhs } ->
+      Eq { lhs = map_record_item lhs ~map_expr:f; rhs = map_record_item rhs ~map_expr:f}
+    | Cmp { lhs; op; rhs } ->
       Cmp { lhs = f lhs; op; rhs = f rhs }
-  | Add { lhs; op; rhs } ->
+    | Add { lhs; op; rhs } ->
       Add { lhs = f lhs; op; rhs = f rhs }
-  | Mul { lhs; op; rhs } ->
+    | Mul { lhs; op; rhs } ->
       Mul { lhs = f lhs; op; rhs = f rhs }
-  | In { el; set } ->
-      In { el = f el; set = f set }
-
-
-let map_record_item ~map_expr ~map_record = function
-  | Rec_value expr ->
+    | In { el; set } ->
+      In { el = f el; set = map_value set }
+  in
+  let map_record = function
+    | {name;elements} ->
+      {name;elements = String_map.map (fun x -> (map_record_item ~map_expr x)) elements} 
+  in function
+    | Rec_value expr ->
       Rec_value (map_expr expr)
-  | Rec_record record ->
+    | Rec_record record ->
       Rec_record (map_record record)
-  | Rec_repeating_group { num_in_group_field; elements; name; message_template } ->
+    | Rec_repeating_group { num_in_group_field; elements; name; message_template } ->
       Rec_repeating_group
         { num_in_group_field; name; message_template; elements = CCList.map map_record elements }
 
-
-let map_record ~map_record_item r = {name = r.name; elements = String_map.map map_record_item r.elements}
-
 let map f =
-  let rec mri item =
-    map_record_item
-      ~map_expr:f
-      ~map_record:(map_record ~map_record_item:mri)
-      item
-  in
-  map_expr ~map_expr:f ~map_value:(map_value ~map_expr:f ~map_record_item:mri)
+  map_record_item ~map_expr:f
 
-
-let rec walk f e =
-  let e = f e in
-  map (walk f) e
-
+let rec walk (f:expr-> expr) (e:expr) =
+  let e = f e in 
+  match map (walk f) (Rec_value e)
+  with 
+  | Rec_value e -> e 
+  (* not mapping on to record values *)
+  | _ -> e
 
 exception Iterated
 
 let iterated () = raise Iterated
 
-let iter f e =
+let iter (f:expr -> unit) (e:expr) =
   try
     ignore
       (walk
          (fun e ->
-           f e ;
-           e)
+            f e ;
+            e)
          e)
   with
   | Iterated ->
-      ()
+    ()
 
 
-let exists f e =
+let exists (f:expr-> bool) (e:expr) =
   let found = ref false in
   iter
     (fun e ->
-      if f e
-      then (
-        found := true ;
-        iterated () ))
+       if f e
+       then (
+         found := true ;
+         iterated () ))
     e ;
   !found
 
@@ -354,26 +328,25 @@ let rec fold f init e =
   let init = f init e in
   match e with
   | Value _ ->
-      init
+    init
   | Not e1 ->
-      fold f init e1
-  | Arrow { condition; assertion } ->
-      let init = fold f init condition in
-      fold f init assertion
+    fold f init e1
   | Or { lhs; rhs }
   | And { lhs; rhs }
-  | Eq { lhs; rhs }
-  | Like { lhs; rhs }
   | Cmp { lhs; rhs; _ }
   | Add { lhs; rhs; _ }
   | Mul { lhs; rhs; _ } ->
-      let init = fold f init lhs in
-      let init = fold f init rhs in
-      init
-  | In { el; set } ->
-      let init = fold f init el in
-      let init = fold f init set in
-      init
+    let init = fold f init lhs in
+    let init = fold f init rhs in
+    init
+  | Eq { lhs = Rec_value lhs; rhs = Rec_value rhs } -> 
+    let lhs = Rec_value (fold f init lhs) in
+    let rhs = Rec_value (fold f init rhs) in
+    Eq { lhs ; rhs  }
+  | In { el; _ } ->
+    let init = fold f init el in
+    init
+  | _ -> init
 
 
 let is_funcall = function Value (Funcall _) -> true | _ -> false
@@ -423,37 +396,37 @@ let eq_opt lhs rhs =
 let add_eval lhs rhs =
   match (lhs, rhs) with
   | Value (Literal (String lhs)), Value (Literal (String rhs)) ->
-      Value (Literal (String (lhs ^ rhs)))
+    Value (Literal (String (lhs ^ rhs)))
   | _ ->
-      add lhs rhs
+    add lhs rhs
 
 
 let concat ?sep = function
   | [] ->
-      string ""
+    string ""
   | e :: es ->
-      let add e1 e2 =
-        match sep with
-        | None ->
-            add_eval e1 e2
-        | Some sep ->
-            add_eval e1 (add_eval sep e2)
-      in
-      CCList.fold_left add e es
+    let add e1 e2 =
+      match sep with
+      | None ->
+        add_eval e1 e2
+      | Some sep ->
+        add_eval e1 (add_eval sep e2)
+    in
+    CCList.fold_left add e es
 
 
 let simplify e =
   let rec simplify_rec e acc_string acc_list =
     match e with
     | [] ->
-        acc_list
+      acc_list
     | Value (Literal (String s)) :: t ->
-        simplify_rec t (acc_string ^ s) acc_list
+      simplify_rec t (acc_string ^ s) acc_list
     | h :: t ->
-        simplify_rec
-          t
-          ""
-          ( acc_list
+      simplify_rec
+        t
+        ""
+        ( acc_list
           @ (match acc_string with "" -> [] | _ -> [ string acc_string ])
           @ [ h ] )
   in
@@ -462,13 +435,13 @@ let simplify e =
 
 let all = function
   | [] ->
-      bool true
+    bool true
   | e :: es ->
-      CCList.fold_left
-        (fun e c ->
-          match c with Value (Literal (Bool true)) -> e | _ -> and_ e c)
-        e
-        es
+    CCList.fold_left
+      (fun e c ->
+         match c with Value (Literal (Bool true)) -> e | _ -> and_ e c)
+      e
+      es
 
 
 let convert_timestamp_localmktdate date =
@@ -482,20 +455,20 @@ let empty_record : record = {name = "";elements = String_map.empty}
 let rec map_value_in_record (path : string list) f (record : record) =
   match path with
   | [] ->
-      record
+    record
   | [ field ] ->
-      {name = record.name;elements = record.elements |> String_map.update field f}
+    {name = record.name;elements = record.elements |> String_map.update field f}
   | field :: path ->
-      {name= record.name;elements = record.elements
-      |> String_map.update field (fun entry ->
-             let record =
-               match entry with
-               | Some (Rec_record record) ->
-                   record
-               | _ ->
-                   empty_record
-             in
-             Some (Rec_record (map_value_in_record path f record)))}
+    {name= record.name;elements = record.elements
+                                  |> String_map.update field (fun entry ->
+                                      let record =
+                                        match entry with
+                                        | Some (Rec_record record) ->
+                                          record
+                                        | _ ->
+                                          empty_record
+                                      in
+                                      Some (Rec_record (map_value_in_record path f record)))}
 
 
 (** Given a record, return a list of paths to expressions that reference all the
@@ -515,31 +488,31 @@ let rec map_value_in_record (path : string list) f (record : record) =
        ]
 *)
 let rec flatten_record ?qualify_records (r : record) : (string list * expr) list
-    =
+  =
   r.elements
   |> String_map.to_list
   |> CCList.flat_map (fun (field, (item : record_item)) ->
-         flatten_record_item ?qualify_records field item)
+      flatten_record_item ?qualify_records field item)
 
 
 and flatten_record_item ?(qualify_records = true) field (i : record_item) =
   match i with
   | Rec_value expr ->
-      [ ([ field ], expr) ]
+    [ ([ field ], expr) ]
   | Rec_record record ->
-      flatten_record ~qualify_records record
-      |> CCList.map (fun (path, expr) ->
-             if qualify_records then (field :: path, expr) else (path, expr))
+    flatten_record ~qualify_records record
+    |> CCList.map (fun (path, expr) ->
+        if qualify_records then (field :: path, expr) else (path, expr))
   | Rec_repeating_group { num_in_group_field; elements;_ } ->
-      elements
-      |> CCList.mapi (fun i record ->
-             flatten_record ~qualify_records record
-             |> CCList.map (fun (path, expr) ->
-                    ( field
-                      :: Printf.sprintf "%s[%i]" num_in_group_field i
-                      :: path
-                    , expr )))
-      |> CCList.concat
+    elements
+    |> CCList.mapi (fun i record ->
+        flatten_record ~qualify_records record
+        |> CCList.map (fun (path, expr) ->
+            ( field
+              :: Printf.sprintf "%s[%i]" num_in_group_field i
+              :: path
+            , expr )))
+    |> CCList.concat
 
 
 module Template = struct
@@ -554,18 +527,18 @@ module Template = struct
   let to_json (t : t) : Yojson.Basic.t =
     match t with
     | Name (_, s) ->
-        `Assoc [ ("name", `String s) ]
+      `Assoc [ ("name", `String s) ]
     | Var (_, s) ->
-        `Assoc [ ("var", `String s) ]
+      `Assoc [ ("var", `String s) ]
 
 
   let pp fmt t =
     let open CCFormat in
     let pp_inner fmt = function
       | Name (s, _) ->
-          pp_string fmt s
+        pp_string fmt s
       | Var (v, _) ->
-          Var.pp fmt v
+        Var.pp fmt v
     in
     fprintf fmt "%a" pp_inner t
 end
@@ -581,9 +554,9 @@ type expecting =
   }
 
 type field =
- { name: string
- ; value : record_item
- }
+  { name: string
+  ; value : record_item
+  }
 
 type instruction =
   | Break
@@ -660,10 +633,10 @@ type instruction =
   | Comment of string
 
 module Instructions_set = CCSet.Make (struct
-  type t = instruction list
+    type t = instruction list
 
-  let compare = Caml.compare
-end)
+    let compare = Caml.compare
+  end)
 
 module Value = struct
   type t = value
@@ -676,44 +649,39 @@ module Value = struct
     | Variable _
     | MessageValue _
     | ConnectionRef _
-    | TODOHex _
     | Now
     | Counter ->
-        false
+      false
     | ObjectProperty { obj = e; index = _; prop = _ } ->
-        exists_expr f e
+      exists_record_item f e
     | Funcall { func = _; args = es } ->
-        CCList.exists (exists_expr f) es
-    | Record_item record_item ->
-        exists_record_item f record_item
+      CCList.exists (exists_record_item f) es
 
 
   and exists_expr f = function
     | Value v ->
-        exists f v
+      exists f v
     | Not e ->
-        exists_expr f e
-    | Arrow { condition; assertion } ->
-        exists_expr f condition || exists_expr f assertion
+      exists_expr f e
     | Or { lhs; rhs }
     | And { lhs; rhs }
-    | Eq { lhs; rhs }
-    | Like { lhs; rhs }
     | Cmp { lhs; rhs; op = _ }
     | Add { lhs; rhs; op = _ }
     | Mul { lhs; rhs; op = _ } ->
-        exists_expr f lhs || exists_expr f rhs
+      exists_expr f lhs || exists_expr f rhs
     | In { el; set } ->
-        exists_expr f el || exists_expr f set
+      exists_expr f el || exists f set
+    | Eq { lhs; rhs } -> 
+      exists_record_item f lhs || exists_record_item f rhs
 
 
   and exists_record_item f = function
     | Rec_value e ->
-        exists_expr f e
+      exists_expr f e
     | Rec_record record ->
-        exists_record f record
+      exists_record f record
     | Rec_repeating_group { num_in_group_field = _; elements;_ } ->
-        CCList.exists (exists_record f) elements
+      CCList.exists (exists_record f) elements
 
 
   and exists_record f r =
@@ -722,21 +690,21 @@ module Value = struct
 
   let rec exists_instruction f = function
     | Break | Goto _ | Label _ | Disconnect _ | Comment _ | Template _ ->
-        false
+      false
     | Call { variable = _; call = v } | Unset v ->
-        exists f v
+      exists f v
     | ExpectingOf { variable = _; expecting = { exprs = es; modifier = _ } } ->
-        CCList.exists (exists_expr f) es
+      CCList.exists (exists_expr f) es
     | Print e | Run e | Sleep e | Assert e ->
-        exists_expr f e
+      exists_expr f e
     | Set { prop = _; value = e } ->
-        exists_record_item f e
+      exists_record_item f e
     | Fail e | Return e | Connect { connection = _; timeout = e; block = _ } ->
-        e |> CCOpt.exists (exists_expr f)
+      e |> CCOpt.exists (exists_expr f)
     | Action {fields;_} ->
-        CCList.exists (exists_record_item f) (List.map (fun x -> x.value) fields)
+      CCList.exists (exists_record_item f) (List.map (fun x -> x.value) fields)
     | Message {fields;_} ->
-        CCList.exists (exists_record_item f) (List.map (fun x -> x.value) fields)
+      CCList.exists (exists_record_item f) (List.map (fun x -> x.value) fields)
     | Send
         { variable = _
         ; template = _
@@ -744,27 +712,31 @@ module Value = struct
         ; using = _
         ; withs = record
         } ->
-        CCOpt.exists (exists_record f) record
+      CCOpt.exists (exists_record f) record
     | Cleanup is
     | OnExpired is
     | Repeat { ntimes = _; instructions = is }
     | FunctionDef { name = _; args = _; body = is } ->
-        CCList.exists (exists_instruction f) is
+      CCList.exists (exists_instruction f) is
     | ForEach { dataset = e; instructions = is } ->
-        exists_expr f e || CCList.exists (exists_instruction f) is
+      exists_expr f e || CCList.exists (exists_instruction f) is
     | Receive { variable = _; connection = _; timeout; where; expecting;_ } ->
-        CCOpt.exists (exists_expr f) timeout
-        || exists_expr f where
-        || CCOpt.exists
-             (fun (e : expecting) -> CCList.exists (exists_expr f) e.exprs)
-             expecting
+      CCOpt.exists (exists_expr f) timeout
+      || exists_expr f where
+      || CCOpt.exists
+        (fun (e : expecting) -> CCList.exists (exists_expr f) e.exprs)
+        expecting
     | IfThenElse { cond; then_; else_ } ->
-        exists_expr f cond
-        || CCList.exists (exists_instruction f) then_
-        || CCList.exists (exists_instruction f) else_
+      exists_expr f cond
+      || CCList.exists (exists_instruction f) then_
+      || CCList.exists (exists_instruction f) else_
 end
 
-let append ~to_ e = Set { prop = to_; value = Rec_value (add (Value (Record_item (Rec_value (var to_)))) e )}
+let append ~to_ = 
+  function 
+  | Rec_value e -> Set { prop = to_; value = Rec_value (add (var to_) e) }
+  (* TODO printing of records and repeating groups *)
+  | _ -> Set { prop = to_; value = Rec_record {name="temp";elements =String_map.empty} }
 
 (** Combine:
 
@@ -778,99 +750,97 @@ let append ~to_ e = Set { prop = to_; value = Rec_value (add (Value (Record_item
 let rec combine_appends ~var = function
   | Set { prop = x1; value }
     :: Set
-         { prop = x2
-         ; value = Rec_value (Add { lhs = Value (Variable (Var x3)); rhs; op = '+' })
-         }
-       :: is
+      { prop = x2
+      ; value = Rec_value (Add { lhs = Value (Variable (Var x3)); rhs; op = '+' } as orig_value)
+      }
+    :: is
     when x1 = var && x2 = var && x3 = var ->
-      let i =
-        match value with
-        | Rec_value (Add { lhs = Value (Variable (Var x4)); rhs = value; op = '+' })
-          when x4 = var ->
-            append ~to_:var (add_eval value rhs)
-        | _ ->
-            Set { prop = var; value = Rec_value (add (Value (Record_item value)) rhs) }
-      in
-      combine_appends ~var (i :: is)
+    let i =
+      match value with
+      | Rec_value (Add { lhs = Value (Variable (Var x4)); rhs = value; op = '+' })
+        when x4 = var ->
+        append ~to_:var (Rec_value (add_eval value rhs))
+      | _ ->
+        Set { prop = var; value = Rec_value (add orig_value rhs) }
+    in
+    combine_appends ~var (i :: is)
   | i :: is ->
-      i :: combine_appends ~var is
+    i :: combine_appends ~var is
   | [] ->
-      []
+    []
 
 
 let is_local_message_value = function
-  | Value (MessageValue { var = None; _ }) ->
-      true
+  |  Value (MessageValue { var = None; _ }) ->
+    true
   | _ ->
-      false
+    false
 
 
 let rec eval_pp_value ~var (value : value) : instruction list =
   let append e = append ~to_:var e in
   match value with
   | MessageValue ({ var = None; _ } as mv) ->
-      [ append (string (CCFormat.sprintf "%a" Message_value.pp mv)) ]
+    [ append (Rec_value (string (CCFormat.sprintf "%a" Message_value.pp mv))) ]
   | Funcall _ ->
-      (* todo for printing *) []
+    (* todo for printing *) []
   | Literal _
   | Variable _
   | MessageValue _
   | ConnectionRef _
-  | TODOHex _
   | Now
   | Counter
   (* TODO *)
   | ObjectProperty _
-  | Record_item _ ->
-      [ append (Value value) ]
+    ->
+    [ append (Rec_value (Value value)) ]
 
 
-and eval_pp_expr ~var (e : expr) : instruction list =
+and eval_pp_record_item ~var (e : record_item) : instruction list =
   let append e = append ~to_:var e in
   let bin_expr lhs rhs op =
     CCList.concat
-      [ eval_pp_expr ~var lhs
-      ; [ append (string (CCFormat.sprintf " %s " op)) ]
-      ; eval_pp_expr ~var rhs
+      [ eval_pp_record_item ~var lhs
+      ; [ append (Rec_value (string (CCFormat.sprintf " %s " op))) ]
+      ; eval_pp_record_item ~var rhs
       ]
   in
   let instructions =
-    if exists is_local_message_value e
-    then
-      match e with
-      | Value v ->
-          eval_pp_value ~var v
-      | Not e ->
-          CCList.concat
-            [ [ append (string "(not ") ]
-            ; eval_pp_expr ~var e
-            ; [ append (string ")") ]
-            ]
-      | Arrow { condition; assertion } ->
-          bin_expr condition assertion "->"
-      | Cmp { lhs; op; rhs } ->
-          bin_expr lhs rhs op
-      | Add { lhs; op; rhs } | Mul { lhs; op; rhs } ->
-          bin_expr lhs rhs (CCString.of_char op)
-      | Or { lhs = And { lhs = cond; rhs = when_true }; rhs = when_false }
-        when not (exists is_local_message_value cond) ->
-          [ IfThenElse
-              { cond
-              ; then_ = eval_pp_expr ~var when_true
-              ; else_ = eval_pp_expr ~var when_false
-              }
-          ]
-      | Or { lhs; rhs } ->
-          bin_expr lhs rhs "||"
-      | And { lhs; rhs } ->
-          bin_expr lhs rhs "&&"
-      | Eq { lhs; rhs } ->
-          bin_expr lhs rhs "="
-      | Like { lhs; rhs } ->
-          bin_expr lhs rhs "like"
-      | In { el; set } ->
-          bin_expr el set "in"
-    else [ append e ]
+    match e with 
+      Rec_value e -> (
+        if exists is_local_message_value e
+        then
+          (match e with | Value v ->
+             eval_pp_value ~var v
+                        | Not e ->
+                          CCList.concat
+                            [ [ append (Rec_value (string "(not ")) ]
+                            ; eval_pp_record_item ~var (Rec_value e)
+                            ; [ append (Rec_value (string ")")) ]
+                            ]
+                        | Cmp { lhs; op; rhs } ->
+                          bin_expr (Rec_value lhs) (Rec_value rhs) op
+                        | Add { lhs; op; rhs } | Mul { lhs; op; rhs } ->
+                          bin_expr (Rec_value lhs) (Rec_value rhs) (CCString.of_char op)
+                        | Or { lhs = And { lhs = cond; rhs = when_true }; rhs = when_false }
+                          when not (exists is_local_message_value cond) ->
+                          [ IfThenElse
+                              { cond
+                              ; then_ = eval_pp_record_item ~var (Rec_value when_true)
+                              ; else_ = eval_pp_record_item ~var (Rec_value when_false)
+                              }
+                          ]
+                        | Or { lhs; rhs } ->
+                          bin_expr (Rec_value lhs) (Rec_value rhs) "||"
+                        | And { lhs; rhs } ->
+                          bin_expr (Rec_value lhs) (Rec_value rhs) "&&"
+                        | Eq { lhs = Rec_value lhs; rhs = Rec_value rhs } ->
+                          bin_expr (Rec_value lhs) (Rec_value rhs) "="
+                        | In { el; set } ->
+                          bin_expr (Rec_value el) (Rec_value (Value set)) "in"
+                        | _ -> [])
+        else [ append (Rec_value e) ]) 
+    | _  -> []
   in
   combine_appends ~var instructions
 
