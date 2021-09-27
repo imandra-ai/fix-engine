@@ -21,24 +21,35 @@ let rec loop (fixio_box, fixio) (engine_box, engine) (model_box, model) =
   Lwt.pick
     [ ( Lwt_mvar.take engine_box
       >>= function
-      | Engine.FIXMessage (Full_messages.ValidMsg msg) ->
-        Lwt_io.printl "Engine.FIXMessage" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
-        engine_to_fixio fixio msg
-      | Engine.OutFIXData (_,msg) ->
+      | Engine.FIXMessage (Full_messages.ValidMsg msg) -> 
+        Lwt_io.printl "Engine.FIXMessage ValidMsg" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+        engine_to_fixio fixio msg 
+      | Engine.FIXMessage (Full_messages.Garbled ) ->
+        Lwt_io.printl "Engine.FIXMessage Garbled" >>= fun () -> Lwt_io.flush_all ()
+      | Engine.FIXMessage (Full_messages.SessionRejectedMsg m ) ->
+        Lwt_io.printl "Engine.FIXMessage SessionRejectedMsg" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+        Lwt_io.printl (Full_messages_json.session_rejected_msg_to_json m |> Yojson.Basic.to_string) >>= fun () -> Lwt_io.flush_all ()
+      | Engine.FIXMessage (Full_messages.BusinessRejectedMsg m ) ->
+        Lwt_io.printl "Engine.FIXMessage BusinessRejectedMsg" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+        Lwt_io.printl (Full_messages_json.biz_rejected_msg_to_json m |> Yojson.Basic.to_string) >>= fun () -> Lwt_io.flush_all ()
+      | Engine.OutFIXData (_,msg) -> 
         Lwt_io.printl "Engine.OutFIXData" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
-        Model.send_fix model (OutIntMsg_ApplicationData msg) 
-      | _ ->
-          Lwt.return_unit )
-    ; (Lwt_mvar.take fixio_box >>= fun msg ->
-       Lwt_io.printl "fixio_box" >>= fun () -> Lwt_io.flush_all () >>= 
-      fun () -> fixio_to_engine engine msg)
+        Model.send_fix model (OutIntMsg_ApplicationData msg)
+      | Engine.State _ -> 
+        Lwt_io.printl "Engine.State" >>= fun () -> Lwt_io.flush_all () 
+      )
+    ; ( Lwt_mvar.take fixio_box >>= fun msg ->
+        Lwt_io.printl "fixio_box" >>= fun () -> Lwt_io.flush_all () >>= 
+        fun () -> fixio_to_engine engine msg
+      )
     ; ( Lwt_mvar.take model_box
       >>= function
       | Model.FIXMessage msg ->
         Lwt_io.printl "Model.FIXMessage" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
         Engine.send_int engine msg
-      | _ ->
-          Lwt.return_unit )
+      | Model.State _ ->
+        Lwt_io.printl "Model.State" >>= fun () -> Lwt_io.flush_all () 
+      )
     ]
   >>= fun () -> loop (fixio_box, fixio) (engine_box, engine) (model_box, model)
 
