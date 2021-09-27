@@ -138,11 +138,19 @@ end = struct
   
   let rec main_loop t engine_state =
     let open Fix_engine_state in 
-    Lwt_mvar.take t.send_box >>= (function 
+    Lwt_mvar.take t.send_box >>= fun msg ->
+    Lwt_io.printl "Engine: main_loop received a message" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+    (match msg with 
+    | SendFIXMessage msg -> Lwt_io.printl " - SendFIXMessage" >>= fun () -> Lwt_io.flush_all ()
+    | SendInternal   msg -> Lwt_io.printl " - SendInternal" >>= fun () -> Lwt_io.flush_all ()
+    | GetState -> Lwt_io.printl " - GetState" >>= fun () -> Lwt_io.flush_all ()
+    ) >>= fun () ->    
+    (match msg with 
     | SendFIXMessage msg -> {engine_state with incoming_fix_msg = Some msg } |> while_busy_loop t
     | SendInternal   msg -> {engine_state with incoming_int_msg = Some msg } |> while_busy_loop t
     | GetState -> t.recv (State engine_state) >>= fun () -> Lwt.return engine_state
-    ) >>= fun engine_state -> 
+    ) >>= fun engine_state ->
+    Lwt_io.printl "Engine: main_loop continues" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
     main_loop t engine_state
 
   let do_timechange t =
