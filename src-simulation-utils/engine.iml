@@ -112,7 +112,8 @@ end = struct
     (* This assumes that after one_step we can get either ontgoing internal or outgoing FIX message *)
     begin match ( engine_state.outgoing_fix_msg , engine_state.outgoing_int_msg) with
       | Some msg, None -> t.recv ( FIXMessage msg )  
-      | None, Some (OutIntMsg_ApplicationData msg) -> t.recv ( extract_out_fix_data engine_state msg ) 
+      | None, Some (OutIntMsg_ApplicationData msg)  
+      | None, Some (OutIntMsg_ResendApplicationData msg) -> t.recv ( extract_out_fix_data engine_state msg ) 
       | None, Some _ 
       | None, None   -> Lwt.return_unit
       |  _ -> Lwt.fail_with "Critical internal error in fix_engine model" 
