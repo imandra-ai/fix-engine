@@ -22,15 +22,20 @@ let rec loop (fixio_box, fixio) (engine_box, engine) (model_box, model) =
     [ ( Lwt_mvar.take engine_box
       >>= function
       | Engine.FIXMessage (Full_messages.ValidMsg msg) ->
-          engine_to_fixio fixio msg
+        Lwt_io.printl "Engine.FIXMessage" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+        engine_to_fixio fixio msg
       | Engine.OutFIXData (_,msg) ->
-          Model.send_fix model (OutIntMsg_ApplicationData msg) 
+        Lwt_io.printl "Engine.OutFIXData" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+        Model.send_fix model (OutIntMsg_ApplicationData msg) 
       | _ ->
           Lwt.return_unit )
-    ; (Lwt_mvar.take fixio_box >>= fun msg -> fixio_to_engine engine msg)
+    ; (Lwt_mvar.take fixio_box >>= fun msg ->
+       Lwt_io.printl "fixio_box" >>= fun () -> Lwt_io.flush_all () >>= 
+      fun () -> fixio_to_engine engine msg)
     ; ( Lwt_mvar.take model_box
       >>= function
       | Model.FIXMessage msg ->
+        Lwt_io.printl "Model.FIXMessage" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
           Engine.send_int engine msg
       | _ ->
           Lwt.return_unit )
