@@ -111,11 +111,23 @@ end = struct
     let engine_state = Fix_engine.one_step engine_state in
     (* This assumes that after one_step we can get either ontgoing internal or outgoing FIX message *)
     begin match ( engine_state.outgoing_fix_msg , engine_state.outgoing_int_msg) with
-      | Some msg, None -> t.recv ( FIXMessage msg )  
+      | Some msg, None -> (
+        Lwt_io.printl "Engine sends FIXMessage" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+        t.recv ( FIXMessage msg )  
+      )
       | None, Some (OutIntMsg_ApplicationData msg)  
-      | None, Some (OutIntMsg_ResendApplicationData msg) -> t.recv ( extract_out_fix_data engine_state msg ) 
-      | None, Some _ 
-      | None, None   -> Lwt.return_unit
+      | None, Some (OutIntMsg_ResendApplicationData msg) -> (
+        Lwt_io.printl "Engine sends OutFIXData" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+        t.recv ( extract_out_fix_data engine_state msg ) 
+      )
+      | None, Some _ ->(
+        Lwt_io.printl "Engine: ignored " >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+        Lwt.return_unit
+      )
+      | None, None   ->( 
+        Lwt_io.printl "Engine: nothing to send" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+        Lwt.return_unit
+      )
       |  _ -> Lwt.fail_with "Critical internal error in fix_engine model" 
     end >>= fun () ->
     save_state_seqns t.sess engine_state >>= fun () ->
