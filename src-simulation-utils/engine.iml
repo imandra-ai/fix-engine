@@ -111,23 +111,12 @@ end = struct
     let engine_state = Fix_engine.one_step engine_state in
     (* This assumes that after one_step we can get either ontgoing internal or outgoing FIX message *)
     begin match ( engine_state.outgoing_fix_msg , engine_state.outgoing_int_msg) with
-      | Some msg, None -> (
-        Lwt_io.printl "Engine sends FIXMessage" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
-        t.recv ( FIXMessage msg )  
-      )
+      | Some msg, None -> t.recv ( FIXMessage msg )  
       | None, Some (OutIntMsg_ApplicationData msg)  
-      | None, Some (OutIntMsg_ResendApplicationData msg) -> (
-        Lwt_io.printl "Engine sends OutFIXData" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
+      | None, Some (OutIntMsg_ResendApplicationData msg) ->
         t.recv ( extract_out_fix_data engine_state msg ) 
-      )
-      | None, Some _ ->(
-        Lwt_io.printl "Engine: ignored " >>= fun () -> Lwt_io.flush_all () >>= fun () ->
-        Lwt.return_unit
-      )
-      | None, None   ->( 
-        Lwt_io.printl "Engine: nothing to send" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
-        Lwt.return_unit
-      )
+      | None, Some _ -> Lwt.return_unit
+      | None, None   -> Lwt.return_unit
       |  _ -> Lwt.fail_with "Critical internal error in fix_engine model" 
     end >>= fun () ->
     save_state_seqns t.sess engine_state >>= fun () ->
@@ -139,18 +128,11 @@ end = struct
   let rec main_loop t engine_state =
     let open Fix_engine_state in 
     Lwt_mvar.take t.send_box >>= fun msg ->
-    Lwt_io.printl "Engine: main_loop received a message" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
-    (match msg with 
-    | SendFIXMessage msg -> Lwt_io.printl " - SendFIXMessage" >>= fun () -> Lwt_io.flush_all ()
-    | SendInternal   msg -> Lwt_io.printl " - SendInternal" >>= fun () -> Lwt_io.flush_all ()
-    | GetState -> Lwt_io.printl " - GetState" >>= fun () -> Lwt_io.flush_all ()
-    ) >>= fun () ->    
-    (match msg with 
+    ( match msg with 
     | SendFIXMessage msg -> {engine_state with incoming_fix_msg = Some msg } |> while_busy_loop t
     | SendInternal   msg -> {engine_state with incoming_int_msg = Some msg } |> while_busy_loop t
     | GetState -> t.recv (State engine_state) >>= fun () -> Lwt.return engine_state
     ) >>= fun engine_state ->
-    Lwt_io.printl "Engine: main_loop continues" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
     main_loop t engine_state
 
   let do_timechange t =
