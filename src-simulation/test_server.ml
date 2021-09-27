@@ -62,7 +62,7 @@ let f _ (inch, outch) =
   let model_box = Lwt_mvar.create_empty () in
   let fixio_box = Lwt_mvar.create_empty () in
   let config = config engine_box in
-  let enginethread, engine = Engine.start (Z.zero, Z.zero) ~config in
+  let enginethread, engine = Engine.start ~session_dir:"test_runner.session" ~reset:true ~config in
   let modelthread, model = Model.start ~recv:(Lwt_mvar.put model_box) in
   let iothread, fixio =
     Fix_io.start ~recv:(Lwt_mvar.put fixio_box) (inch, outch)
