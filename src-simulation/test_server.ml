@@ -18,7 +18,7 @@ let engine_to_fixio fixio msg =
 
 
 let rec loop (fixio_box, fixio) (engine_box, engine) (model_box, model) =
-  Lwt.pick
+  Lwt.choose
     [ ( Lwt_mvar.take engine_box
       >>= function
       | Engine.FIXMessage (Full_messages.ValidMsg msg) -> 
