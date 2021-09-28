@@ -243,7 +243,7 @@ and record_item_eq i1 i2 =
 
 and record_eq r1 r2 = r1.name = r2.name && String_map.equal record_item_eq r1.elements r2.elements
 
-let rec map_record_item ~map_expr:f = 
+let rec map_record_item ~map_expr:f =
   let map_value = function
     | ObjectProperty { obj; index; prop } ->
       ObjectProperty { obj = map_record_item obj ~map_expr:f; index; prop }
@@ -251,7 +251,7 @@ let rec map_record_item ~map_expr:f =
       Funcall { func; args = CCList.map (map_record_item ~map_expr:f) args}
     | v ->
       v
-  in 
+  in
   let map_expr = function
     | Value v ->
       Value (map_value v)
@@ -274,7 +274,7 @@ let rec map_record_item ~map_expr:f =
   in
   let map_record = function
     | {name;elements} ->
-      {name;elements = String_map.map (fun x -> (map_record_item ~map_expr x)) elements} 
+      {name;elements = String_map.map (fun x -> (map_record_item ~map_expr x)) elements}
   in function
     | Rec_value expr ->
       Rec_value (map_expr expr)
@@ -288,10 +288,10 @@ let map f =
   map_record_item ~map_expr:f
 
 let rec walk (f:expr-> expr) (e:expr) =
-  let e = f e in 
+  let e = f e in
   match map (walk f) (Rec_value e)
-  with 
-  | Rec_value e -> e 
+  with
+  | Rec_value e -> e
   (* not mapping on to record values *)
   | _ -> e
 
@@ -339,7 +339,7 @@ let rec fold f init e =
     let init = fold f init lhs in
     let init = fold f init rhs in
     init
-  | Eq { lhs = Rec_value lhs; rhs = Rec_value rhs } -> 
+  | Eq { lhs = Rec_value lhs; rhs = Rec_value rhs } ->
     let lhs = Rec_value (fold f init lhs) in
     let rhs = Rec_value (fold f init rhs) in
     Eq { lhs ; rhs  }
@@ -443,10 +443,11 @@ let all = function
       e
       es
 
-
 let convert_timestamp_localmktdate date =
   funcall "timestamp_to_localmktdate" [ date ]
 
+let format_timestamp date =
+funcall "format_timestamp" [date]
 
 let convert_timestamp_dateonly date = funcall "timestamp_to_dateonly" [ date ]
 
@@ -671,7 +672,7 @@ module Value = struct
       exists_expr f lhs || exists_expr f rhs
     | In { el; set } ->
       exists_expr f el || exists f set
-    | Eq { lhs; rhs } -> 
+    | Eq { lhs; rhs } ->
       exists_record_item f lhs || exists_record_item f rhs
 
 
@@ -732,8 +733,8 @@ module Value = struct
       || CCList.exists (exists_instruction f) else_
 end
 
-let append ~to_ = 
-  function 
+let append ~to_ =
+  function
   | Rec_value e -> Set { prop = to_; value = Rec_value (add (var to_) e) }
   (* TODO printing of records and repeating groups *)
   | _ -> Set { prop = to_; value = Rec_record {name="temp";elements =String_map.empty} }
@@ -806,7 +807,7 @@ and eval_pp_record_item ~var (e : record_item) : instruction list =
       ]
   in
   let instructions =
-    match e with 
+    match e with
       Rec_value e -> (
         if exists is_local_message_value e
         then
@@ -839,7 +840,7 @@ and eval_pp_record_item ~var (e : record_item) : instruction list =
                         | In { el; set } ->
                           bin_expr (Rec_value el) (Rec_value (Value set)) "in"
                         | _ -> [])
-        else [ append (Rec_value e) ]) 
+        else [ append (Rec_value e) ])
     | _  -> []
   in
   combine_appends ~var instructions
