@@ -92,7 +92,9 @@ let rec literal_decoder () : literal decoder =
         let+ q = float in
         Float (Q.of_float q)
       | "Coll" ->
-        let+ c = list (record_item_decoder ()) in
+        let+ c = list (one_of [
+          "record_item",record_item_decoder ();
+          "expr",let+ e = expr_decoder () in Rec_value e]) in
         Coll c
       | "MapColl" ->
         let* d = field "default" (record_item_decoder ()) in
@@ -101,7 +103,9 @@ let rec literal_decoder () : literal decoder =
       | "None" ->
         succeed LiteralNone
       | "Some" ->
-        let+ e = record_item_decoder () in
+        let+ e = one_of [
+          "record_item",record_item_decoder ();
+          "expr",(let+ e = expr_decoder ()in Rec_value e)] in
         LiteralSome e
       | "Datetime" ->
         let+ d = datetime_decoder in
@@ -134,14 +138,20 @@ and value_decoder () : Itr_ast.value decoder =
       | "Counter" ->
         succeed Counter
       | "ObjectProperty" ->
-        let* obj = field "obj" (record_item_decoder ()) in
+        let* obj = field "obj" (
+          one_of[
+            "record_item",record_item_decoder ()
+          ; "expr", let+ e = expr_decoder () in Rec_value e]) in
         let* index = field "index" (nullable int) in
         let index = CCOpt.map (fun x -> Z.of_int x) index in
         let* prop = field "prop" string in
         succeed (ObjectProperty { obj; index; prop })
       | "Funcall" ->
         let* func = field "name" string in
-        let* args = field "args" (list (record_item_decoder ())) in
+        let* args = field "args" (list (
+          one_of [
+            "record_item",record_item_decoder ();
+            "expr",let+ e = expr_decoder() in Rec_value e])) in
         succeed (Funcall { func; args })
       | s ->
         fail @@ "unrecognised value:" ^ s)
