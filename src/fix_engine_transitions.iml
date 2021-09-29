@@ -264,7 +264,9 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                         incoming_fix_msg = None;
                 }
             | Full_Msg_Logon _data           -> engine
-            | Full_Msg_Logoff _data          -> logoff_and_shutdown ( engine )
+            | Full_Msg_Logoff _data          -> 
+                let engine = logoff_and_shutdown engine in 
+                { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
             | Full_Msg_Reject _data          -> { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
             | Full_Msg_Business_Reject _data -> engine
             | Full_Msg_Resend_Request data  ->
