@@ -1,12 +1,5 @@
 module Internal : sig
 
-  module SessionManager : sig
-    type t
-    val save : t -> (int * int) -> unit Lwt.t
-    val create : reset:bool -> dir:string -> t
-    val get : t -> (int * int)
-  end
-
   type t
 
   type event =
@@ -27,7 +20,6 @@ module Internal : sig
   val send_fix : t -> Full_messages.full_top_level_msg -> unit Lwt.t
   val send_int : t -> Fix_engine_state.fix_engine_int_inc_msg -> unit Lwt.t
   val send_getstate : t -> unit Lwt.t
-  val save_state_seqns : SessionManager.t -> Fix_engine_state.fix_engine_state -> unit Lwt.t
 
 end = struct
 
