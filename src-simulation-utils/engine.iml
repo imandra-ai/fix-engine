@@ -1,6 +1,11 @@
-module Internal : sig 
-  
-  module SessionManager : sig type t end
+module Internal : sig
+
+  module SessionManager : sig
+    type t
+    val save : t -> (int * int) -> unit Lwt.t
+    val create : reset:bool -> dir:string -> t
+    val get : t -> (int * int)
+  end
 
   type t
 
@@ -9,35 +14,37 @@ module Internal : sig
     | FIXMessage of Full_messages.full_top_level_msg
     | State      of Fix_engine_state.fix_engine_state
 
-  type config = 
+  type config =
     { comp_id        : string
     ; host_id        : string option
     ; on_behalf_id   : string option
     ; target_id      : string
     ; timer          : float
-    ; recv           : event -> unit Lwt.t 
+    ; recv           : event -> unit Lwt.t
     }
 
   val start : reset:bool -> session_dir:string -> config:config -> unit Lwt.t * t
   val send_fix : t -> Full_messages.full_top_level_msg -> unit Lwt.t
   val send_int : t -> Fix_engine_state.fix_engine_int_inc_msg -> unit Lwt.t
   val send_getstate : t -> unit Lwt.t
+  val save_state_seqns : SessionManager.t -> Fix_engine_state.fix_engine_state -> unit Lwt.t
 
 end = struct
 
-  module SessionManager : sig 
+  module SessionManager : sig
     type t
     val save : t -> (int * int) -> unit Lwt.t
-    val create : reset:bool -> dir:string -> t 
+    val create : reset:bool -> dir:string -> t
     val get : t -> (int * int)
+
   end = struct
 
     let (>>=) = Lwt.(>>=)
 
     type t =
       { dir : string
-      ; seqin  : int 
-      ; seqout : int 
+      ; seqin  : int
+      ; seqout : int
       }
 
     let read_int file = try
@@ -46,27 +53,27 @@ end = struct
         let () = close_in chn in
         num |> int_of_string |> Z.of_int
       with _exn -> 0
-    
+
     let read_seqns dir =
       { dir
-      ; seqin  = read_int Filename.(concat dir "seqin" ) 
-      ; seqout = read_int Filename.(concat dir "seqout") 
+      ; seqin  = read_int Filename.(concat dir "seqin" )
+      ; seqout = read_int Filename.(concat dir "seqout")
       }
 
     let prepare_folder dir =
-      if not(Caml_sys.file_exists dir) then 
-        Caml_unix.(mkdir dir (Z.to_int 0o775)) 
-      else ()   
+      if not(Caml_sys.file_exists dir) then
+        Caml_unix.(mkdir dir (Z.to_int 0o775))
+      else ()
 
     let write_int dir fname num =
-      let filename = Filename.(concat dir fname) in 
+      let filename = Filename.(concat dir fname) in
       Lwt_io.(open_file ~mode:output filename) >>= fun fch ->
       Lwt_io.write fch (String.of_int num) >>= fun () ->
       Lwt_io.close fch
 
     let save state (seqin, seqout) =
       write_int state.dir "seqin"  seqin  >>= fun () ->
-      write_int state.dir "seqout" seqout 
+      write_int state.dir "seqout" seqout
 
     let create ~reset ~dir =
       let () = prepare_folder dir in
@@ -83,18 +90,18 @@ end = struct
   type send_event =
     | SendInternal   of Fix_engine_state.fix_engine_int_inc_msg
     | SendFIXMessage of Full_messages.full_top_level_msg
-    | GetState      
+    | GetState
 
   type event =
     | OutFIXData of ( int * Full_app_messages.full_app_msg_data )
     | FIXMessage of Full_messages.full_top_level_msg
     | State      of Fix_engine_state.fix_engine_state
 
-  type t = 
+  type t =
     { recv          : event -> unit Lwt.t
     ; send_box      : send_event Lwt_mvar.t
     ; timer         : float
-    ; sess          : SessionManager.t    
+    ; sess          : SessionManager.t
     }
 
   let save_state_seqns sessn state =
@@ -106,46 +113,46 @@ end = struct
     let open Fix_engine_state in
     OutFIXData ( engine_state.incoming_seq_num , msg )
 
-  (** Calls Fix_engine.one_step and pubs outgoing messages while busy *)  
+  (** Calls Fix_engine.one_step and pubs outgoing messages while busy *)
   let rec while_busy_loop t engine_state  =
     let engine_state = Fix_engine.one_step engine_state in
     (* This assumes that after one_step we can get either ontgoing internal or outgoing FIX message *)
     begin match ( engine_state.outgoing_fix_msg , engine_state.outgoing_int_msg) with
       | Some msg, None -> (
         Lwt_io.printl "Engine sends FIXMessage" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
-        t.recv ( FIXMessage msg )  
+        t.recv ( FIXMessage msg )
       )
-      | None, Some (OutIntMsg_ApplicationData msg)  
+      | None, Some (OutIntMsg_ApplicationData msg)
       | None, Some (OutIntMsg_ResendApplicationData msg) -> (
         Lwt_io.printl "Engine sends OutFIXData" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
-        t.recv ( extract_out_fix_data engine_state msg ) 
+        t.recv ( extract_out_fix_data engine_state msg )
       )
       | None, Some _ ->(
         Lwt_io.printl "Engine: ignored " >>= fun () -> Lwt_io.flush_all () >>= fun () ->
         Lwt.return_unit
       )
-      | None, None   ->( 
+      | None, None   ->(
         Lwt_io.printl "Engine: nothing to send" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
         Lwt.return_unit
       )
-      |  _ -> Lwt.fail_with "Critical internal error in fix_engine model" 
+      |  _ -> Lwt.fail_with "Critical internal error in fix_engine model"
     end >>= fun () ->
     save_state_seqns t.sess engine_state >>= fun () ->
     let engine_state = { engine_state with outgoing_fix_msg = None ; outgoing_int_msg = None } in
     if Fix_engine_state.engine_state_busy engine_state then
       while_busy_loop t engine_state
     else Lwt.return engine_state
-  
+
   let rec main_loop t engine_state =
-    let open Fix_engine_state in 
+    let open Fix_engine_state in
     Lwt_mvar.take t.send_box >>= fun msg ->
     Lwt_io.printl "Engine: main_loop received a message" >>= fun () -> Lwt_io.flush_all () >>= fun () ->
-    (match msg with 
+    (match msg with
     | SendFIXMessage msg -> Lwt_io.printl " - SendFIXMessage" >>= fun () -> Lwt_io.flush_all ()
     | SendInternal   msg -> Lwt_io.printl " - SendInternal" >>= fun () -> Lwt_io.flush_all ()
     | GetState -> Lwt_io.printl " - GetState" >>= fun () -> Lwt_io.flush_all ()
-    ) >>= fun () ->    
-    (match msg with 
+    ) >>= fun () ->
+    (match msg with
     | SendFIXMessage msg -> {engine_state with incoming_fix_msg = Some msg } |> while_busy_loop t
     | SendInternal   msg -> {engine_state with incoming_int_msg = Some msg } |> while_busy_loop t
     | GetState -> t.recv (State engine_state) >>= fun () -> Lwt.return engine_state
@@ -159,22 +166,22 @@ end = struct
     let timechange = Fix_engine_state.IncIntMsg_TimeChange time in
     let timechange = SendInternal timechange in
     Lwt_mvar.put t.send_box timechange
-    
+
   let rec heartbeat_thread t =
     (** Heartbeat thread  *)
-    Lwt_unix.sleep t.timer >>= fun () -> 
-    do_timechange t >>= fun () -> 
+    Lwt_unix.sleep t.timer >>= fun () ->
+    do_timechange t >>= fun () ->
     heartbeat_thread t
 
-  type config = 
+  type config =
     { comp_id        : string
     ; host_id        : string option
     ; on_behalf_id   : string option
     ; target_id      : string
     ; timer          : float
-    ; recv           : event -> unit Lwt.t 
+    ; recv           : event -> unit Lwt.t
     }
-  
+
   let make_engine_state (inseq, outseq) config =
     let open Fix_engine_state in
     { init_fix_engine_state with
@@ -186,17 +193,17 @@ end = struct
     ; fe_max_num_logons_sent = 10
     ; fe_application_up = true
     ; incoming_seq_num = inseq
-    ; outgoing_seq_num = outseq    
+    ; outgoing_seq_num = outseq
     }
 
   let start ~reset ~session_dir ~config  =
     let sess = SessionManager.create ~reset ~dir:session_dir in
     let (inseq, outsec) = SessionManager.get sess in
     let engine_state = make_engine_state (inseq, outsec) config in
-    let state = 
+    let state =
       { recv = config.recv
       ; send_box = Lwt_mvar.create_empty ()
-      ; timer = config.timer 
+      ; timer = config.timer
       ; sess
       } in
     let thread = Lwt.pick
@@ -205,7 +212,7 @@ end = struct
       ] in
     ( thread , state )
 
-  let send_fix state msg = 
+  let send_fix state msg =
     Lwt_mvar.put state.send_box (SendFIXMessage msg) >>= fun () ->
     do_timechange state
 
