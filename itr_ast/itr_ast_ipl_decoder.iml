@@ -39,10 +39,9 @@ let rec pp_error fmt = function
       msg
       pp_error error
 
+let of_file _file = Error "not supported"
 
-let of_file _file =
-
-  Error "not supported"
+let runner_none = Rec_value (Value (Literal LiteralNone))
 
 let get_string = function
   | Rec_value (Value (Literal (String value))) -> Some value
@@ -66,7 +65,7 @@ let get_bool = function
   | _ -> None
 
 let get_opt : value -> value option = function
-  | Rec_value (Value (Literal LiteralNone)) -> Some (Rec_value (Value (Literal LiteralNone)))
+  | Rec_value (Value (Literal LiteralNone)) -> Some runner_none
   | Rec_value (Value (Literal (LiteralSome value))) -> Some value
   | _ -> None
 
@@ -372,10 +371,11 @@ let opt : 'a runner_decoder -> 'a option runner_decoder =
       match get_opt t with
       | None -> (fail "Expected on opt").run t
       | Some value ->
-        let open CCResult in
-        runner_decoder.run value
-        |> CCResult.map_err (tag_error (Printf.sprintf "opt element"))
-        >|= fun x -> Some x
+        if value = runner_none then Ok None else
+          let open CCResult in
+          runner_decoder.run value
+          |> CCResult.map_err (tag_error (Printf.sprintf "opt element"))
+          >|= fun x -> Some x
   }
 
 

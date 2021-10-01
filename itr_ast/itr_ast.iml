@@ -243,57 +243,70 @@ and record_item_eq i1 i2 =
 
 and record_eq r1 r2 = r1.name = r2.name && String_map.equal record_item_eq r1.elements r2.elements
 
-let rec map_record_item ~map_expr:f =
-  let map_value = function
-    | ObjectProperty { obj; index; prop } ->
-      ObjectProperty { obj = map_record_item obj ~map_expr:f; index; prop }
-    | Funcall { func; args } ->
-      Funcall { func; args = CCList.map (map_record_item ~map_expr:f) args}
-    | v ->
-      v
-  in
-  let map_expr = function
-    | Value v ->
-      Value (map_value v)
-    | Not e ->
-      Not (f e)
-    | Or { lhs; rhs } ->
-      Or { lhs = f lhs; rhs = f rhs }
-    | And { lhs; rhs } ->
-      And { lhs = f lhs; rhs = f rhs }
-    | Eq { lhs; rhs } ->
-      Eq { lhs = map_record_item lhs ~map_expr:f; rhs = map_record_item rhs ~map_expr:f}
-    | Cmp { lhs; op; rhs } ->
-      Cmp { lhs = f lhs; op; rhs = f rhs }
-    | Add { lhs; op; rhs } ->
-      Add { lhs = f lhs; op; rhs = f rhs }
-    | Mul { lhs; op; rhs } ->
-      Mul { lhs = f lhs; op; rhs = f rhs }
-    | In { el; set } ->
-      In { el = f el; set = map_value set }
-  in
-  let map_record = function
-    | {name;elements} ->
-      {name;elements = String_map.map (fun x -> (map_record_item ~map_expr x)) elements}
-  in function
-    | Rec_value expr ->
-      Rec_value (map_expr expr)
-    | Rec_record record ->
-      Rec_record (map_record record)
-    | Rec_repeating_group { num_in_group_field; elements; name; message_template } ->
-      Rec_repeating_group
-        { num_in_group_field; name; message_template; elements = CCList.map map_record elements }
+let map_value ~map_record_item = function
+  | ObjectProperty { obj; index; prop } ->
+    ObjectProperty { obj = map_record_item obj; index; prop }
+  | Funcall { func; args } ->
+    Funcall { func; args = List.map map_record_item args }
+  | Literal (Coll l) ->
+    Literal (Coll (List.map map_record_item l))
+  | Literal (MapColl (d,l)) ->
+    Literal (MapColl (map_record_item d,(List.map (fun (l,r)-> map_record_item l,map_record_item r) l)))
+  | Literal LiteralSome ri ->
+    Literal (LiteralSome (map_record_item ri))
+  | v ->
+    v
+
+
+let map_expr ~map_expr:f ~map_value ~map_record_item = function
+  | Value v ->
+    Value (map_value v)
+  | Not e ->
+    Not (f e)
+  | Or { lhs; rhs } ->
+    Or { lhs = f lhs; rhs = f rhs }
+  | And { lhs; rhs } ->
+    And { lhs = f lhs; rhs = f rhs }
+  | Eq { lhs; rhs } ->
+    Eq { lhs = map_record_item lhs; rhs = map_record_item rhs }
+  | Cmp { lhs; op; rhs } ->
+    Cmp { lhs = f lhs; op; rhs = f rhs }
+  | Add { lhs; op; rhs } ->
+    Add { lhs = f lhs; op; rhs = f rhs }
+  | Mul { lhs; op; rhs } ->
+    Mul { lhs = f lhs; op; rhs = f rhs }
+  | In { el; set } ->
+    In { el = f el; set = map_value set }
+
+
+let map_record_item ~map_expr ~map_record = function
+  | Rec_value expr ->
+    Rec_value (map_expr expr)
+  | Rec_record record ->
+    Rec_record (map_record record)
+  | Rec_repeating_group { name: string
+                        ; message_template: string option;num_in_group_field; elements } ->
+    Rec_repeating_group
+      { name;message_template;num_in_group_field; elements = CCList.map map_record elements }
+
+
+let map_record ~map_record_item {name;elements} = {name;elements = String_map.map map_record_item elements}
 
 let map f =
-  map_record_item ~map_expr:f
+  let rec mri item =
+    map_record_item
+      ~map_expr:f
+      ~map_record:(map_record ~map_record_item:mri)
+      item
+  in
+  map_expr ~map_expr:f ~map_value:(map_value ~map_record_item:mri) ~map_record_item:mri
 
-let rec walk (f:expr-> expr) (e:expr) =
+
+let rec walk f e =
   let e = f e in
-  match map (walk f) (Rec_value e)
-  with
-  | Rec_value e -> e
-  (* not mapping on to record values *)
-  | _ -> e
+  map (walk f) e
+
+
 
 exception Iterated
 
