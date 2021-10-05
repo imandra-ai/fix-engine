@@ -168,7 +168,7 @@ let full_top_level_msg_decoder : full_top_level_msg D.decoder =
     D.succeed (SessionRejectedMsg m)
   | "BusinessRejectedMsg" -> full_msg_business_reject_decoder >>= fun m ->
     D.succeed (BusinessRejectedMsg m)
-  | "Garbled" -> string >>= fun m ->
+  | "Garbled" -> string >>= fun _m ->
     D.succeed Garbled
   | x -> D.fail @@ "unknown top level message "^x
 
