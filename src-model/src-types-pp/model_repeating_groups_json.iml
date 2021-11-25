@@ -12,7 +12,7 @@ open Model_repeating_groups;;
 open Yojson.Basic;;
 
 
-let model_PtysSubGrp_rg_to_json (x)  : json =
+let model_PtysSubGrp_rg_to_json (x)  : Yojson.Basic.t =
     (match x with
         | None -> `Null
         | Some x -> (assoc_filter_nulls ([(("PartySubID",(match x.mod_f_PtysSubGrp_PartySubID with
@@ -27,7 +27,7 @@ let mod_ptyssubgrp_to_json (d)  =
     assoc_filter_nulls ([(("4",model_PtysSubGrp_rg_to_json d.rg_PtysSubGrp_element_4));(("3",model_PtysSubGrp_rg_to_json d.rg_PtysSubGrp_element_3));(("2",model_PtysSubGrp_rg_to_json d.rg_PtysSubGrp_element_2));(("1",model_PtysSubGrp_rg_to_json d.rg_PtysSubGrp_element_1));(("0",model_PtysSubGrp_rg_to_json d.rg_PtysSubGrp_element_0))])
 ;;
 
-let model_Parties_rg_to_json (x)  : json =
+let model_Parties_rg_to_json (x)  : Yojson.Basic.t =
     (match x with
         | None -> `Null
         | Some x -> (assoc_filter_nulls ([(("PartyID",string_to_json x.mod_f_Parties_PartyID));(("PartyIndex",int_to_json x.mod_f_Parties_PartyIndex));(("PtysSubGrp",mod_ptyssubgrp_to_json x.mod_f_Parties_PtysSubGrp))]))

@@ -168,8 +168,8 @@ let side_to_string (d)  =
     )
 ;;
 
-let execinst_to_json (d)  : json =
-    `List (List.map (fun x -> 
+let execinst_to_json (d)  : Yojson.Basic.t =
+    `List (List.map (fun x ->
     (match x with
         | Ok x -> (`Assoc ([(("Ok",`String (execinst_to_string x)))]))
         | Error s -> (`Assoc ([(("Error",`String s))]))
@@ -177,77 +177,77 @@ let execinst_to_json (d)  : json =
     ) d)
 ;;
 
-let exectype_to_json (d)  : json =
+let exectype_to_json (d)  : Yojson.Basic.t =
     (match d with
         | Ok x -> (`Assoc ([(("Ok",`String (exectype_to_string x)))]))
         | Error s -> (`Assoc ([(("Error",`String s))]))
     )
 ;;
 
-let ordstatus_to_json (d)  : json =
+let ordstatus_to_json (d)  : Yojson.Basic.t =
     (match d with
         | Ok x -> (`Assoc ([(("Ok",`String (ordstatus_to_string x)))]))
         | Error s -> (`Assoc ([(("Error",`String s))]))
     )
 ;;
 
-let ordtype_to_json (d)  : json =
+let ordtype_to_json (d)  : Yojson.Basic.t =
     (match d with
         | Ok x -> (`Assoc ([(("Ok",`String (ordtype_to_string x)))]))
         | Error s -> (`Assoc ([(("Error",`String s))]))
     )
 ;;
 
-let partysubidtype_to_json (d)  : json =
+let partysubidtype_to_json (d)  : Yojson.Basic.t =
     (match d with
         | Ok x -> (`Assoc ([(("Ok",`String (partysubidtype_to_string x)))]))
         | Error s -> (`Assoc ([(("Error",`String s))]))
     )
 ;;
 
-let side_to_json (d)  : json =
+let side_to_json (d)  : Yojson.Basic.t =
     (match d with
         | Ok x -> (`Assoc ([(("Ok",`String (side_to_string x)))]))
         | Error s -> (`Assoc ([(("Error",`String s))]))
     )
 ;;
 
-let execinst_opt_to_json (d)  : json =
+let execinst_opt_to_json (d)  : Yojson.Basic.t =
     (match d with
         | None -> (`Null)
         | Some d -> (execinst_to_json d)
     )
 ;;
 
-let exectype_opt_to_json (d)  : json =
+let exectype_opt_to_json (d)  : Yojson.Basic.t =
     (match d with
         | None -> (`Null)
         | Some d -> (exectype_to_json d)
     )
 ;;
 
-let ordstatus_opt_to_json (d)  : json =
+let ordstatus_opt_to_json (d)  : Yojson.Basic.t =
     (match d with
         | None -> (`Null)
         | Some d -> (ordstatus_to_json d)
     )
 ;;
 
-let ordtype_opt_to_json (d)  : json =
+let ordtype_opt_to_json (d)  : Yojson.Basic.t =
     (match d with
         | None -> (`Null)
         | Some d -> (ordtype_to_json d)
     )
 ;;
 
-let partysubidtype_opt_to_json (d)  : json =
+let partysubidtype_opt_to_json (d)  : Yojson.Basic.t =
     (match d with
         | None -> (`Null)
         | Some d -> (partysubidtype_to_json d)
     )
 ;;
 
-let side_opt_to_json (d)  : json =
+let side_opt_to_json (d)  : Yojson.Basic.t =
     (match d with
         | None -> (`Null)
         | Some d -> (side_to_json d)

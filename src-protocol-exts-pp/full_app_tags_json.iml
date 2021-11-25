@@ -39,22 +39,22 @@ let full_app_field_tag_to_string (tag)  =
     )
 ;;
 
-let full_app_msg_tag_to_json (tag)  : json =
+let full_app_msg_tag_to_json (tag)  : Yojson.Basic.t =
     `String (full_app_msg_tag_to_string tag)
 ;;
 
-let full_app_msg_tag_opt_to_json (tag)  : json =
+let full_app_msg_tag_opt_to_json (tag)  : Yojson.Basic.t =
     (match tag with
         | None -> (`Null)
         | Some tag -> (full_app_msg_tag_to_json tag)
     )
 ;;
 
-let full_app_field_tag_to_json (tag)  : json =
+let full_app_field_tag_to_json (tag)  : Yojson.Basic.t =
     `String (full_app_field_tag_to_string tag)
 ;;
 
-let full_app_field_tag_opt_to_json (tag)  : json =
+let full_app_field_tag_opt_to_json (tag)  : Yojson.Basic.t =
     (match tag with
         | None -> (`Null)
         | Some tag -> (full_app_field_tag_to_json tag)

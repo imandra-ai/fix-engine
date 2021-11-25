@@ -12,25 +12,25 @@ open Model_records;;
 open Yojson.Basic;;
 
 
-let mod_act_bookstate_opt_to_json (y)  : json =
+let mod_act_bookstate_opt_to_json (y)  : Yojson.Basic.t =
     (match y with
         | None -> `Null
         | Some x -> (assoc_filter_nulls ([(("bestBid",float_2_to_json x.mod_f_bookState_bestBid));(("bestAsk",float_2_to_json x.mod_f_bookState_bestAsk))]))
     )
 ;;
 
-let mod_act_bookstate_to_json (x)  : json =
+let mod_act_bookstate_to_json (x)  : Yojson.Basic.t =
     assoc_filter_nulls ([(("bestBid",float_2_to_json x.mod_f_bookState_bestBid));(("bestAsk",float_2_to_json x.mod_f_bookState_bestAsk))])
 ;;
 
-let mod_act_fill_opt_to_json (y)  : json =
+let mod_act_fill_opt_to_json (y)  : Yojson.Basic.t =
     (match y with
         | None -> `Null
         | Some x -> (assoc_filter_nulls ([(("fill_price",float_2_to_json x.mod_f_fill_fill_price));(("fill_qty",float_6_to_json x.mod_f_fill_fill_qty))]))
     )
 ;;
 
-let mod_act_fill_to_json (x)  : json =
+let mod_act_fill_to_json (x)  : Yojson.Basic.t =
     assoc_filter_nulls ([(("fill_price",float_2_to_json x.mod_f_fill_fill_price));(("fill_qty",float_6_to_json x.mod_f_fill_fill_qty))])
 ;;
 

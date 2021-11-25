@@ -73,22 +73,22 @@ let msgdirection_to_string ( d ) =
     )
 ;;
 
-let session_reject_reason_to_json  x : json = `String ( session_reject_reason_to_string  x ) ;;
+let session_reject_reason_to_json  x : Yojson.Basic.t = `String ( session_reject_reason_to_string  x ) ;;
 
 
-let business_reject_reason_to_json x : json = `String ( business_reject_reason_to_string x ) ;;
+let business_reject_reason_to_json x : Yojson.Basic.t = `String ( business_reject_reason_to_string x ) ;;
 
 
-let app_reject_reason_to_json      x : json = `String ( app_reject_reason_to_string      x ) ;;
+let app_reject_reason_to_json      x : Yojson.Basic.t = `String ( app_reject_reason_to_string      x ) ;;
 
 
-let gapFillFlag_to_json            x : json = `String ( gapFillFlag_to_string            x ) ;;
+let gapFillFlag_to_json            x : Yojson.Basic.t = `String ( gapFillFlag_to_string            x ) ;;
 
 
-let encryption_method_to_json      x : json = `String ( encryption_method_to_string      x ) ;;
+let encryption_method_to_json      x : Yojson.Basic.t = `String ( encryption_method_to_string      x ) ;;
 
 (** *)
-let msgdirection_to_json           x : json = `String ( msgdirection_to_string           x ) ;;
+let msgdirection_to_json           x : Yojson.Basic.t = `String ( msgdirection_to_string           x ) ;;
 
 
 

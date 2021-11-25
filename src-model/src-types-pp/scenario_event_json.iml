@@ -10,7 +10,7 @@ open Scenario_type;;
 open Yojson.Basic;;
 
 
-let json_of_scenario_event (x)  : json =
+let json_of_scenario_event (x)  : Yojson.Basic.t =
     (match x with
         | Action x -> (`Assoc ([(("action",json_of_fix_action x))]))
         | Message x -> (`Assoc ([(("message",json_of_model_msg_opt_def x))]))

@@ -86,12 +86,12 @@ let full_admin_field_tag_to_string = function
 ;;
 
 
-let full_admin_msg_tag_to_json x : json = `String (full_admin_msg_tag_to_string x);;
+let full_admin_msg_tag_to_json x : Yojson.Basic.t = `String (full_admin_msg_tag_to_string x);;
 
 let full_admin_msg_tag_opt_to_json = function None -> `Null | Some x -> full_admin_msg_tag_to_json x;;
 
 
-let full_admin_field_tag_to_json x : json = `String (full_admin_field_tag_to_string x );;
+let full_admin_field_tag_to_json x : Yojson.Basic.t = `String (full_admin_field_tag_to_string x );;
 
 let full_admin_field_tag_opt_to_json = function None -> `Null | Some x -> full_admin_field_tag_to_json x ;;
 [@@@logic]

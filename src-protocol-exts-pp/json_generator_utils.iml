@@ -4,12 +4,12 @@
 open Yojson.Basic;;
 
 
-let assoc_filter_nulls (x)  : json =
+let assoc_filter_nulls (x)  : Yojson.Basic.t =
     `Assoc (List.filter (function (_,`Null) -> false |_ -> true
     ) x)
 ;;
 
-let rg_for_json (f) (lst)  : json =
+let rg_for_json (f) (lst)  : Yojson.Basic.t =
     (match lst with
         | [] -> (`List [])
         | lst -> (`List (List.map f lst))

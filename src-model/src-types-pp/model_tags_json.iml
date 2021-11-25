@@ -10,14 +10,14 @@ open Model_tags;;
 open Yojson.Basic;;
 
 
-let json_of_model_msg_tag (msg : m_msg_tag)  : json =
+let json_of_model_msg_tag (msg : m_msg_tag)  : Yojson.Basic.t =
     (match msg with
         | M_Msg_NewOrderSingle_Tag -> (`String "D")
         | M_Msg_ExecutionReport_Tag -> (`String "8")
     )
 ;;
 
-let json_of_model_field_tag (x : m_field_tag)  : json =
+let json_of_model_field_tag (x : m_field_tag)  : Yojson.Basic.t =
     (match x with
         | M_Field_Side_Tag -> (`String "54")
         | M_Field_TransactTime_Tag -> (`String "60")
@@ -35,7 +35,7 @@ let json_of_model_field_tag (x : m_field_tag)  : json =
     )
 ;;
 
-let json_of_model_rg (x : repeating_group_defs option)  : json =
+let json_of_model_rg (x : repeating_group_defs option)  : Yojson.Basic.t =
     (match x with
         | Some MOD_FIX_Repeating_Group_PtysSubGrp -> (`String "PtysSubGrp")
         | Some MOD_FIX_Repeating_Group_Parties -> (`String "Parties")
@@ -43,7 +43,7 @@ let json_of_model_rg (x : repeating_group_defs option)  : json =
     )
 ;;
 
-let json_of_req_field_missing (x : field_missing_or_invalid_data)  : json =
+let json_of_req_field_missing (x : field_missing_or_invalid_data)  : Yojson.Basic.t =
     `Assoc ([(("m_msg_tag",json_of_model_msg_tag x.field_missing_of_invalid_data_msg));(("m_field_tag",json_of_model_field_tag x.field_missing_or_invalid_data_field));(("repeating_group_defs",json_of_model_rg x.repeating_group_origin))])
 ;;
 

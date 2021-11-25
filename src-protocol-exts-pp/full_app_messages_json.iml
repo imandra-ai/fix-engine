@@ -18,11 +18,11 @@ open Json_generator_utils;;
 open Yojson.Basic;;
 
 
-let newordersingle_to_json (x)  : json =
+let newordersingle_to_json (x)  : Yojson.Basic.t =
     assoc_filter_nulls ([(("OrderQtyData",orderqtydata_to_json x.f_NewOrderSingle_OrderQtyData));(("ClOrdID",string_opt_to_json x.f_NewOrderSingle_ClOrdID));(("Account",string_opt_to_json x.f_NewOrderSingle_Account));(("ExecInst",execinst_opt_to_json x.f_NewOrderSingle_ExecInst));(("Side",side_opt_to_json x.f_NewOrderSingle_Side));(("TransactTime",utctimestamp_milli_opt_to_json x.f_NewOrderSingle_TransactTime));(("OrdType",ordtype_opt_to_json x.f_NewOrderSingle_OrdType));(("Price",float_2_opt_to_json x.f_NewOrderSingle_Price));(("SpreadProportion",float_opt_to_json x.f_NewOrderSingle_SpreadProportion));(("Parties",`Assoc ([(("entries",rg_for_json parties_to_json x.f_NewOrderSingle_Parties.f_Parties_entries));(("numField",int_opt_to_json x.f_NewOrderSingle_Parties.f_Parties_num_field))])))])
 ;;
 
-let executionreport_to_json (x)  : json =
+let executionreport_to_json (x)  : Yojson.Basic.t =
     assoc_filter_nulls ([(("OrderQtyData",orderqtydata_to_json x.f_ExecutionReport_OrderQtyData));
     (("OrderID",string_opt_to_json x.f_ExecutionReport_OrderID));
     (("ExecID",string_opt_to_json x.f_ExecutionReport_ExecID));
@@ -36,7 +36,7 @@ let executionreport_to_json (x)  : json =
     (("Parties",`Assoc ([(("entries",rg_for_json parties_to_json x.f_ExecutionReport_Parties.f_Parties_entries));(("numField",int_opt_to_json x.f_ExecutionReport_Parties.f_Parties_num_field))])))])
 ;;
 
-let full_app_msg_to_json (x)  : json =
+let full_app_msg_to_json (x)  : Yojson.Basic.t =
     (match x with
         | FIX_Full_Msg_NewOrderSingle x -> (`Assoc ([(("NewOrderSingle",newordersingle_to_json x))]))
         | FIX_Full_Msg_ExecutionReport x -> (`Assoc ([(("ExecutionReport",executionreport_to_json x))]))

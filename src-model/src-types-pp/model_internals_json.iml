@@ -26,7 +26,7 @@ open Time_defaults;;
 open Yojson.Basic;;
 
 
-let mod_internal_state_to_json (x)  : json =
+let mod_internal_state_to_json (x)  : Yojson.Basic.t =
     assoc_filter_nulls ([(("state.live_order",bool_to_json x.mod_f_internal_state_live_order));
     (("state.AvgPx",float_to_json x.mod_f_internal_state_AvgPx));
     (("state.bestBid",float_2_to_json x.mod_f_internal_state_bestBid));
@@ -53,7 +53,7 @@ let mod_internal_state_to_json (x)  : json =
     (("state.ExecType",mod_exectype_to_json x.mod_f_internal_state_ExecType))])
 ;;
 
-let mod_internal_fresh_state'_to_json (x)  : json =
+let mod_internal_fresh_state'_to_json (x)  : Yojson.Basic.t =
     assoc_filter_nulls ([(("fresh_state'.seed_string",string_to_json x.mod_f_internal_fresh_state'_seed_string))])
 ;;
 

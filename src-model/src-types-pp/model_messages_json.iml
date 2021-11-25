@@ -18,7 +18,7 @@ open Model_tags_json;;
 open Yojson.Basic;;
 
 
-let mod_newordersingle_opt_def_to_json (x)  : json =
+let mod_newordersingle_opt_def_to_json (x)  : Yojson.Basic.t =
     assoc_filter_nulls ([(("ClOrdID",(match x.mod_def_opt_f_NewOrderSingle_ClOrdID with
         | None -> `Null
         | Some x -> (string_to_json x)
@@ -45,7 +45,7 @@ let mod_newordersingle_opt_def_to_json (x)  : json =
     ));(("Parties",mod_parties_to_json x.mod_def_opt_f_NewOrderSingle_Parties))])
 ;;
 
-let mod_newordersingle_to_json (x)  : json =
+let mod_newordersingle_to_json (x)  : Yojson.Basic.t =
     assoc_filter_nulls ([(("ClOrdID",(match x.mod_f_NewOrderSingle_ClOrdID with
         | None -> `Null
         | Some x -> (string_to_json x)
@@ -68,7 +68,7 @@ let mod_newordersingle_to_json (x)  : json =
     ));(("ExecInst",mod_execinst_to_json x.mod_f_NewOrderSingle_ExecInst));(("Parties",mod_parties_to_json x.mod_f_NewOrderSingle_Parties))])
 ;;
 
-let mod_executionreport_opt_def_to_json (x)  : json =
+let mod_executionreport_opt_def_to_json (x)  : Yojson.Basic.t =
     assoc_filter_nulls ([(("OrderID",string_to_json x.mod_def_opt_f_ExecutionReport_OrderID));
     (("ExecID",string_to_json x.mod_def_opt_f_ExecutionReport_ExecID));
     (("ExecType",mod_exectype_to_json x.mod_def_opt_f_ExecutionReport_ExecType));
@@ -86,7 +86,7 @@ let mod_executionreport_opt_def_to_json (x)  : json =
     (("ExecInst",mod_execinst_to_json x.mod_def_opt_f_ExecutionReport_ExecInst))])
 ;;
 
-let mod_executionreport_to_json (x)  : json =
+let mod_executionreport_to_json (x)  : Yojson.Basic.t =
     assoc_filter_nulls ([(("OrderID",string_to_json x.mod_f_ExecutionReport_OrderID));
     (("ExecID",string_to_json x.mod_f_ExecutionReport_ExecID));
     (("ExecType",mod_exectype_to_json x.mod_f_ExecutionReport_ExecType));
@@ -104,21 +104,21 @@ let mod_executionreport_to_json (x)  : json =
     (("ExecInst",mod_execinst_to_json x.mod_f_ExecutionReport_ExecInst))])
 ;;
 
-let json_of_model_msg (x)  : json =
+let json_of_model_msg (x)  : Yojson.Basic.t =
     (match x with
         | FIX_Msg_NewOrderSingle x -> (`Assoc ([(("tag",`String "D"));(("data",mod_newordersingle_to_json x))]))
         | FIX_Msg_ExecutionReport x -> (`Assoc ([(("tag",`String "8"));(("data",mod_executionreport_to_json x))]))
     )
 ;;
 
-let json_of_model_msg_opt_def (x)  : json =
+let json_of_model_msg_opt_def (x)  : Yojson.Basic.t =
     (match x with
         | FIX_Msg_Def_Opt_NewOrderSingle x -> (`Assoc ([(("tag",`String "D"));(("data",mod_newordersingle_opt_def_to_json x))]))
         | FIX_Msg_Def_Opt_ExecutionReport x -> (`Assoc ([(("tag",`String "8"));(("data",mod_executionreport_opt_def_to_json x))]))
     )
 ;;
 
-let json_of_top_level_msg (x)  : json =
+let json_of_top_level_msg (x)  : Yojson.Basic.t =
     (match x with
         | FIX_TL_Normal x -> (`Assoc ([(("top_level_msg",`String "FIX_TL_Normal"));(("data",json_of_model_msg_opt_def x))]))
         | FIX_TL_Req_Field_Missing x -> (`Assoc ([(("top_level_msg",`String "FIX_TL_Req_Field_Missing"));(("data",json_of_req_field_missing x))]))
