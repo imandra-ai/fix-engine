@@ -3,6 +3,6 @@
  (public_name fix-engine.test_utils)
  (wrapped false)
  (flags
-  (:standard -open Imandra_prelude -warn-error -A+8+39 -alert -deprecated -w -33-58))
+  (:standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58))
  (libraries imandra-prelude yojson protocol_pp core_printer lwt lwt.unix
    fix_simulation_utils))

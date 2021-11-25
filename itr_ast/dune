@@ -2,6 +2,6 @@
   (name itr_ast)
   (public_name fix-engine.itr_ast)
   (wrapped false)
-  (flags :standard -open Imandra_prelude -warn-error -A+8+39 -alert -deprecated -w -33-58)
+  (flags :standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58)
   (libraries types_pp imandra-prelude containers decoders decoders-yojson yojson core core_pp)
 )
