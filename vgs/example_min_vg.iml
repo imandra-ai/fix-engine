@@ -2,7 +2,9 @@
 
 (* First, we try to verify a false VG and extract a counterexample. *)
 [@@@import "../src/fix_engine.iml"]
+
 [@@@import "../src/fix_engine_state.iml"]
+
 open Fix_engine
 open Fix_engine_state
 (*
@@ -51,8 +53,8 @@ verify ( fun (state : fix_engine_state) ->
    was introduced when we ran the verify statement above.
 
    For example, the following evaluates to false: *)
-(* 
-foo CX.state;; *)
+(*
+   foo CX.state;; *)
 
 (* We can use foo to minimize our counterexample. *)
 
@@ -86,60 +88,59 @@ let minimize_state_vg vg_test s =
   done;
   !s
 ;; *)
-(* 
-:shadow on
+(*
+   :shadow on
 
-minimize_state_vg foo CX.state;; *)
+   minimize_state_vg foo CX.state;; *)
 
 (* Result:
 
-{fe_curr_mode = CacheReplay; fe_initiator = Some false; fe_curr_time = 1;
- fe_comp_id = 1; fe_target_comp_id = 1; incoming_int_msg = None;
- outgoing_int_msg = None; incoming_seq_num = 1; outgoing_seq_num = 1;
- incoming_fix_msg =
-  Some
-   {header =
-     {begin_string = 44; body_length = 43; sender_comp_id = 42;
-      target_comp_id = 41; msg_seq_num = 535; on_behalf_of_comp_id = Some 40;
-      deliver_to_comp_id = Some 39; secure_data_len = Some 38;
-      secure_data = Some 37; sender_sub_id = Some 36;
-      sender_location_id = Some 35; target_sub_id = Some 34;
-      target_location_id = Some 33; on_behalf_of_sub_id = Some 32;
-      on_behalf_of_location_id = Some 31; deliver_to_sub_id = Some 30;
-      deliver_to_location_id = Some 29; poss_dup_flag = Some true;
-      poss_resend = Some false; sending_time = Some 28;
-      orig_sending_time = Some 27; xml_data_len = Some 26;
-      xml_data = Some 25; message_enconding = Some 24;
-      last_msg_seq_num_processed = Some 23; no_hops = Some 22};
-    msg_data =
-     FIX_logon
-      {encrypt_method = 21; heartbeat_interval = 20; raw_data_length = 19};
-    trailer = {signature_length = 18; signature = 17; check_sum = 16};
-    reject_flags =
-     {garbled = false; session_invalid = None; business_invalid = None}};
- outgoing_fix_msg = None; fe_cache = []; fe_history = [];
- fe_last_hbeat_recived = 1; fe_heartbeat_interval = 1;
- fe_history_to_send =
-  [{header =
-     {begin_string = 153; body_length = 152; sender_comp_id = 151;
-      target_comp_id = 150; msg_seq_num = 149;
-      on_behalf_of_comp_id = Some 148; deliver_to_comp_id = Some 147;
-      secure_data_len = Some 146; secure_data = Some 145;
-      sender_sub_id = Some 144; sender_location_id = Some 143;
-      target_sub_id = Some 142; target_location_id = Some 141;
-      on_behalf_of_sub_id = Some 140; on_behalf_of_location_id = Some 139;
-      deliver_to_sub_id = Some 138; deliver_to_location_id = Some 137;
-      poss_dup_flag = Some false; poss_resend = Some false;
-      sending_time = Some 136; orig_sending_time = Some 135;
-      xml_data_len = Some 134; xml_data = Some 133;
-      message_enconding = Some 132; last_msg_seq_num_processed = Some 131;
-      no_hops = Some 130};
-    msg_data =
-     FIX_logon
-      {encrypt_method = 129; heartbeat_interval = 128; raw_data_length = 127};
-    trailer = {signature_length = 126; signature = 125; check_sum = 124};
-    reject_flags =
-     {garbled = false; session_invalid = None; business_invalid = None}}];
- fe_application_up = false}
-
- *)
+   {fe_curr_mode = CacheReplay; fe_initiator = Some false; fe_curr_time = 1;
+    fe_comp_id = 1; fe_target_comp_id = 1; incoming_int_msg = None;
+    outgoing_int_msg = None; incoming_seq_num = 1; outgoing_seq_num = 1;
+    incoming_fix_msg =
+     Some
+      {header =
+        {begin_string = 44; body_length = 43; sender_comp_id = 42;
+         target_comp_id = 41; msg_seq_num = 535; on_behalf_of_comp_id = Some 40;
+         deliver_to_comp_id = Some 39; secure_data_len = Some 38;
+         secure_data = Some 37; sender_sub_id = Some 36;
+         sender_location_id = Some 35; target_sub_id = Some 34;
+         target_location_id = Some 33; on_behalf_of_sub_id = Some 32;
+         on_behalf_of_location_id = Some 31; deliver_to_sub_id = Some 30;
+         deliver_to_location_id = Some 29; poss_dup_flag = Some true;
+         poss_resend = Some false; sending_time = Some 28;
+         orig_sending_time = Some 27; xml_data_len = Some 26;
+         xml_data = Some 25; message_enconding = Some 24;
+         last_msg_seq_num_processed = Some 23; no_hops = Some 22};
+       msg_data =
+        FIX_logon
+         {encrypt_method = 21; heartbeat_interval = 20; raw_data_length = 19};
+       trailer = {signature_length = 18; signature = 17; check_sum = 16};
+       reject_flags =
+        {garbled = false; session_invalid = None; business_invalid = None}};
+    outgoing_fix_msg = None; fe_cache = []; fe_history = [];
+    fe_last_hbeat_recived = 1; fe_heartbeat_interval = 1;
+    fe_history_to_send =
+     [{header =
+        {begin_string = 153; body_length = 152; sender_comp_id = 151;
+         target_comp_id = 150; msg_seq_num = 149;
+         on_behalf_of_comp_id = Some 148; deliver_to_comp_id = Some 147;
+         secure_data_len = Some 146; secure_data = Some 145;
+         sender_sub_id = Some 144; sender_location_id = Some 143;
+         target_sub_id = Some 142; target_location_id = Some 141;
+         on_behalf_of_sub_id = Some 140; on_behalf_of_location_id = Some 139;
+         deliver_to_sub_id = Some 138; deliver_to_location_id = Some 137;
+         poss_dup_flag = Some false; poss_resend = Some false;
+         sending_time = Some 136; orig_sending_time = Some 135;
+         xml_data_len = Some 134; xml_data = Some 133;
+         message_enconding = Some 132; last_msg_seq_num_processed = Some 131;
+         no_hops = Some 130};
+       msg_data =
+        FIX_logon
+         {encrypt_method = 129; heartbeat_interval = 128; raw_data_length = 127};
+       trailer = {signature_length = 126; signature = 125; check_sum = 124};
+       reject_flags =
+        {garbled = false; session_invalid = None; business_invalid = None}}];
+    fe_application_up = false}
+*)

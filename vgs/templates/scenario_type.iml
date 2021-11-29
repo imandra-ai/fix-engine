@@ -1,12 +1,12 @@
 (* Imandra Inc. copyright 2021 *)
 [@@@import "../../src-model/src-types/actions.iml"]
-open Actions;;
-[@@@import "../../src-model/src-types/model_messages.iml"]
-open Model_messages;;
 
+open Actions
+
+[@@@import "../../src-model/src-types/model_messages.iml"]
+
+open Model_messages
 
 type event =
-    | Action of fix_action
-    | Message of model_msg_opt_def
-;;
-
+  | Action of fix_action
+  | Message of model_msg_opt_def

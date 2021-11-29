@@ -11,17 +11,23 @@
 
 (* open Imandra_pervasives;; *)
 [@@@import "../src-core/datetime.iml"]
+
 [@@@import "../src/fix_engine.iml"]
+
 [@@@import "../src/fix_engine_state.iml"]
+
 [@@@import "../src-protocol/full_admin_messages.iml"]
+
 [@@@import "../src-protocol/full_messages.iml"]
-open Datetime;;
-open Fix_engine;;
+
+open Datetime
+open Fix_engine
 open Fix_engine_state
-open Full_admin_messages;;
-open Full_messages;;
+open Full_admin_messages
+open Full_messages
 
 (** **************************************************************************************** *)
+
 (**
     
     Reject VG.1
@@ -34,34 +40,34 @@ open Full_messages;;
     administrative message which can be resent."
 
 *)
+
 (** **************************************************************************************** *)
 
-let outbound_is_reject_or_app ( m : full_top_level_msg option ) = 
-    match m with 
-    | None                      -> false
-    | Some msg                  ->
-    match msg with 
-    | ValidMsg vmsg             -> (
-    match vmsg.full_msg_data with 
-    | Full_FIX_App_Msg _        -> true
-    | Full_FIX_Admin_Msg amsg   ->
-    match amsg with 
-    | Full_Msg_Reject _         -> true
-    | _                         -> false
-    )
-    | _                         -> false
+let outbound_is_reject_or_app (m : full_top_level_msg option) =
+  match m with
+  | None ->
+      false
+  | Some msg ->
+    ( match msg with
+    | ValidMsg vmsg ->
+      ( match vmsg.full_msg_data with
+      | Full_FIX_App_Msg _ ->
+          true
+      | Full_FIX_Admin_Msg amsg ->
+        (match amsg with Full_Msg_Reject _ -> true | _ -> false) )
+    | _ ->
+        false )
+
 ;;
 
-verify (fun (engine : fix_engine_state ) ->
-    let engine' = one_step ( engine ) in 
+verify (fun (engine : fix_engine_state) ->
+    let engine' = one_step engine in
 
-    ( engine.fe_curr_mode = Retransmit && 
-        engine.incoming_fix_msg = None &&
-        engine.incoming_int_msg = None &&
-        engine.fe_history_to_send <> []
-    ) ==> (
-        (engine'.outgoing_fix_msg = None ||
-        outbound_is_reject_or_app ( engine'.outgoing_fix_msg )) || 
-        ( engine'.outgoing_fix_msg = None &&
-            engine'.fe_curr_mode <> Retransmit )))
-;;
+    ( engine.fe_curr_mode = Retransmit
+    && engine.incoming_fix_msg = None
+    && engine.incoming_int_msg = None
+    && engine.fe_history_to_send <> [] )
+    ==> ( ( engine'.outgoing_fix_msg = None
+          || outbound_is_reject_or_app engine'.outgoing_fix_msg )
+        || engine'.outgoing_fix_msg = None
+           && engine'.fe_curr_mode <> Retransmit ) )

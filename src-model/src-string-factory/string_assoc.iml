@@ -1,33 +1,30 @@
 (* Imandra Inc. copyright 2021 *)
 [@@@program]
-[@@@import "string_assoc_common.iml"]
-open String_assoc_common;;
 
+[@@@import "string_assoc_common.iml"]
+
+open String_assoc_common
 
 module StringAssoc = struct
-
   type t = (string, string) Hashtbl.t
 
   exception No_match of string
 
   let h = ref (None : t option)
 
-  
   let init_tbl () =
     let h' = (Hashtbl.create (Z.to_int (List.length string_pairs)) : t) in
-    let () = Caml.List.iter (fun (k,v) -> (Hashtbl.add h') k v) 
-    string_pairs in
+    let () = Caml.List.iter (fun (k, v) -> (Hashtbl.add h') k v) string_pairs in
     h := Some h'
+
 
   let rec get s =
     match !h with
-      None   -> init_tbl ();
-                get s
+    | None ->
+        init_tbl () ;
+        get s
     | Some h ->
-       try
-         Hashtbl.find h s
-       with Not_found -> raise (No_match s)
-
-end;;
+      (try Hashtbl.find h s with Not_found -> raise (No_match s))
+end
 
 [@@@logic]

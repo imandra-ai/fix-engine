@@ -2,30 +2,30 @@
 #
 build:
 	@echo "(dirs :standard \ *-vg)" > dune
-	dune build @install
-	dune build src-simulation/server.bc
+	opam exec -- dune build @install
+	opam exec -- dune build src-simulation/server.bc
 	rm dune
 
 build_server:
 	@echo "(dirs :standard \ *-vg)" > dune
-	dune build src-simulation/server.bc
+	opam exec -- dune build src-simulation/server.bc
 	rm dune
 
 build_vgs:
 	@echo "(dirs :standard \ src-protocol-exts src-protocol-exts-pp src-model src-simulation src-simulation-utils src-core-utils src-tests-utils)" > dune
-	dune build @install
+	opam exec-- dune build @install
 	rm dune
 
 build_tests:
 	@echo "(dirs :standard \ *-vg)" > dune
-	dune build src-tests/test_runner.bc
-	dune build src-tests/test_cache.bc
-	dune build src-tests/test_roundtrip.bc
+	opam exec -- dune build src-tests/test_runner.bc
+	opam exec -- dune build src-tests/test_cache.bc
+	opam exec -- dune build src-tests/test_roundtrip.bc
 	rm dune
 
 doc:
 	@echo "(dirs :standard \ src-protocol-exts-vg src-protocol-exts-pp-vg)" > dune
-	dune build @doc
+	opam exec -- dune build @doc
 	mkdir -p _pages/doc
 	cp -r _build/default/_doc/_html/* _pages/doc/
 	rm -rf _pages/doc/odoc.css
@@ -53,13 +53,13 @@ _opam:
 
 format:
 	@echo "(dirs :standard \ *-vg)" > dune
-	dune build @fmt --auto-promote || true
+	opam exec -- dune build @fmt --auto-promote || true
 	rm dune
 
 format_vgs:
 	@echo "(dirs :standard \ src-protocol-exts src-protocol-exts-pp src-model src-simulation src-simulation-utils src-core-utils src-tests-utils)" > dune
-	dune build @fmt --auto-promote || true
+	opam exec -- dune build @fmt --auto-promote || true
 	rm dune
 
 clean:
-	dune clean
+	opam exec -- dune clean

@@ -1,32 +1,27 @@
 (* Imandra Inc. copyright 2021 *)
 [@@@import "../src-types/model_app_enums.iml"]
-open Model_app_enums;;
+
+open Model_app_enums
+
+let rec convert__model_to_full_ExecInst f x =
+  match x with
+  | [] ->
+      []
+  | h :: t ->
+      if Map.get h f
+      then Ok h :: convert__model_to_full_ExecInst f t
+      else convert__model_to_full_ExecInst f t
 
 
-let rec convert__model_to_full_ExecInst (f) (x)  =
-    (match x with
-        | [] -> []
-        | h :: t -> ((if (Map.get h f) then
-            ((Ok h) :: (convert__model_to_full_ExecInst f t))
-        else
-            (convert__model_to_full_ExecInst f t))
-        )
-    )
-;;
-
-let rec convert__full_to_model_ExecInst (f)  : (model_fix_execinst,bool) Map.t option =
-    (match f with
-        | [] -> (Some (Map.const false))
-        | h :: t -> ((match h with
-            | Error _ -> (None)
-            | Ok s -> let x = convert__full_to_model_ExecInst t
-            in
-            (match x with
-                | None -> (None)
-                | Some x -> (Some (Map.add s true x))
-            )
-        )
-        )
-    )
-;;
-
+let rec convert__full_to_model_ExecInst f :
+    (model_fix_execinst, bool) Map.t option =
+  match f with
+  | [] ->
+      Some (Map.const false)
+  | h :: t ->
+    ( match h with
+    | Error _ ->
+        None
+    | Ok s ->
+        let x = convert__full_to_model_ExecInst t in
+        (match x with None -> None | Some x -> Some (Map.add s true x)) )

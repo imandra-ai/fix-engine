@@ -1,64 +1,82 @@
 (* Imandra Inc. copyright 2021 *)
 [@@@program]
+
 [@@@import "../src-protocol-exts/full_app_tags.iml"]
-open Full_app_tags;;
+
+open Full_app_tags
+
 [@@@require "yojson"]
-open Yojson.Basic;;
+
+open Yojson.Basic
+
+let full_app_msg_tag_to_string tag =
+  match tag with
+  | Full_Msg_NewOrderSingle_Tag ->
+      "NewOrderSingle"
+  | Full_Msg_ExecutionReport_Tag ->
+      "ExecutionReport"
 
 
-let full_app_msg_tag_to_string (tag)  =
-    (match tag with
-        | Full_Msg_NewOrderSingle_Tag -> "NewOrderSingle"
-        | Full_Msg_ExecutionReport_Tag -> "ExecutionReport"
-    )
-;;
+let full_app_field_tag_to_string tag =
+  match tag with
+  | Full_Field_ClOrdID_Tag ->
+      "ClOrdID"
+  | Full_Field_Account_Tag ->
+      "Account"
+  | Full_Field_ExecInst_Tag ->
+      "ExecInst"
+  | Full_Field_Side_Tag ->
+      "Side"
+  | Full_Field_TransactTime_Tag ->
+      "TransactTime"
+  | Full_Field_OrdType_Tag ->
+      "OrdType"
+  | Full_Field_Price_Tag ->
+      "Price"
+  | Full_Field_SpreadProportion_Tag ->
+      "SpreadProportion"
+  | Full_Field_OrderID_Tag ->
+      "OrderID"
+  | Full_Field_ExecID_Tag ->
+      "ExecID"
+  | Full_Field_ExecType_Tag ->
+      "ExecType"
+  | Full_Field_OrdStatus_Tag ->
+      "OrdStatus"
+  | Full_Field_LeavesQty_Tag ->
+      "LeavesQty"
+  | Full_Field_CumQty_Tag ->
+      "CumQty"
+  | Full_Field_Text_Tag ->
+      "Text"
+  | Full_Field_OrderQty_Tag ->
+      "OrderQty"
+  | Full_Field_NoPartySubIDs_Tag ->
+      "NoPartySubIDs"
+  | Full_Field_PartySubID_Tag ->
+      "PartySubID"
+  | Full_Field_NoPartyIDs_Tag ->
+      "NoPartyIDs"
+  | Full_Field_PartyID_Tag ->
+      "PartyID"
+  | Full_Field_PartyIndex_Tag ->
+      "PartyIndex"
 
-let full_app_field_tag_to_string (tag)  =
-    (match tag with
-        | Full_Field_ClOrdID_Tag -> "ClOrdID"
-        | Full_Field_Account_Tag -> "Account"
-        | Full_Field_ExecInst_Tag -> "ExecInst"
-        | Full_Field_Side_Tag -> "Side"
-        | Full_Field_TransactTime_Tag -> "TransactTime"
-        | Full_Field_OrdType_Tag -> "OrdType"
-        | Full_Field_Price_Tag -> "Price"
-        | Full_Field_SpreadProportion_Tag -> "SpreadProportion"
-        | Full_Field_OrderID_Tag -> "OrderID"
-        | Full_Field_ExecID_Tag -> "ExecID"
-        | Full_Field_ExecType_Tag -> "ExecType"
-        | Full_Field_OrdStatus_Tag -> "OrdStatus"
-        | Full_Field_LeavesQty_Tag -> "LeavesQty"
-        | Full_Field_CumQty_Tag -> "CumQty"
-        | Full_Field_Text_Tag -> "Text"
-        | Full_Field_OrderQty_Tag -> "OrderQty"
-        | Full_Field_NoPartySubIDs_Tag -> "NoPartySubIDs"
-        | Full_Field_PartySubID_Tag -> "PartySubID"
-        | Full_Field_NoPartyIDs_Tag -> "NoPartyIDs"
-        | Full_Field_PartyID_Tag -> "PartyID"
-        | Full_Field_PartyIndex_Tag -> "PartyIndex"
-    )
-;;
 
-let full_app_msg_tag_to_json (tag)  : json =
-    `String (full_app_msg_tag_to_string tag)
-;;
+let full_app_msg_tag_to_json tag : Yojson.Basic.t =
+  `String (full_app_msg_tag_to_string tag)
 
-let full_app_msg_tag_opt_to_json (tag)  : json =
-    (match tag with
-        | None -> (`Null)
-        | Some tag -> (full_app_msg_tag_to_json tag)
-    )
-;;
 
-let full_app_field_tag_to_json (tag)  : json =
-    `String (full_app_field_tag_to_string tag)
-;;
+let full_app_msg_tag_opt_to_json tag : Yojson.Basic.t =
+  match tag with None -> `Null | Some tag -> full_app_msg_tag_to_json tag
 
-let full_app_field_tag_opt_to_json (tag)  : json =
-    (match tag with
-        | None -> (`Null)
-        | Some tag -> (full_app_field_tag_to_json tag)
-    )
-;;
+
+let full_app_field_tag_to_json tag : Yojson.Basic.t =
+  `String (full_app_field_tag_to_string tag)
+
+
+let full_app_field_tag_opt_to_json tag : Yojson.Basic.t =
+  match tag with None -> `Null | Some tag -> full_app_field_tag_to_json tag
+
 
 [@@@logic]

@@ -1,17 +1,11 @@
-(** Time defaults for a particular FIX implementation *)
 (***
 
     Imandra Inc.
     Copyright (c) 2014 - 2021
 
     fix_version.iml
-    
 *)
-type session_details = {
-    constant_begin_string : string
-}
-;;
+(** Time defaults for a particular FIX implementation *)
+type session_details = { constant_begin_string : string }
 
-let default_session_details = {
-    constant_begin_string = "FIX.4.4"
-};;
+let default_session_details = { constant_begin_string = "FIX.4.4" }
