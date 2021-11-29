@@ -1,8 +1,5 @@
 (* Imandra Inc. copyright 2021 *)
 
-
-
-
 open Time_defaults
 
 type t = fix_utctimestamp
@@ -16,14 +13,7 @@ let make
     ?(second = 0)
     ?millisecond
     () : t =
-  Time_defaults.make_utctimestamp
-    year
-    month
-    day
-    hour
-    minute
-    second
-    millisecond
+  Time_defaults.make_utctimestamp year month day hour minute second millisecond
 
 
 let ( = ) = utctimestamp_Equal
@@ -41,5 +31,3 @@ let compare x y = if x < y then -1 else if x = y then 0 else 1
 let to_string = Time_defaults_pp.encode_UTCTimestamp [@@program]
 
 let pp fmt x = Format.fprintf fmt "%s" (to_string x) [@@program]
-
-

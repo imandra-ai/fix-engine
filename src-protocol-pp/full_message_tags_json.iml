@@ -1,43 +1,52 @@
-
-(*** 
+(***
 
     Imandra Inc.
     Copyright (c) 2014 - 2021
-    
-    full_message_tags_json.ml
 
+    full_message_tags_json.ml
 *)
 [@@@import "../src-protocol/full_message_tags.iml"]
-[@@@import "../src-protocol-exts-pp/full_app_tags_json.iml"]
-[@@@import "full_admin_tags_json.iml"]
-[@@@program]
-open Full_app_tags_json;;
-open Full_message_tags;;
-open Full_admin_tags_json;;
 
+[@@@import "../src-protocol-exts-pp/full_app_tags_json.iml"]
+
+[@@@import "full_admin_tags_json.iml"]
+
+[@@@program]
+
+open Full_app_tags_json
+open Full_message_tags
+open Full_admin_tags_json
 
 let full_msg_tag_to_json = function
-    | Full_Admin_Msg_Tag   x -> `Assoc [("Full_Admin_Msg_Tag",full_admin_msg_tag_to_json x)]
-    | Full_App_Msg_Tag     x -> `Assoc [("Full_App_Msg_Tag",full_app_msg_tag_to_json x)]
-    | Full_Msg_Unknown_Tag x -> `Assoc [("Full_Msg_Unknown_Tag",`String x)]
-;;
+  | Full_Admin_Msg_Tag x ->
+      `Assoc [ ("Full_Admin_Msg_Tag", full_admin_msg_tag_to_json x) ]
+  | Full_App_Msg_Tag x ->
+      `Assoc [ ("Full_App_Msg_Tag", full_app_msg_tag_to_json x) ]
+  | Full_Msg_Unknown_Tag x ->
+      `Assoc [ ("Full_Msg_Unknown_Tag", `String x) ]
 
 
 let full_msg_tag_opt_to_json = function
-    | None -> `Null 
-    | Some x -> full_msg_tag_to_json x
-;;
+  | None ->
+      `Null
+  | Some x ->
+      full_msg_tag_to_json x
 
 
 let full_field_tag_to_json = function
-    | Full_Admin_Field_Tag   x -> `Assoc [("Full_Admin_Field_Tag",full_admin_field_tag_to_json x)]
-    | Full_App_Field_Tag     x -> `Assoc [("Full_App_Field_Tag",full_app_field_tag_to_json x)]
-    | Full_Field_Unknown_Tag x -> `Assoc [("Full_Field_Unknown_Tag",`String x)]
-;;
+  | Full_Admin_Field_Tag x ->
+      `Assoc [ ("Full_Admin_Field_Tag", full_admin_field_tag_to_json x) ]
+  | Full_App_Field_Tag x ->
+      `Assoc [ ("Full_App_Field_Tag", full_app_field_tag_to_json x) ]
+  | Full_Field_Unknown_Tag x ->
+      `Assoc [ ("Full_Field_Unknown_Tag", `String x) ]
 
 
 let full_field_tag_opt_to_json = function
-    | None -> `Null 
-    | Some x -> full_field_tag_to_json x
-;;
+  | None ->
+      `Null
+  | Some x ->
+      full_field_tag_to_json x
+
+
 [@@@logic]

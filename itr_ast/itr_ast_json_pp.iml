@@ -1,6 +1,9 @@
 [@@@program]
+
 [@@@require "yojson"]
+
 [@@@import "itr_ast.iml"]
+
 [@@@import "../src-core-pp/datetime_json.iml"]
 
 open Format
@@ -37,8 +40,14 @@ let rec literal_to_json : literal -> t = function
       `Assoc [ ("Float", `Float (Q.to_float q)) ]
   | Coll l ->
       `Assoc [ ("Coll", `List (List.map record_item_to_json l)) ]
-  | MapColl (d,l) ->
-      `Assoc [ ("MapColl", `Assoc["default",record_item_to_json d;"elements",`List (List.map record_item_pair_to_json l)]) ]
+  | MapColl (d, l) ->
+      `Assoc
+        [ ( "MapColl"
+          , `Assoc
+              [ ("default", record_item_to_json d)
+              ; ("elements", `List (List.map record_item_pair_to_json l))
+              ] )
+        ]
   | LiteralNone ->
       `Assoc [ ("None", `String "None") ]
   | LiteralSome e ->
@@ -46,8 +55,12 @@ let rec literal_to_json : literal -> t = function
   | Datetime d ->
       `Assoc [ ("Datetime", datetime_to_json d) ]
 
+
 and record_item_pair_to_json : record_item * record_item -> t = function
-  | e1,e2 -> `Assoc ["key",record_item_to_json e1;"value",record_item_to_json e2]
+  | e1, e2 ->
+      `Assoc
+        [ ("key", record_item_to_json e1); ("value", record_item_to_json e2) ]
+
 
 and value_to_json : value -> t = function
   | Literal l ->
@@ -104,7 +117,11 @@ and expr_to_json : expr -> t = function
         ]
   | Eq { lhs; rhs } ->
       `Assoc
-        [ ("Eq", `Assoc [ ("lhs", record_item_to_json lhs); ("rhs", record_item_to_json rhs) ])
+        [ ( "Eq"
+          , `Assoc
+              [ ("lhs", record_item_to_json lhs)
+              ; ("rhs", record_item_to_json rhs)
+              ] )
         ]
   | Cmp { lhs; op; rhs } ->
       `Assoc
@@ -145,11 +162,14 @@ and record_to_json (record : record) =
   in
   `Assoc
     [ ( "Record"
-      , `Assoc [
-      ("name",`String record.name);
-      ("elements",`List (List.map item_to_json (String_map.to_list record.elements |> CCList.rev)))
-      ]
-      )
+      , `Assoc
+          [ ("name", `String record.name)
+          ; ( "elements"
+            , `List
+                (List.map
+                   item_to_json
+                   (String_map.to_list record.elements |> CCList.rev) ) )
+          ] )
     ]
 
 
@@ -159,21 +179,27 @@ and record_item_to_json (item : record_item) =
       `Assoc [ ("Rec_value", expr_to_json value) ]
   | Rec_record items ->
       `Assoc [ ("Rec_record", record_to_json items) ]
-  | Rec_repeating_group { num_in_group_field; elements; name;message_template } ->
+  | Rec_repeating_group { num_in_group_field; elements; name; message_template }
+    ->
       `Assoc
         [ ( "Rec_repeating_group"
           , `Assoc
               [ ("num_in_group_field", `String num_in_group_field)
               ; ("elements", `List (List.map record_to_json elements))
               ; ("name", `String name)
-              ; ("message_template", match message_template with
-              | None -> `Null
-              | Some message_template -> `String message_template)
+              ; ( "message_template"
+                , match message_template with
+                  | None ->
+                      `Null
+                  | Some message_template ->
+                      `String message_template )
               ] )
         ]
 
-let field_to_json (f:field ) =
-  `Assoc ["name",`String f.name;"value",record_item_to_json f.value]
+
+let field_to_json (f : field) =
+  `Assoc [ ("name", `String f.name); ("value", record_item_to_json f.value) ]
+
 
 let rec instruction_to_json : instruction -> t = function
   | Break ->
@@ -186,10 +212,22 @@ let rec instruction_to_json : instruction -> t = function
       `Assoc [ ("Sleep", expr_to_json e) ]
   | Assert e ->
       `Assoc [ ("Assert", expr_to_json e) ]
-  | Action {name;fields} ->
-      `Assoc ["Action",`Assoc ["name",`String name;"fields",`List (List.map field_to_json fields)]]
-  | Message {name;fields} ->
-      `Assoc ["Message",`Assoc ["name",`String name;"fields",`List (List.map field_to_json fields)]]
+  | Action { name; fields } ->
+      `Assoc
+        [ ( "Action"
+          , `Assoc
+              [ ("name", `String name)
+              ; ("fields", `List (List.map field_to_json fields))
+              ] )
+        ]
+  | Message { name; fields } ->
+      `Assoc
+        [ ( "Message"
+          , `Assoc
+              [ ("name", `String name)
+              ; ("fields", `List (List.map field_to_json fields))
+              ] )
+        ]
   | Fail e ->
       `Assoc
         [ ("Fail", match e with None -> `Null | Some e -> expr_to_json e) ]
@@ -248,7 +286,9 @@ let rec instruction_to_json : instruction -> t = function
   | Set { prop; value } ->
       `Assoc
         [ ( "Set"
-          , `Assoc [ ("prop", `String prop); ("value", record_item_to_json value) ] )
+          , `Assoc
+              [ ("prop", `String prop); ("value", record_item_to_json value) ]
+          )
         ]
   | Call { variable; call } ->
       `Assoc

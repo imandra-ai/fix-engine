@@ -32,7 +32,7 @@ let rec loop t =
       >>= function
       | Engine.FIXMessage (Full_messages.ValidMsg msg) ->
           engine_to_fixio t.fixio msg
-      | Engine.OutFIXData (_,msg) ->
+      | Engine.OutFIXData (_, msg) ->
           Model.send_fix t.model (OutIntMsg_ApplicationData msg)
       | _ ->
           Lwt.return_unit )
@@ -92,9 +92,7 @@ let f _ (inch, outch) =
     let iothread, fixio =
       Fix_io.start ~recv:(Lwt_mvar.put fixio_box) (inch, outch)
     in
-    let state =
-      { engine; engine_box; fixio; fixio_box; model; model_box }
-    in
+    let state = { engine; engine_box; fixio; fixio_box; model; model_box } in
     Lwt_mvar.put established ()
     >>= fun () ->
     Lwt.pick [ loop state; enginethread; iothread; modelthread ]

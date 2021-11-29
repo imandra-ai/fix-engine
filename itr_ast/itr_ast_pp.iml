@@ -1,5 +1,7 @@
 [@@@program]
+
 [@@@import "itr_ast.iml"]
+
 [@@@import "../src-core-pp/encode_datetime.iml"]
 
 open Format
@@ -8,98 +10,119 @@ open Encode_datetime
 
 let datetime_pp (ppf : formatter) : datetime -> unit = function
   | UTCTimestamp d ->
-    fprintf ppf "%s" (encode_UTCTimestamp_micro d)
+      fprintf ppf "%s" (encode_UTCTimestamp_micro d)
   | UTCTimeOnly d ->
-    fprintf ppf "%s" (encode_UTCTimeOnly_micro d)
+      fprintf ppf "%s" (encode_UTCTimeOnly_micro d)
   | UTCDateOnly d ->
-    fprintf ppf "%s" (encode_UTCDateOnly d)
+      fprintf ppf "%s" (encode_UTCDateOnly d)
   | LocalMktDate d ->
-    fprintf ppf "%s" (encode_LocalMktDate d)
+      fprintf ppf "%s" (encode_LocalMktDate d)
   | MonthYear d ->
-    fprintf ppf "%s" (encode_MonthYear d)
+      fprintf ppf "%s" (encode_MonthYear d)
   | Duration d ->
-    fprintf ppf "%s" (encode_Duration d)
+      fprintf ppf "%s" (encode_Duration d)
 
 
 let rec literal_pp (ppf : formatter) : literal -> unit = function
   | Bool true ->
-    fprintf ppf "true"
+      fprintf ppf "true"
   | Bool false ->
-    fprintf ppf "false"
+      fprintf ppf "false"
   | Int i ->
-    fprintf ppf "%s" (Z.to_string i)
+      fprintf ppf "%s" (Z.to_string i)
   | String s ->
-    fprintf ppf "\"%s\"" (Caml.String.escaped s)
+      fprintf ppf "\"%s\"" (Caml.String.escaped s)
   | UnquotedString s ->
-    fprintf ppf "%s" s
+      fprintf ppf "%s" s
   | Float q ->
-    fprintf ppf "%s" (Q.to_string q)
+      fprintf ppf "%s" (Q.to_string q)
   | Coll l ->
-    fprintf ppf "%a" CCFormat.(list ~sep:(return " ") record_item_pp) l
-  | MapColl (d,l) ->
-    fprintf ppf "default:%a@, %a" record_item_pp d CCFormat.(list ~sep:(return " ") record_item_pair_pp) l
+      fprintf ppf "%a" CCFormat.(list ~sep:(return " ") record_item_pp) l
+  | MapColl (d, l) ->
+      fprintf
+        ppf
+        "default:%a@, %a"
+        record_item_pp
+        d
+        CCFormat.(list ~sep:(return " ") record_item_pair_pp)
+        l
   | LiteralNone ->
-    fprintf ppf "None"
+      fprintf ppf "None"
   | LiteralSome e ->
-    fprintf ppf "Some %a" record_item_pp e
+      fprintf ppf "Some %a" record_item_pp e
   | Datetime d ->
-    fprintf ppf "%a" datetime_pp d
+      fprintf ppf "%a" datetime_pp d
 
 
 and value_pp (ppf : formatter) : value -> unit = function
   | Literal l ->
-    literal_pp ppf l
+      literal_pp ppf l
   | Variable v ->
-    fprintf ppf "%a" Var.pp v
+      fprintf ppf "%a" Var.pp v
   | MessageValue mv ->
-    fprintf ppf "%a" Message_value.pp mv
+      fprintf ppf "%a" Message_value.pp mv
   | ConnectionRef c ->
-    fprintf ppf "%a" Connection_ref.pp c
+      fprintf ppf "%a" Connection_ref.pp c
   | Now ->
-    fprintf ppf "Now"
+      fprintf ppf "Now"
   | Counter ->
-    fprintf ppf "Counter"
+      fprintf ppf "Counter"
   | ObjectProperty op ->
-    fprintf ppf "%a%a.%s" record_item_pp_parens op.obj opt_index_pp op.index op.prop
+      fprintf
+        ppf
+        "%a%a.%s"
+        record_item_pp_parens
+        op.obj
+        opt_index_pp
+        op.index
+        op.prop
   | Funcall { func; args } ->
-    fprintf ppf "%s(%a)" func CCFormat.(list ~sep:(return ",") record_item_pp) args
+      fprintf
+        ppf
+        "%s(%a)"
+        func
+        CCFormat.(list ~sep:(return ",") record_item_pp)
+        args
 
 
 and opt_index_pp (ppf : formatter) : Z.t option -> unit = function
   | None ->
-    ()
+      ()
   | Some i ->
-    fprintf ppf "[%i]" (Z.to_int i)
+      fprintf ppf "[%i]" (Z.to_int i)
 
 
 and expr_pp (ppf : formatter) : expr -> unit = function
   | Value v ->
-    fprintf ppf "%a" value_pp v
+      fprintf ppf "%a" value_pp v
   | Not e ->
-    fprintf ppf "!%a" expr_pp_parens e
+      fprintf ppf "!%a" expr_pp_parens e
   | Or { lhs; rhs } ->
-    fprintf ppf "%a || %a" expr_pp_parens lhs expr_pp_parens rhs
+      fprintf ppf "%a || %a" expr_pp_parens lhs expr_pp_parens rhs
   | And { lhs; rhs } ->
-    fprintf ppf "%a && %a" expr_pp_parens lhs expr_pp_parens rhs
+      fprintf ppf "%a && %a" expr_pp_parens lhs expr_pp_parens rhs
   | Eq { lhs; rhs } ->
-    fprintf ppf "%a = %a" record_item_pp_parens lhs record_item_pp_parens rhs
+      fprintf ppf "%a = %a" record_item_pp_parens lhs record_item_pp_parens rhs
   | Cmp { lhs; op; rhs } ->
-    fprintf ppf "%a %s %a" expr_pp_parens lhs op expr_pp_parens rhs
+      fprintf ppf "%a %s %a" expr_pp_parens lhs op expr_pp_parens rhs
   | Add { lhs; op; rhs } ->
-    fprintf ppf "%a %c %a" expr_pp_parens lhs op expr_pp_parens rhs
+      fprintf ppf "%a %c %a" expr_pp_parens lhs op expr_pp_parens rhs
   | Mul { lhs; op; rhs } ->
-    fprintf ppf "%a %c %a" expr_pp_parens lhs op expr_pp_parens rhs
+      fprintf ppf "%a %c %a" expr_pp_parens lhs op expr_pp_parens rhs
   | In { el; set } ->
-    fprintf ppf "%a in %a" expr_pp_parens el value_pp set
+      fprintf ppf "%a in %a" expr_pp_parens el value_pp set
 
-and record_item_pair_pp ppf (e1,e2) =
+
+and record_item_pair_pp ppf (e1, e2) =
   fprintf ppf "%a -> %a" record_item_pp e1 record_item_pp e2
+
+
 and expr_pp_parens ppf e =
   match e with
   | Value _ | Not _ ->
-    expr_pp ppf e
+      expr_pp ppf e
   | Or _ | And _ | Eq _ | Cmp _ | Add _ | Mul _ | In _ ->
-    fprintf ppf "(%a)" expr_pp e
+      fprintf ppf "(%a)" expr_pp e
 
 
 and record_pp (ppf : formatter) (items : record) =
@@ -107,11 +130,11 @@ and record_pp (ppf : formatter) (items : record) =
     let open CCFormat in
     match item with
     | Rec_value _ ->
-      fprintf ppf "%s = %a;" name record_item_pp item
+        fprintf ppf "%s = %a;" name record_item_pp item
     | Rec_record _ ->
-      fprintf ppf "%s %a" name record_item_pp item
+        fprintf ppf "%s %a" name record_item_pp item
     | Rec_repeating_group _ ->
-      record_item_pp ppf item
+        record_item_pp ppf item
   in
   fprintf
     ppf
@@ -124,14 +147,14 @@ and record_item_pp (ppf : formatter) (item : record_item) =
   let open CCFormat in
   match item with
   | Rec_value value ->
-    expr_pp ppf value
+      expr_pp ppf value
   | Rec_record items ->
-    record_pp ppf items
-  | Rec_repeating_group { num_in_group_field; elements;_ } ->
+      record_pp ppf items
+  | Rec_repeating_group { num_in_group_field; elements; _ } ->
     ( match elements with
-      | [] ->
+    | [] ->
         fprintf ppf "@[<v 2>%s@ [@[<v 1>@ {@,}@]@ ]@]" num_in_group_field
-      | _ ->
+    | _ ->
         fprintf
           ppf
           "@[<v 2>%s@ [@[<v 1>@ %a@]@ ]@]"
@@ -139,18 +162,19 @@ and record_item_pp (ppf : formatter) (item : record_item) =
           (list ~sep:(return "@ ") record_pp)
           elements )
 
+
 and record_item_pp_parens (ppf : formatter) (item : record_item) =
   let open CCFormat in
   match item with
   | Rec_value value ->
-    expr_pp_parens ppf value
+      expr_pp_parens ppf value
   | Rec_record items ->
-    record_pp ppf items
-  | Rec_repeating_group { num_in_group_field; elements;_ } ->
+      record_pp ppf items
+  | Rec_repeating_group { num_in_group_field; elements; _ } ->
     ( match elements with
-      | [] ->
+    | [] ->
         fprintf ppf "@[<v 2>%s@ [@[<v 1>@ {@,}@]@ ]@]" num_in_group_field
-      | _ ->
+    | _ ->
         fprintf
           ppf
           "@[<v 2>%s@ [@[<v 1>@ %a@]@ ]@]"
@@ -163,147 +187,147 @@ let rec instruction_pp (ppf : formatter) : instruction -> unit =
   let open CCFormat in
   let pp_var_eq_opt fmt = function
     | None ->
-      ()
+        ()
     | Some var ->
-      fprintf fmt "%a = " Var.pp var
+        fprintf fmt "%a = " Var.pp var
   in
   let timeout_pp (ppf : formatter) (tmout : expr) : unit =
     fprintf ppf "with timeout=%a" expr_pp tmout
   in
   function
   | Break ->
-    fprintf ppf "break"
+      fprintf ppf "break"
   | Print e ->
-    fprintf ppf "print %a" expr_pp e
+      fprintf ppf "print %a" expr_pp e
   | Run e ->
-    fprintf ppf "run %a" expr_pp e
+      fprintf ppf "run %a" expr_pp e
   | Sleep e ->
-    fprintf ppf "sleep %a" expr_pp e
+      fprintf ppf "sleep %a" expr_pp e
   | Assert e ->
-    fprintf ppf "assert %a" expr_pp e
+      fprintf ppf "assert %a" expr_pp e
   | Fail e ->
-    fprintf ppf "fail %a" (some expr_pp) e
+      fprintf ppf "fail %a" (some expr_pp) e
   | Return e ->
-    fprintf ppf "return %a" (some expr_pp) e
+      fprintf ppf "return %a" (some expr_pp) e
   | Goto l ->
-    fprintf ppf "goto \"%s\"" l
+      fprintf ppf "goto \"%s\"" l
   | Label l ->
-    fprintf ppf "label \"%s\":" l
+      fprintf ppf "label \"%s\":" l
   | Disconnect s ->
-    fprintf ppf "disconnect %a" Connection_ref.pp s
+      fprintf ppf "disconnect %a" Connection_ref.pp s
   | Unset v ->
-    fprintf ppf "unset %a" value_pp v
+      fprintf ppf "unset %a" value_pp v
   | Cleanup i ->
-    fprintf
-      ppf
-      "cleanup@[<v>@,{@,%a@,}@,@]"
-      (list ~sep:(return "@,") instruction_pp)
-      i
+      fprintf
+        ppf
+        "cleanup@[<v>@,{@,%a@,}@,@]"
+        (list ~sep:(return "@,") instruction_pp)
+        i
   | OnExpired i ->
-    fprintf
-      ppf
-      "onexpired@[<v>@,{@,%a@,}@,@]"
-      (list ~sep:(return "@,") instruction_pp)
-      i
+      fprintf
+        ppf
+        "onexpired@[<v>@,{@,%a@,}@,@]"
+        (list ~sep:(return "@,") instruction_pp)
+        i
   | ForEach { dataset; instructions } ->
-    fprintf
-      ppf
-      "@[<v>for each row in dataset %a@,@[<v 2>{@,%a@]@,}@]"
-      expr_pp
-      dataset
-      (list ~sep:(return "@,") instruction_pp)
-      instructions
+      fprintf
+        ppf
+        "@[<v>for each row in dataset %a@,@[<v 2>{@,%a@]@,}@]"
+        expr_pp
+        dataset
+        (list ~sep:(return "@,") instruction_pp)
+        instructions
   | Repeat { ntimes; instructions } ->
-    fprintf
-      ppf
-      "repeat %a@[<v>@,{@,%a@,}@,@]"
-      (some expr_pp)
-      ntimes
-      (list ~sep:(return "@,") instruction_pp)
-      instructions
+      fprintf
+        ppf
+        "repeat %a@[<v>@,{@,%a@,}@,@]"
+        (some expr_pp)
+        ntimes
+        (list ~sep:(return "@,") instruction_pp)
+        instructions
   | Action _ ->
-    ()
+      ()
   | Message _ ->
-    ()
+      ()
   | Connect { connection; timeout; block } ->
-    let noblock = if block then "" else "noblock" in
-    fprintf
-      ppf
-      "connect %a %a %s"
-      Connection_ref.pp
-      connection
-      (some timeout_pp)
-      timeout
-      noblock
+      let noblock = if block then "" else "noblock" in
+      fprintf
+        ppf
+        "connect %a %a %s"
+        Connection_ref.pp
+        connection
+        (some timeout_pp)
+        timeout
+        noblock
   | Set { prop; value } ->
-    fprintf ppf "set %s = %a" prop record_item_pp_parens value
+      fprintf ppf "set %s = %a" prop record_item_pp_parens value
   | Call { variable; call } ->
-    fprintf ppf "call %a%a" pp_var_eq_opt variable value_pp call
+      fprintf ppf "call %a%a" pp_var_eq_opt variable value_pp call
   | Send { variable; template; connection; using; withs } ->
-    let using = match using with Some u -> " using " ^ u | None -> "" in
-    fprintf
-      ppf
-      "@[<v>send %a%a to %a%s %a@]"
-      pp_var_eq_opt
-      variable
-      Template.pp
-      template
-      Connection_ref.pp
-      connection
-      using
-      (CCFormat.some record_pp)
-      withs
+      let using = match using with Some u -> " using " ^ u | None -> "" in
+      fprintf
+        ppf
+        "@[<v>send %a%a to %a%s %a@]"
+        pp_var_eq_opt
+        variable
+        Template.pp
+        template
+        Connection_ref.pp
+        connection
+        using
+        (CCFormat.some record_pp)
+        withs
   | ExpectingOf { variable; expecting } ->
-    fprintf
-      ppf
-      "@[<v>expectingof %a %a@]"
-      Var.pp
-      variable
-      expecting_pp
-      expecting
+      fprintf
+        ppf
+        "@[<v>expectingof %a %a@]"
+        Var.pp
+        variable
+        expecting_pp
+        expecting
   | Template { variable; template; connection; using } ->
-    let using = match using with Some u -> u | None -> "" in
-    fprintf
-      ppf
-      "template %a%a over %a %s"
-      pp_var_eq_opt
-      variable
-      Template.pp
-      template
-      Connection_ref.pp
-      connection
-      using
+      let using = match using with Some u -> u | None -> "" in
+      fprintf
+        ppf
+        "template %a%a over %a %s"
+        pp_var_eq_opt
+        variable
+        Template.pp
+        template
+        Connection_ref.pp
+        connection
+        using
   | Receive { variable; connection; timeout; where; expecting; _ } ->
-    let pp_space_opt pp fmt = function
-      | None ->
-        ()
-      | Some x ->
-        fprintf fmt " %a" pp x
-    in
-    let pp_expecting_opt pp fmt = function
-      | None ->
-        ()
-      | Some x ->
-        fprintf fmt "@ expecting %a" pp x
-    in
-    fprintf
-      ppf
-      "@[<v 2>receive%a from %a%a where %a%a@]"
-      (pp_space_opt Var.pp)
-      variable
-      Connection_ref.pp
-      connection
-      (pp_space_opt timeout_pp)
-      timeout
-      expr_pp
-      where
-      (pp_expecting_opt expecting_pp)
-      expecting
+      let pp_space_opt pp fmt = function
+        | None ->
+            ()
+        | Some x ->
+            fprintf fmt " %a" pp x
+      in
+      let pp_expecting_opt pp fmt = function
+        | None ->
+            ()
+        | Some x ->
+            fprintf fmt "@ expecting %a" pp x
+      in
+      fprintf
+        ppf
+        "@[<v 2>receive%a from %a%a where %a%a@]"
+        (pp_space_opt Var.pp)
+        variable
+        Connection_ref.pp
+        connection
+        (pp_space_opt timeout_pp)
+        timeout
+        expr_pp
+        where
+        (pp_expecting_opt expecting_pp)
+        expecting
   | IfThenElse { cond; then_; else_ } ->
     ( match else_ with
-      | [] ->
+    | [] ->
         fprintf ppf "@[<v>if (%a) @,%a@]" expr_pp cond withs_pp then_
-      | else_ ->
+    | else_ ->
         fprintf
           ppf
           "@[<v>if (%a) @,%a else @,%a@]"
@@ -314,16 +338,16 @@ let rec instruction_pp (ppf : formatter) : instruction -> unit =
           withs_pp
           else_ )
   | FunctionDef { name; args; body } ->
-    fprintf
-      ppf
-      "@[<v>function %s(%a)@,%a@]"
-      name
-      typed_term_pp
-      args
-      withs_pp
-      body
+      fprintf
+        ppf
+        "@[<v>function %s(%a)@,%a@]"
+        name
+        typed_term_pp
+        args
+        withs_pp
+        body
   | Comment text ->
-    fprintf ppf "# %s" text
+      fprintf ppf "# %s" text
 
 
 and withs_pp (ppf : formatter) (is : instruction list) =
@@ -340,39 +364,39 @@ and expecting_pp fmt (expecting : expecting) =
   let modifier =
     match expecting.modifier with
     | Some `Only ->
-      "only "
+        "only "
     | Some `Only_supported ->
-      "only supported "
+        "only supported "
     | None ->
-      ""
+        ""
   in
   match expecting.exprs with
   | [] ->
-    fprintf fmt "%s{@,}" modifier
+      fprintf fmt "%s{@,}" modifier
   | es ->
-    fprintf
-      fmt
-      "%s{@,@[<v 2>  %a@]@,}"
-      modifier
-      (list ~sep:(return "@,") expr_pp)
-      es
+      fprintf
+        fmt
+        "%s{@,@[<v 2>  %a@]@,}"
+        modifier
+        (list ~sep:(return "@,") expr_pp)
+        es
 
 
 and typed_term_pp (ppf : formatter) (args : typed_term list) =
   let open CCFormat in
   match args with
   | [] ->
-    fprintf ppf "%s" ""
+      fprintf ppf "%s" ""
   | _ ->
-    fprintf ppf "%a" (list ~sep:(return ",") tt_p) args
+      fprintf ppf "%a" (list ~sep:(return ",") tt_p) args
 
 
 and tt_p (ppf : formatter) a =
   match a.type_ with
   | None ->
-    fprintf ppf "%s" a.name
+      fprintf ppf "%s" a.name
   | Some type_ ->
-    fprintf ppf "%s:%s" a.name type_
+      fprintf ppf "%s:%s" a.name type_
 
 
 let instructions_pp = CCFormat.(vbox (list instruction_pp ~sep:(return "@,")))

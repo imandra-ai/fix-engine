@@ -5,5 +5,6 @@
  (name imandra)
  (implementation
   (extension iml)
-  (preprocess  (system "imandra-extract %{input-file}")))
+  (preprocess  (system "imandra-extract %{input-file}"))
+  (format (system "ocamlformat %{input-file}")))
  (interface (extension "imli")))
