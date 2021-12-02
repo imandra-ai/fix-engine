@@ -406,7 +406,9 @@ and expecting_to_json (expecting : expecting) =
             `String "only"
         | Some `Only_supported ->
             `String "only supported" )
-    ; ("exprs", `List (List.map expr_to_json expecting.exprs))
+    ; ("relevant_exprs", `List (List.map expr_to_json expecting.relevant_exprs))
+    ; ("common_exprs", `List (List.map expr_to_json expecting.common_exprs))
+    ; ("nullable_exprs", `List (List.map expr_to_json expecting.nullable_exprs))
     ]
 
 

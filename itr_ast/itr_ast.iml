@@ -599,7 +599,9 @@ type typed_term =
 
 type expecting =
   { modifier : [ `Only | `Only_supported ] option
-  ; exprs : expr list
+  ; relevant_exprs : expr list
+  ; nullable_exprs : expr list
+  ; common_exprs : expr list
   }
 
 type field =
@@ -746,8 +748,16 @@ module Value = struct
         false
     | Call { variable = _; call = v } | Unset v ->
         exists f v
-    | ExpectingOf { variable = _; expecting = { exprs = es; modifier = _ } } ->
-        CCList.exists (exists_expr f) es
+    | ExpectingOf
+        { variable = _
+        ; expecting =
+            { relevant_exprs = es
+            ; common_exprs = ces
+            ; nullable_exprs = nes
+            ; modifier = _
+            }
+        } ->
+        CCList.exists (exists_expr f) (es @ ces @ nes)
     | Print e | Run e | Sleep e | Assert e ->
         exists_expr f e
     | Set { prop = _; value = e } ->
@@ -781,7 +791,10 @@ module Value = struct
         CCOpt.exists (exists_expr f) timeout
         || exists_expr f where
         || CCOpt.exists
-             (fun (e : expecting) -> CCList.exists (exists_expr f) e.exprs)
+             (fun (e : expecting) ->
+               CCList.exists
+                 (exists_expr f)
+                 (e.relevant_exprs @ e.common_exprs @ e.nullable_exprs) )
              expecting
     | IfThenElse { cond; then_; else_ } ->
         exists_expr f cond
@@ -936,7 +949,9 @@ let send ?variable ~template ~to_ ?using ?values () =
   Send { variable; template; connection = to_; using; withs = values }
 
 
-let expecting ?modifier exprs = { modifier; exprs }
+let expecting ?modifier relevant_exprs common_exprs nullable_exprs =
+  { modifier; relevant_exprs; common_exprs; nullable_exprs }
+
 
 let receive ?variable ~from ?timeout ~where ?expecting ~example () =
   Receive { variable; connection = from; timeout; where; expecting; example }

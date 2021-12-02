@@ -293,8 +293,10 @@ let expecting_decoder : expecting decoder =
       (function "only supported" -> `Only_supported | _ -> `Only)
       modifier
   in
-  let* exprs = field "exprs" (list (expr_decoder ())) in
-  succeed { modifier; exprs }
+  let* relevant_exprs = field "relevant_exprs" (list (expr_decoder ())) in
+  let* common_exprs = field "common_exprs" (list (expr_decoder ())) in
+  let* nullable_exprs = field "nullable_exprs" (list (expr_decoder ())) in
+  succeed { modifier; relevant_exprs; nullable_exprs; common_exprs }
 
 
 let tt_decoder : typed_term decoder =
