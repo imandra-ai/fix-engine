@@ -727,7 +727,7 @@ let make_monthyear (year : int) (month : int) (week : fix_week option) =
 let is_valid_monthyear (my : fix_monthyear) =
   0 <= my.monthyear_year
   && my.monthyear_year <= 9999
-  && 0 <= my.monthyear_month
+  && 1 <= my.monthyear_month
   && my.monthyear_month <= 12
   && (match my.monthyear_day with None -> true | Some d -> 0 <= d && d <= 31)
   &&
