@@ -371,13 +371,12 @@ and expecting_pp fmt (expecting : expecting) =
         ""
   in
   match
-    expecting.relevant_exprs @ expecting.common_exprs @ expecting.nullable_exprs
+    expecting.relevant_exprs @ expecting.common_exprs @ expecting.qe_modified_exprs @ expecting.nullable_exprs
   with
   | [] ->
       fprintf fmt "%s{@,}" modifier
   | es ->
       fprintf fmt "%s{@,@[<v 2>  %a@]@,}" modifier exprs_pp es
-
 
 and exprs_pp fmt (exprs : expr list) =
   let open CCFormat in

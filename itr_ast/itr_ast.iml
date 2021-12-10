@@ -601,6 +601,7 @@ type expecting =
   { modifier : [ `Only | `Only_supported ] option
   ; relevant_exprs : expr list
   ; nullable_exprs : expr list
+  ; qe_modified_exprs : expr list
   ; common_exprs : expr list
   }
 
@@ -754,10 +755,11 @@ module Value = struct
             { relevant_exprs = es
             ; common_exprs = ces
             ; nullable_exprs = nes
+            ; qe_modified_exprs = qems
             ; modifier = _
             }
         } ->
-        CCList.exists (exists_expr f) (es @ ces @ nes)
+        CCList.exists (exists_expr f) (es @ ces @ nes @ qems)
     | Print e | Run e | Sleep e | Assert e ->
         exists_expr f e
     | Set { prop = _; value = e } ->
@@ -949,8 +951,8 @@ let send ?variable ~template ~to_ ?using ?values () =
   Send { variable; template; connection = to_; using; withs = values }
 
 
-let expecting ?modifier relevant_exprs common_exprs nullable_exprs =
-  { modifier; relevant_exprs; common_exprs; nullable_exprs }
+let expecting ?modifier relevant_exprs common_exprs qe_modified_exprs nullable_exprs =
+  { modifier; relevant_exprs; common_exprs; qe_modified_exprs; nullable_exprs }
 
 
 let receive ?variable ~from ?timeout ~where ?expecting ~example () =

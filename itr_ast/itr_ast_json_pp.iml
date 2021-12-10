@@ -408,6 +408,7 @@ and expecting_to_json (expecting : expecting) =
             `String "only supported" )
     ; ("relevant_exprs", `List (List.map expr_to_json expecting.relevant_exprs))
     ; ("common_exprs", `List (List.map expr_to_json expecting.common_exprs))
+    ; ("qe_modified_exprs", `List (List.map expr_to_json expecting.qe_modified_exprs))
     ; ("nullable_exprs", `List (List.map expr_to_json expecting.nullable_exprs))
     ]
 

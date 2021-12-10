@@ -296,7 +296,8 @@ let expecting_decoder : expecting decoder =
   let* relevant_exprs = field "relevant_exprs" (list (expr_decoder ())) in
   let* common_exprs = field "common_exprs" (list (expr_decoder ())) in
   let* nullable_exprs = field "nullable_exprs" (list (expr_decoder ())) in
-  succeed { modifier; relevant_exprs; nullable_exprs; common_exprs }
+  let+ qe_modified_exprs = field "qe_modified_exprs" (list (expr_decoder ())) in
+  { modifier; relevant_exprs; nullable_exprs; qe_modified_exprs; common_exprs }
 
 
 let tt_decoder : typed_term decoder =
