@@ -2,6 +2,7 @@
 
 [@@@import "itr_ast.iml"]
 [@@@import "itr_ast_pp.iml"]
+[@@@import "../src-core-utils-pp/current_time.iml"]
 open Itr_ast
 
 type msg_or_expr =
