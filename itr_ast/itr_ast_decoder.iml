@@ -295,7 +295,16 @@ let expecting_decoder : expecting decoder =
   in
   let* relevant_exprs = field "relevant_exprs" (list (expr_decoder ())) in
   let* common_exprs = field "common_exprs" (list (expr_decoder ())) in
-  let* nullable_exprs = field "nullable_exprs" (list (expr_decoder ())) in
+  let* nullable_exprs =
+    field
+      "nullable_exprs"
+      (list
+         (let* field_paths =
+            field "field_paths" (list (list name_and_index_decoder))
+          in
+          let+ expr = field "expr" (expr_decoder ()) in
+          (expr, field_paths) ) )
+  in
   let+ qe_modified_exprs = field "qe_modified_exprs" (list (expr_decoder ())) in
   { modifier; relevant_exprs; nullable_exprs; qe_modified_exprs; common_exprs }
 

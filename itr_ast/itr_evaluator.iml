@@ -1,8 +1,11 @@
 [@@@program]
 
 [@@@import "itr_ast.iml"]
+
 [@@@import "itr_ast_pp.iml"]
+
 [@@@import "../src-core-utils-pp/current_time.iml"]
+
 open Itr_ast
 
 type msg_or_expr =
@@ -358,7 +361,8 @@ and evaluate_expr (context : context) (e : expr) : record_item =
                (Literal
                   (Datetime
                      (UTCDateOnly
-                        (Datetime.convert_utctimestamp_micro_utcdateonly t)))))
+                        (Datetime.convert_utctimestamp_micro_utcdateonly t) ) )
+               ) )
       | _ ->
           Rec_value e )
     | [ date; Rec_value (Value (Literal (String "yyyyMMdd-HH:mm:ss.SSS"))) ] ->
@@ -371,7 +375,8 @@ and evaluate_expr (context : context) (e : expr) : record_item =
         (Value
            (Literal
               (Datetime
-                 (UTCTimestamp (Current_time.get_current_utctimestamp_micro ())))))
+                 (UTCTimestamp (Current_time.get_current_utctimestamp_micro ()))
+              ) ) )
   | Value (Funcall { func : string; args : record_item list })
     when func = "timestamp_to_dateonly" && List.length args = 1 ->
     ( match args with
@@ -383,7 +388,8 @@ and evaluate_expr (context : context) (e : expr) : record_item =
                (Literal
                   (Datetime
                      (UTCDateOnly
-                        (Datetime.convert_utctimestamp_micro_utcdateonly t)))))
+                        (Datetime.convert_utctimestamp_micro_utcdateonly t) ) )
+               ) )
       | _ ->
           Rec_value e )
     | _ ->
@@ -399,7 +405,8 @@ and evaluate_expr (context : context) (e : expr) : record_item =
                (Literal
                   (Datetime
                      (LocalMktDate
-                        (Datetime.convert_utctimestamp_micro_localmktdate t)))))
+                        (Datetime.convert_utctimestamp_micro_localmktdate t) )
+                  ) ) )
       | _ ->
           Rec_value e )
     | _ ->
@@ -518,9 +525,11 @@ and evaluate_expr (context : context) (e : expr) : record_item =
                 (Bool
                    (List.mem
                       (evaluate_expr el)
-                      (List.map evaluate_record_item es)))))
+                      (List.map evaluate_record_item es) ) ) ) )
     | _ ->
         Rec_value e )
   | _ ->
       Rec_value e
+
+
 [@@@logic]

@@ -408,8 +408,34 @@ and expecting_to_json (expecting : expecting) =
             `String "only supported" )
     ; ("relevant_exprs", `List (List.map expr_to_json expecting.relevant_exprs))
     ; ("common_exprs", `List (List.map expr_to_json expecting.common_exprs))
-    ; ("qe_modified_exprs", `List (List.map expr_to_json expecting.qe_modified_exprs))
-    ; ("nullable_exprs", `List (List.map expr_to_json expecting.nullable_exprs))
+    ; ( "qe_modified_exprs"
+      , `List (List.map expr_to_json expecting.qe_modified_exprs) )
+    ; ( "nullable_exprs"
+      , `List
+          (List.map
+             (fun (expr, field_paths) ->
+               `Assoc
+                 [ ("expr", expr_to_json expr)
+                 ; ( "field_paths"
+                   , `List
+                       (List.map
+                          (fun x ->
+                            `List
+                              (List.map
+                                 (fun (x, o) ->
+                                   `Assoc
+                                     [ ("name", `String x)
+                                     ; ( "index"
+                                       , match o with
+                                         | None ->
+                                             `Null
+                                         | Some x ->
+                                             `Int (Z.to_int x) )
+                                     ] )
+                                 x ) )
+                          field_paths ) )
+                 ] )
+             expecting.nullable_exprs ) )
     ]
 
 

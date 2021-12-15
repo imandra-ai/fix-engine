@@ -387,6 +387,32 @@ let rec fold f init e =
       init
 
 
+let rec get_vars e acc =
+  match e with
+  | Value _ ->
+      e :: acc
+  | Not e1 ->
+      get_vars e1 acc
+  | Or { lhs; rhs }
+  | And { lhs; rhs }
+  | Cmp { lhs; rhs; _ }
+  | Add { lhs; rhs; _ }
+  | Mul { lhs; rhs; _ } ->
+      let vars_l_acc = get_vars lhs acc in
+      let vars_r_acc = get_vars rhs vars_l_acc in
+      vars_r_acc
+  | Eq { lhs = Rec_value lhs; rhs = Rec_value rhs } ->
+      let vars_l_acc = get_vars lhs acc in
+      let vars_r_acc = get_vars rhs vars_l_acc in
+      vars_r_acc
+  | In { el; _ } ->
+      get_vars el acc
+  | _ ->
+      acc
+
+
+let get_vars e = get_vars e []
+
 let is_funcall = function Value (Funcall _) -> true | _ -> false
 
 let bool b = Value (Literal (Bool b))
@@ -600,7 +626,7 @@ type typed_term =
 type expecting =
   { modifier : [ `Only | `Only_supported ] option
   ; relevant_exprs : expr list
-  ; nullable_exprs : expr list
+  ; nullable_exprs : (expr * (string * int option) list list) list
   ; qe_modified_exprs : expr list
   ; common_exprs : expr list
   }
@@ -759,7 +785,7 @@ module Value = struct
             ; modifier = _
             }
         } ->
-        CCList.exists (exists_expr f) (es @ ces @ nes @ qems)
+        CCList.exists (exists_expr f) (es @ ces @ List.map fst nes @ qems)
     | Print e | Run e | Sleep e | Assert e ->
         exists_expr f e
     | Set { prop = _; value = e } ->
@@ -796,7 +822,9 @@ module Value = struct
              (fun (e : expecting) ->
                CCList.exists
                  (exists_expr f)
-                 (e.relevant_exprs @ e.common_exprs @ e.nullable_exprs) )
+                 ( e.relevant_exprs
+                 @ e.common_exprs
+                 @ List.map fst e.nullable_exprs ) )
              expecting
     | IfThenElse { cond; then_; else_ } ->
         exists_expr f cond
@@ -951,7 +979,8 @@ let send ?variable ~template ~to_ ?using ?values () =
   Send { variable; template; connection = to_; using; withs = values }
 
 
-let expecting ?modifier relevant_exprs common_exprs qe_modified_exprs nullable_exprs =
+let expecting
+    ?modifier relevant_exprs common_exprs qe_modified_exprs nullable_exprs =
   { modifier; relevant_exprs; common_exprs; qe_modified_exprs; nullable_exprs }
 
 
