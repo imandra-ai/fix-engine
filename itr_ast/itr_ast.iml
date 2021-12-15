@@ -387,31 +387,31 @@ let rec fold f init e =
       init
 
 
-let rec get_vars e acc =
+let rec get_vars_rec e acc =
   match e with
   | Value _ ->
       e :: acc
   | Not e1 ->
-      get_vars e1 acc
+      get_vars_rec e1 acc
   | Or { lhs; rhs }
   | And { lhs; rhs }
   | Cmp { lhs; rhs; _ }
   | Add { lhs; rhs; _ }
   | Mul { lhs; rhs; _ } ->
-      let vars_l_acc = get_vars lhs acc in
-      let vars_r_acc = get_vars rhs vars_l_acc in
+      let vars_l_acc = get_vars_rec lhs acc in
+      let vars_r_acc = get_vars_rec rhs vars_l_acc in
       vars_r_acc
   | Eq { lhs = Rec_value lhs; rhs = Rec_value rhs } ->
-      let vars_l_acc = get_vars lhs acc in
-      let vars_r_acc = get_vars rhs vars_l_acc in
+      let vars_l_acc = get_vars_rec lhs acc in
+      let vars_r_acc = get_vars_rec rhs vars_l_acc in
       vars_r_acc
   | In { el; _ } ->
-      get_vars el acc
+      get_vars_rec el acc
   | _ ->
       acc
 
 
-let get_vars e = get_vars e []
+let get_vars e = get_vars_rec e []
 
 let is_funcall = function Value (Funcall _) -> true | _ -> false
 
