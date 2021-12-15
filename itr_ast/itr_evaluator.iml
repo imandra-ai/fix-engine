@@ -44,6 +44,15 @@ let rec replace_in_expr e e_check e_replace =
   then e_replace
   else
     match e with
+    | Value (Funcall { func : string; args : record_item list }) ->
+        Value
+          (Funcall
+             { func
+             ; args =
+                 List.map
+                   (fun arg -> replace_in_record_item arg e_check e_replace)
+                   args
+             } )
     | Value _ ->
         e
     | Not expr ->
