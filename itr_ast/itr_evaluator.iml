@@ -326,9 +326,10 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
       let rhs = evaluate_record_item rhs in
       if lhs = rhs
       then e_true
-      else
-        (* only evaluate equality to false if the terms have no variables *)
-        e_false
+      else if (* only evaluate equality to false if the terms have no variables *)
+              is_ground lhs && is_ground rhs
+      then e_false
+      else Rec_value (Eq { lhs; rhs })
   | Cmp { lhs : expr; op : string; rhs : expr } ->
       let lhs = evaluate_expr lhs in
       let rhs = evaluate_expr rhs in
