@@ -236,8 +236,8 @@ let check_cmp lhs rhs op =
       Rec_value (Cmp { lhs; op; rhs })
 
 
-let rec evaluate_record_item (context : context) (e : record_item) : record_item
-    =
+let rec evaluate_record_item (context : context option) (e : record_item) :
+    record_item =
   match e with
   | Rec_value r ->
       evaluate_expr context r
@@ -251,7 +251,7 @@ let rec evaluate_record_item (context : context) (e : record_item) : record_item
       e
 
 
-and evaluate_expr (context : context) (e : expr) : record_item =
+and evaluate_expr (context : context option) (e : expr) : record_item =
   let evaluate_expr = evaluate_expr context in
   let evaluate_record_item = evaluate_record_item context in
   match e with
@@ -436,31 +436,39 @@ and evaluate_expr (context : context) (e : expr) : record_item =
   | Value (Funcall _) ->
       Rec_value e
   | Value (Variable (Var v)) ->
-    ( match String_map.get v context.local_vars with
+    ( match context with
     | None ->
-        failwith @@ "Unknown variable " ^ v
-    | Some (Record_item ri) ->
-        evaluate_record_item ri
-    | _ ->
-        Rec_value e )
+        Rec_value e
+    | Some context ->
+      ( match String_map.get v context.local_vars with
+      | None ->
+          failwith @@ "Unknown variable " ^ v
+      | Some (Record_item ri) ->
+          evaluate_record_item ri
+      | _ ->
+          Rec_value e ) )
   | Value (Literal (Coll l)) ->
       Rec_value (Value (Literal (Coll (List.map evaluate_record_item l))))
   | Value (Literal (LiteralSome s)) ->
       evaluate_record_item s
   | Value (MessageValue { var; field_path }) ->
-    ( match (var, context.implicit_message) with
-    | Some x, _ ->
-      ( match String_map.get (Var.name x) context.local_vars with
-      | Some (Msg (msg, _tag)) ->
+    ( match context with
+    | None ->
+        Rec_value e
+    | Some context ->
+      ( match (var, context.implicit_message) with
+      | Some x, _ ->
+        ( match String_map.get (Var.name x) context.local_vars with
+        | Some (Msg (msg, _tag)) ->
+            evaluate_record_item (context.get_field msg field_path)
+        | Some (Record_item ri) ->
+            evaluate_record_item ri
+        | _ ->
+            Rec_value e )
+      | None, Some (msg, _tag) ->
           evaluate_record_item (context.get_field msg field_path)
-      | Some (Record_item ri) ->
-          evaluate_record_item ri
-      | _ ->
-          Rec_value e )
-    | None, Some (msg, _tag) ->
-        evaluate_record_item (context.get_field msg field_path)
-    | None, None ->
-        failwith "No message to reference" )
+      | None, None ->
+          failwith "No message to reference" ) )
   | Add { lhs : expr; op : char; rhs : expr } ->
       let lhs, rhs = (evaluate_expr lhs, evaluate_expr rhs) in
       ( match (lhs, rhs) with
