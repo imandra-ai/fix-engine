@@ -236,6 +236,38 @@ let check_cmp lhs rhs op =
       Rec_value (Cmp { lhs; op; rhs })
 
 
+let rec is_ground_expr : expr -> bool = function
+  | Value (Variable _) | Value (MessageValue _) ->
+      false
+  | Value _ ->
+      true
+  | Not e1 ->
+      is_ground_expr e1
+  | Or { lhs; rhs }
+  | And { lhs; rhs }
+  | Cmp { lhs; rhs; _ }
+  | Add { lhs; rhs; _ }
+  | Mul { lhs; rhs; _ } ->
+      is_ground_expr lhs && is_ground_expr rhs
+  | Eq { lhs = Rec_value lhs; rhs = Rec_value rhs } ->
+      is_ground_expr lhs && is_ground_expr rhs
+  | In { el; _ } ->
+      is_ground_expr el
+  | _ ->
+      true
+
+
+let rec is_ground (e : record_item) : bool =
+  match e with
+  | Rec_value r ->
+      is_ground_expr r
+  | Rec_record { elements; _ } ->
+      String_map.for_all (fun _ x -> is_ground x) elements
+  (* TODO checking of ground for repeating group structures *)
+  | _ ->
+      false
+
+
 let rec evaluate_record_item (context : context option) (e : record_item) :
     record_item =
   match e with
@@ -292,7 +324,11 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
   | Eq { lhs : record_item; rhs : record_item } ->
       let lhs = evaluate_record_item lhs in
       let rhs = evaluate_record_item rhs in
-      if lhs = rhs then e_true else e_false
+      if lhs = rhs
+      then e_true
+      else
+        (* only evaluate equality to false if the terms have no variables *)
+        e_false
   | Cmp { lhs : expr; op : string; rhs : expr } ->
       let lhs = evaluate_expr lhs in
       let rhs = evaluate_expr rhs in
