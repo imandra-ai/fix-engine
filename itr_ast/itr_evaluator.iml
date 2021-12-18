@@ -237,7 +237,11 @@ let check_cmp lhs rhs op =
 
 
 let rec is_ground_expr : expr -> bool = function
-  | Value (Variable _) | Value (MessageValue _) ->
+  | Value (Variable (Var v)) ->
+      print_endline v ;
+      false
+  | Value (MessageValue mv) ->
+      CCFormat.printf "%a@," Message_value.pp mv ;
       false
   | Value _ ->
       true
