@@ -387,6 +387,59 @@ let rec fold f init e =
       init
 
 
+let rec get_vars_record_item ri acc =
+  match ri with
+  | Rec_value e ->
+      get_vars_expr e acc
+  | Rec_record r ->
+      CCList.fold_left
+        (fun inner_acc (_, inner_el) -> get_vars_record_item inner_el inner_acc)
+        acc
+        (String_map.to_list r.elements)
+  | Rec_repeating_group r ->
+      CCList.fold_left
+        (fun inner_acc inner_el ->
+          CCList.fold_left
+            (fun r_acc (_, r_el) -> get_vars_record_item r_el r_acc)
+            inner_acc
+            (String_map.to_list inner_el.elements) )
+        acc
+        r.elements
+
+
+and get_vars_expr e acc =
+  match e with
+  | Value (ObjectProperty { obj : record_item; _ }) ->
+      get_vars_record_item obj acc
+  | Value (Funcall { args : record_item list; _ }) ->
+      CCList.fold_left
+        (fun inner_acc inner_el -> get_vars_record_item inner_el inner_acc)
+        acc
+        args
+  | Value _ ->
+      e :: acc
+  | Not e1 ->
+      get_vars_expr e1 acc
+  | Or { lhs; rhs }
+  | And { lhs; rhs }
+  | Cmp { lhs; rhs; _ }
+  | Add { lhs; rhs; _ }
+  | Mul { lhs; rhs; _ } ->
+      let vars_l_acc = get_vars_expr lhs acc in
+      let vars_r_acc = get_vars_expr rhs vars_l_acc in
+      vars_r_acc
+  | Eq { lhs = Rec_value lhs; rhs = Rec_value rhs } ->
+      let vars_l_acc = get_vars_expr lhs acc in
+      let vars_r_acc = get_vars_expr rhs vars_l_acc in
+      vars_r_acc
+  | In { el; _ } ->
+      get_vars_expr el acc
+  | _ ->
+      acc
+
+
+let get_vars e = get_vars_expr e []
+
 let is_funcall = function Value (Funcall _) -> true | _ -> false
 
 let bool b = Value (Literal (Bool b))
@@ -599,7 +652,10 @@ type typed_term =
 
 type expecting =
   { modifier : [ `Only | `Only_supported ] option
-  ; exprs : expr list
+  ; relevant_exprs : expr list
+  ; nullable_exprs : (expr * (string * int option) list list) list
+  ; qe_modified_exprs : expr list
+  ; common_exprs : expr list
   }
 
 type field =
@@ -746,8 +802,17 @@ module Value = struct
         false
     | Call { variable = _; call = v } | Unset v ->
         exists f v
-    | ExpectingOf { variable = _; expecting = { exprs = es; modifier = _ } } ->
-        CCList.exists (exists_expr f) es
+    | ExpectingOf
+        { variable = _
+        ; expecting =
+            { relevant_exprs = es
+            ; common_exprs = ces
+            ; nullable_exprs = nes
+            ; qe_modified_exprs = qems
+            ; modifier = _
+            }
+        } ->
+        CCList.exists (exists_expr f) (es @ ces @ List.map fst nes @ qems)
     | Print e | Run e | Sleep e | Assert e ->
         exists_expr f e
     | Set { prop = _; value = e } ->
@@ -781,7 +846,12 @@ module Value = struct
         CCOpt.exists (exists_expr f) timeout
         || exists_expr f where
         || CCOpt.exists
-             (fun (e : expecting) -> CCList.exists (exists_expr f) e.exprs)
+             (fun (e : expecting) ->
+               CCList.exists
+                 (exists_expr f)
+                 ( e.relevant_exprs
+                 @ e.common_exprs
+                 @ List.map fst e.nullable_exprs ) )
              expecting
     | IfThenElse { cond; then_; else_ } ->
         exists_expr f cond
@@ -936,7 +1006,10 @@ let send ?variable ~template ~to_ ?using ?values () =
   Send { variable; template; connection = to_; using; withs = values }
 
 
-let expecting ?modifier exprs = { modifier; exprs }
+let expecting
+    ?modifier relevant_exprs common_exprs qe_modified_exprs nullable_exprs =
+  { modifier; relevant_exprs; common_exprs; qe_modified_exprs; nullable_exprs }
+
 
 let receive ?variable ~from ?timeout ~where ?expecting ~example () =
   Receive { variable; connection = from; timeout; where; expecting; example }

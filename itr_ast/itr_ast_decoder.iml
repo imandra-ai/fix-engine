@@ -293,8 +293,38 @@ let expecting_decoder : expecting decoder =
       (function "only supported" -> `Only_supported | _ -> `Only)
       modifier
   in
-  let* exprs = field "exprs" (list (expr_decoder ())) in
-  succeed { modifier; exprs }
+  one_of
+    [ ( "combined_expressions"
+      , let+ exprs = field "exprs" (list (expr_decoder ())) in
+        { modifier
+        ; relevant_exprs = exprs
+        ; nullable_exprs = []
+        ; qe_modified_exprs = []
+        ; common_exprs = []
+        } )
+    ; ( "structured_expressions"
+      , let* relevant_exprs = field "relevant_exprs" (list (expr_decoder ())) in
+        let* common_exprs = field "common_exprs" (list (expr_decoder ())) in
+        let* nullable_exprs =
+          field
+            "nullable_exprs"
+            (list
+               (let* field_paths =
+                  field "field_paths" (list (list name_and_index_decoder))
+                in
+                let+ expr = field "expr" (expr_decoder ()) in
+                (expr, field_paths) ) )
+        in
+        let+ qe_modified_exprs =
+          field "qe_modified_exprs" (list (expr_decoder ()))
+        in
+        { modifier
+        ; relevant_exprs
+        ; nullable_exprs
+        ; qe_modified_exprs
+        ; common_exprs
+        } )
+    ]
 
 
 let tt_decoder : typed_term decoder =

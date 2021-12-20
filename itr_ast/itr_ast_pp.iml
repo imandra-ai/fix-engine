@@ -370,16 +370,21 @@ and expecting_pp fmt (expecting : expecting) =
     | None ->
         ""
   in
-  match expecting.exprs with
+  match
+    expecting.relevant_exprs
+    @ expecting.common_exprs
+    @ expecting.qe_modified_exprs
+    @ List.map fst expecting.nullable_exprs
+  with
   | [] ->
       fprintf fmt "%s{@,}" modifier
   | es ->
-      fprintf
-        fmt
-        "%s{@,@[<v 2>  %a@]@,}"
-        modifier
-        (list ~sep:(return "@,") expr_pp)
-        es
+      fprintf fmt "%s{@,@[<v 2>  %a@]@,}" modifier exprs_pp es
+
+
+and exprs_pp fmt (exprs : expr list) =
+  let open CCFormat in
+  fprintf fmt "%a" (list ~sep:(return "@,") expr_pp) exprs
 
 
 and typed_term_pp (ppf : formatter) (args : typed_term list) =
