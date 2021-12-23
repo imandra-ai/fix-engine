@@ -296,8 +296,10 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
         Rec_value (Value (Literal (Bool false)))
     | Rec_value (Value (Literal (Bool false))) ->
         Rec_value (Value (Literal (Bool true)))
-    | e ->
-        e )
+    | Rec_value e ->
+        Rec_value (Not e)
+    | _ ->
+        Rec_value e )
   | Or { lhs : expr; rhs : expr } ->
       let lhs = evaluate_expr lhs in
       let rhs = evaluate_expr rhs in
