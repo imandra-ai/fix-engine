@@ -482,8 +482,6 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
         Rec_value e
     | Some context ->
       ( match String_map.get v context.local_vars with
-      | None ->
-          failwith @@ "Unknown variable " ^ v
       | Some (Record_item ri) ->
           evaluate_record_item ri
       | _ ->
@@ -509,7 +507,7 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
       | None, Some (msg, _tag) ->
           evaluate_record_item (context.get_field msg field_path)
       | None, None ->
-          failwith "No message to reference" ) )
+          Rec_value e ) )
   | Add { lhs : expr; op : char; rhs : expr } ->
       let lhs, rhs = (evaluate_expr lhs, evaluate_expr rhs) in
       ( match (lhs, rhs) with
