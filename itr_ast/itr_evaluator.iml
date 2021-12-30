@@ -545,7 +545,7 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
         | Value (Literal (Float a)), '+', Value (Literal (String b)) ->
             Rec_value (Value (Literal (String (Q.to_string a ^ b))))
         | _, '+', _ | _, '-', _ ->
-            failwith @@ "Type error in Add node: " ^ failing_msg (Rec_value e)
+            Rec_value e
         | _, _, _ ->
             failwith "Unknown Add operator" )
       | _ ->
@@ -572,7 +572,7 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
         | Value (Literal (Int a)), '/', Value (Literal (Float b)) ->
             Rec_value (Value (Literal (Float (Q.of_bigint a /. b))))
         | _, '+', _ | _, '-', _ ->
-            failwith @@ "Type error in Mul node: " ^ failing_msg (Rec_value e)
+            Rec_value e
         | _, _, _ ->
             failwith "Unknown Mul operator" )
       | _ ->
