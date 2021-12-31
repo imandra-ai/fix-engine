@@ -312,29 +312,41 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
   | Or { lhs : expr; rhs : expr } ->
       let lhs = evaluate_expr lhs in
       let rhs = evaluate_expr rhs in
-      if is_true lhs || is_true rhs
-      then e_true
-      else if is_false lhs && is_false rhs
-      then e_false
-      else (
-        match (lhs, rhs) with
-        | Rec_value lhs, Rec_value rhs ->
-            Rec_value (Or { lhs; rhs })
-        | _ ->
-            Rec_value e )
+      ( match (lhs, rhs) with
+      | Rec_value (Value (Literal (Bool true))), _ ->
+          e_true
+      | _, Rec_value (Value (Literal (Bool true))) ->
+          e_true
+      | ( Rec_value (Value (Literal (Bool false)))
+        , Rec_value (Value (Literal (Bool false))) ) ->
+          e_false
+      | Rec_value (Value (Literal (Bool false))), _ ->
+          rhs
+      | _, Rec_value (Value (Literal (Bool false))) ->
+          lhs
+      | Rec_value lhs, Rec_value rhs ->
+          Rec_value (Or { lhs; rhs })
+      | _ ->
+          Rec_value e )
   | And { lhs : expr; rhs : expr } ->
       let lhs = evaluate_expr lhs in
       let rhs = evaluate_expr rhs in
-      if is_true lhs && is_true rhs
-      then e_true
-      else if is_false lhs || is_false rhs
-      then e_false
-      else (
-        match (lhs, rhs) with
-        | Rec_value lhs, Rec_value rhs ->
-            Rec_value (And { lhs; rhs })
-        | _ ->
-            Rec_value e )
+      ( match (lhs, rhs) with
+      | ( Rec_value (Value (Literal (Bool true)))
+        , Rec_value (Value (Literal (Bool true))) ) ->
+          e_true
+      | Rec_value (Value (Literal (Bool false))), _ ->
+          e_false
+      | _, Rec_value (Value (Literal (Bool false))) ->
+          e_false
+      | Rec_value (Value (Literal (Bool true))), _ ->
+          rhs
+      | _, Rec_value (Value (Literal (Bool true))) ->
+          lhs
+      | Rec_value lhs, Rec_value rhs ->
+          Rec_value (And { lhs; rhs })
+      | _ ->
+          Rec_value e )
   | Eq { lhs : record_item; rhs : record_item } ->
       let lhs = evaluate_record_item lhs in
       let rhs = evaluate_record_item rhs in
