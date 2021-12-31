@@ -20,6 +20,12 @@ end
 
 module String_map = Map_extra (CCMap.Make (CCString))
 
+module Field_path_set = CCSet.Make (struct
+  type t = (string * Z.t option) list
+
+  let compare = Caml.compare
+end)
+
 let pp_string fmt s = CCFormat.(fprintf fmt "%S" s)
 
 module Var = struct

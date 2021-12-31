@@ -8,6 +8,16 @@
 
 open Itr_ast
 
+let retrieve_current_vars (expr : expr) : (string * Z.t option) list list =
+  let open Itr_ast in
+  get_vars expr
+  |> List.filter_map (function
+         | Value (MessageValue { var = None; field_path }) ->
+             Some field_path
+         | _ ->
+             None )
+
+
 type msg_or_expr =
   | Msg of (Model_messages.model_msg_opt_def * string)
   | Record_item of record_item
@@ -591,6 +601,44 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
         Rec_value e )
   | _ ->
       Rec_value e
+
+
+let nullable_expr
+    (expr : expr) (message_field_optional_map : bool String_map.t option) :
+    Field_path_set.t =
+  let open Itr_ast in
+  let this_msg_vars =
+    match message_field_optional_map with
+    | None ->
+        Field_path_set.empty
+    | Some message_field_optional_map ->
+        retrieve_current_vars expr
+        |> List.filter (fun l ->
+               let nm = String.concat "." (List.map fst l) in
+               match String_map.get nm message_field_optional_map with
+               | None ->
+                   false
+               | Some is_optional ->
+                   is_optional )
+        |> Field_path_set.of_list
+  in
+  let nullable_var_names =
+    Field_path_set.fold
+      (fun el acc ->
+        let expr =
+          replace_in_expr
+            expr
+            (Value (MessageValue { var = None; field_path = el }))
+            (Value (Literal LiteralNone))
+        in
+        let record_item = evaluate_expr None expr in
+        if is_true @@ evaluate_record_item None record_item
+        then Field_path_set.add el acc
+        else acc )
+      this_msg_vars
+      Field_path_set.empty
+  in
+  nullable_var_names
 
 
 [@@@logic]

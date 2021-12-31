@@ -1,0 +1,76 @@
+[@@@program]
+
+[@@@require "decoders-yojson"]
+
+[@@@require "yojson"]
+
+[@@@import "itr_ast.iml"]
+
+open Itr_ast
+
+type t =
+  { scenario_metadatas : Yojson.Basic.t String_map.t
+        (** scenario id -> scenario metadata json value **)
+  ; internals_names : string list
+        (** names of IPL 'internal' (keyword) structs, e.g. 'state' *)
+  ; global_metadata : Yojson.Basic.t
+        (** other 'top-level' (i.e. not scenario specific) metadata fields as a single json value *)
+  ; message_field_optional_map : bool String_map.t String_map.t
+  }
+
+module Decode = struct
+  open Decoders_yojson.Basic.Decode
+
+  let dissoc_key m k =
+    `Assoc (m |> Yojson.Basic.Util.to_assoc |> CCList.remove_assoc ~eq:( = ) k)
+
+
+  let template_value_with_id : (string * value) decoder =
+    field "id" string >>= fun id -> value >>= fun v -> succeed (id, v)
+
+
+  let internals_name : string decoder =
+    field "name" string >>= fun name -> succeed name
+
+
+  let message_field_optional_map : bool String_map.t String_map.t decoder =
+    let+ map =
+      list
+        (let* tag = field "tag" string in
+         let* requires = field "requires" (list string) in
+         let+ optionals = field "optionals" (list string) in
+         ( tag
+         , List.map (fun x -> (x, false)) requires
+           @ List.map (fun x -> (x, true)) optionals
+           |> String_map.of_list ) )
+    in
+    String_map.of_list map
+
+
+  let t : t decoder =
+    value
+    >>= fun all_metadata ->
+    let global_metadata = dissoc_key all_metadata "templates" in
+    field "templates" (list template_value_with_id)
+    >>= fun templates_by_id ->
+    let scenario_metadatas = String_map.of_list templates_by_id in
+    field "internals" (list internals_name)
+    >>= fun internals_names ->
+    let+ message_field_optional_map =
+      field "messages" message_field_optional_map
+    in
+    { global_metadata
+    ; scenario_metadatas
+    ; internals_names
+    ; message_field_optional_map
+    }
+end
+
+let get_ipl_metadata ~out_dir =
+  let metadata_file = out_dir ^ "/fix-engine/vgs/metadata.json" in
+  match Decoders_yojson.Basic.Decode.decode_file Decode.t metadata_file with
+  | Ok j ->
+      j
+  | Error e ->
+      Format.printf "%a@." Decoders_yojson.Basic.Decode.pp_error e ;
+      failwith "Metadata JSON decode error"
