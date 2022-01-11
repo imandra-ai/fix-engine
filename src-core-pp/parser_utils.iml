@@ -236,6 +236,7 @@ module Parser = struct
         opt groups_msg tag Parse_base_types.parse_int @@ fun groups_msg numInGroup ->
         match numInGroup with
         | None -> ( ParseSuccess (Some 0,[]) >|>= f msg )
+        | Some 0 -> ( ParseSuccess (Some 0,[]) >|>= f (leading_msg @ groups_msg) )
         | Some numInGroup ->
           (* Break the list into a list of lists using the separator *)
           let groups = cut_on_separator groups_msg in
