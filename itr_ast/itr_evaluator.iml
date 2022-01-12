@@ -279,6 +279,42 @@ let rec is_ground (e : record_item) : bool =
   | _ ->
       false
 
+let rec get_assoc_ors (e:expr):expr list = 
+  match e with 
+  | Or {lhs;rhs} -> 
+      get_assoc_ors lhs @ get_assoc_ors rhs
+  | _ -> [e]
+
+let rec loem (es:record_item list): record_item list = 
+  let rec remove (match_expr:expr) (ris:record_item list) (found:bool): record_item list * bool = 
+    match ris with 
+    | [] -> [],found
+    | (Rec_value h )::t -> 
+      if h = Not match_expr || match_expr = Not h then 
+        remove match_expr t true else remove match_expr t false  
+    | h :: t -> 
+      let res,boolres = remove match_expr t false in
+      h::res,boolres
+  in
+  match es with 
+  | [] -> [] 
+  | [_] -> es 
+  | (Rec_value h)::t -> let rest,found = remove h t false in 
+    if found then loem rest else (Rec_value h):: loem t
+  | h :: t -> h::loem t
+
+let reconstruct_ors (es:record_item list) : record_item = 
+let rec reconstruct_ors_rec (es:record_item list) : expr  = 
+  let expr_f = Value (Literal (Bool false)) in
+  match es with 
+  | [] -> expr_f (* in theory not reachable *)
+  | [h] -> (match h with 
+   | Rec_value h -> h 
+   | _ -> expr_f)
+  | lhs::t -> (match lhs with 
+   Rec_value lhs ->   (Or {lhs;rhs = reconstruct_ors_rec t})
+   | _ -> expr_f) in 
+   Rec_value (reconstruct_ors_rec es)
 
 let rec evaluate_record_item (context : context option) (e : record_item) :
     record_item =
@@ -310,24 +346,13 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
     | _ ->
         Rec_value e )
   | Or { lhs : expr; rhs : expr } ->
-      let lhs = evaluate_expr lhs in
-      let rhs = evaluate_expr rhs in
-      ( match (lhs, rhs) with
-      | Rec_value (Value (Literal (Bool true))), _ ->
-          e_true
-      | _, Rec_value (Value (Literal (Bool true))) ->
-          e_true
-      | ( Rec_value (Value (Literal (Bool false)))
-        , Rec_value (Value (Literal (Bool false))) ) ->
-          e_false
-      | Rec_value (Value (Literal (Bool false))), _ ->
-          rhs
-      | _, Rec_value (Value (Literal (Bool false))) ->
-          lhs
-      | Rec_value lhs, Rec_value rhs ->
-          Rec_value (Or { lhs; rhs })
-      | _ ->
-          Rec_value e )
+      let ors = get_assoc_ors lhs @ get_assoc_ors rhs in
+      let evaluated_ors = List.map evaluate_expr ors in
+      let evaluated_ors = loem evaluated_ors in
+      if List.exists is_true evaluated_ors then e_true else 
+      if List.for_all is_false evaluated_ors then e_false else 
+      let simplified_ors = List.filter ( fun x -> Caml.not (is_false x)) evaluated_ors in
+      reconstruct_ors simplified_ors
   | And { lhs : expr; rhs : expr } ->
       let lhs = evaluate_expr lhs in
       let rhs = evaluate_expr rhs in
