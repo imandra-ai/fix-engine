@@ -151,6 +151,10 @@ let check_cmp lhs rhs op =
         if l < r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l <. r then e_true else e_false
+    | Value (Literal (Int l)), Value (Literal (Float r)) ->
+          if (Q.of_bigint l) <. r then e_true else e_false
+    | Value (Literal (Float l)), Value (Literal (Int r)) ->
+            if l <. (Q.of_bigint r) then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_LessThan_micro_micro l r
@@ -178,6 +182,10 @@ let check_cmp lhs rhs op =
         if l > r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l >. r then e_true else e_false
+    | Value (Literal (Int l)), Value (Literal (Float r)) ->
+          if (Q.of_bigint l) >. r then e_true else e_false
+    | Value (Literal (Float l)), Value (Literal (Int r)) ->
+            if l >. (Q.of_bigint r) then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_GreaterThan_micro_micro l r
@@ -205,6 +213,10 @@ let check_cmp lhs rhs op =
         if l <= r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l <=. r then e_true else e_false
+    | Value (Literal (Int l)), Value (Literal (Float r)) ->
+          if (Q.of_bigint l) <=. r then e_true else e_false
+    | Value (Literal (Float l)), Value (Literal (Int r)) ->
+            if l <=. (Q.of_bigint r) then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_LessThanEqual_micro_micro l r
@@ -232,6 +244,10 @@ let check_cmp lhs rhs op =
         if l >= r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l >=. r then e_true else e_false
+    | Value (Literal (Int l)), Value (Literal (Float r)) ->
+          if (Q.of_bigint l) >=. r then e_true else e_false
+    | Value (Literal (Float l)), Value (Literal (Int r)) ->
+            if l >=. (Q.of_bigint r) then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_GreaterThanEqual_micro_micro l r
