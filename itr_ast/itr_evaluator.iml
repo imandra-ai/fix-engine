@@ -747,9 +747,9 @@ let rec normalise_record_item record_item =
 
 and normalise_expr expr =
   match expr with
-  | Not (Eq { lhs; rhs = Rec_value (Value (Literal LiteralNone)) }) ->
+  | Not (Eq { lhs; rhs }) when rhs = Rec_value (Value (Literal LiteralNone)) ->
       Rec_value (Value (Funcall { func = "IsSet"; args = [ lhs ] }))
-  | Eq { lhs; rhs = Rec_value (Value (Literal LiteralNone)) } ->
+  | Eq { lhs; rhs } when rhs = Rec_value (Value (Literal LiteralNone)) ->
       Rec_value (Not (Value (Funcall { func = "IsSet"; args = [ lhs ] })))
   | Not expr ->
     ( match normalise_expr expr with
