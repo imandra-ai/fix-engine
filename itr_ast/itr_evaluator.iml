@@ -733,9 +733,44 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
       Rec_value e
 
 
+let rec normalise_record_item record_item =
+  match record_item with Rec_value ri -> normalise_expr ri | _ -> record_item
+
+
+and normalise_expr expr =
+  match expr with
+  | Not (Eq { lhs; rhs = Rec_value (Value (Literal LiteralNone)) }) ->
+      Rec_value (Value (Funcall { func = "IsSet"; args = [ lhs ] }))
+  | Eq { lhs; rhs = Rec_value (Value (Literal LiteralNone)) } ->
+      Rec_value (Value (Funcall { func = "IsSet"; args = [ lhs ] }))
+  | Not expr ->
+      normalise_expr expr
+  | Or { lhs : expr; rhs : expr } ->
+    ( match (normalise_expr lhs, normalise_expr rhs) with
+    | Rec_value lhs, Rec_value rhs ->
+        Rec_value (Or { lhs; rhs })
+    | _ ->
+        Rec_value expr )
+  | And { lhs : expr; rhs : expr } ->
+    ( match (normalise_expr lhs, normalise_expr rhs) with
+    | Rec_value lhs, Rec_value rhs ->
+        Rec_value (And { lhs; rhs })
+    | _ ->
+        Rec_value expr )
+  | Eq { lhs : record_item; rhs : record_item } ->
+      Rec_value
+        (Eq { lhs = normalise_record_item lhs; rhs = normalise_record_item rhs })
+  | _ ->
+      Rec_value expr
+
+
 let fix_evaluate_record_item context record_item =
   let res = evaluate_record_item context record_item in
   if res = record_item then record_item else evaluate_record_item context res
+
+
+let evaluate_and_normalise_record_item context record_item =
+  fix_evaluate_record_item context record_item |> normalise_record_item
 
 
 let nullable_expr
