@@ -734,7 +734,15 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
 
 
 let rec normalise_record_item record_item =
-  match record_item with Rec_value ri -> normalise_expr ri | _ -> record_item
+  match record_item with
+  | Rec_value ri ->
+      normalise_expr ri
+  | Rec_record { name; elements } ->
+      Rec_record
+        { name; elements = String_map.map normalise_record_item elements }
+  (* TODO simplification of repeating group structures *)
+  | _ ->
+      record_item
 
 
 and normalise_expr expr =
