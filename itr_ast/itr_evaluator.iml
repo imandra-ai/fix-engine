@@ -742,7 +742,7 @@ and normalise_expr expr =
   | Not (Eq { lhs; rhs = Rec_value (Value (Literal LiteralNone)) }) ->
       Rec_value (Value (Funcall { func = "IsSet"; args = [ lhs ] }))
   | Eq { lhs; rhs = Rec_value (Value (Literal LiteralNone)) } ->
-      Rec_value (Value (Funcall { func = "IsSet"; args = [ lhs ] }))
+      Rec_value (Not (Value (Funcall { func = "IsSet"; args = [ lhs ] })))
   | Not expr ->
       normalise_expr expr
   | Or { lhs : expr; rhs : expr } ->
