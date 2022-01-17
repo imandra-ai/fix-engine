@@ -50,14 +50,9 @@ let failing_msg expr =
 
 
 let failing_pretty_msg expr =
-    let open CCFormat in
-    fprintf
-      str_formatter
-      "%a"
-      Itr_ast_pp.record_item_pp expr ;
-    flush_str_formatter ()
-
-
+  let open CCFormat in
+  fprintf str_formatter "%a" Itr_ast_pp.record_item_pp expr ;
+  flush_str_formatter ()
 
 
 let rec replace_in_expr e e_check e_replace =
@@ -152,9 +147,9 @@ let check_cmp lhs rhs op =
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l <. r then e_true else e_false
     | Value (Literal (Int l)), Value (Literal (Float r)) ->
-          if (Q.of_bigint l) <. r then e_true else e_false
+        if Q.of_bigint l <. r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Int r)) ->
-            if l <. (Q.of_bigint r) then e_true else e_false
+        if l <. Q.of_bigint r then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_LessThan_micro_micro l r
@@ -183,9 +178,9 @@ let check_cmp lhs rhs op =
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l >. r then e_true else e_false
     | Value (Literal (Int l)), Value (Literal (Float r)) ->
-          if (Q.of_bigint l) >. r then e_true else e_false
+        if Q.of_bigint l >. r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Int r)) ->
-            if l >. (Q.of_bigint r) then e_true else e_false
+        if l >. Q.of_bigint r then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_GreaterThan_micro_micro l r
@@ -214,9 +209,9 @@ let check_cmp lhs rhs op =
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l <=. r then e_true else e_false
     | Value (Literal (Int l)), Value (Literal (Float r)) ->
-          if (Q.of_bigint l) <=. r then e_true else e_false
+        if Q.of_bigint l <=. r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Int r)) ->
-            if l <=. (Q.of_bigint r) then e_true else e_false
+        if l <=. Q.of_bigint r then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_LessThanEqual_micro_micro l r
@@ -245,9 +240,9 @@ let check_cmp lhs rhs op =
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l >=. r then e_true else e_false
     | Value (Literal (Int l)), Value (Literal (Float r)) ->
-          if (Q.of_bigint l) >=. r then e_true else e_false
+        if Q.of_bigint l >=. r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Int r)) ->
-            if l >=. (Q.of_bigint r) then e_true else e_false
+        if l >=. Q.of_bigint r then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_GreaterThanEqual_micro_micro l r
@@ -306,44 +301,100 @@ let rec is_ground (e : record_item) : bool =
   | _ ->
       false
 
-let rec get_assoc_ors (e:expr):expr list =
-  match e with
-  | Or {lhs;rhs} ->
-      get_assoc_ors lhs @ get_assoc_ors rhs
-  | _ -> [e]
 
-let rec loem (es:record_item list): record_item list =
-  let rec remove (match_expr:expr) (ris:record_item list) (found:bool): record_item list * bool =
+module Expr_set = CCSet.Make (struct
+  type t = expr
+
+  let compare = Caml.compare
+end)
+
+let rec get_assoc_ors (e : expr) : Expr_set.t =
+  match e with
+  | Or { lhs; rhs } ->
+      Expr_set.union (get_assoc_ors lhs) (get_assoc_ors rhs)
+  | _ ->
+      Expr_set.singleton e
+
+
+let rec get_assoc_ands (e : expr) : Expr_set.t =
+  match e with
+  | Or { lhs; rhs } ->
+      Expr_set.union (get_assoc_ands lhs) (get_assoc_ands rhs)
+  | _ ->
+      Expr_set.singleton e
+
+
+let rec loem (es : record_item list) : record_item list =
+  let rec remove (match_expr : expr) (ris : record_item list) (found : bool) :
+      record_item list * bool =
     match ris with
-    | [] -> [],found
-    | (Rec_value h )::t ->
-      if h = Not match_expr || match_expr = Not h then
-        let res,found = remove match_expr t true in
-        res,found
-       else  let res,found = remove match_expr t found in res, found
+    | [] ->
+        ([], found)
+    | Rec_value h :: t ->
+        if h = Not match_expr || match_expr = Not h
+        then
+          let res, found = remove match_expr t true in
+          (res, found)
+        else
+          let res, found = remove match_expr t found in
+          (res, found)
     | h :: t ->
-      let res,found = remove match_expr t found in
-      h::res,found
+        let res, found = remove match_expr t found in
+        (h :: res, found)
   in
   match es with
-  | [] -> []
-  | [_] -> es
-  | (Rec_value h)::t -> let rest,found = remove h t false in
-    if found then e_true::(loem rest) else (Rec_value h):: loem t
-  | h :: t -> h::loem t
+  | [] ->
+      []
+  | [ _ ] ->
+      es
+  | Rec_value h :: t ->
+      let rest, found = remove h t false in
+      if found then e_true :: loem rest else Rec_value h :: loem t
+  | h :: t ->
+      h :: loem t
 
-let reconstruct_ors (es:record_item list) : record_item =
-let rec reconstruct_ors_rec (es:record_item list) : expr  =
-  let expr_f = Value (Literal (Bool false)) in
-  match es with
-  | [] -> expr_f (* in theory not reachable *)
-  | [h] -> (match h with
-   | Rec_value h -> h
-   | _ -> expr_f)
-  | lhs::t -> (match lhs with
-   Rec_value lhs ->   (Or {lhs;rhs = reconstruct_ors_rec t})
-   | _ -> expr_f) in
-   Rec_value (reconstruct_ors_rec es)
+
+let reconstruct_ors (es : record_item list) : record_item =
+  let rec reconstruct_ors_rec (es : record_item list) : expr =
+    let expr_f = Value (Literal (Bool false)) in
+    match es with
+    | [] ->
+        expr_f (* in theory not reachable *)
+    | [ h ] ->
+      (match h with Rec_value h -> h | _ -> expr_f)
+    | lhs :: t ->
+        if CCList.mem lhs t
+        then reconstruct_ors_rec t
+        else (
+          match lhs with
+          | Rec_value lhs ->
+              Or { lhs; rhs = reconstruct_ors_rec t }
+          | _ ->
+              expr_f )
+  in
+  Rec_value (reconstruct_ors_rec es)
+
+
+let reconstruct_ands (es : record_item list) : record_item =
+  let rec reconstruct_ands_rec (es : record_item list) : expr =
+    let expr_f = Value (Literal (Bool false)) in
+    match es with
+    | [] ->
+        expr_f (* in theory not reachable *)
+    | [ h ] ->
+      (match h with Rec_value h -> h | _ -> expr_f)
+    | lhs :: t ->
+        if CCList.mem lhs t
+        then reconstruct_ands_rec t
+        else (
+          match lhs with
+          | Rec_value lhs ->
+              And { lhs; rhs = reconstruct_ands_rec t }
+          | _ ->
+              expr_f )
+  in
+  Rec_value (reconstruct_ands_rec es)
+
 
 let rec evaluate_record_item (context : context option) (e : record_item) :
     record_item =
@@ -364,6 +415,15 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
   let evaluate_expr = evaluate_expr context in
   let evaluate_record_item = evaluate_record_item context in
   match e with
+  | Not (Not expr) ->
+      evaluate_expr expr
+  | Not (Value (Funcall { func : string; args : record_item list }))
+    when func = "IsSet" && List.length args = 1 ->
+      evaluate_expr
+        (Eq
+           { lhs = CCList.hd args
+           ; rhs = Rec_value (Value (Literal LiteralNone))
+           } )
   | Not expr ->
     ( match evaluate_expr expr with
     | Rec_value (Value (Literal (Bool true))) ->
@@ -375,32 +435,36 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
     | _ ->
         Rec_value e )
   | Or { lhs : expr; rhs : expr } ->
-      let ors = get_assoc_ors lhs @ get_assoc_ors rhs in
-      let evaluated_ors = List.map evaluate_expr ors in
+      let ors =
+        Expr_set.to_list
+        @@ Expr_set.union (get_assoc_ors lhs) (get_assoc_ors rhs)
+      in
+      let evaluated_ors = CCList.map evaluate_expr ors in
       let evaluated_ors = loem evaluated_ors in
-      if CCList.exists is_true evaluated_ors then e_true else
-      if CCList.for_all is_false evaluated_ors then e_false else
-      let simplified_ors = List.filter ( fun x -> Caml.not (is_false x)) evaluated_ors in
-      reconstruct_ors simplified_ors
+      if CCList.exists is_true evaluated_ors
+      then e_true
+      else if CCList.for_all is_false evaluated_ors
+      then e_false
+      else
+        let simplified_ors =
+          CCList.filter (fun x -> Caml.not (is_false x)) evaluated_ors
+        in
+        reconstruct_ors simplified_ors
   | And { lhs : expr; rhs : expr } ->
-      let lhs = evaluate_expr lhs in
-      let rhs = evaluate_expr rhs in
-      ( match (lhs, rhs) with
-      | ( Rec_value (Value (Literal (Bool true)))
-        , Rec_value (Value (Literal (Bool true))) ) ->
-          e_true
-      | Rec_value (Value (Literal (Bool false))), _ ->
-          e_false
-      | _, Rec_value (Value (Literal (Bool false))) ->
-          e_false
-      | Rec_value (Value (Literal (Bool true))), _ ->
-          rhs
-      | _, Rec_value (Value (Literal (Bool true))) ->
-          lhs
-      | Rec_value lhs, Rec_value rhs ->
-          Rec_value (And { lhs; rhs })
-      | _ ->
-          Rec_value e )
+      let ands =
+        Expr_set.to_list
+        @@ Expr_set.union (get_assoc_ands lhs) (get_assoc_ands rhs)
+      in
+      let evaluated_ands = CCList.map evaluate_expr ands in
+      if CCList.exists is_false evaluated_ands
+      then e_false
+      else if CCList.for_all is_true evaluated_ands
+      then e_true
+      else
+        let simplified_ors =
+          CCList.filter (fun x -> Caml.not (is_true x)) evaluated_ands
+        in
+        reconstruct_ands simplified_ors
   | Eq { lhs : record_item; rhs : record_item } ->
       let lhs = evaluate_record_item lhs in
       let rhs = evaluate_record_item rhs in
@@ -667,6 +731,11 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
         Rec_value e )
   | _ ->
       Rec_value e
+
+
+let fix_evaluate_record_item context record_item =
+  let res = evaluate_record_item context record_item in
+  if res = record_item then record_item else evaluate_record_item context res
 
 
 let nullable_expr
