@@ -506,15 +506,12 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
     | _ ->
         Rec_value e )
   | Value (Funcall { func : string; args : record_item list })
+  (* translate here *)
     when func = "IsSet" && List.length args = 1 ->
     ( match args with
     | [ a ] ->
-        let ri = evaluate_record_item a in
-        if ri = e_none
-        then Rec_value (Value (Literal (Bool false)))
-        else if is_ground ri && ri <> e_none
-        then Rec_value (Value (Literal (Bool true)))
-        else Rec_value e
+        evaluate_expr
+          (Not (Eq { lhs = a; rhs = Rec_value (Value (Literal LiteralNone)) }))
     | _ ->
         Rec_value e )
   | Value (Funcall { func : string; args : record_item list })
@@ -783,6 +780,10 @@ let fix_evaluate_record_item context record_item =
 
 let evaluate_and_normalise_record_item context record_item =
   fix_evaluate_record_item context record_item |> normalise_record_item
+
+
+let evaluate_and_normalise_expr context expr =
+  fix_evaluate_record_item context (Rec_value expr) |> normalise_record_item
 
 
 let nullable_expr
