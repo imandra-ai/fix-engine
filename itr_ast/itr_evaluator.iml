@@ -273,6 +273,8 @@ let rec is_ground_expr : expr -> bool = function
       false
   | Value (MessageValue _mv) ->
       false
+  | Value (Funcall {args;_}) -> 
+        CCList.for_all is_ground args
   | Value _ ->
       true
   | Not e1 ->
@@ -291,7 +293,7 @@ let rec is_ground_expr : expr -> bool = function
       true
 
 
-let rec is_ground (e : record_item) : bool =
+and  is_ground (e : record_item) : bool =
   match e with
   | Rec_value r ->
       is_ground_expr r
@@ -318,7 +320,7 @@ let rec get_assoc_ors (e : expr) : Expr_set.t =
 
 let rec get_assoc_ands (e : expr) : Expr_set.t =
   match e with
-  | Or { lhs; rhs } ->
+  | And { lhs; rhs } ->
       Expr_set.union (get_assoc_ands lhs) (get_assoc_ands rhs)
   | _ ->
       Expr_set.singleton e
@@ -449,7 +451,8 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
         let simplified_ors =
           CCList.filter (fun x -> Caml.not (is_false x)) evaluated_ors
         in
-        reconstruct_ors simplified_ors
+        let res = reconstruct_ors simplified_ors in 
+       res
   | And { lhs : expr; rhs : expr } ->
       let ands =
         Expr_set.to_list
@@ -461,10 +464,10 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
       else if CCList.for_all is_true evaluated_ands
       then e_true
       else
-        let simplified_ors =
+        let simplified_ands =
           CCList.filter (fun x -> Caml.not (is_true x)) evaluated_ands
         in
-        reconstruct_ands simplified_ors
+      reconstruct_ands simplified_ands    
   | Eq { lhs : record_item; rhs : record_item } ->
       let lhs = evaluate_record_item lhs in
       let rhs = evaluate_record_item rhs in
@@ -543,18 +546,20 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
     | _ ->
         Rec_value e )
   | Value (Funcall { func : string; args : record_item list })
-    when func = "FormatDate" ->
+    when func = "FormatDate" -> 
     ( match args with
     | [ date; Rec_value (Value (Literal (String "yyyyMMdd"))) ] ->
       ( match evaluate_record_item date with
-      | Rec_value (Value (Literal (Datetime (UTCTimestamp t)))) ->
+       Rec_value (Value (Literal (Datetime (UTCTimestamp t)))) ->
           Rec_value
             (Value
                (Literal
                   (Datetime
                      (UTCDateOnly
-                        (Datetime.convert_utctimestamp_micro_utcdateonly t) ) )
-               ) )
+                        (Datetime.convert_utctimestamp_micro_utcdateonly t) ) ) 
+               ) ) 
+      | Rec_value (Value (MessageValue mv)) ->   
+        Rec_value (Value (Funcall {func = "DayOf";args=[Rec_value (Value (MessageValue mv))]}))
       | _ ->
           Rec_value e )
     | [ date; Rec_value (Value (Literal (String "yyyyMMdd-HH:mm:ss.SSS"))) ] ->
@@ -785,10 +790,32 @@ let evaluate_and_normalise_record_item context record_item =
 let evaluate_and_normalise_expr context expr =
   fix_evaluate_record_item context (Rec_value expr) |> normalise_record_item
 
+let get_all_subsets (l:'a list): 'a list list =
+let rec get_all_subsets_tr (l:'a list) (acc: 'a list list):'a list list =
+  match l with
+  | [] -> acc
+  | h::t ->
+    let res = get_all_subsets_tr t [] in
+    [h]::res@(List.map (fun x -> h::x) res)
+  in
+get_all_subsets_tr l []
 
+
+(* return here set of sets -
+  each set element is the set of field_paths which (and) have
+   to be None concurrently to render the expression true
+
+  the set of sets of these is the possible (or) combinations.
+
+  e.g. (!IsSet(A) && !IsSet(B))||!IsSet(C)
+
+  would give you {| {|A,B|} , {|C|} |}
+
+  which is analogous to DNF
+
+*)
 let nullable_expr
-    (expr : expr) (message_field_optional_map : bool String_map.t option) :
-    Field_path_set.t =
+    (expr : expr) (message_field_optional_map : bool String_map.t option) : Field_path_set.t list =
   let open Itr_ast in
   let this_msg_vars =
     match message_field_optional_map with
@@ -804,24 +831,22 @@ let nullable_expr
                | Some is_optional ->
                    is_optional )
         |> Field_path_set.of_list
-  in
-  let nullable_var_names =
-    Field_path_set.fold
-      (fun el acc ->
+  in let this_msg_vars = get_all_subsets (Field_path_set.to_list this_msg_vars) in
+    CCList.fold_left
+      (fun acc el ->
         let expr =
-          replace_in_expr
+          List.fold_left (fun expr inner_el -> replace_in_expr
             expr
-            (Value (MessageValue { var = None; field_path = el }))
-            (Value (Literal LiteralNone))
+            (Value (MessageValue { var = None; field_path = inner_el }))
+            (Value (Literal LiteralNone))) expr el
         in
         let record_item = evaluate_expr None expr in
-        if is_true @@ evaluate_record_item None record_item
-        then Field_path_set.add el acc
+        if is_true @@ evaluate_and_normalise_record_item None record_item
+        then (Field_path_set.of_list el)::acc
         else acc )
+      []
       this_msg_vars
-      Field_path_set.empty
-  in
-  nullable_var_names
+
 
 
 [@@@logic]
