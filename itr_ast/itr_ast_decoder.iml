@@ -308,12 +308,24 @@ let expecting_decoder : expecting decoder =
         let* nullable_exprs =
           field
             "nullable_exprs"
-            (list
-               (let* field_paths =
-                  field "field_paths" (list (list name_and_index_decoder))
-                in
-                let+ expr = field "expr" (expr_decoder ()) in
-                (expr, field_paths) ) )
+            (one_of
+               [ ( "single_nullable"
+                 , list
+                     (let* field_paths =
+                        field "field_paths" (list (list name_and_index_decoder))
+                      in
+                      let+ expr = field "expr" (expr_decoder ()) in
+                      (expr, CCList.map (fun x -> [ x ]) field_paths) ) )
+               ; ( "set_nullable"
+                 , list
+                     (let* field_paths =
+                        field
+                          "field_paths"
+                          (list (list (list name_and_index_decoder)))
+                      in
+                      let+ expr = field "expr" (expr_decoder ()) in
+                      (expr, field_paths) ) )
+               ] )
         in
         let+ qe_modified_exprs =
           field "qe_modified_exprs" (list (expr_decoder ()))
