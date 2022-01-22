@@ -49,6 +49,12 @@ let failing_msg expr =
   flush_str_formatter ()
 
 
+let failing_pretty_msg expr =
+  let open CCFormat in
+  fprintf str_formatter "%a" Itr_ast_pp.record_item_pp expr ;
+  flush_str_formatter ()
+
+
 let rec replace_in_expr e e_check e_replace =
   if e = e_check
   then e_replace
@@ -140,6 +146,10 @@ let check_cmp lhs rhs op =
         if l < r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l <. r then e_true else e_false
+    | Value (Literal (Int l)), Value (Literal (Float r)) ->
+        if Q.of_bigint l <. r then e_true else e_false
+    | Value (Literal (Float l)), Value (Literal (Int r)) ->
+        if l <. Q.of_bigint r then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_LessThan_micro_micro l r
@@ -167,6 +177,10 @@ let check_cmp lhs rhs op =
         if l > r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l >. r then e_true else e_false
+    | Value (Literal (Int l)), Value (Literal (Float r)) ->
+        if Q.of_bigint l >. r then e_true else e_false
+    | Value (Literal (Float l)), Value (Literal (Int r)) ->
+        if l >. Q.of_bigint r then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_GreaterThan_micro_micro l r
@@ -194,6 +208,10 @@ let check_cmp lhs rhs op =
         if l <= r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l <=. r then e_true else e_false
+    | Value (Literal (Int l)), Value (Literal (Float r)) ->
+        if Q.of_bigint l <=. r then e_true else e_false
+    | Value (Literal (Float l)), Value (Literal (Int r)) ->
+        if l <=. Q.of_bigint r then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_LessThanEqual_micro_micro l r
@@ -221,6 +239,10 @@ let check_cmp lhs rhs op =
         if l >= r then e_true else e_false
     | Value (Literal (Float l)), Value (Literal (Float r)) ->
         if l >=. r then e_true else e_false
+    | Value (Literal (Int l)), Value (Literal (Float r)) ->
+        if Q.of_bigint l >=. r then e_true else e_false
+    | Value (Literal (Float l)), Value (Literal (Int r)) ->
+        if l >=. Q.of_bigint r then e_true else e_false
     | ( Value (Literal (Datetime (UTCTimestamp l)))
       , Value (Literal (Datetime (UTCTimestamp r))) ) ->
         if Datetime.utctimestamp_GreaterThanEqual_micro_micro l r
@@ -251,6 +273,8 @@ let rec is_ground_expr : expr -> bool = function
       false
   | Value (MessageValue _mv) ->
       false
+  | Value (Funcall { args; _ }) ->
+      CCList.for_all is_ground args
   | Value _ ->
       true
   | Not e1 ->
@@ -269,7 +293,7 @@ let rec is_ground_expr : expr -> bool = function
       true
 
 
-let rec is_ground (e : record_item) : bool =
+and is_ground (e : record_item) : bool =
   match e with
   | Rec_value r ->
       is_ground_expr r
@@ -278,6 +302,100 @@ let rec is_ground (e : record_item) : bool =
   (* TODO checking of ground for repeating group structures *)
   | _ ->
       false
+
+
+module Expr_set = CCSet.Make (struct
+  type t = expr
+
+  let compare = Caml.compare
+end)
+
+let rec get_assoc_ors (e : expr) : Expr_set.t =
+  match e with
+  | Or { lhs; rhs } ->
+      Expr_set.union (get_assoc_ors lhs) (get_assoc_ors rhs)
+  | _ ->
+      Expr_set.singleton e
+
+
+let rec get_assoc_ands (e : expr) : Expr_set.t =
+  match e with
+  | And { lhs; rhs } ->
+      Expr_set.union (get_assoc_ands lhs) (get_assoc_ands rhs)
+  | _ ->
+      Expr_set.singleton e
+
+
+let rec loem (es : record_item list) : record_item list =
+  let rec remove (match_expr : expr) (ris : record_item list) (found : bool) :
+      record_item list * bool =
+    match ris with
+    | [] ->
+        ([], found)
+    | Rec_value h :: t ->
+        if h = Not match_expr || match_expr = Not h
+        then
+          let res, found = remove match_expr t true in
+          (res, found)
+        else
+          let res, found = remove match_expr t found in
+          (res, found)
+    | h :: t ->
+        let res, found = remove match_expr t found in
+        (h :: res, found)
+  in
+  match es with
+  | [] ->
+      []
+  | [ _ ] ->
+      es
+  | Rec_value h :: t ->
+      let rest, found = remove h t false in
+      if found then e_true :: loem rest else Rec_value h :: loem t
+  | h :: t ->
+      h :: loem t
+
+
+let reconstruct_ors (es : record_item list) : record_item =
+  let rec reconstruct_ors_rec (es : record_item list) : expr =
+    let expr_f = Value (Literal (Bool false)) in
+    match es with
+    | [] ->
+        expr_f (* in theory not reachable *)
+    | [ h ] ->
+      (match h with Rec_value h -> h | _ -> expr_f)
+    | lhs :: t ->
+        if CCList.mem lhs t
+        then reconstruct_ors_rec t
+        else (
+          match lhs with
+          | Rec_value lhs ->
+              Or { lhs; rhs = reconstruct_ors_rec t }
+          | _ ->
+              expr_f )
+  in
+  Rec_value (reconstruct_ors_rec es)
+
+
+let reconstruct_ands (es : record_item list) : record_item =
+  let rec reconstruct_ands_rec (es : record_item list) : expr =
+    let expr_f = Value (Literal (Bool false)) in
+    match es with
+    | [] ->
+        expr_f (* in theory not reachable *)
+    | [ h ] ->
+      (match h with Rec_value h -> h | _ -> expr_f)
+    | lhs :: t ->
+        if CCList.mem lhs t
+        then reconstruct_ands_rec t
+        else (
+          match lhs with
+          | Rec_value lhs ->
+              And { lhs; rhs = reconstruct_ands_rec t }
+          | _ ->
+              expr_f )
+  in
+  Rec_value (reconstruct_ands_rec es)
 
 
 let rec evaluate_record_item (context : context option) (e : record_item) :
@@ -299,6 +417,15 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
   let evaluate_expr = evaluate_expr context in
   let evaluate_record_item = evaluate_record_item context in
   match e with
+  | Not (Not expr) ->
+      evaluate_expr expr
+  | Not (Value (Funcall { func : string; args : record_item list }))
+    when func = "IsSet" && List.length args = 1 ->
+      evaluate_expr
+        (Eq
+           { lhs = CCList.hd args
+           ; rhs = Rec_value (Value (Literal LiteralNone))
+           } )
   | Not expr ->
     ( match evaluate_expr expr with
     | Rec_value (Value (Literal (Bool true))) ->
@@ -310,43 +437,37 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
     | _ ->
         Rec_value e )
   | Or { lhs : expr; rhs : expr } ->
-      let lhs = evaluate_expr lhs in
-      let rhs = evaluate_expr rhs in
-      ( match (lhs, rhs) with
-      | Rec_value (Value (Literal (Bool true))), _ ->
-          e_true
-      | _, Rec_value (Value (Literal (Bool true))) ->
-          e_true
-      | ( Rec_value (Value (Literal (Bool false)))
-        , Rec_value (Value (Literal (Bool false))) ) ->
-          e_false
-      | Rec_value (Value (Literal (Bool false))), _ ->
-          rhs
-      | _, Rec_value (Value (Literal (Bool false))) ->
-          lhs
-      | Rec_value lhs, Rec_value rhs ->
-          Rec_value (Or { lhs; rhs })
-      | _ ->
-          Rec_value e )
+      let ors =
+        Expr_set.to_list
+        @@ Expr_set.union (get_assoc_ors lhs) (get_assoc_ors rhs)
+      in
+      let evaluated_ors = CCList.map evaluate_expr ors in
+      let evaluated_ors = loem evaluated_ors in
+      if CCList.exists is_true evaluated_ors
+      then e_true
+      else if CCList.for_all is_false evaluated_ors
+      then e_false
+      else
+        let simplified_ors =
+          CCList.filter (fun x -> Caml.not (is_false x)) evaluated_ors
+        in
+        let res = reconstruct_ors simplified_ors in
+        res
   | And { lhs : expr; rhs : expr } ->
-      let lhs = evaluate_expr lhs in
-      let rhs = evaluate_expr rhs in
-      ( match (lhs, rhs) with
-      | ( Rec_value (Value (Literal (Bool true)))
-        , Rec_value (Value (Literal (Bool true))) ) ->
-          e_true
-      | Rec_value (Value (Literal (Bool false))), _ ->
-          e_false
-      | _, Rec_value (Value (Literal (Bool false))) ->
-          e_false
-      | Rec_value (Value (Literal (Bool true))), _ ->
-          rhs
-      | _, Rec_value (Value (Literal (Bool true))) ->
-          lhs
-      | Rec_value lhs, Rec_value rhs ->
-          Rec_value (And { lhs; rhs })
-      | _ ->
-          Rec_value e )
+      let ands =
+        Expr_set.to_list
+        @@ Expr_set.union (get_assoc_ands lhs) (get_assoc_ands rhs)
+      in
+      let evaluated_ands = CCList.map evaluate_expr ands in
+      if CCList.exists is_false evaluated_ands
+      then e_false
+      else if CCList.for_all is_true evaluated_ands
+      then e_true
+      else
+        let simplified_ands =
+          CCList.filter (fun x -> Caml.not (is_true x)) evaluated_ands
+        in
+        reconstruct_ands simplified_ands
   | Eq { lhs : record_item; rhs : record_item } ->
       let lhs = evaluate_record_item lhs in
       let rhs = evaluate_record_item rhs in
@@ -388,15 +509,12 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
     | _ ->
         Rec_value e )
   | Value (Funcall { func : string; args : record_item list })
+  (* translate here *)
     when func = "IsSet" && List.length args = 1 ->
     ( match args with
     | [ a ] ->
-        let ri = evaluate_record_item a in
-        if ri = e_none
-        then Rec_value (Value (Literal (Bool false)))
-        else if is_ground ri && ri <> e_none
-        then Rec_value (Value (Literal (Bool true)))
-        else Rec_value e
+        evaluate_expr
+          (Not (Eq { lhs = a; rhs = Rec_value (Value (Literal LiteralNone)) }))
     | _ ->
         Rec_value e )
   | Value (Funcall { func : string; args : record_item list })
@@ -440,6 +558,13 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
                      (UTCDateOnly
                         (Datetime.convert_utctimestamp_micro_utcdateonly t) ) )
                ) )
+      | Rec_value (Value (MessageValue mv)) ->
+          Rec_value
+            (Value
+               (Funcall
+                  { func = "DayOf"
+                  ; args = [ Rec_value (Value (MessageValue mv)) ]
+                  } ) )
       | _ ->
           Rec_value e )
     | [ date; Rec_value (Value (Literal (String "yyyyMMdd-HH:mm:ss.SSS"))) ] ->
@@ -615,9 +740,89 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
       Rec_value e
 
 
+let rec normalise_record_item record_item =
+  match record_item with
+  | Rec_value ri ->
+      normalise_expr ri
+  | Rec_record { name; elements } ->
+      Rec_record
+        { name; elements = String_map.map normalise_record_item elements }
+  (* TODO simplification of repeating group structures *)
+  | _ ->
+      record_item
+
+
+and normalise_expr expr =
+  match expr with
+  | Not (Eq { lhs; rhs }) when rhs = Rec_value (Value (Literal LiteralNone)) ->
+      Rec_value (Value (Funcall { func = "IsSet"; args = [ lhs ] }))
+  | Eq { lhs; rhs } when rhs = Rec_value (Value (Literal LiteralNone)) ->
+      Rec_value (Not (Value (Funcall { func = "IsSet"; args = [ lhs ] })))
+  | Not expr ->
+    ( match normalise_expr expr with
+    | Rec_value expr ->
+        Rec_value (Not expr)
+    | record_item ->
+        record_item )
+  | Or { lhs : expr; rhs : expr } ->
+    ( match (normalise_expr lhs, normalise_expr rhs) with
+    | Rec_value lhs, Rec_value rhs ->
+        Rec_value (Or { lhs; rhs })
+    | _ ->
+        Rec_value expr )
+  | And { lhs : expr; rhs : expr } ->
+    ( match (normalise_expr lhs, normalise_expr rhs) with
+    | Rec_value lhs, Rec_value rhs ->
+        Rec_value (And { lhs; rhs })
+    | _ ->
+        Rec_value expr )
+  | Eq { lhs : record_item; rhs : record_item } ->
+      Rec_value
+        (Eq { lhs = normalise_record_item lhs; rhs = normalise_record_item rhs })
+  | _ ->
+      Rec_value expr
+
+
+let fix_evaluate_record_item context record_item =
+  let res = evaluate_record_item context record_item in
+  if res = record_item then record_item else evaluate_record_item context res
+
+
+let evaluate_and_normalise_record_item context record_item =
+  fix_evaluate_record_item context record_item |> normalise_record_item
+
+
+let evaluate_and_normalise_expr context expr =
+  fix_evaluate_record_item context (Rec_value expr) |> normalise_record_item
+
+
+let get_all_subsets (l : 'a list) : 'a list list =
+  let rec get_all_subsets_tr (l : 'a list) (acc : 'a list list) : 'a list list =
+    match l with
+    | [] ->
+        acc
+    | h :: t ->
+        let res = get_all_subsets_tr t [] in
+        ([ h ] :: res) @ List.map (fun x -> h :: x) res
+  in
+  get_all_subsets_tr l []
+
+
+(* return here set of sets -
+   each set element is the set of field_paths which (and) have
+    to be None concurrently to render the expression true
+
+   the set of sets of these is the possible (or) combinations.
+
+   e.g. (!IsSet(A) && !IsSet(B))||!IsSet(C)
+
+   would give you {| {|A,B|} , {|C|} |}
+
+   which is analogous to DNF
+*)
 let nullable_expr
     (expr : expr) (message_field_optional_map : bool String_map.t option) :
-    Field_path_set.t =
+    Field_path_set.t list =
   let open Itr_ast in
   let this_msg_vars =
     match message_field_optional_map with
@@ -634,23 +839,25 @@ let nullable_expr
                    is_optional )
         |> Field_path_set.of_list
   in
-  let nullable_var_names =
-    Field_path_set.fold
-      (fun el acc ->
-        let expr =
-          replace_in_expr
-            expr
-            (Value (MessageValue { var = None; field_path = el }))
-            (Value (Literal LiteralNone))
-        in
-        let record_item = evaluate_expr None expr in
-        if is_true @@ evaluate_record_item None record_item
-        then Field_path_set.add el acc
-        else acc )
-      this_msg_vars
-      Field_path_set.empty
-  in
-  nullable_var_names
+  let this_msg_vars = get_all_subsets (Field_path_set.to_list this_msg_vars) in
+  CCList.fold_left
+    (fun acc el ->
+      let expr =
+        List.fold_left
+          (fun expr inner_el ->
+            replace_in_expr
+              expr
+              (Value (MessageValue { var = None; field_path = inner_el }))
+              (Value (Literal LiteralNone)) )
+          expr
+          el
+      in
+      let record_item = evaluate_expr None expr in
+      if is_true @@ evaluate_and_normalise_record_item None record_item
+      then Field_path_set.of_list el :: acc
+      else acc )
+    []
+    this_msg_vars
 
 
 [@@@logic]

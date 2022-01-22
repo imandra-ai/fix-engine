@@ -413,27 +413,31 @@ and expecting_to_json (expecting : expecting) =
     ; ( "nullable_exprs"
       , `List
           (List.map
-             (fun (expr, field_paths) ->
+             (fun (expr, field_paths_list) ->
                `Assoc
                  [ ("expr", expr_to_json expr)
                  ; ( "field_paths"
                    , `List
                        (List.map
-                          (fun x ->
+                          (fun field_paths ->
                             `List
                               (List.map
-                                 (fun (x, o) ->
-                                   `Assoc
-                                     [ ("name", `String x)
-                                     ; ( "index"
-                                       , match o with
-                                         | None ->
-                                             `Null
-                                         | Some x ->
-                                             `Int (Z.to_int x) )
-                                     ] )
-                                 x ) )
-                          field_paths ) )
+                                 (fun x ->
+                                   `List
+                                     (List.map
+                                        (fun (x, o) ->
+                                          `Assoc
+                                            [ ("name", `String x)
+                                            ; ( "index"
+                                              , match o with
+                                                | None ->
+                                                    `Null
+                                                | Some x ->
+                                                    `Int (Z.to_int x) )
+                                            ] )
+                                        x ) )
+                                 field_paths ) )
+                          field_paths_list ) )
                  ] )
              expecting.nullable_exprs ) )
     ]

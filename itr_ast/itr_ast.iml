@@ -659,7 +659,7 @@ type typed_term =
 type expecting =
   { modifier : [ `Only | `Only_supported ] option
   ; relevant_exprs : expr list
-  ; nullable_exprs : (expr * (string * int option) list list) list
+  ; nullable_exprs : (expr * (string * int option) list list list) list
   ; qe_modified_exprs : expr list
   ; common_exprs : expr list
   }
