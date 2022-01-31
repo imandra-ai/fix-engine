@@ -426,6 +426,13 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
            { lhs = CCList.hd args
            ; rhs = Rec_value (Value (Literal LiteralNone))
            } )
+  | Value (CaseSplit {default_value;cases}) -> 
+    (CCResult.fold_l (fun acc (check,value) -> 
+      if is_true (evaluate_record_item check) then Error (`GotResult (evaluate_record_item value))
+      else Ok acc
+    ) (evaluate_record_item default_value) cases |> function 
+    | Ok res -> res
+    | Error (`GotResult ri) -> ri)
   | Not expr ->
     ( match evaluate_expr expr with
     | Rec_value (Value (Literal (Bool true))) ->
