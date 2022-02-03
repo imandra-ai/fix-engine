@@ -417,6 +417,102 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
   let evaluate_expr = evaluate_expr context in
   let evaluate_record_item = evaluate_record_item context in
   match e with
+  | Cmp
+      { lhs =
+          Value (Funcall { func = "defaultIfNotSet"; args = [ def_val; ri ] })
+      ; op
+      ; rhs
+      }
+    when (Caml.not @@ is_ground def_val) && (Caml.not @@ is_ground ri) ->
+      let def_val, ri =
+        (evaluate_record_item def_val, evaluate_record_item ri)
+      in
+      if is_ground def_val
+      then
+        match (def_val, ri) with
+        | Rec_value lhs, Rec_value ri ->
+            if is_false @@ evaluate_expr (Cmp { lhs; op; rhs })
+            then Rec_value (Cmp { lhs = ri; op; rhs })
+            else
+              Rec_value
+                (Cmp
+                   { lhs =
+                       Value
+                         (Funcall
+                            { func = "defaultIfNotSet"
+                            ; args = [ Rec_value lhs; Rec_value ri ]
+                            } )
+                   ; op
+                   ; rhs
+                   } )
+        | _ ->
+            Rec_value e
+      else
+        let def_val, ri =
+          (evaluate_record_item def_val, evaluate_record_item ri)
+        in
+        if is_ground ri
+        then
+          match (def_val, ri) with
+          | Rec_value lhs, Rec_value ri ->
+              if is_false @@ evaluate_expr (Cmp { lhs = ri; op; rhs })
+              then Rec_value (Cmp { lhs; op; rhs })
+              else
+                Rec_value
+                  (Cmp
+                     { lhs =
+                         Value
+                           (Funcall
+                              { func = "defaultIfNotSet"
+                              ; args = [ Rec_value lhs; Rec_value ri ]
+                              } )
+                     ; op
+                     ; rhs
+                     } )
+          | _ ->
+              Rec_value e
+        else Rec_value e
+  | Eq
+      { lhs =
+          Rec_value
+            (Value
+              (Funcall { func = "defaultIfNotSet"; args = [ def_val; ri ] }) )
+      ; rhs
+      }
+    when (Caml.not @@ is_ground def_val) && (Caml.not @@ is_ground ri) ->
+      let lhs, ri = (evaluate_record_item def_val, evaluate_record_item ri) in
+      if is_ground lhs
+      then
+        if is_false @@ evaluate_expr (Eq { lhs; rhs })
+        then Rec_value (Eq { lhs = ri; rhs })
+        else
+          Rec_value
+            (Eq
+               { lhs =
+                   Rec_value
+                     (Value
+                        (Funcall
+                           { func = "defaultIfNotSet"; args = [ lhs; ri ] } ) )
+               ; rhs
+               } )
+      else
+        let lhs, ri = (evaluate_record_item def_val, evaluate_record_item ri) in
+        if is_ground ri
+        then
+          if is_false @@ evaluate_expr (Eq { lhs = ri; rhs })
+          then Rec_value (Eq { lhs; rhs })
+          else
+            Rec_value
+              (Eq
+                 { lhs =
+                     Rec_value
+                       (Value
+                          (Funcall
+                             { func = "defaultIfNotSet"; args = [ lhs; ri ] } )
+                       )
+                 ; rhs
+                 } )
+        else Rec_value e
   | Not (Not expr) ->
       evaluate_expr expr
   | Not (Value (Funcall { func : string; args : record_item list }))
@@ -426,13 +522,15 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
            { lhs = CCList.hd args
            ; rhs = Rec_value (Value (Literal LiteralNone))
            } )
-  | Value (CaseSplit {default_value;cases}) -> 
-    (CCResult.fold_l (fun acc (check,value) -> 
-      if is_true (evaluate_record_item check) then Error (`GotResult (evaluate_record_item value))
-      else Ok acc
-    ) (evaluate_record_item default_value) cases |> function 
-    | Ok res -> res
-    | Error (`GotResult ri) -> ri)
+  | Value (CaseSplit { default_value; cases }) ->
+      CCResult.fold_l
+        (fun acc (check, value) ->
+          if is_true (evaluate_record_item check)
+          then Error (`GotResult (evaluate_record_item value))
+          else Ok acc )
+        (evaluate_record_item default_value)
+        cases
+      |> (function Ok res -> res | Error (`GotResult ri) -> ri)
   | Not expr ->
     ( match evaluate_expr expr with
     | Rec_value (Value (Literal (Bool true))) ->
@@ -533,8 +631,14 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
         | Rec_value (Value (Literal LiteralNone)) ->
             evaluate_record_item d
         | _ ->
-            if is_ground a then
-            a else Rec_value (Value (Funcall {func;args = CCList.map evaluate_record_item args})))
+            if is_ground a
+            then a
+            else
+              Rec_value
+                (Value
+                   (Funcall
+                      { func; args = CCList.map evaluate_record_item args } ) )
+        )
     | _ ->
         Rec_value e )
   | Value (Funcall { func : string; args : record_item list })
