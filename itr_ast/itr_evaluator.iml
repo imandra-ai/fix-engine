@@ -533,7 +533,8 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
         | Rec_value (Value (Literal LiteralNone)) ->
             evaluate_record_item d
         | _ ->
-            a )
+            if is_ground a then
+            a else Rec_value (Value (Funcall {func;args = CCList.map evaluate_record_item args})))
     | _ ->
         Rec_value e )
   | Value (Funcall { func : string; args : record_item list })
