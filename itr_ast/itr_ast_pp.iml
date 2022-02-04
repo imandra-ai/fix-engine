@@ -107,6 +107,14 @@ and opt_index_pp (ppf : formatter) : Z.t option -> unit = function
 
 
 and expr_pp (ppf : formatter) : expr -> unit = function
+  | Eq {lhs = Rec_value (Value (Literal LiteralNone));rhs = Rec_value (Value (MessageValue m))} -> 
+      fprintf ppf "!IsSet(%a)" Message_value.pp m
+  | Eq {rhs = Rec_value (Value (Literal LiteralNone));lhs = Rec_value (Value (MessageValue m))} -> 
+        fprintf ppf "!IsSet(%a)" Message_value.pp m
+  | Not (Eq {lhs = Rec_value (Value (Literal LiteralNone));rhs = Rec_value (Value (MessageValue m))} )-> 
+          fprintf ppf "IsSet(%a)" Message_value.pp m
+  | Not (Eq {rhs = Rec_value (Value (Literal LiteralNone));lhs = Rec_value (Value (MessageValue m))}) -> 
+            fprintf ppf "IsSet(%a)" Message_value.pp m
   | Value v ->
       fprintf ppf "%a" value_pp v
   | Not e ->
