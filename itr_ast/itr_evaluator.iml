@@ -852,60 +852,9 @@ and evaluate_expr (context : context option) (e : expr) : record_item =
       Rec_value e
 
 
-let rec normalise_record_item record_item =
-  match record_item with
-  | Rec_value ri ->
-      normalise_expr ri
-  | Rec_record { name; elements } ->
-      Rec_record
-        { name; elements = String_map.map normalise_record_item elements }
-  (* TODO simplification of repeating group structures *)
-  | _ ->
-      record_item
-
-
-and normalise_expr expr =
-  match expr with
-  | Not (Eq { lhs; rhs }) when rhs = Rec_value (Value (Literal LiteralNone)) ->
-      Rec_value (Value (Funcall { func = "IsSet"; args = [ lhs ] }))
-  | Eq { lhs; rhs } when rhs = Rec_value (Value (Literal LiteralNone)) ->
-      Rec_value (Not (Value (Funcall { func = "IsSet"; args = [ lhs ] })))
-  | Not expr ->
-    ( match normalise_expr expr with
-    | Rec_value expr ->
-        Rec_value (Not expr)
-    | record_item ->
-        record_item )
-  | Or { lhs : expr; rhs : expr } ->
-    ( match (normalise_expr lhs, normalise_expr rhs) with
-    | Rec_value lhs, Rec_value rhs ->
-        Rec_value (Or { lhs; rhs })
-    | _ ->
-        Rec_value expr )
-  | And { lhs : expr; rhs : expr } ->
-    ( match (normalise_expr lhs, normalise_expr rhs) with
-    | Rec_value lhs, Rec_value rhs ->
-        Rec_value (And { lhs; rhs })
-    | _ ->
-        Rec_value expr )
-  | Eq { lhs : record_item; rhs : record_item } ->
-      Rec_value
-        (Eq { lhs = normalise_record_item lhs; rhs = normalise_record_item rhs })
-  | _ ->
-      Rec_value expr
-
-
 let fix_evaluate_record_item context record_item =
   let res = evaluate_record_item context record_item in
   if res = record_item then record_item else evaluate_record_item context res
-
-
-let evaluate_and_normalise_record_item context record_item =
-  fix_evaluate_record_item context record_item |> normalise_record_item
-
-
-let evaluate_and_normalise_expr context expr =
-  fix_evaluate_record_item context (Rec_value expr) |> normalise_record_item
 
 
 let get_all_subsets (l : 'a list) : 'a list list =
@@ -964,8 +913,8 @@ let nullable_expr
           expr
           el
       in
-      let record_item = evaluate_expr None expr in
-      if is_true @@ evaluate_and_normalise_record_item None record_item
+      let record_item = fix_evaluate_record_item None (Rec_value expr) in
+      if is_true record_item
       then Field_path_set.of_list el :: acc
       else acc )
     []
