@@ -105,7 +105,9 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
     match m.full_msg_data with
     | Full_FIX_Admin_Msg ( Full_Msg_Logon d ) ->
         begin
-            if m.full_msg_header.h_target_comp_id <> engine.fe_comp_id then 
+            if ( m.full_msg_header.h_target_comp_id <> engine.fe_comp_id ) &&
+               ( m.full_msg_header.h_sender_comp_id <> engine.fe_target_comp_id ) 
+               then 
                 engine
             (* TODO: better timestamp comparison *)
             else if (m.full_msg_header.h_sending_time.utc_timestamp_year <> engine.fe_curr_time.utc_timestamp_year ) then
