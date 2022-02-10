@@ -436,9 +436,15 @@ let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     | _ ->
     let msg = match m with
     | { full_msg_header = { h_msg_seq_num; _ }
-        ; full_msg_data = Full_FIX_Admin_Msg (Full_Msg_Sequence_Reset { seqr_new_seq_no; _ } )
+        ; full_msg_data = Full_FIX_Admin_Msg (Full_Msg_Sequence_Reset { seqr_new_seq_no; seqr_gap_fill_flag } )
         ; _ } ->
-        CacheGap (h_msg_seq_num, seqr_new_seq_no)
+        (* If the GapFillFlag <123> field is not present (or set to N). 
+           The MsgSeqNum <34> in the header should be ignored... *)
+        let gap_start = match seqr_gap_fill_flag with
+            | Some FIX_GapFillFlag_Y -> h_msg_seq_num
+            | _ -> engine.incoming_seq_num
+            in
+        CacheGap (gap_start, seqr_new_seq_no)
     | _ -> CacheMessage(m)
     in
     let new_cache = update_cache engine.fe_cache msg in
