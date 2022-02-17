@@ -155,6 +155,10 @@ and value =
       { func : string
       ; args : record_item list
       }
+  | CaseSplit of
+      { default_value : record_item
+      ; cases : (record_item * record_item) list
+      }
 
 and expr =
   | Value of value
@@ -769,6 +773,12 @@ module Value = struct
         exists_record_item f e
     | Funcall { func = _; args = es } ->
         CCList.exists (exists_record_item f) es
+    | CaseSplit { default_value; cases } ->
+        exists_record_item f default_value
+        || CCList.exists
+             (fun (check, value) ->
+               exists_record_item f check || exists_record_item f value )
+             cases
 
 
   and exists_expr f = function
@@ -933,6 +943,7 @@ let rec eval_pp_value ~var (value : value) : instruction list =
   | ConnectionRef _
   | Now
   | Counter
+  | CaseSplit _
   (* TODO *)
   | ObjectProperty _ ->
       [ append (Rec_value (Value value)) ]

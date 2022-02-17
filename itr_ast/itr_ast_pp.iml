@@ -54,6 +54,12 @@ let rec literal_pp (ppf : formatter) : literal -> unit = function
       fprintf ppf "%a" datetime_pp d
 
 
+and case_split_pair_pp (ppf : formatter) : record_item * record_item -> unit =
+  function
+  | check, value ->
+      fprintf ppf "if (%a) : %a" record_item_pp check record_item_pp value
+
+
 and value_pp (ppf : formatter) : value -> unit = function
   | Literal l ->
       literal_pp ppf l
@@ -83,6 +89,14 @@ and value_pp (ppf : formatter) : value -> unit = function
         func
         CCFormat.(list ~sep:(return ",") record_item_pp)
         args
+  | CaseSplit { default_value; cases } ->
+      fprintf
+        ppf
+        "cases(%a@,default:%a)"
+        CCFormat.(list ~sep:(return "@,") case_split_pair_pp)
+        cases
+        record_item_pp
+        default_value
 
 
 and opt_index_pp (ppf : formatter) : Z.t option -> unit = function
@@ -93,6 +107,14 @@ and opt_index_pp (ppf : formatter) : Z.t option -> unit = function
 
 
 and expr_pp (ppf : formatter) : expr -> unit = function
+  | Eq {lhs = Rec_value (Value (Literal LiteralNone));rhs = Rec_value (Value (MessageValue m))} -> 
+      fprintf ppf "!IsSet(%a)" Message_value.pp m
+  | Eq {rhs = Rec_value (Value (Literal LiteralNone));lhs = Rec_value (Value (MessageValue m))} -> 
+        fprintf ppf "!IsSet(%a)" Message_value.pp m
+  | Not (Eq {lhs = Rec_value (Value (Literal LiteralNone));rhs = Rec_value (Value (MessageValue m))} )-> 
+          fprintf ppf "IsSet(%a)" Message_value.pp m
+  | Not (Eq {rhs = Rec_value (Value (Literal LiteralNone));lhs = Rec_value (Value (MessageValue m))}) -> 
+            fprintf ppf "IsSet(%a)" Message_value.pp m
   | Value v ->
       fprintf ppf "%a" value_pp v
   | Not e ->

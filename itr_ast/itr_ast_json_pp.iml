@@ -92,6 +92,22 @@ and value_to_json : value -> t = function
               ; ("args", `List (List.map record_item_to_json args))
               ] )
         ]
+  | CaseSplit { default_value; cases } ->
+      `Assoc
+        [ ( "CaseSplit"
+          , `Assoc
+              [ ("default_value", record_item_to_json default_value)
+              ; ( "cases"
+                , `List
+                    (List.map
+                       (fun (c, v) ->
+                         `Assoc
+                           [ ("check", record_item_to_json c)
+                           ; ("value", record_item_to_json v)
+                           ] )
+                       cases ) )
+              ] )
+        ]
 
 
 and opt_index_to_json : Z.t option -> t = function

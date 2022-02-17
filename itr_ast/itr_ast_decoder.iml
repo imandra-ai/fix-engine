@@ -182,6 +182,17 @@ and value_decoder () : Itr_ast.value decoder =
                     ] ) )
           in
           succeed (Funcall { func; args })
+      | "CaseSplit" ->
+          let* default_value = field "default_value" (record_item_decoder ()) in
+          let+ cases =
+            field
+              "cases"
+              (list
+                 (let* check = field "check" (record_item_decoder ()) in
+                  let+ value = field "value" (record_item_decoder ()) in
+                  (check, value) ) )
+          in
+          CaseSplit { default_value; cases }
       | s ->
           fail @@ "unrecognised value:" ^ s )
 
