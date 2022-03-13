@@ -21,10 +21,7 @@ let full_msg_tag_to_json = function
   | Full_Admin_Msg_Tag x ->
       `Assoc [ ("Full_Admin_Msg_Tag", full_admin_msg_tag_to_json x) ]
   | Full_App_Msg_Tag x ->
-      `Assoc [ ("Full_App_Msg_Tag", full_app_msg_tag_to_json x) ]
-  | Full_Msg_Unknown_Tag x ->
-      `Assoc [ ("Full_Msg_Unknown_Tag", `String x) ]
-
+      `Assoc [ ("Full_App_Msg_Tag", `String x) ]
 
 let full_msg_tag_opt_to_json = function
   | None ->
@@ -37,9 +34,7 @@ let full_field_tag_to_json = function
   | Full_Admin_Field_Tag x ->
       `Assoc [ ("Full_Admin_Field_Tag", full_admin_field_tag_to_json x) ]
   | Full_App_Field_Tag x ->
-      `Assoc [ ("Full_App_Field_Tag", full_app_field_tag_to_json x) ]
-  | Full_Field_Unknown_Tag x ->
-      `Assoc [ ("Full_Field_Unknown_Tag", `String x) ]
+      `Assoc [ ("Full_App_Field_Tag", `String x) ]
 
 
 let full_field_tag_opt_to_json = function

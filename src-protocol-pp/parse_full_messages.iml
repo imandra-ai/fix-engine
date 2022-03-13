@@ -26,12 +26,10 @@ open Time_defaults_parser
 
 let parse_msg_data msg_tag_str msg =
   match parse_full_msg_tag msg_tag_str with 
-  | None | Some (Full_Msg_Unknown_Tag _) -> 
-    UnknownMessageTag msg_tag_str 
   | Some (Full_Admin_Msg_Tag msg_tag) -> Parse_admin_messages.parse_admin_msg_data msg_tag msg
                                  >>= fun x -> ParseSuccess ( Full_FIX_Admin_Msg x )
-  | Some (Full_App_Msg_Tag msg_tag) -> Parse_app_messages.parse_app_msg_data     msg_tag msg
-                                 >>= fun x ->  ParseSuccess ( Full_FIX_App_Msg x )
+  | Some (Full_App_Msg_Tag _) -> ParseSuccess ( Full_FIX_App_Msg msg )
+  | None -> UnknownMessageTag msg_tag_str
 ;;
 
 let parse_header msg = 

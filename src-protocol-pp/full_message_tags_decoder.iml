@@ -17,6 +17,7 @@ open Full_app_messages_decoder
 open Full_app_tags_decoder
 module D = Decoders_yojson.Basic.Decode
 
+
 let full_msg_tag_of_json : full_msg_tag D.decoder =
   let open D in
   single_field
@@ -24,9 +25,7 @@ let full_msg_tag_of_json : full_msg_tag D.decoder =
   | "Full_Admin_Msg_Tag" ->
       full_admin_msg_tag_of_json >>= fun x -> D.succeed (Full_Admin_Msg_Tag x)
   | "Full_App_Msg_Tag" ->
-      full_app_msg_tag_of_json >>= fun x -> D.succeed (Full_App_Msg_Tag x)
-  | "Full_Msg_Unknown_Tag" ->
-      string >>= fun x -> D.succeed (Full_Msg_Unknown_Tag x)
+      string >>= fun x -> D.succeed (Full_App_Msg_Tag x)
   | x ->
       D.fail @@ "Unknown full message tag " ^ x
 
@@ -39,8 +38,6 @@ let full_field_tag_of_json : full_field_tag D.decoder =
       full_admin_field_tag_of_json
       >>= fun x -> D.succeed (Full_Admin_Field_Tag x)
   | "Full_App_Field_Tag" ->
-      full_app_field_tag_of_json >>= fun x -> D.succeed (Full_App_Field_Tag x)
-  | "Full_Field_Unknown_Tag" ->
-      string >>= fun x -> D.succeed (Full_Field_Unknown_Tag x)
+      string >>= fun x -> D.succeed (Full_App_Field_Tag x)
   | x ->
       D.fail @@ "Unknown full message tag " ^ x

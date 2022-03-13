@@ -19,11 +19,9 @@ open Full_admin_tags
 (** Union message tag type. *)
 type full_msg_tag =
   | Full_Admin_Msg_Tag of full_admin_msg_tag
-  | Full_App_Msg_Tag of full_app_msg_tag
-  | Full_Msg_Unknown_Tag of string
+  | Full_App_Msg_Tag of string
 
 (** Union field tag type. *)
 type full_field_tag =
   | Full_Admin_Field_Tag of full_admin_field_tag
-  | Full_App_Field_Tag of full_app_field_tag
-  | Full_Field_Unknown_Tag of string
+  | Full_App_Field_Tag of string

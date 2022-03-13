@@ -30,6 +30,11 @@ let assoc_filter_nulls l : Yojson.Basic.t =
 ;;
 
 
+let full_app_msg_to_json data : Yojson.Basic.t =
+  data |> List.map ( fun (k,v) ->
+    `List [ `String k ; `String v ]
+  ) |> fun x -> `List x
+
 let full_msg_to_json = function
     | Full_FIX_Admin_Msg x -> `Assoc [("Full_FIX_Admin_Msg",full_admin_msg_to_json x)]
     | Full_FIX_App_Msg   x -> `Assoc [("Full_FIX_App_Msg",full_app_msg_to_json x)]

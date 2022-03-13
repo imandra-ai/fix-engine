@@ -7,8 +7,6 @@
 
 [@@@import "full_admin_messages_decoder.iml"]
 
-[@@@import "../src-protocol-exts-pp/full_app_messages_decoder.iml"]
-
 [@@@import "../src-protocol/full_admin_tags.iml"]
 
 [@@@import "full_message_tags_decoder.iml"]
@@ -19,7 +17,7 @@
 
 [@@@import "../src-core-pp/base_types_json.iml"]
 
-open Full_app_messages_decoder
+
 open Full_admin_messages_decoder
 open Full_admin_tags
 open Full_messages
@@ -29,6 +27,16 @@ open Time_defaults_json
 open Base_types_json
 module D = Decoders_yojson.Basic.Decode
 
+let full_app_msg_data_decoder : (string * string) list D.decoder =
+  let kv : (string * string) D.decoder =
+    let open D.Infix in
+    let* a = D.index 0i D.string in
+    let* b = D.index 1i D.string in
+    D.succeed (a, b)
+    in
+  D.list kv
+
+
 let full_msg_decoder : full_msg_data D.decoder =
   let open D in
   single_field
@@ -36,7 +44,7 @@ let full_msg_decoder : full_msg_data D.decoder =
   | "Full_FIX_Admin_Msg" ->
       full_admin_msg_decoder >>= fun x -> D.succeed (Full_FIX_Admin_Msg x)
   | "Full_FIX_App_Msg" ->
-      full_app_msg_of_json >>= fun x -> D.succeed (Full_FIX_App_Msg x)
+      full_app_msg_data_decoder >>= fun x -> D.succeed (Full_FIX_App_Msg x)
   | x ->
       D.fail @@ "Unknown full message type " ^ x
 
