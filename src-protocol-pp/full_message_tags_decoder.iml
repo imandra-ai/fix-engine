@@ -7,14 +7,8 @@
 
 [@@@import "full_admin_tags_decoder.iml"]
 
-[@@@import "../src-protocol-exts-pp/full_app_messages_decoder.iml"]
-
-[@@@import "../src-protocol-exts-pp/full_app_tags_decoder.iml"]
-
 open Full_admin_tags_decoder
 open Full_message_tags
-open Full_app_messages_decoder
-open Full_app_tags_decoder
 module D = Decoders_yojson.Basic.Decode
 
 

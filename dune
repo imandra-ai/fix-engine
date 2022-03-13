@@ -1,1 +1,13 @@
-(dirs :standard \ *-vg api src-simulation-utils src-simulation src-tests-utils)
+(dirs :standard \ *-vg api 
+  src-simulation-utils 
+  src-simulation 
+  src-tests-utils
+
+  src-model
+  itr_ast
+  api
+  src-protocol-exts
+  src-protocol-exts-pp
+  src-simulation-utils-gen
+  vgs
+  )

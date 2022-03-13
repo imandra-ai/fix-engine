@@ -5,11 +5,8 @@
 
     full_admin_messages.ml
 *)
-[@@@import "../src-protocol-exts/full_app_tags.iml"]
-
 [@@@import "full_admin_tags.iml"]
 
-open Full_app_tags
 open Full_admin_tags
 
 (** Union Tag types. The tag types must be declared in a separate module,
