@@ -62,5 +62,8 @@ run_test ./defs/Imandra4_CacheReplayOutOfOrder.def
 run_test ./defs/Imandra5_SeqResetWithGapFillOvershoot.def
 run_test ./defs/Imandra6_CacheReplayAdminOnly.def
 run_test ./defs/Imandra7_CriticalResetLogon.def
+run_test ./defs/Imandra8_LogonResetReq_Normal.def
+run_test ./defs/Imandra9_LogonResetReq_Rewind.def
+run_test ./defs/Imandra10_LogonResetReq_DuringSession.def
 
 rm dune

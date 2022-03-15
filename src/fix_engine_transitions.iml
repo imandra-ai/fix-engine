@@ -119,6 +119,10 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                         fe_curr_status = MaxNumLogonMsgsViolated;
             } else
                 begin
+                    let engine = match d.ln_reset_seq_num_flag with
+                        | Some true -> { engine with incoming_seq_num = 0; outgoing_seq_num = 0 }
+                        | _ -> engine
+                        in
                     let engine  = { engine with
                             fe_encrypt_method  = d.ln_encrypt_method;
                             fe_heartbeat_interval   = d.ln_heartbeat_interval;
@@ -127,7 +131,6 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                     let logon_msg = create_logon_msg ( engine , false ) in
                     let engine = { engine with
                             fe_initiator            = Some false;
-                            (*  TODO -- check if we really have to accept all incoming senders *)
                             outgoing_fix_msg        = Some (ValidMsg ( logon_msg ));
                             outgoing_seq_num        = engine.outgoing_seq_num + 1;
                             fe_target_comp_id       = m.full_msg_header.h_sender_comp_id;
@@ -236,6 +239,22 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     | Some new_seq_num ->  attempt_sequence_reset (engine, header.h_msg_seq_num, new_seq_num) | None ->
     (* In all other cases we first check sequence numbers / duplicate flags*)
     let msgtag = get_full_msg_tag m.full_msg_data in
+    (* Logon with sequence reset resets both seq numbers*)
+    match m.full_msg_data with 
+    | Full_FIX_Admin_Msg (Full_Msg_Logon data) ->
+        (match data.ln_reset_seq_num_flag with
+        | Some true -> 
+          let engine = { engine with incoming_seq_num = 1; outgoing_seq_num = 1 } in              
+          let logon_msg = create_logon_msg ( engine , false ) in {
+            engine with
+                outgoing_fix_msg        = Some ( ValidMsg (logon_msg ));
+                outgoing_seq_num        = engine.outgoing_seq_num + 1;
+                fe_last_time_data_sent  = engine.fe_curr_time;
+                fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
+            }
+        | _ -> engine
+        )
+    | _ ->  
     (* Check msg header. If something is wrong - send the reject and start shutdown. *)
     match validate_message_header ( engine, header, msgtag ) with
     | Some engine -> engine | None ->
@@ -267,14 +286,12 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                         incoming_seq_num = m.full_msg_header.h_msg_seq_num;
                         incoming_fix_msg = None;
                 }
-            | Full_Msg_Logon data           ->
-                (match data.ln_reset_seq_num_flag with
-                | Some true -> attempt_sequence_reset (engine, header.h_msg_seq_num, header.h_msg_seq_num+1)
-                | _ -> engine
-                )
+            | Full_Msg_Logon _data           -> engine
             | Full_Msg_Logoff _data          ->
                 let engine = logoff_and_shutdown engine in
-                { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
+                { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num 
+                ; fe_curr_mode = NoActiveSession
+                }
             | Full_Msg_Reject _data          -> { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
             | Full_Msg_Business_Reject _data -> { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
             | Full_Msg_Resend_Request data  ->
