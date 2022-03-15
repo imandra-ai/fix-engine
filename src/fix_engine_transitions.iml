@@ -244,7 +244,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     | Full_FIX_Admin_Msg (Full_Msg_Logon data) ->
         (match data.ln_reset_seq_num_flag with
         | Some true -> 
-          let engine = { engine with incoming_seq_num = 1; outgoing_seq_num = 1 } in              
+          let engine = { engine with incoming_seq_num = 1; outgoing_seq_num = 0 } in              
           let logon_msg = create_logon_msg ( engine , false ) in {
             engine with
                 outgoing_fix_msg        = Some ( ValidMsg (logon_msg ));
