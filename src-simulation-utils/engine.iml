@@ -125,6 +125,8 @@ end = struct
 
   let rec main_loop t engine_state =
     let open Fix_engine_state in
+    let mode = engine_state.fe_curr_mode |> Fix_engine_json.fix_engine_mode_to_string in
+    Lwt_io.printf "Engine.main_loop: mode = %s\n" mode >>= fun () ->
     Lwt_mvar.take t.send_box >>= fun msg ->
     (match msg with
     | SendFIXMessage msg -> {engine_state with incoming_fix_msg = Some msg } |> while_busy_loop t
