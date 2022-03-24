@@ -1,7 +1,0 @@
-(library
- (name simulation_utils_gen)
- (public_name fix-engine.fix_simulation_utils_gen)
- (wrapped false)
- (flags
-  (:standard -open Imandra_prelude -open Unix -warn-error -A+8+39 -w -33-58))
- (libraries venue_types))

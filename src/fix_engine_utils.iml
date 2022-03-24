@@ -7,24 +7,22 @@
     fix_engine_utils.iml
 
 *)
+[@@@import "fix_engine_state.iml"]
+open Fix_engine_state;;
+
 [@@@import "../src-core/datetime.iml"]
+open Datetime;;
+
 [@@@import "../src-protocol/full_admin_enums.iml"]
 [@@@import "../src-protocol/full_admin_messages.iml"]
 [@@@import "../src-protocol/full_messages.iml"]
 [@@@import "../src-protocol/full_message_tags.iml"]
 [@@@import "../src-protocol/full_admin_tags.iml"]
-[@@@import "fix_engine_state.iml"]
-[@@@import "../src-core-time-defaults/time_defaults.iml"]
-[@@@import "../src-core-utils/fix_version.iml"]
-open Datetime;;
 open Full_admin_enums;;
 open Full_admin_messages;;
 open Full_messages;;
 open Full_message_tags;;
 open Full_admin_tags;;
-open Fix_engine_state;;
-open Time_defaults;;
-open Fix_version;;
 
 
 (* Does the message have the right sequence number? *)
@@ -123,7 +121,7 @@ let add_msg_to_history ( history, msg : full_valid_fix_msg list * full_valid_fix
 (** Create outbound FIX message with the appropriate header and trailer. *)
 let create_outbound_fix_msg ( engine, msg, is_duplicate ) = {
     full_msg_header = {
-        h_begin_string = default_session_details.constant_begin_string;
+        h_begin_string = engine.fe_begin_string;
         h_body_length = 0;
         h_msg_seq_num = engine.outgoing_seq_num + 1;
         h_poss_dup_flag = if is_duplicate then Some is_duplicate else None;
@@ -352,7 +350,7 @@ let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * f
         let engine = session_reject ( reject , engine ) in
         Some { engine with incoming_seq_num = curr_incoming_seq_num }
     | Some orig_sending_time ->
-    if utctimestamp_LessThan  msg_header.h_sending_time  orig_sending_time   then
+    if utctimestamp_LessThan_micro_micro  msg_header.h_sending_time  orig_sending_time   then
         let reject = { reject with
             srej_msg_field_tag = Some (Full_Admin_Field_Tag Full_Field_OrigSendingTime_Tag);
             srej_msg_reject_reason = Some SendingTimeAccuracyProblem;

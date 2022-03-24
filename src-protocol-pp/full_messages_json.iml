@@ -11,30 +11,27 @@
 [@@@import "full_message_tags_json.iml"]
 [@@@import "full_admin_enums_json.iml"]
 [@@@import "full_admin_messages_json.iml"]
-[@@@import "../src-protocol-exts-pp/full_app_messages_json.iml"]
 [@@@import "../src-protocol/full_messages.iml"]
-[@@@import "../src-core-time-defaults-pp/time_defaults_json.iml"]
 [@@@program]
+
 open Yojson.Basic;;
 open Base_types_json;;
 open Full_message_tags_json;;
 open Full_admin_enums_json;;
 open Full_admin_messages_json;;
-open Full_app_messages_json;;
 open Full_messages;;
-open Time_defaults_json;;
-
 
 let assoc_filter_nulls l : Yojson.Basic.t =
     `Assoc ( List.filter (function ( _, `Null ) -> false | _ -> true ) l )
-;;
 
+let full_app_msg_to_json data : Yojson.Basic.t =
+  data |> List.map ( fun (k,v) ->
+    `List [ `String k ; `String v ]
+  ) |> fun x -> `List x
 
 let full_msg_to_json = function
     | Full_FIX_Admin_Msg x -> `Assoc [("Full_FIX_Admin_Msg",full_admin_msg_to_json x)]
     | Full_FIX_App_Msg   x -> `Assoc [("Full_FIX_App_Msg",full_app_msg_to_json x)]
-;;
-
 
 let session_rejected_msg_to_json x : Yojson.Basic.t =
     [ ( "RefSeqNum"             , int_to_json                        x.srej_msg_msg_seq_num   )
@@ -58,7 +55,8 @@ let biz_rejected_msg_to_json x : Yojson.Basic.t =
     ] |> assoc_filter_nulls
 ;;
 
-let header_to_json x : Yojson.Basic.t =
+let header_to_json utctimestamp_to_json x : Yojson.Basic.t =
+    let utctimestamp_opt_to_json = function None -> `Null | Some x -> utctimestamp_to_json x in
     [ ( "BeginString" , string_to_json            x.h_begin_string                )
     ; ( "BodyLength"  , int_to_json               x.h_body_length                 )
     ; ( "SenderCompID", string_to_json            x.h_sender_comp_id              )
@@ -96,7 +94,8 @@ let trailer_to_json x : Yojson.Basic.t =
 ;;
 
 
-let full_valid_msg_to_json x : Yojson.Basic.t =
+let full_valid_msg_to_json utctimestamp_to_json x : Yojson.Basic.t =
+    let header_to_json = header_to_json utctimestamp_to_json in
     [ ( "StandardHeader" , header_to_json    x.full_msg_header  )
     ; ( "MessageBody",     full_msg_to_json  x.full_msg_data    )
     ; ( "StandardTrailer", trailer_to_json   x.full_msg_trailer )
@@ -104,12 +103,14 @@ let full_valid_msg_to_json x : Yojson.Basic.t =
 ;;
 
 
-let full_msg_list_to_json l : Yojson.Basic.t =
-    `List ( l |> List.map  full_valid_msg_to_json )
+let full_msg_list_to_json utctimestamp_to_json l : Yojson.Basic.t =
+    `List ( l |> List.map ( full_valid_msg_to_json utctimestamp_to_json ) )
 ;;
 
 
-let full_top_level_msg_to_json x : Yojson.Basic.t = match x with
+let full_top_level_msg_to_json utctimestamp_to_json x : Yojson.Basic.t = 
+    let full_valid_msg_to_json = full_valid_msg_to_json utctimestamp_to_json in 
+    match x with
     | ValidMsg             x -> `Assoc [ ( "ValidMsg"            , full_valid_msg_to_json       x ) ]
     | SessionRejectedMsg   x -> `Assoc [ ( "SessionRejectedMsg"  , session_rejected_msg_to_json x ) ]
     | BusinessRejectedMsg  x -> `Assoc [ ( "BusinessRejectedMsg" , biz_rejected_msg_to_json     x ) ]
@@ -117,8 +118,8 @@ let full_top_level_msg_to_json x : Yojson.Basic.t = match x with
 ;;
 
 
-let full_top_level_msg_opt_to_json = function
+let full_top_level_msg_opt_to_json utctimestamp_to_json = function
     | None -> `Null
-    | Some x -> full_top_level_msg_to_json x
+    | Some x -> (full_top_level_msg_to_json utctimestamp_to_json) x
 ;;
 [@@@logic]

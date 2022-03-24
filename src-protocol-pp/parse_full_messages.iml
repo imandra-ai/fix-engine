@@ -12,7 +12,6 @@
 [@@@import "../src-core-pp/parser_utils.iml"]
 [@@@import "../src-core-pp/parse_base_types.iml"]
 [@@@import "parse_full_tags.iml"]
-[@@@import "../src-core-time-defaults-pp/time_defaults_parser.iml"]
 [@@@import "parse_admin_messages.iml"]
 [@@@import "../src-protocol-exts-pp/parse_app_messages.iml"]
 [@@@program]
@@ -21,20 +20,18 @@ open Full_messages
 open Parser_utils.Parser
 open Parse_base_types
 open Parse_full_tags
-open Time_defaults_parser
+
 
 
 let parse_msg_data msg_tag_str msg =
   match parse_full_msg_tag msg_tag_str with 
-  | None | Some (Full_Msg_Unknown_Tag _) -> 
-    UnknownMessageTag msg_tag_str 
   | Some (Full_Admin_Msg_Tag msg_tag) -> Parse_admin_messages.parse_admin_msg_data msg_tag msg
                                  >>= fun x -> ParseSuccess ( Full_FIX_Admin_Msg x )
-  | Some (Full_App_Msg_Tag msg_tag) -> Parse_app_messages.parse_app_msg_data     msg_tag msg
-                                 >>= fun x ->  ParseSuccess ( Full_FIX_App_Msg x )
+  | Some (Full_App_Msg_Tag _) -> ParseSuccess ( Full_FIX_App_Msg msg )
+  | None -> UnknownMessageTag msg_tag_str
 ;;
 
-let parse_header msg = 
+let parse_header parse_UTCTimestamp msg = 
     req msg "8"   parse_string        @@ fun msg h_begin_string                ->
     req msg "9"   parse_int           @@ fun msg h_body_length                 ->
     req msg "49"  parse_string        @@ fun msg h_sender_comp_id              ->
@@ -191,7 +188,8 @@ let make_session_reject reason tagstr msg =
     })))
 ;;
 
-let parse_top_level_msg msg =
+let parse_top_level_msg parse_UTCTimestamp msg =
+    let parse_header = parse_header parse_UTCTimestamp in
     let parse_result = begin 
     message_basic_check msg >>= fun () ->
     let header_and_trailer, msg = 

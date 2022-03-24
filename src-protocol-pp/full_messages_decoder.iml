@@ -7,27 +7,32 @@
 
 [@@@import "full_admin_messages_decoder.iml"]
 
-[@@@import "../src-protocol-exts-pp/full_app_messages_decoder.iml"]
-
 [@@@import "../src-protocol/full_admin_tags.iml"]
 
 [@@@import "full_message_tags_decoder.iml"]
 
 [@@@import "full_admin_enums_decoder.iml"]
 
-[@@@import "../src-core-time-defaults-pp/time_defaults_json.iml"]
-
 [@@@import "../src-core-pp/base_types_json.iml"]
 
-open Full_app_messages_decoder
+
 open Full_admin_messages_decoder
 open Full_admin_tags
 open Full_messages
 open Full_message_tags_decoder
 open Full_admin_enums_decoder
-open Time_defaults_json
 open Base_types_json
 module D = Decoders_yojson.Basic.Decode
+
+let full_app_msg_data_decoder : (string * string) list D.decoder =
+  let kv : (string * string) D.decoder =
+    let open D.Infix in
+    let* a = D.index 0i D.string in
+    let* b = D.index 1i D.string in
+    D.succeed (a, b)
+    in
+  D.list kv
+
 
 let full_msg_decoder : full_msg_data D.decoder =
   let open D in
@@ -36,7 +41,7 @@ let full_msg_decoder : full_msg_data D.decoder =
   | "Full_FIX_Admin_Msg" ->
       full_admin_msg_decoder >>= fun x -> D.succeed (Full_FIX_Admin_Msg x)
   | "Full_FIX_App_Msg" ->
-      full_app_msg_of_json >>= fun x -> D.succeed (Full_FIX_App_Msg x)
+      full_app_msg_data_decoder >>= fun x -> D.succeed (Full_FIX_App_Msg x)
   | x ->
       D.fail @@ "Unknown full message type " ^ x
 
@@ -97,7 +102,7 @@ let full_msg_business_reject_decoder : biz_rejected_msg_data D.decoder =
     }
 
 
-let header_decoder : fix_header D.decoder =
+let header_decoder utctimestamp_decoder : fix_header D.decoder =
   let open D in
   field "BeginString" string
   >>= fun h_begin_string ->
@@ -191,9 +196,9 @@ let trailer_decoder : fix_trailer D.decoder =
   >>= fun check_sum -> D.succeed { signature_length; signature; check_sum }
 
 
-let full_valid_msg_decoder : full_valid_fix_msg D.decoder =
+let full_valid_msg_decoder utctimestamp_decoder : full_valid_fix_msg D.decoder =
   let open D in
-  field "StandardHeader" header_decoder
+  field "StandardHeader" (header_decoder utctimestamp_decoder)
   >>= fun full_msg_header ->
   field "MessageBody" full_msg_decoder
   >>= fun full_msg_data ->
@@ -202,17 +207,17 @@ let full_valid_msg_decoder : full_valid_fix_msg D.decoder =
   D.succeed { full_msg_header; full_msg_data; full_msg_trailer }
 
 
-let full_valid_msg_list_decoder : full_valid_fix_msg list D.decoder =
+let full_valid_msg_list_decoder utctimestamp_decoder : full_valid_fix_msg list D.decoder =
   let open D in
-  list full_valid_msg_decoder
+  list (full_valid_msg_decoder utctimestamp_decoder)
 
 
-let full_top_level_msg_decoder : full_top_level_msg D.decoder =
+let full_top_level_msg_decoder utctimestamp_decoder : full_top_level_msg D.decoder =
   let open D in
   single_field
   @@ function
   | "ValidMsg" ->
-      full_valid_msg_decoder >>= fun m -> D.succeed (ValidMsg m)
+      (full_valid_msg_decoder utctimestamp_decoder ) >>= fun m -> D.succeed (ValidMsg m)
   | "SessionRejectedMsg" ->
       full_msg_reject_decoder >>= fun m -> D.succeed (SessionRejectedMsg m)
   | "BusinessRejectedMsg" ->

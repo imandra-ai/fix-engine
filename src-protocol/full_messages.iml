@@ -7,21 +7,21 @@
     full_messages.ml
 
 *)
+[@@@import "../src-core/datetime.iml"]
+open Datetime;;
+
 [@@@import "full_message_tags.iml"]
 [@@@import "full_admin_enums.iml"]
 [@@@import "full_admin_messages.iml"]
-[@@@import "../src-protocol-exts/full_app_messages.iml"]
-[@@@import "../src-core-time-defaults/time_defaults.iml"]
 open Full_message_tags;;
 open Full_admin_enums;;
 open Full_admin_messages;;
-open Full_app_messages;;
-open Time_defaults;;
-
 
 (** 
   * Union Message type
   *)
+
+type full_app_msg_data = (string * string) list
 
 (** Full FIX message data may be of 2 types: Admin and Application. *)
 type full_msg_data = 
@@ -33,7 +33,7 @@ type full_msg_data =
 let get_full_msg_tag ( m : full_msg_data ) =
     match m with
     | Full_FIX_Admin_Msg msg                        -> Full_Admin_Msg_Tag ( get_full_admin_msg_tag ( msg ) )
-    | Full_FIX_App_Msg msg                          -> Full_App_Msg_Tag ( get_full_app_msg_tag (msg ) )
+    | Full_FIX_App_Msg msg                          -> Full_App_Msg_Tag ""
 ;;
 
 
@@ -110,11 +110,11 @@ type fix_header = {
     h_poss_dup_flag                   : bool option;     (* Tag 43   *)
     
     h_poss_resend                     : bool option;     (* Tag 97   *)
-    h_sending_time                    : fix_utctimestamp;(* Tag 52   *)
-    h_orig_sending_time               : fix_utctimestamp option;   (* Tag 122  *)
+    h_sending_time                    : fix_utctimestamp_micro;          (* Tag 52   *)
+    h_orig_sending_time               : fix_utctimestamp_micro option;   (* Tag 122  *)
     h_xml_data_len                    : int option;      (* Tag 212  *)
     h_xml_data                        : int option;      (* Tag 213  *)
-    h_message_encoding               : int option;      (* Tag 347  *)
+    h_message_encoding                : int option;      (* Tag 347  *)
     h_last_msg_seq_num_processed      : int option;      (* Tag 369  *)
     h_no_hops                         : int option;      (* Tag 627  *)
 } 

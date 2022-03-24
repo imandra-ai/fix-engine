@@ -7,32 +7,33 @@
     parse_full_messages.ml
 
 *)
+[@@@import "encode_full_tags.iml"]
+[@@@import "encode_admin_messages.iml"]
 [@@@import "../src-protocol/full_messages.iml"]
 [@@@import "../src-core-pp/encode_base_types.iml"]
-[@@@import "encode_full_tags.iml"]
-[@@@import "../src-core-time-defaults-pp/time_defaults_pp.iml"]
-[@@@import "../src-core-utils/fix_version.iml"]
-[@@@import "encode_admin_messages.iml"]
-[@@@import "../src-protocol-exts-pp/encode_app_messages.iml"]
+
 [@@@program]
 open Full_messages
 open Encode_base_types
 open Encode_full_tags
-open Time_defaults_pp
-open Fix_version
+
 
 let req f x = Some (f x);;
 let opt f v = match v with Some x -> Some ( f x ) | None -> None;;
 
-
 let encode_msg_data msg =
     match msg with
     | Full_FIX_Admin_Msg msg -> Encode_admin_messages.encode_admin_msg_data msg
-    | Full_FIX_App_Msg   msg -> Encode_app_messages.encode_app_msg_data     msg  
+    | Full_FIX_App_Msg   msg -> msg |> List.map @@ fun (k,v) -> (k, Some v)  
 ;;
 
+type fix_encoder_config =
+  {  begin_string : string
+  ;  encode_UTCTimestamp : Datetime.fix_utctimestamp_micro -> string  
+  }
 
-let encode_header msg_tag msg = 
+let encode_header (config : fix_encoder_config) msg_tag msg = 
+    let { encode_UTCTimestamp ; _ } = config in
     [ (* Tags 8 and 9 will be added in encode_full_valid_msg *)
       ( "35"  , req encode_full_msg_tag  msg_tag                          )
     ; ( "49"  , req encode_string        msg.h_sender_comp_id             )
@@ -93,31 +94,32 @@ let get_checksum msg =
     scan 0 msg 
 ;;
 
-let prepare_packet msg_body =
+let prepare_packet begin_string msg_body =
     let encode_checksum = Printf.sprintf "%03u" in
-    let msg = [ ( "8"   , default_session_details.constant_begin_string )
+    let msg = [ ( "8"   , begin_string )
               ; ( "9"   , get_body_length msg_body |> encode_int )
               ] @ msg_body
               in             
     msg @ [ ( "10" , get_checksum msg |> Z.to_int |> encode_checksum )] 
 ;;
 
-let packet_full_valid_msg x =
+let packet_full_valid_msg (config : fix_encoder_config) x =
+    let { begin_string ; _ } = config in
     let msgtag = get_full_msg_tag x.full_msg_data in
     let msg_body = 
-        encode_header msgtag x.full_msg_header @
-        encode_msg_data      x.full_msg_data   @
-        encode_trailer       x.full_msg_trailer
+        encode_header config msgtag x.full_msg_header @
+        encode_msg_data x.full_msg_data   @
+        encode_trailer  x.full_msg_trailer
         in
     let msg_body = msg_body
         |> List.filter (fun (_k,v) -> v <> None )
         |> List.map    (fun (k,v) -> (k, match v with Some v -> v | None -> ""))
         in
-    msg_body |> prepare_packet
+    msg_body |> prepare_packet begin_string
 ;;
 
-let encode_full_valid_msg x =
-    x |> packet_full_valid_msg
+let encode_full_valid_msg (config : fix_encoder_config) x =
+    x |> packet_full_valid_msg config
       |> List.map ( fun(k,v) -> k^"="^v )
       |> List.fold_left ( fun a s -> a ^ s ^ "\001" ) ""
 ;;

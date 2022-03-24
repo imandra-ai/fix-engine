@@ -4,4 +4,4 @@
  (wrapped false)
  (flags
   (:standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58))
- (libraries imandra-prelude core_time_defaults protocol_exts))
+ (libraries imandra-prelude core_pp))

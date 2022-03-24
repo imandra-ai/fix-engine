@@ -1,7 +1,0 @@
-(library
- (name venue_types)
- (public_name fix-engine.venue_types)
- (wrapped false)
- (flags
-  (:standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58))
- (libraries imandra-prelude core core_time_defaults))
