@@ -2,10 +2,15 @@ module Internal : sig
 
   type t
 
+  type message = (string * string) list
+
+  type err = 
+    [ `MissingMessageTypeTag
+    ]
+
   type event =
-    | OutFIXData of ( int * Full_messages.full_app_msg_data )
-    | FIXMessage of Full_messages.full_top_level_msg
-    | State      of Fix_engine_state.fix_engine_state
+    | FIXFromEngine of message
+    | State of Fix_engine_state.fix_engine_state
 
   type config =
     { comp_id        : string
@@ -13,12 +18,25 @@ module Internal : sig
     ; on_behalf_id   : string option
     ; target_id      : string
     ; timer          : float
+    ; begin_string   : string option
+    ; millisecond_precision : bool option
     }
 
-  val start : reset:bool -> session_dir:string -> config:config -> recv:(event -> unit Lwt.t) -> unit Lwt.t * t
-  val send_fix : t -> Full_messages.full_top_level_msg -> unit Lwt.t
-  val send_int : t -> Fix_engine_state.fix_engine_int_inc_msg -> unit Lwt.t
-  val send_getstate : t -> unit Lwt.t
+  val start : 
+    reset:bool -> 
+    session_dir:string -> 
+    config:config -> 
+    recv:(event -> unit Lwt.t) -> 
+    unit Lwt.t * t
+  
+  val process_fix_wire : t -> message -> unit Lwt.t
+  
+  val send_fix_message : t -> message -> (unit, err) Lwt_result.t
+    
+  val send_internal_message : 
+    t -> Fix_engine_state.fix_engine_int_inc_msg -> unit Lwt.t
+
+  val send_get_state : t -> unit Lwt.t
 
 end = struct
 
@@ -77,22 +95,31 @@ end = struct
   end
 
   let (>>=) = Lwt.(>>=)
+  let (let*) = Lwt.bind
 
-  type send_event =
-    | SendInternal   of Fix_engine_state.fix_engine_int_inc_msg
-    | SendFIXMessage of Full_messages.full_top_level_msg
-    | GetState
+  type message = (string * string) list
+
+  type err = 
+    [ `MissingMessageTypeTag
+    ]
+
+  type action =
+    | InternalToEngine of Fix_engine_state.fix_engine_int_inc_msg
+    | FIXToEngine of Full_messages.full_top_level_msg
+    | GetState    
 
   type event =
-    | OutFIXData of ( int * Full_messages.full_app_msg_data )
-    | FIXMessage of Full_messages.full_top_level_msg
-    | State      of Fix_engine_state.fix_engine_state
+    | FIXFromEngine of message
+    | State of Fix_engine_state.fix_engine_state
 
   type t =
     { recv          : event -> unit Lwt.t
-    ; send_box      : send_event Lwt_mvar.t
+    ; to_engine_box : action Lwt_mvar.t
     ; timer         : float
     ; sess          : SessionManager.t
+    ; begin_string  : string
+    ; timestamp_parse : string -> Datetime.fix_utctimestamp_micro option
+    ; timestamp_encode: Datetime.fix_utctimestamp_micro -> string
     }
 
   let save_state_seqns sessn state =
@@ -100,18 +127,23 @@ end = struct
     let seqout = state.Fix_engine_state.outgoing_seq_num in
     SessionManager.save sessn (seqin, seqout)
 
-  let extract_out_fix_data engine_state msg =
-    let open Fix_engine_state in
-    OutFIXData ( engine_state.incoming_seq_num , msg )
 
   (** Calls Fix_engine.one_step and pubs outgoing messages while busy *)
-  let rec while_busy_loop t engine_state  =
+  let rec while_busy_loop (t:t) engine_state  =
+    let cfg =  Encode_full_messages.{ 
+      begin_string = t.begin_string ;
+      encode_UTCTimestamp = t.timestamp_encode
+    } in
     let engine_state = Fix_engine.one_step engine_state in
     (* This assumes that after one_step we can get either ontgoing internal or outgoing FIX message *)
     begin match ( engine_state.outgoing_fix_msg , engine_state.outgoing_int_msg) with
-      | Some msg, None -> t.recv ( FIXMessage msg )
-      | None, Some (OutIntMsg_ApplicationData msg)
-      | None, Some (OutIntMsg_ResendApplicationData msg) -> t.recv ( extract_out_fix_data engine_state msg )
+      | Some msg, None -> begin
+        match msg with 
+        | Full_messages.ValidMsg msg ->
+          let msg = Encode_full_messages.packet_full_valid_msg cfg msg in
+          t.recv ( FIXFromEngine msg )
+        | _ -> Lwt.return_unit
+      end
       | None, Some _ | None, None   ->
         Lwt.return_unit
       |  _ -> Lwt.fail_with "Critical internal error in fix_engine model"
@@ -124,23 +156,27 @@ end = struct
 
   let rec main_loop t engine_state =
     let open Fix_engine_state in
-    Lwt_mvar.take t.send_box >>= fun msg ->
-    (match msg with
-    | SendFIXMessage msg -> {engine_state with incoming_fix_msg = Some msg } |> while_busy_loop t
-    | SendInternal   msg -> {engine_state with incoming_int_msg = Some msg } |> while_busy_loop t
-    | GetState -> t.recv (State engine_state) >>= fun () -> Lwt.return engine_state
-    ) >>= fun engine_state ->
+    let* msg = Lwt_mvar.take t.to_engine_box in
+    let* engine_state = match msg with      
+      | InternalToEngine msg -> 
+        let engine_state = {engine_state with incoming_int_msg = Some msg } in 
+        while_busy_loop t engine_state
+      | FIXToEngine msg ->
+        let engine_state = {engine_state with incoming_fix_msg = Some msg } in 
+        while_busy_loop t engine_state
+      | GetState ->  
+        let* () = t.recv ( State engine_state ) in
+        Lwt.return engine_state
+      in
     main_loop t engine_state
 
   let do_timechange t =
-    (** Timechange poster  *)
     let time = Current_time.get_current_utctimestamp_micro () in
     let timechange = Fix_engine_state.IncIntMsg_TimeChange time in
-    let timechange = SendInternal timechange in
-    Lwt_mvar.put t.send_box timechange
+    let timechange = InternalToEngine timechange in
+    Lwt_mvar.put t.to_engine_box timechange
 
   let rec heartbeat_thread t =
-    (** Heartbeat thread  *)
     Lwt_unix.sleep t.timer >>= fun () ->
     do_timechange t >>= fun () ->
     heartbeat_thread t
@@ -151,6 +187,8 @@ end = struct
     ; on_behalf_id   : string option
     ; target_id      : string
     ; timer          : float
+    ; begin_string   : string option
+    ; millisecond_precision : bool option
     }
 
   let make_engine_state (inseq, outseq) config =
@@ -167,15 +205,41 @@ end = struct
     ; outgoing_seq_num = outseq
     }
 
+
+  let get_timestamp_codec ms =
+    let parse_milli x =
+      match Parse_datetime.parse_UTCTimestamp_milli x with None -> None
+      | Some x -> Some ( Datetime.convert_utctimestamp_milli_micro x)
+      in
+    let encode_milli x = x
+      |> Datetime.convert_utctimestamp_micro_milli 
+      |> Encode_datetime.encode_UTCTimestamp_milli
+      in
+    let ms = match ms with None -> false | Some x -> x in
+    if ms then ( parse_milli , encode_milli ) 
+    else ( 
+      Parse_datetime.parse_UTCTimestamp_micro, 
+      Encode_datetime.encode_UTCTimestamp_micro
+    )
+
   let start ~reset ~session_dir ~config ~recv =
+    let timestamp_parse, timestamp_encode = 
+      get_timestamp_codec config.millisecond_precision 
+    in
+    let begin_string = match config.begin_string with
+      | Some x -> x | None -> "FIX.4.2" 
+      in
     let sess = SessionManager.create ~reset ~dir:session_dir in
     let (inseq, outsec) = SessionManager.get sess in
     let engine_state = make_engine_state (inseq, outsec) config in
     let state =
-      { send_box = Lwt_mvar.create_empty ()
+      { to_engine_box = Lwt_mvar.create_empty ()
       ; timer = config.timer
       ; sess
       ; recv
+      ; begin_string
+      ; timestamp_parse
+      ; timestamp_encode
       } in
     let thread = Lwt.pick
       [ heartbeat_thread state
@@ -183,15 +247,49 @@ end = struct
       ] in
     ( thread , state )
 
-  let send_fix state msg =
-    Lwt_mvar.put state.send_box (SendFIXMessage msg) >>= fun () ->
-    do_timechange state
 
-  let send_int state msg =
-    Lwt_mvar.put state.send_box (SendInternal msg)
 
-  let send_getstate state =
-    Lwt_mvar.put state.send_box GetState
+  let create_internal_message (msg : message) 
+      : (Fix_engine_state.fix_engine_int_inc_msg, err) result 
+    =
+    let is_application_field (k,_) =
+      match Parse_full_tags.parse_full_field_tag k with
+      | None -> false | Some _ -> true
+      in
+    let is_msgtype_tag (k,_) = 
+      let open Full_message_tags in
+      match Parse_full_tags.parse_full_field_tag k with
+      | Some ( Full_Admin_Field_Tag Full_Field_MsgType_Tag ) -> true
+      | _ -> false
+      in
+    match List.find is_msgtype_tag msg with 
+    | None -> Error `MissingMessageTypeTag
+    | Some msgtag_kv ->
+      let app_data = List.filter is_application_field msg in
+      let app_data = msgtag_kv::app_data in
+      let int_msg = Fix_engine_state.IncIntMsg_ApplicationData app_data in
+      Ok int_msg  
+
+
+  let process_fix_wire state msg =
+    let msg = Parse_full_messages.parse_top_level_msg state.timestamp_parse msg in
+    let* () = do_timechange state in
+    let action = FIXToEngine msg in
+    Lwt_mvar.put state.to_engine_box action
+
+  let send_fix_message state msg =
+    let (let*?) = Lwt_result.bind in
+    let*? int_msg = create_internal_message msg |> Lwt.return in
+    let action = InternalToEngine int_msg in
+    let*? () = do_timechange state |> Lwt_result.ok  in 
+    Lwt_mvar.put state.to_engine_box action |> Lwt_result.ok
+  
+  let send_internal_message state int_msg =
+    let action = InternalToEngine int_msg in
+    Lwt_mvar.put state.to_engine_box action 
+
+  let send_get_state state =
+    Lwt_mvar.put state.to_engine_box GetState 
 
 
 end
