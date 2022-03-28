@@ -1,7 +1,7 @@
 (executable
  (name server)
  (public_name fix-engine.server)
- (modules server fix_io engine config)
+ (modules server fix_io engine)
  (modes byte)
  (libraries 
   lwt.unix

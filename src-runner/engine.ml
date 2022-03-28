@@ -60,7 +60,7 @@ end = struct
         let chn = open_in file in
         let num = input_line chn in
         let () = close_in chn in
-        num |> int_of_string |> Z.of_int
+        num |> int_of_string 
       with _exn -> 0
 
     let read_seqns dir =
@@ -70,14 +70,14 @@ end = struct
       }
 
     let prepare_folder dir =
-      if not(Caml_sys.file_exists dir) then
-        Caml_unix.(mkdir dir (Z.to_int 0o775))
+      if not(Sys.file_exists dir) then
+        Unix.(mkdir dir 0o775)
       else ()
 
     let write_int dir fname num =
       let filename = Filename.(concat dir fname) in
       Lwt_io.(open_file ~mode:output filename) >>= fun fch ->
-      Lwt_io.write fch (String.of_int num) >>= fun () ->
+      Lwt_io.write fch (string_of_int num) >>= fun () ->
       Lwt_io.close fch
 
     let save state (seqin, seqout) =
@@ -125,7 +125,7 @@ end = struct
   let save_state_seqns sessn state =
     let seqin = state.Fix_engine_state.incoming_seq_num in
     let seqout = state.Fix_engine_state.outgoing_seq_num in
-    SessionManager.save sessn (seqin, seqout)
+    SessionManager.save sessn (Z.to_int seqin, Z.to_int seqout)
 
 
   (** Calls Fix_engine.one_step and pubs outgoing messages while busy *)
@@ -199,10 +199,10 @@ end = struct
     ; fe_on_behalf_of_comp_id = config.on_behalf_id
     ; fe_target_comp_id = config.target_id
     ; fe_curr_time = Current_time.get_current_utctimestamp_micro ()
-    ; fe_max_num_logons_sent = 10
+    ; fe_max_num_logons_sent = Z.of_int 10
     ; fe_application_up = true
-    ; incoming_seq_num = inseq
-    ; outgoing_seq_num = outseq
+    ; incoming_seq_num = Z.of_int inseq
+    ; outgoing_seq_num = Z.of_int outseq
     }
 
 
@@ -248,7 +248,6 @@ end = struct
     ( thread , state )
 
 
-
   let create_internal_message (msg : message) 
       : (Fix_engine_state.fix_engine_int_inc_msg, err) result 
     =
@@ -262,7 +261,7 @@ end = struct
       | Some ( Full_Admin_Field_Tag Full_Field_MsgType_Tag ) -> true
       | _ -> false
       in
-    match List.find is_msgtype_tag msg with 
+    match List.find_opt is_msgtype_tag msg with 
     | None -> Error `MissingMessageTypeTag
     | Some msgtag_kv ->
       let app_data = List.filter is_application_field msg in

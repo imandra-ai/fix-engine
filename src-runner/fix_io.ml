@@ -27,10 +27,10 @@ end = struct
 
   (* Converts [ '5'; '2'; '='; 'A' ] to ("52" , "A" ) *)
   let extract_key_value (chlist : char list) : string * string =
-    let buf = Buffer.create @@ Caml.List.length chlist in
-    let () = chlist |> Caml.List.iter @@ Buffer.add_char buf in
+    let buf = Buffer.create @@ List.length chlist in
+    let () = chlist |> List.iter @@ Buffer.add_char buf in
     Buffer.contents buf
-    |> Caml.String.split_on_char '='
+    |> String.split_on_char '='
     |> function [] -> ("", "") | h :: tl -> (h, String.concat "=" tl)
 
 
@@ -55,7 +55,7 @@ end = struct
 
   (** Writing thread *)
   let encode ~split msg =
-    let split = String.make 1i split in
+    let split = String.make 1 split in
     msg
     |> List.map (fun (k, v) -> k ^ "=" ^ v)
     |> List.fold_left (fun a s -> a ^ s ^ split) ""
