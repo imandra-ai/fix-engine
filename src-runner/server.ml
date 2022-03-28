@@ -42,15 +42,44 @@ let receive_engine t event =
   end
   | _ -> Lwt.return_unit 
 
-let loop (t : t) : unit Lwt.t =
+let rec loop (t : t) : unit Lwt.t =
   let rec loop_box box receiver =
     let* msg = Lwt_mvar.take box in
     let* () = receiver t msg in 
     loop_box box receiver
     in
-  loop_box t.engine_box receive_engine
+  let* () = Lwt.join [ 
+    loop_box t.engine_box receive_engine; 
+    loop_box t.fixio_box receive_fix_io 
+    ] in
+  loop t
   
-let handler (t : t) (_in_addr: Unix.sockaddr) (inch, outch) =
+
+let connection_lock = Lwt_mutex.create ()
+
+let with_locks f =
+  Lwt_mutex.with_lock connection_lock
+  @@ fun () ->
+  Lwt.catch f (fun e ->
+      let msg = Printexc.to_string e
+      and stack = Printexc.get_backtrace () in
+      let msg = Printf.sprintf "\n%s%s\n" msg stack in
+      Lwt_io.printl @@ "Server thread stopped with exception: " ^ msg )
+  
+let handler (t : t) (in_addr: Unix.sockaddr) (inch, outch) =
+  let addr_str = match in_addr with
+    | ADDR_UNIX s -> s
+    | ADDR_INET (h,p) -> 
+      Printf.sprintf "%s:%d" (Unix.string_of_inet_addr h) p
+    in
+  if Lwt_mutex.is_locked connection_lock
+    then
+      Lwt_io.printlf
+        "Incoming FIX connection from %s. Session already established. Ignoring."
+        addr_str
+    else
+  let* () = Lwt_io.printlf "Received FIX connection from %s" addr_str in
+  with_locks @@ fun () ->
   (* FIX IO loop *)
   let recv = Lwt_mvar.put t.fixio_box in
   let fixio_thread, fixio = Fix_io.start ~recv (inch, outch) in
@@ -110,6 +139,7 @@ let start
   let server_thread = 
     let handler = handler state in 
     let _server = Lwt_io.establish_server_with_client_address addr handler in
+    let* () = Lwt_io.printlf "FIX Server established on localhost:%d" port in
     Lwt.return_unit
     in
   Lwt.join

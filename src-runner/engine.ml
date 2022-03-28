@@ -271,7 +271,12 @@ end = struct
 
 
   let process_fix_wire state msg =
+    let* () = Lwt_io.printl "process_fix_wire" in
     let msg = Parse_full_messages.parse_top_level_msg state.timestamp_parse msg in
+    let tenc = Datetime_json.utctimestamp_micro_to_json in
+    let json = Full_messages_json.full_top_level_msg_to_json tenc msg in
+    let str = Yojson.Basic.pretty_to_string json in
+    let* () = Lwt_io.printl str in
     let* () = do_timechange state in
     let action = FIXToEngine msg in
     Lwt_mvar.put state.to_engine_box action
