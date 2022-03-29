@@ -13,14 +13,15 @@ module Internal : sig
     | State of Fix_engine_state.fix_engine_state
 
   type config =
-    { comp_id        : string
-    ; host_id        : string option
-    ; on_behalf_id   : string option
-    ; target_id      : string
-    ; timer          : float
-    ; begin_string   : string option
-    ; millisecond_precision : bool option
-    }
+    { comp_id       : string
+    ; target_id     : string
+    ; host_id       : string option
+    ; on_behalf_id  : string option
+    ; timer         : float
+    ; begin_string  : string
+    ; millisecond_precision : bool 
+    }  
+  
 
   val start : 
     reset:bool -> 
@@ -182,15 +183,31 @@ end = struct
     heartbeat_thread t
 
   type config =
-    { comp_id        : string
-    ; host_id        : string option
-    ; on_behalf_id   : string option
-    ; target_id      : string
-    ; timer          : float
-    ; begin_string   : string option
-    ; millisecond_precision : bool option
-    }
+    { comp_id       : string
+    ; target_id     : string
+    ; host_id       : string option
+    ; on_behalf_id  : string option
+    ; timer         : float
+    ; begin_string  : string
+    ; millisecond_precision : bool 
+    }  
 
+  let get_timestamp_codec ms =
+    let parse_milli x =
+      match Parse_datetime.parse_UTCTimestamp_milli x with None -> None
+      | Some x -> Some ( Datetime.convert_utctimestamp_milli_micro x)
+      in
+    let encode_milli x = x
+      |> Datetime.convert_utctimestamp_micro_milli 
+      |> Encode_datetime.encode_UTCTimestamp_milli
+      in
+    if ms then ( parse_milli , encode_milli ) 
+    else ( 
+      Parse_datetime.parse_UTCTimestamp_micro, 
+      Encode_datetime.encode_UTCTimestamp_micro
+    )
+    
+    
   let make_engine_state (inseq, outseq) config =
     let open Fix_engine_state in
     { init_fix_engine_state with
@@ -203,32 +220,14 @@ end = struct
     ; fe_application_up = true
     ; incoming_seq_num = Z.of_int inseq
     ; outgoing_seq_num = Z.of_int outseq
-    }
+    }    
+    
 
-
-  let get_timestamp_codec ms =
-    let parse_milli x =
-      match Parse_datetime.parse_UTCTimestamp_milli x with None -> None
-      | Some x -> Some ( Datetime.convert_utctimestamp_milli_micro x)
-      in
-    let encode_milli x = x
-      |> Datetime.convert_utctimestamp_micro_milli 
-      |> Encode_datetime.encode_UTCTimestamp_milli
-      in
-    let ms = match ms with None -> false | Some x -> x in
-    if ms then ( parse_milli , encode_milli ) 
-    else ( 
-      Parse_datetime.parse_UTCTimestamp_micro, 
-      Encode_datetime.encode_UTCTimestamp_micro
-    )
-
-  let start ~reset ~session_dir ~config ~recv =
+  let start ~reset ~session_dir ~(config:config) ~recv =
     let timestamp_parse, timestamp_encode = 
       get_timestamp_codec config.millisecond_precision 
-    in
-    let begin_string = match config.begin_string with
-      | Some x -> x | None -> "FIX.4.2" 
       in
+    let begin_string = config.begin_string in
     let sess = SessionManager.create ~reset ~dir:session_dir in
     let (inseq, outsec) = SessionManager.get sess in
     let engine_state = make_engine_state (inseq, outsec) config in

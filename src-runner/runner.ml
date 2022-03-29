@@ -66,7 +66,7 @@ let with_locks f =
       let msg = Printf.sprintf "\n%s%s\n" msg stack in
       Lwt_io.printl @@ "Server thread stopped with exception: " ^ msg )
   
-let handler (t : t) (in_addr: Unix.sockaddr) (inch, outch) =
+let server_handler (t : t) (in_addr: Unix.sockaddr) (inch, outch) =
   let addr_str = match in_addr with
     | ADDR_UNIX s -> s
     | ADDR_INET (h,p) -> 
@@ -109,13 +109,12 @@ let default_session_folder ~(config:Engine.config) =
   in
   Printf.sprintf "%s.%s.%s.session" config.comp_id config.target_id hostid
 
-let start
-    ?(session_dir : string option)
-    ?(reset : bool option)
+
+let make_state_and_thread
+    ~(session_dir : string option)
+    ~(reset : bool option)
     ~(config : Engine.config)
-    ~(port : int)
     ~(recv : event -> unit Lwt.t )
-    ()
   =
   let reset = match reset with None -> false | Some x -> x in
   let session_dir = match session_dir with 
@@ -128,16 +127,23 @@ let start
     let recv = Lwt_mvar.put engine_box in
     Engine.start ~reset ~session_dir ~config ~recv 
     in
-  let state =
-    { fixio = None
-    ; engine
-    ; engine_box
-    ; fixio_box
-    ; recv
-    } in
+  let state = { fixio = None ; engine; engine_box; fixio_box; recv} in
+  (state , engine_thread)   
+
+
+let start_server
+    ?(session_dir : string option)
+    ?(reset : bool option)
+    ~(config : Engine.config)
+    ~(port : int)
+    ~(recv : event -> unit Lwt.t )
+    ()
+  =
+  let (state, engine_thread) =  
+    make_state_and_thread ~session_dir ~reset ~config ~recv in
   let addr = Unix.(ADDR_INET (inet_addr_loopback, port)) in
   let server_thread = 
-    let handler = handler state in 
+    let handler = server_handler state in 
     let _server = Lwt_io.establish_server_with_client_address addr handler in
     let* () = Lwt_io.printlf "FIX Server established on localhost:%d" port in
     Lwt.return_unit
@@ -147,3 +153,40 @@ let start
     ; server_thread
     ]
   
+let with_catch_disconnect f =
+  Lwt.catch f (fun _ -> Lwt_io.printl "Server disconnected.")
+
+let client_handler (t, engine_thread, init_msg) (inch, outch)  =
+  let* () = Lwt_io.printl "Client connected, starting fix-engine." in
+  with_catch_disconnect @@ fun () ->
+  let recv = Lwt_mvar.put t.fixio_box in
+  let fixio_thread, fixio = Fix_io.start ~recv (inch, outch) in
+  let t = {t with fixio = Some fixio } in
+  let* () = Engine.send_internal_message t.engine init_msg in
+  Lwt.pick
+  [ engine_thread
+  ; fixio_thread
+  ; loop t
+  ]
+    
+
+let start_client
+    ?(session_dir : string option)
+    ?(reset : bool option)
+    ~(config : Engine.config)
+    ~(host : string)
+    ~(port : int)
+    ~(recv : event -> unit Lwt.t )
+    ()
+  =
+  let (state, engine_thread) =  
+    make_state_and_thread ~session_dir ~reset ~config ~recv in
+  let init_msg =
+    Fix_engine_state.(
+      IncIntMsg_CreateSession
+        { dest_comp_id = config.target_id; reset_seq_num = false })
+    in
+  let handler = client_handler (state, engine_thread, init_msg) in
+  let addr = Unix.inet_addr_of_string host in
+  let addr = Unix.(ADDR_INET (addr, port)) in
+  Lwt_io.with_connection addr handler

@@ -2,7 +2,7 @@
  (name runner)
  (public_name fix-engine.runner)
  (wrapped false)
- (modules fix_io engine server)
+ (modules fix_io engine runner)
  (libraries 
   lwt.unix
   fix_engine
