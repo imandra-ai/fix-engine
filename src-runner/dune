@@ -13,10 +13,11 @@
 )
 
 (executable
- (name zmq_server)
- (modules zmq_server)
+ (name zmq_engine)
+ (modules zmq_engine)
  (libraries 
   fix-engine.runner
   zmq-lwt
+  cmdliner
  )
 )

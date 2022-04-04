@@ -240,7 +240,7 @@ end = struct
       ; timestamp_parse
       ; timestamp_encode
       } in
-    let thread = Lwt.pick
+    let thread = Lwt.join
       [ heartbeat_thread state
       ; main_loop state engine_state
       ] in
@@ -270,7 +270,6 @@ end = struct
 
 
   let process_fix_wire state msg =
-    let* () = Lwt_io.printl "process_fix_wire" in
     let msg = Parse_full_messages.parse_top_level_msg state.timestamp_parse msg in
     let tenc = Datetime_json.utctimestamp_micro_to_json in
     let json = Full_messages_json.full_top_level_msg_to_json tenc msg in

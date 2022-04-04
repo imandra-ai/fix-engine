@@ -1,0 +1,7 @@
+{ "reset" : true 
+, "mode" : { "Client" : { "port" : 9880 } }
+, "zmqpub" : "tcp://*:6000"
+, "zmqrep" : "tcp://*:6001"
+, "comp_id" : "CLIENT"
+, "target_id" : "IMANDRA"
+}

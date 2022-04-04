@@ -24,6 +24,8 @@ let get_msg_type message =
   match Parse_admin_tags.parse_admin_msg_tag k with
   | None -> Application | Some _ -> Admin 
 
+let send_box : Engine.message Lwt_mvar.t = Lwt_mvar.create_empty ()
+
 let receive_fix_io t message =
   let msg_type = get_msg_type message in
   Lwt.join 
@@ -42,6 +44,11 @@ let receive_engine t event =
   end
   | _ -> Lwt.return_unit 
 
+let receive_send t message =
+  let* _ = Engine.send_fix_message t.engine message in
+  Lwt.return_unit
+
+
 let rec loop (t : t) : unit Lwt.t =
   let rec loop_box box receiver =
     let* msg = Lwt_mvar.take box in
@@ -50,10 +57,10 @@ let rec loop (t : t) : unit Lwt.t =
     in
   let* () = Lwt.join [ 
     loop_box t.engine_box receive_engine; 
-    loop_box t.fixio_box receive_fix_io 
+    loop_box t.fixio_box receive_fix_io; 
+    loop_box send_box receive_send
     ] in
   loop t
-  
 
 let connection_lock = Lwt_mutex.create ()
 
@@ -169,7 +176,6 @@ let client_handler (t, engine_thread, init_msg) (inch, outch)  =
   ; loop t
   ]
     
-
 let start_client
     ?(session_dir : string option)
     ?(reset : bool option)
@@ -189,4 +195,4 @@ let start_client
   let handler = client_handler (state, engine_thread, init_msg) in
   let addr = Unix.inet_addr_of_string host in
   let addr = Unix.(ADDR_INET (addr, port)) in
-  Lwt_io.with_connection addr handler
+  Lwt_io.with_connection addr handler 
