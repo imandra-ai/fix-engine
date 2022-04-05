@@ -41,7 +41,9 @@ let full_msg_decoder : full_msg_data D.decoder =
   | "Full_FIX_Admin_Msg" ->
       full_admin_msg_decoder >>= fun x -> D.succeed (Full_FIX_Admin_Msg x)
   | "Full_FIX_App_Msg" ->
-      full_app_msg_data_decoder >>= fun x -> D.succeed (Full_FIX_App_Msg x)
+    let* msg_tag = field "msg_tag" D.string in
+    let* payload = field "payload" full_app_msg_data_decoder in
+    D.succeed (Full_FIX_App_Msg {msg_tag ; payload})
   | x ->
       D.fail @@ "Unknown full message type " ^ x
 

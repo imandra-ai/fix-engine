@@ -95,7 +95,6 @@ end = struct
 
   end
 
-  let (>>=) = Lwt.(>>=)
   let (let*) = Lwt.bind
 
   type message = (string * string) list
@@ -128,7 +127,6 @@ end = struct
     let seqout = state.Fix_engine_state.outgoing_seq_num in
     SessionManager.save sessn (Z.to_int seqin, Z.to_int seqout)
 
-
   (** Calls Fix_engine.one_step and pubs outgoing messages while busy *)
   let rec while_busy_loop (t:t) engine_state  =
     let cfg =  Encode_full_messages.{ 
@@ -137,7 +135,7 @@ end = struct
     } in
     let engine_state = Fix_engine.one_step engine_state in
     (* This assumes that after one_step we can get either ontgoing internal or outgoing FIX message *)
-    begin match ( engine_state.outgoing_fix_msg , engine_state.outgoing_int_msg) with
+    let* () = match ( engine_state.outgoing_fix_msg , engine_state.outgoing_int_msg) with
       | Some msg, None -> begin
         match msg with 
         | Full_messages.ValidMsg msg ->
@@ -148,8 +146,8 @@ end = struct
       | None, Some _ | None, None   ->
         Lwt.return_unit
       |  _ -> Lwt.fail_with "Critical internal error in fix_engine model"
-    end >>= fun () ->
-    save_state_seqns t.sess engine_state >>= fun () ->
+      in
+    let* () = save_state_seqns t.sess engine_state in
     let engine_state = { engine_state with outgoing_fix_msg = None ; outgoing_int_msg = None } in
     if Fix_engine_state.engine_state_busy engine_state then
       while_busy_loop t engine_state
@@ -178,8 +176,8 @@ end = struct
     Lwt_mvar.put t.to_engine_box timechange
 
   let rec heartbeat_thread t =
-    Lwt_unix.sleep t.timer >>= fun () ->
-    do_timechange t >>= fun () ->
+    let* () = Lwt_unix.sleep t.timer in
+    let* () = do_timechange t in
     heartbeat_thread t
 
   type config =
@@ -250,31 +248,42 @@ end = struct
   let create_internal_message (msg : message) 
       : (Fix_engine_state.fix_engine_int_inc_msg, err) result 
     =
+    let dbg dd msg = msg 
+      |> List.map @@ ( fun (k,v) -> Printf.sprintf "%s=%s" k v)
+      |> String.concat "|" 
+      |> (fun x -> dd ^ "  " ^ x)
+      |> print_endline
+      |> flush_all
+      in
     let is_application_field (k,_) =
-      match Parse_full_tags.parse_full_field_tag k with
-      | None -> false | Some _ -> true
+      let r = match Parse_admin_tags.parse_admin_field_tag k with
+        | None -> true | Some _ -> false
+        in
+      let () = print_endline ( k ^ (if r then " admin" else " app" )) in
+      r
       in
     let is_msgtype_tag (k,_) = 
-      let open Full_message_tags in
-      match Parse_full_tags.parse_full_field_tag k with
-      | Some ( Full_Admin_Field_Tag Full_Field_MsgType_Tag ) -> true
+      match Parse_admin_tags.parse_admin_field_tag k with
+      | Some Full_Field_MsgType_Tag -> true
       | _ -> false
       in
+    let () = dbg "msg" msg in
     match List.find_opt is_msgtype_tag msg with 
     | None -> Error `MissingMessageTypeTag
-    | Some msgtag_kv ->
-      let app_data = List.filter is_application_field msg in
-      let app_data = msgtag_kv::app_data in
+    | Some (_ , msg_tag ) ->
+      let payload = List.filter is_application_field msg in
+      let () = dbg "app_data" payload in
+      let app_data = Full_messages.{ msg_tag ; payload }  in
       let int_msg = Fix_engine_state.IncIntMsg_ApplicationData app_data in
       Ok int_msg  
 
 
   let process_fix_wire state msg =
+    let* () = Lwt_io.printl (Fix_io.encode ~split:'|' msg) in
     let msg = Parse_full_messages.parse_top_level_msg state.timestamp_parse msg in
     let tenc = Datetime_json.utctimestamp_micro_to_json in
     let json = Full_messages_json.full_top_level_msg_to_json tenc msg in
-    let str = Yojson.Basic.pretty_to_string json in
-    let* () = Lwt_io.printl str in
+    let _str = Yojson.Basic.pretty_to_string json in
     let* () = do_timechange state in
     let action = FIXToEngine msg in
     Lwt_mvar.put state.to_engine_box action
@@ -282,6 +291,7 @@ end = struct
   let send_fix_message state msg =
     let (let*?) = Lwt_result.bind in
     let*? int_msg = create_internal_message msg |> Lwt.return in
+    let* () = Lwt_io.printl "send_fix_message" in
     let action = InternalToEngine int_msg in
     let*? () = do_timechange state |> Lwt_result.ok  in 
     Lwt_mvar.put state.to_engine_box action |> Lwt_result.ok

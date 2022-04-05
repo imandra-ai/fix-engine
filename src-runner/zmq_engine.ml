@@ -84,13 +84,18 @@ let rep_thread ( zmqrepsocket : 'a Zmq_lwt.Socket.t ) =
   let rec thread () = 
     let* msg = Zmq_lwt.Socket.recv zmqrepsocket in
     let msg = String.split_on_char '|' msg in
+    let msg = List.filter ( fun x -> not ( x = "" ) ) msg in
     let msg = msg |> List.map ( fun x -> 
       match String.split_on_char '=' x with 
       | h::tl -> (h, String.concat "=" tl)
       | _ -> (x , "")
     ) in
-    let* () = Lwt_mvar.put Runner.send_box msg in
-    let* () = Zmq_lwt.Socket.send zmqrepsocket "OK" in
+    let* result = Runner.send_message  msg in
+    let result = match result with
+      | Ok () ->  "OK" 
+      | Error _err -> "ERROR" 
+      in
+    let* () = Zmq_lwt.Socket.send zmqrepsocket result in
     thread ()
     in
   thread ()

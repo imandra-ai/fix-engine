@@ -25,13 +25,15 @@ let assoc_filter_nulls l : Yojson.Basic.t =
     `Assoc ( List.filter (function ( _, `Null ) -> false | _ -> true ) l )
 
 let full_app_msg_to_json data : Yojson.Basic.t =
-  data |> List.map ( fun (k,v) ->
-    `List [ `String k ; `String v ]
-  ) |> fun x -> `List x
+    let payload = data.payload |> List.map ( fun (k,v) ->
+        `List [ `String k ; `String v ]
+        ) |> fun x -> `List x in
+    let msg_tag = `String data.msg_tag in
+    `Assoc [("msg_tag", msg_tag); ("payload", payload)]
 
 let full_msg_to_json = function
     | Full_FIX_Admin_Msg x -> `Assoc [("Full_FIX_Admin_Msg",full_admin_msg_to_json x)]
-    | Full_FIX_App_Msg   x -> `Assoc [("Full_FIX_App_Msg",full_app_msg_to_json x)]
+    | Full_FIX_App_Msg   x -> `Assoc [("Full_FIX_App_Msg", full_app_msg_to_json x )]
 
 let session_rejected_msg_to_json x : Yojson.Basic.t =
     [ ( "RefSeqNum"             , int_to_json                        x.srej_msg_msg_seq_num   )

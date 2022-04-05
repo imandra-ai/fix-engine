@@ -1,4 +1,3 @@
-let (>>=) = Lwt.(>>=)
 let (let*) = Lwt.bind 
 
 type direction = Incoming | Outgoing
@@ -24,8 +23,6 @@ let get_msg_type message =
   match Parse_admin_tags.parse_admin_msg_tag k with
   | None -> Application | Some _ -> Admin 
 
-let send_box : Engine.message Lwt_mvar.t = Lwt_mvar.create_empty ()
-
 let receive_fix_io t message =
   let msg_type = get_msg_type message in
   Lwt.join 
@@ -44,9 +41,13 @@ let receive_engine t event =
   end
   | _ -> Lwt.return_unit 
 
+
+let send_box : Engine.message Lwt_mvar.t = Lwt_mvar.create_empty ()
+let result_box : (unit, Engine.err) result Lwt_mvar.t = Lwt_mvar.create_empty ()
+
 let receive_send t message =
-  let* _ = Engine.send_fix_message t.engine message in
-  Lwt.return_unit
+  let* result = Engine.send_fix_message t.engine message in
+  Lwt_mvar.put result_box result
 
 
 let rec loop (t : t) : unit Lwt.t =
@@ -95,20 +96,6 @@ let server_handler (t : t) (in_addr: Unix.sockaddr) (inch, outch) =
   [ fixio_thread
   ; loop t
   ]
-
-
-let get_timestamp_codec ms =
-  let parse_milli x =
-    match Parse_datetime.parse_UTCTimestamp_milli x with None -> None
-    | Some x -> Some ( Datetime.convert_utctimestamp_milli_micro x)
-    in
-  let encode_milli x = x
-    |> Datetime.convert_utctimestamp_micro_milli 
-    |> Encode_datetime.encode_UTCTimestamp_milli
-    in
-  let ms = match ms with None -> false | Some x -> x in
-  if ms then ( parse_milli , encode_milli ) 
-  else ( Parse_datetime.parse_UTCTimestamp_micro, Encode_datetime.encode_UTCTimestamp_micro)
 
 let default_session_folder ~(config:Engine.config) =
   let hostid =
@@ -196,3 +183,7 @@ let start_client
   let addr = Unix.inet_addr_of_string host in
   let addr = Unix.(ADDR_INET (addr, port)) in
   Lwt_io.with_connection addr handler 
+
+let send_message msg =
+  let* () = Lwt_mvar.put send_box msg in
+  Lwt_mvar.take result_box 

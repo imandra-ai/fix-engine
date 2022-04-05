@@ -24,7 +24,7 @@ let opt f v = match v with Some x -> Some ( f x ) | None -> None;;
 let encode_msg_data msg =
     match msg with
     | Full_FIX_Admin_Msg msg -> Encode_admin_messages.encode_admin_msg_data msg
-    | Full_FIX_App_Msg   msg -> msg |> List.map @@ fun (k,v) -> (k, Some v)  
+    | Full_FIX_App_Msg   { payload ; _ } -> payload |> List.map @@ fun (k,v) -> (k, Some v)  
 ;;
 
 type fix_encoder_config =
@@ -108,7 +108,7 @@ let packet_full_valid_msg (config : fix_encoder_config) x =
     let msgtag = get_full_msg_tag x.full_msg_data in
     let msg_body = 
         encode_header config msgtag x.full_msg_header @
-        encode_msg_data x.full_msg_data   @
+        encode_msg_data  x.full_msg_data @
         encode_trailer  x.full_msg_trailer
         in
     let msg_body = msg_body
