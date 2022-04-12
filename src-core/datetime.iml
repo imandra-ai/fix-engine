@@ -289,14 +289,24 @@ let compare_week w1 w2 =
   | Week_5, _ -> one
 
 (** MonthYear
+
+    YYYYMM
+    YYYYMMDD
+    YYYYMMw1
+
     if fix_week is Some, we ignore the day.
+
+    TODO: represent YYYYMM (no week or day)
  *)
 type fix_monthyear = T.t * fix_week option
 
 let default_monthyear = (T.epoch, None)
 
-let make_monthyear (year : int) (month : int) (week : fix_week option) =
-  T.of_date (year, month, one), week
+let make_monthyear (year : int) (month : int) (week : fix_week option)
+    : fix_monthyear option =
+  match T.of_date (year, month, one) with
+  | Some t -> Some (t, week)
+  | None -> None
 
 let is_valid_monthyear ((t, week) : fix_monthyear) =
   let (_d, ps) = T.to_span t |> T.Span.to_d_ps in
@@ -509,7 +519,11 @@ let utcdateonly_LessThanEqual (d1 : fix_utcdateonly) (d2 : fix_utcdateonly) =
     T.compare d1 d2 <= zero
 
 
-(** Duration *)
+(** Duration
+    TODO: calendar durations rather than POSIX time spans?
+    E.g. add 1 month to Jan 31 => ??
+         add 1 year to Feb 29 => ??
+ *)
 type fix_duration = T.Span.t
 
 let is_valid_duration (dur : fix_duration) = TE.Span.is_valid dur
