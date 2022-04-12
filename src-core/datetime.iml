@@ -16,71 +16,66 @@ open Ints
 module T = Imandra_ptime
 module TE = Imandra_ptime_extra
 
-(* let ps_count_in_us = 1_000_000_000_000 *)
-(* let ps_count_in_ms = 1_000_000_000 *)
-(* let ps_count_in_s = 1_000_000_000_000 *)
-(* let ps_count_in_min = 60_000_000_000_000 *)
-(* let ps_count_in_hour = 3600_000_000_000_000 *)
+(** Helpers *)
+
+let of_date_time_ms (date, (hh, mm, ss, ms)) =
+  let time = (hh, mm, ss) in
+  let tz = zero in
+  T.of_date_time (date, (time, tz))
+  |> Option.flat_map (fun t -> T.add_span t (TE.Span.of_int_ms ms))
+
+let of_time_ms time_ms =
+  let date = (epoch_year, one, one) in
+  of_date_time_ms (date, time_ms)
+
+let to_date_time_ms (t : T.t) =
+  let ((y, m, d), ((hh, mm, ss), _tz)) = T.to_date_time t in
+  let (_d, ps) = t |> T.to_span |> T.Span.to_d_ps in
+  let ps = ps mod ps_count_in_s in
+  let ms = ps / ps_count_in_ms in
+  ((y, m, d), (hh, mm, ss, ms))
+
+let to_time_ms (t : T.t) =
+  let (_date, time_ms) = to_date_time_ms t in
+  time_ms
+
+let of_date_time_us (date, (hh, mm, ss, us)) =
+  let time = (hh, mm, ss) in
+  let tz = zero in
+  T.of_date_time (date, (time, tz))
+  |> Option.flat_map (fun t -> T.add_span t (TE.Span.of_int_us us))
+
+let of_time_us time_us =
+  let date = (epoch_year, one, one) in
+  of_date_time_us (date, time_us)
+
+let to_date_time_us (t : T.t) =
+  let ((y, m, d), ((hh, mm, ss), _tz)) = T.to_date_time t in
+  let (_d, ps) = t |> T.to_span |> T.Span.to_d_ps in
+  let ps = ps mod ps_count_in_s in
+  let us = ps / ps_count_in_us in
+  ((y, m, d), (hh, mm, ss, us))
+
+let to_time_us (t : T.t) =
+  let (_date, time_us) = to_date_time_us t in
+  time_us
+
+let to_millis (t : T.t) = T.truncate ~frac_s:three t
+
+let to_days (d : T.Span.t) =
+  T.Span.to_int_s d / s_count_in_day
+
 
 (** UTC Timestamp type. *)
 type fix_utctimestamp_milli = T.t
-  (* { utc_timestamp_year : int *)
-  (* ; utc_timestamp_month : int *)
-  (* ; utc_timestamp_day : int *)
-  (* ; utc_timestamp_hour : int *)
-  (* ; utc_timestamp_minute : int *)
-  (* ; utc_timestamp_second : int *)
-  (* ; utc_timestamp_millisec : int option *)
-  (* } *)
-
-
-
-(* let fix_utctimestamp_milli_of_ptime (t : T.t) : fix_utctimestamp_milli = *)
-(*   let ((y, m, d), ((hh, mm, ss), _tz)) = T.to_date_time t in *)
-(*   let _d, ps = T.to_span t |> T.Span.to_d_ps in *)
-(*   let ms = ps mod ps_count_in_ms in *)
-(*   { utc_timestamp_year = y *)
-(*   ; utc_timestamp_month = m *)
-(*   ; utc_timestamp_day = d *)
-(*   ; utc_timestamp_hour = hh *)
-(*   ; utc_timestamp_minute = mm *)
-(*   ; utc_timestamp_second = ss *)
-(*   ; utc_timestamp_millisec = if ms = 0 then None else Some ms *)
-(*   } *)
-
 
 type fix_utctimestamp_micro = T.t
-  (* { utc_timestamp_year : int *)
-  (* ; utc_timestamp_month : int *)
-  (* ; utc_timestamp_day : int *)
-  (* ; utc_timestamp_hour : int *)
-  (* ; utc_timestamp_minute : int *)
-  (* ; utc_timestamp_second : int *)
-  (* ; utc_timestamp_microsec : int option *)
-  (* } *)
-
-
-(* let fix_utctimestamp_micro_of_ptime (t : T.t) : fix_utctimestamp_micro = *)
-(*   let ((y, m, d), ((hh, mm, ss), _tz)) = T.to_date_time t in *)
-(*   let _d, ps = T.to_span t |> T.Span.to_d_ps in *)
-(*   let us = ps mod ps_count_in_us in *)
-(*   { utc_timestamp_year = y *)
-(*   ; utc_timestamp_month = m *)
-(*   ; utc_timestamp_day = d *)
-(*   ; utc_timestamp_hour = hh *)
-(*   ; utc_timestamp_minute = mm *)
-(*   ; utc_timestamp_second = ss *)
-(*   ; utc_timestamp_microsec = if us = 0 then None else Some us *)
-(*   } *)
-
 
 (** Default timestamp is 0 unix epoch timestamp *)
 let default_utctimestamp_milli : fix_utctimestamp_milli = T.epoch
 
-
 (** Default timestamp is 0 unix epoch timestamp *)
 let default_utctimestamp_micro  : fix_utctimestamp_micro = T.epoch
-
 
 (** Constructor for the UTC timestamp milli  *)
 let make_utctimestamp_milli
@@ -91,13 +86,8 @@ let make_utctimestamp_milli
     (minute : int)
     (second : int)
     (millisec : int option) : fix_utctimestamp_milli option =
-  let date = (year, month, day) in
-  let time = (hour, minute, second) in
-  let tz = zero in
-  T.of_date_time (date, (time, tz))
-  |> Option.flat_map (fun t ->
-         let ms = millisec |> Option.get_or ~default:zero  in
-         T.add_span t (TE.Span.of_int_ms ms))
+  let ms = millisec |> Option.get_or ~default:zero in
+  of_date_time_ms ((year, month, day), (hour, minute, second, ms))
 
 
 (** Constructor for the UTC timestamp micro  *)
@@ -109,14 +99,8 @@ let make_utctimestamp_micro
     (minute : int)
     (second : int)
     (microsec : int option) : fix_utctimestamp_micro option  =
-  let date = (year, month, day) in
-  let time = (hour, minute, second) in
-    let tz = zero in
-    T.of_date_time (date, (time, tz))
-    |> Option.flat_map (fun t ->
-           let us = microsec |> Option.get_or ~default:zero  in
-           T.add_span t (TE.Span.of_int_us us))
-
+  let us = microsec |> Option.get_or ~default:zero in
+  of_date_time_us ((year, month, day), (hour, minute, second, us))
 
 
 (** Conversion for the UTC timestamp and timeonly fields *)
@@ -124,20 +108,20 @@ let convert_utctimestamp_milli_micro (f1 : fix_utctimestamp_milli) :
     fix_utctimestamp_micro =
   f1
 
-let to_millis t = T.truncate ~frac_s:three t
-
 let convert_utctimestamp_micro_milli (f1 : fix_utctimestamp_micro) :
     fix_utctimestamp_milli =
   to_millis f1
 
 (** Checking validity of the values in the UTC timestamp milli *)
 let is_valid_utctimestamp_milli (ts : fix_utctimestamp_milli) =
-  TE.is_valid ts
+  let (_d, ps) = ts |> T.to_span |> T.Span.to_d_ps in
+  TE.is_valid ts && ps mod ps_count_in_ms = zero
 
 
 (** Checking validity of the values in the UTC timestamp micro *)
 let is_valid_utctimestamp_micro (ts : fix_utctimestamp_micro) =
-  TE.is_valid ts
+  let (_d, ps) = ts |> T.to_span |> T.Span.to_d_ps in
+  TE.is_valid ts && ps mod ps_count_in_us = zero
 
 
 (** Two UTC timestamps are equal if they have equal field values *)
@@ -266,9 +250,8 @@ let localmktdate_GreaterThan
   T.compare lmd1 lmd2 > zero
 
 
-let localmktdate_LessThan (lmd1 : fix_localmktdate) (lmd2 : fix_localmktdate)
-    =
-    T.compare lmd1 lmd2 < zero
+let localmktdate_LessThan (lmd1 : fix_localmktdate) (lmd2 : fix_localmktdate) =
+  T.compare lmd1 lmd2 < zero
 
 
 let localmktdate_Equal (lmd1 : fix_localmktdate) (lmd2 : fix_localmktdate) =
@@ -293,101 +276,59 @@ type fix_week =
   | Week_4
   | Week_5
 
-(** MonthYear *)
-type fix_monthyear =
-  { monthyear_year : int
-  ; monthyear_month : int
-  ; monthyear_day : int option
-  ; monthyear_week : fix_week option
-  }
+let compare_week w1 w2 =
+  if w1 = w2 then zero else
+  match w1, w2 with
+  | Week_1, _ -> neg_one
+  | Week_2, Week_1 -> one
+  | Week_2, _ -> neg_one
+  | Week_3, (Week_1 | Week_2) -> one
+  | Week_3, _ -> neg_one
+  | Week_4, (Week_1 | Week_2 | Week_3) -> one
+  | Week_4, _ -> neg_one
+  | Week_5, _ -> one
 
-let default_monthyear =
-  { monthyear_year = 1970
-  ; monthyear_month = 1
-  ; monthyear_day = Some 1
-  ; monthyear_week = None
-  }
+(** MonthYear
+    if fix_week is Some, we ignore the day.
+ *)
+type fix_monthyear = T.t * fix_week option
 
+let default_monthyear = (T.epoch, None)
 
 let make_monthyear (year : int) (month : int) (week : fix_week option) =
-  { monthyear_year = year
-  ; monthyear_month = month
-  ; monthyear_day = None
-  ; monthyear_week = week
-  }
+  T.of_date (year, month, one), week
 
+let is_valid_monthyear ((t, week) : fix_monthyear) =
+  let (_d, ps) = T.to_span t |> T.Span.to_d_ps in
+  let (_y, _m, d) = T.to_date t in
+  TE.is_valid t && ps = zero &&
+  match week with
+  | Some _ -> d = one
+  | None -> true
 
-let is_valid_monthyear (my : fix_monthyear) =
-  0 <= my.monthyear_year
-  && my.monthyear_year <= 9999
-  && 1 <= my.monthyear_month
-  && my.monthyear_month <= 12
-  && (match my.monthyear_day with None -> true | Some d -> 0 <= d && d <= 31)
-  &&
-  (* You can only specify one of them, but not both. *)
-  match (my.monthyear_day, my.monthyear_week) with
-  | Some _, Some _ ->
-      false
-  | _, _ ->
-      true
+let compare_monthyear ((t1, w1) : fix_monthyear) ((t2, w2) : fix_monthyear) =
+  let c = T.compare t1 t2 in
+  if c <> zero then c else
+    match w1, w2 with
+    | Some w1, Some w2 -> compare_week w1 w2
+    | Some _, None -> one
+    | None, Some _ -> neg_one
+    | None, None -> zero
 
+let monthyear_GreaterThan (my1 : fix_monthyear) (my2 : fix_monthyear) =
+  compare_monthyear my1 my2 > zero
 
-(** TODO: Add support for weeks! *)
-let monthyear_GreaterThan (myOne : fix_monthyear) (myTwo : fix_monthyear) =
-  if myOne.monthyear_year > myTwo.monthyear_year
-  then true
-  else if myOne.monthyear_year < myTwo.monthyear_year
-  then false
-  else if myOne.monthyear_month > myTwo.monthyear_month
-  then true
-  else if myOne.monthyear_month < myTwo.monthyear_month
-  then false
-  else
-    match (myOne.monthyear_day, myTwo.monthyear_day) with
-    | None, None ->
-        false
-    | Some _d, None ->
-        true
-    | None, Some _d ->
-        false
-    | Some d_one, Some d_two ->
-        d_one > d_two
+let monthyear_LessThan (my1 : fix_monthyear) (my2 : fix_monthyear) =
+  compare_monthyear my1 my2 < zero
 
+let monthyear_Equal (my1 : fix_monthyear) (my2 : fix_monthyear) =
+  compare_monthyear my1 my2 = zero
 
-let monthyear_LessThan (myOne : fix_monthyear) (myTwo : fix_monthyear) =
-  if myOne.monthyear_year < myTwo.monthyear_year
-  then true
-  else if myOne.monthyear_year > myTwo.monthyear_year
-  then false
-  else if myOne.monthyear_month < myTwo.monthyear_month
-  then true
-  else if myOne.monthyear_month > myTwo.monthyear_month
-  then false
-  else
-    match (myOne.monthyear_day, myTwo.monthyear_day) with
-    | None, None ->
-        false
-    | Some _d, None ->
-        false
-    | None, Some _d ->
-        true
-    | Some d_one, Some d_two ->
-        d_one > d_two
+let monthyear_GreaterThanEqual (my1 : fix_monthyear) (my2 : fix_monthyear) =
+  compare_monthyear my1 my2 >= zero
 
-
-let monthyear_Equal (myOne : fix_monthyear) (myTwo : fix_monthyear) =
-  myOne.monthyear_year = myTwo.monthyear_year
-  && myOne.monthyear_month = myTwo.monthyear_month
-  && myOne.monthyear_day = myTwo.monthyear_day
-
-
-let monthyear_GreaterThanEqual (myOne : fix_monthyear) (myTwo : fix_monthyear) =
-  monthyear_GreaterThan myOne myTwo || monthyear_Equal myOne myTwo
-
-
-let monthyear_LessThanEqual (myOne : fix_monthyear) (myTwo : fix_monthyear) =
-  monthyear_LessThan myOne myTwo || monthyear_Equal myOne myTwo
-
+let monthyear_LessThanEqual (my1 : fix_monthyear) (my2 : fix_monthyear) =
+  compare_monthyear my1 my2 <= zero
 
 (** UTC Timeonly *)
 type fix_utctimeonly_milli = T.t
@@ -402,17 +343,20 @@ let default_utctimeonly_micro = T.epoch
 let make_utctimeonly_milli
     (hour : int) (minute : int) (second : int) (millisec : int option) :
     fix_utctimeonly_milli option =
-  make_utctimestamp_milli epoch_year one one hour minute second millisec
+  let ms = millisec |> Option.get_or ~default:zero in
+  of_time_ms (hour, minute, second, ms)
 
 
 let make_utctimeonly_micro
     (hour : int) (minute : int) (second : int) (microsec : int option) :
     fix_utctimeonly_micro option =
-  make_utctimestamp_micro epoch_year one one hour minute second microsec
+  let us = microsec |> Option.get_or ~default:zero in
+  of_time_us (hour, minute, second, us)
 
 
 let convert_utctimeonly_milli_micro (f1 : fix_utctimeonly_milli) :
-    fix_utctimeonly_micro = f1
+    fix_utctimeonly_micro =
+  f1
 
 
 let convert_utctimeonly_micro_milli (f1 : fix_utctimeonly_micro) :
@@ -421,14 +365,12 @@ let convert_utctimeonly_micro_milli (f1 : fix_utctimeonly_micro) :
 
 
 let is_valid_utctimeonly_milli (t : fix_utctimeonly_milli) =
-  let s = T.to_span t in
-  let (d, _ps) = T.Span.to_d_ps s in
-  d = zero && TE.Span.is_valid s
+  let (d, ps) = T.Span.to_d_ps (T.to_span t) in
+  TE.is_valid t && d = zero && ps mod ps_count_in_ms = zero
 
 let is_valid_utctimeonly_micro (t : fix_utctimeonly_micro) =
-  let s = T.to_span t in
-  let (d, _ps) = T.Span.to_d_ps s in
-  d = zero && TE.Span.is_valid s
+  let (d, ps) = T.Span.to_d_ps (T.to_span t) in
+  TE.is_valid t && d = zero && ps mod ps_count_in_us = zero
 
 
 let utctimeonly_Equal_milli_milli
@@ -573,31 +515,33 @@ type fix_duration = T.Span.t
 let is_valid_duration (dur : fix_duration) = TE.Span.is_valid dur
 
 
+(** Months are assumed to be 30 days *)
 let make_duration years months days hours minutes seconds =
-  let d = years * 365 + months * 12 + days in
+  let d = years * 365 + months * 30 + days in
   let secs = hours * 3600 + minutes * 60 + seconds in
   T.Span.(add (unsafe_of_d_ps (d, 0)) (of_int_s secs))
 
 
+(** Overflows/underflows are silently ignored *)
 let utctimestamp_milli_duration_Add
-    (t : fix_utctimestamp_milli) (dur : fix_duration) =
-  T.add_span t dur
+      (t : fix_utctimestamp_milli) (dur : fix_duration) =
+  T.add_span t dur |> Option.get_or ~default:t
 
 
+(** Overflows/underflows are silently ignored *)
 let duration_utctimestamp_milli_Add
-    (dur : fix_duration) (t : fix_utctimestamp_milli) =
-  T.add_span t dur
+      (dur : fix_duration) (t : fix_utctimestamp_milli) =
+  T.add_span t dur |> Option.get_or ~default:t
 
 
 let utctimestamp_micro_duration_Add
     (t : fix_utctimestamp_micro) (dur : fix_duration) =
-  T.add_span t dur
+  T.add_span t dur |> Option.get_or ~default:t
 
 
 let duration_utctimestamp_micro_Add
     (dur : fix_duration) (t : fix_utctimestamp_micro) =
-  T.add_span t dur
-
+  T.add_span t dur |> Option.get_or ~default:t
 
 let seconds_to_duration seconds =
   T.Span.of_int_s seconds
@@ -606,178 +550,112 @@ let seconds_to_duration seconds =
 let duration_to_seconds dur =
   T.Span.to_int_s dur
 
-let duration_Equal dur1 dur2 = T.Span.equal dur1 dur2
+let duration_Equal d1 d2 = T.Span.equal d1 d2
 
-let duration_GreaterThan dur1 dur2 =
-  dur1.dur_years > dur2.dur_years
-  || (dur1.dur_years = dur2.dur_years && dur1.dur_months > dur2.dur_months)
-  || (dur1.dur_months = dur2.dur_months && dur1.dur_days > dur2.dur_days)
-  || (dur1.dur_days = dur2.dur_days && dur1.dur_hours > dur2.dur_hours)
-  || (dur1.dur_hours = dur2.dur_hours && dur1.dur_minutes > dur2.dur_minutes)
-  || (dur1.dur_minutes = dur2.dur_minutes && dur1.dur_seconds > dur2.dur_seconds)
+let duration_GreaterThan d1 d2 =
+  T.Span.compare d1 d2 > zero
 
 
-let duration_GreaterThanEqual dur1 dur2 =
-  duration_GreaterThan dur1 dur2 || duration_Equal dur1 dur2
+let duration_GreaterThanEqual d1 d2 =
+  T.Span.compare d1 d2 >= zero
 
+let duration_LessThan d1 d2 =
+  T.Span.compare d1 d2 < zero
 
-let duration_LessThan dur1 dur2 = not (duration_GreaterThanEqual dur1 dur2)
-
-let duration_LessThanEqual dur1 dur2 = not (duration_GreaterThan dur1 dur2)
+let duration_LessThanEqual d1 d2 =
+  T.Span.compare d1 d2 <= zero
 
 let convert_utctimestamp_milli_utctimeonly_milli (ts : fix_utctimestamp_milli) :
     fix_utctimeonly_milli =
-  { utc_timeonly_hour = ts.utc_timestamp_hour
-  ; utc_timeonly_minute = ts.utc_timestamp_minute
-  ; utc_timeonly_second = ts.utc_timestamp_second
-  ; utc_timeonly_millisec = ts.utc_timestamp_millisec
-  }
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
 
 
 let convert_utctimestamp_micro_utctimeonly_micro (ts : fix_utctimestamp_micro) :
     fix_utctimeonly_micro =
-  { utc_timeonly_hour = ts.utc_timestamp_hour
-  ; utc_timeonly_minute = ts.utc_timestamp_minute
-  ; utc_timeonly_second = ts.utc_timestamp_second
-  ; utc_timeonly_microsec = ts.utc_timestamp_microsec
-  }
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
 
 
 let convert_utctimestamp_milli_utctimeonly_micro (ts : fix_utctimestamp_milli) :
     fix_utctimeonly_micro =
-  { utc_timeonly_hour = ts.utc_timestamp_hour
-  ; utc_timeonly_minute = ts.utc_timestamp_minute
-  ; utc_timeonly_second = ts.utc_timestamp_second
-  ; utc_timeonly_microsec =
-      ( match ts.utc_timestamp_millisec with
-      | None ->
-          None
-      | Some x ->
-          Some (x * 1000) )
-  }
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
 
 
 let convert_utctimestamp_micro_utctimeonly_milli (ts : fix_utctimestamp_micro) :
     fix_utctimeonly_milli =
-  { utc_timeonly_hour = ts.utc_timestamp_hour
-  ; utc_timeonly_minute = ts.utc_timestamp_minute
-  ; utc_timeonly_second = ts.utc_timestamp_second
-  ; utc_timeonly_millisec =
-      ( match ts.utc_timestamp_microsec with
-      | None ->
-          None
-      | Some x ->
-          Some (x / 1000) )
-  }
+  let ts = to_millis ts in
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
 
 
 let convert_utctimestamp_micro_localmktdate (ts : fix_utctimestamp_micro) :
     fix_localmktdate =
-  { localmktdate_year = ts.utc_timestamp_year
-  ; localmktdate_month = ts.utc_timestamp_month
-  ; localmktdate_day = ts.utc_timestamp_day
-  }
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, zero)
 
 
 let convert_utctimestamp_milli_localmktdate (ts : fix_utctimestamp_milli) :
     fix_localmktdate =
-  { localmktdate_year = ts.utc_timestamp_year
-  ; localmktdate_month = ts.utc_timestamp_month
-  ; localmktdate_day = ts.utc_timestamp_day
-  }
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, zero)
 
 
 let convert_utctimestamp_micro_utcdateonly (ts : fix_utctimestamp_micro) :
     fix_utcdateonly =
-  { utc_dateonly_year = ts.utc_timestamp_year
-  ; utc_dateonly_month = ts.utc_timestamp_month
-  ; utc_dateonly_day = ts.utc_timestamp_day
-  }
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, zero)
 
 
 let convert_utctimestamp_milli_utcdateonly (ts : fix_utctimestamp_milli) :
     fix_utcdateonly =
-  { utc_dateonly_year = ts.utc_timestamp_year
-  ; utc_dateonly_month = ts.utc_timestamp_month
-  ; utc_dateonly_day = ts.utc_timestamp_day
-  }
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, zero)
 
 
 let convert_utctimestamp_micro_monthyear (ts : fix_utctimestamp_micro) :
     fix_monthyear =
-  { monthyear_year = ts.utc_timestamp_year
-  ; monthyear_month = ts.utc_timestamp_month
-  ; monthyear_day = Some ts.utc_timestamp_day
-  ; monthyear_week = None
-  }
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  let t = T.unsafe_of_d_ps (d, zero) in
+  (t, None)
 
 
 let convert_utctimestamp_milli_monthyear (ts : fix_utctimestamp_milli) :
     fix_monthyear =
-  { monthyear_year = ts.utc_timestamp_year
-  ; monthyear_month = ts.utc_timestamp_month
-  ; monthyear_day = Some ts.utc_timestamp_day
-  ; monthyear_week = None
-  }
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  let t = T.unsafe_of_d_ps (d, zero) in
+  (t, None)
 
 
 let make_utctimestamp_micro_utctimeonly_micro_utcdateonly
     (to_ : fix_utctimeonly_micro) (do_ : fix_utcdateonly) :
     fix_utctimestamp_micro =
-  { utc_timestamp_microsec = to_.utc_timeonly_microsec
-  ; utc_timestamp_second = to_.utc_timeonly_second
-  ; utc_timestamp_minute = to_.utc_timeonly_minute
-  ; utc_timestamp_hour = to_.utc_timeonly_hour
-  ; utc_timestamp_day = do_.utc_dateonly_day
-  ; utc_timestamp_month = do_.utc_dateonly_month
-  ; utc_timestamp_year = do_.utc_dateonly_year
-  }
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
 
 
 let make_utctimestamp_milli_utctimeonly_milli_utcdateonly
     (to_ : fix_utctimeonly_milli) (do_ : fix_utcdateonly) :
     fix_utctimestamp_milli =
-  { utc_timestamp_millisec = to_.utc_timeonly_millisec
-  ; utc_timestamp_second = to_.utc_timeonly_second
-  ; utc_timestamp_minute = to_.utc_timeonly_minute
-  ; utc_timestamp_hour = to_.utc_timeonly_hour
-  ; utc_timestamp_day = do_.utc_dateonly_day
-  ; utc_timestamp_month = do_.utc_dateonly_month
-  ; utc_timestamp_year = do_.utc_dateonly_year
-  }
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
 
 
 let make_utctimestamp_micro_utctimeonly_milli_utcdateonly
     (to_ : fix_utctimeonly_milli) (do_ : fix_utcdateonly) :
     fix_utctimestamp_micro =
-  { utc_timestamp_microsec =
-      ( match to_.utc_timeonly_millisec with
-      | None ->
-          None
-      | Some x ->
-          Some (x * 1000) )
-  ; utc_timestamp_second = to_.utc_timeonly_second
-  ; utc_timestamp_minute = to_.utc_timeonly_minute
-  ; utc_timestamp_hour = to_.utc_timeonly_hour
-  ; utc_timestamp_day = do_.utc_dateonly_day
-  ; utc_timestamp_month = do_.utc_dateonly_month
-  ; utc_timestamp_year = do_.utc_dateonly_year
-  }
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
 
 
 let make_utctimestamp_milli_utctimeonly_micro_utcdateonly
     (to_ : fix_utctimeonly_micro) (do_ : fix_utcdateonly) :
     fix_utctimestamp_milli =
-  { utc_timestamp_millisec =
-      ( match to_.utc_timeonly_microsec with
-      | None ->
-          None
-      | Some x ->
-          Some (x / 1000) )
-  ; utc_timestamp_second = to_.utc_timeonly_second
-  ; utc_timestamp_minute = to_.utc_timeonly_minute
-  ; utc_timestamp_hour = to_.utc_timeonly_hour
-  ; utc_timestamp_day = do_.utc_dateonly_day
-  ; utc_timestamp_month = do_.utc_dateonly_month
-  ; utc_timestamp_year = do_.utc_dateonly_year
-  }
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let to_ = to_millis to_ in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
