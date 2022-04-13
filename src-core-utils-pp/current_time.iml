@@ -18,7 +18,7 @@ let get_current_utctimestamp_milli () : fix_utctimestamp_milli =
   Ptime_clock.now () |> T.of_ptime |> to_millis
 
 
-let get_current_utctimestamp_micro ?(offset = 0) () : fix_utctimestamp_micro =
+let get_current_utctimestamp_micro () : fix_utctimestamp_micro =
   Ptime_clock.now () |> T.of_ptime |> to_micros
 
 
