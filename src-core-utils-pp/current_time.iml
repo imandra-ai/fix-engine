@@ -7,7 +7,7 @@
    fiv_verion.ml
 *)
 
-[@@@require "ptime.clock"]
+[@@@require "ptime.clock.os"]
 [@@@import "../src-core/datetime.iml"]
 
 [@@@program]
