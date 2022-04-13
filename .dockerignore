@@ -3,5 +3,6 @@ jekyll-resources/
 .sass-cache/
 _opam/
 _build/
+.git
 .merlin
 **/.merlin
