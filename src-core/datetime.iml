@@ -62,6 +62,8 @@ let to_time_us (t : T.t) =
 
 let to_millis (t : T.t) = T.truncate ~frac_s:three t
 
+let to_micros (t : T.t) = T.truncate ~frac_s:six t
+
 let to_days (d : T.Span.t) =
   T.Span.to_int_s d / s_count_in_day
 
