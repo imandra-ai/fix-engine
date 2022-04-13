@@ -89,6 +89,16 @@ let make_utctimestamp_milli
   let ms = millisec |> Option.get_or ~default:zero in
   of_date_time_ms ((year, month, day), (hour, minute, second, ms))
 
+let make_utctimestamp_milli_unsafe
+      (year : int)
+      (month : int)
+      (day : int)
+      (hour : int)
+      (minute : int)
+      (second : int)
+      (millisec : int option) : fix_utctimestamp_milli =
+  make_utctimestamp_milli year month day hour minute second millisec
+  |> Option.get_or ~default:default_utctimestamp_milli
 
 (** Constructor for the UTC timestamp micro  *)
 let make_utctimestamp_micro
@@ -102,6 +112,17 @@ let make_utctimestamp_micro
   let us = microsec |> Option.get_or ~default:zero in
   of_date_time_us ((year, month, day), (hour, minute, second, us))
 
+
+let make_utctimestamp_micro_unsafe
+      (year : int)
+      (month : int)
+      (day : int)
+      (hour : int)
+      (minute : int)
+      (second : int)
+      (microsec : int option) : fix_utctimestamp_micro =
+  make_utctimestamp_micro year month day hour minute second microsec
+  |> Option.get_or ~default:default_utctimestamp_micro
 
 (** Conversion for the UTC timestamp and timeonly fields *)
 let convert_utctimestamp_milli_micro (f1 : fix_utctimestamp_milli) :
@@ -237,8 +258,11 @@ let default_localmktdate : fix_localmktdate = T.epoch
 
 
 (** LocalMktDate constructor *)
-let make_localmktdate (year : int) (month : int) (day : int) =
+let make_localmktdate (year : int) (month : int) (day : int) : fix_localmktdate option =
   T.of_date (year, month, day)
+
+let make_localmktdate_unsafe (year : int) (month : int) (day : int) : fix_localmktdate =
+  make_localmktdate year month day |> Option.get_or ~default:default_localmktdate
 
 
 let is_valid_localmktdate (lmd : fix_localmktdate) =
@@ -308,6 +332,9 @@ let make_monthyear (year : int) (month : int) (week : fix_week option)
   | Some t -> Some (t, week)
   | None -> None
 
+let make_monthyear_unsafe year month week : fix_monthyear =
+  make_monthyear year month week |> Option.get_or ~default:default_monthyear
+
 let is_valid_monthyear ((t, week) : fix_monthyear) =
   let (_d, ps) = T.to_span t |> T.Span.to_d_ps in
   let (_y, _m, d) = T.to_date t in
@@ -356,12 +383,20 @@ let make_utctimeonly_milli
   let ms = millisec |> Option.get_or ~default:zero in
   of_time_ms (hour, minute, second, ms)
 
+let make_utctimeonly_milli_unsafe hour minute second millisec =
+  make_utctimeonly_milli hour minute second millisec
+  |> Option.get_or ~default:default_utctimeonly_milli
+
 
 let make_utctimeonly_micro
     (hour : int) (minute : int) (second : int) (microsec : int option) :
     fix_utctimeonly_micro option =
   let us = microsec |> Option.get_or ~default:zero in
   of_time_us (hour, minute, second, us)
+
+let make_utctimeonly_micro_unsafe hour minute second microsec =
+  make_utctimeonly_micro hour minute second microsec
+  |> Option.get_or ~default:default_utctimeonly_micro
 
 
 let convert_utctimeonly_milli_micro (f1 : fix_utctimeonly_milli) :
@@ -490,8 +525,11 @@ type fix_utcdateonly = T.t
 let default_utcdateonly = T.epoch
 
 
-let make_utcdateonly (year : int) (month : int) (day : int) =
+let make_utcdateonly (year : int) (month : int) (day : int) : fix_utcdateonly option =
   T.of_date (year, month, day)
+
+let make_utcdateonly_unsafe y m d =
+  make_utcdateonly y m d |> Option.get_or ~default:default_utcdateonly
 
 
 let is_valid_utcdateonly (d : fix_utcdateonly) =
@@ -530,7 +568,7 @@ let is_valid_duration (dur : fix_duration) = TE.Span.is_valid dur
 
 
 (** Months are assumed to be 30 days *)
-let make_duration years months days hours minutes seconds =
+let make_duration years months days hours minutes seconds : fix_duration =
   let d = years * 365 + months * 30 + days in
   let secs = hours * 3600 + minutes * 60 + seconds in
   T.Span.(add (unsafe_of_d_ps (d, 0)) (of_int_s secs))
@@ -538,30 +576,30 @@ let make_duration years months days hours minutes seconds =
 
 (** Overflows/underflows are silently ignored *)
 let utctimestamp_milli_duration_Add
-      (t : fix_utctimestamp_milli) (dur : fix_duration) =
+      (t : fix_utctimestamp_milli) (dur : fix_duration) : fix_utctimestamp_milli =
   T.add_span t dur |> Option.get_or ~default:t
 
 
 (** Overflows/underflows are silently ignored *)
 let duration_utctimestamp_milli_Add
-      (dur : fix_duration) (t : fix_utctimestamp_milli) =
+      (dur : fix_duration) (t : fix_utctimestamp_milli) : fix_utctimestamp_milli =
   T.add_span t dur |> Option.get_or ~default:t
 
 
 let utctimestamp_micro_duration_Add
-    (t : fix_utctimestamp_micro) (dur : fix_duration) =
+    (t : fix_utctimestamp_micro) (dur : fix_duration) : fix_utctimestamp_micro =
   T.add_span t dur |> Option.get_or ~default:t
 
 
 let duration_utctimestamp_micro_Add
-    (dur : fix_duration) (t : fix_utctimestamp_micro) =
+    (dur : fix_duration) (t : fix_utctimestamp_micro) : fix_utctimestamp_micro =
   T.add_span t dur |> Option.get_or ~default:t
 
-let seconds_to_duration seconds =
+let seconds_to_duration seconds : fix_duration =
   T.Span.of_int_s seconds
 
 
-let duration_to_seconds dur =
+let duration_to_seconds dur : int =
   T.Span.to_int_s dur
 
 let duration_Equal d1 d2 = T.Span.equal d1 d2
