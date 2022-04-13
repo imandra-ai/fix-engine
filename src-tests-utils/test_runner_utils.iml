@@ -90,7 +90,8 @@ let prepare_message msg (src, tagret) =
         if adds = "" then 0 else Z.of_int (Scanf.sscanf adds "%d" id)
       in
       let time =
-        get_current_utctimestamp ~offset:adds () |> normalise_utctimestamp
+        Imandra_ptime.(add_span time (Span.of_int_s adds))
+        |> Option.get_or ~default:time
       in
       (k, Core_printer.fix_utctimestamp_to_string time)
   in
