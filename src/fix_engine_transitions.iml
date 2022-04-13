@@ -109,9 +109,13 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                ( m.full_msg_header.h_sender_comp_id <> engine.fe_target_comp_id )
                then
                 engine
-            (* TODO: better timestamp comparison *)
-            else if (m.full_msg_header.h_sending_time.utc_timestamp_year <> engine.fe_curr_time.utc_timestamp_year ) then
-                logoff_and_shutdown engine
+            else if
+              (* TODO: better timestamp comparison *)
+              let sending_day, _ps = m.full_msg_header.h_sending_time |> T.to_span |> T.Span.to_d_ps in
+              let current_day, _ps = engine.fe_curr_time |> T.to_span |> T.Span.to_d_ps in
+              sending_day <> current_day
+            then
+              logoff_and_shutdown engine
             else if ( engine.fe_encrypt_method <> d.ln_encrypt_method &&
                 engine.fe_num_logons_sent >= engine.fe_max_num_logons_sent ) then {
                     engine with
