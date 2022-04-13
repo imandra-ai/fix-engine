@@ -13,7 +13,7 @@ let make
     ?(second = 0)
     ?millisecond
     () : t =
-  Time_defaults.make_utctimestamp year month day hour minute second millisecond
+  Time_defaults.make_utctimestamp_unsafe year month day hour minute second millisecond
 
 
 let ( = ) = utctimestamp_Equal

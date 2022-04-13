@@ -22,6 +22,8 @@ type fix_utctimestamp = fix_utctimestamp_milli
 
 let make_utctimestamp = make_utctimestamp_milli;;
 
+let make_utctimestamp_unsafe = make_utctimestamp_milli_unsafe;;
+
 let default_utctimestamp = default_utctimestamp_milli
 
 let is_valid_utctimestamp = is_valid_utctimestamp_milli;;
