@@ -1,4 +1,11 @@
 steps:
+- id: 'git-submodules'
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: '/bin/bash'
+  args:
+    - '-c'
+    - |
+      git submodule update --init
 - name: 'gcr.io/cloud-builders/docker'
   id: 'build-docker'
   entrypoint: '/bin/bash'
