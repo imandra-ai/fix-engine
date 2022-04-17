@@ -9,7 +9,7 @@
 *)
 
 [@@@import "../vendor/imandra-ptime/src/imandra_ptime.iml"]
-[@@@import "../vendor/imandra-ptime/src/imandra_ptime_extra.iml"]
+[@@@import "../vendor/imandra-ptime/src-extra/imandra_ptime_extra.iml"]
 [@@@import "./ints.iml"]
 open Ints
 
