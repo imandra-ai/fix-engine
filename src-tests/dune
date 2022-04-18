@@ -2,17 +2,20 @@
  (name test_runner)
  (libraries threads cmdliner lwt.unix fix_simulation_utils protocol_pp
    core_printer test_utils)
+ (flags :standard -alert --deprecated)
  (modes byte)
  (modules test_runner))
 
 (executable
  (name test_cache)
  (libraries test_utils fix_engine)
+ (flags :standard -alert --deprecated)
  (modes byte)
  (modules test_cache))
 
 (executable
  (name test_roundtrip)
  (libraries test_utils fix_engine)
+ (flags :standard -alert --deprecated)
  (modes byte)
  (modules test_roundtrip))
