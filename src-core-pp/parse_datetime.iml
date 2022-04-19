@@ -11,126 +11,107 @@
 [@@@program]
 open Datetime;;
 
-
-let parse_UTCDateOnly str =
+let parse_date str =
   if String.length str <> 8 then None else
-    try let year, month, day = Scanf.sscanf str "%04u%02u%02u"
-            ( fun y m d -> (y,m,d) ) in
-      Some {
-        utc_dateonly_year  = Z.of_int year;
-        utc_dateonly_month = Z.of_int month;
-        utc_dateonly_day   = Z.of_int day
-      }
+    try
+      Scanf.sscanf str "%04u%02u%02u"
+        ( fun y m d -> Some (Z.of_int y, Z.of_int m, Z.of_int d) )
     with | _ -> None
-;;
 
 
-let parse_LocalMktDate str =
-  if String.length str <> 8 then None else
-    try let year, month, day = Scanf.sscanf str "%04u%02u%02u"
-            ( fun y m d -> (y,m,d) ) in
-      Some {
-        localmktdate_year  = Z.of_int year;
-        localmktdate_month = Z.of_int month;
-        localmktdate_day   = Z.of_int day
-      } with
-    | _ -> None
-;;
-
-
-let parse_UTCTimeOnly_milli str =
+let parse_time_ms str =
   let length = String.length str in
   if (length <> 8) && (length <> 12) then None else
-    try let hours, minutes, seconds, mseconds =
-          Scanf.sscanf str "%02u:%02u:%02u%s"
-            ( fun h m s ms -> (
-                  let mseconds = if(ms = "") then None
-                    else ( Scanf.sscanf ms ".%03d" (fun x -> Some x) ) in
-                  (Z.of_int h,Z.of_int m,Z.of_int s,match mseconds with None -> None | Some c -> Some (Z.of_int c)) ) ) in
-      Some {
-        utc_timeonly_hour    = hours;
-        utc_timeonly_minute  = minutes;
-        utc_timeonly_second  = seconds;
-        utc_timeonly_millisec = mseconds
-      } with
+    try
+      Scanf.sscanf str "%02u:%02u:%02u%s"
+        (fun h m s ms ->
+          let ms =
+            if ms = "" then None
+            else Scanf.sscanf ms ".%03d" (fun x -> Some (Z.of_int x))
+          in
+          Some (Z.of_int h, Z.of_int m, Z.of_int s, ms))
+    with
     | _ -> None
-;;
 
-let parse_UTCTimeOnly_micro str =
+
+let parse_time_us str =
   let length = String.length str in
   if (length <> 8) && (length <> 15) then None else
-    try let hours, minutes, seconds, mseconds =
-          Scanf.sscanf str "%02u:%02u:%02u%s"
-            ( fun h m s ms -> (
-                  let mseconds = if(ms = "") then None
-                    else ( Scanf.sscanf ms ".%06d" (fun x -> Some x) ) in
-                  (Z.of_int h,Z.of_int m,Z.of_int s,match mseconds with None -> None | Some c -> Some (Z.of_int c)) ) ) in
-      Some {
-        utc_timeonly_hour    = hours;
-        utc_timeonly_minute  = minutes;
-        utc_timeonly_second  = seconds;
-        utc_timeonly_microsec = mseconds
-      } with
+    try
+      Scanf.sscanf str "%02u:%02u:%02u%s"
+        (fun h m s us ->
+          let us =
+            if us = "" then None
+            else Scanf.sscanf us ".%06d" (fun x -> Some (Z.of_int x))
+          in
+          Some (Z.of_int h, Z.of_int m, Z.of_int s, us))
+    with
     | _ -> None
-;;
 
-let parse_UTCTimestamp_milli str =
+let parse_UTCDateOnly str : fix_utcdateonly option =
+  parse_date str |> Option.flat_map T.of_date
+
+let parse_LocalMktDate str : fix_localmktdate option =
+  parse_date str |> Option.flat_map T.of_date
+
+let parse_UTCTimeOnly_milli str : fix_utctimeonly_milli option =
+  parse_time_ms str
+  |> Option.flat_map (fun (hh, mm, ss, ms) ->
+         make_utctimeonly_milli hh mm ss ms)
+
+let parse_UTCTimeOnly_micro str : fix_utctimeonly_micro option =
+  parse_time_us str
+  |> Option.flat_map (fun (hh, mm, ss, us) ->
+         make_utctimeonly_micro hh mm ss us)
+
+let parse_UTCTimestamp_milli str : fix_utctimestamp_milli option =
   let length = String.length str in
   if (length <> 17) && (length <> 21) then None else
-    try let date, time = Scanf.sscanf str "%s@-%s"
-            ( fun d t -> (parse_UTCDateOnly d , parse_UTCTimeOnly_milli t) ) in
+    try
+      let date, time =
+        Scanf.sscanf str "%s@-%s"
+          (fun d t -> (parse_date d, parse_time_ms t))
+      in
       match date, time with
-      | (Some date, Some time) -> Some {
-          utc_timestamp_year     = date.utc_dateonly_year;
-          utc_timestamp_month    = date.utc_dateonly_month;
-          utc_timestamp_day      = date.utc_dateonly_day;
-          utc_timestamp_hour     = time.utc_timeonly_hour;
-          utc_timestamp_minute   = time.utc_timeonly_minute;
-          utc_timestamp_second   = time.utc_timeonly_second;
-          utc_timestamp_millisec = time.utc_timeonly_millisec }
-      | _ -> None with
+      | (Some (y, m, d), Some (hh, mm, ss, ms)) ->
+         make_utctimestamp_milli y m d hh mm ss ms
+      | _ -> None
+    with
     | _ -> None
-;;
 
 let parse_UTCTimestamp_micro str =
   let length = String.length str in
   if (length <> 17) && (length <> 24) then None else
-    try let date, time = Scanf.sscanf str "%s@-%s"
-            ( fun d t -> (parse_UTCDateOnly d , parse_UTCTimeOnly_micro t) ) in
+    try
+      let date, time =
+        Scanf.sscanf str "%s@-%s"
+          (fun d t -> (parse_date d, parse_time_us t))
+      in
       match date, time with
-      | (Some date, Some time) -> Some {
-          utc_timestamp_year     = date.utc_dateonly_year;
-          utc_timestamp_month    = date.utc_dateonly_month;
-          utc_timestamp_day      = date.utc_dateonly_day;
-          utc_timestamp_hour     = time.utc_timeonly_hour;
-          utc_timestamp_minute   = time.utc_timeonly_minute;
-          utc_timestamp_second   = time.utc_timeonly_second;
-          utc_timestamp_microsec = time.utc_timeonly_microsec }
+      | (Some (y, m, d), Some (hh, mm, ss, us)) ->
+         make_utctimestamp_micro y m d hh mm ss us
       | _ -> None
-    with | _ -> None
-;;
+    with
+    | _ -> None
 
 let parse_MonthYear str =
   let length = String.length str in
   if (length < 6) then None else
-    try let year, month, tail = Scanf.sscanf str "%04u%02u%s" (fun y m t -> (y,m,t)) in
-      let day, week = match tail with
-        | "w1" -> None, Some Week_1
-        | "w2" -> None, Some Week_2
-        | "w3" -> None, Some Week_3
-        | "w4" -> None, Some Week_4
-        | "w5" -> None, Some Week_5
-        | ""   -> None, None
-        | day  -> Some (Z.of_string day), None
+    try
+      let y, m, tail = Scanf.sscanf str "%04u%02u%s" (fun y m t -> (Z.of_int y, Z.of_int m, t)) in
+      let _d, week =
+        match tail with
+        | "w1" -> (1, Some Week_1)
+        | "w2" -> (1, Some Week_2)
+        | "w3" -> (1, Some Week_3)
+        | "w4" -> (1, Some Week_4)
+        | "w5" -> (1, Some Week_5)
+        | ""   -> (1, None)
+        | day  -> (Z.of_string day, None)
       in
-      Some {
-        monthyear_year  = Z.of_int year;
-        monthyear_month = Z.of_int month;
-        monthyear_day   = day;
-        monthyear_week  = week;
-      } with
+      make_monthyear y m week
+    with
     | _ -> None
-;;
 
 
 let parse_Duration (str:string) : fix_duration option =
@@ -143,44 +124,16 @@ let parse_Duration (str:string) : fix_duration option =
        match t,v with
        | 'D',x -> (match parse_int x with
            | None -> None
-           | Some x -> Some (normalise_duration {
-               dur_years    = 0;
-               dur_months   = 0;
-               dur_days     = x;
-               dur_hours    = 0;
-               dur_minutes  = 0;
-               dur_seconds  = 0;
-             }))
+           | Some x -> Some (make_duration 0 0 x 0 0 0))
        | 'M',x -> (match parse_int x with
            | None -> None
-           | Some x -> Some (normalise_duration {
-               dur_years    = 0;
-               dur_months   = x;
-               dur_days     = 0;
-               dur_hours    = 0;
-               dur_minutes  = 0;
-               dur_seconds  = 0;
-             }))
+           | Some x -> Some (make_duration 0 x 0 0 0 0))
        | 'W',x -> (match parse_int x with
            | None -> None
-           | Some x -> Some (normalise_duration {
-               dur_years    = 0;
-               dur_months   = 0;
-               dur_days     = x*7;
-               dur_hours    = 0;
-               dur_minutes  = 0;
-               dur_seconds  = 0;
-             }))
+           | Some x -> Some (make_duration 0 0 (x * 7) 0 0 0))
        | 'Y',x -> (match parse_int x with
            | None -> None
-           | Some x -> Some (normalise_duration {
-               dur_years    = x;
-               dur_months   = 0;
-               dur_days     = 0;
-               dur_hours    = 0;
-               dur_minutes  = 0;
-               dur_seconds  = 0;
-             }))
+           | Some x -> Some (make_duration x 0 0 0 0 0))
        | _,_ -> None with
     | _ -> None)
   else None

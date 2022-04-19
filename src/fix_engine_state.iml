@@ -8,11 +8,15 @@
 *)
 
 [@@@import "../src-core/datetime.iml"]
+[@@@import "../src-core-time-defaults/time_defaults.iml"]
+
 open Datetime
+open Time_defaults
 
 [@@@import "../src-protocol/full_admin_enums.iml"]
 [@@@import "../src-protocol-exts/full_app_messages.iml"]
 [@@@import "../src-protocol/full_messages.iml"]
+
 open Full_admin_enums
 open Full_admin_messages
 open Full_messages
@@ -146,7 +150,7 @@ let init_fix_engine_state =
   ; fe_curr_status = Normal
   ; fe_initiator = None
   ; fe_curr_mode = NoActiveSession
-  ; fe_curr_time = make_utctimestamp_micro 2017 1 1 0 1 0 None
+  ; fe_curr_time = default_utctimestamp
   ; fe_comp_id = "IMANDRA"
   ; fe_target_comp_id = "TARGET"
   ; fe_sender_location_id = None
@@ -160,10 +164,10 @@ let init_fix_engine_state =
   ; outgoing_fix_msg = None
   ; fe_cache = []
   ; fe_history = []
-  ; fe_last_data_received = make_utctimestamp_micro 2017 1 1 0 1 0 None
+  ; fe_last_data_received = default_utctimestamp
   ; fe_heartbeat_interval = make_duration 0 0 0 0 0 30
   ; (* 30 seconds *)
-    fe_last_time_data_sent = make_utctimestamp_micro 2017 1 1 0 1 0 None
+    fe_last_time_data_sent = default_utctimestamp
   ; fe_testreq_interval = make_duration 0 0 0 0 0 30
   ; fe_history_to_send = []
   ; fe_retransmit_start_idx = 0
