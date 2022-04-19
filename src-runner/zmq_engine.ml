@@ -128,11 +128,11 @@ let run ( config : Config.t ) =
 let () =
   let open Cmdliner in
   let config_json =
-      let doc = "Configuration JSON" in
-      Arg.(value & opt string "config.json" & info ["config"] ~docv:"CONFIG_JSON" ~doc)
-      in
+    let doc = "Configuration JSON" in
+    Arg.(value & opt string "config.json" & info ["config"] ~docv:"CONFIG_JSON" ~doc)
+    in
   let info = let doc = "FIX engine" in
-      Term.info "fix-engine" ~version:"%%VERSION%%" ~doc ~exits:Term.default_exits
-      in
+    Cmd.info "fix-engine" ~version:"%%VERSION%%" ~doc ~exits:Cmd.Exit.defaults
+    in
   let config = Term.(const load_config $ config_json ) in
-  Term.exit @@ Term.eval (Term. (const run $ config ), info)
+  Cmd.eval (Cmd.v info Term.(const run $ config )) |> ignore

@@ -13,6 +13,17 @@
 )
 
 (executable
+ (name test_server)
+ (modules test_server)
+ (libraries 
+  fix-engine.runner
+  fix-engine.venue
+  fix-engine.conversions
+  fix-engine.protocol_exts_pp
+ )
+)
+
+(executable
  (name zmq_engine)
  (modules zmq_engine)
  (libraries 
