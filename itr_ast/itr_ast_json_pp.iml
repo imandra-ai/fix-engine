@@ -264,7 +264,7 @@ let rec instruction_to_json : instruction -> t = function
       `Assoc [ ("Onexpired", `List (List.map instruction_to_json i)) ]
   | ForEach { dataset; instructions } ->
       `Assoc
-        [ ( "Foreach"
+        [ ( "ForEach"
           , `Assoc
               [ ("dataset", expr_to_json dataset)
               ; ( "instructions"
