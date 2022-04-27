@@ -22,9 +22,9 @@ type msg_or_expr =
   | Msg of (Model_messages.model_msg_opt_def * string)
   | Record_item of record_item
 
-type field_presence = 
+type field_presence =
   | Present
-  | NotPresent 
+  | NotPresent
   | Unknown
 
 type field_path = (string * Z.t option) list
@@ -44,9 +44,9 @@ type static_context =
       -> record_item
   }
 
-type field_presence_map = field_presence Field_path_map.t 
+type field_presence_map = field_presence Field_path_map.t
 
-type context = 
+type context =
 {
   static_context:static_context option;
   field_presence_map:field_presence_map
@@ -159,7 +159,7 @@ let is_false = function
   | _ ->
       false
 
-let is_none = function 
+let is_none = function
 | Rec_value (Value (Literal LiteralNone)) ->
   true
 | _ ->
@@ -555,8 +555,8 @@ and evaluate_expr (context : context) (e : expr) : record_item =
   | Value (Funcall { func : string; args : record_item list })
     when func = "defaultIfNotSet" && List.length args = 2 ->
     ( match args with
-    | [Rec_value (Value (MessageValue {var=None;field_path=field_path1}));Rec_value (Value (MessageValue {var=None;field_path=field_path2}))] -> 
-      (match Field_path_map.get field_path1 context.field_presence_map,Field_path_map.get field_path2 context.field_presence_map with 
+    | [Rec_value (Value (MessageValue {var=None;field_path=field_path1}));Rec_value (Value (MessageValue {var=None;field_path=field_path2}))] ->
+      (match Field_path_map.get field_path1 context.field_presence_map,Field_path_map.get field_path2 context.field_presence_map with
       | Some Present,_ ->  Rec_value (Value (MessageValue {var=None;field_path=field_path1}))
       | _,Some Present ->  Rec_value (Value (MessageValue {var=None;field_path=field_path2}))
       | _-> Rec_value
@@ -564,16 +564,16 @@ and evaluate_expr (context : context) (e : expr) : record_item =
          (Funcall
             { func; args = CCList.map evaluate_record_item args } ) )
       )
-    | [_d;Rec_value (Value (MessageValue {var=None;field_path}))] -> 
-      (match Field_path_map.get field_path context.field_presence_map with 
+    | [_d;Rec_value (Value (MessageValue {var=None;field_path}))] ->
+      (match Field_path_map.get field_path context.field_presence_map with
       | Some Present ->  Rec_value (Value (MessageValue {var=None;field_path}))
       | _-> Rec_value
       (Value
          (Funcall
             { func; args = CCList.map evaluate_record_item args } ) )
       )
-      | [Rec_value (Value (MessageValue {var=None;field_path}));_] -> 
-        (match Field_path_map.get field_path context.field_presence_map with 
+      | [Rec_value (Value (MessageValue {var=None;field_path}));_] ->
+        (match Field_path_map.get field_path context.field_presence_map with
         | Some Present ->  Rec_value (Value (MessageValue {var=None;field_path}))
         | _-> Rec_value
         (Value
@@ -785,7 +785,7 @@ and evaluate_expr (context : context) (e : expr) : record_item =
             Rec_value (Value (Literal (Float (a /. Q.of_bigint b))))
         | Value (Literal (Int a)), '/', Value (Literal (Float b)) ->
             Rec_value (Value (Literal (Float (Q.of_bigint a /. b))))
-        | _, '+', _ | _, '-', _ ->
+        | _, '*', _ | _, '/', _ ->
             Rec_value e
         | _, _, _ ->
             failwith "Unknown Mul operator" )
@@ -811,7 +811,7 @@ let fix_evaluate_record_item context record_item =
   let res = evaluate_record_item context record_item in
   if res = record_item then record_item else evaluate_record_item context res
 
-let fix_evaluate_constraints context constraints = 
+let fix_evaluate_constraints context constraints =
     CCList.map (fix_evaluate_record_item context) constraints
 
 
@@ -830,10 +830,10 @@ let get_all_subsets (l : 'a list) : 'a list list =
 let rec infer_field_presence (context : context) (e:expr) : field_path list =
     let evaluate_record_item = evaluate_record_item context in
     let evaluate_expr = evaluate_expr context in
-    match e with 
+    match e with
     | Cmp
     { lhs =
-        Value (Funcall { func = "defaultIfNotSet"; args = 
+        Value (Funcall { func = "defaultIfNotSet"; args =
         [ def_val; ri ] })
     ; op
     ; rhs
@@ -842,7 +842,7 @@ let rec infer_field_presence (context : context) (e:expr) : field_path list =
       (evaluate_record_item def_val, evaluate_record_item ri)
     in if ((is_ground def_val && is_ground ri)||
       (Caml.not @@ is_ground def_val && Caml.not @@ is_ground ri))
-    then [] else 
+    then [] else
       (match (def_val, ri) with
       | Rec_value lhs, Rec_value (Value (MessageValue {var=None;field_path})) ->
           if is_false @@ evaluate_expr (Cmp { lhs; op; rhs })
@@ -867,7 +867,7 @@ let rec infer_field_presence (context : context) (e:expr) : field_path list =
         (evaluate_record_item def_val, evaluate_record_item ri)
       in if ((is_ground def_val && is_ground ri)||
         (Caml.not @@ is_ground def_val && Caml.not @@ is_ground ri))
-      then [] else 
+      then [] else
         (match (def_val, ri) with
         |  lhs, Rec_value (Value (MessageValue {var=None;field_path})) ->
             if is_false @@ evaluate_expr (Eq { lhs; rhs })
@@ -881,12 +881,12 @@ let rec infer_field_presence (context : context) (e:expr) : field_path list =
                []
         | _ ->
             [])
-  
-    | And _ -> let assoc_ands = get_assoc_ands e in 
-      CCList.fold_left (fun acc el -> 
+
+    | And _ -> let assoc_ands = get_assoc_ands e in
+      CCList.fold_left (fun acc el ->
         (infer_field_presence context el)@acc
         ) [] (Expr_set.to_list assoc_ands)
-    | _ -> []  
+    | _ -> []
 
 
 (* return here set of sets -
@@ -902,7 +902,7 @@ let rec infer_field_presence (context : context) (e:expr) : field_path list =
    which is analogous to DNF
 *)
 let nullable_expr
-    (expr : expr) (message_field_optional_map : bool String_map.t option) 
+    (expr : expr) (message_field_optional_map : bool String_map.t option)
     (field_presence_map: field_presence_map):
     Field_path_set.t list =
   let open Itr_ast in
