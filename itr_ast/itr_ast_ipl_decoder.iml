@@ -363,7 +363,7 @@ let nullable (runner_decoder : 'a runner_decoder) : 'a option runner_decoder =
             Ok None
         | None ->
             runner_decoder.run input
-            |> CCResult.map CCOpt.return
+            |> CCResult.map CCOption.return
             |> CCResult.map_err (tag_error "Expected null or") )
   }
 
@@ -652,7 +652,7 @@ let field : string -> 'a runner_decoder -> 'a runner_decoder =
       (fun t ->
         let value =
           get_key_value_pairs t
-          |> CCOpt.flat_map
+          |> CCOption.flat_map
                (CCList.find_map (fun (k, v) ->
                     match get_string k with
                     | Some s when s = key ->
@@ -678,7 +678,7 @@ let field_opt : string -> 'a runner_decoder -> 'a option runner_decoder =
       (fun t ->
         let value =
           get_key_value_pairs t
-          |> CCOpt.flat_map
+          |> CCOption.flat_map
                (CCList.find_map (fun (k, v) ->
                     match get_string k with
                     | Some s when s = key ->

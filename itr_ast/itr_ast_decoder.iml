@@ -165,7 +165,7 @@ and value_decoder () : Itr_ast.value decoder =
                  ] )
           in
           let* index = field "index" (nullable int) in
-          let index = CCOpt.map (fun x -> Z.of_int x) index in
+          let index = CCOption.map (fun x -> Z.of_int x) index in
           let* prop = field "prop" string in
           succeed (ObjectProperty { obj; index; prop })
       | "Funcall" ->
@@ -300,7 +300,7 @@ and record_decoder () : record decoder =
 let expecting_decoder : expecting decoder =
   let* modifier = field "modifier" (nullable string) in
   let modifier =
-    CCOpt.map
+    CCOption.map
       (function "only supported" -> `Only_supported | _ -> `Only)
       modifier
   in
@@ -436,12 +436,12 @@ let rec instruction_decoder () : instruction decoder =
           succeed (Set { prop; value })
       | "Call" ->
           let* variable = field "variable" (nullable string) in
-          let variable = CCOpt.map (fun v -> Var.mk v) variable in
+          let variable = CCOption.map (fun v -> Var.mk v) variable in
           let* call = field "call" (value_decoder ()) in
           succeed (Call { variable; call })
       | "Send" ->
           let* variable = field "variable" (nullable string) in
-          let variable = CCOpt.map (fun v -> Var.mk v) variable in
+          let variable = CCOption.map (fun v -> Var.mk v) variable in
           let* template = field "template" template_decoder in
           let* connection = field "connection" connection_ref_decoder in
           let* using = field "using" (nullable string) in
@@ -454,14 +454,14 @@ let rec instruction_decoder () : instruction decoder =
           succeed (ExpectingOf { variable; expecting })
       | "Template" ->
           let* variable = field "variable" (nullable string) in
-          let variable = CCOpt.map (fun v -> Var.mk v) variable in
+          let variable = CCOption.map (fun v -> Var.mk v) variable in
           let* template = field "template" template_decoder in
           let* connection = field "connection" connection_ref_decoder in
           let* using = field "using" (nullable string) in
           succeed (Template { variable; template; connection; using })
       | "Receive" ->
           let* variable = field "variable" (nullable string) in
-          let variable = CCOpt.map (fun v -> Var.mk v) variable in
+          let variable = CCOption.map (fun v -> Var.mk v) variable in
           let* connection = field "connection" connection_ref_decoder in
           let* timeout = field "timeout" (nullable (expr_decoder ())) in
           let* where = field "where" (expr_decoder ()) in

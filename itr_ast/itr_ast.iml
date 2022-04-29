@@ -834,7 +834,7 @@ module Value = struct
     | Set { prop = _; value = e } ->
         exists_record_item f e
     | Fail e | Return e | Connect { connection = _; timeout = e; block = _ } ->
-        e |> CCOpt.exists (exists_expr f)
+        e |> CCOption.exists (exists_expr f)
     | Action { fields; _ } ->
         CCList.exists
           (exists_record_item f)
@@ -850,7 +850,7 @@ module Value = struct
         ; using = _
         ; withs = record
         } ->
-        CCOpt.exists (exists_record f) record
+        CCOption.exists (exists_record f) record
     | Cleanup is
     | OnExpired is
     | Repeat { ntimes = _; instructions = is }
@@ -859,9 +859,9 @@ module Value = struct
     | ForEach { dataset = e; instructions = is } ->
         exists_expr f e || CCList.exists (exists_instruction f) is
     | Receive { variable = _; connection = _; timeout; where; expecting; _ } ->
-        CCOpt.exists (exists_expr f) timeout
+        CCOption.exists (exists_expr f) timeout
         || exists_expr f where
-        || CCOpt.exists
+        || CCOption.exists
              (fun (e : expecting) ->
                CCList.exists
                  (exists_expr f)
