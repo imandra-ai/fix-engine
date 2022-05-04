@@ -1,0 +1,19 @@
+(* Imandra Inc. copyright 2022 *)
+[@@@import "../src-types/model_app_enums.iml"]
+open Model_app_enums;;
+
+
+let model_func_default_ExecInst_NewOrderSingle (() : unit)  : model_fix_execinst Set.t =
+    let _return_ret_var = Map.const false
+    in
+    (let local_set_var:model_fix_execinst Set.t = Map.const false
+    in
+    let local_set_var = Map.add FIX_ExecInst_AllOrNone true local_set_var
+    in
+    let local_set_var = Map.add FIX_ExecInst_Held true local_set_var
+    in
+    local_set_var
+    )
+    [@@macro]
+;;
+

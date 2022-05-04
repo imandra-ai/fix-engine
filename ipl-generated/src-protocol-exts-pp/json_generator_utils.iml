@@ -1,0 +1,29 @@
+(* Imandra Inc. copyright 2022 *)
+[@@@program]
+[@@@require "decoders-yojson"]
+open Decoders_yojson.Basic.Decode;;
+[@@@require "decoders-yojson"]
+open Decoders_yojson.Basic.Decode.Infix;;
+[@@@require "yojson"]
+open Yojson.Basic;;
+
+
+let lstring  : LString.t decoder =
+    string >>= (fun x -> 
+    succeed (LString.of_string x)
+    )
+;;
+
+let assoc_filter_nulls (x)  : Yojson.Basic.t =
+    `Assoc (List.filter (function (_,`Null) -> false |_ -> true
+    ) x)
+;;
+
+let rg_for_json (f) (lst)  : Yojson.Basic.t =
+    (match lst with
+        | [] -> (`List [])
+        | lst -> (`List (List.map f lst))
+    )
+;;
+
+[@@@logic]

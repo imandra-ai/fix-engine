@@ -1,0 +1,52 @@
+(* Imandra Inc. copyright 2022 *)
+
+
+type ('a) loop_result = {
+    loop_result_result : 'a;
+    loop_result_break : bool;
+    loop_result_return : bool
+}
+;;
+
+let loop_range_measure (t) (f)  =
+    Ordinal.of_int (abs ((-) t f))
+    [@@macro]
+;;
+
+let sign (x)  =
+    (if ((<=) x 0) then
+        ((-) 0 1)
+    else
+        1)
+;;
+
+let rec loop_range (f) (from) (to_) (step) (acc)  =
+    (if ((||) ((<>) (sign ((-) to_ from)) (sign step)) ((=) step 0)) then
+        acc
+    else
+        ((if ((<=) ((-) to_ from) 0) then
+            acc
+        else
+            let new_acc = f from acc
+            in
+            (if ((||) new_acc.loop_result_break new_acc.loop_result_return) then
+                new_acc
+            else
+                (loop_range f ((+) from step) to_ step new_acc))
+            )
+        ))
+    [@@measure loop_range_measure to_ from]
+;;
+
+let rec loop_enum (f) (from) (acc)  =
+    (match from with
+        | [] -> acc
+        | h :: t -> let new_acc = f h acc
+        in
+        (if ((||) new_acc.loop_result_break new_acc.loop_result_return) then
+            new_acc
+        else
+            (loop_enum f t new_acc))
+    )
+;;
+

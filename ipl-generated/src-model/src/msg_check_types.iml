@@ -1,0 +1,59 @@
+(* Imandra Inc. copyright 2022 *)
+[@@@import "../../src-core/datetime.iml"]
+open Datetime;;
+[@@@import "../../src-core/numeric.iml"]
+open Numeric;;
+[@@@import "../../src-core-time-defaults/time_defaults.iml"]
+open Time_defaults;;
+
+
+type reject_info_defrej = {
+    mod_builtin_rejectInfo_text : LString.t;
+    mod_builtin_rejectInfo_field : LString.t option
+}
+;;
+
+type field_state_defrej = {
+    field_invalid_defrej : bool;
+    field_reject_info_defrej : reject_info_defrej
+}
+;;
+
+let fields_good_defrej = {
+    field_invalid_defrej = false;
+    field_reject_info_defrej = {
+        mod_builtin_rejectInfo_text = {l|0|l};
+        mod_builtin_rejectInfo_field = None
+    }
+} [@@macro];;
+
+let is_fields_invalid_defrej (rej_info : reject_info_defrej)  =
+    {
+        field_invalid_defrej = true;
+        field_reject_info_defrej = rej_info
+    }
+    [@@macro]
+;;
+
+type validate_reject_defrej = {
+    validate_invalid_defrej : bool;
+    validate_reject_info_defrej : reject_info_defrej
+}
+;;
+
+let no_invalid_validates_defrej = {
+    validate_invalid_defrej = false;
+    validate_reject_info_defrej = {
+        mod_builtin_rejectInfo_text = {l|0|l};
+        mod_builtin_rejectInfo_field = None
+    }
+} [@@macro];;
+
+let make_cond_defrej (cond_result : bool) (rej_info : reject_info_defrej)  =
+    {
+        validate_invalid_defrej = not cond_result;
+        validate_reject_info_defrej = rej_info
+    }
+    [@@macro]
+;;
+

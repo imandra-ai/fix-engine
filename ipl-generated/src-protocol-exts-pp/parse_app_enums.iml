@@ -1,0 +1,183 @@
+(* Imandra Inc. copyright 2022 *)
+[@@@program]
+[@@@import "../src-model/src-types/model_app_enums.iml"]
+open Model_app_enums;;
+[@@@import "../src-core-pp/parser_utils.iml"]
+open Parser_utils.Parser;;
+
+
+let parse_inner_ExecInst (str)  =
+    (match str with
+        | "1" -> (Ok ((FIX_ExecInst_NotHeld)))
+        | "2" -> (Ok ((FIX_ExecInst_Work)))
+        | "3" -> (Ok ((FIX_ExecInst_GoAlong)))
+        | "4" -> (Ok ((FIX_ExecInst_OverTheDay)))
+        | "5" -> (Ok ((FIX_ExecInst_Held)))
+        | "6" -> (Ok ((FIX_ExecInst_ParticipateDoNotInitiate)))
+        | "7" -> (Ok ((FIX_ExecInst_StrictScale)))
+        | "8" -> (Ok ((FIX_ExecInst_TryToScale)))
+        | "9" -> (Ok ((FIX_ExecInst_StayOnBidSide)))
+        | "0" -> (Ok ((FIX_ExecInst_StayOnOfferSide)))
+        | "A" -> (Ok ((FIX_ExecInst_NoCross)))
+        | "B" -> (Ok ((FIX_ExecInst_OKToCross)))
+        | "C" -> (Ok ((FIX_ExecInst_CallFirst)))
+        | "D" -> (Ok ((FIX_ExecInst_PercentOfVolume)))
+        | "E" -> (Ok ((FIX_ExecInst_DoNotIncrease)))
+        | "F" -> (Ok ((FIX_ExecInst_DoNotReduce)))
+        | "G" -> (Ok ((FIX_ExecInst_AllOrNone)))
+        | "H" -> (Ok ((FIX_ExecInst_ReinstateOnSystemFailure)))
+        | "I" -> (Ok ((FIX_ExecInst_InstitutionsOnly)))
+        | "J" -> (Ok ((FIX_ExecInst_ReinstateOnTradingHalt)))
+        | "K" -> (Ok ((FIX_ExecInst_CancelOnTradingHalt)))
+        | "L" -> (Ok ((FIX_ExecInst_LastPeg)))
+        | "M" -> (Ok ((FIX_ExecInst_MidPricePeg)))
+        | "N" -> (Ok ((FIX_ExecInst_NonNegotiable)))
+        | "O" -> (Ok ((FIX_ExecInst_OpeningPeg)))
+        | "P" -> (Ok ((FIX_ExecInst_MarketPeg)))
+        | "Q" -> (Ok ((FIX_ExecInst_CancelOnSystemFailure)))
+        | "R" -> (Ok ((FIX_ExecInst_PrimaryPeg)))
+        | "S" -> (Ok ((FIX_ExecInst_Suspend)))
+        | "U" -> (Ok ((FIX_ExecInst_CustomerDisplayInstruction)))
+        | "V" -> (Ok ((FIX_ExecInst_Netting)))
+        | "W" -> (Ok ((FIX_ExecInst_PegToVWAP)))
+        | "X" -> (Ok ((FIX_ExecInst_TradeAlong)))
+        | "Y" -> (Ok ((FIX_ExecInst_TryToStop)))
+        | "Z" -> (Ok ((FIX_ExecInst_CancelIfNotBest)))
+        | "a" -> (Ok ((FIX_ExecInst_TrailingStopPeg)))
+        | "b" -> (Ok ((FIX_ExecInst_StrictLimit)))
+        | "c" -> (Ok ((FIX_ExecInst_IgnorePriceValidityChecks)))
+        | "d" -> (Ok ((FIX_ExecInst_PegToLimitPrice)))
+        | "e" -> (Ok ((FIX_ExecInst_WorkToTargetStrategy)))
+        | s -> (Error s)
+    )
+;;
+
+let parse_ExecInst (str)  =
+    let x = split_to_list str ' '
+    in
+    Some (List.map parse_inner_ExecInst x)
+;;
+
+let parse_ExecType (str)  =
+    (match str with
+        | "0" -> (Some (Ok ((FIX_ExecType_New))))
+        | "3" -> (Some (Ok ((FIX_ExecType_DoneForDay))))
+        | "4" -> (Some (Ok ((FIX_ExecType_Canceled))))
+        | "5" -> (Some (Ok ((FIX_ExecType_Replaced))))
+        | "6" -> (Some (Ok ((FIX_ExecType_PendingCancel))))
+        | "7" -> (Some (Ok ((FIX_ExecType_Stopped))))
+        | "8" -> (Some (Ok ((FIX_ExecType_Rejected))))
+        | "9" -> (Some (Ok ((FIX_ExecType_Suspended))))
+        | "A" -> (Some (Ok ((FIX_ExecType_PendingNew))))
+        | "B" -> (Some (Ok ((FIX_ExecType_Calculated))))
+        | "C" -> (Some (Ok ((FIX_ExecType_Expired))))
+        | "D" -> (Some (Ok ((FIX_ExecType_Restated))))
+        | "E" -> (Some (Ok ((FIX_ExecType_PendingReplace))))
+        | "F" -> (Some (Ok ((FIX_ExecType_Trade))))
+        | "G" -> (Some (Ok ((FIX_ExecType_TradeCorrect))))
+        | "H" -> (Some (Ok ((FIX_ExecType_TradeCancel))))
+        | "I" -> (Some (Ok ((FIX_ExecType_OrderStatus))))
+        | s -> (Some (Error s))
+    )
+;;
+
+let parse_OrdStatus (str)  =
+    (match str with
+        | "0" -> (Some (Ok ((FIX_OrdStatus_New))))
+        | "1" -> (Some (Ok ((FIX_OrdStatus_PartiallyFilled))))
+        | "2" -> (Some (Ok ((FIX_OrdStatus_Filled))))
+        | "3" -> (Some (Ok ((FIX_OrdStatus_DoneForDay))))
+        | "4" -> (Some (Ok ((FIX_OrdStatus_Canceled))))
+        | "6" -> (Some (Ok ((FIX_OrdStatus_PendingCancel))))
+        | "7" -> (Some (Ok ((FIX_OrdStatus_Stopped))))
+        | "8" -> (Some (Ok ((FIX_OrdStatus_Rejected))))
+        | "9" -> (Some (Ok ((FIX_OrdStatus_Suspended))))
+        | "A" -> (Some (Ok ((FIX_OrdStatus_PendingNew))))
+        | "B" -> (Some (Ok ((FIX_OrdStatus_Calculated))))
+        | "C" -> (Some (Ok ((FIX_OrdStatus_Expired))))
+        | "D" -> (Some (Ok ((FIX_OrdStatus_AcceptedForBidding))))
+        | "E" -> (Some (Ok ((FIX_OrdStatus_PendingReplace))))
+        | "5" -> (Some (Ok ((FIX_OrdStatus_Replaced))))
+        | s -> (Some (Error s))
+    )
+;;
+
+let parse_OrdType (str)  =
+    (match str with
+        | "1" -> (Some (Ok ((FIX_OrdType_Market))))
+        | "2" -> (Some (Ok ((FIX_OrdType_Limit))))
+        | "3" -> (Some (Ok ((FIX_OrdType_Stop))))
+        | "4" -> (Some (Ok ((FIX_OrdType_StopLimit))))
+        | "6" -> (Some (Ok ((FIX_OrdType_WithOrWithout))))
+        | "7" -> (Some (Ok ((FIX_OrdType_LimitOrBetter))))
+        | "8" -> (Some (Ok ((FIX_OrdType_LimitWithOrWithout))))
+        | "9" -> (Some (Ok ((FIX_OrdType_OnBasis))))
+        | "D" -> (Some (Ok ((FIX_OrdType_PreviouslyQuoted))))
+        | "E" -> (Some (Ok ((FIX_OrdType_PreviouslyIndicated))))
+        | "G" -> (Some (Ok ((FIX_OrdType_ForexSwap))))
+        | "I" -> (Some (Ok ((FIX_OrdType_Funari))))
+        | "J" -> (Some (Ok ((FIX_OrdType_MarketIfTouched))))
+        | "K" -> (Some (Ok ((FIX_OrdType_MarketWithLeftOverAsLimit))))
+        | "L" -> (Some (Ok ((FIX_OrdType_PreviousFundValuationPoint))))
+        | "M" -> (Some (Ok ((FIX_OrdType_NextFundValuationPoint))))
+        | "P" -> (Some (Ok ((FIX_OrdType_Pegged))))
+        | "s" -> (Some (Ok ((FIX_OrdType_StopSpread))))
+        | s -> (Some (Error s))
+    )
+;;
+
+let parse_PartySubIDType (str)  =
+    (match str with
+        | "1" -> (Some (Ok ((FIX_PartySubIDType_Firm))))
+        | "2" -> (Some (Ok ((FIX_PartySubIDType_Person))))
+        | "3" -> (Some (Ok ((FIX_PartySubIDType_System))))
+        | "4" -> (Some (Ok ((FIX_PartySubIDType_Application))))
+        | "5" -> (Some (Ok ((FIX_PartySubIDType_FullLegalNameOfFirm))))
+        | "6" -> (Some (Ok ((FIX_PartySubIDType_PostalAddress))))
+        | "7" -> (Some (Ok ((FIX_PartySubIDType_PhoneNumber))))
+        | "8" -> (Some (Ok ((FIX_PartySubIDType_EmailAddress))))
+        | "9" -> (Some (Ok ((FIX_PartySubIDType_ContactName))))
+        | "10" -> (Some (Ok ((FIX_PartySubIDType_SecuritiesAccountNumber))))
+        | "11" -> (Some (Ok ((FIX_PartySubIDType_RegistrationNumber))))
+        | "12" -> (Some (Ok ((FIX_PartySubIDType_RegisteredAddressForConfirmation))))
+        | "13" -> (Some (Ok ((FIX_PartySubIDType_RegulatoryStatus))))
+        | "14" -> (Some (Ok ((FIX_PartySubIDType_RegistrationName))))
+        | "15" -> (Some (Ok ((FIX_PartySubIDType_CashAccountNumber))))
+        | "16" -> (Some (Ok ((FIX_PartySubIDType_BIC))))
+        | "17" -> (Some (Ok ((FIX_PartySubIDType_CSDParticipantMemberCode))))
+        | "18" -> (Some (Ok ((FIX_PartySubIDType_RegisteredAddress))))
+        | "19" -> (Some (Ok ((FIX_PartySubIDType_FundAccountName))))
+        | "20" -> (Some (Ok ((FIX_PartySubIDType_TelexNumber))))
+        | "21" -> (Some (Ok ((FIX_PartySubIDType_FaxNumber))))
+        | "22" -> (Some (Ok ((FIX_PartySubIDType_SecuritiesAccountName))))
+        | "23" -> (Some (Ok ((FIX_PartySubIDType_CashAccountName))))
+        | "24" -> (Some (Ok ((FIX_PartySubIDType_Department))))
+        | "25" -> (Some (Ok ((FIX_PartySubIDType_LocationDesk))))
+        | "26" -> (Some (Ok ((FIX_PartySubIDType_PositionAccountType))))
+        | s -> (Some (Error s))
+    )
+;;
+
+let parse_Side (str)  =
+    (match str with
+        | "1" -> (Some (Ok ((FIX_Side_Buy))))
+        | "2" -> (Some (Ok ((FIX_Side_Sell))))
+        | "3" -> (Some (Ok ((FIX_Side_BuyMinus))))
+        | "4" -> (Some (Ok ((FIX_Side_SellPlus))))
+        | "5" -> (Some (Ok ((FIX_Side_SellShort))))
+        | "6" -> (Some (Ok ((FIX_Side_SellShortExempt))))
+        | "7" -> (Some (Ok ((FIX_Side_Undisclosed))))
+        | "8" -> (Some (Ok ((FIX_Side_Cross))))
+        | "9" -> (Some (Ok ((FIX_Side_CrossShort))))
+        | "A" -> (Some (Ok ((FIX_Side_CrossShortExempt))))
+        | "B" -> (Some (Ok ((FIX_Side_AsDefined))))
+        | "C" -> (Some (Ok ((FIX_Side_Opposite))))
+        | "D" -> (Some (Ok ((FIX_Side_Subscribe))))
+        | "E" -> (Some (Ok ((FIX_Side_Redeem))))
+        | "F" -> (Some (Ok ((FIX_Side_Lend))))
+        | "G" -> (Some (Ok ((FIX_Side_Borrow))))
+        | s -> (Some (Error s))
+    )
+;;
+
+[@@@logic]

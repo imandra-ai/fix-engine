@@ -20,6 +20,7 @@
   fix-engine.venue
   fix-engine.conversions
   fix-engine.protocol_exts_pp
+  fix-engine.simulation_utils_gen
  )
 )
 
