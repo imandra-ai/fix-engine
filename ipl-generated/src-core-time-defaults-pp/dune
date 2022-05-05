@@ -1,6 +1,6 @@
 (library
   (name core_time_defaults_pp)
-  (public_name fix-engine.core_time_defaults_pp)
+  (public_name fix-engine-gen.core_time_defaults_pp)
   (wrapped false)
   (flags (:standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58))
   (libraries imandra-prelude fix-engine.core_pp fix-engine.core_utils_pp)

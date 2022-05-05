@@ -17,10 +17,10 @@
  (modules test_server)
  (libraries 
   fix-engine.runner
-  fix-engine.venue
-  fix-engine.conversions
-  fix-engine.protocol_exts_pp
-  fix-engine.simulation_utils_gen
+  fix-engine-gen.venue
+  fix-engine-gen.conversions
+  fix-engine-gen.protocol_exts_pp
+  fix-engine-gen.simulation_utils_gen
  )
 )
 

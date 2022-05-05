@@ -1,7 +1,7 @@
 (library
   (name string_factory)
-  (public_name fix-engine.string_factory)
+  (public_name fix-engine-gen.string_factory)
   (wrapped false)
   (flags (:standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58))
-  (libraries imandra-prelude fix-engine.venue_types)
+  (libraries imandra-prelude fix-engine-gen.venue_types)
 )
