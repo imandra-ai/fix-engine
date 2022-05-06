@@ -1,0 +1,34 @@
+(executable
+ (name test_runner)
+ (libraries 
+   threads 
+   cmdliner 
+   lwt.unix 
+   fix-engine.protocol_pp
+   fix-engine.core_utils_pp
+  )
+ (modes byte)
+ (modules test_runner test_runner_utils config_parser message_stream))
+
+(executable
+ (name test_cache)
+ (libraries test_utils fix_engine)
+ (modes byte)
+ (modules test_cache))
+
+(executable
+ (name test_roundtrip)
+ (libraries test_utils fix_engine)
+ (modes byte)
+ (modules test_roundtrip))
+
+(executable
+ (name test_server)
+ (modules test_server model)
+ (libraries 
+  fix-engine.runtime
+  fix-engine-gen.venue
+  fix-engine-gen.conversions
+  fix-engine-gen.protocol_exts_pp
+  fix-engine-gen.simulation_utils_gen
+ ))
