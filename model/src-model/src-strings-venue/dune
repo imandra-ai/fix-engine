@@ -1,7 +1,7 @@
 (library
   (name venue_strings_venue)
-  (public_name fix-engine-gen.venue_strings_venue)
+  (public_name model.venue_strings_venue)
   (wrapped false)
   (flags (:standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58))
-  (libraries imandra-prelude fix-engine-gen.venue_types)
+  (libraries imandra-prelude model.venue_types)
 )

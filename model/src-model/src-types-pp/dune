@@ -1,7 +1,7 @@
 (library
   (name types_pp)
-  (public_name fix-engine-gen.types_pp)
+  (public_name model.types_pp)
   (wrapped false)
   (flags (:standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58))
-  (libraries imandra-prelude decoders-yojson fix-engine.core fix-engine.core_pp fix-engine-gen.core_time_defaults fix-engine-gen.protocol_exts_pp fix-engine-gen.string_factory fix-engine.templates fix-engine-gen.venue_strings_venue fix-engine-gen.venue_types yojson)
+  (libraries imandra-prelude decoders-yojson fix-engine.core fix-engine.core_pp model.core_time_defaults model.protocol_exts_pp model.string_factory fix-engine.templates model.venue_strings_venue model.venue_types yojson)
 )
