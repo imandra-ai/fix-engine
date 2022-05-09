@@ -1,0 +1,14 @@
+(library
+ (name simulation)
+ (public_name model.simulation)
+ (wrapped false)
+ (modules model)
+ (libraries 
+  model.venue
+  model.conversions
+  model.protocol_exts_pp
+  model.simulation_utils_gen
+  fix-engine.protocol_pp
+  lwt.unix
+ )
+)

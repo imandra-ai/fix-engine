@@ -25,8 +25,14 @@ let ts_parser =
 let log_thread () =
   let rec thread () = 
     let* msg = Lwt_mvar.take log_box in
+    let t = match msg.direction, msg.msg_type with
+      | Runtime.Incoming , Runtime.Admin -> "incoming admin"
+      | Runtime.Incoming , Runtime.Application -> "incoming application"
+      | Runtime.Outgoing , Runtime.Admin -> "outgoing admin"
+      | Runtime.Outgoing , Runtime.Application -> "outgoing application"
+      in
     let msg = Fix_io.encode ~split:'|' msg.Runtime.message in
-    let* () = Lwt_io.printl ("Log thread: "  ^ msg) in
+    let* () = Lwt_io.printl ("Log thread, " ^ t ^ ": " ^ msg) in
     thread ()
     in
   thread ()
@@ -42,15 +48,12 @@ let engine_thread () =
 let engine_to_model_thread model_handle () =
   let rec thread () = 
     let* msg = Lwt_mvar.take model_box in
-    let* () = Lwt_io.printl ("engine_to_model_got message") in
     let* () = match msg.direction, msg.msg_type with
       | Incoming , Application -> begin
         let open Full_messages in
         let msg = Parse_full_messages.parse_top_level_msg ts_parser msg.message in
-        let* () = Lwt_io.printl ("Incoming app message") in
         match msg with 
         | ValidMsg msg -> begin 
-          let* () = Lwt_io.printl ("Valid message") in
           match msg.full_msg_data with
           | Full_FIX_Admin_Msg _ -> 
             Lwt.return_unit
@@ -60,7 +63,6 @@ let engine_to_model_thread model_handle () =
         | _ -> Lwt.return_unit
       end  
       | _ , _  -> 
-        let* () = Lwt_io.printl ("Irrelevant. skipping") in
         Lwt.return_unit
       in
     thread ()

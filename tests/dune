@@ -12,11 +12,12 @@
 
 (executable
  (name test_server)
- (modules test_server model)
+ (modules test_server)
  (libraries 
   fix-engine.runtime
   model.venue
   model.conversions
   model.protocol_exts_pp
   model.simulation_utils_gen
+  model.simulation
  ))
