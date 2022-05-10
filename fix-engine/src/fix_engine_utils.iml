@@ -14,7 +14,6 @@
 [@@@import "../src-protocol/full_message_tags.iml"]
 [@@@import "../src-protocol/full_admin_tags.iml"]
 [@@@import "fix_engine_state.iml"]
-[@@@import "../src-core-time-defaults/time_defaults.iml"]
 open Datetime;;
 open Full_admin_enums;;
 open Full_admin_messages;;
@@ -22,7 +21,6 @@ open Full_messages;;
 open Full_message_tags;;
 open Full_admin_tags;;
 open Fix_engine_state;;
-open Time_defaults;;
 
 
 (* Does the message have the right sequence number? *)
@@ -345,7 +343,7 @@ let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * f
         let engine = session_reject ( reject , engine ) in
         Some { engine with incoming_seq_num = curr_incoming_seq_num }
     | Some orig_sending_time ->
-    if utctimestamp_LessThan  msg_header.h_sending_time  orig_sending_time   then
+    if utctimestamp_LessThan_milli_milli  msg_header.h_sending_time  orig_sending_time   then
         let reject = { reject with
             srej_msg_field_tag = Some (Full_Admin_Field_Tag Full_Field_OrigSendingTime_Tag);
             srej_msg_reject_reason = Some SendingTimeAccuracyProblem;

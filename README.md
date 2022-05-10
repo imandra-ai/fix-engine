@@ -1,1 +1,7 @@
-echo "8=FIX.4.2|9=71|35=A|49=CLIENT|56=IMANDRA|34=1|52=20210810-14:30:16.025000|98=0|108=30|10=059|" | tr "|" "\001" | nc localhost 9880
+Starting a ZMQ server:
+
+    dune exec fix-engine/src-runtime/zmq_engine.exe
+
+Starting a ZMQ client
+
+    dune exec fix-engine/src-runtime/zmq_engine.exe -- --config=client.json
