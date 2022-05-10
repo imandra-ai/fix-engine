@@ -1,7 +1,0 @@
-(library
-  (name protocol_exts_pp)
-  (public_name model.protocol_exts_pp)
-  (wrapped false)
-  (flags (:standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58))
-  (libraries imandra-prelude decoders-yojson fix-engine.core fix-engine.core_pp model.protocol_exts model.venue_types yojson)
-)

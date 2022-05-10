@@ -1,7 +1,0 @@
-(library
-  (name conversions)
-  (public_name model.conversions)
-  (wrapped false)
-  (flags (:standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58))
-  (libraries imandra-prelude model.protocol_exts model.venue_types)
-)
