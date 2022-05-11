@@ -35,20 +35,20 @@ module Field_path_map = CCMap.Make (struct
   let compare = Caml.compare
 end)
 
-type static_context =
+type 'a static_context =
   { local_vars : msg_or_expr String_map.t
-  ; implicit_message : (Model_messages.model_msg_opt_def * string) option
+  ; implicit_message : ('a * string) option
   ; get_field :
-         Model_messages.model_msg_opt_def
+         'a
       -> (string * int option) list
       -> record_item
   }
 
 type field_presence_map = field_presence Field_path_map.t
 
-type context =
+type 'a context =
 {
-  static_context:static_context option;
+  static_context:'a static_context option;
   field_presence_map:field_presence_map
 }
 
@@ -425,7 +425,7 @@ let reconstruct_ands (es : record_item list) : record_item =
   in
   Rec_value (reconstruct_ands_rec es)
 
-let rec evaluate_record_item (context : context) (e : record_item) :
+let rec evaluate_record_item (context : 'a context) (e : record_item) :
     record_item =
   match e with
   | Rec_value r ->
@@ -439,7 +439,7 @@ let rec evaluate_record_item (context : context) (e : record_item) :
   | _ ->
       e
 
-and evaluate_expr (context : context) (e : expr) : record_item =
+and evaluate_expr (context : 'a context) (e : expr) : record_item =
   let evaluate_expr = evaluate_expr context in
   let evaluate_record_item = evaluate_record_item context in
   match e with
@@ -827,7 +827,7 @@ let get_all_subsets (l : 'a list) : 'a list list =
   get_all_subsets_tr l []
 
 
-let rec infer_field_presence (context : context) (e:expr) : field_path list =
+let rec infer_field_presence (context : 'a context) (e:expr) : field_path list =
     let evaluate_record_item = evaluate_record_item context in
     let evaluate_expr = evaluate_expr context in
     match e with
