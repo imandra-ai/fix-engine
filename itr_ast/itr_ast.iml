@@ -419,8 +419,9 @@ let rec get_vars_record_item ri acc =
 
 and get_vars_expr e acc =
   match e with
-  | Value (ObjectProperty { obj : record_item; _ }) ->
-      get_vars_record_item obj acc
+  (* hack to return obj properties as variables *)
+  (* | Value (ObjectProperty { obj : record_item; _ }) ->
+      get_vars_record_item obj acc *)
   | Value (Funcall { args : record_item list; _ }) ->
       CCList.fold_left
         (fun inner_acc inner_el -> get_vars_record_item inner_el inner_acc)
