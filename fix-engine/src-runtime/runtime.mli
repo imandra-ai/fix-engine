@@ -1,11 +1,19 @@
 type direction = Incoming | Outgoing
 type msg_type = Application | Admin 
 
-type event = 
+type message = 
   { message : (string * string) list
   ; direction : direction
   ; msg_type : msg_type
   }
+
+type event = 
+  | FIXMessage of message
+  | Connected of string
+  | Disconnected of string
+  | ConnectionRejected of string
+
+type handle
 
 val start_server:
     ?session_dir:string ->
@@ -14,7 +22,7 @@ val start_server:
     port:int -> 
     recv:(event -> unit Lwt.t) -> 
     unit -> 
-    unit Lwt.t
+    handle * unit Lwt.t
 
 val start_client:
     ?session_dir:string ->
@@ -24,7 +32,9 @@ val start_client:
     port:int -> 
     recv:(event -> unit Lwt.t) -> 
     unit -> 
-    unit Lwt.t
+    handle * unit Lwt.t
 
 val send_message:
-    Engine.message -> (unit, Engine.err) result Lwt.t
+  handle ->  
+  Engine.message -> 
+  (unit, Engine.err) result Lwt.t

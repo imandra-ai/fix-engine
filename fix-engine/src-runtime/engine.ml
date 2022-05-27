@@ -290,7 +290,6 @@ end = struct
   let send_fix_message state msg =
     let (let*?) = Lwt_result.bind in
     let*? int_msg = create_internal_message msg |> Lwt.return in
-    let* () = Lwt_io.printl "send_fix_message" in
     let action = InternalToEngine int_msg in
     let*? () = do_timechange state |> Lwt_result.ok  in 
     Lwt_mvar.put state.to_engine_box action |> Lwt_result.ok

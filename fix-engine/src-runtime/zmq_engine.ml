@@ -13,14 +13,17 @@ let event_box : Runtime.event Lwt_mvar.t = Lwt_mvar.create_empty ()
 
 let pub_thread ( zmqpubsocket : 'a Zmq_lwt.Socket.t ) =
   let rec thread () = 
+    let (let*?) x f = match x with Some x -> f x | None -> Lwt.return_unit in  
     let* msg = Lwt_mvar.take event_box in
+    let*? msg = match msg with 
+      | Runtime.FIXMessage msg -> Some msg | _ -> None in
     let msg = Fix_io.encode ~split:'|' msg.Runtime.message in
     let* () = Zmq_lwt.Socket.send zmqpubsocket msg in
     thread ()
     in
   thread ()
 
-let rep_thread ( zmqrepsocket : 'a Zmq_lwt.Socket.t ) =
+let rep_thread handle ( zmqrepsocket : 'a Zmq_lwt.Socket.t ) =
   let rec thread () = 
     let* msg = Zmq_lwt.Socket.recv zmqrepsocket in
     let msg = String.split_on_char '|' msg in
@@ -30,7 +33,7 @@ let rep_thread ( zmqrepsocket : 'a Zmq_lwt.Socket.t ) =
       | h::tl -> (h, String.concat "=" tl)
       | _ -> (x , "")
     ) in
-    let* result = Runtime.send_message  msg in
+    let* result = Runtime.send_message handle msg in
     let result = match result with
       | Ok () ->  "OK" 
       | Error _err -> "ERROR" 
@@ -50,6 +53,7 @@ let engine_thread ( config : Config.t ) =
     Runtime.start_client ~reset ~config:config.engine_config ~host ~port ~recv ()
   
 let run ( config : Config.t ) =
+  let handle, engine = engine_thread config in
   let zmqcontext = Zmq.Context.create () in
   let zmqpubsocket = Zmq.Socket.(create zmqcontext pub) in
   let () = Zmq.Socket.bind zmqpubsocket config.zmqpub in
@@ -58,9 +62,9 @@ let run ( config : Config.t ) =
   let () = Zmq.Socket.bind zmqrepsocket config.zmqrep in
   let zmqrepsocket = Zmq_lwt.Socket.of_socket zmqrepsocket in
   let thread = Lwt.join
-    [ engine_thread config
+    [ engine
     ; pub_thread zmqpubsocket
-    ; rep_thread zmqrepsocket
+    ; rep_thread handle zmqrepsocket
     ] in
   let () = Lwt_main.run thread in
   Zmq.Context.terminate zmqcontext
