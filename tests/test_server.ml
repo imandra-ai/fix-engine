@@ -22,17 +22,29 @@ let ts_parser =
   else Parse_datetime.parse_UTCTimestamp_micro 
   
 
-let log_thread () =
+let log_thread () : unit Lwt.t =
   let rec thread () = 
+    let (let*?) x f = match x with Some x -> f x | None -> thread () in  
     let* msg = Lwt_mvar.take log_box in
+    let* msg = match msg with 
+      | Runtime.FIXMessage msg -> Lwt.return @@ Some msg 
+      | Runtime.Connected x -> 
+        let* () = Lwt_io.printlf "Client %s connected" x in
+        Lwt.return None 
+      | Runtime.Disconnected _ -> 
+        let* () = Lwt_io.printlf "Client disconnected" in
+        Lwt.return None 
+      | _ -> Lwt.return None 
+      in
+    let*? msg = msg in
     let t = match msg.direction, msg.msg_type with
-      | Runtime.Incoming , Runtime.Admin -> "incoming admin"
-      | Runtime.Incoming , Runtime.Application -> "incoming application"
-      | Runtime.Outgoing , Runtime.Admin -> "outgoing admin"
-      | Runtime.Outgoing , Runtime.Application -> "outgoing application"
+      | Runtime.Incoming , Runtime.Admin -> "Incoming admin"
+      | Runtime.Incoming , Runtime.Application -> "Incoming application"
+      | Runtime.Outgoing , Runtime.Admin -> "Outgoing admin"
+      | Runtime.Outgoing , Runtime.Application -> "Outgoing application"
       in
     let msg = Fix_io.encode ~split:'|' msg.Runtime.message in
-    let* () = Lwt_io.printl ("Log thread, " ^ t ^ ": " ^ msg) in
+    let* () = Lwt_io.printl (t ^ ": " ^ msg) in
     thread ()
     in
   thread ()
@@ -46,42 +58,38 @@ let engine_thread () =
   Runtime.start_server ~reset ~config ~port ~recv ()
 
 let engine_to_model_thread model_handle () =
-  let rec thread () = 
+  let rec thread () =
+    let (let*?) x f = match x with Some x -> f x | None -> thread () in  
     let* msg = Lwt_mvar.take model_box in
-    let* () = match msg.direction, msg.msg_type with
-      | Incoming , Application -> begin
-        let open Full_messages in
-        let msg = Parse_full_messages.parse_top_level_msg ts_parser msg.message in
-        match msg with 
-        | ValidMsg msg -> begin 
-          match msg.full_msg_data with
-          | Full_FIX_Admin_Msg _ -> 
-            Lwt.return_unit
-          | Full_FIX_App_Msg data -> 
-            Model.send_fix model_handle data
-        end
-        | _ -> Lwt.return_unit
-      end  
-      | _ , _  -> 
-        Lwt.return_unit
-      in
+    let*? msg = match msg with 
+      | Runtime.FIXMessage msg -> Some msg | _ -> None in
+    let*? msg = match msg.direction, msg.msg_type with
+      | Incoming , Application -> Some msg | _ -> None in
+    let open Full_messages in
+    let msg = Parse_full_messages.parse_top_level_msg ts_parser msg.message in
+    let*? msg = match msg with ValidMsg msg -> Some msg | _ -> None in
+    let*? data = match msg.full_msg_data with
+      | Full_FIX_App_Msg data -> Some data | _ -> None in
+    let* () = Model.send_fix model_handle data in
     thread ()
     in
   thread ()
 
-let model_recv (evt : Model.event) =
+let model_recv (handle:Runtime.handle) (evt : Model.event) =
   match evt with
   | FIXMessage (IncIntMsg_ApplicationData(data)) -> begin
     let msg = ("35", data.msg_tag)::data.payload in
-    let* r = Runtime.send_message msg in
+    let* r = Runtime.send_message handle msg in
     Lwt.return ( ignore r)
   end
   | _ -> Lwt.return_unit  
 
 let () =
-  let model_thread , model = Model.start ~recv:model_recv in
+  let handle , engine = engine_thread () in
+  let recv = model_recv handle in
+  let model_thread , model = Model.start ~recv in
   let thread = Lwt.join
-    [ engine_thread ()
+    [ engine
     ; log_thread ()
     ; model_thread
     ; engine_to_model_thread model () 
