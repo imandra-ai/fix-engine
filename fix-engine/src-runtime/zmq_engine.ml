@@ -11,9 +11,9 @@ let (let*) = Lwt.bind
 
 let event_box : Runtime.event Lwt_mvar.t = Lwt_mvar.create_empty ()
 
-let pub_thread ( zmqpubsocket : 'a Zmq_lwt.Socket.t ) =
+let pub_thread ( zmqpubsocket : 'a Zmq_lwt.Socket.t ) : unit Lwt.t =
   let rec thread () = 
-    let (let*?) x f = match x with Some x -> f x | None -> Lwt.return_unit in  
+    let (let*?) x f = match x with Some x -> f x | None -> thread () in  
     let* msg = Lwt_mvar.take event_box in
     let*? msg = match msg with 
       | Runtime.FIXMessage msg -> Some msg | _ -> None in
@@ -62,7 +62,7 @@ let run ( config : Config.t ) =
   let () = Zmq.Socket.bind zmqrepsocket config.zmqrep in
   let zmqrepsocket = Zmq_lwt.Socket.of_socket zmqrepsocket in
   let thread = Lwt.join
-    [ engine
+    [ engine   
     ; pub_thread zmqpubsocket
     ; rep_thread handle zmqrepsocket
     ] in

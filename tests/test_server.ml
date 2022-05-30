@@ -22,12 +22,21 @@ let ts_parser =
   else Parse_datetime.parse_UTCTimestamp_micro 
   
 
-let log_thread () =
+let log_thread () : unit Lwt.t =
   let rec thread () = 
-    let (let*?) x f = match x with Some x -> f x | None -> Lwt.return_unit in  
-    let* msg = Lwt_mvar.take model_box in
-    let*? msg = match msg with 
-      | Runtime.FIXMessage msg -> Some msg | _ -> None in
+    let (let*?) x f = match x with Some x -> f x | None -> thread () in  
+    let* msg = Lwt_mvar.take log_box in
+    let* msg = match msg with 
+      | Runtime.FIXMessage msg -> Lwt.return @@ Some msg 
+      | Runtime.Connected x -> 
+        let* () = Lwt_io.printlf "Client %s connected" x in
+        Lwt.return None 
+      | Runtime.Disconnected _ -> 
+        let* () = Lwt_io.printlf "Client disconnected" in
+        Lwt.return None 
+      | _ -> Lwt.return None 
+      in
+    let*? msg = msg in
     let t = match msg.direction, msg.msg_type with
       | Runtime.Incoming , Runtime.Admin -> "Incoming admin"
       | Runtime.Incoming , Runtime.Application -> "Incoming application"
@@ -50,7 +59,7 @@ let engine_thread () =
 
 let engine_to_model_thread model_handle () =
   let rec thread () =
-    let (let*?) x f = match x with Some x -> f x | None -> Lwt.return_unit in  
+    let (let*?) x f = match x with Some x -> f x | None -> thread () in  
     let* msg = Lwt_mvar.take model_box in
     let*? msg = match msg with 
       | Runtime.FIXMessage msg -> Some msg | _ -> None in
