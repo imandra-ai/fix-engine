@@ -1,5 +1,16 @@
 steps:
+- name: 'gcr.io/cloud-builders/git'
+    id: git-clone--submodules
+    entrypoint: '/bin/bash'
+    args:
+      - '-c'
+      - |
+        git submodule update --init
+    volumes:
+      - name: 'ssh'
+        path: /root/.ssh
 - name: 'gcr.io/cloud-builders/docker'
+  waitFor: ['git-clone--submodules']
   id: 'build-docker'
   entrypoint: '/bin/bash'
   args:
