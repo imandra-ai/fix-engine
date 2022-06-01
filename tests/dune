@@ -1,0 +1,23 @@
+(executable
+ (name test_runner)
+ (libraries 
+   threads 
+   cmdliner 
+   lwt.unix 
+   fix-engine.protocol_pp
+   fix-engine.core_utils_pp
+  )
+ (modes byte)
+ (modules test_runner test_runner_utils config_parser message_stream))
+
+(executable
+ (name test_server)
+ (modules test_server)
+ (libraries 
+  fix-engine.runtime
+  model.venue
+  model.conversions
+  model.protocol_exts_pp
+  model.simulation_utils_gen
+  model.simulation
+ ))

@@ -1,48 +1,9 @@
-## OCaml compilation of the `fix-engine` model 
+## Running ZMQ-controlled server and client 
 
-Build all the `*.cma` libraries in each module subfolder:
+Running a ZMQ server
 
-```
-make build
-```
+    dune exec fix-engine/src-runtime/zmq_engine.exe -- --config=config.json
 
-Build a FIX server, based on the model:
+Running a ZMQ client
 
-```
-make server
-```
-
-Build a FIX client that runs the test suite:
-
-```
-make build_test
-```
-
-To run the test suite, you can launch the `run_tests.sh` bash script.
-
-## Making and updating documentation in the `gh-pages`
-
-To update the documentation in the `gh-pages` branch, you can do the following:
-
-- checkout the `master` branch and call maketo generate the `doc` folder
- 
- ```
- git checkout master  git status
- make doc
- ```
-
-- stash the changes in the `doc` folder
-
-```
-git add _pages/doc/*
-git stash
-```
-
-- checkout gh-pages and apply the stash    
-
-```
-git checkout gh-pages-src
-git checkout stash -- _pages
-git commit -m "Update documentation"
-git push origin gh-pages-src
-```
+    dune exec fix-engine/src-runtime/zmq_engine.exe -- --config=client.json

@@ -1,0 +1,24 @@
+(***
+
+    Imandra Inc.
+    Copyright (c) 2014 - 2021
+
+    full_admin_messages.ml
+*)
+[@@@import "full_admin_tags.iml"]
+
+open Full_admin_tags
+
+(** Union Tag types. The tag types must be declared in a separate module,
+    because they are used withing administrative messages.
+*)
+
+(** Union message tag type. *)
+type full_msg_tag =
+  | Full_Admin_Msg_Tag of full_admin_msg_tag
+  | Full_App_Msg_Tag of string
+
+(** Union field tag type. *)
+type full_field_tag =
+  | Full_Admin_Field_Tag of full_admin_field_tag
+  | Full_App_Field_Tag of string
