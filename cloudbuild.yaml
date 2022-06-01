@@ -1,5 +1,5 @@
 steps:
-- name: 'gcr.io/cloud-builders/git'
+  - name: 'gcr.io/cloud-builders/git'
     id: git-clone--submodules
     entrypoint: '/bin/bash'
     args:
@@ -9,11 +9,11 @@ steps:
     volumes:
       - name: 'ssh'
         path: /root/.ssh
-- name: 'gcr.io/cloud-builders/docker'
-  waitFor: ['git-clone--submodules']
-  id: 'build-docker'
-  entrypoint: '/bin/bash'
-  args:
-    - '-c'
-    - |
-      docker build -t fix-engine-build . --target fix-engine-build
+  - name: 'gcr.io/cloud-builders/docker'
+    waitFor: ['git-clone--submodules']
+    id: 'build-docker'
+    entrypoint: '/bin/bash'
+    args:
+      - '-c'
+      - |
+        docker build -t fix-engine-build . --target fix-engine-build
