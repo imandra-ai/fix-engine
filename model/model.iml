@@ -1,0 +1,17 @@
+type data =
+  {msg_tag:string;
+  payload:(string * string) list
+  }
+
+type appData =
+  | IncIntMsg_ApplicationData of data
+
+type event =
+  | FIXMessage of  appData
+  | FIXOther
+
+let send_fix _ _ = Lwt.return_unit
+
+let start ~recv =
+  let _ = recv in
+  (Lwt.return_unit,0)

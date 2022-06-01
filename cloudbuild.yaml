@@ -1,0 +1,8 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'build-docker'
+  entrypoint: '/bin/bash'
+  args:
+    - '-c'
+    - |
+      docker build -t fix-engine-build . --target fix-engine-build

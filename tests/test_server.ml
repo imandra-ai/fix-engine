@@ -18,23 +18,23 @@ let ts_parser =
     match Parse_datetime.parse_UTCTimestamp_milli x with None -> None
     | Some x -> Some ( Datetime.convert_utctimestamp_milli_micro x)
     in
-  if config.millisecond_precision then parse_milli   
-  else Parse_datetime.parse_UTCTimestamp_micro 
-  
+  if config.millisecond_precision then parse_milli
+  else Parse_datetime.parse_UTCTimestamp_micro
+
 
 let log_thread () : unit Lwt.t =
-  let rec thread () = 
-    let (let*?) x f = match x with Some x -> f x | None -> thread () in  
+  let rec thread () =
+    let (let*?) x f = match x with Some x -> f x | None -> thread () in
     let* msg = Lwt_mvar.take log_box in
-    let* msg = match msg with 
-      | Runtime.FIXMessage msg -> Lwt.return @@ Some msg 
-      | Runtime.Connected x -> 
+    let* msg = match msg with
+      | Runtime.FIXMessage msg -> Lwt.return @@ Some msg
+      | Runtime.Connected x ->
         let* () = Lwt_io.printlf "Client %s connected" x in
-        Lwt.return None 
-      | Runtime.Disconnected _ -> 
+        Lwt.return None
+      | Runtime.Disconnected _ ->
         let* () = Lwt_io.printlf "Client disconnected" in
-        Lwt.return None 
-      | _ -> Lwt.return None 
+        Lwt.return None
+      | _ -> Lwt.return None
       in
     let*? msg = msg in
     let t = match msg.direction, msg.msg_type with
@@ -50,18 +50,18 @@ let log_thread () : unit Lwt.t =
   thread ()
 
 let engine_thread () =
-  let recv msg = 
+  let recv msg =
     let* () = Lwt_mvar.put log_box msg in
-    Lwt_mvar.put model_box msg 
+    Lwt_mvar.put model_box msg
     in
   let port, reset = 9880, true in
   Runtime.start_server ~reset ~config ~port ~recv ()
 
 let engine_to_model_thread model_handle () =
   let rec thread () =
-    let (let*?) x f = match x with Some x -> f x | None -> thread () in  
+    let (let*?) x f = match x with Some x -> f x | None -> thread () in
     let* msg = Lwt_mvar.take model_box in
-    let*? msg = match msg with 
+    let*? msg = match msg with
       | Runtime.FIXMessage msg -> Some msg | _ -> None in
     let*? msg = match msg.direction, msg.msg_type with
       | Incoming , Application -> Some msg | _ -> None in
@@ -82,7 +82,7 @@ let model_recv (handle:Runtime.handle) (evt : Model.event) =
     let* r = Runtime.send_message handle msg in
     Lwt.return ( ignore r)
   end
-  | _ -> Lwt.return_unit  
+  | _ -> Lwt.return_unit
 
 let () =
   let handle , engine = engine_thread () in
@@ -92,7 +92,7 @@ let () =
     [ engine
     ; log_thread ()
     ; model_thread
-    ; engine_to_model_thread model () 
+    ; engine_to_model_thread model ()
     ] in
-  Lwt_main.run thread 
+  Lwt_main.run thread
 

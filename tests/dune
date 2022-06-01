@@ -1,9 +1,9 @@
 (executable
  (name test_runner)
- (libraries 
-   threads 
-   cmdliner 
-   lwt.unix 
+ (libraries
+   threads
+   cmdliner
+   lwt.unix
    fix-engine.protocol_pp
    fix-engine.core_utils_pp
   )
@@ -13,11 +13,7 @@
 (executable
  (name test_server)
  (modules test_server)
- (libraries 
+ (libraries
   fix-engine.runtime
-  model.venue
-  model.conversions
-  model.protocol_exts_pp
-  model.simulation_utils_gen
   model.simulation
  ))

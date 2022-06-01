@@ -1,0 +1,6 @@
+(library
+ (name simulation)
+ (public_name model.simulation)
+ (wrapped false)
+ (flags :standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58)
+ (libraries imandra-prelude lwt.unix))
