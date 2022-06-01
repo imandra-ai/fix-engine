@@ -12,13 +12,14 @@
 open Datetime
 
 [@@@import "../src-protocol/full_admin_enums.iml"]
+
 [@@@import "../src-protocol-exts/full_app_messages.iml"]
+
 [@@@import "../src-protocol/full_messages.iml"]
 
 open Full_admin_enums
 open Full_admin_messages
 open Full_messages
-
 
 (** Define set of actions + data for manual intervention by the user. *)
 type manual_int_data =
@@ -202,7 +203,9 @@ let engine_state_busy engine =
     we need to maintain that every state transition from a valid state 
     would result in another valid state. *)
 let is_state_valid (engine : fix_engine_state) =
-  utctimestamp_LessThanEqual_micro_micro engine.fe_last_data_received engine.fe_curr_time
+  utctimestamp_LessThanEqual_micro_micro
+    engine.fe_last_data_received
+    engine.fe_curr_time
   && utctimestamp_LessThanEqual_micro_micro
        engine.fe_last_time_data_sent
        engine.fe_curr_time

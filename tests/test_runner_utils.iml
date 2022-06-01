@@ -34,11 +34,15 @@ open Config_parser
 
 let ( >>= ) = Lwt.( >>= )
 
-let get_current_utctimestamp ?offset () = 
+let get_current_utctimestamp ?offset () =
   let ts = Current_time.get_current_utctimestamp_micro () in
-  match offset with None -> ts | Some offset ->
-  let dt = Datetime.make_duration 0 0 0 0 0 offset in
-  Datetime.utctimestamp_milli_duration_Add ts dt
+  match offset with
+  | None ->
+      ts
+  | Some offset ->
+      let dt = Datetime.make_duration 0 0 0 0 0 offset in
+      Datetime.utctimestamp_milli_duration_Add ts dt
+
 
 let msg_to_string msg =
   msg
@@ -90,9 +94,7 @@ let prepare_message msg (src, tagret) =
       let adds =
         if adds = "" then 0 else Z.of_int (Scanf.sscanf adds "%d" id)
       in
-      let time =
-        get_current_utctimestamp ~offset:adds () 
-      in
+      let time = get_current_utctimestamp ~offset:adds () in
       (k, Encode_datetime.encode_UTCTimestamp_micro time)
   in
   let fill_empty_ts (k, v) =
@@ -180,9 +182,9 @@ let get_type_and_seqnum msg =
       | None ->
           "?"
       | Some (Full_message_tags.Full_Admin_Msg_Tag tag) ->
-        Full_admin_tags_json.full_admin_msg_tag_to_string tag
+          Full_admin_tags_json.full_admin_msg_tag_to_string tag
       | Some (Full_message_tags.Full_App_Msg_Tag tag) ->
-        tag
+          tag
     with
     | _ ->
         "?"

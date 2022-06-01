@@ -1,13 +1,18 @@
-type direction = Incoming | Outgoing
-type msg_type = Application | Admin 
+type direction =
+  | Incoming
+  | Outgoing
 
-type message = 
+type msg_type =
+  | Application
+  | Admin
+
+type message =
   { message : (string * string) list
   ; direction : direction
   ; msg_type : msg_type
   }
 
-type event = 
+type event =
   | FIXMessage of message
   | Connected of string
   | Disconnected of string
@@ -15,26 +20,23 @@ type event =
 
 type handle
 
-val start_server:
-    ?session_dir:string ->
-    ?reset:bool ->
-    config:Engine.config ->
-    port:int -> 
-    recv:(event -> unit Lwt.t) -> 
-    unit -> 
-    handle * unit Lwt.t
+val start_server :
+     ?session_dir:string
+  -> ?reset:bool
+  -> config:Engine.config
+  -> port:int
+  -> recv:(event -> unit Lwt.t)
+  -> unit
+  -> handle * unit Lwt.t
 
-val start_client:
-    ?session_dir:string ->
-    ?reset:bool ->
-    config:Engine.config ->
-    host:string -> 
-    port:int -> 
-    recv:(event -> unit Lwt.t) -> 
-    unit -> 
-    handle * unit Lwt.t
+val start_client :
+     ?session_dir:string
+  -> ?reset:bool
+  -> config:Engine.config
+  -> host:string
+  -> port:int
+  -> recv:(event -> unit Lwt.t)
+  -> unit
+  -> handle * unit Lwt.t
 
-val send_message:
-  handle ->  
-  Engine.message -> 
-  (unit, Engine.err) result Lwt.t
+val send_message : handle -> Engine.message -> (unit, Engine.err) result Lwt.t

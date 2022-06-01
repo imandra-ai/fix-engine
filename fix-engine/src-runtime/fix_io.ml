@@ -50,9 +50,7 @@ end = struct
 
 
   let rec read_thread t : unit Lwt.t =
-    get_message t [] >>= fun msg -> 
-    t.recv msg >>= fun () -> 
-    read_thread t
+    get_message t [] >>= fun msg -> t.recv msg >>= fun () -> read_thread t
 
 
   (** Writing thread *)

@@ -11,7 +11,6 @@ open Full_admin_tags_decoder
 open Full_message_tags
 module D = Decoders_yojson.Basic.Decode
 
-
 let full_msg_tag_of_json : full_msg_tag D.decoder =
   let open D in
   single_field
