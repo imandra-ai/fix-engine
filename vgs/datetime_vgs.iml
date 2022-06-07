@@ -1,0 +1,57 @@
+(* Basic Datetime VGs *)
+[@@@import "../fix-engine/src-core/datetime.iml"]
+open Datetime;;
+
+let transitive  f (x,y,z) = f x y && f y z ==> f x z ;;
+let irreflexive f x = not(f x x)  
+let total f (x, y) = (x = y) || f x y || f y x   
+
+theorem utc_milli_gt_transitive (x,y,z) =
+  transitive utctimestamp_GreaterThan_milli_milli (x,y,z)
+;;
+
+theorem utc_milli_gt_irreflexive (x) =
+  irreflexive utctimestamp_GreaterThan_milli_milli x 
+;;
+
+theorem utc_milli_gt_total (x,y) =
+  total utctimestamp_GreaterThan_milli_milli (x, y)
+;;
+
+theorem utc_micro_gt_transitive (x,y,z) =
+  transitive utctimestamp_GreaterThan_micro_micro (x,y,z)
+;;
+
+theorem utc_micro_gt_irreflexive (x) =
+  irreflexive utctimestamp_GreaterThan_micro_micro x 
+;;
+
+theorem utc_micro_gt_total (x,y) =
+  total utctimestamp_GreaterThan_micro_micro (x, y)
+;;
+
+
+theorem utc_milli_GT_EQ_elim (x,y) =
+  utctimestamp_GreaterThan_milli_milli x y  ==> utctimestamp_Equal_milli_milli x y  = false
+;;
+
+theorem utc_micro_GT_EQ_elim (x,y) =
+  utctimestamp_GreaterThan_micro_micro x y  ==> utctimestamp_Equal_micro_micro x y  = false
+;;
+
+
+let transitive2  f g (x,y,z) = f x y && g y z ==> g x z ;;
+
+theorem utc_milli_micro_gt_transitive (x,y,z) =
+  transitive2 
+    utctimestamp_GreaterThan_milli_milli
+    utctimestamp_GreaterThan_milli_micro 
+    (x,y,z)
+;;
+
+theorem utc_micro_milli_gt_transitive (x,y,z) =
+  transitive2 
+    utctimestamp_GreaterThan_micro_micro
+    utctimestamp_GreaterThan_micro_milli
+    (x,y,z)
+;;

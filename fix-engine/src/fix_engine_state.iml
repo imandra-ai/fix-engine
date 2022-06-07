@@ -13,8 +13,6 @@ open Datetime
 
 [@@@import "../src-protocol/full_admin_enums.iml"]
 
-[@@@import "../src-protocol-exts/full_app_messages.iml"]
-
 [@@@import "../src-protocol/full_messages.iml"]
 
 open Full_admin_enums
