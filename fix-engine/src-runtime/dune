@@ -2,11 +2,11 @@
  (name runtime)
  (public_name fix-engine.runtime)
  (wrapped false)
- (modules fix_io engine config runtime)
+ (modules fix_io engine runtime)
  (libraries lwt.unix fix_engine fix-engine.protocol_pp
    fix-engine.core_utils_pp decoders-yojson))
 
 (executable
  (name zmq_engine)
- (modules zmq_engine)
+ (modules zmq_engine config)
  (libraries fix-engine.runtime zmq-lwt cmdliner))
