@@ -8,20 +8,18 @@
     fix_heartbeat_vgs.ml
 
 *)
-[@@@import "../src-core/datetime.iml"]
-[@@@import "../src/fix_engine.iml"]
-[@@@import "../src/fix_engine_state.iml"]
-[@@@import "../src/fix_engine_utils.iml"]
-[@@@import "../src-protocol/full_admin_messages.iml"]
-[@@@import "../src-protocol/full_messages.iml"]
-[@@@import "../src-core-time-defaults/time_defaults.iml"]
+[@@@import "../fix-engine/src-core/datetime.iml"]
+[@@@import "../fix-engine/src/fix_engine.iml"]
+[@@@import "../fix-engine/src/fix_engine_state.iml"]
+[@@@import "../fix-engine/src/fix_engine_utils.iml"]
+[@@@import "../fix-engine/src-protocol/full_admin_messages.iml"]
+[@@@import "../fix-engine/src-protocol/full_messages.iml"]
 open Datetime;;
 open Fix_engine;;
 open Fix_engine_state;;
 open Fix_engine_utils;;
 open Full_admin_messages;;
 open Full_messages;;
-open Time_defaults;;
 
 (*** *************************************************************************************** *)
 (**
@@ -67,26 +65,34 @@ let outbound_msg_heartbeat ( m : full_top_level_msg option )=
     | _ -> false
 ;;
 
-let time_update_received ( m, last_time_data_sent, last_time_data_received, hbeat_interval : fix_engine_int_inc_msg option * fix_utctimestamp * fix_utctimestamp * fix_duration ) =
+let time_update_received ( m, last_time_data_sent, last_time_data_received, hbeat_interval : fix_engine_int_inc_msg option * fix_utctimestamp_micro * fix_utctimestamp_micro * fix_duration ) =
     match m with
     | Some ( IncIntMsg_TimeChange  tc_data ) ->
         begin
-            let valid_send_time = utctimestamp_duration_Add last_time_data_sent hbeat_interval  in
-            let valid_received_time = utctimestamp_duration_Add last_time_data_received hbeat_interval in
-            utctimestamp_GreaterThan tc_data valid_send_time && utctimestamp_GreaterThan valid_received_time tc_data
+            let valid_send_time = utctimestamp_micro_duration_Add last_time_data_sent hbeat_interval  in
+            let valid_received_time = utctimestamp_micro_duration_Add last_time_data_received hbeat_interval in
+            utctimestamp_GreaterThan_micro_micro tc_data valid_send_time && 
+            utctimestamp_GreaterThan_micro_micro valid_received_time tc_data
         end
     | _ -> false
 ;;
+ 
+
 
 theorem hbeat_sent_if_no_data_sent ( engine : fix_engine_state ) =
     let engine' = one_step ( engine ) in
     let cond =
         begin
+            engine.fe_history = [] &&
             not ( hbeat_interval_null ( engine.fe_heartbeat_interval )) &&
             engine.fe_curr_mode = ActiveSession &&
             is_int_message_valid ( engine ) &&
             is_state_valid ( engine ) &&
-            time_update_received ( engine.incoming_int_msg, engine.fe_last_time_data_sent, engine.fe_last_data_received, engine.fe_heartbeat_interval )
+            time_update_received 
+                ( engine.incoming_int_msg
+                , engine.fe_last_time_data_sent
+                , engine.fe_last_data_received
+                , engine.fe_heartbeat_interval )
         end in
     cond ==> outbound_msg_heartbeat ( engine'.outgoing_fix_msg )
 ;;
@@ -127,7 +133,7 @@ theorem hbeat_not_sent_if_duration_zero ( engine : fix_engine_state ) =
             engine.outgoing_fix_msg = None &&
             hbeat_interval_null ( engine.fe_heartbeat_interval ) &&
             engine.fe_curr_mode = ActiveSession &&
-            is_valid_utctimestamp ( engine.fe_last_time_data_sent ) &&
+            is_valid_utctimestamp_micro ( engine.fe_last_time_data_sent ) &&
             is_int_message_valid ( engine) && is_state_valid ( engine ) &&
             is_state_valid ( engine ) &&
             time_update_received ( engine.incoming_int_msg, engine.fe_last_time_data_sent, engine.fe_last_data_received, engine.fe_heartbeat_interval )
@@ -163,13 +169,13 @@ let outbound_msg_testrequest ( m, _hbeat_id : full_top_level_msg option * int ) 
     | _ -> false
 ;;
 
-let have_not_received_data' ( m, last_time_data_received, hbeat_interval, timereq_interval : fix_engine_int_inc_msg option * fix_utctimestamp * fix_duration * fix_duration ) =
+let have_not_received_data' ( m, last_time_data_received, hbeat_interval, timereq_interval : fix_engine_int_inc_msg option * fix_utctimestamp_micro * fix_duration * fix_duration ) =
     match m with
     | Some ( IncIntMsg_TimeChange tc_data ) ->
         begin
-            let valid_received_time = utctimestamp_duration_Add last_time_data_received hbeat_interval  in
-            let valid_testreq_time = utctimestamp_duration_Add valid_received_time timereq_interval  in
-            utctimestamp_GreaterThan tc_data valid_testreq_time
+            let valid_received_time = utctimestamp_micro_duration_Add last_time_data_received hbeat_interval  in
+            let valid_testreq_time = utctimestamp_micro_duration_Add valid_received_time timereq_interval  in
+            utctimestamp_GreaterThan_micro_micro tc_data valid_testreq_time
         end
     | _ -> false
 ;;
@@ -179,7 +185,7 @@ theorem testrequest_sent_correctly' ( engine : fix_engine_state ) =
     let cond =
         begin
             engine.fe_curr_mode = ActiveSession &&
-            is_valid_utctimestamp ( engine.fe_last_time_data_sent ) &&
+            is_valid_utctimestamp_micro ( engine.fe_last_time_data_sent ) &&
             is_int_message_valid ( engine) &&
             is_state_valid ( engine ) &&
             have_not_received_data' ( engine.incoming_int_msg, engine.fe_last_time_data_sent, engine.fe_heartbeat_interval, engine.fe_testreq_interval )
@@ -242,9 +248,9 @@ theorem non_garbled_updates_clock ( engine : fix_engine_state ) =
 let no_heartbeats_received_logoff ( m, engine : fix_engine_int_inc_msg option * fix_engine_state ) =
     match m with
     | Some (IncIntMsg_TimeChange tc_data) ->
-        let valid_time = utctimestamp_duration_Add  engine.fe_last_time_data_sent engine.fe_heartbeat_interval  in
-        let valid_time_padded = utctimestamp_duration_Add  valid_time engine.fe_testreq_interval  in
-        utctimestamp_GreaterThan tc_data valid_time_padded
+        let valid_time = utctimestamp_micro_duration_Add  engine.fe_last_time_data_sent engine.fe_heartbeat_interval  in
+        let valid_time_padded = utctimestamp_micro_duration_Add  valid_time engine.fe_testreq_interval  in
+        utctimestamp_GreaterThan_micro_micro tc_data valid_time_padded
     | _ -> false
 ;;
 

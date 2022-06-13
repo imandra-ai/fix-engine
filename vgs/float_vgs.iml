@@ -1,4 +1,4 @@
-[@@@import "../src-core/numeric.iml"]
+[@@@import "../fix-engine/src-core/numeric.iml"]
 
 open Numeric;;
 

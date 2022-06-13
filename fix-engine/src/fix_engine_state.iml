@@ -200,6 +200,14 @@ let engine_state_busy engine =
     TODO: once we have the full library of checks for incoming messages
     we need to maintain that every state transition from a valid state 
     would result in another valid state. *)
+let valid_interval d =
+  let zero = seconds_to_duration 0 in
+  let hour = seconds_to_duration 3600 in
+  is_valid_duration d 
+  && duration_GreaterThan d zero 
+  && duration_LessThan d hour 
+
+
 let is_state_valid (engine : fix_engine_state) =
   utctimestamp_LessThanEqual_micro_micro
     engine.fe_last_data_received
@@ -210,5 +218,5 @@ let is_state_valid (engine : fix_engine_state) =
   && is_valid_utctimestamp_micro engine.fe_curr_time
   && is_valid_utctimestamp_micro engine.fe_last_time_data_sent
   && is_valid_utctimestamp_micro engine.fe_last_data_received
-  && is_valid_duration engine.fe_heartbeat_interval
-  && is_valid_duration engine.fe_testreq_interval
+  && valid_interval engine.fe_heartbeat_interval
+  && valid_interval engine.fe_testreq_interval
