@@ -39,10 +39,12 @@ let ptime_to_json (t : T.t) =
   span_to_json (T.to_span t)
 
 let ptime_decoder : T.t D.decoder =
-  span_decoder >>= fun s ->
+  D.one_of [("span_decoder",span_decoder >>= fun s ->
   match T.of_span s with
   | Some t -> D.succeed t
-  | None -> D.fail "invalid timestamp"
+  | None -> D.fail "invalid timestamp");
+
+  ]
 
 let validate_with f msg decoder =
   decoder >>= fun x ->
@@ -52,15 +54,48 @@ let utctimestamp_milli_to_json ( ts : fix_utctimestamp_milli )  =
   ptime_to_json ts
 
 let utctimestamp_milli_decoder : fix_utctimestamp_milli Decoders_yojson.Basic.Decode.decoder =
-  ptime_decoder
-  |> validate_with is_valid_utctimestamp_milli "fix_utctimestamp_milli"
+  D.one_of [("ptime_decoder",ptime_decoder
+  |> validate_with is_valid_utctimestamp_milli "fix_utctimestamp_milli");
+  ("timestamp_decoder", (D.field "utc_timestamp_year" int_decoder) >>= fun utc_timestamp_year ->
+    (D.field "utc_timestamp_month" int_decoder) >>= fun utc_timestamp_month ->
+    (D.field "utc_timestamp_day" int_decoder) >>= fun utc_timestamp_day ->
+    (D.field "utc_timestamp_hour" int_decoder) >>= fun utc_timestamp_hour ->
+    (D.field "utc_timestamp_minute" int_decoder) >>= fun utc_timestamp_minute ->
+    (D.field "utc_timestamp_second" int_decoder) >>= fun utc_timestamp_second ->
+    D.maybe (D.field "utc_timestamp_millisec" int_decoder) >>= fun utc_timestamp_millisec ->
+    D.succeed (make_utctimestamp_milli_unsafe
+      utc_timestamp_year
+     utc_timestamp_month
+     utc_timestamp_day
+     utc_timestamp_hour
+     utc_timestamp_minute
+     utc_timestamp_second
+     utc_timestamp_millisec
+    ))]
 
 let utctimestamp_micro_to_json ( ts : fix_utctimestamp_micro )  =
   ptime_to_json ts
 
 let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.Decode.decoder =
-  ptime_decoder
-  |> validate_with is_valid_utctimestamp_micro "fix_utctimestamp_micro"
+  D.one_of [("ptime_decoder", ptime_decoder
+  |> validate_with is_valid_utctimestamp_micro "fix_utctimestamp_micro");
+  ("timestamp_decoder", (D.field "utc_timestamp_year" int_decoder) >>= fun utc_timestamp_year ->
+    (D.field "utc_timestamp_month" int_decoder) >>= fun utc_timestamp_month ->
+    (D.field "utc_timestamp_day" int_decoder) >>= fun utc_timestamp_day ->
+    (D.field "utc_timestamp_hour" int_decoder) >>= fun utc_timestamp_hour ->
+    (D.field "utc_timestamp_minute" int_decoder) >>= fun utc_timestamp_minute ->
+    (D.field "utc_timestamp_second" int_decoder) >>= fun utc_timestamp_second ->
+    D.maybe (D.field "utc_timestamp_millisec" int_decoder) >>= fun utc_timestamp_millisec ->
+    D.succeed (make_utctimestamp_micro_unsafe
+      utc_timestamp_year
+     utc_timestamp_month
+     utc_timestamp_day
+     utc_timestamp_hour
+     utc_timestamp_minute
+     utc_timestamp_second
+     utc_timestamp_millisec
+    ))
+  ]
 
 let utctimestamp_milli_opt_to_json = function
   | None    -> `Null
