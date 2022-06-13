@@ -268,24 +268,16 @@ end = struct
 
   let create_internal_message (msg : message) :
       (Fix_engine_state.fix_engine_int_inc_msg, err) result =
-    let dbg dd msg =
-      msg
-      |> (List.map @@ fun (k, v) -> Printf.sprintf "%s=%s" k v)
-      |> String.concat "|"
-      |> (fun x -> dd ^ "  " ^ x)
-      |> print_endline
-      |> flush_all
-    in
-    let is_application_field (k, _) =
-      let r =
-        match Parse_admin_tags.parse_admin_field_tag k with
-        | None ->
-            true
-        | Some _ ->
-            false
-      in
-      let () = print_endline (k ^ if r then " admin" else " app") in
-      r
+    let keep_field (k, _) =
+      match Parse_admin_tags.parse_admin_field_tag k with
+      | None -> true
+      | Some Full_Field_RefSeqNum_Tag -> true
+      | Some Full_Field_Text_Tag -> true
+      | Some Full_Field_RefTagID_Tag -> true
+      | Some Full_Field_RefMsgType_Tag -> true
+      | Some Full_Field_SessionRejectReason_Tag -> true
+      | Some Full_Field_BusinessRejectReason_Tag -> true
+      | _ -> false
     in
     let is_msgtype_tag (k, _) =
       match Parse_admin_tags.parse_admin_field_tag k with
@@ -294,16 +286,14 @@ end = struct
       | _ ->
           false
     in
-    let () = dbg "msg" msg in
     match List.find_opt is_msgtype_tag msg with
     | None ->
-        Error `MissingMessageTypeTag
+      Error `MissingMessageTypeTag    
     | Some (_, msg_tag) ->
-        let payload = List.filter is_application_field msg in
-        let () = dbg "app_data" payload in
-        let app_data = Full_messages.{ msg_tag; payload } in
-        let int_msg = Fix_engine_state.IncIntMsg_ApplicationData app_data in
-        Ok int_msg
+      let payload = List.filter keep_field msg in
+      let app_data = Full_messages.{ msg_tag; payload } in
+      let int_msg = Fix_engine_state.IncIntMsg_ApplicationData app_data in
+      Ok int_msg
 
 
   let process_fix_wire state msg =
