@@ -147,8 +147,18 @@ let utctimeonly_milli_to_json ( d : fix_utctimeonly_milli ) =
   ptime_to_json d
 
 let utctimeonly_milli_decoder : fix_utctimeonly_milli Decoders_yojson.Basic.Decode.decoder =
-  ptime_decoder
-  |> validate_with is_valid_utctimeonly_milli "fix_utctimeonly_milli"
+  D.one_of ["ptime_decoder",ptime_decoder
+  |> validate_with is_valid_utctimeonly_milli "fix_utctimeonly_milli";
+  "timeonly_decoder",(D.field "utc_timeonly_hour" int_decoder) >>= fun utc_timeonly_hour ->
+    (D.field "utc_timeonly_minute" int_decoder) >>= fun utc_timeonly_minute ->
+    (D.field "utc_timeonly_second" int_decoder) >>= fun utc_timeonly_second ->
+    D.maybe (D.field "utc_timeonly_millisec" int_decoder) >>= fun utc_timeonly_millisec ->
+    D.succeed (make_utctimeonly_milli_unsafe
+      utc_timeonly_hour
+     utc_timeonly_minute
+     utc_timeonly_second
+    utc_timeonly_millisec
+    )]
 
 let utctimeonly_milli_opt_to_json  = function
   | None    -> `Null
@@ -159,8 +169,19 @@ let utctimeonly_micro_to_json ( d : fix_utctimeonly_micro ) =
   ptime_to_json d
 
 let utctimeonly_micro_decoder : fix_utctimeonly_micro Decoders_yojson.Basic.Decode.decoder =
-  ptime_decoder
-  |> validate_with is_valid_utctimeonly_micro "fix_utctimeonly_micro"
+  D.one_of ["ptime_decoder",ptime_decoder
+  |> validate_with is_valid_utctimeonly_micro "fix_utctimeonly_micro";
+  "timeonly_decoder",(D.field "utc_timeonly_hour" int_decoder) >>= fun utc_timeonly_hour ->
+    (D.field "utc_timeonly_minute" int_decoder) >>= fun utc_timeonly_minute ->
+    (D.field "utc_timeonly_second" int_decoder) >>= fun utc_timeonly_second ->
+    D.maybe (D.field "utc_timeonly_microsec" int_decoder) >>= fun utc_timeonly_microsec ->
+    D.succeed (make_utctimeonly_micro_unsafe
+      utc_timeonly_hour
+     utc_timeonly_minute
+     utc_timeonly_second
+    utc_timeonly_microsec
+    )
+  ]
 
 let utctimeonly_micro_opt_to_json  = function
   | None    -> `Null

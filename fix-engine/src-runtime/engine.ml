@@ -270,14 +270,22 @@ end = struct
       (Fix_engine_state.fix_engine_int_inc_msg, err) result =
     let keep_field (k, _) =
       match Parse_admin_tags.parse_admin_field_tag k with
-      | None -> true
-      | Some Full_Field_RefSeqNum_Tag -> true
-      | Some Full_Field_Text_Tag -> true
-      | Some Full_Field_RefTagID_Tag -> true
-      | Some Full_Field_RefMsgType_Tag -> true
-      | Some Full_Field_SessionRejectReason_Tag -> true
-      | Some Full_Field_BusinessRejectReason_Tag -> true
-      | _ -> false
+      | None ->
+          true
+      | Some Full_Field_RefSeqNum_Tag ->
+          true
+      | Some Full_Field_Text_Tag ->
+          true
+      | Some Full_Field_RefTagID_Tag ->
+          true
+      | Some Full_Field_RefMsgType_Tag ->
+          true
+      | Some Full_Field_SessionRejectReason_Tag ->
+          true
+      | Some Full_Field_BusinessRejectReason_Tag ->
+          true
+      | _ ->
+          false
     in
     let is_msgtype_tag (k, _) =
       match Parse_admin_tags.parse_admin_field_tag k with
@@ -288,12 +296,12 @@ end = struct
     in
     match List.find_opt is_msgtype_tag msg with
     | None ->
-      Error `MissingMessageTypeTag    
+        Error `MissingMessageTypeTag
     | Some (_, msg_tag) ->
-      let payload = List.filter keep_field msg in
-      let app_data = Full_messages.{ msg_tag; payload } in
-      let int_msg = Fix_engine_state.IncIntMsg_ApplicationData app_data in
-      Ok int_msg
+        let payload = List.filter keep_field msg in
+        let app_data = Full_messages.{ msg_tag; payload } in
+        let int_msg = Fix_engine_state.IncIntMsg_ApplicationData app_data in
+        Ok int_msg
 
 
   let process_fix_wire state msg =
