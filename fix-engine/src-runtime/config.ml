@@ -61,6 +61,8 @@ module Decode (D : Decoders.Decode.S) = struct
         ; timer
         ; millisecond_precision
         ; begin_string
+        ; ignore_business_reject = false
+        ; ignore_session_reject = false
         }
     in
     D.succeed { zmqpub; zmqrep; mode; engine_config; reset }
