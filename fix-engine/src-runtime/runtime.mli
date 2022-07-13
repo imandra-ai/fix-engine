@@ -13,6 +13,7 @@ type message =
   }
 
 type event =
+  | Log of string
   | FIXMessage of message
   | Connected of string
   | Disconnected of string
@@ -22,6 +23,7 @@ type handle
 
 val start_server :
      ?session_dir:string
+  -> ?log_file:string
   -> ?reset:bool
   -> config:Engine.config
   -> port:int
@@ -31,6 +33,7 @@ val start_server :
 
 val start_client :
      ?session_dir:string
+  -> ?log_file:string
   -> ?reset:bool
   -> config:Engine.config
   -> host:string
@@ -40,3 +43,7 @@ val start_client :
   -> handle * unit Lwt.t
 
 val send_message : handle -> Engine.message -> (unit, Engine.err) result Lwt.t
+
+val overwrite_sequence_numbers : handle -> (Z.t option * Z.t option) -> unit Lwt.t
+
+val terminate : handle -> unit Lwt.t

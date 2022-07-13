@@ -6,6 +6,7 @@ module Internal : sig
   type err = [ `MissingMessageTypeTag ]
 
   type event =
+    | Log of string
     | FIXFromEngine of message
     | State of Fix_engine_state.fix_engine_state
 
@@ -15,8 +16,10 @@ module Internal : sig
     ; host_id : string option
     ; on_behalf_id : string option
     ; timer : float
-    ; begin_string : string
+    ; ignore_session_reject : bool
+    ; ignore_business_reject : bool
     ; millisecond_precision : bool
+    ; begin_string : string
     }
 
   val start :
@@ -34,16 +37,24 @@ module Internal : sig
     t -> Fix_engine_state.fix_engine_int_inc_msg -> unit Lwt.t
 
   val send_get_state : t -> unit Lwt.t
+
+  val overwrite_sequence_numbers : t -> (Z.t option * Z.t option) -> unit Lwt.t
+
+  val terminate : t -> unit Lwt.t
+
 end = struct
   module SessionManager : sig
     type t
 
     val save : t -> int * int -> unit Lwt.t
 
+    val save_opt : t -> int option * int option -> unit Lwt.t
+
     val create : reset:bool -> dir:string -> t
 
     val get : t -> int * int
   end = struct
+    let ( let* ) = Lwt.( >>= )
     let ( >>= ) = Lwt.( >>= )
 
     type t =
@@ -85,6 +96,17 @@ end = struct
       write_int state.dir "seqin" seqin
       >>= fun () -> write_int state.dir "seqout" seqout
 
+    let save_opt state (seqin, seqout) =
+      let* () = match seqin with
+        | None -> Lwt.return_unit
+        | Some seqin -> write_int state.dir "seqin" seqin
+        in
+      let* () = match seqout with
+        | None -> Lwt.return_unit
+        | Some seqout -> write_int state.dir "seqout" seqout
+        in
+      Lwt.return_unit
+
 
     let create ~reset ~dir =
       let () = prepare_folder dir in
@@ -107,14 +129,32 @@ end = struct
   type action =
     | InternalToEngine of Fix_engine_state.fix_engine_int_inc_msg
     | FIXToEngine of Full_messages.full_top_level_msg
+    | IncrementInSeq
     | GetState
+    | Terminate
+
 
   type event =
+    | Log of string
     | FIXFromEngine of message
     | State of Fix_engine_state.fix_engine_state
 
+  type config =
+    { comp_id : string
+    ; target_id : string
+    ; host_id : string option
+    ; on_behalf_id : string option
+    ; timer : float
+    ; ignore_session_reject : bool
+    ; ignore_business_reject : bool
+    ; millisecond_precision : bool
+    ; begin_string : string
+    }
+
   type t =
     { recv : event -> unit Lwt.t
+    ; ignore_sessrejects : bool
+    ; ignore_buisrejects : bool
     ; to_engine_box : action Lwt_mvar.t
     ; timer : float
     ; sess : SessionManager.t
@@ -180,7 +220,15 @@ end = struct
       | GetState ->
           let* () = t.recv (State engine_state) in
           Lwt.return engine_state
+      | IncrementInSeq ->
+        let engine_state = { engine_state with
+          incoming_seq_num = Z.(engine_state.incoming_seq_num + one)
+        } in
+        let* () = save_state_seqns t.sess engine_state in
+        Lwt.return engine_state
+      | Terminate -> Lwt.return engine_state
     in
+    if msg = Terminate then Lwt.return_unit else
     main_loop t engine_state
 
 
@@ -195,17 +243,6 @@ end = struct
     let* () = Lwt_unix.sleep t.timer in
     let* () = do_timechange t in
     heartbeat_thread t
-
-
-  type config =
-    { comp_id : string
-    ; target_id : string
-    ; host_id : string option
-    ; on_behalf_id : string option
-    ; timer : float
-    ; begin_string : string
-    ; millisecond_precision : bool
-    }
 
   let get_timestamp_codec ms =
     let parse_milli x =
@@ -242,26 +279,28 @@ end = struct
     }
 
 
+
   let start ~reset ~session_dir ~(config : config) ~recv =
     let timestamp_parse, timestamp_encode =
       get_timestamp_codec config.millisecond_precision
-    in
-    let begin_string = config.begin_string in
+      in
     let sess = SessionManager.create ~reset ~dir:session_dir in
     let inseq, outsec = SessionManager.get sess in
     let engine_state = make_engine_state (inseq, outsec) config in
-    let state =
+    let state : t =
       { to_engine_box = Lwt_mvar.create_empty ()
       ; timer = config.timer
+      ; ignore_sessrejects = config.ignore_session_reject
+      ; ignore_buisrejects = config.ignore_business_reject
       ; sess
       ; recv
-      ; begin_string
+      ; begin_string = config.begin_string
       ; timestamp_parse
       ; timestamp_encode
       }
     in
     let thread =
-      Lwt.join [ heartbeat_thread state; main_loop state engine_state ]
+      Lwt.pick [ heartbeat_thread state; main_loop state engine_state ]
     in
     (thread, state)
 
@@ -304,14 +343,27 @@ end = struct
         Ok int_msg
 
 
-  let process_fix_wire state msg =
+  let process_fix_wire state msg_kvs =
     let msg =
-      Parse_full_messages.parse_top_level_msg state.timestamp_parse msg
+      Parse_full_messages.parse_top_level_msg state.timestamp_parse msg_kvs
     in
-    let tenc = Datetime_json.utctimestamp_micro_to_json in
-    let json = Full_messages_json.full_top_level_msg_to_json tenc msg in
-    let _str = Yojson.Basic.pretty_to_string json in
     let* () = do_timechange state in
+    let msg_log = Fix_io.encode ~split:'|' msg_kvs in
+    let* ignore = match msg with
+      | Garbled ->
+        let* () = state.recv @@ Log( "Received Garbled message: " ^ msg_log ) in
+        Lwt.return_false
+      | BusinessRejectedMsg _ ->
+        if not state.ignore_buisrejects then Lwt.return_false else
+        let* () = state.recv @@ Log( "Ignoring received BusinessRejectedMsg message: " ^ msg_log ) in
+        Lwt.return_true
+      | SessionRejectedMsg _ ->
+        if not state.ignore_sessrejects then Lwt.return_false else
+        let* () = state.recv @@ Log( "Ignoring received SessionRejectedMsg message: " ^ msg_log ) in
+        Lwt.return_true
+      | ValidMsg _ -> Lwt.return_false
+      in
+    if ignore then Lwt_mvar.put state.to_engine_box IncrementInSeq else
     let action = FIXToEngine msg in
     Lwt_mvar.put state.to_engine_box action
 
@@ -328,8 +380,16 @@ end = struct
     let action = InternalToEngine int_msg in
     Lwt_mvar.put state.to_engine_box action
 
-
   let send_get_state state = Lwt_mvar.put state.to_engine_box GetState
+
+  let overwrite_sequence_numbers state (inseq, outseq) =
+    let inseq = CCOpt.map Z.to_int inseq in
+    let outseq = CCOpt.map Z.to_int outseq in
+    SessionManager.save_opt state.sess (inseq, outseq)
+
+  let terminate state  =
+    Lwt_mvar.put state.to_engine_box Terminate
+
 end
 
 include Internal
