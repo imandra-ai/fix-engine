@@ -84,19 +84,44 @@ end = struct
     let prepare_folder dir =
       if not (Sys.file_exists dir) then Unix.(mkdir dir 0o775) else ()
 
+    let seqout_ch = ref None
 
-    let write_int dir fname num =
+    let seqin_ch = ref None
+
+    let write_seqn_int fname ch_ref dir num =
       let filename = Filename.(concat dir fname) in
-      Lwt_io.(open_file ~mode:output filename)
-      >>= fun fch ->
-      Lwt_io.write fch (string_of_int num) >>= fun () -> Lwt_io.close fch
+      let open Lwt.Syntax in
+      let* fch =
+        match !ch_ref with
+        | None ->
+           let* ch = Lwt_io.(open_file ~mode:output filename ) in
+           ch_ref := Some ch;
+           Lwt.return ch
+        | Some x ->
+           Lwt.return x
+      in
+      (* assumption: num is always increasing *)
+      let* () = Lwt_io.set_position fch Int64.zero in
+      Lwt_io.write fch (string_of_int num)
 
 
-    let save state (seqin, seqout) =
-      write_int state.dir "seqin" seqin
-      >>= fun () -> write_int state.dir "seqout" seqout
+    let write_seqout_int dir num =
+      write_seqn_int "seqout" seqout_ch dir num
+
+    let write_seqin_int dir num =
+      write_seqn_int "seqin" seqin_ch dir num
+
+    let save state (seqin, seqout) = Lwt.return_unit
+(*      write_seqin_int state.dir seqin
+      >>= fun () -> write_seqout_int state.dir seqout *)
 
     let save_opt state (seqin, seqout) =
+      let write_int dir fname num =
+        let filename = Filename.(concat dir fname) in
+        let* fch = Lwt_io.(open_file ~mode:output filename) in
+        let* () = Lwt_io.write fch (string_of_int num) in
+        Lwt_io.close fch
+        in
       let* () = match seqin with
         | None -> Lwt.return_unit
         | Some seqin -> write_int state.dir "seqin" seqin
