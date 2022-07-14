@@ -55,7 +55,6 @@ end = struct
     val get : t -> int * int
   end = struct
     let ( let* ) = Lwt.( >>= )
-    let ( >>= ) = Lwt.( >>= )
 
     type t =
       { dir : string
@@ -105,13 +104,13 @@ end = struct
       Lwt_io.write fch (string_of_int num)
 
 
-    let write_seqout_int dir num =
+    let _write_seqout_int dir num =
       write_seqn_int "seqout" seqout_ch dir num
 
-    let write_seqin_int dir num =
+    let _write_seqin_int dir num =
       write_seqn_int "seqin" seqin_ch dir num
 
-    let save state (seqin, seqout) = Lwt.return_unit
+    let save _state (_seqin, _seqout) = Lwt.return_unit
 (*      write_seqin_int state.dir seqin
       >>= fun () -> write_seqout_int state.dir seqout *)
 
