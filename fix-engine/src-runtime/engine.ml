@@ -20,6 +20,7 @@ module Internal : sig
     ; ignore_business_reject : bool
     ; millisecond_precision : bool
     ; begin_string : string
+    ; no_history : bool
     }
 
   val start :
@@ -173,6 +174,7 @@ end = struct
     ; ignore_business_reject : bool
     ; millisecond_precision : bool
     ; begin_string : string
+    ; no_history : bool
     }
 
   type t =
@@ -183,6 +185,7 @@ end = struct
     ; timer : float
     ; sess : SessionManager.t
     ; begin_string : string
+    ; should_clean_history : bool
     ; timestamp_parse : string -> Datetime.fix_utctimestamp_micro option
     ; timestamp_encode : Datetime.fix_utctimestamp_micro -> string
     }
@@ -252,6 +255,11 @@ end = struct
         Lwt.return engine_state
       | Terminate -> Lwt.return engine_state
     in
+    let engine_state = 
+      if t.should_clean_history 
+        then {engine_state with fe_history=[]} 
+        else engine_state 
+      in
     if msg = Terminate then Lwt.return_unit else
     main_loop t engine_state
 
@@ -321,6 +329,7 @@ end = struct
       ; begin_string = config.begin_string
       ; timestamp_parse
       ; timestamp_encode
+      ; should_clean_history = config.no_history
       }
     in
     let thread =
