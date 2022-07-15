@@ -35,7 +35,11 @@ module SessionManager = struct
       ()
 
 
-    let delete ~dir ty = Unix.unlink (fname_of_ty ~dir ty)
+    let delete ~dir ty =
+      let fname = fname_of_ty ~dir ty in
+      try Unix.unlink (fname_of_ty ~dir ty) with
+      | Unix.(Unix_error (ENOENT, _, _)) ->
+          ()
   end
 
   let read_persisted_seqns_if_present dir =
