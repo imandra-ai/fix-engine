@@ -233,8 +233,17 @@ let send_message t msg =
   Lwt_mvar.take t.result_box
 
 
-let overwrite_sequence_numbers t seqns =
-  Engine.overwrite_sequence_numbers t.engine seqns
+(** If [final_seqnums] is passed, these are written to the session dir
+    to be read on next startup of fix-engine.
 
-
-let terminate t = Engine.terminate t.engine
+    If no seqnums are present on startup, fix-engine just starts from 0
+ *)
+let terminate ?final_seqnums (t : t) =
+  let () =
+    match final_seqnums with
+    | None ->
+        ()
+    | Some (seqin, seqout) ->
+        Engine.persist_final_seqnums t.engine (seqin, seqout)
+  in
+  Engine.terminate t.engine

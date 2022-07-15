@@ -1,3 +1,81 @@
+module SessionManager = struct
+  let ( let* ) = Lwt.( >>= )
+
+  type t =
+    { dir : string
+    ; seqin : int
+    ; seqout : int
+    }
+
+  module Seqnum = struct
+    let fname_of_ty ~dir = function
+      | `In ->
+          Filename.concat dir "seqin"
+      | `Out ->
+          Filename.concat dir "seqout"
+
+
+    let read ~dir ty =
+      let fname = fname_of_ty ~dir ty in
+      try
+        let chn = open_in fname in
+        let num = input_line chn in
+        let () = close_in chn in
+        num |> int_of_string
+      with
+      | _exn ->
+          0
+
+
+    let write ~dir ty i =
+      let fname = fname_of_ty ~dir ty in
+      let chn = open_out fname in
+      let num = output_string chn (string_of_int i) in
+      let () = close_out chn in
+      ()
+
+
+    let delete ~dir ty = Unix.unlink (fname_of_ty ~dir ty)
+  end
+
+  let read_persisted_seqns_if_present dir =
+    { dir; seqin = Seqnum.read ~dir `In; seqout = Seqnum.read ~dir `Out }
+
+
+  let prepare_folder dir =
+    if not (Sys.file_exists dir) then Unix.(mkdir dir 0o775) else ()
+
+
+  let cleanup_persisted_seqns dir =
+    let () = Seqnum.delete ~dir `In in
+    let () = Seqnum.delete ~dir `Out in
+    ()
+
+
+  let create ~reset ~dir =
+    let () = prepare_folder dir in
+    let state =
+      (* normally we want to start from zero, but fix-engine may have been
+         directed by the other side to do a reset. in this situation we write
+         the seqnums as fix-engine shuts down, read the new values from the
+         session folder, then cleanup the seqnum files for next time around. *)
+      let st = read_persisted_seqns_if_present dir in
+      let () = cleanup_persisted_seqns dir in
+      st
+    in
+    let state = if reset then { state with seqin = 0; seqout = 0 } else state in
+    state
+
+
+  let get state = (state.seqin, state.seqout)
+
+  let write_persisted_seqns state =
+    let dir = state.dir in
+    let () = Seqnum.write ~dir `In state.seqin in
+    let () = Seqnum.write ~dir `Out state.seqout in
+    ()
+end
+
 module Internal : sig
   type t
 
@@ -39,116 +117,10 @@ module Internal : sig
 
   val send_get_state : t -> unit Lwt.t
 
-  val overwrite_sequence_numbers : t -> Z.t option * Z.t option -> unit Lwt.t
+  val persist_final_seqnums : t -> Z.t option * Z.t option -> unit
 
   val terminate : t -> unit Lwt.t
 end = struct
-  module SessionManager : sig
-    type t
-
-    val save : t -> int * int -> unit Lwt.t
-
-    val save_opt : t -> int option * int option -> unit Lwt.t
-
-    val create : reset:bool -> dir:string -> t
-
-    val get : t -> int * int
-  end = struct
-    let ( let* ) = Lwt.( >>= )
-
-    type t =
-      { dir : string
-      ; seqin : int
-      ; seqout : int
-      }
-
-    let read_int file =
-      try
-        let chn = open_in file in
-        let num = input_line chn in
-        let () = close_in chn in
-        num |> int_of_string
-      with
-      | _exn ->
-          0
-
-
-    let read_seqns dir =
-      { dir
-      ; seqin = read_int Filename.(concat dir "seqin")
-      ; seqout = read_int Filename.(concat dir "seqout")
-      }
-
-
-    let prepare_folder dir =
-      if not (Sys.file_exists dir) then Unix.(mkdir dir 0o775) else ()
-
-
-    let seqout_ch = ref None
-
-    let seqin_ch = ref None
-
-    let write_seqn_int fname ch_ref dir num =
-      let filename = Filename.(concat dir fname) in
-      let open Lwt.Syntax in
-      let* fch =
-        match !ch_ref with
-        | None ->
-            let* ch = Lwt_io.(open_file ~mode:output filename) in
-            ch_ref := Some ch ;
-            Lwt.return ch
-        | Some x ->
-            Lwt.return x
-      in
-      (* assumption: num is always increasing *)
-      let* () = Lwt_io.set_position fch Int64.zero in
-      Lwt_io.write fch (string_of_int num)
-
-
-    let _write_seqout_int dir num = write_seqn_int "seqout" seqout_ch dir num
-
-    let _write_seqin_int dir num = write_seqn_int "seqin" seqin_ch dir num
-
-    let save _state (_seqin, _seqout) = Lwt.return_unit
-    (* write_seqin_int state.dir seqin
-       >>= fun () -> write_seqout_int state.dir seqout *)
-
-    let save_opt state (seqin, seqout) =
-      let write_int dir fname num =
-        let filename = Filename.(concat dir fname) in
-        let* fch = Lwt_io.(open_file ~mode:output filename) in
-        let* () = Lwt_io.write fch (string_of_int num) in
-        Lwt_io.close fch
-      in
-      let* () =
-        match seqin with
-        | None ->
-            Lwt.return_unit
-        | Some seqin ->
-            write_int state.dir "seqin" seqin
-      in
-      let* () =
-        match seqout with
-        | None ->
-            Lwt.return_unit
-        | Some seqout ->
-            write_int state.dir "seqout" seqout
-      in
-      Lwt.return_unit
-
-
-    let create ~reset ~dir =
-      let () = prepare_folder dir in
-      let state = read_seqns dir in
-      let state =
-        if reset then { state with seqin = 0; seqout = 0 } else state
-      in
-      state
-
-
-    let get state = (state.seqin, state.seqout)
-  end
-
   let ( let* ) = Lwt.bind
 
   type message = (string * string) list
@@ -193,12 +165,6 @@ end = struct
     ; timestamp_encode : Datetime.fix_utctimestamp_micro -> string
     }
 
-  let save_state_seqns sessn state =
-    let seqin = state.Fix_engine_state.incoming_seq_num in
-    let seqout = state.Fix_engine_state.outgoing_seq_num in
-    SessionManager.save sessn (Z.to_int seqin, Z.to_int seqout)
-
-
   (** Calls Fix_engine.one_step and pubs outgoing messages while busy *)
   let rec while_busy_loop (t : t) engine_state =
     let cfg =
@@ -223,7 +189,6 @@ end = struct
       | _ ->
           Lwt.fail_with "Critical internal error in fix_engine model"
     in
-    let* () = save_state_seqns t.sess engine_state in
     let engine_state =
       { engine_state with outgoing_fix_msg = None; outgoing_int_msg = None }
     in
@@ -256,7 +221,6 @@ end = struct
               incoming_seq_num = Z.(engine_state.incoming_seq_num + one)
             }
           in
-          let* () = save_state_seqns t.sess engine_state in
           Lwt.return engine_state
       | Terminate ->
           Lwt.return engine_state
@@ -438,10 +402,15 @@ end = struct
 
   let send_get_state state = Lwt_mvar.put state.to_engine_box GetState
 
-  let overwrite_sequence_numbers state (inseq, outseq) =
-    let inseq = CCOpt.map Z.to_int inseq in
-    let outseq = CCOpt.map Z.to_int outseq in
-    SessionManager.save_opt state.sess (inseq, outseq)
+  let persist_final_seqnums state (inseq, outseq) =
+    let sess =
+      SessionManager.
+        { dir = state.sess.dir
+        ; seqin = (match inseq with None -> 0 | Some x -> Z.to_int x)
+        ; seqout = (match outseq with None -> 0 | Some x -> Z.to_int x)
+        }
+    in
+    SessionManager.write_persisted_seqns sess
 
 
   let terminate state = Lwt_mvar.put state.to_engine_box Terminate

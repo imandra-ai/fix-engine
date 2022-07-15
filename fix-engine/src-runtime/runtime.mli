@@ -44,6 +44,4 @@ val start_client :
 
 val send_message : handle -> Engine.message -> (unit, Engine.err) result Lwt.t
 
-val overwrite_sequence_numbers : handle -> Z.t option * Z.t option -> unit Lwt.t
-
-val terminate : handle -> unit Lwt.t
+val terminate : ?final_seqnums:Z.t option * Z.t option -> handle -> unit Lwt.t
