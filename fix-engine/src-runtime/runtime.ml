@@ -61,9 +61,11 @@ let receive_fix_io t message =
 let receive_engine t event =
   match (event, t.fixio) with
   | Engine.FIXFromEngine message, Some fixio ->
-    Lwt.join [ Fix_io.send fixio message; t.recv (mk_event message Outgoing) ]
-  | ( Engine.Log msg , _ )->  t.recv (Log msg)
-  | _ -> Lwt.return_unit
+      Lwt.join [ Fix_io.send fixio message; t.recv (mk_event message Outgoing) ]
+  | Engine.Log msg, _ ->
+      t.recv (Log msg)
+  | _ ->
+      Lwt.return_unit
 
 
 let receive_send t message =
@@ -133,7 +135,7 @@ let default_session_folder ~(config : Engine.config) =
 
 let make_state_and_thread
     ~(session_dir : string option)
-    ~(log_file: string option)
+    ~(log_file : string option)
     ~(reset : bool option)
     ~(config : Engine.config)
     ~(recv : event -> unit Lwt.t) =
@@ -154,14 +156,22 @@ let make_state_and_thread
     Engine.start ~reset ~session_dir ~config ~recv
   in
   let state =
-    { fixio = None; engine; engine_box; fixio_box; send_box; result_box; recv; log_file }
+    { fixio = None
+    ; engine
+    ; engine_box
+    ; fixio_box
+    ; send_box
+    ; result_box
+    ; recv
+    ; log_file
+    }
   in
   (state, engine_thread)
 
 
 let start_server
     ?(session_dir : string option)
-    ?(log_file: string option)
+    ?(log_file : string option)
     ?(reset : bool option)
     ~(config : Engine.config)
     ~(port : int)
@@ -195,7 +205,7 @@ let client_handler addr_str (t, engine_thread, init_msg) (inch, outch) =
 
 let start_client
     ?(session_dir : string option)
-    ?(log_file: string option)
+    ?(log_file : string option)
     ?(reset : bool option)
     ~(config : Engine.config)
     ~(host : string)
@@ -226,5 +236,5 @@ let send_message t msg =
 let overwrite_sequence_numbers t seqns =
   Engine.overwrite_sequence_numbers t.engine seqns
 
-let terminate t  =
-  Engine.terminate t.engine
+
+let terminate t = Engine.terminate t.engine

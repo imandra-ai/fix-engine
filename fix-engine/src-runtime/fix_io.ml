@@ -15,8 +15,8 @@ module Internal : sig
   val send : fix_io -> message -> unit Lwt.t
 end = struct
   let ( >>= ) = Lwt.( >>= )
-  let ( let* ) = Lwt.( >>= )
 
+  let ( let* ) = Lwt.( >>= )
 
   type fix_io =
     { send_box : message Lwt_mvar.t
@@ -32,6 +32,7 @@ end = struct
     msg
     |> List.map (fun (k, v) -> k ^ "=" ^ v)
     |> List.fold_left (fun a s -> a ^ s ^ split) ""
+
 
   let open_append s =
     let flags = Unix.[ O_WRONLY; O_APPEND; O_CREAT ] in
@@ -76,12 +77,14 @@ end = struct
 
   let rec read_thread t : unit Lwt.t =
     let* msg = get_message t [] in
-    let* () = match t.log_file_channel with
-      | None -> Lwt.return_unit
+    let* () =
+      match t.log_file_channel with
+      | None ->
+          Lwt.return_unit
       | Some oc ->
-        let logmsg = encode ~split:'|' msg in
-        logfix oc logmsg
-      in
+          let logmsg = encode ~split:'|' msg in
+          logfix oc logmsg
+    in
     let* () = t.recv msg in
     read_thread t
 
@@ -92,35 +95,44 @@ end = struct
     Lwt_mvar.take t.send_box
     >>= fun msg ->
     let wire = encode ~split:t.split msg in
-    let* () = match t.log_file_channel with
-      | None -> Lwt.return_unit
+    let* () =
+      match t.log_file_channel with
+      | None ->
+          Lwt.return_unit
       | Some oc ->
-        let logmsg = encode ~split:'|' msg in
-        logfix oc logmsg
-      in
+          let logmsg = encode ~split:'|' msg in
+          logfix oc logmsg
+    in
     Lwt_io.write t.outch wire >>= fun () -> write_thread t
 
 
-  let start
-    ?(split = '\001')
-    ?log_file
-    ~recv
-    (inch, outch) =
+  let start ?(split = '\001') ?log_file ~recv (inch, outch) =
     let state =
-      { inch; outch; split; send_box = Lwt_mvar.create_empty (); recv ; log_file_channel = None }
+      { inch
+      ; outch
+      ; split
+      ; send_box = Lwt_mvar.create_empty ()
+      ; recv
+      ; log_file_channel = None
+      }
     in
     let thread =
-      let* log_file_channel = match log_file with
-        | None -> Lwt.return_none
+      let* log_file_channel =
+        match log_file with
+        | None ->
+            Lwt.return_none
         | Some fname ->
-          let* oc = open_append fname in
-          let _ = Lwt_main.Exit_hooks.add_first (fun () ->
-              let* () = Lwt_io.flush oc in
-              Lwt_io.close oc) in
-          Lwt.return_some oc
-        in
-      let state = {state with log_file_channel } in
-      Lwt.pick [ read_thread state; write_thread state ] in
+            let* oc = open_append fname in
+            let _ =
+              Lwt_main.Exit_hooks.add_first (fun () ->
+                  let* () = Lwt_io.flush oc in
+                  Lwt_io.close oc )
+            in
+            Lwt.return_some oc
+      in
+      let state = { state with log_file_channel } in
+      Lwt.pick [ read_thread state; write_thread state ]
+    in
     (thread, state)
 
 
