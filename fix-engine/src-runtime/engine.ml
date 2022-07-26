@@ -329,6 +329,8 @@ end = struct
           true
       | Some Full_Field_BusinessRejectReason_Tag ->
           true
+      | Some Full_Field_TestReqID_Tag ->
+          true
       | _ ->
           false
     in
