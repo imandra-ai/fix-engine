@@ -13,6 +13,9 @@ let config =
     ; timer = 0.1
     ; begin_string = "FIX.4.4"
     ; millisecond_precision = false
+    ; no_history = false
+    ; ignore_business_reject = false
+    ; ignore_session_reject = false
     }
 
 
