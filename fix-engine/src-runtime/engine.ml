@@ -1,3 +1,85 @@
+module SessionManager = struct
+  let ( let* ) = Lwt.( >>= )
+
+  type t =
+    { dir : string
+    ; seqin : int
+    ; seqout : int
+    }
+
+  module Seqnum = struct
+    let fname_of_ty ~dir = function
+      | `In ->
+          Filename.concat dir "seqin"
+      | `Out ->
+          Filename.concat dir "seqout"
+
+
+    let read ~dir ty =
+      let fname = fname_of_ty ~dir ty in
+      try
+        let chn = open_in fname in
+        let num = input_line chn in
+        let () = close_in chn in
+        num |> int_of_string
+      with
+      | _exn ->
+          0
+
+
+    let write ~dir ty i =
+      let fname = fname_of_ty ~dir ty in
+      let chn = open_out fname in
+      let () = output_string chn (string_of_int i) in
+      let () = close_out chn in
+      ()
+
+
+    let delete ~dir ty =
+      let fname = fname_of_ty ~dir ty in
+      try Unix.unlink fname with
+      | Unix.(Unix_error (ENOENT, _, _)) ->
+          ()
+  end
+
+  let read_persisted_seqns_if_present dir =
+    { dir; seqin = Seqnum.read ~dir `In; seqout = Seqnum.read ~dir `Out }
+
+
+  let prepare_folder dir =
+    if not (Sys.file_exists dir) then Unix.(mkdir dir 0o775) else ()
+
+
+  let cleanup_persisted_seqns dir =
+    let () = Seqnum.delete ~dir `In in
+    let () = Seqnum.delete ~dir `Out in
+    ()
+
+
+  let create ~reset ~dir =
+    let () = prepare_folder dir in
+    let state =
+      (* normally we want to start from zero, but fix-engine may have been
+         directed by the other side to do a reset. in this situation we write
+         the seqnums as fix-engine shuts down, read the new values from the
+         session folder, then cleanup the seqnum files for next time around. *)
+      let st = read_persisted_seqns_if_present dir in
+      let () = cleanup_persisted_seqns dir in
+      st
+    in
+    let state = if reset then { state with seqin = 0; seqout = 0 } else state in
+    state
+
+
+  let get state = (state.seqin, state.seqout)
+
+  let write_persisted_seqns state =
+    let dir = state.dir in
+    let () = Seqnum.write ~dir `In state.seqin in
+    let () = Seqnum.write ~dir `Out state.seqout in
+    ()
+end
+
 module Internal : sig
   type t
 
@@ -6,6 +88,7 @@ module Internal : sig
   type err = [ `MissingMessageTypeTag ]
 
   type event =
+    | Log of string
     | FIXFromEngine of message
     | State of Fix_engine_state.fix_engine_state
 
@@ -15,8 +98,11 @@ module Internal : sig
     ; host_id : string option
     ; on_behalf_id : string option
     ; timer : float
-    ; begin_string : string
+    ; ignore_session_reject : bool
+    ; ignore_business_reject : bool
     ; millisecond_precision : bool
+    ; begin_string : string
+    ; no_history : bool
     }
 
   val start :
@@ -34,70 +120,11 @@ module Internal : sig
     t -> Fix_engine_state.fix_engine_int_inc_msg -> unit Lwt.t
 
   val send_get_state : t -> unit Lwt.t
+
+  val persist_final_seqnums : t -> Z.t option * Z.t option -> unit
+
+  val terminate : t -> unit Lwt.t
 end = struct
-  module SessionManager : sig
-    type t
-
-    val save : t -> int * int -> unit Lwt.t
-
-    val create : reset:bool -> dir:string -> t
-
-    val get : t -> int * int
-  end = struct
-    let ( >>= ) = Lwt.( >>= )
-
-    type t =
-      { dir : string
-      ; seqin : int
-      ; seqout : int
-      }
-
-    let read_int file =
-      try
-        let chn = open_in file in
-        let num = input_line chn in
-        let () = close_in chn in
-        num |> int_of_string
-      with
-      | _exn ->
-          0
-
-
-    let read_seqns dir =
-      { dir
-      ; seqin = read_int Filename.(concat dir "seqin")
-      ; seqout = read_int Filename.(concat dir "seqout")
-      }
-
-
-    let prepare_folder dir =
-      if not (Sys.file_exists dir) then Unix.(mkdir dir 0o775) else ()
-
-
-    let write_int dir fname num =
-      let filename = Filename.(concat dir fname) in
-      Lwt_io.(open_file ~mode:output filename)
-      >>= fun fch ->
-      Lwt_io.write fch (string_of_int num) >>= fun () -> Lwt_io.close fch
-
-
-    let save state (seqin, seqout) =
-      write_int state.dir "seqin" seqin
-      >>= fun () -> write_int state.dir "seqout" seqout
-
-
-    let create ~reset ~dir =
-      let () = prepare_folder dir in
-      let state = read_seqns dir in
-      let state =
-        if reset then { state with seqin = 0; seqout = 0 } else state
-      in
-      state
-
-
-    let get state = (state.seqin, state.seqout)
-  end
-
   let ( let* ) = Lwt.bind
 
   type message = (string * string) list
@@ -107,27 +134,40 @@ end = struct
   type action =
     | InternalToEngine of Fix_engine_state.fix_engine_int_inc_msg
     | FIXToEngine of Full_messages.full_top_level_msg
+    | IncrementInSeq
     | GetState
+    | Terminate
 
   type event =
+    | Log of string
     | FIXFromEngine of message
     | State of Fix_engine_state.fix_engine_state
 
+  type config =
+    { comp_id : string
+    ; target_id : string
+    ; host_id : string option
+    ; on_behalf_id : string option
+    ; timer : float
+    ; ignore_session_reject : bool
+    ; ignore_business_reject : bool
+    ; millisecond_precision : bool
+    ; begin_string : string
+    ; no_history : bool
+    }
+
   type t =
     { recv : event -> unit Lwt.t
+    ; ignore_sessrejects : bool
+    ; ignore_buisrejects : bool
     ; to_engine_box : action Lwt_mvar.t
     ; timer : float
     ; sess : SessionManager.t
     ; begin_string : string
+    ; should_clean_history : bool
     ; timestamp_parse : string -> Datetime.fix_utctimestamp_micro option
     ; timestamp_encode : Datetime.fix_utctimestamp_micro -> string
     }
-
-  let save_state_seqns sessn state =
-    let seqin = state.Fix_engine_state.incoming_seq_num in
-    let seqout = state.Fix_engine_state.outgoing_seq_num in
-    SessionManager.save sessn (Z.to_int seqin, Z.to_int seqout)
-
 
   (** Calls Fix_engine.one_step and pubs outgoing messages while busy *)
   let rec while_busy_loop (t : t) engine_state =
@@ -153,7 +193,6 @@ end = struct
       | _ ->
           Lwt.fail_with "Critical internal error in fix_engine model"
     in
-    let* () = save_state_seqns t.sess engine_state in
     let engine_state =
       { engine_state with outgoing_fix_msg = None; outgoing_int_msg = None }
     in
@@ -180,8 +219,22 @@ end = struct
       | GetState ->
           let* () = t.recv (State engine_state) in
           Lwt.return engine_state
+      | IncrementInSeq ->
+          let engine_state =
+            { engine_state with
+              incoming_seq_num = Z.(engine_state.incoming_seq_num + one)
+            }
+          in
+          Lwt.return engine_state
+      | Terminate ->
+          Lwt.return engine_state
     in
-    main_loop t engine_state
+    let engine_state =
+      if t.should_clean_history
+      then { engine_state with fe_history = [] }
+      else engine_state
+    in
+    if msg = Terminate then Lwt.return_unit else main_loop t engine_state
 
 
   let do_timechange t =
@@ -196,16 +249,6 @@ end = struct
     let* () = do_timechange t in
     heartbeat_thread t
 
-
-  type config =
-    { comp_id : string
-    ; target_id : string
-    ; host_id : string option
-    ; on_behalf_id : string option
-    ; timer : float
-    ; begin_string : string
-    ; millisecond_precision : bool
-    }
 
   let get_timestamp_codec ms =
     let parse_milli x =
@@ -246,22 +289,24 @@ end = struct
     let timestamp_parse, timestamp_encode =
       get_timestamp_codec config.millisecond_precision
     in
-    let begin_string = config.begin_string in
     let sess = SessionManager.create ~reset ~dir:session_dir in
     let inseq, outsec = SessionManager.get sess in
     let engine_state = make_engine_state (inseq, outsec) config in
-    let state =
+    let state : t =
       { to_engine_box = Lwt_mvar.create_empty ()
       ; timer = config.timer
+      ; ignore_sessrejects = config.ignore_session_reject
+      ; ignore_buisrejects = config.ignore_business_reject
       ; sess
       ; recv
-      ; begin_string
+      ; begin_string = config.begin_string
       ; timestamp_parse
       ; timestamp_encode
+      ; should_clean_history = config.no_history
       }
     in
     let thread =
-      Lwt.join [ heartbeat_thread state; main_loop state engine_state ]
+      Lwt.pick [ heartbeat_thread state; main_loop state engine_state ]
     in
     (thread, state)
 
@@ -284,6 +329,8 @@ end = struct
           true
       | Some Full_Field_BusinessRejectReason_Tag ->
           true
+      | Some Full_Field_TestReqID_Tag ->
+          true
       | _ ->
           false
     in
@@ -304,16 +351,46 @@ end = struct
         Ok int_msg
 
 
-  let process_fix_wire state msg =
+  let process_fix_wire state msg_kvs =
     let msg =
-      Parse_full_messages.parse_top_level_msg state.timestamp_parse msg
+      Parse_full_messages.parse_top_level_msg state.timestamp_parse msg_kvs
     in
-    let tenc = Datetime_json.utctimestamp_micro_to_json in
-    let json = Full_messages_json.full_top_level_msg_to_json tenc msg in
-    let _str = Yojson.Basic.pretty_to_string json in
     let* () = do_timechange state in
-    let action = FIXToEngine msg in
-    Lwt_mvar.put state.to_engine_box action
+    let msg_log = Fix_io.encode ~split:'|' msg_kvs in
+    let* ignore =
+      match msg with
+      | Garbled ->
+          let* () =
+            state.recv @@ Log ("Received Garbled message: " ^ msg_log)
+          in
+          Lwt.return_false
+      | BusinessRejectedMsg _ ->
+          if not state.ignore_buisrejects
+          then Lwt.return_false
+          else
+            let* () =
+              state.recv
+              @@ Log
+                   ("Ignoring received BusinessRejectedMsg message: " ^ msg_log)
+            in
+            Lwt.return_true
+      | SessionRejectedMsg _ ->
+          if not state.ignore_sessrejects
+          then Lwt.return_false
+          else
+            let* () =
+              state.recv
+              @@ Log ("Ignoring received SessionRejectedMsg message: " ^ msg_log)
+            in
+            Lwt.return_true
+      | ValidMsg _ ->
+          Lwt.return_false
+    in
+    if ignore
+    then Lwt_mvar.put state.to_engine_box IncrementInSeq
+    else
+      let action = FIXToEngine msg in
+      Lwt_mvar.put state.to_engine_box action
 
 
   let send_fix_message state msg =
@@ -330,6 +407,19 @@ end = struct
 
 
   let send_get_state state = Lwt_mvar.put state.to_engine_box GetState
+
+  let persist_final_seqnums state (inseq, outseq) =
+    let sess =
+      SessionManager.
+        { dir = state.sess.dir
+        ; seqin = (match inseq with None -> 0 | Some x -> Z.to_int x)
+        ; seqout = (match outseq with None -> 0 | Some x -> Z.to_int x)
+        }
+    in
+    SessionManager.write_persisted_seqns sess
+
+
+  let terminate state = Lwt_mvar.put state.to_engine_box Terminate
 end
 
 include Internal

@@ -15,6 +15,7 @@ type message =
   }
 
 type event =
+  | Log of string
   | FIXMessage of message
   | Connected of string
   | Disconnected of string
@@ -26,6 +27,7 @@ type t =
   ; send_box : Engine.message Lwt_mvar.t
   ; result_box : (unit, Engine.err) result Lwt_mvar.t
   ; engine : Engine.t
+  ; log_file : string option
   ; fixio : Fix_io.fix_io option
   ; recv : event -> unit Lwt.t
   }
@@ -60,6 +62,8 @@ let receive_engine t event =
   match (event, t.fixio) with
   | Engine.FIXFromEngine message, Some fixio ->
       Lwt.join [ Fix_io.send fixio message; t.recv (mk_event message Outgoing) ]
+  | Engine.Log msg, _ ->
+      t.recv (Log msg)
   | _ ->
       Lwt.return_unit
 
@@ -116,7 +120,8 @@ let server_handler (t : t) (in_addr : Unix.sockaddr) (inch, outch) =
     @@ fun () ->
     (* FIX IO loop *)
     let recv = Lwt_mvar.put t.fixio_box in
-    let fixio_thread, fixio = Fix_io.start ~recv (inch, outch) in
+    let log_file = t.log_file in
+    let fixio_thread, fixio = Fix_io.start ~recv ?log_file (inch, outch) in
     let t = { t with fixio = Some fixio } in
     Lwt.pick [ fixio_thread; loop t ]
 
@@ -130,6 +135,7 @@ let default_session_folder ~(config : Engine.config) =
 
 let make_state_and_thread
     ~(session_dir : string option)
+    ~(log_file : string option)
     ~(reset : bool option)
     ~(config : Engine.config)
     ~(recv : event -> unit Lwt.t) =
@@ -150,20 +156,29 @@ let make_state_and_thread
     Engine.start ~reset ~session_dir ~config ~recv
   in
   let state =
-    { fixio = None; engine; engine_box; fixio_box; send_box; result_box; recv }
+    { fixio = None
+    ; engine
+    ; engine_box
+    ; fixio_box
+    ; send_box
+    ; result_box
+    ; recv
+    ; log_file
+    }
   in
   (state, engine_thread)
 
 
 let start_server
     ?(session_dir : string option)
+    ?(log_file : string option)
     ?(reset : bool option)
     ~(config : Engine.config)
     ~(port : int)
     ~(recv : event -> unit Lwt.t)
     () =
   let state, engine_thread =
-    make_state_and_thread ~session_dir ~reset ~config ~recv
+    make_state_and_thread ~session_dir ~log_file ~reset ~config ~recv
   in
   let addr = Unix.(ADDR_INET (inet_addr_loopback, port)) in
   let server_thread =
@@ -181,7 +196,8 @@ let client_handler addr_str (t, engine_thread, init_msg) (inch, outch) =
   with_catch_disconnect t.recv
   @@ fun () ->
   let recv = Lwt_mvar.put t.fixio_box in
-  let fixio_thread, fixio = Fix_io.start ~recv (inch, outch) in
+  let log_file = t.log_file in
+  let fixio_thread, fixio = Fix_io.start ~recv ?log_file (inch, outch) in
   let t = { t with fixio = Some fixio } in
   let* () = Engine.send_internal_message t.engine init_msg in
   Lwt.pick [ engine_thread; fixio_thread; loop t ]
@@ -189,6 +205,7 @@ let client_handler addr_str (t, engine_thread, init_msg) (inch, outch) =
 
 let start_client
     ?(session_dir : string option)
+    ?(log_file : string option)
     ?(reset : bool option)
     ~(config : Engine.config)
     ~(host : string)
@@ -196,7 +213,7 @@ let start_client
     ~(recv : event -> unit Lwt.t)
     () =
   let state, engine_thread =
-    make_state_and_thread ~session_dir ~reset ~config ~recv
+    make_state_and_thread ~session_dir ~log_file ~reset ~config ~recv
   in
   let init_msg =
     Fix_engine_state.(
@@ -214,3 +231,19 @@ let start_client
 let send_message t msg =
   let* () = Lwt_mvar.put t.send_box msg in
   Lwt_mvar.take t.result_box
+
+
+(** If [final_seqnums] is passed, these are written to the session dir
+    to be read on next startup of fix-engine.
+
+    If no seqnums are present on startup, fix-engine just starts from 0
+ *)
+let terminate ?final_seqnums (t : t) =
+  let () =
+    match final_seqnums with
+    | None ->
+        ()
+    | Some (seqin, seqout) ->
+        Engine.persist_final_seqnums t.engine (seqin, seqout)
+  in
+  Engine.terminate t.engine

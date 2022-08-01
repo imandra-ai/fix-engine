@@ -52,6 +52,7 @@ module Decode (D : Decoders.Decode.S) = struct
     let* timer = field_def "timer" 1.0 D.float in
     let* millisecond_precision = field_def "timer" false D.bool in
     let* reset = field_def "reset" false D.bool in
+    let* no_history = field_def "no_history" false D.bool in
     let engine_config =
       Engine.
         { comp_id
@@ -61,6 +62,9 @@ module Decode (D : Decoders.Decode.S) = struct
         ; timer
         ; millisecond_precision
         ; begin_string
+        ; ignore_business_reject = false
+        ; ignore_session_reject = false
+        ; no_history
         }
     in
     D.succeed { zmqpub; zmqrep; mode; engine_config; reset }
