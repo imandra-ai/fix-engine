@@ -30,14 +30,14 @@ module SessionManager = struct
     let write ~dir ty i =
       let fname = fname_of_ty ~dir ty in
       let chn = open_out fname in
-      let num = output_string chn (string_of_int i) in
+      let () = output_string chn (string_of_int i) in
       let () = close_out chn in
       ()
 
 
     let delete ~dir ty =
       let fname = fname_of_ty ~dir ty in
-      try Unix.unlink (fname_of_ty ~dir ty) with
+      try Unix.unlink fname with
       | Unix.(Unix_error (ENOENT, _, _)) ->
           ()
   end
