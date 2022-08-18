@@ -1,6 +1,6 @@
 [submodule "vendor/imandra-ptime"]
 	path = vendor/imandra-ptime
 	url = https://github.com/AestheticIntegration/imandra-ptime.git
-[submodule "vendor/imandra-prelude"]
-	path = vendor/imandra-prelude
-	url = https://github.com/AestheticIntegration/imandra-prelude.git
+# [submodule "vendor/imandra-prelude"]
+# 	path = vendor/imandra-prelude
+# 	url = https://github.com/AestheticIntegration/imandra-prelude.git
