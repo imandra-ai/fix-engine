@@ -180,7 +180,7 @@ let start_server
   let state, engine_thread =
     make_state_and_thread ~session_dir ~log_file ~reset ~config ~recv
   in
-  let addr = Unix.(ADDR_INET (inet_addr_loopback, port)) in
+  let addr = Unix.(ADDR_INET (inet_addr_any, port)) in
   let server_thread =
     let handler = server_handler state in
     let _server = Lwt_io.establish_server_with_client_address addr handler in
