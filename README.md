@@ -20,7 +20,7 @@ industry, cutting down time and costs for connecting (and ensuring
 regulatory compliance of) the numerous systems relying on this
 protocol.
 
-This README will give you a brief overview of the project. For further information please seethe documentation page at https://docs.imandra.ai/fix-engine/
+This README will give you a brief overview of the project. For further information please see the documentation page at https://docs.imandra.ai/fix-engine/
 
 ## Why
 
@@ -81,7 +81,7 @@ documentation for further information.
 ## Model Verification
 
 In addition to the model source code, you will find a collection of
-Verification Goals (VGs). VGs are statements in IML expressing
+**Verification Goals** (VGs). VGs are statements in IML expressing
 properties of the FIX engine model that we wish to verify. It's
 important to note that IML is used for both building the model and
 describing the properties we wish to verify about it.
