@@ -1,15 +1,17 @@
 # Makefile
-#
+
+DUNE_OPTS?= --profile=release
+
 build:
-	opam exec -- dune build @install
+	opam exec -- dune build $(DUNE_OPTS) @install
 
 build_tests:
-	opam exec -- dune build tests/test_runner.bc
-	opam exec -- dune build tests/test_server.exe
+	opam exec -- dune build $(DUNE_OPTS) tests/test_runner.bc
+	opam exec -- dune build $(DUNE_OPTS) tests/test_server.exe
 
 
 doc:
-	opam exec -- dune build @doc
+	opam exec -- dune build $(DUNE_OPTS) @doc
 	mkdir -p _pages/doc
 	cp -r _build/default/_doc/_html/* _pages/doc/
 	rm -rf _pages/doc/odoc.css
@@ -37,13 +39,17 @@ _opam:
 
 format:
 	@echo "(dirs :standard \ *-vg)" > dune
-	opam exec -- dune build @fmt --auto-promote || true
+	opam exec -- dune build $(DUNE_OPTS) @fmt --auto-promote || true
 	rm dune
 
 format_vgs:
 	@echo "(dirs :standard \ src-protocol-exts src-protocol-exts-pp src-model src-simulation src-simulation-utils src-core-utils src-tests-utils)" > dune
-	opam exec -- dune build @fmt --auto-promote || true
+	opam exec -- dune build $(DUNE_OPTS) @fmt --auto-promote || true
 	rm dune
 
 clean:
-	opam exec -- dune clean
+	opam exec -- dune clean $(DUNE_OPTS)
+
+WATCH?=@check
+watch:
+	@opam exec -- dune build $(DUNE_OPTS) $(WATCH) -w
