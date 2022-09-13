@@ -16,5 +16,7 @@ depends: [
   "yojson"
   "decoders"
   "decoders-yojson"
+  "zmq"
+  "zmq-lwt"
   "ocaml" {>= "4.08.0"}
 ]
