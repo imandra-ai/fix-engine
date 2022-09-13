@@ -4,6 +4,7 @@ type mode =
       { host : string
       ; port : int
       }
+[@@deriving show { with_path = false }]
 
 type t =
   { engine_config : Engine.config
@@ -12,6 +13,7 @@ type t =
   ; zmqrep : string
   ; reset : bool
   }
+[@@deriving show { with_path = false }]
 
 module Decode (D : Decoders.Decode.S) = struct
   let ( let* ) = D.( >>= )

@@ -3,16 +3,19 @@ let ( let* ) = Lwt.bind
 type direction =
   | Incoming
   | Outgoing
+[@@deriving show]
 
 type msg_type =
   | Application
   | Admin
+[@@deriving show]
 
 type message =
   { message : (string * string) list
   ; direction : direction
   ; msg_type : msg_type
   }
+[@@deriving show]
 
 type event =
   | Log of string
@@ -20,6 +23,7 @@ type event =
   | Connected of string
   | Disconnected of string
   | ConnectionRejected of string
+[@@deriving show]
 
 type t =
   { engine_box : Engine.event Lwt_mvar.t

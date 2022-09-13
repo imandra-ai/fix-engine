@@ -37,9 +37,7 @@ module SessionManager = struct
 
     let delete ~dir ty =
       let fname = fname_of_ty ~dir ty in
-      try Unix.unlink fname with
-      | Unix.(Unix_error (ENOENT, _, _)) ->
-          ()
+      try Unix.unlink fname with Unix.(Unix_error (ENOENT, _, _)) -> ()
   end
 
   let read_persisted_seqns_if_present dir =
@@ -104,6 +102,7 @@ module Internal : sig
     ; begin_string : string
     ; no_history : bool
     }
+  [@@deriving show { with_path = false }]
 
   val start :
        reset:bool
@@ -155,6 +154,7 @@ end = struct
     ; begin_string : string
     ; no_history : bool
     }
+  [@@deriving show { with_path = false }]
 
   type t =
     { recv : event -> unit Lwt.t
