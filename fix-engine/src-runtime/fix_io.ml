@@ -135,7 +135,7 @@ end = struct
        even if [not (is_empty self)] *)
     let shift_to_left (self : t) =
       let n = len self in
-      B.blit self.buf self.off self.buf 0 n ;
+      if n > 0 then B.blit self.buf self.off self.buf 0 n ;
       self.off <- 0 ;
       self.max_off <- n
 
@@ -154,6 +154,10 @@ end = struct
         self.buf <- new_buf ) ;
 
       (* add more bytes starting from [self.max_off] *)
+      Printf.printf
+        "read into off=%d len=%d\n%!"
+        self.max_off
+        (B.length self.buf - len self) ;
       let+ n =
         IO.read_into self.ic self.buf self.max_off (B.length self.buf - len self)
       in
