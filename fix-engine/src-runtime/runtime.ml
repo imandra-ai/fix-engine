@@ -95,8 +95,8 @@ let rec loop (t : t) : unit Lwt.t =
 
 let with_catch_disconnect recv f =
   Lwt.catch f (fun e ->
-      let msg = Printexc.to_string e
-      and stack = Printexc.get_backtrace () in
+      let stack = Printexc.get_backtrace () in
+      let msg = Printexc.to_string e in
       let msg = Printf.sprintf "\n%s%s\n" msg stack in
       recv (Disconnected msg) )
 
