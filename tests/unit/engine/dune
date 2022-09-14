@@ -1,4 +1,4 @@
 
 (tests
   (names t_fix_io)
-  (libraries fix-engine.runtime))
+  (libraries fix-engine.runtime lwt lwt.unix))

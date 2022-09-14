@@ -1,4 +1,4 @@
-type message = (string * string) list
+type message = (string * string) list [@@deriving show]
 
 module Internal : sig
   type fix_io
@@ -9,6 +9,14 @@ module Internal : sig
     -> recv:(message -> unit Lwt.t)
     -> Lwt_io.input_channel * Lwt_io.output_channel
     -> unit Lwt.t * fix_io
+
+  module Read : sig
+    type t
+
+    val create : ?buf_size:int -> split:char -> Lwt_io.input_channel -> t
+
+    val read_next_message : t -> message option Lwt.t
+  end
 
   val encode : split:char -> message -> string
 
@@ -74,48 +82,174 @@ end = struct
 
 
   let logfix oc logmsg =
-    let str = "[" ^ get_time_string () ^ "]: " ^ logmsg ^ "\n" in
+    let str = Printf.sprintf "[%s]: %s\n" (get_time_string ()) logmsg in
     Lwt_io.write oc str
 
 
   (** Reading thread *)
 
-  (* Converts [ '5'; '2'; '='; 'A' ] to ("52" , "A" ) *)
-  let extract_key_value (chlist : char list) : string * string =
-    let buf = Buffer.create @@ List.length chlist in
-    let () = chlist |> List.iter @@ Buffer.add_char buf in
-    Buffer.contents buf
-    |> String.split_on_char '='
-    |> function [] -> ("", "") | h :: tl -> (h, String.concat "=" tl)
+  module Read : sig
+    type t
+
+    val create : ?buf_size:int -> split:char -> Lwt_io.input_channel -> t
+
+    val read_next_message : t -> message option Lwt.t
+  end = struct
+    module B = Bytes
+    module IO = Lwt_io
+    open Lwt.Syntax
+
+    type t =
+      { ic : IO.input_channel
+      ; split : char
+      ; mutable buf : bytes
+      ; mutable off : int  (** current offset in [buf] *)
+      ; mutable max_off : int  (** maximum valid offset in [buf] *)
+      ; mutable partial_msg : message
+      }
+
+    let create ?(buf_size = 16 * 1024) ~split ic : t =
+      { split
+      ; ic
+      ; buf = Bytes.create buf_size
+      ; off = 0
+      ; max_off = 0
+      ; partial_msg = []
+      }
 
 
-  let rec get_key_value t chars =
-    Lwt_io.read_char t.inch
-    >>= fun c ->
-    if c <> t.split
-    then get_key_value t (c :: chars)
-    else Lwt.return @@ extract_key_value @@ List.rev chars
+    let[@inline] is_empty (self : t) : bool = self.off = self.max_off
+
+    let[@inline] len self = self.max_off - self.off
+
+    (* find the next split char in the internal buffer *)
+    let next_split (self : t) : int option =
+      match Bytes.index_from_opt self.buf self.off self.split with
+      | Some n when n > self.max_off ->
+          None
+      | r ->
+          r
 
 
-  let rec get_message t msg =
-    get_key_value t []
-    >>= fun (k, v) ->
-    let msg = (k, v) :: msg in
-    if k <> "10" then get_message t msg else Lwt.return @@ List.rev msg
+    (* move data inside to the left, so that [self.off = 0].  This must work
+       even if [not (is_empty self)] *)
+    let shift_to_left (self : t) =
+      let n = len self in
+      B.blit self.buf self.off self.buf 0 n ;
+      self.off <- 0 ;
+      self.max_off <- n
 
 
-  let rec read_thread t : unit Lwt.t =
-    let* msg = get_message t [] in
-    let* () =
-      match t.log_file_channel with
+    (* refill internal buffer. Returns true if at least one byte was added. *)
+    let refill (self : t) : bool Lwt.t =
+      shift_to_left self ;
+      assert (self.off = 0) ;
+
+      (* corner case: a single key/value pair is bigger than
+         the internal buffer. Allocate bigger buffer. *)
+      if self.max_off = B.length self.buf
+      then (
+        let new_buf = B.create (B.length self.buf * 2) in
+        B.blit self.buf 0 new_buf 0 (len self) ;
+        self.buf <- new_buf ) ;
+
+      (* add more bytes starting from [self.max_off] *)
+      let+ n =
+        IO.read_into self.ic self.buf self.max_off (B.length self.buf - len self)
+      in
+      self.max_off <- self.max_off + n ;
+
+      n > 0
+
+
+    type available_res =
+      | Reached_checksum
+      | Needs_more
+
+    (* read key/value pairs that are fully in the buffer. The key/value
+       pairs that are read are pushed into [self.partial_msg] *)
+    let rec read_available_pairs (self : t) : available_res =
+      match next_split self with
       | None ->
-          Lwt.return_unit
-      | Some oc ->
-          let logmsg = encode ~split:'|' msg in
-          logfix oc logmsg
+          (* no split found, need more data. *)
+          Needs_more
+      | Some idx_split ->
+          (* found split, now find '=' before it so we can extract key
+             and value *)
+          assert (B.get self.buf idx_split = self.split) ;
+          ( match B.index_from_opt self.buf self.off '=' with
+          | Some idx_eq when idx_eq < idx_split ->
+              let k = B.sub_string self.buf self.off (idx_eq - self.off) in
+              let v =
+                B.sub_string self.buf (idx_eq + 1) (idx_split - idx_eq - 1)
+              in
+              self.partial_msg <- (k, v) :: self.partial_msg ;
+
+              (* move past the split *)
+              self.off <- idx_split + 1 ;
+
+              (* we may have read the last field we needed *)
+              if k = "10"
+              then Reached_checksum
+              else (read_available_pairs [@tailcall]) self
+          | _ ->
+              Printf.printf
+                "cur buf: %S\n%!"
+                (B.sub_string self.buf self.off (len self)) ;
+              invalid_arg
+                "Fix_io.read_next_message: no '=' present before split" )
+
+
+    (* read a full message *)
+    let read_next_message (self : t) : message option Lwt.t =
+      assert (self.partial_msg = []) ;
+      let rec loop () =
+        match read_available_pairs self with
+        | Reached_checksum ->
+            (* data in buffer was enough *)
+            let msg = List.rev self.partial_msg in
+            self.partial_msg <- [] ;
+            Lwt.return (Some msg)
+        | Needs_more ->
+            let* read_some = refill self in
+            if read_some
+            then (
+              assert (not (is_empty self)) ;
+              loop () )
+            else (
+              if not (is_empty self)
+              then
+                invalid_arg
+                  (Printf.sprintf
+                     "Fix_io.read_next_message: leftover data %S"
+                     (B.sub_string self.buf 0 self.max_off) ) ;
+              Lwt.return None )
+      in
+      loop ()
+  end
+
+  let read_next_message = Read.read_next_message
+
+  let read_thread t : unit Lwt.t =
+    let reader = Read.create ~split:t.split t.inch in
+    let rec loop () =
+      let* msg = Read.read_next_message reader in
+      match msg with
+      | None ->
+          Lwt.return ()
+      | Some msg ->
+          let* () =
+            match t.log_file_channel with
+            | None ->
+                Lwt.return_unit
+            | Some oc ->
+                let logmsg = encode ~split:'|' msg in
+                logfix oc logmsg
+          in
+          let* () = t.recv msg in
+          loop ()
     in
-    let* () = t.recv msg in
-    read_thread t
+    loop ()
 
 
   (** Writing thread *)
