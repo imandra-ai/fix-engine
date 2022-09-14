@@ -99,8 +99,8 @@ module Receive = struct
         (function End_of_file -> Lwt.return None | e -> raise e)
   end
 
-  let read_messages ~init ~read_next_message () : Fix_io.message list Lwt.t =
-    let data = String.concat "" test_data in
+  let read_messages ~init ~read_next_message (data : string) :
+      Fix_io.message list Lwt.t =
     let ic = Lwt_io.of_bytes ~mode:Lwt_io.input @@ Lwt_bytes.of_string data in
     let reader = init ~split:'|' ic in
     let rec loop acc =
@@ -116,19 +116,20 @@ module Receive = struct
 
   let test ~buf_size =
     Lwt_main.run
-      (let* l1 =
+      (let data = String.concat "" test_data in
+       let* l1 =
          read_messages
            ~init:(fun ~split ic -> (split, ic))
            ~read_next_message:(fun (split, ic) ->
              Ref.read_next_message ~split ic )
-           ()
+           data
        in
        let* l2 =
          (* small buffer size to test the resize/refill *)
          read_messages
            ~init:(Fix_io.Read.create ~buf_size)
            ~read_next_message:Fix_io.Read.read_next_message
-           ()
+           data
        in
        if l1 <> l2
        then (
@@ -198,4 +199,24 @@ module Receive = struct
         assert false
     | _ ->
         assert false
+
+
+  (* test long sequence of messages *)
+  let () =
+    Lwt_main.run
+    @@
+    (* repeat [test_data] many times *)
+    let n_copies = 1000 in
+    let expected_len = n_copies * List.length test_data in
+    let data = String.concat "" @@ CCList.repeat n_copies test_data in
+
+    let* msg_l =
+      read_messages
+        ~init:(Fix_io.Read.create ~buf_size:401)
+        ~read_next_message:Fix_io.Read.read_next_message
+        data
+    in
+
+    assert (List.length msg_l = expected_len) ;
+    Lwt.return ()
 end
