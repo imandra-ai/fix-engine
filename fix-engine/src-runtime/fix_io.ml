@@ -28,10 +28,39 @@ end = struct
     }
 
   let encode ~split msg =
-    let split = String.make 1 split in
-    msg
-    |> List.map (fun (k, v) -> k ^ "=" ^ v)
-    |> List.fold_left (fun a s -> a ^ s ^ split) ""
+    (* compute how many bytes are required *)
+    let size =
+      List.fold_left
+        (fun n (k, v) ->
+          (* add size for "k=v|" *)
+          n + 2 + String.length k + String.length v )
+        0
+        msg
+    in
+    (* concatenate into a fixed size buffer *)
+    let out = Bytes.create size in
+    let offset = ref 0 in
+
+    let[@inline] add_char (c : char) =
+      Bytes.set out !offset c ;
+      incr offset
+    in
+    let[@inline] add_str (s : string) =
+      Bytes.blit_string s 0 out !offset (String.length s) ;
+      offset := !offset + String.length s
+    in
+
+    List.iter
+      (fun (k, v) ->
+        add_str k ;
+        add_char '=' ;
+        add_str v ;
+        add_char split )
+      msg ;
+
+    (* return new string *)
+    assert (!offset = size) ;
+    Bytes.unsafe_to_string out
 
 
   let open_append s =
