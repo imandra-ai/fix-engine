@@ -125,7 +125,7 @@ end = struct
     (* find the next split char in the internal buffer *)
     let next_split (self : t) : int option =
       match Bytes.index_from_opt self.buf self.off self.split with
-      | Some n when n > self.max_off ->
+      | Some n when n >= self.max_off ->
           None
       | r ->
           r
