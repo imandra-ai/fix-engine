@@ -50,6 +50,9 @@ format_vgs:
 clean:
 	opam exec -- dune clean $(DUNE_OPTS)
 
+bench-engine-decode:
+	opam exec -- dune exec $(DUNE_OPTS) tests/benchs/engine/bench_engine_decode.exe --
+
 WATCH?=@check
 watch:
 	@opam exec -- dune build $(DUNE_OPTS) $(WATCH) -w
