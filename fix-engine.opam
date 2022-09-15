@@ -20,4 +20,6 @@ depends: [
   "zmq-lwt"
   "logs"
   "ocaml" {>= "4.08.0"}
+  "benchmark" {with-test}
+  "qcheck-core" {with-test}
 ]
