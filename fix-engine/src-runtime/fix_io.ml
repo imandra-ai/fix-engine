@@ -155,10 +155,6 @@ end = struct
         self.buf <- new_buf ) ;
 
       (* add more bytes starting from [self.max_off] *)
-      Printf.printf
-        "read into off=%d len=%d\n%!"
-        self.max_off
-        (B.length self.buf - len self) ;
       let+ n =
         IO.read_into self.ic self.buf self.max_off (B.length self.buf - len self)
       in
@@ -199,9 +195,6 @@ end = struct
               then Reached_checksum
               else (read_available_pairs [@tailcall]) self
           | _ ->
-              Printf.printf
-                "cur buf: %S\n%!"
-                (B.sub_string self.buf self.off (len self)) ;
               invalid_arg
                 "Fix_io.read_next_message: no '=' present before split" )
 
