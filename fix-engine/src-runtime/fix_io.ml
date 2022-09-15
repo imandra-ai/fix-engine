@@ -1,4 +1,4 @@
-type message = (string * string) list [@@deriving show]
+type message = Message.t [@@deriving show]
 
 module Internal : sig
   type fix_io
