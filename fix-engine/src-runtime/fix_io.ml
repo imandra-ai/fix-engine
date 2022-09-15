@@ -135,6 +135,7 @@ end = struct
        even if [not (is_empty self)] *)
     let shift_to_left (self : t) =
       let n = len self in
+      assert (n >= 0) ;
       if n > 0 then B.blit self.buf self.off self.buf 0 n ;
       self.off <- 0 ;
       self.max_off <- n
@@ -161,6 +162,7 @@ end = struct
       let+ n =
         IO.read_into self.ic self.buf self.max_off (B.length self.buf - len self)
       in
+      assert (n >= 0) ;
       self.max_off <- self.max_off + n ;
 
       n > 0
