@@ -1,0 +1,4 @@
+
+(tests
+  (names t_message)
+  (libraries fix-engine.util-msg qcheck-core qcheck-core.runner))

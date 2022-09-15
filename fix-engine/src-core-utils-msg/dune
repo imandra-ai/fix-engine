@@ -1,0 +1,8 @@
+(library
+ (name util_msg)
+ (public_name fix-engine.util-msg)
+ (wrapped false)
+ (modules message)
+ (preprocess (pps ppx_deriving.std))
+ (libraries))
+

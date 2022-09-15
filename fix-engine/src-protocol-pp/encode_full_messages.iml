@@ -11,6 +11,7 @@
 [@@@import "encode_admin_messages.iml"]
 [@@@import "../src-protocol/full_messages.iml"]
 [@@@import "../src-core-pp/encode_base_types.iml"]
+[@@@import "../src-core-utils-msg/message.ml"]
 
 [@@@program]
 open Full_messages
@@ -81,17 +82,7 @@ let get_body_length msg =
     scan 0 msg
 ;;
 
-let get_checksum msg =
-    let checksum s =
-        let rec chsum i v =
-            if i < 0 then v else chsum (i - 1) (Z.of_int (Char.code s.[Z.to_int i]) + v)  in
-        chsum (String.length s - 1) 0
-    in
-    let rec scan n msg = match msg with
-        | ("10", _v )::_tl -> n mod 256
-        | (  k , v )::tl -> scan (checksum k + checksum v + 62 + n) tl
-        | [] -> n mod 256 in
-    scan 0 msg
+let get_checksum msg = Z.of_int (Message.checksum msg)
 ;;
 
 let prepare_packet begin_string msg_body =
