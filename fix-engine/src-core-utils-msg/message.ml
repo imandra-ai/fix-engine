@@ -19,3 +19,17 @@ let checksum (msg : t) =
         n mod 256
   in
   scan 0 msg
+
+
+let valid_checksum (self : t) : bool =
+  let c = checksum self in
+  match List.find_opt (fun (tag, _) -> tag = "10") self with
+  | None ->
+      false
+  | Some (_tag, c') ->
+    ( match int_of_string_opt c' with
+    | None ->
+        false
+    | Some c' ->
+        (* stored checksum (at tag "10") must be the same as our computed checksum *)
+        c = c' )

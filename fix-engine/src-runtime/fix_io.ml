@@ -227,8 +227,6 @@ end = struct
       loop ()
   end
 
-  let read_next_message = Read.read_next_message
-
   let read_thread t : unit Lwt.t =
     let reader = Read.create ~split:t.split t.inch in
     let rec loop () =
