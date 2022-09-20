@@ -1,5 +1,4 @@
 module Q = QCheck
-open Message
 
 let assert_eq_int i j =
   if i <> j

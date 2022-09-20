@@ -1,5 +1,4 @@
 open Datetime
-open Encode_base_types
 module Ptime = Imandra_ptime
 
 let ( ~$ ) = Z.( ~$ )
@@ -10,17 +9,6 @@ open struct
     then (
       Printf.eprintf "not equal: %S vs %S\n%!" a b ;
       assert false )
-
-
-  let zfill (n : int) (s : string) : string =
-    let bv = Bytes.of_string s in
-    let length = Bytes.length bv in
-    if n <= length
-    then Bytes.to_string bv
-    else
-      let result = Bytes.make n '0' in
-      Bytes.blit bv 0 result (n - length) length ;
-      Bytes.to_string result
 end
 
 module Encode_utc_dateonly = struct
