@@ -15,17 +15,6 @@ open Ints;;
 open Datetime;;
 open Encode_base_types;;
 
-let zfill (n:Caml.Int.t) (s:string) : string =
-  let bv = Bytes.of_string s in
-  let length = Bytes.length bv in
-  if Caml.Int.(n <= length) then (
-    Bytes.to_string bv
-  ) else (
-    let result = Bytes.make n '0' in
-    Bytes.blit bv 0i result Caml.Int.(n-length) length;
-    Bytes.to_string result
-  )
-
 
 let encode_UTCDateOnly (x : fix_utcdateonly) : string =
   let y, m, d = T.to_date x in

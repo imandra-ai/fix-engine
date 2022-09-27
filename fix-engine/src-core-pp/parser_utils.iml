@@ -104,7 +104,7 @@ module Parser = struct
 
   (** The modified bind operator that applies a function that
       returns [( 'a Parser.t * msg )] pair *)
-  let ( >|>= ) x f = match x with
+  let ( >|>= ) x f : _ t * msg = match x with
     | ParseSuccess             x -> f x
     | UnknownMessageTag        x -> UnknownMessageTag        x , []
     | RequiredTagMissing       x -> RequiredTagMissing       x , []
