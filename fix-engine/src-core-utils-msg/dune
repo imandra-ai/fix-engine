@@ -2,7 +2,7 @@
  (name util_msg)
  (public_name fix-engine.util-msg)
  (wrapped false)
- (modules message parse_message_util)
+ (modules message parse_message_util parser_combinators)
  (preprocess (pps ppx_deriving.std))
  (libraries))
 
