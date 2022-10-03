@@ -215,10 +215,9 @@ let perform_action (instream, outch) act =
       Lwt_io.printl ("Received: " ^ msg_to_string rmsg)
       >>= fun () ->
       msg
-      |> Stream.of_string
       |> Parser_utils.split_into_key_value '\001'
       |> Parser_utils.split_into_messages
-      |> Stream.next
+      |> CCSeq.take 1i |> CCSeq.to_list |> List.hd
       |> check_expected_compatible rmsg
   | ExpectAction Disconnect ->
       Lwt_io.printl "Disconnecting"

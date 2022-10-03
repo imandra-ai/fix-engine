@@ -43,10 +43,10 @@ let parse_config_line cfgstr =
           payload |> Printf.sprintf "Error parsing action \"%s\"" |> failwith
     in
     let string_to_key_value string =
-      Stream.of_string string
+      string
       |> Parser_utils.split_into_key_value '\001'
       |> Parser_utils.split_into_messages
-      |> Stream.next
+      |> CCSeq.take 1i |> CCSeq.to_list |> List.hd
     in
     match Bytes.get cfgstr 0i with
     | ' ' | '#' ->

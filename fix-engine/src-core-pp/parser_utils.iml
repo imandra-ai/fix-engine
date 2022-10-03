@@ -13,51 +13,16 @@
 *)
 [@@@program]
 [@@@import "parse_base_types.iml"]
-(**  Splits a stream of characters into a stream of [(key * value)] pairs. *)
-let split_into_key_value (spliton : char) ( stream : char Stream.t ) : (string * string) Stream.t =
-  let current = ref [] in
-  let listref_to_string lst =
-    !lst |> List.rev |> String.concat "" in
-  let rec next i =
-    try
-      let c = Stream.next stream in
-      if c = spliton then (
-        let entry = listref_to_string current in
-        current := [];
-        Scanf.sscanf entry "%s@=%s@\001" (fun k v -> Some (k,v))
-      ) else (
-        current := Char.escaped c :: !current;
-        next i
-      )
-    with Stream.Failure -> None in
-  Stream.from next
-;;
-
-(** Splits a stream of key-value paris into stream of messages. *)
-let split_into_messages (stream : (string * string) Stream.t) =
-  let current = ref [] in
-  let rec next i =
-    try
-      let key,value = Stream.next stream in
-      if (key = "10") then (
-        let message = List.rev ( (key,value)::!current ) in
-        current := [];
-        Some message
-      ) else (
-        current := (key,value) :: !current;
-        next i
-      )
-    with Stream.Failure -> (
-        if (!current <> []) then (
-          let message = List.rev !current in
-          current := [];
-          Some message
-        ) else None
-      ) in
-  Stream.from next
-;;
+[@@@require "fix-engine.util-msg"]
 
 
+(** Split [str] into pairs of [key/value] separated by [sep],
+     each pair being a [key=value] pair. *)
+let split_into_key_value (sep:char) (str:string) : (string*string) Seq.t =
+  Parse_message_util.split_into_key_value sep str
+
+let split_into_messages (seq: (string*string) Seq.t) : (string*string) list Seq.t =
+  Parse_message_util.split_into_messages seq
 
 (** Extract a value given a tag, returns a pair with the value and the rest of the list.*)
 let take (key : string) (lst : (string * string) list ) =
@@ -139,7 +104,7 @@ module Parser = struct
 
   (** The modified bind operator that applies a function that
       returns [( 'a Parser.t * msg )] pair *)
-  let ( >|>= ) x f = match x with
+  let ( >|>= ) x f : _ t * msg = match x with
     | ParseSuccess             x -> f x
     | UnknownMessageTag        x -> UnknownMessageTag        x , []
     | RequiredTagMissing       x -> RequiredTagMissing       x , []

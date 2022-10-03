@@ -7,6 +7,7 @@
     parse_full_messages.ml
 
 *)
+[@@@require "fix-engine.util-msg"]
 [@@@import "../src-protocol/full_message_tags.iml"]
 [@@@import "../src-protocol/full_messages.iml"]
 [@@@import "../src-core-pp/parser_utils.iml"]
@@ -139,24 +140,7 @@ let valid_body_length ( msg : (string * string) list ) : bool =
         | _ -> false
 ;;
 
-(**  Verifies the checksum (sum of all bytes mod 256) of all bytes in 
-    the message up to the CheckSum<10> entry. Returns true if the computed 
-    checksum is equal to the value of CheckSum<10>.
-*)
-let valid_checksum ( msg : (string * string) list ) : bool  =
-    let checksum s = 
-        let rec chsum i v =
-            if i < 0 then v else chsum (i - 1) (Z.of_int (Char.code s.[Z.to_int i]) + v)  in
-        chsum (String.length s - 1) 0 
-        in
-    let checksum, msg_checksum =
-        let rec scan n msg = match msg with
-            | ("10", v )::_tl -> ( n mod 256 , v )
-            | (  k , v )::tl -> scan (checksum k + checksum v + 62 + n) tl
-            | [] -> ( n mod 256 , "") in 
-        scan 0 msg
-        in
-    try checksum = Z.of_string msg_checksum with _ -> false
+let valid_checksum = Message.valid_checksum
 ;;
 
 (**

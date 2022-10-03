@@ -1,0 +1,12 @@
+
+(library
+  (name test_engine_data))
+
+(rule
+  (targets fix_data.ml)
+  (deps (:file sample_fix_data.txt))
+  (action (with-stdout-to %{targets}
+                          (progn
+                            (echo "let data = {|")
+                            (cat %{file})
+                            (echo "|}")))))

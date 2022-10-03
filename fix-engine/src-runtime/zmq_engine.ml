@@ -1,3 +1,4 @@
+open Common
 module D = Decoders_yojson.Basic.Decode
 module CD = Config.Decode (D)
 
@@ -7,10 +8,8 @@ let load_config filename =
       x
   | Error err ->
       let err = D.string_of_error err in
-      let err =
-        Printf.sprintf "Error loading %s config json:/n%s" filename err
-      in
-      failwith err
+      Log.err (fun k -> k "Error loading %S config json:%s" filename err) ;
+      failwith "could not load config"
 
 
 let ( let* ) = Lwt.bind
@@ -69,14 +68,16 @@ let engine_thread (config : Config.t) =
         ()
 
 
-let run (config : Config.t) =
+let run (config : Config.t) (log_level : Logs.level option) =
+  Logs.set_level ~all:true log_level ;
+  Logs.set_reporter @@ Logs.format_reporter () ;
   let handle, engine = engine_thread config in
   let zmqcontext = Zmq.Context.create () in
   let zmqpubsocket = Zmq.Socket.(create zmqcontext pub) in
-  let () = Zmq.Socket.bind zmqpubsocket config.zmqpub in
+  Zmq.Socket.bind zmqpubsocket config.zmqpub ;
   let zmqpubsocket = Zmq_lwt.Socket.of_socket zmqpubsocket in
   let zmqrepsocket = Zmq.Socket.(create zmqcontext rep) in
-  let () = Zmq.Socket.bind zmqrepsocket config.zmqrep in
+  Zmq.Socket.bind zmqrepsocket config.zmqrep ;
   let zmqrepsocket = Zmq_lwt.Socket.of_socket zmqrepsocket in
   let thread =
     Lwt.join [ engine; pub_thread zmqpubsocket; rep_thread handle zmqrepsocket ]
@@ -98,5 +99,6 @@ let () =
     let doc = "FIX engine" in
     Cmd.info "fix-engine" ~version:"%%VERSION%%" ~doc ~exits:Cmd.Exit.defaults
   in
+  let logs = Logs_cli.level () in
   let config = Term.(const load_config $ config_json) in
-  Cmd.eval (Cmd.v info Term.(const run $ config)) |> ignore
+  Cmd.eval (Cmd.v info Term.(const run $ config $ logs)) |> ignore
