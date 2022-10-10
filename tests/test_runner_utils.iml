@@ -24,8 +24,6 @@
 
 [@@@import "../src-protocol-pp/full_admin_tags_json.iml"]
 
-[@@@import "../src-protocol-exts-pp/full_app_tags_json.iml"]
-
 [@@@import "../src-simulation-utils/message_stream.iml"]
 
 [@@@program]
