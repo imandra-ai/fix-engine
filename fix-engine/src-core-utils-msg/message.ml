@@ -33,3 +33,25 @@ let valid_checksum (self : t) : bool =
     | Some c' ->
         (* stored checksum (at tag "10") must be the same as our computed checksum *)
         c = c' )
+
+
+let valid_body_length (msg : (string * string) list) : bool =
+  let body_length =
+    let rec scan n msg =
+      match msg with
+      | ("8", _) :: tl | ("9", _) :: tl ->
+          scan n tl
+      | ("10", _) :: _tl ->
+          n
+      | (k, v) :: tl ->
+          n + scan String.(length k + length v + 2) tl
+      | [] ->
+          n
+    in
+    scan 0 msg
+  in
+  match msg with
+  | ("8", _) :: ("9", bl) :: _ ->
+    (try body_length = int_of_string bl with _ -> false)
+  | _ ->
+      false

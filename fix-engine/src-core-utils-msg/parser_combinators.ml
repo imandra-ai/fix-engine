@@ -38,6 +38,14 @@ let fail_ e = raise (Fail e)
 
 let fail e = { run = (fun _ -> fail_ e) }
 
+let get_msg = { run = (fun st -> st.msg) }
+
+let reflect_err p =
+  { run =
+      (fun st -> match p.run st with x -> Ok x | exception Fail e -> Error e)
+  }
+
+
 module Infix = struct
   let ( >|= ) p f : _ t = { run = (fun st -> f (p.run st)) }
 
