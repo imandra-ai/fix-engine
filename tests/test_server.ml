@@ -92,8 +92,12 @@ let engine_to_model_thread model_handle () =
           None
     in
     let open Full_messages in
-    let msg = Parse_full_messages.parse_top_level_msg ts_parser msg.message in
-    let*? msg = match msg with ValidMsg msg -> Some msg | _ -> None in
+    let msg =
+      Parser_combinators.run
+        (Parse_full_messages.parse_top_level_msg ts_parser)
+        msg.message
+    in
+    let*? msg = match msg with Ok (ValidMsg msg) -> Some msg | _ -> None in
     let*? data =
       match msg.full_msg_data with
       | Full_FIX_App_Msg data ->
