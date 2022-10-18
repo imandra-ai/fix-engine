@@ -191,17 +191,17 @@ let parse_top_level_msg parse_UTCTimestamp : full_top_level_msg P.t = P.(
     match parse_result with
     | Ok msg -> return (ValidMsg msg)
     | Error GarbledMessage -> return Garbled
-    | Error (UnknownMessageTag tagstr) -> fail @@ make_session_reject Full_admin_enums.InvalidMsgType tagstr msg
-    | Error (RequiredTagMissing tagstr) -> fail @@ make_session_reject Full_admin_enums.RequiredTagMissing tagstr msg
-    | Error (DuplicateTag tagstr) -> fail @@ make_session_reject Full_admin_enums.TagAppearsMoreThanOnce tagstr msg
-    | Error (WrongValueFormat tagstr) -> fail @@ make_session_reject Full_admin_enums.IncorrectDataFormatForValue tagstr msg
-    | Error (UndefinedTag tagstr) -> fail @@ make_session_reject Full_admin_enums.TagNotDefinedForThisMessageType tagstr msg
+    | Error (UnknownMessageTag tagstr) -> return @@ make_session_reject Full_admin_enums.InvalidMsgType tagstr msg
+    | Error (RequiredTagMissing tagstr) -> return @@ make_session_reject Full_admin_enums.RequiredTagMissing tagstr msg
+    | Error (DuplicateTag tagstr) -> return @@ make_session_reject Full_admin_enums.TagAppearsMoreThanOnce tagstr msg
+    | Error (WrongValueFormat tagstr) -> return @@ make_session_reject Full_admin_enums.IncorrectDataFormatForValue tagstr msg
+    | Error (UndefinedTag tagstr) -> return @@ make_session_reject Full_admin_enums.TagNotDefinedForThisMessageType tagstr msg
     | Error (IncorrectNumInGroupCount tagstr) ->
-        fail @@ make_session_reject Full_admin_enums.IncorrectNumInGroupCountForRepeatingGroup tagstr msg
+        return @@ make_session_reject Full_admin_enums.IncorrectNumInGroupCountForRepeatingGroup tagstr msg
     | Error (RepeatingGroupOutOfOrder tagstr) ->
-        fail @@ make_session_reject Full_admin_enums.RepeatingGroupFieldsOutOfOrder tagstr msg
+        return @@ make_session_reject Full_admin_enums.RepeatingGroupFieldsOutOfOrder tagstr msg
     | Error (EmptyValue tag) ->
-        fail @@ make_session_reject Full_admin_enums.TagSecifiedWithoutAValue tag msg
+        return @@ make_session_reject Full_admin_enums.TagSecifiedWithoutAValue tag msg
 )
 ;;
 [@@@logic]

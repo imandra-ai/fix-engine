@@ -353,7 +353,16 @@ end = struct
 
   let process_fix_wire state msg_kvs =
     let msg =
-      Parse_full_messages.parse_top_level_msg state.timestamp_parse msg_kvs
+      match
+        Parser_combinators.run
+          (Parse_full_messages.parse_top_level_msg state.timestamp_parse)
+          msg_kvs
+      with
+      | Ok msg ->
+          msg
+      | Error _err ->
+          (* the toplevel parser is supposed to catch everything *)
+          assert false
     in
     let* () = do_timechange state in
     let msg_log = Fix_io.encode ~split:'|' msg_kvs in
