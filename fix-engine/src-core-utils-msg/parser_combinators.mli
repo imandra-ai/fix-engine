@@ -50,6 +50,9 @@ val fail : error -> _ t
 val get_msg : msg t
 (** Get current message *)
 
+val set_msg : msg -> unit t
+(** Set current message *)
+
 val reflect_err : 'a t -> 'a result t
 (** [reflect_err p] captures errors occurring in [p] and reflects them
     into the returned value. *)

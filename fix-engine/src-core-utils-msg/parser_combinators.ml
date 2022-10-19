@@ -20,11 +20,45 @@ type error =
 (** Result of parsing *)
 type nonrec 'a result = ('a, error) result
 
+open struct
+  (* Extract a value given a tag, returns a pair with the value and the rest of the list.*)
+  let take (key : string) (lst : (string * string) list) =
+    let rec take accu = function
+      | (k, v) :: tl ->
+          if k = key
+          then (Some v, List.rev accu @ tl)
+          else take ((k, v) :: accu) tl
+      | [] ->
+          (None, List.rev accu)
+    in
+    take [] lst
+
+
+  (* Splits a list of [(tag * value)] pairs into two lists on a given tag. The tag
+     itself goes into the second list.  If the tag is absent -- returnes an empty
+     second list.
+
+     {[
+       split_on_tag 4 [(1,0); (2,0); (3,0); (4,0); (5,0); (6,0)] =>
+       ( [ (1,0); (2,0); (3,0) ] ,
+         [ (4,0); (5,0); (6,0) ]
+       )
+     ]}
+  *)
+  let split_on_tag (key : string) (msg : (string * string) list) =
+    let rec split accu = function
+      | (k, v) :: tl ->
+          if k = key
+          then (List.rev accu, (k, v) :: tl)
+          else split ((k, v) :: accu) tl
+      | [] ->
+          (List.rev accu, [])
+    in
+    split [] msg
+end
+
 (* internal state during parsing *)
-type state_ =
-  { mutable msg : Message.t
-  ; mutable not_queried : Str_set.t
-  }
+type state_ = { mutable msg : Message.t }
 
 exception Fail of error
 
@@ -39,6 +73,14 @@ let fail_ e = raise (Fail e)
 let fail e = { run = (fun _ -> fail_ e) }
 
 let get_msg = { run = (fun st -> st.msg) }
+
+let set_msg msg =
+  { run =
+      (fun st ->
+        st.msg <- msg ;
+        () )
+  }
+
 
 let reflect_err p =
   { run =
@@ -69,15 +111,12 @@ end
 
 include Infix
 
-let mark_tag_as_used_ (st : state_) ~tag : unit =
-  st.not_queried <- Str_set.remove tag st.not_queried
-
-
 let req tag p : _ t =
   { run =
       (fun st ->
-        mark_tag_as_used_ st ~tag ;
-        match List.assoc_opt tag st.msg with
+        let value, msg = take tag st.msg in
+        st.msg <- msg ;
+        match value with
         | None ->
             fail_ @@ RequiredTagMissing tag
         | Some "" ->
@@ -96,8 +135,9 @@ let req tag p : _ t =
 let opt tag p : _ t =
   { run =
       (fun st ->
-        mark_tag_as_used_ st ~tag ;
-        match List.assoc_opt tag st.msg with
+        let value, msg = take tag st.msg in
+        st.msg <- msg ;
+        match value with
         | None ->
             None
         | Some "" ->
@@ -111,18 +151,6 @@ let opt tag p : _ t =
           | exception _ ->
               fail_ @@ WrongValueFormat tag ) )
   }
-
-
-let find_beginning_of_repeating_ ~tag (st : state_) : _ option =
-  let rec loop = function
-    | [] ->
-        None
-    | (k, v) :: tl when tag = k ->
-        Some (v, tl)
-    | _ :: tl ->
-        loop tl
-  in
-  loop st.msg
 
 
 (* Uses the first entry tag in the input list to split the list into a list of
@@ -158,86 +186,90 @@ let cut_on_separator (msg : (string * string) list) =
 (* parse [msg] using [p], reusing [st]. Only [msg] will be visible
    to the sub-parser [p], however the checking of unused fields is
    shared. *)
-let parse_sub (st : state_) (p : 'a t) ~(msg : msg) : 'a =
-  let st' = { st with msg } in
-  p.run st'
+let parse_sub (_st : state_) (p : 'a t) ~(msg : msg) : 'a * msg =
+  let st' = { msg } in
+  let x = p.run st' in
+  (x, st'.msg)
 
 
 let check_duplicate_tags : _ t =
   { run =
       (fun st ->
-        let seen_and_not_queried = ref Str_set.empty in
+        let seen = ref Str_set.empty in
         List.iter
           (fun (tag, _) ->
-            if Str_set.mem tag st.not_queried
-            then (
-              if Str_set.mem tag !seen_and_not_queried
-              then fail_ @@ DuplicateTag tag ;
-              seen_and_not_queried := Str_set.add tag !seen_and_not_queried ) )
-          st.msg ;
-        () )
+            if Str_set.mem tag !seen then fail_ @@ DuplicateTag tag ;
+            seen := Str_set.add tag !seen )
+          st.msg )
   }
 
 
 let check_unknown_tags : _ t =
   { run =
       (fun st ->
-        match Str_set.choose_opt st.not_queried with
-        | None ->
+        match st.msg with
+        | [] ->
             ()
-        | Some tag ->
+        | (tag, _) :: _ ->
             fail_ @@ UndefinedTag tag )
   }
 
 
+let parse_int = int_of_string_opt
+
 let repeating tag ~(block_parser : 'a t) : (_ * 'a list) t =
   { run =
       (fun st ->
-        match find_beginning_of_repeating_ ~tag st with
+        (* Finding where the repeating group starts *)
+        let leading_msg, groups_msg = split_on_tag tag st.msg in
+        (* groups_msg starts with the NumInGroup tag, we parse it *)
+        let numInGroup, groups_msg =
+          parse_sub st (opt tag parse_int) ~msg:groups_msg
+        in
+        match numInGroup with
         | None ->
             (None, [])
-        | Some (v, rest) ->
-            (* parse length expressed in [v] *)
-            let num_groups =
-              try int_of_string v with _ -> fail_ @@ WrongValueFormat tag
-            in
-            if num_groups = 0
-            then (None, [])
+        | Some 0 ->
+            st.msg <- leading_msg @ groups_msg ;
+            (Some 0, [])
+        | Some numInGroup ->
+            (* Break the list into a list of lists using the separator *)
+            let groups : msg list = cut_on_separator groups_msg in
+            (* Check that the length is correct *)
+            if List.length groups <> numInGroup
+            then fail_ (IncorrectNumInGroupCount tag)
             else
-              (* split [rest] into a list of groups. The last group also
-                 contains the remainder of the message. *)
-              let group_msg_l = cut_on_separator rest in
-              if List.length group_msg_l <> num_groups
-              then fail_ @@ IncorrectNumInGroupCount tag ;
-
-              (* Parse group, check that it used all tags *)
-              let block_parser_checking_all_used : _ t =
-                let* x = block_parser in
-                let+ () = check_unknown_tags in
-                x
+              (* Pass each list into the block parser ( reverses the list ) *)
+              let groups : (_ * msg) list =
+                List.rev_map
+                  (fun grp -> parse_sub st block_parser ~msg:grp)
+                  groups
               in
-
+              (* Get the rest of the message from the last group entry *)
+              let groups, msg_remainder =
+                match groups with
+                | [] ->
+                    ([], [])
+                | (v, following_msg) :: tl ->
+                    ((v, []) :: tl, leading_msg @ following_msg)
+              in
+              (* Check that every group have parsed cleanly *)
               let groups =
-                List.mapi
-                  (fun i group_msg ->
-                    (* locally, focus on [group_msg] only. For every group but
-                       the last, we also check that all pairs are used. *)
-                    let p =
-                      if i + 1 = num_groups
-                      then block_parser
-                      else block_parser_checking_all_used
-                    in
-                    parse_sub st p ~msg:group_msg )
-                  group_msg_l
+                List.rev_map
+                  (function
+                    | v, [] ->
+                        v
+                    | _, (k, _) :: _tl ->
+                        fail_ @@ RepeatingGroupOutOfOrder k )
+                  groups
               in
-              (Some num_groups, groups) )
+              (* "Monadic flatten" the list and pass into the continuation with the rest of the message *)
+              st.msg <- msg_remainder ;
+
+              (Some numInGroup, groups) )
   }
 
 
 let run (self : _ t) (msg : msg) : _ result =
-  (* gather all fields *)
-  let not_queried =
-    List.fold_left (fun set (k, _) -> Str_set.add k set) Str_set.empty msg
-  in
-  let st = { msg; not_queried } in
+  let st = { msg } in
   try Ok (self.run st) with Fail e -> Error e

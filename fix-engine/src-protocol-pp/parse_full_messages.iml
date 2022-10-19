@@ -165,10 +165,20 @@ let make_session_reject reason tagstr msg =
 
 (** Parse a toplevel message *)
 let parse_top_level_msg parse_UTCTimestamp : full_top_level_msg P.t = P.(
+  let module Fmt = CCFormat in
     let* msg = get_msg in
+    Fmt.printf "parse top msg=%a@." Message.pp msg;
     let main_parser =
       let* () = message_basic_check  in
+
+      let* msg = get_msg in
+      Fmt.printf "parsing header msg=%a@." Message.pp msg;
+
       let* full_msg_header = parse_header parse_UTCTimestamp in
+
+      let* msg = get_msg in
+      Fmt.printf "parsing trailer msg=%a@." Message.pp msg;
+
       let* full_msg_trailer = parse_trailer in
         (* TODO: is [block] different than what we do above?
           block msg parse_header  @@ fun msg full_msg_header   ->
@@ -176,11 +186,20 @@ let parse_top_level_msg parse_UTCTimestamp : full_top_level_msg P.t = P.(
           ParseSuccess (full_msg_header, full_msg_trailer), msg 
           in
             *)
+
+      let* msg = get_msg in
+      Fmt.printf "parsing tag msg=%a@." Message.pp msg;
+
       let* msg_tag_str = opt "35" parse_string in
+
+      let* msg = get_msg in
+      Fmt.printf "tag=%a msg=%a@." Fmt.Dump.(option string) msg_tag_str Message.pp msg;
+
       match msg_tag_str with
       | None -> fail GarbledMessage
       | Some msg_tag_str ->
         let+ full_msg_data = parse_msg_data msg_tag_str in
+        Fmt.printf "parsed msg data@.";
         { full_msg_header
         ; full_msg_data
         ; full_msg_trailer
@@ -188,6 +207,7 @@ let parse_top_level_msg parse_UTCTimestamp : full_top_level_msg P.t = P.(
     in
 
     let* parse_result = reflect_err main_parser in
+    Fmt.printf "parsed (ok: %B)@." (Result.is_ok parse_result);
     match parse_result with
     | Ok msg -> return (ValidMsg msg)
     | Error GarbledMessage -> return Garbled
