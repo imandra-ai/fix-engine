@@ -8,7 +8,10 @@ build:
 build_tests:
 	opam exec -- dune build $(DUNE_OPTS) tests/test_runner.bc
 	opam exec -- dune build $(DUNE_OPTS) tests/test_server.exe
+	opam exec -- dune build $(DUNE_OPTS) tests/parser_test_runner.exe
 
+run_parser_tests:
+	opam exec -- dune exec tests/parser_test_runner.exe
 
 doc:
 	opam exec -- dune build $(DUNE_OPTS) @doc
