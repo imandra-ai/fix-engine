@@ -6,6 +6,12 @@
  (modules test_runner test_runner_utils config_parser message_stream))
 
 (executable
+ (name parser_test_runner)
+ (libraries fix-engine.core_utils_pp)
+ (modes byte)
+ (modules parser_test_runner))
+
+(executable
  (name test_server)
  (modules test_server)
  (libraries fix-engine.runtime model.simulation))

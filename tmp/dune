@@ -1,0 +1,12 @@
+(library
+ (name tmpt)
+ (public_name fix-engine.tmpt)
+ (wrapped false)
+ (flags
+  (:standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58))
+ (libraries
+  imandra-prelude
+  fix-engine.protocol
+  fix-engine.protocol_pp
+  fix-engine.core
+))
