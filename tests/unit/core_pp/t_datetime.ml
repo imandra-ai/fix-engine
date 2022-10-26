@@ -5,10 +5,10 @@ let ( ~$ ) = Z.( ~$ )
 
 open struct
   let assert_str_eq a b =
-    if a <> b
-    then (
-      Printf.eprintf "not equal: %S vs %S\n%!" a b ;
-      assert false )
+    if a <> b then (
+      Printf.eprintf "not equal: %S vs %S\n%!" a b;
+      assert false
+    )
 end
 
 module Encode_utc_dateonly = struct
@@ -19,14 +19,12 @@ module Encode_utc_dateonly = struct
     let expect = "20220914" in
     assert_str_eq (Encode_datetime.encode_UTCDateOnly d) expect
 
-
   let () =
     let d : fix_utcdateonly =
       Ptime.of_date (~$2001, ~$01, ~$02) |> Option.get
     in
     let expect = "20010102" in
     assert_str_eq (Encode_datetime.encode_UTCDateOnly d) expect
-
 
   let () =
     let d : fix_utcdateonly = Ptime.of_date (~$702, ~$01, ~$22) |> Option.get in
@@ -41,7 +39,6 @@ module Encode_utc_timeonly_milli = struct
     in
     let expect = "22:35:07.240" in
     assert_str_eq (Encode_datetime.encode_UTCTimeOnly_milli t) expect
-
 
   let () =
     let t : fix_utctimeonly_milli =
@@ -59,7 +56,6 @@ module Encode_utc_timeonly_micro = struct
     let expect = "22:35:07.240102" in
     assert_str_eq (Encode_datetime.encode_UTCTimeOnly_micro t) expect
 
-
   let () =
     let t : fix_utctimeonly_micro =
       make_utctimeonly_micro_unsafe ~$22 ~$35 ~$7 None
@@ -75,7 +71,6 @@ module Encode_utc_timestamp_milli = struct
     in
     let expect = "20220914-22:35:07.124" in
     assert_str_eq (Encode_datetime.encode_UTCTimestamp_milli t) expect
-
 
   let () =
     let t : fix_utctimestamp_milli =
@@ -93,7 +88,6 @@ module Encode_utc_timestamp_micro = struct
     let expect = "20220914-22:35:07.002124" in
     assert_str_eq (Encode_datetime.encode_UTCTimestamp_micro t) expect
 
-
   let () =
     let t : fix_utctimestamp_micro =
       make_utctimestamp_micro_unsafe ~$2022 ~$12 ~$1 ~$3 ~$35 ~$22 None
@@ -107,7 +101,6 @@ module Encode_monthYear = struct
     let t : fix_monthyear = make_monthyear_unsafe ~$2032 ~$07 None in
     let expect = "20320701" in
     assert_str_eq (Encode_datetime.encode_MonthYear t) expect
-
 
   let () =
     let t : fix_monthyear = make_monthyear_unsafe ~$2032 ~$07 (Some Week_4) in
