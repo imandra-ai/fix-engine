@@ -6,12 +6,13 @@
     parse_admin_enums.ml
 *)
 [@@@import "../src-protocol/full_admin_enums.iml"]
+[@@@require "fix-engine.util-msg"]
 
 [@@@program]
 
 open Full_admin_enums
 
-let parse_session_reject_reason = function
+let parse_session_reject_reason : _ Parser_combinators.value_parser = function
   | "0" ->
       Some InvalidTagNumber
   | "1" ->
@@ -54,7 +55,7 @@ let parse_session_reject_reason = function
       None
 
 
-let parse_business_reject_reason = function
+let parse_business_reject_reason : _ Parser_combinators.value_parser = function
   | "4" ->
       Some ApplicationDown
   | "3" ->
@@ -65,7 +66,7 @@ let parse_business_reject_reason = function
       None
 
 
-let parse_app_reject_reason = function
+let parse_app_reject_reason : _ Parser_combinators.value_parser = function
   | "5" ->
       Some FIX_App_Reject_MissingReqField
   | "1" ->
@@ -76,7 +77,7 @@ let parse_app_reject_reason = function
       None
 
 
-let parse_GapFillFlag = function
+let parse_GapFillFlag : _ Parser_combinators.value_parser = function
   | "Y" ->
       Some FIX_GapFillFlag_Y
   | "N" ->
@@ -85,7 +86,7 @@ let parse_GapFillFlag = function
       None
 
 
-let parse_encryption_method = function
+let parse_encryption_method : _ Parser_combinators.value_parser = function
   | "0" ->
       Some NoEncryption
   | "1" ->

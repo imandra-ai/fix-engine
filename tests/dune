@@ -10,3 +10,7 @@
  (modules test_server)
  (libraries fix-engine.runtime model.simulation))
 
+(executable
+ (name parser_test_runner)
+ (modules parser_test_runner parser_tests)
+ (libraries fix-engine.protocol_pp fix-engine.protocol))

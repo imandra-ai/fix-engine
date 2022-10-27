@@ -7,6 +7,7 @@
     parse_full_messages.ml
 
 *)
+
 [@@@require "fix-engine.util-msg"]
 [@@@import "../src-protocol/full_message_tags.iml"]
 [@@@import "../src-protocol/full_messages.iml"]
@@ -20,96 +21,100 @@ open Full_messages
 open Parser_utils.Parser
 open Parse_base_types
 open Parse_full_tags
+module P = Parser_combinators;;
 
 
-
-let parse_msg_data msg_tag_str msg =
+let parse_msg_data msg_tag_str = P.(
   match parse_full_msg_tag msg_tag_str with
-  | Some (Full_Admin_Msg_Tag msg_tag) -> Parse_admin_messages.parse_admin_msg_data msg_tag msg
-                                 >>= fun x -> ParseSuccess ( Full_FIX_Admin_Msg x )
+  | Some (Full_Admin_Msg_Tag msg_tag) ->
+    let+ x = Parse_admin_messages.parse_admin_msg_data msg_tag in
+    Full_FIX_Admin_Msg x
   | Some (Full_App_Msg_Tag _) ->
+    let+ msg = get_msg in
     let msg = {msg_tag = msg_tag_str ; payload = msg} in
-    ParseSuccess ( Full_FIX_App_Msg msg )
-  | None -> UnknownMessageTag msg_tag_str
+    Full_FIX_App_Msg msg
+  | None -> fail (UnknownMessageTag msg_tag_str)
+)
 ;;
 
-let parse_header parse_UTCTimestamp msg =
-    req msg "8"   parse_string        @@ fun msg h_begin_string                ->
-    req msg "9"   parse_int           @@ fun msg h_body_length                 ->
-    req msg "49"  parse_string        @@ fun msg h_sender_comp_id              ->
-    req msg "56"  parse_string        @@ fun msg h_target_comp_id              ->
-    req msg "34"  parse_int           @@ fun msg h_msg_seq_num                 ->
-    req msg "52"  parse_UTCTimestamp  @@ fun msg h_sending_time                ->
-    opt msg "115" parse_string        @@ fun msg h_on_behalf_of_comp_id        ->
-    opt msg "128" parse_string        @@ fun msg h_deliver_to_comp_id          ->
-    opt msg "90"  parse_int           @@ fun msg h_secure_data_len             ->
-    opt msg "91"  parse_int           @@ fun msg h_secure_data                 ->
-    opt msg "50"  parse_string        @@ fun msg h_sender_sub_id               ->
-    opt msg "142" parse_string        @@ fun msg h_sender_location_id          ->
-    opt msg "57"  parse_string        @@ fun msg h_target_sub_id               ->
-    opt msg "143" parse_string        @@ fun msg h_target_location_id          ->
-    opt msg "116" parse_string        @@ fun msg h_on_behalf_of_sub_id         ->
-    opt msg "144" parse_string        @@ fun msg h_on_behalf_of_location_id    ->
-    opt msg "129" parse_string        @@ fun msg h_deliver_to_sub_id           ->
-    opt msg "145" parse_string        @@ fun msg h_deliver_to_location_id      ->
-    opt msg "43"  parse_bool          @@ fun msg h_poss_dup_flag               ->
-    opt msg "97"  parse_bool          @@ fun msg h_poss_resend                 ->
-    opt msg "122" parse_UTCTimestamp  @@ fun msg h_orig_sending_time           ->
-    opt msg "212" parse_int           @@ fun msg h_xml_data_len                ->
-    opt msg "213" parse_int           @@ fun msg h_xml_data                    ->
-    opt msg "347" parse_int           @@ fun msg h_message_encoding            ->
-    opt msg "369" parse_int           @@ fun msg h_last_msg_seq_num_processed  ->
-    opt msg "627" parse_int           @@ fun msg h_no_hops                     ->
-    ParseSuccess
-    { h_begin_string
-    ; h_body_length
-    ; h_sender_comp_id
-    ; h_target_comp_id
-    ; h_msg_seq_num
-    ; h_on_behalf_of_comp_id
-    ; h_deliver_to_comp_id
-    ; h_secure_data_len
-    ; h_secure_data
-    ; h_sender_sub_id
-    ; h_sender_location_id
-    ; h_target_sub_id
-    ; h_target_location_id
-    ; h_on_behalf_of_sub_id
-    ; h_on_behalf_of_location_id
-    ; h_deliver_to_sub_id
-    ; h_deliver_to_location_id
-    ; h_poss_dup_flag
-    ; h_poss_resend
-    ; h_sending_time
-    ; h_orig_sending_time
-    ; h_xml_data_len
-    ; h_xml_data
-    ; h_message_encoding
-    ; h_last_msg_seq_num_processed
-    ; h_no_hops
-    } , msg
+let parse_header parse_UTCTimestamp = P.(
+  let* h_begin_string = req "8" parse_string in
+  let* h_body_length = req "9" parse_int in
+  let* h_sender_comp_id = req "49" parse_string in
+  let* h_target_comp_id = req "56" parse_string in
+  let* h_msg_seq_num = req "34" parse_int in
+  let* h_sending_time = req "52" parse_UTCTimestamp in
+  let* h_on_behalf_of_comp_id = opt "115" parse_string in
+  let* h_deliver_to_comp_id = opt "128" parse_string in
+  let* h_secure_data_len = opt "90" parse_int in
+  let* h_secure_data = opt "91" parse_int in
+  let* h_sender_sub_id = opt "50" parse_string in
+  let* h_sender_location_id = opt "142" parse_string in
+  let* h_target_sub_id = opt "57" parse_string in
+  let* h_target_location_id = opt "143" parse_string in
+  let* h_on_behalf_of_sub_id = opt "116" parse_string in
+  let* h_on_behalf_of_location_id = opt "144" parse_string in
+  let* h_deliver_to_sub_id = opt "129" parse_string in
+  let* h_deliver_to_location_id = opt "145" parse_string in
+  let* h_poss_dup_flag = opt "43" parse_bool in
+  let* h_poss_resend = opt "97" parse_bool in
+  let* h_orig_sending_time = opt "122" parse_UTCTimestamp in
+  let* h_xml_data_len = opt "212" parse_int in
+  let* h_xml_data = opt "213" parse_int in
+  let* h_message_encoding = opt "347" parse_int in
+  let* h_last_msg_seq_num_processed = opt "369" parse_int in
+  let* h_no_hops = opt "627" parse_int in
+  return
+  { h_begin_string
+  ; h_body_length
+  ; h_sender_comp_id
+  ; h_target_comp_id
+  ; h_msg_seq_num
+  ; h_on_behalf_of_comp_id
+  ; h_deliver_to_comp_id
+  ; h_secure_data_len
+  ; h_secure_data
+  ; h_sender_sub_id
+  ; h_sender_location_id
+  ; h_target_sub_id
+  ; h_target_location_id
+  ; h_on_behalf_of_sub_id
+  ; h_on_behalf_of_location_id
+  ; h_deliver_to_sub_id
+  ; h_deliver_to_location_id
+  ; h_poss_dup_flag
+  ; h_poss_resend
+  ; h_sending_time
+  ; h_orig_sending_time
+  ; h_xml_data_len
+  ; h_xml_data
+  ; h_message_encoding
+  ; h_last_msg_seq_num_processed
+  ; h_no_hops
+  }
+)
 ;;
 
-let parse_trailer msg =
-    opt msg "93" parse_int  @@ fun msg signature_length ->
-    opt msg "89" parse_int  @@ fun msg signature        ->
-    req msg "10" parse_int  @@ fun msg check_sum        ->
-    ParseSuccess
-    { signature_length
-    ; signature
-    ; check_sum
-    } , msg
+let parse_trailer = P.(
+  let* signature_length = opt "93" parse_int in
+  let* signature = opt "89" parse_int in
+  let* check_sum = req "10" parse_int in
+  return
+  { signature_length
+  ; signature
+  ; check_sum
+  }
+)
 ;;
-
 
 
 let check_first_three_tags ( msg : (string * string) list ) : string option =
-    if List.hd msg |> fst <> "8" then Some "8" else
-    let msg = List.tl msg in
-    if List.hd msg |> fst <> "9" then Some "9" else
-    let msg = List.tl msg in
-    if List.hd msg |> fst <> "35" then Some "35" else
-    None
+  match msg with
+  | ("8", _) :: ("9", _)  :: ("35", _) :: _ -> None (* all good *)
+  | ("8", _) :: ("9", _) :: (tag, _) :: _ -> Some tag
+  | ("8", _) :: (tag, _) :: _ -> Some tag
+  | (tag, _) :: _ -> Some tag
+  | [] -> None
 ;;
 
 let check_tags_are_integers ( msg : (string * string) list ) : bool =
@@ -118,25 +123,7 @@ let check_tags_are_integers ( msg : (string * string) list ) : bool =
     ) msg
 ;;
 
-
-(**  Checks that the message contains BodyLength<9> field as a second entry
-     in the message. And that the value equals to the number of bytes between
-     BodyLength<9> and CheckSum<10> entries in the message.
-*)
-let valid_body_length ( msg : (string * string) list ) : bool =
-    let body_length =
-        let rec scan n msg = match msg with
-            | ( "8", _ )::tl
-            | ( "9", _ )::tl -> scan n tl
-            | ("10", _ )::_tl -> n
-            | (  k , v )::tl -> n + scan String.(length k + length v + 2) tl
-            | [] -> n in
-        scan 0 msg
-        in
-    match msg with
-        | ("8", _ ) :: ("9", bl) :: _ ->
-            ( try body_length = Z.of_string bl with _ -> false )
-        | _ -> false
+let valid_body_length = Message.valid_body_length
 ;;
 
 let valid_checksum = Message.valid_checksum
@@ -145,16 +132,19 @@ let valid_checksum = Message.valid_checksum
 (**
     Runs basic message intergrity checks. Returns ParseSuccess ()  on success.
 *)
-let message_basic_check msg =
-    match check_first_three_tags msg with Some tag -> RequiredTagMissing tag | None ->
-    if not (check_tags_are_integers msg ) then GarbledMessage else
-    if not (valid_checksum          msg ) then GarbledMessage else
-    if not (valid_body_length       msg ) then GarbledMessage else
-    ParseSuccess ()
+let message_basic_check = P.(
+  let* msg = get_msg in
+  match check_first_three_tags msg with
+  | Some tag -> fail @@ RequiredTagMissing tag
+  | None ->
+    if not (check_tags_are_integers msg ) then fail @@ GarbledMessage else
+    if not (valid_checksum          msg ) then fail @@ GarbledMessage else
+    if not (valid_body_length       msg ) then fail @@ GarbledMessage else
+    return ()
+)
 ;;
 
 let make_session_reject reason tagstr msg =
-    if not (List.mem_assoc "34" msg ) then Garbled else
     match ( List.assoc "34" msg) with None -> Garbled | Some x ->
        (match parse_int x with None -> Garbled | Some seq_num ->
             (match ( List.assoc "35" msg) with None -> Garbled | Some y -> (let msg_tag = parse_full_msg_tag y in
@@ -173,33 +163,65 @@ let make_session_reject reason tagstr msg =
     })))
 ;;
 
-let parse_top_level_msg parse_UTCTimestamp msg =
-    let parse_header = parse_header parse_UTCTimestamp in
-    let parse_result = begin
-    message_basic_check msg >>= fun () ->
-    let header_and_trailer, msg =
-        block msg parse_header  @@ fun msg full_msg_header   ->
-        block msg parse_trailer @@ fun msg full_msg_trailer  ->
-        ParseSuccess (full_msg_header, full_msg_trailer), msg
-        in
-    header_and_trailer >>= fun (full_msg_header , full_msg_trailer) ->
-    let msg_tag_str, msg = Parser_utils.take "35" msg in
-    match msg_tag_str with None -> GarbledMessage | Some msg_tag_str ->
-    parse_msg_data msg_tag_str msg >>= fun full_msg_data ->
-    ParseSuccess
-    { full_msg_header
-    ; full_msg_data
-    ; full_msg_trailer
-    } end in match parse_result with
-        | ParseSuccess msg       -> ValidMsg msg
-        | GarbledMessage         -> Garbled
-        | UnknownMessageTag        tagstr -> make_session_reject Full_admin_enums.InvalidMsgType tagstr msg
-        | RequiredTagMissing       tagstr -> make_session_reject Full_admin_enums.RequiredTagMissing tagstr msg
-        | DuplicateTag             tagstr -> make_session_reject Full_admin_enums.TagAppearsMoreThanOnce tagstr msg
-        | WrongValueFormat         tagstr -> make_session_reject Full_admin_enums.IncorrectDataFormatForValue tagstr msg
-        | UndefinedTag             tagstr -> make_session_reject Full_admin_enums.TagNotDefinedForThisMessageType tagstr msg
-        | IncorrectNumInGroupCount tagstr -> make_session_reject Full_admin_enums.IncorrectNumInGroupCountForRepeatingGroup tagstr msg
-        | RepeatingGroupOutOfOrder tagstr -> make_session_reject Full_admin_enums.RepeatingGroupFieldsOutOfOrder tagstr msg
-        | EmptyValue         tag -> make_session_reject Full_admin_enums.TagSecifiedWithoutAValue tag msg
+(** Parse a toplevel message *)
+let parse_top_level_msg parse_UTCTimestamp : full_top_level_msg P.t = P.(
+  let module Fmt = CCFormat in
+    let* msg = get_msg in
+    Fmt.printf "parse top msg=%a@." Message.pp msg;
+    let main_parser =
+      let* () = message_basic_check  in
+
+      let* msg = get_msg in
+      Fmt.printf "parsing header msg=%a@." Message.pp msg;
+
+      let* full_msg_header = parse_header parse_UTCTimestamp in
+
+      let* msg = get_msg in
+      Fmt.printf "parsing trailer msg=%a@." Message.pp msg;
+
+      let* full_msg_trailer = parse_trailer in
+        (* TODO: is [block] different than what we do above?
+          block msg parse_header  @@ fun msg full_msg_header   ->
+          block msg parse_trailer @@ fun msg full_msg_trailer  ->
+          ParseSuccess (full_msg_header, full_msg_trailer), msg 
+          in
+            *)
+
+      let* msg = get_msg in
+      Fmt.printf "parsing tag msg=%a@." Message.pp msg;
+
+      let* msg_tag_str = opt "35" parse_string in
+
+      let* msg = get_msg in
+      Fmt.printf "tag=%a msg=%a@." Fmt.Dump.(option string) msg_tag_str Message.pp msg;
+
+      match msg_tag_str with
+      | None -> fail GarbledMessage
+      | Some msg_tag_str ->
+        let+ full_msg_data = parse_msg_data msg_tag_str in
+        Fmt.printf "parsed msg data@.";
+        { full_msg_header
+        ; full_msg_data
+        ; full_msg_trailer
+        }
+    in
+
+    let* parse_result = reflect_err main_parser in
+    Fmt.printf "parsed (ok: %B)@." (Result.is_ok parse_result);
+    match parse_result with
+    | Ok msg -> return (ValidMsg msg)
+    | Error GarbledMessage -> return Garbled
+    | Error (UnknownMessageTag tagstr) -> return @@ make_session_reject Full_admin_enums.InvalidMsgType tagstr msg
+    | Error (RequiredTagMissing tagstr) -> return @@ make_session_reject Full_admin_enums.RequiredTagMissing tagstr msg
+    | Error (DuplicateTag tagstr) -> return @@ make_session_reject Full_admin_enums.TagAppearsMoreThanOnce tagstr msg
+    | Error (WrongValueFormat tagstr) -> return @@ make_session_reject Full_admin_enums.IncorrectDataFormatForValue tagstr msg
+    | Error (UndefinedTag tagstr) -> return @@ make_session_reject Full_admin_enums.TagNotDefinedForThisMessageType tagstr msg
+    | Error (IncorrectNumInGroupCount tagstr) ->
+        return @@ make_session_reject Full_admin_enums.IncorrectNumInGroupCountForRepeatingGroup tagstr msg
+    | Error (RepeatingGroupOutOfOrder tagstr) ->
+        return @@ make_session_reject Full_admin_enums.RepeatingGroupFieldsOutOfOrder tagstr msg
+    | Error (EmptyValue tag) ->
+        return @@ make_session_reject Full_admin_enums.TagSecifiedWithoutAValue tag msg
+)
 ;;
 [@@@logic]

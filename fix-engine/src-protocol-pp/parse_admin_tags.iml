@@ -8,11 +8,13 @@
 
 *)
 [@@@import "../src-protocol/full_admin_tags.iml"]
+[@@@require "fix-engine.util-msg"]
+
 [@@@program]
 open Full_admin_tags;;
 
 
-let parse_admin_msg_tag = function
+let parse_admin_msg_tag : _ Parser_combinators.value_parser = function
     |   "0" -> Some Full_Msg_Heartbeat_Tag
     |   "1" -> Some Full_Msg_TestRequest_Tag
     |   "2" -> Some Full_Msg_ResendRequest_Tag
@@ -24,7 +26,7 @@ let parse_admin_msg_tag = function
     |    _  -> None
 ;;
 
-let parse_admin_field_tag = function
+let parse_admin_field_tag : _ Parser_combinators.value_parser = function
     | "7"   -> Some Full_Field_BeginSeqNo_Tag
     | "8"   -> Some Full_Field_BeginString_Tag
     | "9"   -> Some Full_Field_BodyLength_Tag
