@@ -8,11 +8,11 @@ type msg_type =
   | Admin
 [@@deriving show]
 
-type message =
-  { message : (string * string) list
-  ; direction : direction
-  ; msg_type : msg_type
-  }
+type message = {
+  message: (string * string) list;
+  direction: direction;
+  msg_type: msg_type;
+}
 [@@deriving show]
 
 type event =
@@ -26,25 +26,25 @@ type event =
 type handle
 
 val start_server :
-     ?session_dir:string
-  -> ?log_file:string
-  -> ?reset:bool
-  -> config:Engine.config
-  -> port:int
-  -> recv:(event -> unit Lwt.t)
-  -> unit
-  -> handle * unit Lwt.t
+  ?session_dir:string ->
+  ?log_file:string ->
+  ?reset:bool ->
+  config:Engine.config ->
+  port:int ->
+  recv:(event -> unit Lwt.t) ->
+  unit ->
+  handle * unit Lwt.t
 
 val start_client :
-     ?session_dir:string
-  -> ?log_file:string
-  -> ?reset:bool
-  -> config:Engine.config
-  -> host:string
-  -> port:int
-  -> recv:(event -> unit Lwt.t)
-  -> unit
-  -> handle * unit Lwt.t
+  ?session_dir:string ->
+  ?log_file:string ->
+  ?reset:bool ->
+  config:Engine.config ->
+  host:string ->
+  port:int ->
+  recv:(event -> unit Lwt.t) ->
+  unit ->
+  handle * unit Lwt.t
 
 val send_message : handle -> Engine.message -> (unit, Engine.err) result Lwt.t
 

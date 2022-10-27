@@ -34,8 +34,8 @@ type error =
   | RepeatingGroupOutOfOrder of string
   | GarbledMessage
 
-(** Result of parsing *)
 type nonrec 'a result = ('a, error) result
+(** Result of parsing *)
 
 type +'a t
 

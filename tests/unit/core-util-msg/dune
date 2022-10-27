@@ -1,5 +1,4 @@
-
 (tests
-  (names t_message t_parse_message_util)
-  (libraries containers fix-engine.util-msg test_engine_data
-             qcheck-core qcheck-core.runner))
+ (names t_message t_parse_message_util)
+ (libraries containers fix-engine.util-msg test_engine_data qcheck-core
+   qcheck-core.runner))
