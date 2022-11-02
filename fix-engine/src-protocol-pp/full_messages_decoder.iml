@@ -32,205 +32,155 @@ let full_app_msg_data_decoder : (string * string) list D.decoder =
   in
   D.list kv
 
-
 let full_msg_decoder : full_msg_data D.decoder =
   let open D in
-  single_field
-  @@ function
+  single_field @@ function
   | "Full_FIX_Admin_Msg" ->
-      full_admin_msg_decoder >>= fun x -> D.succeed (Full_FIX_Admin_Msg x)
+    full_admin_msg_decoder >>= fun x -> D.succeed (Full_FIX_Admin_Msg x)
   | "Full_FIX_App_Msg" ->
-      let* msg_tag = field "msg_tag" D.string in
-      let* payload = field "payload" full_app_msg_data_decoder in
-      D.succeed (Full_FIX_App_Msg { msg_tag; payload })
-  | x ->
-      D.fail @@ "Unknown full message type " ^ x
-
+    let* msg_tag = field "msg_tag" D.string in
+    let* payload = field "payload" full_app_msg_data_decoder in
+    D.succeed (Full_FIX_App_Msg { msg_tag; payload })
+  | x -> D.fail @@ "Unknown full message type " ^ x
 
 let full_msg_reject_decoder : session_rejected_msg_data D.decoder =
   let open D in
-  field "RefSeqNum" int_decoder
-  >>= fun srej_msg_msg_seq_num ->
-  maybe (field "RefTagID" full_field_tag_of_json)
-  >>= fun srej_msg_field_tag ->
-  maybe (field "RefMsgType" full_msg_tag_of_json)
-  >>= fun srej_msg_msg_type ->
+  field "RefSeqNum" int_decoder >>= fun srej_msg_msg_seq_num ->
+  maybe (field "RefTagID" full_field_tag_of_json) >>= fun srej_msg_field_tag ->
+  maybe (field "RefMsgType" full_msg_tag_of_json) >>= fun srej_msg_msg_type ->
   maybe
-    (field
-       "SessionRejectReason"
-       full_admin_enum_fix_session_reject_reason_decoder )
+    (field "SessionRejectReason"
+       full_admin_enum_fix_session_reject_reason_decoder)
   >>= fun srej_msg_reject_reason ->
-  maybe (field "Text" string)
-  >>= fun srej_text ->
-  maybe (field "EncodedTextLen" int_decoder)
-  >>= fun srej_encoded_text_len ->
-  maybe (field "EncodedText" string)
-  >>= fun srej_encoded_text ->
+  maybe (field "Text" string) >>= fun srej_text ->
+  maybe (field "EncodedTextLen" int_decoder) >>= fun srej_encoded_text_len ->
+  maybe (field "EncodedText" string) >>= fun srej_encoded_text ->
   D.succeed
-    { srej_msg_msg_seq_num
-    ; srej_msg_field_tag
-    ; srej_msg_msg_type
-    ; srej_msg_reject_reason
-    ; srej_text
-    ; srej_encoded_text_len
-    ; srej_encoded_text
+    {
+      srej_msg_msg_seq_num;
+      srej_msg_field_tag;
+      srej_msg_msg_type;
+      srej_msg_reject_reason;
+      srej_text;
+      srej_encoded_text_len;
+      srej_encoded_text;
     }
-
 
 let full_msg_business_reject_decoder : biz_rejected_msg_data D.decoder =
   let open D in
-  field "RefSeqNum" int_decoder
-  >>= fun brej_msg_ref_seq_num ->
-  field "RefMsgType" full_msg_tag_of_json
-  >>= fun brej_msg_msg_tag ->
+  field "RefSeqNum" int_decoder >>= fun brej_msg_ref_seq_num ->
+  field "RefMsgType" full_msg_tag_of_json >>= fun brej_msg_msg_tag ->
   maybe (field "BusinessFieldTag" full_field_tag_of_json)
   >>= fun brej_msg_field_tag ->
-  field
-    "BusinessRejectReason"
+  field "BusinessRejectReason"
     full_admin_enum_fix_business_reject_reason_decoder
   >>= fun brej_msg_reject_reason ->
-  maybe (field "Text" string)
-  >>= fun brej_msg_text ->
-  maybe (field "EncodedText" string)
-  >>= fun brej_msg_encoded_text ->
+  maybe (field "Text" string) >>= fun brej_msg_text ->
+  maybe (field "EncodedText" string) >>= fun brej_msg_encoded_text ->
   D.succeed
-    { brej_msg_ref_seq_num
-    ; brej_msg_msg_tag
-    ; brej_msg_reject_reason
-    ; brej_msg_field_tag
-    ; brej_msg_text
-    ; brej_msg_encoded_text
+    {
+      brej_msg_ref_seq_num;
+      brej_msg_msg_tag;
+      brej_msg_reject_reason;
+      brej_msg_field_tag;
+      brej_msg_text;
+      brej_msg_encoded_text;
     }
-
 
 let header_decoder utctimestamp_decoder : fix_header D.decoder =
   let open D in
-  field "BeginString" string
-  >>= fun h_begin_string ->
-  field "BodyLength" int_decoder
-  >>= fun h_body_length ->
-  field "SenderCompID" string
-  >>= fun h_sender_comp_id ->
-  field "TargetCompID" string
-  >>= fun h_target_comp_id ->
-  field "MsgSeqNum" int_decoder
-  >>= fun h_msg_seq_num ->
-  maybe (field "OnBehalfOfCompID" string)
-  >>= fun h_on_behalf_of_comp_id ->
-  maybe (field "DeliverToCompID" string)
-  >>= fun h_deliver_to_comp_id ->
-  maybe (field "SecureDataLen" int_decoder)
-  >>= fun h_secure_data_len ->
-  maybe (field "SecureData" int_decoder)
-  >>= fun h_secure_data ->
-  maybe (field "SenderSubID" string)
-  >>= fun h_sender_sub_id ->
-  maybe (field "SenderLocationID" string)
-  >>= fun h_sender_location_id ->
-  maybe (field "TargetSubID" string)
-  >>= fun h_target_sub_id ->
-  maybe (field "TargetLocationID" string)
-  >>= fun h_target_location_id ->
-  maybe (field "OnBehalfOfSubID" string)
-  >>= fun h_on_behalf_of_sub_id ->
+  field "BeginString" string >>= fun h_begin_string ->
+  field "BodyLength" int_decoder >>= fun h_body_length ->
+  field "SenderCompID" string >>= fun h_sender_comp_id ->
+  field "TargetCompID" string >>= fun h_target_comp_id ->
+  field "MsgSeqNum" int_decoder >>= fun h_msg_seq_num ->
+  maybe (field "OnBehalfOfCompID" string) >>= fun h_on_behalf_of_comp_id ->
+  maybe (field "DeliverToCompID" string) >>= fun h_deliver_to_comp_id ->
+  maybe (field "SecureDataLen" int_decoder) >>= fun h_secure_data_len ->
+  maybe (field "SecureData" int_decoder) >>= fun h_secure_data ->
+  maybe (field "SenderSubID" string) >>= fun h_sender_sub_id ->
+  maybe (field "SenderLocationID" string) >>= fun h_sender_location_id ->
+  maybe (field "TargetSubID" string) >>= fun h_target_sub_id ->
+  maybe (field "TargetLocationID" string) >>= fun h_target_location_id ->
+  maybe (field "OnBehalfOfSubID" string) >>= fun h_on_behalf_of_sub_id ->
   maybe (field "OnBehalfOfLocationID" string)
   >>= fun h_on_behalf_of_location_id ->
-  maybe (field "DeliverToSubID" string)
-  >>= fun h_deliver_to_sub_id ->
-  maybe (field "DeliverToLocationID" string)
-  >>= fun h_deliver_to_location_id ->
-  maybe (field "PossDupFlag" bool)
-  >>= fun h_poss_dup_flag ->
-  maybe (field "PossResend" bool)
-  >>= fun h_poss_resend ->
-  field "SendingTime" utctimestamp_decoder
-  >>= fun h_sending_time ->
+  maybe (field "DeliverToSubID" string) >>= fun h_deliver_to_sub_id ->
+  maybe (field "DeliverToLocationID" string) >>= fun h_deliver_to_location_id ->
+  maybe (field "PossDupFlag" bool) >>= fun h_poss_dup_flag ->
+  maybe (field "PossResend" bool) >>= fun h_poss_resend ->
+  field "SendingTime" utctimestamp_decoder >>= fun h_sending_time ->
   maybe (field "OrigSendingTime" utctimestamp_decoder)
   >>= fun h_orig_sending_time ->
-  maybe (field "XmlDataLen" int_decoder)
-  >>= fun h_xml_data_len ->
-  maybe (field "XmlData" int_decoder)
-  >>= fun h_xml_data ->
-  maybe (field "MessageEncoding" int_decoder)
-  >>= fun h_message_encoding ->
+  maybe (field "XmlDataLen" int_decoder) >>= fun h_xml_data_len ->
+  maybe (field "XmlData" int_decoder) >>= fun h_xml_data ->
+  maybe (field "MessageEncoding" int_decoder) >>= fun h_message_encoding ->
   maybe (field "LastMsgSeqNumProcessed" int_decoder)
   >>= fun h_last_msg_seq_num_processed ->
-  maybe (field "NoHops" int_decoder)
-  >>= fun h_no_hops ->
+  maybe (field "NoHops" int_decoder) >>= fun h_no_hops ->
   D.succeed
-    { h_begin_string
-    ; h_body_length
-    ; h_sender_comp_id
-    ; h_target_comp_id
-    ; h_msg_seq_num
-    ; h_on_behalf_of_comp_id
-    ; h_deliver_to_comp_id
-    ; h_secure_data_len
-    ; h_secure_data
-    ; h_sender_sub_id
-    ; h_sender_location_id
-    ; h_target_sub_id
-    ; h_target_location_id
-    ; h_on_behalf_of_sub_id
-    ; h_on_behalf_of_location_id
-    ; h_deliver_to_sub_id
-    ; h_deliver_to_location_id
-    ; h_poss_dup_flag
-    ; h_poss_resend
-    ; h_sending_time
-    ; h_orig_sending_time
-    ; h_xml_data_len
-    ; h_xml_data
-    ; h_message_encoding
-    ; h_last_msg_seq_num_processed
-    ; h_no_hops
+    {
+      h_begin_string;
+      h_body_length;
+      h_sender_comp_id;
+      h_target_comp_id;
+      h_msg_seq_num;
+      h_on_behalf_of_comp_id;
+      h_deliver_to_comp_id;
+      h_secure_data_len;
+      h_secure_data;
+      h_sender_sub_id;
+      h_sender_location_id;
+      h_target_sub_id;
+      h_target_location_id;
+      h_on_behalf_of_sub_id;
+      h_on_behalf_of_location_id;
+      h_deliver_to_sub_id;
+      h_deliver_to_location_id;
+      h_poss_dup_flag;
+      h_poss_resend;
+      h_sending_time;
+      h_orig_sending_time;
+      h_xml_data_len;
+      h_xml_data;
+      h_message_encoding;
+      h_last_msg_seq_num_processed;
+      h_no_hops;
     }
-
 
 let trailer_decoder : fix_trailer D.decoder =
   let open D in
-  maybe (field "SignatureLength" int_decoder)
-  >>= fun signature_length ->
-  maybe (field "Signature" int_decoder)
-  >>= fun signature ->
-  field "CheckSum" int_decoder
-  >>= fun check_sum -> D.succeed { signature_length; signature; check_sum }
-
+  maybe (field "SignatureLength" int_decoder) >>= fun signature_length ->
+  maybe (field "Signature" int_decoder) >>= fun signature ->
+  field "CheckSum" int_decoder >>= fun check_sum ->
+  D.succeed { signature_length; signature; check_sum }
 
 let full_valid_msg_decoder utctimestamp_decoder : full_valid_fix_msg D.decoder =
   let open D in
   field "StandardHeader" (header_decoder utctimestamp_decoder)
   >>= fun full_msg_header ->
-  field "MessageBody" full_msg_decoder
-  >>= fun full_msg_data ->
-  field "StandardTrailer" trailer_decoder
-  >>= fun full_msg_trailer ->
+  field "MessageBody" full_msg_decoder >>= fun full_msg_data ->
+  field "StandardTrailer" trailer_decoder >>= fun full_msg_trailer ->
   D.succeed { full_msg_header; full_msg_data; full_msg_trailer }
-
 
 let full_valid_msg_list_decoder utctimestamp_decoder :
     full_valid_fix_msg list D.decoder =
   let open D in
   list (full_valid_msg_decoder utctimestamp_decoder)
 
-
 let full_top_level_msg_decoder utctimestamp_decoder :
     full_top_level_msg D.decoder =
   let open D in
-  single_field
-  @@ function
+  single_field @@ function
   | "ValidMsg" ->
-      full_valid_msg_decoder utctimestamp_decoder
-      >>= fun m -> D.succeed (ValidMsg m)
+    full_valid_msg_decoder utctimestamp_decoder >>= fun m ->
+    D.succeed (ValidMsg m)
   | "SessionRejectedMsg" ->
-      full_msg_reject_decoder >>= fun m -> D.succeed (SessionRejectedMsg m)
+    full_msg_reject_decoder >>= fun m -> D.succeed (SessionRejectedMsg m)
   | "BusinessRejectedMsg" ->
-      full_msg_business_reject_decoder
-      >>= fun m -> D.succeed (BusinessRejectedMsg m)
-  | "Garbled" ->
-      string >>= fun _m -> D.succeed Garbled
-  | x ->
-      D.fail @@ "unknown top level message " ^ x
-
+    full_msg_business_reject_decoder >>= fun m ->
+    D.succeed (BusinessRejectedMsg m)
+  | "Garbled" -> string >>= fun _m -> D.succeed Garbled
+  | x -> D.fail @@ "unknown top level message " ^ x
 
 [@@@logic]

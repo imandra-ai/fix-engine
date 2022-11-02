@@ -1,7 +1,7 @@
-type data =
-  { msg_tag : string
-  ; payload : (string * string) list
-  }
+type data = {
+  msg_tag: string;
+  payload: (string * string) list;
+}
 
 type appData = IncIntMsg_ApplicationData of data
 
@@ -13,4 +13,4 @@ let send_fix _ _ = Lwt.return_unit
 
 let start ~recv =
   let _ = recv in
-  (Lwt.return_unit, 0)
+  Lwt.return_unit, 0

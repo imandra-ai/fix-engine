@@ -25,11 +25,11 @@ type manual_int_data =
   | IncrementOutSeq
   | SendBusinessReject of full_msg_business_reject_data
 
+type session_data = {
+  dest_comp_id: string;  (** Destination company ID. *)
+  reset_seq_num: bool;  (** Shall we reset sequence numbers? *)
+}
 (** Request to initiate a new session. *)
-type session_data =
-  { dest_comp_id : string  (** Destination company ID. *)
-  ; reset_seq_num : bool  (** Shall we reset sequence numbers? *)
-  }
 
 (** These are internal messages into the Engine. *)
 type fix_engine_int_inc_msg =
@@ -82,101 +82,100 @@ type cache_entry =
   | CacheMessage of full_valid_fix_msg
   | CacheGap of int * int
 
-(** Engine state structure containing all of the information required for it operate. *)
-type fix_engine_state =
-  { fe_begin_string : string
-  ; fe_curr_status : fix_engine_status  (** Status. *)
-  ; fe_curr_mode : fix_engine_mode  (** High-level mode of the engine. *)
-  ; fe_initiator : bool option
-        (** initiator = True if we've received an internal message to initiate
+type fix_engine_state = {
+  fe_begin_string: string;
+  fe_curr_status: fix_engine_status;  (** Status. *)
+  fe_curr_mode: fix_engine_mode;  (** High-level mode of the engine. *)
+  fe_initiator: bool option;
+      (** initiator = True if we've received an internal message to initiate
             the connection. It's False if we've received a Logon request first.
             It's None by default prior to any Logon sequences. *)
-  ; fe_curr_time : fix_utctimestamp_micro
-        (** Need to define time so we're aware of heartbeat status. *)
-  ; fe_comp_id : string  (** Our company ID *)
-  ; fe_target_comp_id : string  (** Target company ID *)
-  ; fe_sender_location_id : string option  (** Location id string *)
-  ; fe_on_behalf_of_comp_id : string option  (** On behalf of string *)
-  ; fe_deliver_to_comp_id : string option  (** Deliver to string *)
-  ; incoming_int_msg : fix_engine_int_inc_msg option
-        (** Incoming internal messages (application). *)
-  ; outgoing_int_msg : fix_engine_int_out_msg option
-        (** These are messages we send back to our owner *)
-  ; incoming_seq_num : int
-        (** Sequence number of the last processed incoming message. *)
-  ; outgoing_seq_num : int  (** Sequence number of the last sent message. *)
-  ; incoming_fix_msg : full_top_level_msg option
-        (** Messages we will send out *)
-  ; outgoing_fix_msg : full_top_level_msg option  (** Messages we receive *)
-  ; fe_cache : cache_entry list
-        (** Maintain a cache of messages in case we detect out-of-sequence message(s). *)
-  ; fe_history : full_valid_fix_msg list
-        (** We maintain history of our outgoing messages in case we're asked to retransmit. *)
-  ; fe_last_time_data_sent : fix_utctimestamp_micro
-        (** Last time we sent out data to the corresponding engine *)
-  ; fe_last_data_received : fix_utctimestamp_micro
-        (** Last time we received a heartbeat or other message. *)
-  ; fe_heartbeat_interval : fix_duration  (** Negotiated heartbeat interval. *)
-  ; fe_testreq_interval : fix_duration
-        (** Interval used to 'pad' heartbeat interval before a TestRequest message is sent out. *)
-  ; fe_retransmit_start_idx : int
-        (** Starting index of the retransmitting history. *)
-  ; fe_retransmit_end_idx : int  (** Ending index ... *)
-  ; fe_history_to_send : full_valid_fix_msg list
-        (** Used in message retransmission. *)
-  ; fe_mode_after_resend : fix_engine_mode
-        (** Which mode should we go to after resend is completed? *)
-  ; fe_application_up : bool
-        (** Is the application that's receiving messages up and running?
+  fe_curr_time: fix_utctimestamp_micro;
+      (** Need to define time so we're aware of heartbeat status. *)
+  fe_comp_id: string;  (** Our company ID *)
+  fe_target_comp_id: string;  (** Target company ID *)
+  fe_sender_location_id: string option;  (** Location id string *)
+  fe_on_behalf_of_comp_id: string option;  (** On behalf of string *)
+  fe_deliver_to_comp_id: string option;  (** Deliver to string *)
+  incoming_int_msg: fix_engine_int_inc_msg option;
+      (** Incoming internal messages (application). *)
+  outgoing_int_msg: fix_engine_int_out_msg option;
+      (** These are messages we send back to our owner *)
+  incoming_seq_num: int;
+      (** Sequence number of the last processed incoming message. *)
+  outgoing_seq_num: int;  (** Sequence number of the last sent message. *)
+  incoming_fix_msg: full_top_level_msg option;  (** Messages we will send out *)
+  outgoing_fix_msg: full_top_level_msg option;  (** Messages we receive *)
+  fe_cache: cache_entry list;
+      (** Maintain a cache of messages in case we detect out-of-sequence message(s). *)
+  fe_history: full_valid_fix_msg list;
+      (** We maintain history of our outgoing messages in case we're asked to retransmit. *)
+  fe_last_time_data_sent: fix_utctimestamp_micro;
+      (** Last time we sent out data to the corresponding engine *)
+  fe_last_data_received: fix_utctimestamp_micro;
+      (** Last time we received a heartbeat or other message. *)
+  fe_heartbeat_interval: fix_duration;  (** Negotiated heartbeat interval. *)
+  fe_testreq_interval: fix_duration;
+      (** Interval used to 'pad' heartbeat interval before a TestRequest message is sent out. *)
+  fe_retransmit_start_idx: int;
+      (** Starting index of the retransmitting history. *)
+  fe_retransmit_end_idx: int;  (** Ending index ... *)
+  fe_history_to_send: full_valid_fix_msg list;
+      (** Used in message retransmission. *)
+  fe_mode_after_resend: fix_engine_mode;
+      (** Which mode should we go to after resend is completed? *)
+  fe_application_up: bool;
+      (** Is the application that's receiving messages up and running?
                                                                 TODO: we might need to constitute a heartbeat to enforce this. *)
-  ; last_test_req_id : string
-        (** These are used to send out TestRequest messages that should be replied
+  last_test_req_id: string;
+      (** These are used to send out TestRequest messages that should be replied
                                                                 with Heartbeat messages containing the testrequest ID. Any string
                                                                 may be used, we use int's for now. *)
-  ; fe_num_logons_sent : int
-        (** Number of logons sent during session initialization. This is done to
+  fe_num_logons_sent: int;
+      (** Number of logons sent during session initialization. This is done to
                                                                 ensure that the engine does not go into infinite loop. *)
-  ; fe_max_num_logons_sent : int
-        (** Setting: maximum number of logons to be sent out. *)
-  ; fe_encrypt_method : fix_encryption_method
-  }
+  fe_max_num_logons_sent: int;
+      (** Setting: maximum number of logons to be sent out. *)
+  fe_encrypt_method: fix_encryption_method;
+}
+(** Engine state structure containing all of the information required for it operate. *)
 
 (** Initial engine state. *)
 let init_fix_engine_state =
-  { fe_begin_string = "FIX.4.2"
-  ; fe_curr_status = Normal
-  ; fe_initiator = None
-  ; fe_curr_mode = NoActiveSession
-  ; fe_curr_time = default_utctimestamp_milli
-  ; fe_comp_id = "IMANDRA"
-  ; fe_target_comp_id = "TARGET"
-  ; fe_sender_location_id = None
-  ; fe_on_behalf_of_comp_id = None
-  ; fe_deliver_to_comp_id = None
-  ; incoming_int_msg = None
-  ; outgoing_int_msg = None
-  ; incoming_seq_num = 0
-  ; outgoing_seq_num = 0
-  ; incoming_fix_msg = None
-  ; outgoing_fix_msg = None
-  ; fe_cache = []
-  ; fe_history = []
-  ; fe_last_data_received = default_utctimestamp_milli
-  ; fe_heartbeat_interval = make_duration 0 0 0 0 0 30
-  ; (* 30 seconds *)
-    fe_last_time_data_sent = default_utctimestamp_milli
-  ; fe_testreq_interval = make_duration 0 0 0 0 0 30
-  ; fe_history_to_send = []
-  ; fe_retransmit_start_idx = 0
-  ; fe_retransmit_end_idx = 0
-  ; fe_mode_after_resend = NoActiveSession
-  ; fe_application_up = true
-  ; last_test_req_id = "fix-engine"
-  ; fe_num_logons_sent = 0
-  ; fe_max_num_logons_sent = 0
-  ; fe_encrypt_method = NoEncryption
+  {
+    fe_begin_string = "FIX.4.2";
+    fe_curr_status = Normal;
+    fe_initiator = None;
+    fe_curr_mode = NoActiveSession;
+    fe_curr_time = default_utctimestamp_milli;
+    fe_comp_id = "IMANDRA";
+    fe_target_comp_id = "TARGET";
+    fe_sender_location_id = None;
+    fe_on_behalf_of_comp_id = None;
+    fe_deliver_to_comp_id = None;
+    incoming_int_msg = None;
+    outgoing_int_msg = None;
+    incoming_seq_num = 0;
+    outgoing_seq_num = 0;
+    incoming_fix_msg = None;
+    outgoing_fix_msg = None;
+    fe_cache = [];
+    fe_history = [];
+    fe_last_data_received = default_utctimestamp_milli;
+    fe_heartbeat_interval = make_duration 0 0 0 0 0 30;
+    (* 30 seconds *)
+    fe_last_time_data_sent = default_utctimestamp_milli;
+    fe_testreq_interval = make_duration 0 0 0 0 0 30;
+    fe_history_to_send = [];
+    fe_retransmit_start_idx = 0;
+    fe_retransmit_end_idx = 0;
+    fe_mode_after_resend = NoActiveSession;
+    fe_application_up = true;
+    last_test_req_id = "fix-engine";
+    fe_num_logons_sent = 0;
+    fe_max_num_logons_sent = 0;
+    fe_encrypt_method = NoEncryption;
   }
-
 
 (** THEOREM: one_step calls on busy state eventually terminate *)
 let engine_state_busy engine =
@@ -186,11 +185,8 @@ let engine_state_busy engine =
   || engine.outgoing_int_msg <> None
   ||
   match engine.fe_curr_mode with
-  | GapDetected | CacheReplay | Retransmit | ShuttingDown ->
-      true
-  | _ ->
-      false
-
+  | GapDetected | CacheReplay | Retransmit | ShuttingDown -> true
+  | _ -> false
 
 (** Properties of a valid state.
 
@@ -201,11 +197,9 @@ let engine_state_busy engine =
     we need to maintain that every state transition from a valid state
     would result in another valid state. *)
 let is_state_valid (engine : fix_engine_state) =
-  utctimestamp_LessThanEqual_micro_micro
-    engine.fe_last_data_received
+  utctimestamp_LessThanEqual_micro_micro engine.fe_last_data_received
     engine.fe_curr_time
-  && utctimestamp_LessThanEqual_micro_micro
-       engine.fe_last_time_data_sent
+  && utctimestamp_LessThanEqual_micro_micro engine.fe_last_time_data_sent
        engine.fe_curr_time
   && is_valid_utctimestamp_micro engine.fe_curr_time
   && is_valid_utctimestamp_micro engine.fe_last_time_data_sent
