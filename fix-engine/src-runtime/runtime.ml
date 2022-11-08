@@ -179,6 +179,10 @@ let client_handler addr_str (t, engine_thread, init_msg) (inch, outch) =
   let recv = Lwt_mvar.put t.fixio_box in
   let log_file = t.log_file in
   let fixio_thread, fixio = Fix_io.start ~recv ?log_file (inch, outch) in
+  let fixio_thread =
+    let* () = fixio_thread in
+    t.recv (Disconnected addr_str)
+    in
   let t = { t with fixio = Some fixio } in
   let* () = Engine.send_internal_message t.engine init_msg in
   Lwt.pick [ engine_thread; fixio_thread; loop t ]
