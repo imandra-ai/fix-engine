@@ -219,25 +219,35 @@ module Parser = struct
             rev_collect groups >|>= fun groups ->
             ParseSuccess (Some numInGroup, groups) >|>= f msg
 
+  let do_check_duplicate_tags = ref true
+
   (** Checks for duplicate tags in messages -- should be called after all the repeating groups are porcessed *)
   let check_duplicate_tags ( msg : msg )
-      ( f : unit -> 'a t * msg ) =
-    let rec scan = function
-      | h::tl ->
-        if List.mem h tl
-        then DuplicateTag h , []
-        else scan tl
-      | [] -> f () in
-    msg |> List.map fst |> scan
+        ( f : unit -> 'a t * msg ) =
+    if !do_check_duplicate_tags then
+      let rec scan = function
+        | h::tl ->
+           if List.mem h tl
+           then DuplicateTag h , []
+           else scan tl
+        | [] -> f () in
+      msg |> List.map fst |> scan
+    else
+      f ()
+
+  let do_check_unknown_tags = ref true
 
   (** This finalizes the message -- if there are any unplrocessed tag=value pairs left -- we return an error *)
   let check_unknown_tags (result , msg) =
-    match result with
-    | ParseSuccess _ ->
-      ( match msg with
-        | [] -> result
-        | (tag,_v)::_tl -> UndefinedTag tag )
-    | _ -> result
+    if !do_check_unknown_tags then
+      match result with
+      | ParseSuccess _ ->
+         ( match msg with
+           | [] -> result
+           | (tag,_v)::_tl -> UndefinedTag tag )
+      | _ -> result
+    else
+      result
 
   let rec get_top_and_last (l:'a list): ('a list * 'a option) =
     match l with
