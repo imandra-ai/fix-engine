@@ -137,6 +137,8 @@ type fix_engine_state = {
   fe_max_num_logons_sent: int;
       (** Setting: maximum number of logons to be sent out. *)
   fe_encrypt_method: fix_encryption_method;
+  logon_extra_fields: (string * string) list;
+  fe_next_expected_msg_seq_num: int option;
 }
 (** Engine state structure containing all of the information required for it operate. *)
 
@@ -175,6 +177,8 @@ let init_fix_engine_state =
     fe_num_logons_sent = 0;
     fe_max_num_logons_sent = 0;
     fe_encrypt_method = NoEncryption;
+    logon_extra_fields = [];
+    fe_next_expected_msg_seq_num = None;
   }
 
 (** THEOREM: one_step calls on busy state eventually terminate *)

@@ -92,6 +92,8 @@ module Internal : sig
     target_id: string;
     host_id: string option;
     on_behalf_id: string option;
+    logon_fields: (string * string) list;
+    next_expected_msg_seq_num: bool;
     timer: float;
     ignore_session_reject: bool;
     ignore_business_reject: bool;
@@ -144,6 +146,8 @@ end = struct
     target_id: string;
     host_id: string option;
     on_behalf_id: string option;
+    logon_fields: (string * string) list;
+    next_expected_msg_seq_num: bool;
     timer: float;
     ignore_session_reject: bool;
     ignore_business_reject: bool;
@@ -271,6 +275,12 @@ end = struct
       fe_application_up = true;
       incoming_seq_num = Z.of_int inseq;
       outgoing_seq_num = Z.of_int outseq;
+      logon_extra_fields = config.logon_fields;
+      fe_next_expected_msg_seq_num =
+        (if config.next_expected_msg_seq_num then
+          Some (Z.of_int (inseq + 1))
+        else
+          None);
     }
 
   let start ~reset ~session_dir ~(config : config) ~recv =

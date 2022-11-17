@@ -47,7 +47,8 @@ type full_msg_logon_data = {
     ln_username                           : string option;                (** Tag 553 *)
     ln_password                           : string option;                (** Tag 554 *)
 
-    ln_msg_types                          : full_msg_types_inner_rg list      (** Repeating group at tag 384 *)
+    ln_msg_types                          : full_msg_types_inner_rg list;      (** Repeating group at tag 384 *)
+    ln_extra_fields                       : (string * string) list
 }
 ;;
 
