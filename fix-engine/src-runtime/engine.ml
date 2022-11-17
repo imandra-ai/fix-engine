@@ -276,6 +276,7 @@ end = struct
       incoming_seq_num = Z.of_int inseq;
       outgoing_seq_num = Z.of_int outseq;
       logon_extra_fields = config.logon_fields;
+      fe_heartbeat_interval = Datetime.make_duration Z.zero Z.zero Z.zero Z.zero Z.zero (Z.of_int 5);
       fe_next_expected_msg_seq_num =
         (if config.next_expected_msg_seq_num then
           Some (Z.of_int (inseq + 1))
