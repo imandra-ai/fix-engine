@@ -46,7 +46,7 @@ let parse_msg_types = P.(
 )
 ;;
 
-let parse_msg_logon_data = P.(
+let parse_msg_logon_data extra_fields = P.(
   let* _, ln_msg_types = repeating "384" ~block_parser:parse_msg_types in
   let* () = check_duplicate_tags in
   let* ln_encrypt_method = req "98" parse_encryption_method in
@@ -59,6 +59,7 @@ let parse_msg_logon_data = P.(
   let* ln_test_message_indicator = opt "464" parse_bool in
   let* ln_username = opt "553" parse_string in
   let* ln_password = opt "554" parse_string in
+  let* ln_extra_fields = all (CCList.map List.hd extra_fields) parse_string in
   let ln_heartbeat_interval = (seconds_to_duration ln_heartbeat_interval) in
   let+ () = check_unknown_tags in
     { ln_encrypt_method
@@ -72,6 +73,7 @@ let parse_msg_logon_data = P.(
     ; ln_username
     ; ln_password
     ; ln_msg_types
+    ; ln_extra_fields
     }
 )
 ;;

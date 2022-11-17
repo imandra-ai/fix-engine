@@ -145,6 +145,13 @@ let opt tag p : _ t =
           | exception _ -> fail_ @@ WrongValueFormat tag));
   }
 
+let all tags p : _ t =
+  (* TODO *)
+  {
+    run =
+      (fun st -> Some []);
+  }
+
 (* Uses the first entry tag in the input list to split the list into a list of
    lists, each starting with the tag.
    Splits [ [(10,0); (11,0); (12,0); (10, 1); (11,1); (10,2); (40,2)] ] into

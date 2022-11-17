@@ -182,7 +182,7 @@ let client_handler addr_str (t, engine_thread, init_msg) (inch, outch) =
   let fixio_thread =
     let* () = fixio_thread in
     t.recv (Disconnected addr_str)
-    in
+  in
   let t = { t with fixio = Some fixio } in
   let* () = Engine.send_internal_message t.engine init_msg in
   Lwt.pick [ engine_thread; fixio_thread; loop t ]
