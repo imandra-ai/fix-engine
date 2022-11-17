@@ -45,7 +45,7 @@ let of_date_time_us (date, (hh, mm, ss, us)) =
   let time = hh, mm, ss in
   let tz = zero in
   T.of_date_time (date, (time, tz))
-  |> Option.flat_map (fun t -> T.add_span t (TE.Span.of_int_us us))
+  |> Option.flat_map (fun t -> T.add_span t (TE.Span.of_int_ns us))
 
 let of_time_us time_us =
   let date = epoch_year, one, one in
@@ -64,7 +64,7 @@ let to_time_us (t : T.t) =
 
 let to_millis (t : T.t) = T.truncate ~frac_s:three t
 
-let to_micros (t : T.t) = T.truncate ~frac_s:six t
+let to_micros (t : T.t) = T.truncate ~frac_s:nine t
 
 let to_days (d : T.Span.t) = T.Span.to_int_s d / s_count_in_day
 
