@@ -47,6 +47,8 @@ let full_msg_logon_decoder : full_msg_logon_data D.decoder =
   maybe (field "TestMessageIndicator" bool) >>= fun ln_test_message_indicator ->
   maybe (field "Username" string) >>= fun ln_username ->
   maybe (field "Password" string) >>= fun ln_password ->
+  maybe (field "ExtraFields" (key_value_pairs string))
+  >>= fun ln_extra_fields ->
   list (field "MsgTypes" full_msg_types_inner_rg_decoder)
   >>= fun ln_msg_types ->
   D.succeed
@@ -62,6 +64,7 @@ let full_msg_logon_decoder : full_msg_logon_data D.decoder =
       ln_username;
       ln_password;
       ln_msg_types;
+      ln_extra_fields = CCOption.get_or ~default:[] ln_extra_fields;
     }
 
 let full_msg_logoff_decoder : full_msg_logoff_data D.decoder =

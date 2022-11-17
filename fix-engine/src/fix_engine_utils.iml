@@ -175,7 +175,8 @@ let create_logon_msg ( engine, reset_seq_num : fix_engine_state * bool ) =
             ln_username                     = None;
             ln_password                     = None;
 
-            ln_msg_types                    = []
+            ln_msg_types                    = [];
+            ln_extra_fields                 = engine.logon_extra_fields
         }
     ) in
     create_outbound_fix_msg (engine, msg_data, false )
