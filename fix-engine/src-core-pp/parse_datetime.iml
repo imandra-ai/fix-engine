@@ -36,13 +36,13 @@ let parse_time_ms str =
 
 let parse_time_us str =
   let length = String.length str in
-  if (length <> 8) && (length <> 15) then None else
+  if (length <> 8) && (length <> 18) then None else
     try
       Scanf.sscanf str "%02u:%02u:%02u%s"
         (fun h m s us ->
           let us =
             if us = "" then None
-            else Scanf.sscanf us ".%06d" (fun x -> Some (Z.of_int x))
+            else Scanf.sscanf us ".%09d" (fun x -> Some (Z.of_int x))
           in
           Some (Z.of_int h, Z.of_int m, Z.of_int s, us))
     with
@@ -81,7 +81,7 @@ let parse_UTCTimestamp_milli str : fix_utctimestamp_milli option =
 
 let parse_UTCTimestamp_micro str =
   let length = String.length str in
-  if (length <> 17) && (length <> 24) then None else
+  if (length <> 17) && (length <> 27) then None else
     try
       let date, time =
         Scanf.sscanf str "%s@-%s"
