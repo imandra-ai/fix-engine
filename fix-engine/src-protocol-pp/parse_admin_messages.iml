@@ -59,6 +59,10 @@ let parse_msg_logon_data = P.(
   let* ln_test_message_indicator = opt "464" parse_bool in
   let* ln_username = opt "553" parse_string in
   let* ln_password = opt "554" parse_string in
+  let* _ = opt "21019" parse_string in
+  let* _ = opt "21021" parse_string in
+  let* _ = opt "21020" parse_string in
+  let* _ = opt "1137" parse_string in
   let ln_heartbeat_interval = (seconds_to_duration ln_heartbeat_interval) in
   let+ () = check_unknown_tags in
     { ln_encrypt_method
@@ -82,6 +86,7 @@ let parse_msg_logoff_data = P.(
   let* lo_text = opt "58" parse_string in
   let* lo_encoded_text_len = opt "355" parse_int in
   let* lo_encoded_text = opt "354" parse_string in
+  let* _ = opt "1409" parse_string in
   let+ () = check_unknown_tags in
   { lo_text
   ; lo_encoded_text_len
