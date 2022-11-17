@@ -57,6 +57,7 @@ module Decode (D : Decoders.Decode.S) = struct
     let* millisecond_precision = field_def "timer" false D.bool in
     let* reset = field_def "reset" false D.bool in
     let* no_history = field_def "no_history" false D.bool in
+    let* heartbeat_interval = field_def "heartbeat_interval" 30 D.int in
     let engine_config =
       Engine.
         {
@@ -66,10 +67,12 @@ module Decode (D : Decoders.Decode.S) = struct
           on_behalf_id;
           timer;
           millisecond_precision;
+          next_expected_msg_seq_num = false;
           begin_string;
           ignore_business_reject = false;
           ignore_session_reject = false;
           no_history;
+          heartbeat_interval;
         }
     in
     D.succeed { zmqpub; zmqrep; mode; engine_config; reset }

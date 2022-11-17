@@ -92,12 +92,14 @@ module Internal : sig
     target_id: string;
     host_id: string option;
     on_behalf_id: string option;
+    next_expected_msg_seq_num: bool;
     timer: float;
     ignore_session_reject: bool;
     ignore_business_reject: bool;
     millisecond_precision: bool;
     begin_string: string;
     no_history: bool;
+    heartbeat_interval: int;
   }
   [@@deriving show { with_path = false }]
 
@@ -144,12 +146,14 @@ end = struct
     target_id: string;
     host_id: string option;
     on_behalf_id: string option;
+    next_expected_msg_seq_num: bool;
     timer: float;
     ignore_session_reject: bool;
     ignore_business_reject: bool;
     millisecond_precision: bool;
     begin_string: string;
     no_history: bool;
+    heartbeat_interval: int;
   }
   [@@deriving show { with_path = false }]
 
@@ -271,6 +275,13 @@ end = struct
       fe_application_up = true;
       incoming_seq_num = Z.of_int inseq;
       outgoing_seq_num = Z.of_int outseq;
+      fe_heartbeat_interval =
+        Imandra_ptime.Span.(of_int_s (Z.of_int config.heartbeat_interval));
+      fe_next_expected_msg_seq_num =
+        (if config.next_expected_msg_seq_num then
+          Some (Z.of_int (inseq + 1))
+        else
+          None);
     }
 
   let start ~reset ~session_dir ~(config : config) ~recv =

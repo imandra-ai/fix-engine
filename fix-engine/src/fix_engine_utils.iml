@@ -168,7 +168,7 @@ let create_logon_msg ( engine, reset_seq_num : fix_engine_state * bool ) =
             ln_raw_data_length              = None;
             ln_raw_data                     = None;
             ln_reset_seq_num_flag           = if reset_seq_num then Some true else None;
-            ln_next_expected_msg_seq_num    = None;
+            ln_next_expected_msg_seq_num    = engine.fe_next_expected_msg_seq_num;
             ln_max_message_size             = None;
 
             ln_test_message_indicator       = None;
