@@ -72,6 +72,7 @@ let parse_msg_logon_data = P.(
     ; ln_username
     ; ln_password
     ; ln_msg_types
+    ; ln_extra_fields = []      (* TODO *)
     }
 )
 ;;

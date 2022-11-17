@@ -51,7 +51,8 @@ let encode_msg_logon_data msg =
     ; ( "464" , opt encode_bool              msg.ln_test_message_indicator    )
     ; ( "553" , opt encode_string            msg.ln_username                  )
     ; ( "554" , opt encode_string            msg.ln_password                  )
-    ] 
+    ]
+    @ CCList.map (fun (k, v) -> k, Some v)   msg.ln_extra_fields
     @ repeat encode_msg_types "384"          msg.ln_msg_types
 ;;
 
