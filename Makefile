@@ -1,6 +1,16 @@
 # Makefile
 
 DUNE_OPTS?= --profile=release
+IMANDRA_SWITCH?=/usr/local/var/imandra
+
+imandra-libs-install:
+	cd vendor/imandra-ptime && opam install . --switch $(IMANDRA_SWITCH) -y && cd -
+
+imandra-libs-uninstall:
+	opam uninstall imandra-ptime --switch $(IMANDRA_SWITCH)
+
+imandra-libs-unpin:
+	opam unpin imandra-ptime --switch $(IMANDRA_SWITCH)
 
 build:
 	opam exec -- dune build $(DUNE_OPTS) @install
