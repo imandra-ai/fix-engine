@@ -10,7 +10,7 @@
 
 [@@@require "imandra-ptime"]
 
-[@@@require "imandra-ptime-extra"]
+[@@@require "imandra-ptime.extra"]
 
 [@@@import "./ints.iml"]
 

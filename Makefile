@@ -43,12 +43,13 @@ opam1-setup:
 # opam2-setup - Will create a local switch under ./_opam.
 opam2-setup: _opam
 	opam pin add -y . --no-action
-	opam depext -y fix-engine
+	opam pin -y -n imandra-prelude vendor/imandra-prelude
+	opam pin -y -n imandra-ptime vendor/imandra-ptime
 	opam install -y . --deps-only --with-test --working-dir
 
 _opam:
 	opam switch create . --empty
-	opam install -y ocaml-base-compiler.4.05.0
+	opam install -y ocaml-base-compiler.4.12.1
 
 format:
 	@echo "(dirs :standard \ *-vg)" > dune

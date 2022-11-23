@@ -20,6 +20,7 @@ depends: [
   "zmq-lwt"
   "logs"
   "ppx_deriving"
+  "imandra-ptime"
   "ocaml" {>= "4.08.0"}
   "benchmark" {with-test}
   "qcheck-core" {with-test}
