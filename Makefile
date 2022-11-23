@@ -36,16 +36,20 @@ module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 
 # opam1-setup - for running in Wercker. Assumes the correct switch is already installed and selected.
 opam1-setup:
-	opam pin add -y . --no-action
-	opam depext -y fix-engine
-	opam install fix-engine --deps-only
+	opam install \
+	  ./vendor/imandra-ptime/imandra-ptime.opam \
+	  ./vendor/imandra-prelude/imandra-prelude.opam \
+	  ./fix-engine.opam \
+	  --deps-only -y
 
+# Note: keep this opam install command in sync with the Dockerfile
 # opam2-setup - Will create a local switch under ./_opam.
 opam2-setup: _opam
-	opam pin -y -n imandra-prelude vendor/imandra-prelude
-	opam pin -y -n imandra-ptime vendor/imandra-ptime
-	opam pin add -y . --no-action
-	opam install -y . --deps-only --with-test --working-dir
+	opam install \
+	  ./vendor/imandra-ptime/imandra-ptime.opam \
+	  ./vendor/imandra-prelude/imandra-prelude.opam \
+	  ./fix-engine.opam \
+	  --deps-only -y
 
 _opam:
 	opam switch create . --empty
