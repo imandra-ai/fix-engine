@@ -1,8 +1,8 @@
 FROM imandra/imandra-client-switch as fix-engine-build
 
 COPY --chown=opam:nogroup ./fix-engine.opam .
-RUN opam pin -y -n imandra-prelude vendor/imandra-prelude
-RUN opam pin -y -n imandra-ptime vendor/imandra-ptime
+COPY --chown=opam:nogroup ./vendor/imandra-ptime/imandra-ptime.opam .
+COPY --chown=opam:nogroup ./vendor/imandra-prelude/imandra-prelude.opam .
 RUN opam install . --deps-only --with-test --working-dir -y
 COPY --chown=opam:nogroup . .
 RUN make imandra-libs-install
