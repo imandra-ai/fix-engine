@@ -8,9 +8,9 @@
     datetime.iml
 *)
 
-[@@@import "../../vendor/imandra-ptime/src/imandra_ptime.iml"]
+[@@@require "imandra-ptime"]
 
-[@@@import "../../vendor/imandra-ptime/src-extra/imandra_ptime_extra.iml"]
+[@@@require "imandra-ptime.extra"]
 
 [@@@import "./ints.iml"]
 

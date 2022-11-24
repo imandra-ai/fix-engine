@@ -1,6 +1,16 @@
 # Makefile
 
 DUNE_OPTS?= --profile=release
+IMANDRA_SWITCH?=/usr/local/var/imandra
+
+imandra-libs-install:
+	cd vendor/imandra-ptime && opam install . --switch $(IMANDRA_SWITCH) -y && cd -
+
+imandra-libs-uninstall:
+	opam uninstall imandra-ptime --switch $(IMANDRA_SWITCH)
+
+imandra-libs-unpin:
+	opam unpin imandra-ptime --switch $(IMANDRA_SWITCH)
 
 build:
 	opam exec -- dune build $(DUNE_OPTS) @install
@@ -24,21 +34,21 @@ doc:
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 	sed -e 's/rotate=90;//g' "$<" | dot -Tsvg -o $@
 
+# Note: keep this opam install command in sync with the Dockerfile
 # opam1-setup - for running in Wercker. Assumes the correct switch is already installed and selected.
 opam1-setup:
-	opam pin add -y . --no-action
-	opam depext -y fix-engine
-	opam install fix-engine --deps-only
+	opam install \
+	  ./vendor/imandra-ptime/imandra-ptime.opam \
+	  ./vendor/imandra-prelude/imandra-prelude.opam \
+	  ./fix-engine.opam \
+	  --deps-only -y
 
 # opam2-setup - Will create a local switch under ./_opam.
-opam2-setup: _opam
-	opam pin add -y . --no-action
-	opam depext -y fix-engine
-	opam install -y . --deps-only --with-test --working-dir
+opam2-setup: _opam opam1-setup
 
 _opam:
 	opam switch create . --empty
-	opam install -y ocaml-base-compiler.4.05.0
+	opam switch set-invariant ocaml-base-compiler.4.12.1
 
 format:
 	@echo "(dirs :standard \ *-vg)" > dune
