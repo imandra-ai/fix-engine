@@ -48,7 +48,7 @@ opam2-setup: _opam opam1-setup
 
 _opam:
 	opam switch create . --empty
-	opam install -y ocaml-base-compiler.4.12.1
+	opam switch set-invariant ocaml-base-compiler.4.12.1
 
 format:
 	@echo "(dirs :standard \ *-vg)" > dune
