@@ -34,6 +34,7 @@ doc:
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 	sed -e 's/rotate=90;//g' "$<" | dot -Tsvg -o $@
 
+# Note: keep this opam install command in sync with the Dockerfile
 # opam1-setup - for running in Wercker. Assumes the correct switch is already installed and selected.
 opam1-setup:
 	opam install \
@@ -42,14 +43,8 @@ opam1-setup:
 	  ./fix-engine.opam \
 	  --deps-only -y
 
-# Note: keep this opam install command in sync with the Dockerfile
 # opam2-setup - Will create a local switch under ./_opam.
-opam2-setup: _opam
-	opam install \
-	  ./vendor/imandra-ptime/imandra-ptime.opam \
-	  ./vendor/imandra-prelude/imandra-prelude.opam \
-	  ./fix-engine.opam \
-	  --deps-only -y
+opam2-setup: _opam opam1-setup
 
 _opam:
 	opam switch create . --empty
