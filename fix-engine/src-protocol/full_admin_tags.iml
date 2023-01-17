@@ -80,4 +80,4 @@ type full_admin_field_tag =
   | Full_Field_HopSendingTime_Tag
   | Full_Field_HopRefID_Tag
   | Full_Field_RefApplVerID_Tag
-  | Full_Field_RefCstmApplVerID
+  | Full_Field_RefCstmApplVerID_Tag

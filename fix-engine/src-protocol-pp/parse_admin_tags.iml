@@ -75,6 +75,7 @@ let parse_admin_field_tag : _ Parser_combinators.value_parser = function
     | "373" -> Some Full_Field_SessionRejectReason_Tag
     | "380" -> Some Full_Field_BusinessRejectReason_Tag
     | "383" -> Some Full_Field_MaxMessageSize_Tag
+    | "385" -> Some Full_Field_MsgDirection_Tag
     | "464" -> Some Full_Field_TestMessageIndicator_Tag
     | "553" -> Some Full_Field_Username_Tag
     | "554" -> Some Full_Field_Password_Tag
@@ -84,6 +85,8 @@ let parse_admin_field_tag : _ Parser_combinators.value_parser = function
     | "628" -> Some Full_Field_HopCompID_Tag
     | "629" -> Some Full_Field_HopSendingTime_Tag
     | "630" -> Some Full_Field_HopRefID_Tag
+    | "1130" -> Some Full_Field_RefApplVerID_Tag
+    | "1131" -> Some Full_Field_RefCstmApplVerID_Tag
     |    _  -> None
 ;;
 [@@@logic]

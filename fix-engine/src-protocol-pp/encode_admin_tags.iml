@@ -84,7 +84,7 @@ let encode_admin_field_tag = function
     | Full_Field_HopSendingTime_Tag         ->  "629"
     | Full_Field_HopRefID_Tag               ->  "630"
     | Full_Field_RefApplVerID_Tag           ->  "1130"
-    | Full_Field_RefCstmApplVerID           ->  "1131"
+    | Full_Field_RefCstmApplVerID_Tag        ->  "1131"
 ;;
 [@@@logic]
 
