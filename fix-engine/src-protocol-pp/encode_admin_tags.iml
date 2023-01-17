@@ -73,6 +73,7 @@ let encode_admin_field_tag = function
     | Full_Field_SessionRejectReason_Tag    ->  "373"
     | Full_Field_BusinessRejectReason_Tag   ->  "380"
     | Full_Field_MaxMessageSize_Tag         ->  "383"
+    | Full_Field_NoMsgTypes_Tag             ->  "384"
     | Full_Field_MsgDirection_Tag           ->  "385"
     | Full_Field_TestMessageIndicator_Tag   ->  "464"
     | Full_Field_Username_Tag               ->  "553"

@@ -70,6 +70,7 @@ type full_admin_field_tag =
   | Full_Field_SessionRejectReason_Tag
   | Full_Field_BusinessRejectReason_Tag
   | Full_Field_MaxMessageSize_Tag
+  | Full_Field_NoMsgTypes_Tag
   | Full_Field_MsgDirection_Tag
   | Full_Field_TestMessageIndicator_Tag
   | Full_Field_Username_Tag

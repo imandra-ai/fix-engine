@@ -75,6 +75,7 @@ let parse_admin_field_tag : _ Parser_combinators.value_parser = function
     | "373" -> Some Full_Field_SessionRejectReason_Tag
     | "380" -> Some Full_Field_BusinessRejectReason_Tag
     | "383" -> Some Full_Field_MaxMessageSize_Tag
+    | "384" -> Some Full_Field_NoMsgTypes_Tag
     | "385" -> Some Full_Field_MsgDirection_Tag
     | "464" -> Some Full_Field_TestMessageIndicator_Tag
     | "553" -> Some Full_Field_Username_Tag
