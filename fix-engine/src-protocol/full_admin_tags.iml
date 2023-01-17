@@ -67,6 +67,7 @@ type full_admin_field_tag =
   | Full_Field_LastMsgSeqNumProcessed_Tag
   | Full_Field_RefTagID_Tag
   | Full_Field_RefMsgType_Tag
+  | Full_Field_MsgDirection_Tag
   | Full_Field_SessionRejectReason_Tag
   | Full_Field_BusinessRejectReason_Tag
   | Full_Field_MaxMessageSize_Tag
