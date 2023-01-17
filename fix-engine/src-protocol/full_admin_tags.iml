@@ -62,6 +62,7 @@ type full_admin_field_tag =
   | Full_Field_XmlDataLen_Tag
   | Full_Field_XmlData_Tag
   | Full_Field_MessageEncoding_Tag
+  | Full_Field_MsgDirection_Tag
   | Full_Field_EncodedTextLen_Tag
   | Full_Field_EncodedText_Tag
   | Full_Field_LastMsgSeqNumProcessed_Tag
