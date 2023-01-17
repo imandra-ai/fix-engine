@@ -68,6 +68,8 @@ let full_admin_string_to_field_tag = function
   | "SessionRejectReason" -> Some Full_Field_SessionRejectReason_Tag
   | "BusinessRejectReason" -> Some Full_Field_BusinessRejectReason_Tag
   | "MaxMessageSize" -> Some Full_Field_MaxMessageSize_Tag
+  | "MsgDirection" -> Some Full_Field_MsgDirection_Tag
+  | "NoMsgTypes" -> Some Full_Field_NoMsgTypes_Tag
   | "TestMessageIndicator" -> Some Full_Field_TestMessageIndicator_Tag
   | "Username" -> Some Full_Field_Username_Tag
   | "Password" -> Some Full_Field_Password_Tag
@@ -77,6 +79,8 @@ let full_admin_string_to_field_tag = function
   | "HopCompID" -> Some Full_Field_HopCompID_Tag
   | "HopSendingTime" -> Some Full_Field_HopSendingTime_Tag
   | "HopRefID" -> Some Full_Field_HopRefID_Tag
+  | "RefApplVerID" -> Some Full_Field_RefApplVerID_Tag
+  | "RefCstmApplVerID" -> Some Full_Field_RefCstmApplVerID_Tag
   | _ -> None
 
 let full_admin_msg_tag_of_json : full_admin_msg_tag D.decoder =
