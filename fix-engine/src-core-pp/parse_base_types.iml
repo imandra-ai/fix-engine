@@ -28,7 +28,7 @@ let parse_char (str: string) : string option =
 let parse_int ( str : string ) : int option =
   if String.get str (Z.to_int 0) = '+' then None else
     try
-      Some  (Z.of_int (int_of_string str))
+      Some (Z.of_string str)
     with _ -> None
 ;;
 
