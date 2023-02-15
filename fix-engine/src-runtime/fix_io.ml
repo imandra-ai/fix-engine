@@ -20,6 +20,8 @@ module Internal : sig
 
   val encode : split:char -> message -> string
 
+  val logfix : Lwt_io.output_channel -> string -> unit Lwt.t
+
   val send : fix_io -> message -> unit Lwt.t
 end = struct
   let ( >>= ) = Lwt.( >>= )
