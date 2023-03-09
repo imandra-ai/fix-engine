@@ -193,13 +193,19 @@ let check_duplicate_tags : _ t =
           st.msg);
   }
 
+let do_check_unknown_tags = ref true
+
 let check_unknown_tags : _ t =
   {
     run =
       (fun st ->
-        match st.msg with
-        | [] -> ()
-        | (tag, _) :: _ -> fail_ @@ UndefinedTag tag);
+        if not !do_check_unknown_tags then
+          ()
+        else (
+          match st.msg with
+          | [] -> ()
+          | (tag, _) :: _ -> fail_ @@ UndefinedTag tag
+        ));
   }
 
 let parse_int = int_of_string_opt
