@@ -1,0 +1,19 @@
+opam-version: "2.0"
+name: "model"
+maintainer: "Denis Ignatovich <denis@aestheticintegration.com>"
+authors: "Denis Ignatovich <denis@aestheticintegration.com>, Grant Passmore <grant@aestheticintegration.com>"
+homepage: "https://github.com/AestheticIntegration/fix-engine"
+bug-reports: "https://github.com/AestheticIntegration/fix-engine/issues"
+description: "FIX engine (model)"
+license: "APACHE-2.0"
+dev-repo: "git+https://github.com/AestheticIntegration/fix-engine"
+doc: "https://AestheticIntegration.github.io/fix-engine/doc"
+build: [["dune" "build" "-p" name "-j" jobs]]
+depends: [
+  "dune" {build}
+  "lwt"
+  "imandra-prelude"
+  "ocaml" {>= "4.08.0"}
+  "benchmark" {with-test}
+  "qcheck-core" {with-test}
+]
