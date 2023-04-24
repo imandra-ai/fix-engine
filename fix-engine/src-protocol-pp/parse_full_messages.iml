@@ -197,7 +197,6 @@ let parse_top_level_msg parse_UTCTimestamp : full_top_level_msg P.t =
     let* parse_result = reflect_err main_parser in
 
     (* TODO: split this result part into a different function *)
-
     match parse_result with
     | Ok msg -> return (ValidMsg msg)
     | Error GarbledMessage -> return Garbled

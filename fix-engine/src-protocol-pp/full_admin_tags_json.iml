@@ -82,8 +82,8 @@ let full_admin_field_tag_to_string = function
   | Full_Field_HopCompID_Tag -> "HopCompID"
   | Full_Field_HopSendingTime_Tag -> "HopSendingTime"
   | Full_Field_HopRefID_Tag -> "HopRefID"
-  | Full_Field_RefApplVerID_Tag ->  "RefApplVerID"
-  | Full_Field_RefCstmApplVerID_Tag ->  "RefCstmApplVerID"
+  | Full_Field_RefApplVerID_Tag -> "RefApplVerID"
+  | Full_Field_RefCstmApplVerID_Tag -> "RefCstmApplVerID"
 
 let full_admin_msg_tag_to_json x : Yojson.Basic.t =
   `String (full_admin_msg_tag_to_string x)
