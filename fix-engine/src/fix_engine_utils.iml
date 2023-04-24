@@ -332,7 +332,8 @@ let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * f
             srej_encoded_text      = None;
         } in
     match msg_header.h_poss_dup_flag with Some false | None -> None | Some true ->
-    (* Message header has a PossibleDuplicate flag => must have orig_sending_time *)
+    (* Message header has a PossibleDuplicate flag => must have orig_sending_time if not a Sequence Reset *)
+    if msg_tag = Full_Admin_Msg_Tag Full_Msg_SequenceReset_Tag then None else
     match msg_header.h_orig_sending_time with
     | None ->
         let reject =  { reject with
