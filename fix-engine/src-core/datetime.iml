@@ -62,9 +62,52 @@ let to_time_us (t : T.t) =
   let _date, time_us = to_date_time_us t in
   time_us
 
+let of_date_time_ns (date, (hh, mm, ss, ns)) =
+  let time = hh, mm, ss in
+  let tz = zero in
+  T.of_date_time (date, (time, tz))
+  |> Option.flat_map (fun t -> T.add_span t (TE.Span.of_int_ns ns))
+
+let of_time_ns time_ms =
+  let date = epoch_year, one, one in
+  of_date_time_ns (date, time_ms)
+
+let to_date_time_ns (t : T.t) =
+  let (y, m, d), ((hh, mm, ss), _tz) = T.to_date_time t in
+  let _d, ps = t |> T.to_span |> T.Span.to_d_ps in
+  let ps = ps mod ps_count_in_s in
+  let ns = ps / ps_count_in_ns in
+  (y, m, d), (hh, mm, ss, ns)
+
+let to_time_ns (t : T.t) =
+  let _date, time_ns = to_date_time_ns t in
+  time_ns
+
+let of_date_time_ps (date, (hh, mm, ss, ps)) =
+  let time = hh, mm, ss in
+  let tz = zero in
+  T.of_date_time (date, (time, tz))
+  |> Option.flat_map (fun t -> T.add_span t (TE.Span.of_int_ps ps))
+
+let of_time_ps time_ps =
+  let date = epoch_year, one, one in
+  of_date_time_ps (date, time_ps)
+
+let to_date_time_ps (t : T.t) =
+  let (y, m, d), ((hh, mm, ss), _tz) = T.to_date_time t in
+  let _d, ps = t |> T.to_span |> T.Span.to_d_ps in
+  let ps = ps mod ps_count_in_s in
+  (y, m, d), (hh, mm, ss, ps)
+
+let to_time_ps (t : T.t) =
+  let _date, time_ps = to_date_time_ps t in
+  time_ps
+
 let to_millis (t : T.t) = T.truncate ~frac_s:three t
 
 let to_micros (t : T.t) = T.truncate ~frac_s:six t
+
+let to_nanos (t : T.t) = T.truncate ~frac_s:nine t
 
 let to_days (d : T.Span.t) = T.Span.to_int_s d / s_count_in_day
 
@@ -73,11 +116,18 @@ type fix_utctimestamp_milli = T.t
 
 type fix_utctimestamp_micro = T.t
 
+type fix_utctimestamp_nano = T.t
+
+type fix_utctimestamp_pico = T.t
+
 (** Default timestamp is 0 unix epoch timestamp *)
 let default_utctimestamp_milli : fix_utctimestamp_milli = T.epoch
 
-(** Default timestamp is 0 unix epoch timestamp *)
 let default_utctimestamp_micro : fix_utctimestamp_micro = T.epoch
+
+let default_utctimestamp_nano : fix_utctimestamp_milli = T.epoch
+
+let default_utctimestamp_pico : fix_utctimestamp_micro = T.epoch
 
 (** Constructor for the UTC timestamp milli  *)
 let make_utctimestamp_milli (year : int) (month : int) (day : int) (hour : int)
@@ -105,14 +155,80 @@ let make_utctimestamp_micro_unsafe (year : int) (month : int) (day : int)
   make_utctimestamp_micro year month day hour minute second microsec
   |> Option.get_or ~default:default_utctimestamp_micro
 
-(** Conversion for the UTC timestamp and timeonly fields *)
+(** Constructor for the UTC timestamp nano  *)
+let make_utctimestamp_nano (year : int) (month : int) (day : int) (hour : int)
+    (minute : int) (second : int) (nanosec : int option) :
+    fix_utctimestamp_nano option =
+  let ns = nanosec |> Option.get_or ~default:zero in
+  of_date_time_ns ((year, month, day), (hour, minute, second, ns))
+
+let make_utctimestamp_nano_unsafe (year : int) (month : int) (day : int)
+    (hour : int) (minute : int) (second : int) (nanosec : int option) :
+    fix_utctimestamp_nano =
+  make_utctimestamp_nano year month day hour minute second nanosec
+  |> Option.get_or ~default:default_utctimestamp_nano
+
+(** Constructor for the UTC timestamp pico  *)
+let make_utctimestamp_pico (year : int) (month : int) (day : int) (hour : int)
+    (minute : int) (second : int) (picsec : int option) :
+    fix_utctimestamp_pico option =
+  let ps = picsec |> Option.get_or ~default:zero in
+  of_date_time_ps ((year, month, day), (hour, minute, second, ps))
+
+let make_utctimestamp_pico_unsafe (year : int) (month : int) (day : int)
+    (hour : int) (minute : int) (second : int) (picosec : int option) :
+    fix_utctimestamp_pico =
+  make_utctimestamp_pico year month day hour minute second picosec
+  |> Option.get_or ~default:default_utctimestamp_pico
+
+(** Conversion for the UTC timestamp fields *)
 let convert_utctimestamp_milli_micro (f1 : fix_utctimestamp_milli) :
     fix_utctimestamp_micro =
+  f1
+
+let convert_utctimestamp_milli_nano (f1 : fix_utctimestamp_milli) :
+    fix_utctimestamp_nano =
+  f1
+
+let convert_utctimestamp_milli_pico (f1 : fix_utctimestamp_milli) :
+    fix_utctimestamp_pico =
   f1
 
 let convert_utctimestamp_micro_milli (f1 : fix_utctimestamp_micro) :
     fix_utctimestamp_milli =
   to_millis f1
+
+let convert_utctimestamp_micro_nano (f1 : fix_utctimestamp_micro) :
+    fix_utctimestamp_nano =
+  f1
+
+let convert_utctimestamp_micro_pico (f1 : fix_utctimestamp_micro) :
+    fix_utctimestamp_pico =
+  f1
+
+let convert_utctimestamp_nano_milli (f1 : fix_utctimestamp_nano) :
+    fix_utctimestamp_milli =
+  to_millis f1
+
+let convert_utctimestamp_nano_micro (f1 : fix_utctimestamp_nano) :
+    fix_utctimestamp_micro =
+  to_micros f1
+
+let convert_utctimestamp_nano_pico (f1 : fix_utctimestamp_nano) :
+    fix_utctimestamp_pico =
+  f1
+
+let convert_utctimestamp_pico_milli (f1 : fix_utctimestamp_pico) :
+    fix_utctimestamp_milli =
+  to_millis f1
+
+let convert_utctimestamp_pico_micro (f1 : fix_utctimestamp_pico) :
+    fix_utctimestamp_micro =
+  to_micros f1
+
+let convert_utctimestamp_pico_nano (f1 : fix_utctimestamp_pico) :
+    fix_utctimestamp_nano =
+  to_nanos f1
 
 (** Checking validity of the values in the UTC timestamp milli *)
 let is_valid_utctimestamp_milli (ts : fix_utctimestamp_milli) =
@@ -124,6 +240,16 @@ let is_valid_utctimestamp_micro (ts : fix_utctimestamp_micro) =
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
   TE.is_valid ts && ps mod ps_count_in_us = zero
 
+(** Checking validity of the values in the UTC timestamp nano *)
+let is_valid_utctimestamp_nano (ts : fix_utctimestamp_nano) =
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  TE.is_valid ts && ps mod ps_count_in_ns = zero
+
+(** Checking validity of the values in the UTC timestamp pico *)
+let is_valid_utctimestamp_pico (ts : fix_utctimestamp_pico) =
+  let _d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  TE.is_valid ts
+
 (** Two UTC timestamps are equal if they have equal field values *)
 let utctimestamp_Equal_milli_milli (t1 : fix_utctimestamp_milli)
     (t2 : fix_utctimestamp_milli) =
@@ -133,81 +259,349 @@ let utctimestamp_Equal_micro_micro (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_micro) =
   T.equal t1 t2
 
+let utctimestamp_Equal_nano_nano (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_nano) =
+  T.equal t1 t2
+
+let utctimestamp_Equal_pico_pico (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_pico) =
+  T.equal t1 t2
+
 let utctimestamp_Equal_milli_micro (t1 : fix_utctimestamp_milli)
     (t2 : fix_utctimestamp_micro) =
+  T.equal t1 (to_millis t2)
+
+let utctimestamp_Equal_milli_nano (t1 : fix_utctimestamp_milli)
+    (t2 : fix_utctimestamp_nano) =
+  T.equal t1 (to_millis t2)
+
+let utctimestamp_Equal_milli_pico (t1 : fix_utctimestamp_milli)
+    (t2 : fix_utctimestamp_pico) =
   T.equal t1 (to_millis t2)
 
 let utctimestamp_Equal_micro_milli (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_milli) =
   T.equal (to_millis t2) t1
 
-(** UTC Timestamp milli base comparison operator *)
+let utctimestamp_Equal_micro_nano (t1 : fix_utctimestamp_micro)
+    (t2 : fix_utctimestamp_nano) =
+  T.equal (to_micros t2) t1
+
+let utctimestamp_Equal_micro_pico (t1 : fix_utctimestamp_micro)
+    (t2 : fix_utctimestamp_pico) =
+  T.equal (to_micros t2) t1
+
+let utctimestamp_Equal_nano_milli (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_milli) =
+  T.equal t2 (to_millis t1)
+
+let utctimestamp_Equal_nano_micro (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_micro) =
+  T.equal t2 (to_micros t1)
+
+let utctimestamp_Equal_nano_pico (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_pico) =
+  T.equal (to_nanos t2) t1
+
+let utctimestamp_Equal_pico_milli (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_milli) =
+  T.equal t2 (to_millis t1)
+
+let utctimestamp_Equal_pico_micro (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_micro) =
+  T.equal t2 (to_micros t1)
+
+let utctimestamp_Equal_pico_nano (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_nano) =
+  T.equal t2 (to_nanos t1)
+
+(** UTC Timestamp milli base GT comparison operator *)
 let utctimestamp_GreaterThan_milli_milli (t1 : fix_utctimestamp_milli)
     (t2 : fix_utctimestamp_milli) =
   T.compare t1 t2 > zero
 
-(** UTC Timestamp milli base comparison operator *)
+(** UTC Timestamp micro base GT comparison operator *)
 let utctimestamp_GreaterThan_micro_micro (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_micro) =
   T.compare t1 t2 > zero
 
-(** UTC Timestamp base comparison operator - milli to micro *)
+(** UTC Timestamp nano base GT comparison operator *)
+let utctimestamp_GreaterThan_nano_nano (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 t2 > zero
+
+(** UTC Timestamp pico base GT comparison operator *)
+let utctimestamp_GreaterThan_pico_pico (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 t2 > zero
+
+(** UTC Timestamp base GT comparison operator - milli to micro, nano, pico *)
 let utctimestamp_GreaterThan_milli_micro (t1 : fix_utctimestamp_milli)
     (t2 : fix_utctimestamp_micro) =
   T.compare t1 (to_millis t2) > zero
 
-(** UTC Timestamp base comparison operator - micro to milli *)
+let utctimestamp_GreaterThan_milli_nano (t1 : fix_utctimestamp_milli)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 (to_millis t2) > zero
+
+let utctimestamp_GreaterThan_milli_pico (t1 : fix_utctimestamp_milli)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_millis t2) > zero
+
+(** UTC Timestamp base GT comparison operator - micro to milli, nano, pico *)
 let utctimestamp_GreaterThan_micro_milli (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_milli) =
   T.compare (to_millis t1) t2 > zero
 
+let utctimestamp_GreaterThan_micro_nano (t1 : fix_utctimestamp_micro)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 (to_micros t2) > zero
+
+let utctimestamp_GreaterThan_micro_pico (t1 : fix_utctimestamp_micro)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_micros t2) > zero
+
+(** UTC Timestamp base GT comparison operator - nano to milli, micro, pico *)
+let utctimestamp_GreaterThan_nano_milli (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_milli) =
+  T.compare (to_millis t1) t2 > zero
+
+let utctimestamp_GreaterThan_nano_micro (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_micro) =
+  T.compare (to_micros t1) t2 > zero
+
+let utctimestamp_GreaterThan_nano_pico (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_nanos t2) > zero
+
+(** UTC Timestamp base GT comparison operator - pico to milli, micro, nano *)
+let utctimestamp_GreaterThan_pico_milli (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_milli) =
+  T.compare (to_millis t1) t2 > zero
+
+let utctimestamp_GreaterThan_pico_micro (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_micro) =
+  T.compare (to_micros t1) t2 > zero
+
+let utctimestamp_GreaterThan_pico_nano (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare (to_nanos t1) t2 > zero
+
+(** UTC Timestamp GTE milli base comparison operator *)
 let utctimestamp_GreaterThanEqual_milli_milli (t1 : fix_utctimestamp_milli)
     (t2 : fix_utctimestamp_milli) =
   T.compare t1 t2 >= zero
 
+(** UTC Timestamp GTE micro base comparison operator *)
 let utctimestamp_GreaterThanEqual_micro_micro (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_micro) =
   T.compare t1 t2 >= zero
 
+(** UTC Timestamp GTE nano base comparison operator *)
+let utctimestamp_GreaterThanEqual_nano_nano (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 t2 >= zero
+
+(** UTC Timestamp GTE pico base comparison operator *)
+let utctimestamp_GreaterThanEqual_pico_pico (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 t2 >= zero
+
+(** UTC Timestamp GTE base comparison operator - milli to micro, nano, pico *)
 let utctimestamp_GreaterThanEqual_milli_micro (t1 : fix_utctimestamp_milli)
     (t2 : fix_utctimestamp_micro) =
   T.compare t1 (to_millis t2) >= zero
 
+let utctimestamp_GreaterThanEqual_milli_nano (t1 : fix_utctimestamp_milli)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 (to_millis t2) >= zero
+
+let utctimestamp_GreaterThanEqual_milli_pico (t1 : fix_utctimestamp_milli)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_millis t2) >= zero
+
+(** UTC Timestamp GTE base comparison operator - micro to milli, nano, pico *)
 let utctimestamp_GreaterThanEqual_micro_milli (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_milli) =
   T.compare (to_millis t1) t2 >= zero
 
+let utctimestamp_GreaterThanEqual_micro_nano (t1 : fix_utctimestamp_micro)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 (to_micros t2) >= zero
+
+let utctimestamp_GreaterThanEqual_micro_pico (t1 : fix_utctimestamp_micro)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_micros t2) >= zero
+
+(** UTC Timestamp GTE base comparison operator - nano to milli, micro, pico *)
+let utctimestamp_GreaterThanEqual_nano_milli (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_milli) =
+  T.compare (to_millis t1) t2 >= zero
+
+let utctimestamp_GreaterThanEqual_nano_micro (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_micro) =
+  T.compare (to_micros t1) t2 >= zero
+
+let utctimestamp_GreaterThanEqual_nano_pico (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_nanos t2) >= zero
+
+(** UTC Timestamp GTE base comparison operator - pico to milli, micro, nano *)
+let utctimestamp_GreaterThanEqual_pico_milli (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_milli) =
+  T.compare (to_millis t1) t2 >= zero
+
+let utctimestamp_GreaterThanEqual_pico_micro (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_micro) =
+  T.compare (to_micros t1) t2 >= zero
+
+let utctimestamp_GreaterThanEqual_pico_nano (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare (to_nanos t1) t2 >= zero
+
+(** UTC Timestamp LT milli base comparison operator *)
 let utctimestamp_LessThan_milli_milli (t1 : fix_utctimestamp_milli)
     (t2 : fix_utctimestamp_milli) =
   T.compare t1 t2 < zero
 
+(** UTC Timestamp LT micro base comparison operator *)
 let utctimestamp_LessThan_micro_micro (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_micro) =
   T.compare t1 t2 < zero
 
+(** UTC Timestamp LT nano base comparison operator *)
+let utctimestamp_LessThan_nano_nano (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 t2 < zero
+
+(** UTC Timestamp LT pico base comparison operator *)
+let utctimestamp_LessThan_pico_pico (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 t2 < zero
+
+(** UTC Timestamp LT base comparison operator - milli to micro, nano, pico *)
 let utctimestamp_LessThan_milli_micro (t1 : fix_utctimestamp_milli)
     (t2 : fix_utctimestamp_micro) =
   T.compare t1 (to_millis t2) < zero
 
+let utctimestamp_LessThan_milli_nano (t1 : fix_utctimestamp_milli)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 (to_millis t2) < zero
+
+let utctimestamp_LessThan_milli_pico (t1 : fix_utctimestamp_milli)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_millis t2) < zero
+
+(** UTC Timestamp LT base comparison operator - micro to milli, nano, pico *)
 let utctimestamp_LessThan_micro_milli (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_milli) =
   T.compare (to_millis t1) t2 < zero
 
+let utctimestamp_LessThan_micro_nano (t1 : fix_utctimestamp_micro)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 (to_micros t2) < zero
+
+let utctimestamp_LessThan_micro_pico (t1 : fix_utctimestamp_micro)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_micros t2) < zero
+
+(** UTC Timestamp LT base comparison operator - nano to milli, micro, pico *)
+let utctimestamp_LessThan_nano_milli (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_milli) =
+  T.compare (to_millis t1) t2 < zero
+
+let utctimestamp_LessThan_nano_micro (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_micro) =
+  T.compare (to_micros t1) t2 < zero
+
+let utctimestamp_LessThan_nano_pico (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_nanos t2) < zero
+
+(** UTC Timestamp LT base comparison operator - pico to milli, micro, nano *)
+let utctimestamp_LessThan_pico_milli (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_milli) =
+  T.compare (to_millis t1) t2 < zero
+
+let utctimestamp_LessThan_pico_micro (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_micro) =
+  T.compare (to_micros t1) t2 < zero
+
+let utctimestamp_LessThan_pico_nano (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare (to_nanos t1) t2 < zero
+
+(** UTC Timestamp LTE milli base comparison operator *)
 let utctimestamp_LessThanEqual_milli_milli (t1 : fix_utctimestamp_milli)
     (t2 : fix_utctimestamp_milli) =
   T.compare t1 t2 <= zero
 
+(** UTC Timestamp LTE micro base comparison operator *)
 let utctimestamp_LessThanEqual_micro_micro (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_micro) =
   T.compare t1 t2 <= zero
 
+(** UTC Timestamp LTE nano base comparison operator *)
+let utctimestamp_LessThanEqual_nano_nano (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 t2 <= zero
+
+(** UTC Timestamp LTE pico base comparison operator *)
+let utctimestamp_LessThanEqual_pico_pico (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 t2 <= zero
+
+(** UTC Timestamp LTE base comparison operator - milli to micro, nano, pico *)
 let utctimestamp_LessThanEqual_milli_micro (t1 : fix_utctimestamp_milli)
     (t2 : fix_utctimestamp_micro) =
   T.compare t1 (to_millis t2) <= zero
 
+let utctimestamp_LessThanEqual_milli_nano (t1 : fix_utctimestamp_milli)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 (to_millis t2) <= zero
+
+let utctimestamp_LessThanEqual_milli_pico (t1 : fix_utctimestamp_milli)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_millis t2) <= zero
+
+(** UTC Timestamp LTE base comparison operator - micro to milli, nano, pico *)
 let utctimestamp_LessThanEqual_micro_milli (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_milli) =
   T.compare (to_millis t1) t2 <= zero
+
+let utctimestamp_LessThanEqual_micro_nano (t1 : fix_utctimestamp_micro)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare t1 (to_micros t2) <= zero
+
+let utctimestamp_LessThanEqual_micro_pico (t1 : fix_utctimestamp_micro)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_micros t2) <= zero
+
+(** UTC Timestamp LT ebase comparison operator - nano to milli, micro, pico *)
+let utctimestamp_LessThanEqual_nano_milli (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_milli) =
+  T.compare (to_millis t1) t2 <= zero
+
+let utctimestamp_LessThanEqual_nano_micro (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_micro) =
+  T.compare (to_micros t1) t2 <= zero
+
+let utctimestamp_LessThanEqual_nano_pico (t1 : fix_utctimestamp_nano)
+    (t2 : fix_utctimestamp_pico) =
+  T.compare t1 (to_nanos t2) <= zero
+
+(** UTC Timestamp LTE base comparison operator - pico to milli, micro, nano *)
+let utctimestamp_LessThanEqual_pico_milli (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_milli) =
+  T.compare (to_millis t1) t2 <= zero
+
+let utctimestamp_LessThanEqual_pico_micro (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_micro) =
+  T.compare (to_micros t1) t2 <= zero
+
+let utctimestamp_LessThanEqual_pico_nano (t1 : fix_utctimestamp_pico)
+    (t2 : fix_utctimestamp_nano) =
+  T.compare (to_nanos t1) t2 <= zero
 
 type fix_localmktdate = T.t
 (** LocalMktDate type denotes a particular date*)
@@ -334,9 +728,17 @@ type fix_utctimeonly_milli = T.t
 
 type fix_utctimeonly_micro = T.t
 
+type fix_utctimeonly_nano = T.t
+
+type fix_utctimeonly_pico = T.t
+
 let default_utctimeonly_milli = T.epoch
 
 let default_utctimeonly_micro = T.epoch
+
+let default_utctimeonly_nano = T.epoch
+
+let default_utctimeonly_pico = T.epoch
 
 let make_utctimeonly_milli (hour : int) (minute : int) (second : int)
     (millisec : int option) : fix_utctimeonly_milli option =
@@ -356,22 +758,94 @@ let make_utctimeonly_micro_unsafe hour minute second microsec =
   make_utctimeonly_micro hour minute second microsec
   |> Option.get_or ~default:default_utctimeonly_micro
 
+let make_utctimeonly_nano (hour : int) (minute : int) (second : int)
+    (nanosec : int option) : fix_utctimeonly_nano option =
+  let ns = nanosec |> Option.get_or ~default:zero in
+  of_time_ns (hour, minute, second, ns)
+
+let make_utctimeonly_nano_unsafe hour minute second nanosec =
+  make_utctimeonly_nano hour minute second nanosec
+  |> Option.get_or ~default:default_utctimeonly_nano
+
+let make_utctimeonly_pico (hour : int) (minute : int) (second : int)
+    (picosec : int option) : fix_utctimeonly_pico option =
+  let ns = picosec |> Option.get_or ~default:zero in
+  of_time_ps (hour, minute, second, ns)
+
+let make_utctimeonly_pico_unsafe hour minute second picosec =
+  make_utctimeonly_pico hour minute second picosec
+  |> Option.get_or ~default:default_utctimeonly_pico
+
+(** Conversion for the UTC timeonly fields *)
 let convert_utctimeonly_milli_micro (f1 : fix_utctimeonly_milli) :
     fix_utctimeonly_micro =
+  f1
+
+let convert_utctimeonly_milli_nano (f1 : fix_utctimeonly_milli) :
+    fix_utctimeonly_nano =
+  f1
+
+let convert_utctimeonly_milli_pico (f1 : fix_utctimeonly_milli) :
+    fix_utctimeonly_pico =
   f1
 
 let convert_utctimeonly_micro_milli (f1 : fix_utctimeonly_micro) :
     fix_utctimeonly_milli =
   to_millis f1
 
-let is_valid_utctimeonly_milli (t : fix_utctimeonly_milli) =
-  let d, ps = T.Span.to_d_ps (T.to_span t) in
-  TE.is_valid t && d = zero && ps mod ps_count_in_ms = zero
+let convert_utctimeonly_micro_nano (f1 : fix_utctimeonly_micro) :
+    fix_utctimeonly_nano =
+  f1
 
-let is_valid_utctimeonly_micro (t : fix_utctimeonly_micro) =
-  let d, ps = T.Span.to_d_ps (T.to_span t) in
-  TE.is_valid t && d = zero && ps mod ps_count_in_us = zero
+let convert_utctimeonly_micro_pico (f1 : fix_utctimeonly_micro) :
+    fix_utctimeonly_pico =
+  f1
 
+let convert_utctimeonly_nano_milli (f1 : fix_utctimeonly_nano) :
+    fix_utctimeonly_milli =
+  to_millis f1
+
+let convert_utctimeonly_nano_micro (f1 : fix_utctimeonly_nano) :
+    fix_utctimeonly_micro =
+  to_micros f1
+
+let convert_utctimeonly_nano_pico (f1 : fix_utctimeonly_nano) :
+    fix_utctimeonly_pico =
+  f1
+
+let convert_utctimeonly_pico_milli (f1 : fix_utctimeonly_pico) :
+    fix_utctimeonly_milli =
+  to_millis f1
+
+let convert_utctimeonly_pico_micro (f1 : fix_utctimeonly_pico) :
+    fix_utctimeonly_micro =
+  to_micros f1
+
+let convert_utctimeonly_pico_nano (f1 : fix_utctimeonly_pico) :
+    fix_utctimeonly_nano =
+  to_nanos f1
+
+(** Checking validity of the values in the UTC timeonly milli *)
+let is_valid_utctimeonly_milli (ts : fix_utctimeonly_milli) =
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  TE.is_valid ts && ps mod ps_count_in_ms = zero
+
+(** Checking validity of the values in the UTC timeonly micro *)
+let is_valid_utctimeonly_micro (ts : fix_utctimeonly_micro) =
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  TE.is_valid ts && ps mod ps_count_in_us = zero
+
+(** Checking validity of the values in the UTC timeonly nano *)
+let is_valid_utctimeonly_nano (ts : fix_utctimeonly_nano) =
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  TE.is_valid ts && ps mod ps_count_in_ns = zero
+
+(** Checking validity of the values in the UTC timeonly pico *)
+let is_valid_utctimeonly_pico (ts : fix_utctimeonly_pico) =
+  let _d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  TE.is_valid ts
+
+(** Two UTC timeonlys are equal if they have equal field values *)
 let utctimeonly_Equal_milli_milli (t1 : fix_utctimeonly_milli)
     (t2 : fix_utctimeonly_milli) =
   T.equal t1 t2
@@ -380,77 +854,349 @@ let utctimeonly_Equal_micro_micro (t1 : fix_utctimeonly_micro)
     (t2 : fix_utctimeonly_micro) =
   T.equal t1 t2
 
+let utctimeonly_Equal_nano_nano (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_nano) =
+  T.equal t1 t2
+
+let utctimeonly_Equal_pico_pico (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_pico) =
+  T.equal t1 t2
+
 let utctimeonly_Equal_milli_micro (t1 : fix_utctimeonly_milli)
     (t2 : fix_utctimeonly_micro) =
   T.equal t1 (to_millis t2)
 
+let utctimeonly_Equal_milli_nano (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_nano) =
+  T.equal t1 (to_millis t2)
+
+let utctimeonly_Equal_milli_pico (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_pico) =
+  T.equal t1 (to_millis t2)
+
 let utctimeonly_Equal_micro_milli (t1 : fix_utctimeonly_micro)
     (t2 : fix_utctimeonly_milli) =
-  T.equal (to_millis t1) t2
+  T.equal (to_millis t2) t1
 
+let utctimeonly_Equal_micro_nano (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_nano) =
+  T.equal (to_micros t2) t1
+
+let utctimeonly_Equal_micro_pico (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_pico) =
+  T.equal (to_micros t2) t1
+
+let utctimeonly_Equal_nano_milli (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_milli) =
+  T.equal t2 (to_millis t1)
+
+let utctimeonly_Equal_nano_micro (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_micro) =
+  T.equal t2 (to_micros t1)
+
+let utctimeonly_Equal_nano_pico (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_pico) =
+  T.equal (to_nanos t2) t1
+
+let utctimeonly_Equal_pico_milli (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_milli) =
+  T.equal t2 (to_millis t1)
+
+let utctimeonly_Equal_pico_micro (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_micro) =
+  T.equal t2 (to_micros t1)
+
+let utctimeonly_Equal_pico_nano (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_nano) =
+  T.equal t2 (to_nanos t1)
+
+(** UTC timeonly milli base GT comparison operator *)
 let utctimeonly_GreaterThan_milli_milli (t1 : fix_utctimeonly_milli)
     (t2 : fix_utctimeonly_milli) =
   T.compare t1 t2 > zero
 
+(** UTC timeonly micro base GT comparison operator *)
 let utctimeonly_GreaterThan_micro_micro (t1 : fix_utctimeonly_micro)
     (t2 : fix_utctimeonly_micro) =
   T.compare t1 t2 > zero
 
+(** UTC timeonly nano base GT comparison operator *)
+let utctimeonly_GreaterThan_nano_nano (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 t2 > zero
+
+(** UTC timeonly pico base GT comparison operator *)
+let utctimeonly_GreaterThan_pico_pico (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 t2 > zero
+
+(** UTC timeonly base GT comparison operator - milli to micro, nano, pico *)
 let utctimeonly_GreaterThan_milli_micro (t1 : fix_utctimeonly_milli)
     (t2 : fix_utctimeonly_micro) =
   T.compare t1 (to_millis t2) > zero
 
+let utctimeonly_GreaterThan_milli_nano (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 (to_millis t2) > zero
+
+let utctimeonly_GreaterThan_milli_pico (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_millis t2) > zero
+
+(** UTC timeonly base GT comparison operator - micro to milli, nano, pico *)
 let utctimeonly_GreaterThan_micro_milli (t1 : fix_utctimeonly_micro)
     (t2 : fix_utctimeonly_milli) =
   T.compare (to_millis t1) t2 > zero
 
-let utctimeonly_LessThan_milli_milli (t1 : fix_utctimeonly_milli)
+let utctimeonly_GreaterThan_micro_nano (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 (to_micros t2) > zero
+
+let utctimeonly_GreaterThan_micro_pico (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_micros t2) > zero
+
+(** UTC timeonly base GT comparison operator - nano to milli, micro, pico *)
+let utctimeonly_GreaterThan_nano_milli (t1 : fix_utctimeonly_nano)
     (t2 : fix_utctimeonly_milli) =
-  T.compare t1 t2 < zero
+  T.compare (to_millis t1) t2 > zero
 
-let utctimeonly_LessThan_micro_micro (t1 : fix_utctimeonly_micro)
+let utctimeonly_GreaterThan_nano_micro (t1 : fix_utctimeonly_nano)
     (t2 : fix_utctimeonly_micro) =
-  T.compare t1 t2 < zero
+  T.compare (to_micros t1) t2 > zero
 
-let utctimeonly_LessThan_milli_micro (t1 : fix_utctimeonly_milli)
-    (t2 : fix_utctimeonly_micro) =
-  T.compare t1 (to_millis t2) < zero
+let utctimeonly_GreaterThan_nano_pico (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_nanos t2) > zero
 
-let utctimeonly_LessThan_micro_milli (t1 : fix_utctimeonly_micro)
+(** UTC timeonly base GT comparison operator - pico to milli, micro, nano *)
+let utctimeonly_GreaterThan_pico_milli (t1 : fix_utctimeonly_pico)
     (t2 : fix_utctimeonly_milli) =
-  T.compare (to_millis t1) t2 < zero
+  T.compare (to_millis t1) t2 > zero
 
-let utctimeonly_LessThanEqual_milli_milli (t1 : fix_utctimeonly_milli)
-    (t2 : fix_utctimeonly_milli) =
-  T.compare t1 t2 <= zero
-
-let utctimeonly_LessThanEqual_micro_micro (t1 : fix_utctimeonly_micro)
+let utctimeonly_GreaterThan_pico_micro (t1 : fix_utctimeonly_pico)
     (t2 : fix_utctimeonly_micro) =
-  T.compare t1 t2 <= zero
+  T.compare (to_micros t1) t2 > zero
 
-let utctimeonly_LessThanEqual_milli_micro (t1 : fix_utctimeonly_milli)
-    (t2 : fix_utctimeonly_micro) =
-  T.compare t1 (to_millis t2) <= zero
+let utctimeonly_GreaterThan_pico_nano (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare (to_nanos t1) t2 > zero
 
-let utctimeonly_LessThanEqual_micro_milli (t1 : fix_utctimeonly_micro)
-    (t2 : fix_utctimeonly_milli) =
-  T.compare (to_millis t1) t2 <= zero
-
+(** UTC timeonly GTE milli base comparison operator *)
 let utctimeonly_GreaterThanEqual_milli_milli (t1 : fix_utctimeonly_milli)
     (t2 : fix_utctimeonly_milli) =
   T.compare t1 t2 >= zero
 
+(** UTC timeonly GTE micro base comparison operator *)
 let utctimeonly_GreaterThanEqual_micro_micro (t1 : fix_utctimeonly_micro)
     (t2 : fix_utctimeonly_micro) =
   T.compare t1 t2 >= zero
 
+(** UTC timeonly GTE nano base comparison operator *)
+let utctimeonly_GreaterThanEqual_nano_nano (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 t2 >= zero
+
+(** UTC timeonly GTE pico base comparison operator *)
+let utctimeonly_GreaterThanEqual_pico_pico (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 t2 >= zero
+
+(** UTC timeonly GTE base comparison operator - milli to micro, nano, pico *)
 let utctimeonly_GreaterThanEqual_milli_micro (t1 : fix_utctimeonly_milli)
     (t2 : fix_utctimeonly_micro) =
   T.compare t1 (to_millis t2) >= zero
 
+let utctimeonly_GreaterThanEqual_milli_nano (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 (to_millis t2) >= zero
+
+let utctimeonly_GreaterThanEqual_milli_pico (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_millis t2) >= zero
+
+(** UTC timeonly GTE base comparison operator - micro to milli, nano, pico *)
 let utctimeonly_GreaterThanEqual_micro_milli (t1 : fix_utctimeonly_micro)
     (t2 : fix_utctimeonly_milli) =
   T.compare (to_millis t1) t2 >= zero
+
+let utctimeonly_GreaterThanEqual_micro_nano (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 (to_micros t2) >= zero
+
+let utctimeonly_GreaterThanEqual_micro_pico (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_micros t2) >= zero
+
+(** UTC timeonly GTE base comparison operator - nano to milli, micro, pico *)
+let utctimeonly_GreaterThanEqual_nano_milli (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_milli) =
+  T.compare (to_millis t1) t2 >= zero
+
+let utctimeonly_GreaterThanEqual_nano_micro (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_micro) =
+  T.compare (to_micros t1) t2 >= zero
+
+let utctimeonly_GreaterThanEqual_nano_pico (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_nanos t2) >= zero
+
+(** UTC timeonly GTE base comparison operator - pico to milli, micro, nano *)
+let utctimeonly_GreaterThanEqual_pico_milli (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_milli) =
+  T.compare (to_millis t1) t2 >= zero
+
+let utctimeonly_GreaterThanEqual_pico_micro (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_micro) =
+  T.compare (to_micros t1) t2 >= zero
+
+let utctimeonly_GreaterThanEqual_pico_nano (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare (to_nanos t1) t2 >= zero
+
+(** UTC timeonly LT milli base comparison operator *)
+let utctimeonly_LessThan_milli_milli (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_milli) =
+  T.compare t1 t2 < zero
+
+(** UTC timeonly LT micro base comparison operator *)
+let utctimeonly_LessThan_micro_micro (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_micro) =
+  T.compare t1 t2 < zero
+
+(** UTC timeonly LT nano base comparison operator *)
+let utctimeonly_LessThan_nano_nano (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 t2 < zero
+
+(** UTC timeonly LT pico base comparison operator *)
+let utctimeonly_LessThan_pico_pico (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 t2 < zero
+
+(** UTC timeonly LT base comparison operator - milli to micro, nano, pico *)
+let utctimeonly_LessThan_milli_micro (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_micro) =
+  T.compare t1 (to_millis t2) < zero
+
+let utctimeonly_LessThan_milli_nano (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 (to_millis t2) < zero
+
+let utctimeonly_LessThan_milli_pico (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_millis t2) < zero
+
+(** UTC timeonly LT base comparison operator - micro to milli, nano, pico *)
+let utctimeonly_LessThan_micro_milli (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_milli) =
+  T.compare (to_millis t1) t2 < zero
+
+let utctimeonly_LessThan_micro_nano (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 (to_micros t2) < zero
+
+let utctimeonly_LessThan_micro_pico (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_micros t2) < zero
+
+(** UTC timeonly LT base comparison operator - nano to milli, micro, pico *)
+let utctimeonly_LessThan_nano_milli (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_milli) =
+  T.compare (to_millis t1) t2 < zero
+
+let utctimeonly_LessThan_nano_micro (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_micro) =
+  T.compare (to_micros t1) t2 < zero
+
+let utctimeonly_LessThan_nano_pico (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_nanos t2) < zero
+
+(** UTC timeonly LT base comparison operator - pico to milli, micro, nano *)
+let utctimeonly_LessThan_pico_milli (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_milli) =
+  T.compare (to_millis t1) t2 < zero
+
+let utctimeonly_LessThan_pico_micro (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_micro) =
+  T.compare (to_micros t1) t2 < zero
+
+let utctimeonly_LessThan_pico_nano (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare (to_nanos t1) t2 < zero
+
+(** UTC timeonly LTE milli base comparison operator *)
+let utctimeonly_LessThanEqual_milli_milli (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_milli) =
+  T.compare t1 t2 <= zero
+
+(** UTC timeonly LTE micro base comparison operator *)
+let utctimeonly_LessThanEqual_micro_micro (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_micro) =
+  T.compare t1 t2 <= zero
+
+(** UTC timeonly LTE nano base comparison operator *)
+let utctimeonly_LessThanEqual_nano_nano (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 t2 <= zero
+
+(** UTC timeonly LTE pico base comparison operator *)
+let utctimeonly_LessThanEqual_pico_pico (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 t2 <= zero
+
+(** UTC timeonly LTE base comparison operator - milli to micro, nano, pico *)
+let utctimeonly_LessThanEqual_milli_micro (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_micro) =
+  T.compare t1 (to_millis t2) <= zero
+
+let utctimeonly_LessThanEqual_milli_nano (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 (to_millis t2) <= zero
+
+let utctimeonly_LessThanEqual_milli_pico (t1 : fix_utctimeonly_milli)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_millis t2) <= zero
+
+(** UTC timeonly LTE base comparison operator - micro to milli, nano, pico *)
+let utctimeonly_LessThanEqual_micro_milli (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_milli) =
+  T.compare (to_millis t1) t2 <= zero
+
+let utctimeonly_LessThanEqual_micro_nano (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare t1 (to_micros t2) <= zero
+
+let utctimeonly_LessThanEqual_micro_pico (t1 : fix_utctimeonly_micro)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_micros t2) <= zero
+
+(** UTC timeonly LT ebase comparison operator - nano to milli, micro, pico *)
+let utctimeonly_LessThanEqual_nano_milli (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_milli) =
+  T.compare (to_millis t1) t2 <= zero
+
+let utctimeonly_LessThanEqual_nano_micro (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_micro) =
+  T.compare (to_micros t1) t2 <= zero
+
+let utctimeonly_LessThanEqual_nano_pico (t1 : fix_utctimeonly_nano)
+    (t2 : fix_utctimeonly_pico) =
+  T.compare t1 (to_nanos t2) <= zero
+
+(** UTC timeonly LTE base comparison operator - pico to milli, micro, nano *)
+let utctimeonly_LessThanEqual_pico_milli (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_milli) =
+  T.compare (to_millis t1) t2 <= zero
+
+let utctimeonly_LessThanEqual_pico_micro (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_micro) =
+  T.compare (to_micros t1) t2 <= zero
+
+let utctimeonly_LessThanEqual_pico_nano (t1 : fix_utctimeonly_pico)
+    (t2 : fix_utctimeonly_nano) =
+  T.compare (to_nanos t1) t2 <= zero
 
 type fix_utcdateonly = T.t
 (** UTC Dateonly *)
@@ -517,6 +1263,22 @@ let duration_utctimestamp_micro_Add (dur : fix_duration)
     (t : fix_utctimestamp_micro) : fix_utctimestamp_micro =
   T.add_span t dur |> Option.get_or ~default:t
 
+let utctimestamp_nano_duration_Add (t : fix_utctimestamp_nano)
+    (dur : fix_duration) : fix_utctimestamp_nano =
+  T.add_span t dur |> Option.get_or ~default:t
+
+let duration_utctimestamp_nano_Add (dur : fix_duration)
+    (t : fix_utctimestamp_nano) : fix_utctimestamp_nano =
+  T.add_span t dur |> Option.get_or ~default:t
+
+let utctimestamp_pico_duration_Add (t : fix_utctimestamp_pico)
+    (dur : fix_duration) : fix_utctimestamp_pico =
+  T.add_span t dur |> Option.get_or ~default:t
+
+let duration_utctimestamp_pico_Add (dur : fix_duration)
+    (t : fix_utctimestamp_pico) : fix_utctimestamp_pico =
+  T.add_span t dur |> Option.get_or ~default:t
+
 let seconds_to_duration seconds : fix_duration = T.Span.of_int_s seconds
 
 let duration_to_seconds dur : int = T.Span.to_int_s dur
@@ -541,8 +1303,28 @@ let convert_utctimestamp_micro_utctimeonly_micro (ts : fix_utctimestamp_micro) :
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
   T.unsafe_of_d_ps (zero, ps)
 
+let convert_utctimestamp_nano_utctimeonly_nano (ts : fix_utctimestamp_nano) :
+    fix_utctimeonly_nano =
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
+
+let convert_utctimestamp_pico_utctimeonly_pico (ts : fix_utctimestamp_pico) :
+    fix_utctimeonly_pico =
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
+
 let convert_utctimestamp_milli_utctimeonly_micro (ts : fix_utctimestamp_milli) :
     fix_utctimeonly_micro =
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
+
+let convert_utctimestamp_milli_utctimeonly_nano (ts : fix_utctimestamp_milli) :
+    fix_utctimeonly_nano =
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
+
+let convert_utctimestamp_milli_utctimeonly_pico (ts : fix_utctimestamp_milli) :
+    fix_utctimeonly_pico =
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
   T.unsafe_of_d_ps (zero, ps)
 
@@ -552,18 +1334,68 @@ let convert_utctimestamp_micro_utctimeonly_milli (ts : fix_utctimestamp_micro) :
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
   T.unsafe_of_d_ps (zero, ps)
 
-let convert_utctimestamp_micro_localmktdate (ts : fix_utctimestamp_micro) :
-    fix_localmktdate =
-  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
-  T.unsafe_of_d_ps (d, zero)
+let convert_utctimestamp_micro_utctimeonly_nano (ts : fix_utctimestamp_micro) :
+    fix_utctimeonly_nano =
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
+
+let convert_utctimestamp_micro_utctimeonly_pico (ts : fix_utctimestamp_micro) :
+    fix_utctimeonly_pico =
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
+
+let convert_utctimestamp_nano_utctimeonly_milli (ts : fix_utctimestamp_micro) :
+    fix_utctimeonly_milli =
+  let ts = to_millis ts in
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
+
+let convert_utctimestamp_nano_utctimeonly_micro (ts : fix_utctimestamp_micro) :
+    fix_utctimeonly_nano =
+  let ts = to_micros ts in
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
+
+let convert_utctimestamp_nano_utctimeonly_pico (ts : fix_utctimestamp_micro) :
+    fix_utctimeonly_pico =
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
+
+let convert_utctimestamp_pico_utctimeonly_milli (ts : fix_utctimestamp_micro) :
+    fix_utctimeonly_milli =
+  let ts = to_millis ts in
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
+
+let convert_utctimestamp_pico_utctimeonly_micro (ts : fix_utctimestamp_micro) :
+    fix_utctimeonly_nano =
+  let ts = to_micros ts in
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
+
+let convert_utctimestamp_pico_utctimeonly_nano (ts : fix_utctimestamp_micro) :
+    fix_utctimeonly_pico =
+  let ts = to_nanos ts in
+  let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (zero, ps)
 
 let convert_utctimestamp_milli_localmktdate (ts : fix_utctimestamp_milli) :
     fix_localmktdate =
   let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
   T.unsafe_of_d_ps (d, zero)
 
-let convert_utctimestamp_micro_utcdateonly (ts : fix_utctimestamp_micro) :
-    fix_utcdateonly =
+let convert_utctimestamp_micro_localmktdate (ts : fix_utctimestamp_micro) :
+    fix_localmktdate =
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, zero)
+
+let convert_utctimestamp_nano_localmktdate (ts : fix_utctimestamp_nano) :
+    fix_localmktdate =
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, zero)
+
+let convert_utctimestamp_pico_localmktdate (ts : fix_utctimestamp_pico) :
+    fix_localmktdate =
   let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
   T.unsafe_of_d_ps (d, zero)
 
@@ -572,17 +1404,51 @@ let convert_utctimestamp_milli_utcdateonly (ts : fix_utctimestamp_milli) :
   let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
   T.unsafe_of_d_ps (d, zero)
 
-let convert_utctimestamp_micro_monthyear (ts : fix_utctimestamp_micro) :
-    fix_monthyear =
+let convert_utctimestamp_micro_utcdateonly (ts : fix_utctimestamp_micro) :
+    fix_utcdateonly =
   let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
-  let t = T.unsafe_of_d_ps (d, zero) in
-  t, None
+  T.unsafe_of_d_ps (d, zero)
+
+let convert_utctimestamp_nano_utcdateonly (ts : fix_utctimestamp_nano) :
+    fix_utcdateonly =
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, zero)
+
+let convert_utctimestamp_pico_utcdateonly (ts : fix_utctimestamp_pico) :
+    fix_utcdateonly =
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, zero)
 
 let convert_utctimestamp_milli_monthyear (ts : fix_utctimestamp_milli) :
     fix_monthyear =
   let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
   let t = T.unsafe_of_d_ps (d, zero) in
   t, None
+
+let convert_utctimestamp_micro_monthyear (ts : fix_utctimestamp_micro) :
+    fix_monthyear =
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  let t = T.unsafe_of_d_ps (d, zero) in
+  t, None
+
+let convert_utctimestamp_nano_monthyear (ts : fix_utctimestamp_nano) :
+    fix_monthyear =
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  let t = T.unsafe_of_d_ps (d, zero) in
+  t, None
+
+let convert_utctimestamp_pico_monthyear (ts : fix_utctimestamp_pico) :
+    fix_monthyear =
+  let d, _ps = ts |> T.to_span |> T.Span.to_d_ps in
+  let t = T.unsafe_of_d_ps (d, zero) in
+  t, None
+
+let make_utctimestamp_milli_utctimeonly_milli_utcdateonly
+    (to_ : fix_utctimeonly_milli) (do_ : fix_utcdateonly) :
+    fix_utctimestamp_milli =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
 
 let make_utctimestamp_micro_utctimeonly_micro_utcdateonly
     (to_ : fix_utctimeonly_micro) (do_ : fix_utcdateonly) :
@@ -591,10 +1457,41 @@ let make_utctimestamp_micro_utctimeonly_micro_utcdateonly
   let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
   T.unsafe_of_d_ps (d, ps)
 
-let make_utctimestamp_milli_utctimeonly_milli_utcdateonly
-    (to_ : fix_utctimeonly_milli) (do_ : fix_utcdateonly) :
+let make_utctimestamp_nano_utctimeonly_nano_utcdateonly
+    (to_ : fix_utctimeonly_nano) (do_ : fix_utcdateonly) : fix_utctimestamp_nano
+    =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
+
+let make_utctimestamp_pico_utctimeonly_pico_utcdateonly
+    (to_ : fix_utctimeonly_pico) (do_ : fix_utcdateonly) : fix_utctimestamp_pico
+    =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
+
+let make_utctimestamp_milli_utctimeonly_micro_utcdateonly
+    (to_ : fix_utctimeonly_micro) (do_ : fix_utcdateonly) :
     fix_utctimestamp_milli =
   let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let to_ = to_millis to_ in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
+
+let make_utctimestamp_milli_utctimeonly_nano_utcdateonly
+    (to_ : fix_utctimeonly_nano) (do_ : fix_utcdateonly) :
+    fix_utctimestamp_milli =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let to_ = to_millis to_ in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
+
+let make_utctimestamp_milli_utctimeonly_pico_utcdateonly
+    (to_ : fix_utctimeonly_pico) (do_ : fix_utcdateonly) :
+    fix_utctimestamp_milli =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let to_ = to_millis to_ in
   let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
   T.unsafe_of_d_ps (d, ps)
 
@@ -605,10 +1502,62 @@ let make_utctimestamp_micro_utctimeonly_milli_utcdateonly
   let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
   T.unsafe_of_d_ps (d, ps)
 
-let make_utctimestamp_milli_utctimeonly_micro_utcdateonly
-    (to_ : fix_utctimeonly_micro) (do_ : fix_utcdateonly) :
-    fix_utctimestamp_milli =
+let make_utctimestamp_micro_utctimeonly_nano_utcdateonly
+    (to_ : fix_utctimeonly_nano) (do_ : fix_utcdateonly) :
+    fix_utctimestamp_micro =
   let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
-  let to_ = to_millis to_ in
+  let to_ = to_micros to_ in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
+
+let make_utctimestamp_micro_utctimeonly_pico_utcdateonly
+    (to_ : fix_utctimeonly_pico) (do_ : fix_utcdateonly) :
+    fix_utctimestamp_micro =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let to_ = to_micros to_ in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
+
+let make_utctimestamp_nano_utctimeonly_milli_utcdateonly
+    (to_ : fix_utctimeonly_milli) (do_ : fix_utcdateonly) :
+    fix_utctimestamp_nano =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
+
+let make_utctimestamp_nano_utctimeonly_micro_utcdateonly
+    (to_ : fix_utctimeonly_micro) (do_ : fix_utcdateonly) :
+    fix_utctimestamp_nano =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
+
+let make_utctimestamp_nano_utctimeonly_pico_utcdateonly
+    (to_ : fix_utctimeonly_pico) (do_ : fix_utcdateonly) : fix_utctimestamp_nano
+    =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let to_ = to_nanos to_ in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
+
+let make_utctimestamp_pico_utctimeonly_milli_utcdateonly
+    (to_ : fix_utctimeonly_milli) (do_ : fix_utcdateonly) :
+    fix_utctimestamp_pico =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
+
+let make_utctimestamp_pico_utctimeonly_micro_utcdateonly
+    (to_ : fix_utctimeonly_micro) (do_ : fix_utcdateonly) :
+    fix_utctimestamp_pico =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
+  T.unsafe_of_d_ps (d, ps)
+
+let make_utctimestamp_pico_utctimeonly_nano_utcdateonly
+    (to_ : fix_utctimeonly_nano) (do_ : fix_utcdateonly) : fix_utctimestamp_pico
+    =
+  let d, _ps = do_ |> T.to_span |> T.Span.to_d_ps in
+  let to_ = to_nanos to_ in
   let _d, ps = to_ |> T.to_span |> T.Span.to_d_ps in
   T.unsafe_of_d_ps (d, ps)

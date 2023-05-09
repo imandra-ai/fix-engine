@@ -18,7 +18,6 @@ let parse_date str =
         ( fun y m d -> Some (Z.of_int y, Z.of_int m, Z.of_int d) )
     with | _ -> None
 
-
 let parse_time_ms str =
   let length = String.length str in
   if (length <> 8) && (length <> 12) then None else
@@ -33,7 +32,6 @@ let parse_time_ms str =
     with
     | _ -> None
 
-
 let parse_time_us str =
   let length = String.length str in
   if (length <> 8) && (length <> 15) then None else
@@ -43,6 +41,34 @@ let parse_time_us str =
           let us =
             if us = "" then None
             else Scanf.sscanf us ".%06d" (fun x -> Some (Z.of_int x))
+          in
+          Some (Z.of_int h, Z.of_int m, Z.of_int s, us))
+    with
+    | _ -> None
+
+let parse_time_ns str =
+  let length = String.length str in
+  if (length <> 8) && (length <> 18) then None else
+    try
+      Scanf.sscanf str "%02u:%02u:%02u%s"
+        (fun h m s us ->
+          let us =
+            if us = "" then None
+            else Scanf.sscanf us ".%09d" (fun x -> Some (Z.of_int x))
+          in
+          Some (Z.of_int h, Z.of_int m, Z.of_int s, us))
+    with
+    | _ -> None
+
+let parse_time_ps str =
+  let length = String.length str in
+  if (length <> 8) && (length <> 21) then None else
+    try
+      Scanf.sscanf str "%02u:%02u:%02u%s"
+        (fun h m s us ->
+          let us =
+            if us = "" then None
+            else Scanf.sscanf us ".%12d" (fun x -> Some (Z.of_int x))
           in
           Some (Z.of_int h, Z.of_int m, Z.of_int s, us))
     with
@@ -63,6 +89,16 @@ let parse_UTCTimeOnly_micro str : fix_utctimeonly_micro option =
   parse_time_us str
   |> Option.flat_map (fun (hh, mm, ss, us) ->
          make_utctimeonly_micro hh mm ss us)
+
+let parse_UTCTimeOnly_nano str : fix_utctimeonly_nano option =
+  parse_time_ns str
+  |> Option.flat_map (fun (hh, mm, ss, ns) ->
+        make_utctimeonly_nano hh mm ss ns)
+
+let parse_UTCTimeOnly_pico str : fix_utctimeonly_pico option =
+  parse_time_ps str
+  |> Option.flat_map (fun (hh, mm, ss, ps) ->
+        make_utctimeonly_pico hh mm ss ps)
 
 let parse_UTCTimestamp_milli str : fix_utctimestamp_milli option =
   let length = String.length str in
@@ -93,6 +129,41 @@ let parse_UTCTimestamp_micro str =
       | _ -> None
     with
     | _ -> None
+
+
+    let parse_UTCTimestamp_nano str =
+      let length = String.length str in
+      if (length <> 17) && (length <> 27) then None else
+        try
+          let date, time =
+            Scanf.sscanf str "%s@-%s"
+              (fun d t -> (parse_date d, parse_time_ns t))
+          in
+          match date, time with
+          | (Some (y, m, d), Some (hh, mm, ss, ns)) ->
+             make_utctimestamp_nano y m d hh mm ss ns
+          | _ -> None
+        with
+        | _ -> None
+
+
+
+        let parse_UTCTimestamp_pico str =
+          let length = String.length str in
+          if (length <> 17) && (length <> 30) then None else
+            try
+              let date, time =
+                Scanf.sscanf str "%s@-%s"
+                  (fun d t -> (parse_date d, parse_time_ps t))
+              in
+              match date, time with
+              | (Some (y, m, d), Some (hh, mm, ss, ps)) ->
+                 make_utctimestamp_pico y m d hh mm ss ps
+              | _ -> None
+            with
+            | _ -> None
+
+
 
 let parse_MonthYear str =
   let length = String.length str in
