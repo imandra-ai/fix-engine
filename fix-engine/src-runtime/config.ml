@@ -38,6 +38,16 @@ module Decode (D : Decoders.Decode.S) = struct
         D.succeed @@ Client { port; host }
       | s -> D.fail @@ Printf.sprintf "Unknown mode string '%s'" s)
 
+  let precision =
+    let open Engine in
+    let* precision = D.string in
+    match precision with
+    | "Milli" -> D.succeed Milli
+    | "Micro" -> D.succeed Micro
+    | "Nano" -> D.succeed Nano
+    | "Pico" -> D.succeed Pico
+    | s -> D.fail @@ Printf.sprintf "Unknown preicison string '%s'" s
+
   let t : t D.decoder =
     let* zmqpub = field_def "zmqpub" "tcp://*:5000" D.string in
     let* zmqrep = field_def "zmqrep" "tcp://*:5001" D.string in
@@ -54,7 +64,10 @@ module Decode (D : Decoders.Decode.S) = struct
     let* on_behalf_id = D.field_opt "on_behalf_id" D.string in
     let* begin_string = field_def "begin_string" "FIX.4.2" D.string in
     let* timer = field_def "timer" 1.0 D.float in
-    let* millisecond_precision = field_def "timer" false D.bool in
+    let* strict_time_precision =
+      field_def "strict_time_precision" false D.bool
+    in
+    let* precision = field_def "precision" Engine.Pico precision in
     let* reset = field_def "reset" false D.bool in
     let* no_history = field_def "no_history" false D.bool in
     let* heartbeat_interval = field_def "heartbeat_interval" 30 D.int in
@@ -66,7 +79,8 @@ module Decode (D : Decoders.Decode.S) = struct
           host_id;
           on_behalf_id;
           timer;
-          millisecond_precision;
+          strict_time_precision;
+          precision;
           next_expected_msg_seq_num = false;
           begin_string;
           ignore_business_reject = false;

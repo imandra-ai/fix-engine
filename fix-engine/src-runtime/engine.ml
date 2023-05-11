@@ -87,6 +87,12 @@ module Internal : sig
     | FIXFromEngine of message
     | State of Fix_engine_state.fix_engine_state
 
+  type precision =
+    | Milli
+    | Micro
+    | Nano
+    | Pico
+
   type config = {
     comp_id: string;
     target_id: string;
@@ -96,7 +102,8 @@ module Internal : sig
     timer: float;
     ignore_session_reject: bool;
     ignore_business_reject: bool;
-    millisecond_precision: bool;
+    strict_time_precision: bool;
+    precision: precision;
     begin_string: string;
     no_history: bool;
     heartbeat_interval: int;
@@ -141,6 +148,13 @@ end = struct
     | FIXFromEngine of message
     | State of Fix_engine_state.fix_engine_state
 
+  type precision =
+    | Milli
+    | Micro
+    | Nano
+    | Pico
+  [@@deriving show]
+
   type config = {
     comp_id: string;
     target_id: string;
@@ -150,7 +164,8 @@ end = struct
     timer: float;
     ignore_session_reject: bool;
     ignore_business_reject: bool;
-    millisecond_precision: bool;
+    strict_time_precision: bool;
+    precision: precision;
     begin_string: string;
     no_history: bool;
     heartbeat_interval: int;
@@ -246,21 +261,67 @@ end = struct
     let* () = do_timechange t in
     heartbeat_thread t
 
-  let get_timestamp_codec ms =
-    let parse_milli x =
-      match Parse_datetime.parse_UTCTimestamp_milli x with
-      | None -> None
-      | Some x -> Some (Datetime.convert_utctimestamp_milli_micro x)
-    in
-    let encode_milli x =
-      x |> Datetime.convert_utctimestamp_micro_milli
-      |> Encode_datetime.encode_UTCTimestamp_milli
-    in
-    if ms then
+  let get_timestamp_codec strict = function
+    | Milli ->
+      let parse_milli x =
+        match
+          if strict then
+            Parse_datetime.parse_UTCTimestamp_milli_strict x
+          else
+            Parse_datetime.parse_UTCTimestamp_milli x
+        with
+        | None -> None
+        | Some x -> Some (Datetime.convert_utctimestamp_milli_pico x)
+      in
+      let encode_milli x =
+        x |> Datetime.convert_utctimestamp_pico_milli
+        |> Encode_datetime.encode_UTCTimestamp_milli
+      in
       parse_milli, encode_milli
-    else
-      ( Parse_datetime.parse_UTCTimestamp_micro,
-        Encode_datetime.encode_UTCTimestamp_micro )
+    | Micro ->
+      let parse_micro x =
+        match
+          if strict then
+            Parse_datetime.parse_UTCTimestamp_micro_strict x
+          else
+            Parse_datetime.parse_UTCTimestamp_micro x
+        with
+        | None -> None
+        | Some x -> Some (Datetime.convert_utctimestamp_micro_pico x)
+      in
+      let encode_micro x =
+        x |> Datetime.convert_utctimestamp_pico_micro
+        |> Encode_datetime.encode_UTCTimestamp_micro
+      in
+      parse_micro, encode_micro
+    | Nano ->
+      let parse_nano x =
+        match
+          if strict then
+            Parse_datetime.parse_UTCTimestamp_nano_strict x
+          else
+            Parse_datetime.parse_UTCTimestamp_nano x
+        with
+        | None -> None
+        | Some x -> Some (Datetime.convert_utctimestamp_nano_pico x)
+      in
+      let encode_nano x =
+        x |> Datetime.convert_utctimestamp_nano_micro
+        |> Encode_datetime.encode_UTCTimestamp_nano
+      in
+      parse_nano, encode_nano
+    | Pico ->
+      let parse_pico =
+        if strict then
+          Parse_datetime.parse_UTCTimestamp_nano_strict
+        else
+          Parse_datetime.parse_UTCTimestamp_nano
+      in
+      let encode_nano x =
+        x |> Datetime.convert_utctimestamp_nano_micro
+        |> Encode_datetime.encode_UTCTimestamp_nano
+      in
+      parse_pico, encode_nano
 
   let make_engine_state (inseq, outseq) config =
     let open Fix_engine_state in
@@ -286,7 +347,7 @@ end = struct
 
   let start ~reset ~session_dir ~(config : config) ~recv =
     let timestamp_parse, timestamp_encode =
-      get_timestamp_codec config.millisecond_precision
+      get_timestamp_codec config.strict_time_precision config.precision
     in
     let sess = SessionManager.create ~reset ~dir:session_dir in
     let inseq, outsec = SessionManager.get sess in
