@@ -297,6 +297,7 @@ let parse_UTCTimestamp_pico str =
     | _ -> None
 
 let parse_MonthYear str =
+  let open TE in
   let length = String.length str in
   if (length < 6) then None else
     try

@@ -234,7 +234,8 @@ let utctimeonly_pico_opt_to_json  = function
   | Some x  -> utctimeonly_pico_to_json x
 ;;
 
-let week_to_json = function
+let week_to_json = let open TE in
+  function
   | Week_1 -> `String "Week1"
   | Week_2 -> `String "Week2"
   | Week_3 -> `String "Week3"
@@ -242,7 +243,8 @@ let week_to_json = function
   | Week_5 -> `String "Week5"
 ;;
 
-let week_decoder : fix_week Decoders_yojson.Basic.Decode.decoder =
+let week_decoder : TE.week Decoders_yojson.Basic.Decode.decoder =
+  let open TE in
   D.string >>= (fun w ->
       match w with
       | "Week1" -> D.succeed (Week_1)
