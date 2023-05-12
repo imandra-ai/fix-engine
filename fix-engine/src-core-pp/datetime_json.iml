@@ -85,7 +85,7 @@ let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.De
     (D.field "utc_timestamp_hour" int_decoder) >>= fun utc_timestamp_hour ->
     (D.field "utc_timestamp_minute" int_decoder) >>= fun utc_timestamp_minute ->
     (D.field "utc_timestamp_second" int_decoder) >>= fun utc_timestamp_second ->
-    D.maybe (D.field "utc_timestamp_millisec" int_decoder) >>= fun utc_timestamp_millisec ->
+    D.maybe (D.field "utc_timestamp_microsec" int_decoder) >>= fun utc_timestamp_microsec ->
     D.succeed (make_utctimestamp_micro_unsafe
       utc_timestamp_year
      utc_timestamp_month
@@ -93,9 +93,21 @@ let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.De
      utc_timestamp_hour
      utc_timestamp_minute
      utc_timestamp_second
-     utc_timestamp_millisec
+     utc_timestamp_microsec
     ))
   ]
+
+let utctimestamp_nano_to_json ( ts : fix_utctimestamp_nano )  =
+ptime_to_json ts
+
+let utctimestamp_nano_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.Decode.decoder =
+ ptime_decoder |> validate_with is_valid_utctimestamp_nano "fix_utctimestamp_nano"
+
+let utctimestamp_pico_to_json ( ts : fix_utctimestamp_pico )  =
+ ptime_to_json ts
+
+let utctimestamp_pico_decoder : fix_utctimestamp_pico Decoders_yojson.Basic.Decode.decoder =
+  ptime_decoder |> validate_with is_valid_utctimestamp_pico "fix_utctimestamp_pico"
 
 let utctimestamp_milli_opt_to_json = function
   | None    -> `Null
@@ -105,6 +117,16 @@ let utctimestamp_milli_opt_to_json = function
 let utctimestamp_micro_opt_to_json = function
   | None    -> `Null
   | Some x  -> utctimestamp_micro_to_json x
+;;
+
+let utctimestamp_nano_opt_to_json = function
+  | None    -> `Null
+  | Some x  -> utctimestamp_nano_to_json x
+;;
+
+let utctimestamp_pico_opt_to_json = function
+  | None    -> `Null
+  | Some x  -> utctimestamp_pico_to_json x
 ;;
 
 let duration_to_json ( d : fix_duration ) =
@@ -186,6 +208,30 @@ let utctimeonly_micro_decoder : fix_utctimeonly_micro Decoders_yojson.Basic.Deco
 let utctimeonly_micro_opt_to_json  = function
   | None    -> `Null
   | Some x  -> utctimeonly_micro_to_json x
+;;
+
+let utctimeonly_nano_to_json ( d : fix_utctimeonly_nano ) =
+  ptime_to_json d
+
+let utctimeonly_nano_decoder : fix_utctimeonly_nano Decoders_yojson.Basic.Decode.decoder =
+ ptime_decoder
+  |> validate_with is_valid_utctimeonly_nano "fix_utctimeonly_nano"
+
+let utctimeonly_nano_opt_to_json  = function
+  | None    -> `Null
+  | Some x  -> utctimeonly_nano_to_json x
+;;
+
+let utctimeonly_pico_to_json ( d : fix_utctimeonly_pico ) =
+  ptime_to_json d
+
+let utctimeonly_pico_decoder : fix_utctimeonly_pico Decoders_yojson.Basic.Decode.decoder =
+ ptime_decoder
+  |> validate_with is_valid_utctimeonly_pico "fix_utctimeonly_nano"
+
+let utctimeonly_pico_opt_to_json  = function
+  | None    -> `Null
+  | Some x  -> utctimeonly_pico_to_json x
 ;;
 
 let week_to_json = function

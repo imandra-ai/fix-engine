@@ -10,7 +10,11 @@ let three = 3
 
 let six = 6
 
+let nine = 9
+
 let epoch_year = 1970
+
+let ps_count_in_ns = 1_000
 
 let ps_count_in_us = 1_000_000
 

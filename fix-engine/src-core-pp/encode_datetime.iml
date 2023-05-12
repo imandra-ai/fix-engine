@@ -48,6 +48,23 @@ let encode_UTCTimeOnly_micro (x:fix_utctimeonly_micro ) : string =
     (Z.to_int us)
 ;;
 
+let encode_UTCTimeOnly_nano (x:fix_utctimeonly_nano ) : string =
+  let (hh, mm, ss, ns) = to_time_us x in
+  Printf.sprintf "%02d:%02d:%02d.%09d"
+    (Z.to_int hh)
+    (Z.to_int mm)
+    (Z.to_int ss)
+    (Z.to_int ns)
+;;
+
+let encode_UTCTimeOnly_pico (x:fix_utctimeonly_pico ) : string =
+  let (hh, mm, ss, ps) = to_time_ps x in
+  Printf.sprintf "%02d:%02d:%02d.%09d"
+    (Z.to_int hh)
+    (Z.to_int mm)
+    (Z.to_int ss)
+    (Z.to_int ps)
+;;
 
 let encode_UTCTimestamp_milli (x:fix_utctimestamp_milli ) : string =
   let ((y, m, d), (hh, mm, ss, ms)) = to_date_time_ms x in
@@ -71,6 +88,30 @@ let encode_UTCTimestamp_micro (x:fix_utctimestamp_micro ) : string =
     (Z.to_int mm)
     (Z.to_int ss)
     (Z.to_int us)
+;;
+
+let encode_UTCTimestamp_nano (x:fix_utctimestamp_nano ) : string =
+  let ((y, m, d), (hh, mm, ss, ns)) = to_date_time_ns x in
+  Printf.sprintf "%04d%02d%02d-%02d:%02d:%02d.%09d"
+    (Z.to_int y)
+    (Z.to_int m)
+    (Z.to_int d)
+    (Z.to_int hh)
+    (Z.to_int mm)
+    (Z.to_int ss)
+    (Z.to_int ns)
+;;
+
+let encode_UTCTimestamp_pico (x:fix_utctimestamp_pico ) : string =
+  let ((y, m, d), (hh, mm, ss, ps)) = to_date_time_ps x in
+  Printf.sprintf "%04d%02d%02d-%02d:%02d:%02d.%12d"
+    (Z.to_int y)
+    (Z.to_int m)
+    (Z.to_int d)
+    (Z.to_int hh)
+    (Z.to_int mm)
+    (Z.to_int ss)
+    (Z.to_int ps)
 ;;
 
 let encode_MonthYear ((t, w) : fix_monthyear) : string =

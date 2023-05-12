@@ -13,7 +13,8 @@ let config =
       on_behalf_id = None;
       timer = 0.1;
       begin_string = "FIX.4.4";
-      millisecond_precision = false;
+      strict_time_precision = false;
+      precision = Micro;
       no_history = false;
       ignore_business_reject = false;
       ignore_session_reject = false;
@@ -22,15 +23,48 @@ let config =
     }
 
 let ts_parser =
-  let parse_milli x =
-    match Parse_datetime.parse_UTCTimestamp_milli x with
-    | None -> None
-    | Some x -> Some (Datetime.convert_utctimestamp_milli_micro x)
-  in
-  if config.millisecond_precision then
+  match config.precision with
+  | Milli ->
+    let parse_milli x =
+      match
+        if config.strict_time_precision then
+          Parse_datetime.parse_UTCTimestamp_milli_strict x
+        else
+          Parse_datetime.parse_UTCTimestamp_milli x
+      with
+      | None -> None
+      | Some x -> Some (Datetime.convert_utctimestamp_milli_pico x)
+    in
     parse_milli
-  else
-    Parse_datetime.parse_UTCTimestamp_micro
+  | Micro ->
+    let parse_micro x =
+      match
+        if config.strict_time_precision then
+          Parse_datetime.parse_UTCTimestamp_micro_strict x
+        else
+          Parse_datetime.parse_UTCTimestamp_micro x
+      with
+      | None -> None
+      | Some x -> Some (Datetime.convert_utctimestamp_micro_pico x)
+    in
+    parse_micro
+  | Nano ->
+    let parse_nano x =
+      match
+        if config.strict_time_precision then
+          Parse_datetime.parse_UTCTimestamp_nano_strict x
+        else
+          Parse_datetime.parse_UTCTimestamp_nano x
+      with
+      | None -> None
+      | Some x -> Some (Datetime.convert_utctimestamp_nano_pico x)
+    in
+    parse_nano
+  | Pico ->
+    if config.strict_time_precision then
+      Parse_datetime.parse_UTCTimestamp_pico_strict
+    else
+      Parse_datetime.parse_UTCTimestamp_pico
 
 let log_thread () : unit Lwt.t =
   let rec thread () =
