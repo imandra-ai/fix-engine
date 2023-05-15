@@ -33,8 +33,8 @@ let of_time_ms time_ms =
 let to_date_time_ms (t : T.t) =
   let (y, m, d), ((hh, mm, ss), _tz) = T.to_date_time t in
   let _d, ps = t |> T.to_span |> T.Span.to_d_ps in
-  let ps = ps mod ps_count_in_s in
-  let ms = ps / ps_count_in_ms in
+  let ps = ps mod TE.ps_count_in_s in
+  let ms = ps / TE.ps_count_in_ms in
   (y, m, d), (hh, mm, ss, ms)
 
 let to_time_ms (t : T.t) =
@@ -54,8 +54,8 @@ let of_time_us time_us =
 let to_date_time_us (t : T.t) =
   let (y, m, d), ((hh, mm, ss), _tz) = T.to_date_time t in
   let _d, ps = t |> T.to_span |> T.Span.to_d_ps in
-  let ps = ps mod ps_count_in_s in
-  let us = ps / ps_count_in_us in
+  let ps = ps mod TE.ps_count_in_s in
+  let us = ps / TE.ps_count_in_us in
   (y, m, d), (hh, mm, ss, us)
 
 let to_time_us (t : T.t) =
@@ -75,8 +75,8 @@ let of_time_ns time_ms =
 let to_date_time_ns (t : T.t) =
   let (y, m, d), ((hh, mm, ss), _tz) = T.to_date_time t in
   let _d, ps = t |> T.to_span |> T.Span.to_d_ps in
-  let ps = ps mod ps_count_in_s in
-  let ns = ps / ps_count_in_ns in
+  let ps = ps mod TE.ps_count_in_s in
+  let ns = ps / TE.ps_count_in_ns in
   (y, m, d), (hh, mm, ss, ns)
 
 let to_time_ns (t : T.t) =
@@ -96,7 +96,7 @@ let of_time_ps time_ps =
 let to_date_time_ps (t : T.t) =
   let (y, m, d), ((hh, mm, ss), _tz) = T.to_date_time t in
   let _d, ps = t |> T.to_span |> T.Span.to_d_ps in
-  let ps = ps mod ps_count_in_s in
+  let ps = ps mod TE.ps_count_in_s in
   (y, m, d), (hh, mm, ss, ps)
 
 let to_time_ps (t : T.t) =
@@ -233,17 +233,17 @@ let convert_utctimestamp_pico_nano (f1 : fix_utctimestamp_pico) :
 (** Checking validity of the values in the UTC timestamp milli *)
 let is_valid_utctimestamp_milli (ts : fix_utctimestamp_milli) =
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
-  TE.is_valid ts && ps mod ps_count_in_ms = zero
+  TE.is_valid ts && ps mod TE.ps_count_in_ms = zero
 
 (** Checking validity of the values in the UTC timestamp micro *)
 let is_valid_utctimestamp_micro (ts : fix_utctimestamp_micro) =
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
-  TE.is_valid ts && ps mod ps_count_in_us = zero
+  TE.is_valid ts && ps mod TE.ps_count_in_us = zero
 
 (** Checking validity of the values in the UTC timestamp nano *)
 let is_valid_utctimestamp_nano (ts : fix_utctimestamp_nano) =
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
-  TE.is_valid ts && ps mod ps_count_in_ns = zero
+  TE.is_valid ts && ps mod TE.ps_count_in_ns = zero
 
 (** Checking validity of the values in the UTC timestamp pico *)
 let is_valid_utctimestamp_pico (ts : fix_utctimestamp_pico) =
@@ -641,30 +641,8 @@ let localmktdate_LessThanEqual (lmd1 : fix_localmktdate)
     (lmd2 : fix_localmktdate) =
   T.compare lmd1 lmd2 <= zero
 
-(** Week *)
-type fix_week =
-  | Week_1
-  | Week_2
-  | Week_3
-  | Week_4
-  | Week_5
 
-let compare_week w1 w2 =
-  if w1 = w2 then
-    zero
-  else (
-    match w1, w2 with
-    | Week_1, _ -> neg_one
-    | Week_2, Week_1 -> one
-    | Week_2, _ -> neg_one
-    | Week_3, (Week_1 | Week_2) -> one
-    | Week_3, _ -> neg_one
-    | Week_4, (Week_1 | Week_2 | Week_3) -> one
-    | Week_4, _ -> neg_one
-    | Week_5, _ -> one
-  )
-
-type fix_monthyear = T.t * fix_week option
+type fix_monthyear = T.t * TE.week option
 (** MonthYear
 
     YYYYMM
@@ -678,7 +656,7 @@ type fix_monthyear = T.t * fix_week option
 
 let default_monthyear = T.epoch, None
 
-let make_monthyear (year : int) (month : int) (week : fix_week option) :
+let make_monthyear (year : int) (month : int) (week : TE.week option) :
     fix_monthyear option =
   match T.of_date (year, month, one) with
   | Some t -> Some (t, week)
@@ -702,7 +680,7 @@ let compare_monthyear ((t1, w1) : fix_monthyear) ((t2, w2) : fix_monthyear) =
     c
   else (
     match w1, w2 with
-    | Some w1, Some w2 -> compare_week w1 w2
+    | Some w1, Some w2 -> TE.compare_week w1 w2
     | Some _, None -> one
     | None, Some _ -> neg_one
     | None, None -> zero
@@ -828,17 +806,17 @@ let convert_utctimeonly_pico_nano (f1 : fix_utctimeonly_pico) :
 (** Checking validity of the values in the UTC timeonly milli *)
 let is_valid_utctimeonly_milli (ts : fix_utctimeonly_milli) =
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
-  TE.is_valid ts && ps mod ps_count_in_ms = zero
+  TE.is_valid ts && ps mod TE.ps_count_in_ms = zero
 
 (** Checking validity of the values in the UTC timeonly micro *)
 let is_valid_utctimeonly_micro (ts : fix_utctimeonly_micro) =
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
-  TE.is_valid ts && ps mod ps_count_in_us = zero
+  TE.is_valid ts && ps mod TE.ps_count_in_us = zero
 
 (** Checking validity of the values in the UTC timeonly nano *)
 let is_valid_utctimeonly_nano (ts : fix_utctimeonly_nano) =
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
-  TE.is_valid ts && ps mod ps_count_in_ns = zero
+  TE.is_valid ts && ps mod TE.ps_count_in_ns = zero
 
 (** Checking validity of the values in the UTC timeonly pico *)
 let is_valid_utctimeonly_pico (ts : fix_utctimeonly_pico) =
