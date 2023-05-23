@@ -181,8 +181,8 @@ end = struct
     sess: SessionManager.t;
     begin_string: string;
     should_clean_history: bool;
-    timestamp_parse: string -> Datetime.fix_utctimestamp_micro option;
-    timestamp_encode: Datetime.fix_utctimestamp_micro -> string;
+    timestamp_parse: string -> Datetime.fix_utctimestamp_pico option;
+    timestamp_encode: Datetime.fix_utctimestamp_pico -> string;
   }
 
   (** Calls Fix_engine.one_step and pubs outgoing messages while busy *)
@@ -251,7 +251,7 @@ end = struct
       main_loop t engine_state
 
   let do_timechange t =
-    let time = Current_time.get_current_utctimestamp_micro () in
+    let time = Current_time.get_current_utctimestamp_pico () in
     let timechange = Fix_engine_state.IncIntMsg_TimeChange time in
     let timechange = InternalToEngine timechange in
     Lwt_mvar.put t.to_engine_box timechange
@@ -331,7 +331,7 @@ end = struct
       fe_sender_location_id = config.host_id;
       fe_on_behalf_of_comp_id = config.on_behalf_id;
       fe_target_comp_id = config.target_id;
-      fe_curr_time = Current_time.get_current_utctimestamp_micro ();
+      fe_curr_time = Current_time.get_current_utctimestamp_pico ();
       fe_max_num_logons_sent = Z.of_int 10;
       fe_application_up = true;
       incoming_seq_num = Z.of_int inseq;

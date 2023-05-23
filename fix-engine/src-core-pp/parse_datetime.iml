@@ -193,7 +193,7 @@ let parse_UTCTimestamp_milli_strict str : fix_utctimestamp_milli option =
 
 let parse_UTCTimestamp_milli str : fix_utctimestamp_milli option =
   let length = String.length str in
-  if (length <> 17) && (length <> 21) then None else
+  if (length < 17) then None else
     try
       let date, time =
         Scanf.sscanf str "%s@-%s"
@@ -223,7 +223,7 @@ let parse_UTCTimestamp_micro_strict str =
 
 let parse_UTCTimestamp_micro str =
   let length = String.length str in
-  if (length <> 17) && (length <> 24) then None else
+  if (length < 17) then None else
     try
       let date, time =
         Scanf.sscanf str "%s@-%s"
@@ -253,7 +253,7 @@ let parse_UTCTimestamp_nano_strict str =
 
 let parse_UTCTimestamp_nano str =
   let length = String.length str in
-  if (length <> 17) && (length <> 27) then None else
+  if (length < 17) then None else
     try
       let date, time =
         Scanf.sscanf str "%s@-%s"
@@ -283,7 +283,7 @@ let parse_UTCTimestamp_pico_strict str =
 
 let parse_UTCTimestamp_pico str =
   let length = String.length str in
-  if (length <> 17) && (length <> 30) then None else
+  if (length < 17) then None else
     try
       let date, time =
         Scanf.sscanf str "%s@-%s"

@@ -641,7 +641,6 @@ let localmktdate_LessThanEqual (lmd1 : fix_localmktdate)
     (lmd2 : fix_localmktdate) =
   T.compare lmd1 lmd2 <= zero
 
-
 type fix_monthyear = T.t * TE.week option
 (** MonthYear
 
