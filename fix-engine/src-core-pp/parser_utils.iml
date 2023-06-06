@@ -200,7 +200,7 @@ module Parser = struct
         (* groups_msg starts with the NumInGroup tag, we parse it *)
         opt groups_msg tag Parse_base_types.parse_int @@ fun groups_msg numInGroup ->
         match numInGroup with
-        | None -> ( ParseSuccess (Some 0,[]) >|>= f msg )
+        | None -> ( ParseSuccess (None,[]) >|>= f msg )
         | Some 0 -> ( ParseSuccess (Some 0,[]) >|>= f (leading_msg @ groups_msg) )
         | Some numInGroup ->
           (* Break the list into a list of lists using the separator *)
