@@ -129,6 +129,11 @@ module Internal : sig
   val persist_final_seqnums : t -> Z.t option * Z.t option -> unit
 
   val terminate : t -> unit Lwt.t
+
+  val get_timestamp_codec :
+    bool ->
+    precision ->
+    (string -> Imandra_ptime.t option) * (Imandra_ptime.t -> string)
 end = struct
   let ( let* ) = Lwt.bind
 
