@@ -34,6 +34,10 @@ type error =
   | RepeatingGroupOutOfOrder of string
   | GarbledMessage
 
+val error_to_string : error -> string
+
+val pp_error : Format.formatter -> error -> unit
+
 type nonrec 'a result = ('a, error) result
 (** Result of parsing *)
 

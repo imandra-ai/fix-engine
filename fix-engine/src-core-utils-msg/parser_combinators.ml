@@ -6,6 +6,7 @@ type msg = Message.t
 
 type tag = string
 
+
 type error =
   | UnknownMessageTag of string
   | RequiredTagMissing of string
@@ -16,6 +17,21 @@ type error =
   | IncorrectNumInGroupCount of string
   | RepeatingGroupOutOfOrder of string
   | GarbledMessage
+
+let error_to_string = function
+  | UnknownMessageTag s -> (Format.asprintf "UnknownMessageTag: %s" s)
+  | RequiredTagMissing s -> (Format.asprintf "RequiredTagMissing: %s" s)
+  | DuplicateTag s -> (Format.asprintf "DuplicateTag: %s" s)
+  | WrongValueFormat s -> (Format.asprintf "WrongValueFormat: %s" s)
+  | UndefinedTag s -> (Format.asprintf "UndefinedTag: %s" s)
+  | EmptyValue s -> (Format.asprintf "EmptyValue: %s" s)
+  | IncorrectNumInGroupCount s -> (Format.asprintf "IncorrectNumInGroupCount: %s" s)
+  | RepeatingGroupOutOfOrder s -> (Format.asprintf "RepeatingGroupOutOfOrder: %s" s)
+  | GarbledMessage -> "GarbledMessage"
+
+let pp_error fmt e =
+  let s = error_to_string e in
+  Format.fprintf fmt "%s" s
 
 type nonrec 'a result = ('a, error) result
 (** Result of parsing *)
