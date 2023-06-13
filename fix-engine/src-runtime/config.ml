@@ -48,6 +48,12 @@ module Decode (D : Decoders.Decode.S) = struct
     | "Pico" -> D.succeed Pico
     | s -> D.fail @@ Printf.sprintf "Unknown preicison string '%s'" s
 
+  let string_pair : (string * string) D.decoder =
+    let* xs = D.list D.string in
+    match xs with
+    | [ a; b ] -> D.succeed (a, b)
+    | _ -> D.fail {|"expected a pair of strings ["a", "b"]|}
+
   let t : t D.decoder =
     let* zmqpub = field_def "zmqpub" "tcp://*:5000" D.string in
     let* zmqrep = field_def "zmqrep" "tcp://*:5001" D.string in
@@ -71,9 +77,7 @@ module Decode (D : Decoders.Decode.S) = struct
     let* reset = field_def "reset" false D.bool in
     let* no_history = field_def "no_history" false D.bool in
     let* heartbeat_interval = field_def "heartbeat_interval" 30 D.int in
-    let* logon_fields =
-      field_def "logon_fields" [] D.(list (D.pair string string))
-    in
+    let* logon_fields = field_def "logon_fields" [] D.(list string_pair) in
     let engine_config =
       Engine.
         {
