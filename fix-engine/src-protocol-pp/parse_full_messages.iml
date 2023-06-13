@@ -13,8 +13,6 @@
 
 [@@@import "../src-protocol/full_messages.iml"]
 
-[@@@import "../src-core-pp/parser_utils.iml"]
-
 [@@@import "../src-core-pp/parse_base_types.iml"]
 
 [@@@import "parse_full_tags.iml"]
@@ -25,7 +23,6 @@
 
 open Full_message_tags
 open Full_messages
-open Parser_utils.Parser
 open Parse_base_types
 open Parse_full_tags
 module P = Parser_combinators
