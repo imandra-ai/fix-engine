@@ -75,6 +75,8 @@ val check_duplicate_tags : unit t
     with [DuplicateTag _].
     Should be called after all the repeating groups are processed. *)
 
+val do_check_unknown_tags : bool ref
+
 val check_unknown_tags : unit t
 (** Checks for remaining tags that have not been processed, and
     fail if one is found with [UndefinedTag _]. Should be called

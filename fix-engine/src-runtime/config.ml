@@ -71,6 +71,9 @@ module Decode (D : Decoders.Decode.S) = struct
     let* reset = field_def "reset" false D.bool in
     let* no_history = field_def "no_history" false D.bool in
     let* heartbeat_interval = field_def "heartbeat_interval" 30 D.int in
+    let* logon_fields =
+      field_def "logon_fields" [] D.(list (D.pair string string))
+    in
     let engine_config =
       Engine.
         {
@@ -81,6 +84,7 @@ module Decode (D : Decoders.Decode.S) = struct
           timer;
           strict_time_precision;
           precision;
+          logon_fields;
           next_expected_msg_seq_num = false;
           begin_string;
           ignore_business_reject = false;

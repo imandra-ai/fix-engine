@@ -98,6 +98,7 @@ module Internal : sig
     target_id: string;
     host_id: string option;
     on_behalf_id: string option;
+    logon_fields: (string * string) list;
     next_expected_msg_seq_num: bool;
     timer: float;
     ignore_session_reject: bool;
@@ -165,6 +166,7 @@ end = struct
     target_id: string;
     host_id: string option;
     on_behalf_id: string option;
+    logon_fields: (string * string) list;
     next_expected_msg_seq_num: bool;
     timer: float;
     ignore_session_reject: bool;
@@ -343,6 +345,7 @@ end = struct
       outgoing_seq_num = Z.of_int outseq;
       fe_heartbeat_interval =
         Imandra_ptime.Span.(of_int_s (Z.of_int config.heartbeat_interval));
+      logon_extra_fields = config.logon_fields;
       fe_next_expected_msg_seq_num =
         (if config.next_expected_msg_seq_num then
           Some (Z.of_int (inseq + 1))
