@@ -10,7 +10,6 @@
 [@@@require "fix-engine.util-msg"]
 [@@@import "../src-protocol/full_admin_tags.iml"]
 [@@@import "../src-protocol/full_admin_messages.iml"]
-[@@@import "../src-core-pp/parser_utils.iml"]
 [@@@import "../src-core-pp/parse_base_types.iml"]
 [@@@import "../src-core-pp/parse_datetime.iml"]
 [@@@import "parse_admin_enums.iml"]
@@ -19,7 +18,6 @@
 [@@@program]
 open Full_admin_tags;;
 open Full_admin_messages;;
-open Parser_utils.Parser;;
 open Parse_base_types;;
 open Parse_datetime;;
 open Parse_admin_enums;;

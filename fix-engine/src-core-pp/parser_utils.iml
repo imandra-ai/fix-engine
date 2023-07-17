@@ -235,11 +235,9 @@ module Parser = struct
     else
       f ()
 
-  let do_check_unknown_tags = ref true
-
   (** This finalizes the message -- if there are any unplrocessed tag=value pairs left -- we return an error *)
   let check_unknown_tags (result , msg) =
-    if !do_check_unknown_tags then
+    if !Parser_combinators.do_check_unknown_tags then
       match result with
       | ParseSuccess _ ->
          ( match msg with
