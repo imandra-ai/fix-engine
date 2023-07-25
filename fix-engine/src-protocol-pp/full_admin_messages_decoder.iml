@@ -22,6 +22,14 @@ open Full_admin_messages
 open Full_message_tags_decoder
 module D = Decoders_yojson.Basic.Decode
 
+
+let or_raw_fix decode =
+  let open D in
+  one_of
+    [("value", (decode >|= fun x -> Ok x));
+     ("raw_fix", (string >|= fun s -> Error s));
+    ]
+
 let full_msg_heartbeat_decoder : full_msg_heartbeat_data D.decoder =
   let open D in
   maybe @@ field "TestReqID" string >>= fun hb_test_req_id ->
@@ -87,7 +95,7 @@ let full_msg_reject_decoder : full_msg_reject_data D.decoder =
   maybe (field "RefMsgType" full_msg_tag_of_json) >>= fun sr_ref_msg_type ->
   maybe
     (field "SessionRejectReason"
-       full_admin_enum_fix_session_reject_reason_decoder)
+       (or_raw_fix full_admin_enum_fix_session_reject_reason_decoder))
   >>= fun sr_session_reject_reason ->
   maybe (field "Text" string) >>= fun sr_text ->
   maybe (field "EncodedTextLen" int_decoder) >>= fun sr_encoded_text_len ->

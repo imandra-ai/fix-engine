@@ -38,12 +38,15 @@ val error_to_string : error -> string
 
 val pp_error : Format.formatter -> error -> unit
 
-type nonrec 'a result = ('a, error) result
-(** Result of parsing *)
-
 type +'a t
 
 type +'a value_parser = string -> 'a option
+
+val or_raw_fix : 'a value_parser -> ('a, string) result value_parser
+(** A parser that never fails. *)
+
+type nonrec 'a result = ('a, error) result
+(** Result of parsing *)
 
 val run : 'a t -> msg -> 'a result
 

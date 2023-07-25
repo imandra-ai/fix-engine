@@ -81,7 +81,8 @@ let msgdirection_to_json x : Yojson.Basic.t = `String (msgdirection_to_string x)
 
 let session_reject_reason_opt_to_json = function
   | None -> `Null
-  | Some x -> session_reject_reason_to_json x
+  | Some (Ok x) -> session_reject_reason_to_json x
+  | Some (Error s) -> `String s
 
 let business_reject_reason_opt_to_json = function
   | None -> `Null

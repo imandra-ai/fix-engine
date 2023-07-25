@@ -72,7 +72,8 @@ type full_msg_reject_data = {
     sr_ref_seq_num                        : int;                              (** Tag 45. MsgSeqNum of rejected message. *)
     sr_ref_tag_id                         : full_field_tag option;            (** Tag 371. The tag number of the FIX field being referenced.*)
     sr_ref_msg_type                       : full_msg_tag option;              (** Tag 372. The MsgType of the FIX message being referenced.*)
-    sr_session_reject_reason              : fix_session_reject_reason option; (** Tag 373. Code to identify reason for a session-level Reject <3> message.*)
+    sr_session_reject_reason              : (fix_session_reject_reason, string) result option;
+    (** Tag 373. Code to identify reason for a session-level Reject <3> message.*)
     sr_text                               : string option;                (** Tag 58. Where possible, message to explain reason for rejection.*)
     sr_encoded_text_len                   : int option;                       (** Tag 354. Encoded text length. *)
     sr_encoded_text                       : string option;                (** Tag 354. Encoded text. *)

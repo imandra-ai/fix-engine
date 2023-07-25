@@ -235,7 +235,8 @@ let create_session_reject_msg ( engine , reject_info ) =
                 sr_ref_seq_num              = reject_info.srej_msg_msg_seq_num;
                 sr_ref_tag_id               = reject_info.srej_msg_field_tag;
                 sr_ref_msg_type             = reject_info.srej_msg_msg_type;
-                sr_session_reject_reason    = reject_info.srej_msg_reject_reason;
+                sr_session_reject_reason =
+                  Option.map (fun r -> Ok r) reject_info.srej_msg_reject_reason;
                 sr_text                     = reject_info.srej_text;
                 sr_encoded_text_len         = reject_info.srej_encoded_text_len;
                 sr_encoded_text             = reject_info.srej_encoded_text

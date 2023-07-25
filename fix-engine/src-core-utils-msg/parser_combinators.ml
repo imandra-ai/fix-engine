@@ -6,7 +6,6 @@ type msg = Message.t
 
 type tag = string
 
-
 type error =
   | UnknownMessageTag of string
   | RequiredTagMissing of string
@@ -19,14 +18,16 @@ type error =
   | GarbledMessage
 
 let error_to_string = function
-  | UnknownMessageTag s -> (Format.asprintf "UnknownMessageTag: %s" s)
-  | RequiredTagMissing s -> (Format.asprintf "RequiredTagMissing: %s" s)
-  | DuplicateTag s -> (Format.asprintf "DuplicateTag: %s" s)
-  | WrongValueFormat s -> (Format.asprintf "WrongValueFormat: %s" s)
-  | UndefinedTag s -> (Format.asprintf "UndefinedTag: %s" s)
-  | EmptyValue s -> (Format.asprintf "EmptyValue: %s" s)
-  | IncorrectNumInGroupCount s -> (Format.asprintf "IncorrectNumInGroupCount: %s" s)
-  | RepeatingGroupOutOfOrder s -> (Format.asprintf "RepeatingGroupOutOfOrder: %s" s)
+  | UnknownMessageTag s -> Format.asprintf "UnknownMessageTag: %s" s
+  | RequiredTagMissing s -> Format.asprintf "RequiredTagMissing: %s" s
+  | DuplicateTag s -> Format.asprintf "DuplicateTag: %s" s
+  | WrongValueFormat s -> Format.asprintf "WrongValueFormat: %s" s
+  | UndefinedTag s -> Format.asprintf "UndefinedTag: %s" s
+  | EmptyValue s -> Format.asprintf "EmptyValue: %s" s
+  | IncorrectNumInGroupCount s ->
+    Format.asprintf "IncorrectNumInGroupCount: %s" s
+  | RepeatingGroupOutOfOrder s ->
+    Format.asprintf "RepeatingGroupOutOfOrder: %s" s
   | GarbledMessage -> "GarbledMessage"
 
 let pp_error fmt e =
@@ -80,6 +81,11 @@ exception Fail of error
 type +'a t = { run: state_ -> 'a } [@@unboxed]
 
 type +'a value_parser = string -> 'a option
+
+let or_raw_fix value_parser s =
+  match value_parser s with
+  | Some x -> Some (Ok x)
+  | None -> Some (Error s)
 
 let return x = { run = (fun _ -> x) }
 
