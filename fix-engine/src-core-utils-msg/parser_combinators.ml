@@ -6,7 +6,6 @@ type msg = Message.t
 
 type tag = string
 
-
 type error =
   | UnknownMessageTag of string
   | RequiredTagMissing of string
@@ -80,6 +79,11 @@ exception Fail of error
 type +'a t = { run: state_ -> 'a } [@@unboxed]
 
 type +'a value_parser = string -> 'a option
+
+let or_raw_fix value_parser s =
+  match value_parser s with
+  | Some x -> Some (Ok x)
+  | None -> Some (Error s)
 
 let return x = { run = (fun _ -> x) }
 

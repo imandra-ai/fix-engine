@@ -39,7 +39,8 @@ let session_rejected_msg_to_json x : Yojson.Basic.t =
     [ ( "RefSeqNum"             , int_to_json                        x.srej_msg_msg_seq_num   )
     ; ( "RefTagID"              , full_field_tag_opt_to_json         x.srej_msg_field_tag     )
     ; ( "RefMsgType"            , full_msg_tag_opt_to_json           x.srej_msg_msg_type      )
-    ; ( "SessionRejectReason"   , session_reject_reason_opt_to_json  x.srej_msg_reject_reason )
+    ; ( "SessionRejectReason",
+        session_reject_reason_opt_to_json (Option.map (fun r -> Ok r) x.srej_msg_reject_reason) )
     ; ( "Text"                  , string_opt_to_json                 x.srej_text              )
     ; ( "EncodedTextLen"        , int_opt_to_json                    x.srej_encoded_text_len  )
     ; ( "EncodedText"           , string_opt_to_json                 x.srej_encoded_text      )

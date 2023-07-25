@@ -26,6 +26,10 @@ let req f x = Some (f x);;
 let opt f v =
     match v with Some x -> Some ( f x ) | None -> None;; 
 
+let or_raw_fix encode_value = function
+  | Ok x -> encode_value x
+  | Error s -> encode_string s
+
 let repeat f tag lst = match lst with [] -> [] | lst ->
     ( tag , lst |> List.length |> req encode_int ) :: (lst |> List.map f |> Caml.List.concat );;
 
@@ -76,7 +80,7 @@ let encode_msg_reject_data msg =
     [ ( "45"  , req encode_int                    msg.sr_ref_seq_num           ) 
     ; ( "371" , opt encode_full_field_tag         msg.sr_ref_tag_id            ) 
     ; ( "372" , opt encode_full_msg_tag           msg.sr_ref_msg_type          ) 
-    ; ( "373" , opt encode_session_reject_reason  msg.sr_session_reject_reason )
+    ; ( "373" , opt (or_raw_fix encode_session_reject_reason)  msg.sr_session_reject_reason )
     ; ( "58"  , opt encode_string                 msg.sr_text                  ) 
     ; ( "354" , opt encode_int                    msg.sr_encoded_text_len      ) 
     ; ( "355" , opt encode_string                 msg.sr_encoded_text          )
