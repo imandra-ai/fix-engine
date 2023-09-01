@@ -238,14 +238,14 @@ end = struct
   let rec write_thread t : unit Lwt.t =
     Lwt_mvar.take t.send_box >>= fun msg ->
     let wire = encode ~split:t.split msg in
+    let logmsg = encode ~split:'|' msg in
+    Lwt_io.write t.outch wire >>= fun () ->
     let* () =
       match t.log_file_channel with
       | None -> Lwt.return_unit
-      | Some oc ->
-        let logmsg = encode ~split:'|' msg in
-        logfix oc logmsg
+      | Some oc -> logfix oc logmsg
     in
-    Lwt_io.write t.outch wire >>= fun () -> write_thread t
+    write_thread t
 
   let start ?(split = '\001') ?log_file ~recv (inch, outch) =
     let state =
