@@ -4,6 +4,8 @@ COPY --chown=opam:nogroup ./fix-engine.opam .
 COPY --chown=opam:nogroup ./vendor/imandra-ptime/imandra-ptime.opam ./vendor/imandra-ptime/imandra-ptime.opam
 COPY --chown=opam:nogroup ./vendor/imandra-prelude/imandra-prelude.opam ./vendor/imandra-prelude/imandra-prelude.opam
 COPY --chown=opam:nogroup ./Makefile ./Makefile
+ARG OPAMSOLVERTIMEOUT=1000
+RUN echo "Setting OPAMSOLVERTIMEOUT to $OPAMSOLVERTIMEOUT"
 RUN make opam1-setup 
 COPY --chown=opam:nogroup . .
 RUN make imandra-libs-install

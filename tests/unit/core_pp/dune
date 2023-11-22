@@ -1,4 +1,4 @@
 (tests
- (names t_datetime)
+ (names t_datetime t_base_types)
  (libraries fix-engine.core_pp zarith)
  (flags :standard))
