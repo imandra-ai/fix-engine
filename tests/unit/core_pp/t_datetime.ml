@@ -9,6 +9,38 @@ open struct
       Printf.eprintf "not equal: %S vs %S\n%!" a b;
       assert false
     )
+
+  let assert_utctimestamp_milli_eq s (b : fix_utctimestamp_milli) =
+    let a =
+      match Parse_datetime.parse_UTCTimestamp_milli s with
+      | Some a -> a
+      | None ->
+        Printf.eprintf "Failed to parse: %s\n%!" s;
+        assert false
+    in
+    if Datetime.utctimeonly_Equal_milli_milli a b |> not then (
+      let a1, a2 = a in
+      let b1, b2 = b in
+      Printf.eprintf "not equal: (%s,%s) vs (%s,%s)\n%!" (Z.to_string a1)
+        (Z.to_string a2) (Z.to_string b1) (Z.to_string b2);
+      assert false
+    )
+
+  let assert_utctimestamp_micro_eq s (b : fix_utctimestamp_micro) =
+    let a =
+      match Parse_datetime.parse_UTCTimestamp_micro s with
+      | Some a -> a
+      | None ->
+        Printf.eprintf "Failed to parse: %s\n%!" s;
+        assert false
+    in
+    if Datetime.utctimeonly_Equal_micro_micro a b |> not then (
+      let a1, a2 = a in
+      let b1, b2 = b in
+      Printf.eprintf "not equal: (%s,%s) vs (%s,%s)\n%!" (Z.to_string a1)
+        (Z.to_string a2) (Z.to_string b1) (Z.to_string b2);
+      assert false
+    )
 end
 
 module Encode_utc_dateonly = struct
@@ -90,6 +122,14 @@ module Encode_utc_timestamp_micro = struct
 
   let () =
     let t : fix_utctimestamp_micro =
+      make_utctimestamp_micro_unsafe ~$2022 ~$9 ~$14 ~$22 ~$35 ~$7
+        (Some ~$212000)
+    in
+    let expect = "20220914-22:35:07.212000" in
+    assert_str_eq (Encode_datetime.encode_UTCTimestamp_micro t) expect
+
+  let () =
+    let t : fix_utctimestamp_micro =
       make_utctimestamp_micro_unsafe ~$2022 ~$12 ~$1 ~$3 ~$35 ~$22 None
     in
     let expect = "20221201-03:35:22.000000" in
@@ -106,4 +146,67 @@ module Encode_monthYear = struct
     let t : fix_monthyear = make_monthyear_unsafe ~$2032 ~$07 (Some Week_4) in
     let expect = "203207w4" in
     assert_str_eq (Encode_datetime.encode_MonthYear t) expect
+end
+
+module Parse_utc_timestamp_milli = struct
+  let () =
+    let t = "20221129-07:04:03.008" in
+    let expect =
+      make_utctimestamp_milli_unsafe ~$2022 ~$11 ~$29 ~$7 ~$4 ~$3 (Some ~$008)
+    in
+    assert_utctimestamp_milli_eq t expect
+
+  let () =
+    let t = "20221129-07:04:03.000" in
+    let expect =
+      make_utctimestamp_milli_unsafe ~$2022 ~$11 ~$29 ~$7 ~$4 ~$3 None
+    in
+    assert_utctimestamp_milli_eq t expect
+
+  let () =
+    let t = "20221129-07:04:03.100" in
+    let expect =
+      make_utctimestamp_milli_unsafe ~$2022 ~$11 ~$29 ~$7 ~$4 ~$3 (Some ~$100)
+    in
+    assert_utctimestamp_milli_eq t expect
+
+  let () =
+    let t = "20221129-07:04:03.8" in
+    let expect =
+      make_utctimestamp_milli_unsafe ~$2022 ~$11 ~$29 ~$7 ~$4 ~$3 (Some ~$800)
+    in
+    assert_utctimestamp_milli_eq t expect
+end
+
+module Parse_utc_timestamp_micro = struct
+  let () =
+    let t = "20221129-07:04:03.000876" in
+    let expect =
+      make_utctimestamp_micro_unsafe ~$2022 ~$11 ~$29 ~$7 ~$4 ~$3
+        (Some ~$000876)
+    in
+    assert_utctimestamp_micro_eq t expect
+
+  let () =
+    let t = "20221129-07:04:03.000000" in
+    let expect =
+      make_utctimestamp_micro_unsafe ~$2022 ~$11 ~$29 ~$7 ~$4 ~$3 None
+    in
+    assert_utctimestamp_micro_eq t expect
+
+  let () =
+    let t = "20221129-07:04:03.100000" in
+    let expect =
+      make_utctimestamp_micro_unsafe ~$2022 ~$11 ~$29 ~$7 ~$4 ~$3
+        (Some ~$100000)
+    in
+    assert_utctimestamp_micro_eq t expect
+
+  let () =
+    let t = "20221129-07:04:03.876" in
+    let expect =
+      make_utctimestamp_micro_unsafe ~$2022 ~$11 ~$29 ~$7 ~$4 ~$3
+        (Some ~$876000)
+    in
+    assert_utctimestamp_micro_eq t expect
 end

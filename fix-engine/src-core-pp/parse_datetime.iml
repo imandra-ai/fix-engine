@@ -40,7 +40,10 @@ let parse_time_ms str =
         (fun h m s ms ->
           let ms =
             if ms = "" then None
-            else Scanf.sscanf (CCString.pad ~side:`Right ~c:'0' 3i ms) ".%03d" (fun x -> Some (Z.of_int x))
+            else (match CCString.split_on_char '.' ms with
+              | [""; ms] ->
+                Scanf.sscanf (CCString.pad ~side:`Right ~c:'0' 3i ms) "%03d" (fun x -> Some (Z.of_int x))
+              | _ -> failwith "Bad end of string")
           in
           Some (Z.of_int h, Z.of_int m, Z.of_int s, ms))
     with
@@ -68,7 +71,10 @@ let parse_time_us str =
         (fun h m s us ->
           let us =
             if us = "" then None
-            else Scanf.sscanf (CCString.pad ~side:`Right ~c:'0' 6i us) ".%06d" (fun x -> Some (Z.of_int x))
+            else (match CCString.split_on_char '.' us with
+              | [""; us] ->
+                Scanf.sscanf (CCString.pad ~side:`Right ~c:'0' 6i us) "%06d" (fun x -> Some (Z.of_int x))
+              | _ -> failwith "Bad end of string")
           in
           Some (Z.of_int h, Z.of_int m, Z.of_int s, us))
     with
@@ -96,7 +102,10 @@ let parse_time_ns str =
         (fun h m s ns ->
           let ns =
             if ns = "" then None
-            else Scanf.sscanf (CCString.pad ~side:`Right ~c:'0' 9i ns) ".%09d" (fun x -> Some (Z.of_int x))
+            else (match CCString.split_on_char '.' ns with
+              | [""; ns] ->
+                Scanf.sscanf (CCString.pad ~side:`Right ~c:'0' 9i ns) "%09d" (fun x -> Some (Z.of_int x))
+              | _ -> failwith "Bad end of string")
           in
           Some (Z.of_int h, Z.of_int m, Z.of_int s, ns))
     with
@@ -124,7 +133,10 @@ let parse_time_ps str =
         (fun h m s ps ->
           let ps =
             if ps = "" then None
-            else Scanf.sscanf (CCString.pad ~side:`Right ~c:'0' 12i ps) ".%09d" (fun x -> Some (Z.of_int x))
+            else (match CCString.split_on_char '.' ps with
+              | [""; ps] ->
+                Scanf.sscanf (CCString.pad ~side:`Right ~c:'0' 12i ps) "%09d" (fun x -> Some (Z.of_int x))
+              | _ -> failwith "Bad end of string")
           in
           Some (Z.of_int h, Z.of_int m, Z.of_int s, ps))
     with
