@@ -112,7 +112,9 @@ let server_handler (t : t) (in_addr : Unix.sockaddr) (inch, outch) =
     let log_file = t.log_file in
     let fixio_thread, fixio = Fix_io.start ~recv ?log_file (inch, outch) in
     let t = { t with fixio = Some fixio } in
-    Lwt.pick [ fixio_thread; loop t ]
+    Lwt.finalize
+      (fun () -> Lwt.pick [ fixio_thread; loop t ])
+      (fun _ -> t.recv (Disconnected addr_str))
 
 let default_session_folder ~(config : Engine.config) =
   let hostid =
