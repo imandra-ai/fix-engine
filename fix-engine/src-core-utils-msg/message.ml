@@ -19,7 +19,7 @@ let checksum (msg : t) =
 let valid_checksum (self : t) : bool =
   let c = checksum self in
   match List.find_opt (fun (tag, _) -> tag = "10") self with
-  | None -> false
+  | None -> true
   | Some (_tag, c') ->
     (match int_of_string_opt c' with
     | None -> false

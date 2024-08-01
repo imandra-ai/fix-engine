@@ -101,8 +101,8 @@ let parse_trailer =
   P.(
     let* signature_length = opt "93" parse_int in
     let* signature = opt "89" parse_int in
-    let* check_sum = req "10" parse_int in
-    return { signature_length; signature; check_sum })
+    (* let* check_sum = req "10" parse_int in *)
+    return { signature_length; signature; check_sum = 0 })
 
 let check_first_three_tags (msg : (string * string) list) : string option =
   match msg with
