@@ -31,4 +31,6 @@ module Parse_float = struct
   let () = assert_parse_some_eq "0.123456" 0.123456
 
   let () = assert_parse_some_eq "0.1234567" 0.123456
+
+  let () = assert_parse_some_eq "-0.001234" (-0.001234)
 end
