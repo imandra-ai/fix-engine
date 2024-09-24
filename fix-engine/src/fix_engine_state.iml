@@ -39,6 +39,7 @@ type fix_engine_int_inc_msg =
   | IncIntMsg_EndSession  (** Terminate current active session. *)
   | IncIntMsg_ApplicationData of full_app_msg_data
       (** App messages to be transmitted over. *)
+  | IncIntMsg_TransportTermination
   | IncIntMsg_ManualIntervention of manual_int_data
       (** TODO: create 'richer' manual commands. *)
 
