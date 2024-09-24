@@ -50,6 +50,7 @@ let int_inc_msg_to_json x : Yojson.Basic.t = match x with
     | IncIntMsg_CreateSession cs                        -> `Assoc [ ( "CreateSession",      `Assoc [ ( "dest_comp_id"   , `String cs.dest_comp_id )])]
     | IncIntMsg_EndSession                              -> `String "EndSession"
     | IncIntMsg_ApplicationData d                       -> `Assoc [ ( "ApplicationData",    `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
+    | IncIntMsg_TransportTermination                    -> `String "TransportTermination"
     | IncIntMsg_ManualIntervention m                    -> `Assoc [ ( "ManualIntervention", manual_int_data_to_json m)]
 ;;
 
