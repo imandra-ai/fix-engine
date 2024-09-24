@@ -125,7 +125,13 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
                 }
             | _ -> engine
         end
-        
+    
+    | IncIntMsg_TransportTermination -> 
+        { engine with
+            fe_curr_mode            = NoActiveSession;
+            fe_curr_status          = ConnTerminatedWithoutLogoff;
+        }
+
     | IncIntMsg_ManualIntervention mi -> begin
         let engine = { engine with incoming_int_msg = None } in
         match mi with 
@@ -223,6 +229,7 @@ let is_int_message_valid ( engine : fix_engine_state ) =
     match int_msg with 
     | IncIntMsg_TimeChange t -> (utctimestamp_LessThan_micro_micro engine.fe_curr_time t ) && is_valid_utctimestamp_micro( t )
     | IncIntMsg_ApplicationData _d -> true
+    | IncIntMsg_TransportTermination -> true
     | IncIntMsg_CreateSession _d -> 
         begin
             match engine.fe_curr_mode with

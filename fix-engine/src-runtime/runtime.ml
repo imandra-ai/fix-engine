@@ -64,6 +64,12 @@ let receive_engine t event =
   | Engine.Log msg, _ -> t.recv (Log msg)
   | _ -> Lwt.return_unit
 
+let on_disconnect t addr_str =
+  let* () =
+    Engine.send_internal_message t.engine IncIntMsg_TransportTermination
+  in
+  t.recv (Disconnected addr_str)
+
 let receive_send t message =
   let* result = Engine.send_fix_message t.engine message in
   Lwt_mvar.put t.result_box result
@@ -84,17 +90,17 @@ let rec loop (t : t) : unit Lwt.t =
   in
   loop t
 
-let with_catch_disconnect recv f =
+let with_catch_disconnect t f =
   Lwt.catch f (fun e ->
       let stack = Printexc.get_backtrace () in
       let msg = Printexc.to_string e in
       let msg = Printf.sprintf "\n%s%s\n" msg stack in
-      recv (Disconnected msg))
+      on_disconnect t msg)
 
 let connection_lock = Lwt_mutex.create ()
 
-let with_locks recv f =
-  Lwt_mutex.with_lock connection_lock @@ fun () -> with_catch_disconnect recv f
+let with_locks t f =
+  Lwt_mutex.with_lock connection_lock @@ fun () -> with_catch_disconnect t f
 
 let addr_to_string = function
   | Unix.ADDR_UNIX s -> s
@@ -106,7 +112,7 @@ let server_handler (t : t) (in_addr : Unix.sockaddr) (inch, outch) =
     t.recv (ConnectionRejected addr_str)
   else
     let* () = t.recv (Connected addr_str) in
-    with_locks t.recv @@ fun () ->
+    with_locks t @@ fun () ->
     (* FIX IO loop *)
     let recv = Lwt_mvar.put t.fixio_box in
     let log_file = t.log_file in
@@ -114,7 +120,7 @@ let server_handler (t : t) (in_addr : Unix.sockaddr) (inch, outch) =
     let t = { t with fixio = Some fixio } in
     Lwt.finalize
       (fun () -> Lwt.pick [ fixio_thread; loop t ])
-      (fun _ -> t.recv (Disconnected addr_str))
+      (fun _ -> on_disconnect t addr_str)
 
 let default_session_folder ~(config : Engine.config) =
   let hostid =
@@ -177,13 +183,13 @@ let start_server ?(session_dir : string option) ?(log_file : string option)
 
 let client_handler addr_str (t, engine_thread, init_msg) (inch, outch) =
   let* () = t.recv (Connected addr_str) in
-  with_catch_disconnect t.recv @@ fun () ->
+  with_catch_disconnect t @@ fun () ->
   let recv = Lwt_mvar.put t.fixio_box in
   let log_file = t.log_file in
   let fixio_thread, fixio = Fix_io.start ~recv ?log_file (inch, outch) in
   let fixio_thread =
     let* () = fixio_thread in
-    t.recv (Disconnected addr_str)
+    on_disconnect t addr_str
   in
   let t = { t with fixio = Some fixio } in
   let* () = Engine.send_internal_message t.engine init_msg in
