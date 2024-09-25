@@ -83,6 +83,11 @@ type cache_entry =
   | CacheMessage of full_valid_fix_msg
   | CacheGap of int * int
 
+type transition_message =
+  | ShuttingDown of string
+  | LogonFailed of string
+  | LogonSucceeded of string
+
 type fix_engine_state = {
   fe_begin_string: string;
   fe_curr_status: fix_engine_status;  (** Status. *)
@@ -140,6 +145,7 @@ type fix_engine_state = {
   fe_encrypt_method: fix_encryption_method;
   logon_extra_fields: (string * string) list;
   fe_next_expected_msg_seq_num: int option;
+  transition_log: transition_message option;
 }
 (** Engine state structure containing all of the information required for it operate. *)
 
@@ -180,6 +186,7 @@ let init_fix_engine_state =
     fe_encrypt_method = NoEncryption;
     logon_extra_fields = [];
     fe_next_expected_msg_seq_num = None;
+    transition_log = None;
   }
 
 (** THEOREM: one_step calls on busy state eventually terminate *)

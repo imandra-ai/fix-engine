@@ -26,7 +26,7 @@ open Fix_engine_utils;;
 
 (** In many abnormal cases we need to send out the Logout messages and
     transition to ShutdownInitiated state. *)
-let logoff_and_shutdown ( engine : fix_engine_state ) =
+let logoff_and_shutdown ( reason, engine : string * fix_engine_state ) =
     let logoff_msg = create_logoff_msg ( engine ) in
     { engine with
         fe_last_time_data_sent  = engine.fe_curr_time;
@@ -34,6 +34,7 @@ let logoff_and_shutdown ( engine : fix_engine_state ) =
         outgoing_fix_msg        = Some ( ValidMsg ( logoff_msg ));
         outgoing_seq_num        = engine.outgoing_seq_num + 1;
         fe_history              = add_msg_to_history ( engine.fe_history, logoff_msg );
+        transition_log          = Some (ShuttingDown reason)
     }
 ;;
 
@@ -105,22 +106,25 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
     match m.full_msg_data with
     | Full_FIX_Admin_Msg ( Full_Msg_Logon d ) ->
         begin
-            if ( m.full_msg_header.h_target_comp_id <> engine.fe_comp_id ) ||
+            if ( m.full_msg_header.h_target_comp_id <> engine.fe_comp_id ) then
+                { engine with transition_log = Some (LogonFailed "Invalid TargetCompID") }
+            else if
                ( m.full_msg_header.h_sender_comp_id <> engine.fe_target_comp_id )
                then
-                engine
+                { engine with transition_log = Some (LogonFailed "Invalid SenderCompID") }
             else if
               (* TODO: better timestamp comparison *)
               let sending_day, _ps = m.full_msg_header.h_sending_time |> T.to_span |> T.Span.to_d_ps in
               let current_day, _ps = engine.fe_curr_time |> T.to_span |> T.Span.to_d_ps in
               sending_day <> current_day
             then
-              logoff_and_shutdown engine
+              logoff_and_shutdown ("Invalid SendingTime in Logon message", engine)
             else if ( engine.fe_encrypt_method <> d.ln_encrypt_method &&
                 engine.fe_num_logons_sent >= engine.fe_max_num_logons_sent ) then {
                     engine with
                         fe_curr_mode = Error;
                         fe_curr_status = MaxNumLogonMsgsViolated;
+                        transition_log = Some (LogonFailed "Maximum number of logon attempts exceeded")
             } else
                 begin
                     let engine = match d.ln_reset_seq_num_flag with
@@ -142,16 +146,18 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                             fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
                         } in
                     if m.full_msg_header.h_msg_seq_num < (engine.incoming_seq_num + 1) then
-                        logoff_and_shutdown engine
+                        logoff_and_shutdown ("Invalid SequenceNumber in Logon message", engine)
                     else if msg_is_sequence_gap ( engine, m.full_msg_header )
                     then { engine with
                         incoming_seq_num  = engine.incoming_seq_num + 1;
                         fe_curr_mode      = GapDetected;
+                        transition_log    = Some (LogonSucceeded "Gap detected")
                     } else
                     { engine with
                         fe_curr_mode      = ActiveSession;
                         incoming_seq_num  = m.full_msg_header.h_msg_seq_num;
                         fe_history        = add_msg_to_history ( engine.fe_history, logon_msg );
+                        transition_log    = Some (LogonSucceeded "Session active")
                     }
                 end
         end
@@ -267,7 +273,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     let possdup = match header.h_poss_dup_flag with Some true -> true | _ -> false in
     if is_duplicate && not possdup then
         (* Message is a duplicate, but no PossibleDuplicate flag -- we instantly logoff *)
-        logoff_and_shutdown engine
+        logoff_and_shutdown ("Duplicate message received without PossibleDuplicate flag", engine)
     else if is_duplicate then
         (* Message is a duplicate and passed all checks -- ignore it. *)
         engine
@@ -292,7 +298,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 }
             | Full_Msg_Logon _data           -> engine
             | Full_Msg_Logoff _data          ->
-                let engine = logoff_and_shutdown engine in
+                let engine = logoff_and_shutdown ("Logoff message received during active session", engine) in
                 { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num 
                 ; fe_curr_mode = NoActiveSession
                 }
@@ -460,7 +466,7 @@ let rec update_cache ( cache : cache_entry list ) (msg : cache_entry)  =
     Transition to CacheReplay when the cahce is complete. *)
 let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     match m.full_msg_data with
-    | Full_FIX_Admin_Msg (Full_Msg_Logoff _m) -> logoff_and_shutdown ( engine )
+    | Full_FIX_Admin_Msg (Full_Msg_Logoff _m) -> logoff_and_shutdown ("Logoff message received during recovery", engine )
     | Full_FIX_Admin_Msg (Full_Msg_Resend_Request m) -> initiate_Resend ( Recovery, m, engine)
     | _ ->
     let msg = match m with

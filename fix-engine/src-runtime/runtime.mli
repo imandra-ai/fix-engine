@@ -21,6 +21,7 @@ type event =
   | Connected of string
   | Disconnected of string
   | ConnectionRejected of string
+  | TransitionMessage of Fix_engine_state.transition_message
 [@@deriving show]
 
 type handle

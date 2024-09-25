@@ -86,6 +86,7 @@ module Internal : sig
     | Log of string
     | FIXFromEngine of message
     | State of Fix_engine_state.fix_engine_state
+    | TransitionMessage of Fix_engine_state.transition_message
 
   type precision =
     | Milli
@@ -153,6 +154,7 @@ end = struct
     | Log of string
     | FIXFromEngine of message
     | State of Fix_engine_state.fix_engine_state
+    | TransitionMessage of Fix_engine_state.transition_message
 
   type precision =
     | Milli
@@ -217,6 +219,12 @@ end = struct
     let engine_state =
       { engine_state with outgoing_fix_msg = None; outgoing_int_msg = None }
     in
+    let* () =
+      match engine_state.transition_log with
+      | Some msg -> t.recv (TransitionMessage msg)
+      | None -> Lwt.return_unit
+    in
+    let engine_state = { engine_state with transition_log = None } in
     if Fix_engine_state.engine_state_busy engine_state then
       while_busy_loop t engine_state
     else

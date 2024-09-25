@@ -17,12 +17,19 @@ type message = {
 }
 [@@deriving show]
 
+type transition_message = Fix_engine_state.transition_message
+
+let pp_transition_message fmt msg =
+  CCFormat.fprintf fmt "%s"
+    (Fix_engine_json.fix_engine_transition_message_to_string msg)
+
 type event =
   | Log of string
   | FIXMessage of message
   | Connected of string
   | Disconnected of string
   | ConnectionRejected of string
+  | TransitionMessage of transition_message
 [@@deriving show]
 
 type t = {
@@ -62,6 +69,7 @@ let receive_engine t event =
   | Engine.FIXFromEngine message, Some fixio ->
     Lwt.join [ Fix_io.send fixio message; t.recv (mk_event message Outgoing) ]
   | Engine.Log msg, _ -> t.recv (Log msg)
+  | Engine.TransitionMessage msg, _ -> t.recv (TransitionMessage msg)
   | _ -> Lwt.return_unit
 
 let on_disconnect t addr_str =
