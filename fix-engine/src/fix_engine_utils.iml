@@ -30,6 +30,11 @@ let msg_is_sequence_gap ( engine, msg_header : fix_engine_state * fix_header ) =
     msg_header.h_msg_seq_num > engine.incoming_seq_num + 1
 ;;
 
+(* Add message to transition_log for external observability *)
+let with_transition_message ( message : transition_message ) ( engine : fix_engine_state) = 
+    { engine with transition_log = message :: engine.transition_log }
+;;
+
 (** get_gap_fill_msg -> out of all of the administrative messages, only the 'Reject' can be retransmitted.
     All application-level messages may be retransmitted - we should, in the future add logic to
     not retransmit stale orders, etc. *)
@@ -352,6 +357,8 @@ let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * f
             srej_msg_reject_reason = Some SendingTimeAccuracyProblem;
             } in
         let engine = session_reject ( reject , engine ) in
-        Some { engine with fe_curr_mode = ShuttingDown }
+        Some ({ engine with 
+            fe_curr_mode = ShuttingDown; 
+        } |> with_transition_message ( MissingField Full_Field_OrigSendingTime_Tag ) )
     else None
 ;;

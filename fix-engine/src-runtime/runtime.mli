@@ -15,13 +15,15 @@ type message = {
 }
 [@@deriving show]
 
+type transition_message = Fix_engine_state.transition_message [@@deriving show]
+
 type event =
   | Log of string
   | FIXMessage of message
   | Connected of string
   | Disconnected of string
   | ConnectionRejected of string
-  | TransitionMessage of Fix_engine_state.transition_message
+  | TransitionMessage of transition_message
 [@@deriving show]
 
 type handle

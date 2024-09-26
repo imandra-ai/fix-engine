@@ -12,11 +12,13 @@
 open Datetime
 
 [@@@import "../src-protocol/full_admin_enums.iml"]
+[@@@import "../src-protocol/full_admin_tags.iml"]
 
 [@@@import "../src-protocol/full_messages.iml"]
 
 open Full_admin_enums
 open Full_admin_messages
+open Full_admin_tags
 open Full_messages
 
 (** Define set of actions + data for manual intervention by the user. *)
@@ -87,6 +89,18 @@ type transition_message =
   | ShuttingDown of string
   | LogonFailed of string
   | LogonSucceeded of string
+  | MissingField of full_admin_field_tag
+  | SequenceNumberReset of int
+  | LogoutTimeout
+  | LogoutComplete
+  | GapDetected
+  | ValidDuplicateIgnored
+  | TestRequestReceived of string
+  | TestRequestSent of string
+  | TestRequestAcknowledged
+  | TestRequestTimeout
+  | MessageIgnored of string
+  | TerminateTransport of string
 
 type fix_engine_state = {
   fe_begin_string: string;
@@ -145,7 +159,7 @@ type fix_engine_state = {
   fe_encrypt_method: fix_encryption_method;
   logon_extra_fields: (string * string) list;
   fe_next_expected_msg_seq_num: int option;
-  transition_log: transition_message option;
+  transition_log: transition_message list;
 }
 (** Engine state structure containing all of the information required for it operate. *)
 
@@ -186,7 +200,7 @@ let init_fix_engine_state =
     fe_encrypt_method = NoEncryption;
     logon_extra_fields = [];
     fe_next_expected_msg_seq_num = None;
-    transition_log = None;
+    transition_log = [];
   }
 
 (** THEOREM: one_step calls on busy state eventually terminate *)

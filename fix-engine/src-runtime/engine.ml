@@ -220,11 +220,16 @@ end = struct
       { engine_state with outgoing_fix_msg = None; outgoing_int_msg = None }
     in
     let* () =
-      match engine_state.transition_log with
-      | Some msg -> t.recv (TransitionMessage msg)
-      | None -> Lwt.return_unit
+      let rec loop log =
+        match log with
+        | msg :: tl ->
+          let* () = t.recv (TransitionMessage msg) in
+          loop tl
+        | [] -> Lwt.return_unit
+      in
+      loop (List.rev engine_state.transition_log)
     in
-    let engine_state = { engine_state with transition_log = None } in
+    let engine_state = { engine_state with transition_log = [] } in
     if Fix_engine_state.engine_state_busy engine_state then
       while_busy_loop t engine_state
     else
