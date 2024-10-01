@@ -1,5 +1,7 @@
 let ( let* ) = Lwt.bind
 
+let ( let+ ) = Lwt.( >|= )
+
 type direction =
   | Incoming
   | Outgoing
@@ -17,12 +19,21 @@ type message = {
 }
 [@@deriving show]
 
+type transition_message = Fix_engine_state.transition_message
+
+let show_transition_message =
+  Fix_engine_json.fix_engine_transition_message_to_string
+
+let pp_transition_message fmt msg =
+  CCFormat.fprintf fmt "%s" (show_transition_message msg)
+
 type event =
   | Log of string
   | FIXMessage of message
   | Connected of string
   | Disconnected of string
   | ConnectionRejected of string
+  | TransitionMessage of transition_message
 [@@deriving show]
 
 type t = {
@@ -51,18 +62,31 @@ let mk_event message direction =
   FIXMessage { message; direction; msg_type }
 
 let receive_fix_io t message =
-  Lwt.join
-    [
-      Engine.process_fix_wire t.engine message;
-      t.recv (mk_event message Incoming);
-    ]
+  let+ () =
+    Lwt.join
+      [
+        Engine.process_fix_wire t.engine message;
+        t.recv (mk_event message Incoming);
+      ]
+  in
+  false
 
 let receive_engine t event =
   match event, t.fixio with
   | Engine.FIXFromEngine message, Some fixio ->
-    Lwt.join [ Fix_io.send fixio message; t.recv (mk_event message Outgoing) ]
-  | Engine.Log msg, _ -> t.recv (Log msg)
-  | _ -> Lwt.return_unit
+    let+ () =
+      Lwt.join [ Fix_io.send fixio message; t.recv (mk_event message Outgoing) ]
+    in
+    false
+  | Engine.Log msg, _ ->
+    let+ () = t.recv (Log msg) in
+    false
+  | Engine.TransitionMessage msg, _ ->
+    let+ () = t.recv (TransitionMessage msg) in
+    (match msg with
+    | TerminateTransport _ -> true
+    | _ -> false)
+  | _ -> Lwt.return_false
 
 let on_disconnect t addr_str =
   let* () =
@@ -72,23 +96,24 @@ let on_disconnect t addr_str =
 
 let receive_send t message =
   let* result = Engine.send_fix_message t.engine message in
-  Lwt_mvar.put t.result_box result
+  let+ () = Lwt_mvar.put t.result_box result in
+  false
 
-let rec loop (t : t) : unit Lwt.t =
+let rec engine_io_thread (t : t) : unit Lwt.t =
   let rec loop_box box receiver =
     let* msg = Lwt_mvar.take box in
-    let* () = receiver t msg in
-    loop_box box receiver
+    let* terminate = receiver t msg in
+    if terminate then
+      Lwt.return_unit
+    else
+      loop_box box receiver
   in
-  let* () =
-    Lwt.join
-      [
-        loop_box t.engine_box receive_engine;
-        loop_box t.fixio_box receive_fix_io;
-        loop_box t.send_box receive_send;
-      ]
-  in
-  loop t
+  Lwt.pick
+    [
+      loop_box t.engine_box receive_engine;
+      loop_box t.fixio_box receive_fix_io;
+      loop_box t.send_box receive_send;
+    ]
 
 let with_catch_disconnect t f =
   Lwt.catch f (fun e ->
@@ -119,7 +144,7 @@ let server_handler (t : t) (in_addr : Unix.sockaddr) (inch, outch) =
     let fixio_thread, fixio = Fix_io.start ~recv ?log_file (inch, outch) in
     let t = { t with fixio = Some fixio } in
     Lwt.finalize
-      (fun () -> Lwt.pick [ fixio_thread; loop t ])
+      (fun () -> Lwt.pick [ fixio_thread; engine_io_thread t ])
       (fun _ -> on_disconnect t addr_str)
 
 let default_session_folder ~(config : Engine.config) =
@@ -193,7 +218,7 @@ let client_handler addr_str (t, engine_thread, init_msg) (inch, outch) =
   in
   let t = { t with fixio = Some fixio } in
   let* () = Engine.send_internal_message t.engine init_msg in
-  Lwt.pick [ engine_thread; fixio_thread; loop t ]
+  Lwt.pick [ engine_thread; fixio_thread; engine_io_thread t ]
 
 let start_client ?(session_dir : string option) ?(log_file : string option)
     ?(reset : bool option) ~(config : Engine.config) ~(host : string)

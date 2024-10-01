@@ -43,6 +43,7 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
                                 fe_last_time_data_sent  = engine'.fe_curr_time;
                                 fe_history              = add_msg_to_history ( engine'.fe_history, test_request_msg );
                         }
+                        |> with_transition_message (TestRequestSent engine.last_test_req_id)
                     end 
                 else
 
@@ -78,8 +79,27 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
                                 outgoing_seq_num        = engine'.outgoing_seq_num + 1;
                                 fe_last_time_data_sent  = engine'.fe_curr_time;
                                 fe_history              = add_msg_to_history ( engine.fe_history, logoff_msg );
-                        }
+                        } 
+                        |> with_transition_message TestRequestTimeout 
+                        |> with_transition_message (TerminateTransport "No timely response to TestRequest")
                     end
+                else
+                    engine'
+            end
+        else if engine.fe_curr_mode = ShutdownInitiated then
+            begin
+            (* Wait twice the heartbeat_interval, as recommended in the FIX Session Layer specification *)
+                let received_cutoff = engine.fe_last_time_data_sent 
+                    |> utctimestamp_micro_duration_Add engine.fe_heartbeat_interval
+                    |> utctimestamp_micro_duration_Add engine.fe_heartbeat_interval in
+                if utctimestamp_GreaterThan_micro_micro t received_cutoff then
+                    { 
+                        engine' with
+                            fe_curr_mode            = NoActiveSession;
+                            fe_curr_status          = ConnTerminatedWithoutLogoff;
+                    } 
+                    |> with_transition_message LogoutTimeout 
+                    |> with_transition_message (TerminateTransport "No timely response to Logout message, shutting down")
                 else
                     engine'
             end
@@ -253,7 +273,7 @@ let one_step ( engine : fix_engine_state ) =
     (* If we still need to retransmit our messages out to the receiving engine. *)
     | Retransmit   -> run_retransmit (engine)
     (* We need to send out Logoff and transition to ShutdownInitiated *)
-    | ShuttingDown -> logoff_and_shutdown (engine)
+    | ShuttingDown -> logoff_and_shutdown ("In ShuttingDown mode", engine)
     (* Now we look to process internal (coming from our application) and external (coming from
         another FIX engine) messages. *)
     | _ -> begin match engine.incoming_fix_msg with 

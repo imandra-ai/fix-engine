@@ -26,7 +26,7 @@ open Fix_engine_utils;;
 
 (** In many abnormal cases we need to send out the Logout messages and
     transition to ShutdownInitiated state. *)
-let logoff_and_shutdown ( engine : fix_engine_state ) =
+let logoff_and_shutdown ( reason, engine : string * fix_engine_state ) =
     let logoff_msg = create_logoff_msg ( engine ) in
     { engine with
         fe_last_time_data_sent  = engine.fe_curr_time;
@@ -34,7 +34,7 @@ let logoff_and_shutdown ( engine : fix_engine_state ) =
         outgoing_fix_msg        = Some ( ValidMsg ( logoff_msg ));
         outgoing_seq_num        = engine.outgoing_seq_num + 1;
         fe_history              = add_msg_to_history ( engine.fe_history, logoff_msg );
-    }
+    } |> with_transition_message (ShuttingDown reason)
 ;;
 
 (** Before sending out a historic message, we need to:
@@ -105,23 +105,30 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
     match m.full_msg_data with
     | Full_FIX_Admin_Msg ( Full_Msg_Logon d ) ->
         begin
-            if ( m.full_msg_header.h_target_comp_id <> engine.fe_comp_id ) ||
+            if ( m.full_msg_header.h_target_comp_id <> engine.fe_comp_id ) then
+                engine 
+                |> with_transition_message ( LogonFailed "Invalid TargetCompID" )
+                |> with_transition_message ( TerminateTransport "Logon failed due to invalid TargetCompID" )
+            else if
                ( m.full_msg_header.h_sender_comp_id <> engine.fe_target_comp_id )
                then
-                engine
+               engine 
+               |> with_transition_message ( LogonFailed "Invalid SenderCompID" )
+               |> with_transition_message ( TerminateTransport "Logon failed due to invalid SenderCompID" )
             else if
               (* TODO: better timestamp comparison *)
               let sending_day, _ps = m.full_msg_header.h_sending_time |> T.to_span |> T.Span.to_d_ps in
               let current_day, _ps = engine.fe_curr_time |> T.to_span |> T.Span.to_d_ps in
               sending_day <> current_day
             then
-              logoff_and_shutdown engine
+              logoff_and_shutdown ("Invalid SendingTime in Logon message", engine)
             else if ( engine.fe_encrypt_method <> d.ln_encrypt_method &&
                 engine.fe_num_logons_sent >= engine.fe_max_num_logons_sent ) then {
                     engine with
                         fe_curr_mode = Error;
                         fe_curr_status = MaxNumLogonMsgsViolated;
-            } else
+                } |> with_transition_message (LogonFailed "Maximum number of logon attempts exceeded" )
+            else
                 begin
                     let engine = match d.ln_reset_seq_num_flag with
                         | Some true -> { engine with incoming_seq_num = 0; outgoing_seq_num = 0 }
@@ -142,17 +149,18 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                             fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
                         } in
                     if m.full_msg_header.h_msg_seq_num < (engine.incoming_seq_num + 1) then
-                        logoff_and_shutdown engine
+                        logoff_and_shutdown ("Invalid SequenceNumber in Logon message", engine)
                     else if msg_is_sequence_gap ( engine, m.full_msg_header )
                     then { engine with
                         incoming_seq_num  = engine.incoming_seq_num + 1;
                         fe_curr_mode      = GapDetected;
-                    } else
+                    } |> with_transition_message ( LogonSucceeded "Gap detected during acceptor logon" )
+                    else
                     { engine with
                         fe_curr_mode      = ActiveSession;
                         incoming_seq_num  = m.full_msg_header.h_msg_seq_num;
                         fe_history        = add_msg_to_history ( engine.fe_history, logon_msg );
-                    }
+                    } |> with_transition_message ( LogonSucceeded "Session active after acceptor logon" )
                 end
         end
     | _ -> engine
@@ -180,13 +188,13 @@ let run_logon_sequence ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                                 fe_last_time_data_sent  = engine.fe_curr_time;
                                 fe_num_logons_sent      = engine.fe_num_logons_sent + 1;
                                 fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
-                        }
+                        } |> with_transition_message ( LogonFailed "Mismatched encryption during initiator logon, resending Logon message" )
                     end
                 else {
                     engine' with
                         fe_curr_mode = ActiveSession;
                         incoming_seq_num = m.full_msg_header.h_msg_seq_num;
-                }
+                } |> with_transition_message ( LogonSucceeded "Session active after initiator logon" )
             end
         | _ -> engine'
 ;;
@@ -230,8 +238,9 @@ let attempt_sequence_reset (engine, msg_seq_num, new_seq_num : fix_engine_state 
             Most logical thing seems to just not change it at all*)
         { engine' with incoming_seq_num = engine.incoming_seq_num }
     else {
-        engine with incoming_seq_num = new_seq_num - 1
-    }
+        engine with 
+            incoming_seq_num = new_seq_num - 1;
+    } |> with_transition_message ( SequenceNumberReset new_seq_num )
 ;;
 
 (** We're operating in a normal mode. *)
@@ -255,7 +264,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 outgoing_seq_num        = engine.outgoing_seq_num + 1;
                 fe_last_time_data_sent  = engine.fe_curr_time;
                 fe_history              = add_msg_to_history ( engine.fe_history, logon_msg );
-            }
+            } |> with_transition_message ( SequenceNumberReset 1 )
         | _ -> engine
         )
     | _ ->  
@@ -267,10 +276,10 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     let possdup = match header.h_poss_dup_flag with Some true -> true | _ -> false in
     if is_duplicate && not possdup then
         (* Message is a duplicate, but no PossibleDuplicate flag -- we instantly logoff *)
-        logoff_and_shutdown engine
+        logoff_and_shutdown ("Message with sequence number below watermark received without PossibleDuplicate flag", engine)
     else if is_duplicate then
         (* Message is a duplicate and passed all checks -- ignore it. *)
-        engine
+        engine |> with_transition_message ValidDuplicateIgnored
     else if msg_is_sequence_gap ( engine, m.full_msg_header ) then {
         (* We've detected a gap in messages. We therefore need to
             transition into GapDetected mode. We place the message into the cahce. *)
@@ -278,7 +287,8 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
             fe_curr_mode = GapDetected;
             incoming_seq_num  = engine.incoming_seq_num + 1;
             fe_cache = CacheMessage m :: [];
-    } else
+        } |> with_transition_message GapDetected
+    else
     (* Message sequence number is OK -- lets process its data *)
     match m.full_msg_data with
     | Full_FIX_Admin_Msg adm_msg ->
@@ -292,10 +302,10 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                 }
             | Full_Msg_Logon _data           -> engine
             | Full_Msg_Logoff _data          ->
-                let engine = logoff_and_shutdown engine in
+                let engine = logoff_and_shutdown ("Logout message received during active session", engine) in
                 { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num 
                 ; fe_curr_mode = NoActiveSession
-                }
+                } |> with_transition_message LogoutComplete
             | Full_Msg_Reject _data          -> { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
             | Full_Msg_Business_Reject _data -> { engine with incoming_seq_num = m.full_msg_header.h_msg_seq_num }
             | Full_Msg_Resend_Request data  ->
@@ -311,7 +321,7 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
                         fe_history              = add_msg_to_history ( engine.fe_history, hearbeat_msg );
                         outgoing_seq_num        = engine.outgoing_seq_num + 1;
                         incoming_seq_num        = m.full_msg_header.h_msg_seq_num;
-                }
+                } |> with_transition_message ( TestRequestReceived data.test_req_id )
         end
     | Full_FIX_App_Msg app_msg          ->
         (* We're processing an application type of message. We just need
@@ -345,9 +355,10 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 let run_wait_heartbeat ( msg, engine ) =
     match msg.full_msg_data with
     | Full_FIX_Admin_Msg ( Full_Msg_Heartbeat _d ) ->
-        let engine = {engine with fe_curr_mode = ActiveSession } in
+        let engine = {engine with fe_curr_mode = ActiveSession} 
+        |> with_transition_message TestRequestAcknowledged in
         run_active_session  (msg , engine)
-    | _ -> engine
+    | _ -> engine |> with_transition_message ( MessageIgnored "Waiting for Heartbeat message" )
 ;;
 
 (** We're in a GapDetected state. Sending out resend request and transitioning into Recovery.*)
@@ -360,6 +371,7 @@ let run_gap_detected ( engine : fix_engine_state ) =
         fe_history       = add_msg_to_history ( engine.fe_history, resend_msg );
         outgoing_seq_num = engine.outgoing_seq_num + 1;
     }
+    |> with_transition_message GapDetected
 ;;
 
 
@@ -460,7 +472,7 @@ let rec update_cache ( cache : cache_entry list ) (msg : cache_entry)  =
     Transition to CacheReplay when the cahce is complete. *)
 let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     match m.full_msg_data with
-    | Full_FIX_Admin_Msg (Full_Msg_Logoff _m) -> logoff_and_shutdown ( engine )
+    | Full_FIX_Admin_Msg (Full_Msg_Logoff _m) -> logoff_and_shutdown ("Logoff message received during recovery", engine )
     | Full_FIX_Admin_Msg (Full_Msg_Resend_Request m) -> initiate_Resend ( Recovery, m, engine)
     | _ ->
     let msg = match m with
@@ -492,9 +504,11 @@ let run_recovery ( m, engine : full_valid_fix_msg * fix_engine_state ) =
 (** We've sent out a Logout message and are now waiting for a confirmation of logout. *)
 let run_shutdown ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     match m.full_msg_data with
-    | Full_FIX_Admin_Msg ( Full_Msg_Logoff _m )          -> { engine with fe_curr_mode = NoActiveSession; }
+    | Full_FIX_Admin_Msg ( Full_Msg_Logoff _m )          -> { engine with 
+        fe_curr_mode = NoActiveSession; 
+    } |> with_transition_message ( TerminateTransport "Clean logout" )
     | Full_FIX_Admin_Msg ( Full_Msg_Resend_Request m )  ->
     (* Since after initiating a Logoff, we can still process Resend request. *)
         initiate_Resend ( ShutdownInitiated, m, engine)
-    | _ -> engine
+    | _ -> engine |> with_transition_message ( MessageIgnored "Waiting for Logout message" )
 ;;
