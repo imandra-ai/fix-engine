@@ -99,7 +99,7 @@ let receive_send t message =
   let+ () = Lwt_mvar.put t.result_box result in
   false
 
-let rec engine_io_thread (t : t) : unit Lwt.t =
+let engine_io_thread (t : t) : unit Lwt.t =
   let rec loop_box box receiver =
     let* msg = Lwt_mvar.take box in
     let* terminate = receiver t msg in
