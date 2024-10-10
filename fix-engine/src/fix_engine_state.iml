@@ -12,6 +12,7 @@
 open Datetime
 
 [@@@import "../src-protocol/full_admin_enums.iml"]
+
 [@@@import "../src-protocol/full_admin_tags.iml"]
 
 [@@@import "../src-protocol/full_messages.iml"]
@@ -85,6 +86,11 @@ type cache_entry =
   | CacheMessage of full_valid_fix_msg
   | CacheGap of int * int
 
+type message_ignore_reason =
+  | WaitingForHeartbeat
+  | WaitingForLogout
+  | SessionReject of Full_admin_enums.fix_session_reject_reason option
+
 type transition_message =
   | ShuttingDown of string
   | LogonFailed of string
@@ -99,7 +105,7 @@ type transition_message =
   | TestRequestSent of string
   | TestRequestAcknowledged
   | TestRequestTimeout
-  | MessageIgnored of string
+  | MessageIgnored of message_ignore_reason
   | TerminateTransport of string
 
 type fix_engine_state = {
