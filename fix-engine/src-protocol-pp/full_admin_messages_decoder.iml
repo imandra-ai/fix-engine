@@ -22,12 +22,12 @@ open Full_admin_messages
 open Full_message_tags_decoder
 module D = Decoders_yojson.Basic.Decode
 
-
 let or_raw_fix decode =
   let open D in
   one_of
-    [("value", (decode >|= fun x -> Ok x));
-     ("raw_fix", (string >|= fun s -> Error s));
+    [
+      ("value", decode >|= fun x -> Ok x);
+      ("raw_fix", string >|= fun s -> Error s);
     ]
 
 let full_msg_heartbeat_decoder : full_msg_heartbeat_data D.decoder =
