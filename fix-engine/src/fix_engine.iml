@@ -220,7 +220,7 @@ let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) =
                                        { state' with fe_last_data_received = engine.fe_curr_time }
             | _                     -> 
                engine
-                                      |> with_transition_message (MessageIgnored (SessionReject data.srej_msg_reject_reason))
+                                      |> with_transition_message (MessageIgnored (SessionReject data))
         end
     | BusinessRejectedMsg data  ->
         begin
