@@ -89,6 +89,7 @@ type cache_entry =
 type message_ignore_reason =
   | WaitingForHeartbeat
   | WaitingForLogout
+  | Garbled
   | SessionReject of Full_messages.session_rejected_msg_data
 
 type transition_message =
