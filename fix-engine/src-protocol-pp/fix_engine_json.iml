@@ -48,7 +48,7 @@ let message_ignore_reason_to_string = function
                                                                                                                   | Some (Full_Admin_Field_Tag t) -> " (Tag: " ^ full_admin_field_tag_to_string t ^ ")"
                                                                                                                   | Some (Full_App_Field_Tag s) -> " (Tag: " ^ s ^ ")"                                   
                                                                                                                   | None -> ""
-                                   | None -> "NoReason")
+                                   | None -> "NoReason") 
 
 
 let fix_engine_transition_message_to_string = function
