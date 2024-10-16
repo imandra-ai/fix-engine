@@ -45,10 +45,10 @@ let message_ignore_reason_to_string = function
   | Garbled -> "Garbled"
   | SessionReject reject_data -> "SessionReject - " ^
                                   (match reject_data.srej_msg_reject_reason with
-                                   | Some reason -> Full_admin_enums_json.session_reject_reason_to_string reason ^ match(reject_data.srej_msg_field_tag) with
+                                   | Some reason -> Full_admin_enums_json.session_reject_reason_to_string reason ^ (match(reject_data.srej_msg_field_tag) with
                                                                                                                   | Some (Full_Admin_Field_Tag t) -> " (Tag: " ^ full_admin_field_tag_to_string t ^ ")"
                                                                                                                   | Some (Full_App_Field_Tag s) -> " (Tag: " ^ s ^ ")"                                   
-                                                                                                                  | None -> ""
+                                                                                                                  | None -> "")
                                    | None -> "NoReason") 
 
 
