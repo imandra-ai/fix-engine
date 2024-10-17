@@ -1,9 +1,10 @@
-(** Numeric types and operations. *)
-(***
-    Imandra Inc.
-    Copyright (c) 2014 - 2021
-    numeric.iml
-*)
+(* Imandra Inc. copyright 2024 *)
+
+let ( // ) (x : int) (y : int) : int =
+  if y = 0 then
+    0
+  else
+    x / y
 
 type fix_float_0 = Float_0 of int
 
@@ -809,199 +810,199 @@ let float_Sub_6_6 (f : fix_float_6) (x : fix_float_6) : fix_float_6 =
 
 let float_Div_0_0 (f : fix_float_0) (x : fix_float_0) : fix_float_0 =
   match f, x with
-  | Float_0 f, Float_0 x -> Float_0 (f / x)
+  | Float_0 f, Float_0 x -> Float_0 (f // x)
 
 let float_Div_0_1 (f : fix_float_0) (x : fix_float_1) : fix_float_1 =
   match f, x with
-  | Float_0 f, Float_1 x -> Float_1 (f * 100 / x)
+  | Float_0 f, Float_1 x -> Float_1 (f * 100 // x)
 
 let float_Div_0_2 (f : fix_float_0) (x : fix_float_2) : fix_float_2 =
   match f, x with
-  | Float_0 f, Float_2 x -> Float_2 (f * 10000 / x)
+  | Float_0 f, Float_2 x -> Float_2 (f * 10000 // x)
 
 let float_Div_0_3 (f : fix_float_0) (x : fix_float_3) : fix_float_3 =
   match f, x with
-  | Float_0 f, Float_3 x -> Float_3 (f * 1000000 / x)
+  | Float_0 f, Float_3 x -> Float_3 (f * 1000000 // x)
 
 let float_Div_0_4 (f : fix_float_0) (x : fix_float_4) : fix_float_4 =
   match f, x with
-  | Float_0 f, Float_4 x -> Float_4 (f * 100000000 / x)
+  | Float_0 f, Float_4 x -> Float_4 (f * 100000000 // x)
 
 let float_Div_0_5 (f : fix_float_0) (x : fix_float_5) : fix_float_5 =
   match f, x with
-  | Float_0 f, Float_5 x -> Float_5 (f * 10000000000 / x)
+  | Float_0 f, Float_5 x -> Float_5 (f * 10000000000 // x)
 
 let float_Div_0_6 (f : fix_float_0) (x : fix_float_6) : fix_float_6 =
   match f, x with
-  | Float_0 f, Float_6 x -> Float_6 (f * 1000000000000 / x)
+  | Float_0 f, Float_6 x -> Float_6 (f * 1000000000000 // x)
 
 let float_Div_1_0 (f : fix_float_1) (x : fix_float_0) : fix_float_1 =
   match f, x with
-  | Float_1 f, Float_0 x -> Float_1 (f / x)
+  | Float_1 f, Float_0 x -> Float_1 (f // x)
 
 let float_Div_1_1 (f : fix_float_1) (x : fix_float_1) : fix_float_1 =
   match f, x with
-  | Float_1 f, Float_1 x -> Float_1 (f * 10 / x)
+  | Float_1 f, Float_1 x -> Float_1 (f * 10 // x)
 
 let float_Div_1_2 (f : fix_float_1) (x : fix_float_2) : fix_float_2 =
   match f, x with
-  | Float_1 f, Float_2 x -> Float_2 (f * 1000 / x)
+  | Float_1 f, Float_2 x -> Float_2 (f * 1000 // x)
 
 let float_Div_1_3 (f : fix_float_1) (x : fix_float_3) : fix_float_3 =
   match f, x with
-  | Float_1 f, Float_3 x -> Float_3 (f * 100000 / x)
+  | Float_1 f, Float_3 x -> Float_3 (f * 100000 // x)
 
 let float_Div_1_4 (f : fix_float_1) (x : fix_float_4) : fix_float_4 =
   match f, x with
-  | Float_1 f, Float_4 x -> Float_4 (f * 10000000 / x)
+  | Float_1 f, Float_4 x -> Float_4 (f * 10000000 // x)
 
 let float_Div_1_5 (f : fix_float_1) (x : fix_float_5) : fix_float_5 =
   match f, x with
-  | Float_1 f, Float_5 x -> Float_5 (f * 1000000000 / x)
+  | Float_1 f, Float_5 x -> Float_5 (f * 1000000000 // x)
 
 let float_Div_1_6 (f : fix_float_1) (x : fix_float_6) : fix_float_6 =
   match f, x with
-  | Float_1 f, Float_6 x -> Float_6 (f * 100000000000 / x)
+  | Float_1 f, Float_6 x -> Float_6 (f * 100000000000 // x)
 
 let float_Div_2_0 (f : fix_float_2) (x : fix_float_0) : fix_float_2 =
   match f, x with
-  | Float_2 f, Float_0 x -> Float_2 (f / x)
+  | Float_2 f, Float_0 x -> Float_2 (f // x)
 
 let float_Div_2_1 (f : fix_float_2) (x : fix_float_1) : fix_float_2 =
   match f, x with
-  | Float_2 f, Float_1 x -> Float_2 (f * 10 / x)
+  | Float_2 f, Float_1 x -> Float_2 (f * 10 // x)
 
 let float_Div_2_2 (f : fix_float_2) (x : fix_float_2) : fix_float_2 =
   match f, x with
-  | Float_2 f, Float_2 x -> Float_2 (f * 100 / x)
+  | Float_2 f, Float_2 x -> Float_2 (f * 100 // x)
 
 let float_Div_2_3 (f : fix_float_2) (x : fix_float_3) : fix_float_3 =
   match f, x with
-  | Float_2 f, Float_3 x -> Float_3 (f * 10000 / x)
+  | Float_2 f, Float_3 x -> Float_3 (f * 10000 // x)
 
 let float_Div_2_4 (f : fix_float_2) (x : fix_float_4) : fix_float_4 =
   match f, x with
-  | Float_2 f, Float_4 x -> Float_4 (f * 1000000 / x)
+  | Float_2 f, Float_4 x -> Float_4 (f * 1000000 // x)
 
 let float_Div_2_5 (f : fix_float_2) (x : fix_float_5) : fix_float_5 =
   match f, x with
-  | Float_2 f, Float_5 x -> Float_5 (f * 100000000 / x)
+  | Float_2 f, Float_5 x -> Float_5 (f * 100000000 // x)
 
 let float_Div_2_6 (f : fix_float_2) (x : fix_float_6) : fix_float_6 =
   match f, x with
-  | Float_2 f, Float_6 x -> Float_6 (f * 10000000000 / x)
+  | Float_2 f, Float_6 x -> Float_6 (f * 10000000000 // x)
 
 let float_Div_3_0 (f : fix_float_3) (x : fix_float_0) : fix_float_3 =
   match f, x with
-  | Float_3 f, Float_0 x -> Float_3 (f / x)
+  | Float_3 f, Float_0 x -> Float_3 (f // x)
 
 let float_Div_3_1 (f : fix_float_3) (x : fix_float_1) : fix_float_3 =
   match f, x with
-  | Float_3 f, Float_1 x -> Float_3 (f * 10 / x)
+  | Float_3 f, Float_1 x -> Float_3 (f * 10 // x)
 
 let float_Div_3_2 (f : fix_float_3) (x : fix_float_2) : fix_float_3 =
   match f, x with
-  | Float_3 f, Float_2 x -> Float_3 (f * 100 / x)
+  | Float_3 f, Float_2 x -> Float_3 (f * 100 // x)
 
 let float_Div_3_3 (f : fix_float_3) (x : fix_float_3) : fix_float_3 =
   match f, x with
-  | Float_3 f, Float_3 x -> Float_3 (f * 1000 / x)
+  | Float_3 f, Float_3 x -> Float_3 (f * 1000 // x)
 
 let float_Div_3_4 (f : fix_float_3) (x : fix_float_4) : fix_float_4 =
   match f, x with
-  | Float_3 f, Float_4 x -> Float_4 (f * 100000 / x)
+  | Float_3 f, Float_4 x -> Float_4 (f * 100000 // x)
 
 let float_Div_3_5 (f : fix_float_3) (x : fix_float_5) : fix_float_5 =
   match f, x with
-  | Float_3 f, Float_5 x -> Float_5 (f * 10000000 / x)
+  | Float_3 f, Float_5 x -> Float_5 (f * 10000000 // x)
 
 let float_Div_3_6 (f : fix_float_3) (x : fix_float_6) : fix_float_6 =
   match f, x with
-  | Float_3 f, Float_6 x -> Float_6 (f * 1000000000 / x)
+  | Float_3 f, Float_6 x -> Float_6 (f * 1000000000 // x)
 
 let float_Div_4_0 (f : fix_float_4) (x : fix_float_0) : fix_float_4 =
   match f, x with
-  | Float_4 f, Float_0 x -> Float_4 (f / x)
+  | Float_4 f, Float_0 x -> Float_4 (f // x)
 
 let float_Div_4_1 (f : fix_float_4) (x : fix_float_1) : fix_float_4 =
   match f, x with
-  | Float_4 f, Float_1 x -> Float_4 (f * 10 / x)
+  | Float_4 f, Float_1 x -> Float_4 (f * 10 // x)
 
 let float_Div_4_2 (f : fix_float_4) (x : fix_float_2) : fix_float_4 =
   match f, x with
-  | Float_4 f, Float_2 x -> Float_4 (f * 100 / x)
+  | Float_4 f, Float_2 x -> Float_4 (f * 100 // x)
 
 let float_Div_4_3 (f : fix_float_4) (x : fix_float_3) : fix_float_4 =
   match f, x with
-  | Float_4 f, Float_3 x -> Float_4 (f * 1000 / x)
+  | Float_4 f, Float_3 x -> Float_4 (f * 1000 // x)
 
 let float_Div_4_4 (f : fix_float_4) (x : fix_float_4) : fix_float_4 =
   match f, x with
-  | Float_4 f, Float_4 x -> Float_4 (f * 10000 / x)
+  | Float_4 f, Float_4 x -> Float_4 (f * 10000 // x)
 
 let float_Div_4_5 (f : fix_float_4) (x : fix_float_5) : fix_float_5 =
   match f, x with
-  | Float_4 f, Float_5 x -> Float_5 (f * 1000000 / x)
+  | Float_4 f, Float_5 x -> Float_5 (f * 1000000 // x)
 
 let float_Div_4_6 (f : fix_float_4) (x : fix_float_6) : fix_float_6 =
   match f, x with
-  | Float_4 f, Float_6 x -> Float_6 (f * 100000000 / x)
+  | Float_4 f, Float_6 x -> Float_6 (f * 100000000 // x)
 
 let float_Div_5_0 (f : fix_float_5) (x : fix_float_0) : fix_float_5 =
   match f, x with
-  | Float_5 f, Float_0 x -> Float_5 (f / x)
+  | Float_5 f, Float_0 x -> Float_5 (f // x)
 
 let float_Div_5_1 (f : fix_float_5) (x : fix_float_1) : fix_float_5 =
   match f, x with
-  | Float_5 f, Float_1 x -> Float_5 (f * 10 / x)
+  | Float_5 f, Float_1 x -> Float_5 (f * 10 // x)
 
 let float_Div_5_2 (f : fix_float_5) (x : fix_float_2) : fix_float_5 =
   match f, x with
-  | Float_5 f, Float_2 x -> Float_5 (f * 100 / x)
+  | Float_5 f, Float_2 x -> Float_5 (f * 100 // x)
 
 let float_Div_5_3 (f : fix_float_5) (x : fix_float_3) : fix_float_5 =
   match f, x with
-  | Float_5 f, Float_3 x -> Float_5 (f * 1000 / x)
+  | Float_5 f, Float_3 x -> Float_5 (f * 1000 // x)
 
 let float_Div_5_4 (f : fix_float_5) (x : fix_float_4) : fix_float_5 =
   match f, x with
-  | Float_5 f, Float_4 x -> Float_5 (f * 10000 / x)
+  | Float_5 f, Float_4 x -> Float_5 (f * 10000 // x)
 
 let float_Div_5_5 (f : fix_float_5) (x : fix_float_5) : fix_float_5 =
   match f, x with
-  | Float_5 f, Float_5 x -> Float_5 (f * 100000 / x)
+  | Float_5 f, Float_5 x -> Float_5 (f * 100000 // x)
 
 let float_Div_5_6 (f : fix_float_5) (x : fix_float_6) : fix_float_6 =
   match f, x with
-  | Float_5 f, Float_6 x -> Float_6 (f * 10000000 / x)
+  | Float_5 f, Float_6 x -> Float_6 (f * 10000000 // x)
 
 let float_Div_6_0 (f : fix_float_6) (x : fix_float_0) : fix_float_6 =
   match f, x with
-  | Float_6 f, Float_0 x -> Float_6 (f / x)
+  | Float_6 f, Float_0 x -> Float_6 (f // x)
 
 let float_Div_6_1 (f : fix_float_6) (x : fix_float_1) : fix_float_6 =
   match f, x with
-  | Float_6 f, Float_1 x -> Float_6 (f * 10 / x)
+  | Float_6 f, Float_1 x -> Float_6 (f * 10 // x)
 
 let float_Div_6_2 (f : fix_float_6) (x : fix_float_2) : fix_float_6 =
   match f, x with
-  | Float_6 f, Float_2 x -> Float_6 (f * 100 / x)
+  | Float_6 f, Float_2 x -> Float_6 (f * 100 // x)
 
 let float_Div_6_3 (f : fix_float_6) (x : fix_float_3) : fix_float_6 =
   match f, x with
-  | Float_6 f, Float_3 x -> Float_6 (f * 1000 / x)
+  | Float_6 f, Float_3 x -> Float_6 (f * 1000 // x)
 
 let float_Div_6_4 (f : fix_float_6) (x : fix_float_4) : fix_float_6 =
   match f, x with
-  | Float_6 f, Float_4 x -> Float_6 (f * 10000 / x)
+  | Float_6 f, Float_4 x -> Float_6 (f * 10000 // x)
 
 let float_Div_6_5 (f : fix_float_6) (x : fix_float_5) : fix_float_6 =
   match f, x with
-  | Float_6 f, Float_5 x -> Float_6 (f * 100000 / x)
+  | Float_6 f, Float_5 x -> Float_6 (f * 100000 // x)
 
 let float_Div_6_6 (f : fix_float_6) (x : fix_float_6) : fix_float_6 =
   match f, x with
-  | Float_6 f, Float_6 x -> Float_6 (f * 1000000 / x)
+  | Float_6 f, Float_6 x -> Float_6 (f * 1000000 // x)
 
 let float_Neg_0 (f : fix_float_0) : fix_float_0 =
   match f with
