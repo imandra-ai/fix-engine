@@ -358,7 +358,7 @@ let run_wait_heartbeat ( msg, engine ) =
         let engine = {engine with fe_curr_mode = ActiveSession} 
         |> with_transition_message TestRequestAcknowledged in
         run_active_session  (msg , engine)
-    | _ -> engine |> with_transition_message ( MessageIgnored "Waiting for Heartbeat message" )
+    | _ -> engine |> with_transition_message ( MessageIgnored WaitingForHeartbeat )
 ;;
 
 (** We're in a GapDetected state. Sending out resend request and transitioning into Recovery.*)
@@ -510,5 +510,5 @@ let run_shutdown ( m, engine : full_valid_fix_msg * fix_engine_state ) =
     | Full_FIX_Admin_Msg ( Full_Msg_Resend_Request m )  ->
     (* Since after initiating a Logoff, we can still process Resend request. *)
         initiate_Resend ( ShutdownInitiated, m, engine)
-    | _ -> engine |> with_transition_message ( MessageIgnored "Waiting for Logout message" )
+    | _ -> engine |> with_transition_message ( MessageIgnored WaitingForLogout )
 ;;

@@ -213,12 +213,15 @@ let proc_incoming_int_msg ( x, engine : fix_engine_int_inc_msg * fix_engine_stat
 let proc_incoming_fix_msg ( m, engine : full_top_level_msg * fix_engine_state) = 
     match m with
     | Garbled                   -> engine   (* Garbled messages are simply ignored. Note the timestamp is not updated. *)
+                                  |> with_transition_message (MessageIgnored Garbled)
     | SessionRejectedMsg data   -> 
         begin
             match engine.fe_curr_mode with
             | ActiveSession         -> let state' = session_reject ( data, engine ) in 
                                        { state' with fe_last_data_received = engine.fe_curr_time }
-            | _                     -> engine
+            | _                     -> 
+               engine
+                                      |> with_transition_message (MessageIgnored (SessionReject data))
         end
     | BusinessRejectedMsg data  ->
         begin
