@@ -64,6 +64,11 @@ type fix_engine_status =
   | ConnTerminatedWithoutLogoff
   | MaxNumLogonMsgsViolated
 
+(** The server may shutdown due to a sesson failure *or* due to standard logoff procedure  *)
+type shut_down_reason =
+  | Error of string  (** Something bad happened, e.g. bad sequence number *)
+  | Logout  (** Standard and expected Logoff flow  *)
+
 (** Represents 'modes' of the engine. *)
 type fix_engine_mode =
   | NoActiveSession  (** State of the engine before logon. *)
@@ -76,7 +81,7 @@ type fix_engine_mode =
   | CacheReplay  (** Replaying the cache. *)
   | Retransmit
       (** Retransmitting sequence of messages because we were asked to retransmit. *)
-  | ShuttingDown
+  | ShuttingDown of shut_down_reason
       (** We'll nees to send a logoff message adn transition to ShutdownInitiated. *)
   | ShutdownInitiated  (** Shutting-down protocol. *)
   | Error
@@ -93,7 +98,7 @@ type message_ignore_reason =
   | SessionReject of Full_messages.session_rejected_msg_data
 
 type transition_message =
-  | ShuttingDown of string
+  | ShuttingDown of shut_down_reason
   | LogonFailed of string
   | LogonSucceeded of string
   | MissingField of full_admin_field_tag
@@ -218,7 +223,7 @@ let engine_state_busy engine =
   || engine.outgoing_int_msg <> None
   ||
   match engine.fe_curr_mode with
-  | GapDetected | CacheReplay | Retransmit | ShuttingDown -> true
+  | GapDetected | CacheReplay | Retransmit | ShuttingDown _ -> true
   | _ -> false
 
 (** Properties of a valid state.
