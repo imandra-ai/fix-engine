@@ -53,8 +53,7 @@ let message_ignore_reason_to_string = function
 
 
 let fix_engine_transition_message_to_string = function
-    | ShuttingDown (Error msg)                          -> "ShuttingDown: " ^ msg
-    | ShuttingDown Logout                               -> "ShuttingDown: Logout message received during active session"
+    | ShuttingDown msg                                  -> "ShuttingDown: " ^ msg
     | LogonFailed msg                                   -> "LogonFailed: " ^ msg
     | LogonSucceeded msg                                -> "LogonSucceeded: " ^ msg
     | MissingField tag                                  -> "MissingField: " ^ (full_admin_field_tag_to_string tag)

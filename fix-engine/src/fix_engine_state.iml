@@ -92,13 +92,8 @@ type message_ignore_reason =
   | Garbled
   | SessionReject of Full_messages.session_rejected_msg_data
 
-(** The server may shutdown due to a sesson failure *or* due to standard logoff procedure  *)
-type shut_down_reason =
-  | Error of string  (** Something bad happened, e.g. bad sequence number *)
-  | Logout  (** Standard and expected Logoff flow  *)
-
 type transition_message =
-  | ShuttingDown of shut_down_reason
+  | ShuttingDown of string
   | LogonFailed of string
   | LogonSucceeded of string
   | MissingField of full_admin_field_tag
