@@ -357,8 +357,13 @@ let validate_message_header ( engine, msg_header, msg_tag : fix_engine_state * f
             srej_msg_reject_reason = Some SendingTimeAccuracyProblem;
             } in
         let engine = session_reject ( reject , engine ) in
-        Some ({ engine with 
+        let msg =
+          let open Encode_datetime in 
+          let send_time = encode_UTCTimestamp_micro msg_header.h_sending_time in
+          let orig_send_time = encode_UTCTimestamp_micro orig_sending_time in 
+          CCFormat.asprintf "SendingTime(%s) is before OrigSendingTime(%s)" send_time orig_send_time in 
+        Some { engine with 
             fe_curr_mode = ShuttingDown (Error "SendingTime is before OrigSendingTime"); 
-        } |> with_transition_message ( MissingField Full_Field_OrigSendingTime_Tag ) )
+        } 
     else None
 ;;
