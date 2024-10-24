@@ -23,13 +23,17 @@ open Full_admin_messages_json
 open Full_messages_json
 
 
+let shut_down_reason_to_string : shut_down_reason -> string = function
+  | Error msg -> msg
+  | Logout -> "Logout message received during active session"
+
 
 let fix_engine_mode_to_string = function
     | NoActiveSession                                   -> "NoActiveSession"
     | LogonInitiated                                    -> "LogonInitiated"
     | ActiveSession                                     -> "ActiveSession"
     | GapDetected                                       -> "GapDetected"
-    | ShuttingDown                                      -> "ShuttingDown"
+    | ShuttingDown reason                               -> "ShuttingDown (" ^ (shut_down_reason_to_string reason)  ^ ")"
     | Recovery                                          -> "Recovery"
     | Retransmit                                        -> "Retransmit"
     | ShutdownInitiated                                 -> "ShutdownInitiated"
@@ -52,9 +56,9 @@ let message_ignore_reason_to_string = function
                                    | None -> "NoReason") 
 
 
+
 let fix_engine_transition_message_to_string = function
-    | ShuttingDown (Error msg)                          -> "ShuttingDown: " ^ msg
-    | ShuttingDown Logout                               -> "ShuttingDown: Logout message received during active session"
+    | ShuttingDown reason                               -> "ShuttingDown: " ^ (shut_down_reason_to_string reason)
     | LogonFailed msg                                   -> "LogonFailed: " ^ msg
     | LogonSucceeded msg                                -> "LogonSucceeded: " ^ msg
     | MissingField tag                                  -> "MissingField: " ^ (full_admin_field_tag_to_string tag)
