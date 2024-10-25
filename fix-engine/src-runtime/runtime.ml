@@ -19,6 +19,12 @@ type message = {
 }
 [@@deriving show]
 
+type sequence_numbers = {
+  next_out: int;
+  next_in: int;
+}
+[@@deriving show]
+
 type transition_message = Fix_engine_state.transition_message
 
 let show_transition_message =
@@ -34,6 +40,7 @@ type event =
   | Disconnected of string
   | ConnectionRejected of string
   | TransitionMessage of transition_message
+  | SequenceNumbers of sequence_numbers
 [@@deriving show]
 
 type t = {
@@ -80,6 +87,19 @@ let receive_engine t event =
     false
   | Engine.Log msg, _ ->
     let+ () = t.recv (Log msg) in
+    false
+  | Engine.State state, _ ->
+    let+ () =
+      t.recv
+        (SequenceNumbers
+           {
+             next_in = Z.to_int state.incoming_seq_num + 1;
+             next_out = Z.to_int state.outgoing_seq_num + 1;
+           })
+    in
+    false
+  | Engine.(SequenceNumbers { next_in; next_out }), _ ->
+    let+ () = t.recv (SequenceNumbers { next_in; next_out }) in
     false
   | Engine.TransitionMessage msg, _ ->
     let+ () = t.recv (TransitionMessage msg) in

@@ -15,6 +15,12 @@ type message = {
 }
 [@@deriving show]
 
+type sequence_numbers = {
+  next_out: int;
+  next_in: int;
+}
+[@@deriving show]
+
 type transition_message = Fix_engine_state.transition_message [@@deriving show]
 
 type event =
@@ -24,6 +30,7 @@ type event =
   | Disconnected of string
   | ConnectionRejected of string
   | TransitionMessage of transition_message
+  | SequenceNumbers of sequence_numbers
 [@@deriving show]
 
 type handle
