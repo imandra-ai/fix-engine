@@ -82,11 +82,17 @@ module Internal : sig
 
   type err = [ `MissingMessageTypeTag ]
 
+  type sequence_numbers = {
+    next_out: int;
+    next_in: int;
+  }
+
   type event =
     | Log of string
     | FIXFromEngine of message
     | State of Fix_engine_state.fix_engine_state
     | TransitionMessage of Fix_engine_state.transition_message
+    | SequenceNumbers of sequence_numbers
 
   type precision =
     | Milli
@@ -150,11 +156,17 @@ end = struct
     | GetState
     | Terminate
 
+  type sequence_numbers = {
+    next_out: int;
+    next_in: int;
+  }
+
   type event =
     | Log of string
     | FIXFromEngine of message
     | State of Fix_engine_state.fix_engine_state
     | TransitionMessage of Fix_engine_state.transition_message
+    | SequenceNumbers of sequence_numbers
 
   type precision =
     | Milli
@@ -238,6 +250,9 @@ end = struct
   let rec main_loop t engine_state =
     let open Fix_engine_state in
     let* msg = Lwt_mvar.take t.to_engine_box in
+    let curr_in, curr_out =
+      engine_state.incoming_seq_num, engine_state.outgoing_seq_num
+    in
     let* engine_state =
       match msg with
       | InternalToEngine msg ->
@@ -258,6 +273,20 @@ end = struct
         in
         Lwt.return engine_state
       | Terminate -> Lwt.return engine_state
+    in
+    let* () =
+      if
+        engine_state.incoming_seq_num <> curr_in
+        || engine_state.outgoing_seq_num <> curr_out
+      then
+        t.recv
+          (SequenceNumbers
+             {
+               next_in = Z.to_int engine_state.incoming_seq_num + 1;
+               next_out = Z.to_int engine_state.outgoing_seq_num + 1;
+             })
+      else
+        Lwt.return_unit
     in
     let engine_state =
       if t.should_clean_history then
