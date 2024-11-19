@@ -168,12 +168,24 @@ let server_handler (t : t) (in_addr : Unix.sockaddr) (inch, outch) =
       (fun _ -> on_disconnect t addr_str)
 
 let default_session_folder ~(config : Engine.config) =
+  (* Sometimes, we want comp/target ids to have forwards slashes.
+     Since '/' is illegal in a unix file name, we replace with underscores. *)
+  let sanitize_id =
+    let f = function
+      | '/' -> '_'
+      | c -> c
+    in
+    String.map f
+  in
   let hostid =
     match config.host_id with
     | None -> "NoHostid"
     | Some host_id -> host_id
   in
-  Printf.sprintf "%s.%s.%s.session" config.comp_id config.target_id hostid
+  Printf.sprintf "%s.%s.%s.session"
+    (sanitize_id config.comp_id)
+    (sanitize_id config.target_id)
+    hostid
 
 let make_state_and_thread ~(session_dir : string option)
     ~(log_file : string option) ~(reset : bool option) ~(config : Engine.config)
