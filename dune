@@ -1,0 +1,3 @@
+(subdir
+ vendor/imandra-ptime
+ (data_only_dirs vendor))
