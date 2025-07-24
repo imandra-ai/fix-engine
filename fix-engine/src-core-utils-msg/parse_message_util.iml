@@ -1,6 +1,10 @@
+[@@@program]
+
+open Caml
+
 let split_into_key_value (sep : char) (str : string) : (string * string) Seq.t =
   (* find the next split char in the internal buffer *)
-  let next_split i : int option =
+  let next_split i : Int.t option =
     match String.index_from_opt str i sep with
     | Some n when n >= String.length str -> None
     | r -> r
@@ -20,12 +24,12 @@ let split_into_key_value (sep : char) (str : string) : (string * string) Seq.t =
       match String.index_from_opt str i '=' with
       | Some idx_eq when idx_eq < end_of_kv ->
         let k = String.sub str i (idx_eq - i) in
-        let v = String.sub str (idx_eq + 1) (end_of_kv - idx_eq - 1) in
-        Seq.Cons ((k, v), loop ~is_done ~i:(end_of_kv + 1))
+        let v = String.sub str (idx_eq + 1i) (end_of_kv - idx_eq - 1i) in
+        Seq.Cons ((k, v), loop ~is_done ~i:(end_of_kv + 1i))
       | _ -> Seq.Nil
     )
   in
-  loop ~is_done:false ~i:0
+  loop ~is_done:false ~i:0i
 
 let split_into_messages (seq : (string * string) Seq.t) :
     (string * string) list Seq.t =
@@ -40,3 +44,5 @@ let split_into_messages (seq : (string * string) Seq.t) :
         loop ((k, v) :: acc) tail ()
   in
   loop [] seq
+
+[@@@logic]

@@ -1,4 +1,28 @@
 (* rewriting of Parser_utils *)
+(** Parser combinators for FIX messages.
+
+
+    Each combinator has access to the message and can query key/values.
+
+    A typical message parser would look like this.
+
+    {[
+      let parse_message = Parser_combinators.(
+        let* group = repeating "1" parse_rg in
+        let* () = check_duplicate_tags msg in
+        let* block = block parse_blk
+        and* x = req "2" parse_int
+        and* y = opt "3" parse_string
+        and* z = req "4" parse_int in
+        let+ () = check_unknown_tags in
+        \{ block; group; x; y; z \}
+      )
+    ]}
+*)
+[@@@program]
+[@@@import "message.iml"]
+
+open Caml
 
 module Str_set = Set.Make (String)
 
@@ -37,7 +61,6 @@ let pp_error fmt e =
 type nonrec 'a result = ('a, error) result
 (** Result of parsing *)
 
-open struct
   (* Extract a value given a tag, returns a pair with the value and the rest of the list.*)
   let take (key : string) (lst : (string * string) list) =
     let rec take accu = function
@@ -71,7 +94,6 @@ open struct
       | [] -> List.rev accu, []
     in
     split [] msg
-end
 
 (* internal state during parsing *)
 type state_ = { mutable msg: Message.t }
@@ -230,7 +252,7 @@ let check_unknown_tags : _ t =
         ));
   }
 
-let parse_int = int_of_string_opt
+let parse_int s = int_of_string_opt s |> Option.map Z.of_int
 
 let repeating tag ~(block_parser : 'a t) : (_ * 'a list) t =
   {
@@ -251,7 +273,7 @@ let repeating tag ~(block_parser : 'a t) : (_ * 'a list) t =
           (* Break the list into a list of lists using the separator *)
           let groups : msg list = cut_on_separator groups_msg in
           (* Check that the length is correct *)
-          if List.length groups <> numInGroup then
+          if List.length groups <> Z.to_int numInGroup then
             fail_ (IncorrectNumInGroupCount tag)
           else (
             (* Pass each list into the block parser ( reverses the list ) *)
@@ -285,3 +307,5 @@ let repeating tag ~(block_parser : 'a t) : (_ * 'a list) t =
 let run (self : _ t) (msg : msg) : _ result =
   let st = { msg } in
   try Ok (self.run st) with Fail e -> Error e
+
+[@@@logic]

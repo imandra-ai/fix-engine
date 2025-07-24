@@ -7,7 +7,6 @@
     parse_admin_messages.ml
 
 *)
-[@@@require "fix-engine.util-msg"]
 [@@@import "../src-protocol/full_admin_tags.iml"]
 [@@@import "../src-protocol/full_admin_messages.iml"]
 [@@@import "../src-core-pp/parse_base_types.iml"]
@@ -15,6 +14,7 @@
 [@@@import "parse_admin_enums.iml"]
 [@@@import "parse_full_tags.iml"]
 [@@@import "../src-core/datetime.iml"]
+[@@@import "../src-core-utils-msg/parser_combinators.iml"]
 [@@@program]
 open Full_admin_tags;;
 open Full_admin_messages;;

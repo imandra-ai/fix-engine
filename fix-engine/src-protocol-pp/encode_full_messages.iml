@@ -7,8 +7,6 @@
     parse_full_messages.ml
 *)
 
-[@@@require "fix-engine.util-msg"]
-
 [@@@import "encode_full_tags.iml"]
 
 [@@@import "encode_admin_messages.iml"]
@@ -16,6 +14,8 @@
 [@@@import "../src-protocol/full_messages.iml"]
 
 [@@@import "../src-core-pp/encode_base_types.iml"]
+
+[@@@import "../src-core-utils-msg/message.iml"]
 
 [@@@program]
 
