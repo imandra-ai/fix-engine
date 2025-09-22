@@ -7,13 +7,13 @@
     parse_full_messages.ml
 *)
 
-[@@@require "fix-engine.util-msg"]
-
 [@@@import "../src-protocol/full_message_tags.iml"]
 
 [@@@import "../src-protocol/full_messages.iml"]
 
 [@@@import "../src-core-pp/parse_base_types.iml"]
+
+[@@@import "../src-core-utils-msg/parser_combinators.iml"]
 
 [@@@import "parse_full_tags.iml"]
 

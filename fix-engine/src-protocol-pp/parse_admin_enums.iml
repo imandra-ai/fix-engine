@@ -7,7 +7,7 @@
 *)
 [@@@import "../src-protocol/full_admin_enums.iml"]
 
-[@@@require "fix-engine.util-msg"]
+[@@@import "../src-core-utils-msg/parser_combinators.iml"]
 
 [@@@program]
 

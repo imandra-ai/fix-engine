@@ -5,4 +5,4 @@
  (modules message parse_message_util parser_combinators)
  (preprocess
   (pps ppx_deriving.std))
- (libraries))
+ (libraries imandra-prelude))

@@ -8,7 +8,7 @@
 
 *)
 [@@@import "../src-protocol/full_admin_tags.iml"]
-[@@@require "fix-engine.util-msg"]
+[@@@import "../src-core-utils-msg/parser_combinators.iml"]
 
 [@@@program]
 open Full_admin_tags;;
