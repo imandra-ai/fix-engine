@@ -1,8 +1,7 @@
-FROM jekyll/jekyll:3.6.2
+FROM ruby:3.3
 
-ADD Gemfile .
-ADD Gemfile.lock .
-
+ADD Gemfile Gemfile.lock /
 RUN bundle install
+WORKDIR /srv/jekyll
 
-CMD jekyll build
+CMD bundle exec jekyll build
