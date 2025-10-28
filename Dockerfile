@@ -1,4 +1,4 @@
-FROM jekyll/jekyll:3.6.2
+FROM jekyll/jekyll:4.2.2
 
 ADD Gemfile .
 RUN bundle install
