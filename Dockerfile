@@ -1,6 +1,8 @@
-FROM jekyll/jekyll:4.2.2
+FROM jekyll/jekyll:3.6.2
 
 ADD Gemfile .
+ADD Gemfile.lock .
+
 RUN bundle install
 
 CMD jekyll build
