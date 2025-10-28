@@ -1,6 +1,6 @@
 <h3 id="seq_reset-vg1">Seq_Reset VG.1</h3>
 
-<p>“When the incoming sequence number does not match the expected corrective processing is required. Note that the <code class="highlighter-rouge">SeqReset-Reset</code> message (used only to recover from a disaster vs. normal resend request processing) is an exception to this rule as it should be processed without regards to its <code class="highlighter-rouge">MsgSeqNum</code>.”</p>
+<p>“When the incoming sequence number does not match the expected corrective processing is required. Note that the <code class="language-plaintext highlighter-rouge">SeqReset-Reset</code> message (used only to recover from a disaster vs. normal resend request processing) is an exception to this rule as it should be processed without regards to its <code class="language-plaintext highlighter-rouge">MsgSeqNum</code>.”</p>
 
 <figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">inc_msg_seqreset_reset</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
     <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>

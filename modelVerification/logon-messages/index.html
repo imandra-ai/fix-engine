@@ -103,7 +103,7 @@
 
 <h3 id="logon-vg3">Logon VG.3</h3>
 
-<p>“After authentication, the initiator and acceptor must synchronize their messages through interrogation of the <code class="highlighter-rouge">MsgSeqNum</code> field before sending any queued or new messages. A comparison of the <code class="highlighter-rouge">MsgSeqNum</code> in the Logon message to the internally monitored next expected sequence number will indicate any message gaps. Likewise, the initiator can detect gaps by comparing the acknowledgment Logon message’s MsgSeqNum to the next expected value. The section on message recovery later in this document deals with message gap handling.”</p>
+<p>“After authentication, the initiator and acceptor must synchronize their messages through interrogation of the <code class="language-plaintext highlighter-rouge">MsgSeqNum</code> field before sending any queued or new messages. A comparison of the <code class="language-plaintext highlighter-rouge">MsgSeqNum</code> in the Logon message to the internally monitored next expected sequence number will indicate any message gaps. Likewise, the initiator can detect gaps by comparing the acknowledgment Logon message’s MsgSeqNum to the next expected value. The section on message recovery later in this document deals with message gap handling.”</p>
 
 <figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">logon_msg_out_of_sequence</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span>
     <span class="bp">true</span>
@@ -191,8 +191,8 @@
 <h3 id="logon-vg5">Logon VG.5</h3>
 
 <blockquote>
-  <p><em>“<code class="highlighter-rouge">NextExpectedMsgSeqNum (789)</code> is used as follows:</em>
-<em>In its Logon request the session initiator supplies in <code class="highlighter-rouge">NextExpectedMsgSeqNum (789)</code> the value next expected from the session acceptor in MsgSeqNum (34). The outgoing header MsgSeqNum (34) of the Logon request is assigned the next-to-be-assigned sequence number as usual.</em></p>
+  <p><em>“<code class="language-plaintext highlighter-rouge">NextExpectedMsgSeqNum (789)</code> is used as follows:</em>
+<em>In its Logon request the session initiator supplies in <code class="language-plaintext highlighter-rouge">NextExpectedMsgSeqNum (789)</code> the value next expected from the session acceptor in MsgSeqNum (34). The outgoing header MsgSeqNum (34) of the Logon request is assigned the next-to-be-assigned sequence number as usual.</em></p>
 </blockquote>
 
 <p>The session acceptor validates the Logon request including that NextExpectedMsgSeqNum (789) does not represent a gap. It then constructs its Logon response with NextExpectedMsgSeqNum (789) containing the value next expected from the session initiator in MsgSeqNum (34) having incremented the number above the Logon request if that was the sequence expected. The outgoing header MsgSeqNum (34) is constructed as usual. The session initiator waits to begin sending application messages until it receives the Logon response. When it is received the initiator validates the response including that NextExpectedMsgSeqNum (789) does not represent a gap.</p>
@@ -200,7 +200,7 @@
 <p>Both sides react to NextExpectedMsgSeqNum (789) from its counterparty thus:</p>
 <ul>
   <li>If equal to the next-to-be-assigned sequence, proceed sending new messages beginning with that number.</li>
-  <li>If lower than the next-to-be-assigned sequence, ‘recover’ (see ‘Message Recovery’) all messages from the the last message delivered prior to this Logon through the specified <code class="highlighter-rouge">NextExpectedMsgSeqNum (789)</code> sending them in order; then Gap Fill over the sequence number used in Logon and proceed sending newly queued messages with a sequence number one higher than the original Logon.</li>
+  <li>If lower than the next-to-be-assigned sequence, ‘recover’ (see ‘Message Recovery’) all messages from the the last message delivered prior to this Logon through the specified <code class="language-plaintext highlighter-rouge">NextExpectedMsgSeqNum (789)</code> sending them in order; then Gap Fill over the sequence number used in Logon and proceed sending newly queued messages with a sequence number one higher than the original Logon.</li>
   <li>If higher than the next-to-be-assigned sequence, send Logout to abort the session.</li>
 </ul>
 

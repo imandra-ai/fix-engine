@@ -4,8 +4,8 @@
 
 <p>Notes: we transform this statement into 2 VGs:</p>
 <ul>
-  <li>VG.1.1 - any outbound message will result in an updated <code class="highlighter-rouge">fe_last_time_data_sent</code> field</li>
-  <li>VG.1.2 - any time update will result in check whether <code class="highlighter-rouge">Heartbeat</code> should be sent out</li>
+  <li>VG.1.1 - any outbound message will result in an updated <code class="language-plaintext highlighter-rouge">fe_last_time_data_sent</code> field</li>
+  <li>VG.1.2 - any time update will result in check whether <code class="language-plaintext highlighter-rouge">Heartbeat</code> should be sent out</li>
 </ul>
 
 <figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="kr">verify</span> <span class="n">last_time_data_sent_gets_updated</span> <span class="p">(</span> <span class="n">engine</span> <span class="o">:</span> <span class="n">fix_engine_state</span> <span class="p">)</span> <span class="o">=</span>
@@ -56,7 +56,7 @@
 
 <p>Notes: there’s no mention of what constitutes a successful data - i.e. is it a non-garbled (but still rejected message)? We interpret this here as that a Non-garbled message results in update of data received.</p>
 
-<p>Also, it’s important to note that we would not process an incoming message if the engine is in a Retransmit or CacheReplay mode, hence we use <code class="highlighter-rouge">let incoming_processed = engine.incoming_fix_msg &lt;&gt; engine'.incoming_fix_msg</code></p>
+<p>Also, it’s important to note that we would not process an incoming message if the engine is in a Retransmit or CacheReplay mode, hence we use <code class="language-plaintext highlighter-rouge">let incoming_processed = engine.incoming_fix_msg &lt;&gt; engine'.incoming_fix_msg</code></p>
 
 <figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">incoming_is_not_garbled</span> <span class="p">(</span> <span class="n">m</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="p">)</span> <span class="o">=</span> 
  <span class="k">match</span> <span class="n">m</span> <span class="k">with</span> 
@@ -76,9 +76,9 @@
 
 <h3 id="heartbeat-vg3">Heartbeat VG.3</h3>
 
-<p>‘When either end of the connection has not received any data for (<code class="highlighter-rouge">HeartBtInt</code> + “some reasonable transmission time”) seconds, it will transmit a Test Request message.’</p>
+<p>‘When either end of the connection has not received any data for (<code class="language-plaintext highlighter-rouge">HeartBtInt</code> + “some reasonable transmission time”) seconds, it will transmit a Test Request message.’</p>
 
-<p>Notes: ‘reasonable time’ is represented by a ‘duration’ type field <code class="highlighter-rouge">fe_testreq_interval</code>.</p>
+<p>Notes: ‘reasonable time’ is represented by a ‘duration’ type field <code class="language-plaintext highlighter-rouge">fe_testreq_interval</code>.</p>
 
 <figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">no_heartbeats_received</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">data_received</span><span class="o">,</span> <span class="n">hbeat_interval</span><span class="o">,</span> <span class="n">pad_interval</span> <span class="o">:</span> <span class="n">fix_engine_int_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="n">fix_utctimestamp</span> <span class="o">*</span> <span class="n">fix_duration</span> <span class="o">*</span> <span class="n">fix_duration</span> <span class="p">)</span> <span class="o">=</span>
  <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
@@ -127,7 +127,7 @@
 
 <p>“If there is still no Heartbeat message received after (HeartBtInt + “some reasonable transmission time”) seconds then the connection should be considered lost and corrective action be initiated.”</p>
 
-<p>Notes: note sure what ‘corrective action be initiated’ means, here we interpret it as meaning that a logoff message to be sent out, session closed and ‘status’ of the engine state set to <code class="highlighter-rouge">ConnTerminatedWithoutLogoff</code>.</p>
+<p>Notes: note sure what ‘corrective action be initiated’ means, here we interpret it as meaning that a logoff message to be sent out, session closed and ‘status’ of the engine state set to <code class="language-plaintext highlighter-rouge">ConnTerminatedWithoutLogoff</code>.</p>
 
 <figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">no_heartbeats_received_logoff</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">data_sent_out</span><span class="o">,</span> <span class="n">hbeat_interval</span><span class="o">,</span> <span class="n">pad_interval</span> <span class="o">:</span> <span class="n">fix_engine_int_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="n">fix_utctimestamp</span> <span class="o">*</span> <span class="n">fix_duration</span> <span class="o">*</span> <span class="n">fix_duration</span> <span class="p">)</span> <span class="o">=</span>
  <span class="k">match</span> <span class="n">m</span> <span class="k">with</span>
@@ -157,7 +157,7 @@
 
 <h3 id="heartbeat-vg5">Heartbeat VG.5</h3>
 
-<p>“If HeartBtInt is set to zero then no regular heartbeat messages will be generated. Note that a test request message can still be sent independent of the value of the <code class="highlighter-rouge">HeartBtInt</code>, which will force a Heartbeat message.”</p>
+<p>“If HeartBtInt is set to zero then no regular heartbeat messages will be generated. Note that a test request message can still be sent independent of the value of the <code class="language-plaintext highlighter-rouge">HeartBtInt</code>, which will force a Heartbeat message.”</p>
 
 <p>Notes: We implement ‘test request message can still be sent independent of the value of the HeartBtInt’ as internal message.</p>
 
@@ -187,9 +187,9 @@
 
 <h3 id="heartbeat-vg6">Heartbeat VG.6</h3>
 
-<p>“Heartbeats issued as the result of <code class="highlighter-rouge">Test Request</code> must contain the <code class="highlighter-rouge">TestReqID</code> transmitted in the <code class="highlighter-rouge">Test Request</code> message. This is useful to verify that the Heartbeat is the result of the <code class="highlighter-rouge">Test Request</code> and not as the result of a regular timeout.”</p>
+<p>“Heartbeats issued as the result of <code class="language-plaintext highlighter-rouge">Test Request</code> must contain the <code class="language-plaintext highlighter-rouge">TestReqID</code> transmitted in the <code class="language-plaintext highlighter-rouge">Test Request</code> message. This is useful to verify that the Heartbeat is the result of the <code class="language-plaintext highlighter-rouge">Test Request</code> and not as the result of a regular timeout.”</p>
 
-<p>Note: that the sequence number of the <code class="highlighter-rouge">TestRequest</code> message must be correct so that the state does not transition into <code class="highlighter-rouge">Recovery</code>.</p>
+<p>Note: that the sequence number of the <code class="language-plaintext highlighter-rouge">TestRequest</code> message must be correct so that the state does not transition into <code class="language-plaintext highlighter-rouge">Recovery</code>.</p>
 
 <figure class="highlight"><pre><code class="language-iml" data-lang="iml"><span class="k">let</span> <span class="n">msg_is_test_request_id</span> <span class="p">(</span> <span class="n">m</span><span class="o">,</span> <span class="n">tr_id</span><span class="o">,</span> <span class="n">seq_num</span> <span class="o">:</span> <span class="n">full_top_level_msg</span> <span class="n">option</span> <span class="o">*</span> <span class="kt">int</span> <span class="o">*</span> <span class="kt">int</span> <span class="p">)</span> <span class="o">=</span>
  <span class="k">match</span> <span class="n">m</span> <span class="k">with</span> 
