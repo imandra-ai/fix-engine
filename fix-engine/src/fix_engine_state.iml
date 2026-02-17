@@ -239,8 +239,8 @@ let is_state_valid (engine : fix_engine_state) =
     engine.fe_curr_time
   && utctimestamp_LessThanEqual_nano_nano engine.fe_last_time_data_sent
        engine.fe_curr_time
-  && is_valid_utctimestamp_micro engine.fe_curr_time
-  && is_valid_utctimestamp_micro engine.fe_last_time_data_sent
-  && is_valid_utctimestamp_micro engine.fe_last_data_received
+  && is_valid_utctimestamp_nano engine.fe_curr_time
+  && is_valid_utctimestamp_nano engine.fe_last_time_data_sent
+  && is_valid_utctimestamp_nano engine.fe_last_data_received
   && is_valid_duration engine.fe_heartbeat_interval
   && is_valid_duration engine.fe_testreq_interval
