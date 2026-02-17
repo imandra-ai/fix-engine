@@ -235,9 +235,9 @@ let engine_state_busy engine =
     we need to maintain that every state transition from a valid state
     would result in another valid state. *)
 let is_state_valid (engine : fix_engine_state) =
-  utctimestamp_LessThanEqual_micro_micro engine.fe_last_data_received
+  utctimestamp_LessThanEqual_nano_nano engine.fe_last_data_received
     engine.fe_curr_time
-  && utctimestamp_LessThanEqual_micro_micro engine.fe_last_time_data_sent
+  && utctimestamp_LessThanEqual_nano_nano engine.fe_last_time_data_sent
        engine.fe_curr_time
   && is_valid_utctimestamp_micro engine.fe_curr_time
   && is_valid_utctimestamp_micro engine.fe_last_time_data_sent
