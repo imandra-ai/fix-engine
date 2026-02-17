@@ -125,9 +125,9 @@ let default_utctimestamp_milli : fix_utctimestamp_milli = T.epoch
 
 let default_utctimestamp_micro : fix_utctimestamp_micro = T.epoch
 
-let default_utctimestamp_nano : fix_utctimestamp_milli = T.epoch
+let default_utctimestamp_nano : fix_utctimestamp_nano = T.epoch
 
-let default_utctimestamp_pico : fix_utctimestamp_micro = T.epoch
+let default_utctimestamp_pico : fix_utctimestamp_pico = T.epoch
 
 (** Constructor for the UTC timestamp milli  *)
 let make_utctimestamp_milli (year : int) (month : int) (day : int) (hour : int)
