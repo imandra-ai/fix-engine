@@ -7,7 +7,7 @@ let run_one (message, result) =
   match
     Parser_combinators.run
       (Parse_full_messages.parse_top_level_msg
-         Parse_datetime.parse_UTCTimestamp_micro)
+         Parse_datetime.parse_UTCTimestamp_nano)
       message
   with
   | Ok (ValidMsg { full_msg_data = Full_FIX_App_Msg data; _ }) ->

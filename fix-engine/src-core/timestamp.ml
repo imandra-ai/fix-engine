@@ -5,6 +5,7 @@ module type Timestamp = sig
   val epoch : t
   val of_ptime : Imandra_ptime.t -> t
   val to_ptime : t -> Imandra_ptime.t
+  val equal : t -> t -> bool
 end
 
 module Micro : Timestamp = struct
@@ -12,6 +13,7 @@ module Micro : Timestamp = struct
     let epoch = Imandra_ptime.epoch
     let of_ptime = Fun.id
     let to_ptime t = t
+    let equal = Imandra_ptime.equal
 end
 
 module Nano : Timestamp = struct
@@ -19,4 +21,5 @@ module Nano : Timestamp = struct
     let epoch = Imandra_ptime.epoch
     let of_ptime = Fun.id
     let to_ptime t = t
+    let equal = Imandra_ptime.equal
 end

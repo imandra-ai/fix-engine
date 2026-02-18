@@ -34,7 +34,7 @@ let ts_parser =
           Parse_datetime.parse_UTCTimestamp_milli x
       with
       | None -> None
-      | Some x -> Some (Datetime.convert_utctimestamp_milli_pico x)
+      | Some x -> Some (Datetime.convert_utctimestamp_milli_nano x)
     in
     parse_milli
   | Micro ->
@@ -46,7 +46,7 @@ let ts_parser =
           Parse_datetime.parse_UTCTimestamp_micro x
       with
       | None -> None
-      | Some x -> Some (Datetime.convert_utctimestamp_micro_pico x)
+      | Some x -> Some (Datetime.convert_utctimestamp_micro_nano x)
     in
     parse_micro
   | Nano ->
@@ -58,14 +58,17 @@ let ts_parser =
           Parse_datetime.parse_UTCTimestamp_nano x
       with
       | None -> None
-      | Some x -> Some (Datetime.convert_utctimestamp_nano_pico x)
+      | Some x -> Some x
     in
     parse_nano
   | Pico ->
-    if config.strict_time_precision then
-      Parse_datetime.parse_UTCTimestamp_pico_strict
-    else
-      Parse_datetime.parse_UTCTimestamp_pico
+    let parse_pico =
+      if config.strict_time_precision then
+        Parse_datetime.parse_UTCTimestamp_pico_strict
+      else
+        Parse_datetime.parse_UTCTimestamp_pico
+    in
+    (fun s -> parse_pico s |> Option.map Datetime.convert_utctimestamp_pico_nano)
 
 let log_thread () : unit Lwt.t =
   let rec thread () =

@@ -38,7 +38,7 @@ let get_current_utctimestamp ?offset () =
   | None -> ts
   | Some offset ->
     let dt = Datetime.make_duration 0 0 0 0 0 offset in
-    Datetime.utctimestamp_milli_duration_Add ts dt
+    Datetime.utctimestamp_micro_duration_Add ts dt
 
 let msg_to_string msg =
   msg

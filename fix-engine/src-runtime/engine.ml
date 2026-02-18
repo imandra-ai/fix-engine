@@ -141,7 +141,7 @@ module Internal : sig
   val get_timestamp_codec :
     bool ->
     precision ->
-    (string -> Imandra_ptime.t option) * (Imandra_ptime.t -> string)
+    (string -> Timestamp.Nano.t option) * (Timestamp.Nano.t -> string)
 end = struct
   let ( let* ) = Lwt.bind
 
@@ -202,8 +202,8 @@ end = struct
     sess: SessionManager.t;
     begin_string: string;
     should_clean_history: bool;
-    timestamp_parse: string -> Datetime.fix_utctimestamp_pico option;
-    timestamp_encode: Datetime.fix_utctimestamp_pico -> string;
+    timestamp_parse: string -> Datetime.fix_utctimestamp_nano option;
+    timestamp_encode: Datetime.fix_utctimestamp_nano -> string;
   }
 
   (** Calls Fix_engine.one_step and pubs outgoing messages while busy *)
@@ -300,7 +300,7 @@ end = struct
       main_loop t engine_state
 
   let do_timechange t =
-    let time = Current_time.get_current_utctimestamp_pico () in
+    let time = Current_time.get_current_utctimestamp_nano () in
     let timechange = Fix_engine_state.IncIntMsg_TimeChange time in
     let timechange = InternalToEngine timechange in
     Lwt_mvar.put t.to_engine_box timechange
@@ -320,10 +320,10 @@ end = struct
             Parse_datetime.parse_UTCTimestamp_milli x
         with
         | None -> None
-        | Some x -> Some (Datetime.convert_utctimestamp_milli_pico x)
+        | Some x -> Some (Datetime.convert_utctimestamp_milli_nano x)
       in
       let encode_milli x =
-        x |> Datetime.convert_utctimestamp_pico_milli
+        x |> Datetime.convert_utctimestamp_nano_milli
         |> Encode_datetime.encode_UTCTimestamp_milli
       in
       parse_milli, encode_milli
@@ -336,10 +336,10 @@ end = struct
             Parse_datetime.parse_UTCTimestamp_micro x
         with
         | None -> None
-        | Some x -> Some (Datetime.convert_utctimestamp_micro_pico x)
+        | Some x -> Some (Datetime.convert_utctimestamp_micro_nano x)
       in
       let encode_micro x =
-        x |> Datetime.convert_utctimestamp_pico_micro
+        x |> Datetime.convert_utctimestamp_nano_micro
         |> Encode_datetime.encode_UTCTimestamp_micro
       in
       parse_micro, encode_micro
@@ -352,11 +352,10 @@ end = struct
             Parse_datetime.parse_UTCTimestamp_nano x
         with
         | None -> None
-        | Some x -> Some (Datetime.convert_utctimestamp_nano_pico x)
+        | Some x -> Some x
       in
       let encode_nano x =
-        x |> Datetime.convert_utctimestamp_nano_micro
-        |> Encode_datetime.encode_UTCTimestamp_nano
+        Encode_datetime.encode_UTCTimestamp_nano x
       in
       parse_nano, encode_nano
     | Pico ->
@@ -367,10 +366,10 @@ end = struct
           Parse_datetime.parse_UTCTimestamp_nano
       in
       let encode_nano x =
-        x |> Datetime.convert_utctimestamp_nano_micro
-        |> Encode_datetime.encode_UTCTimestamp_nano
+        x |> Datetime.convert_utctimestamp_nano_pico
+        |> Encode_datetime.encode_UTCTimestamp_pico
       in
-      parse_pico, encode_nano
+      (fun s -> parse_pico s), encode_nano
 
   let make_engine_state (inseq, outseq) config =
     let open Fix_engine_state in
@@ -380,7 +379,7 @@ end = struct
       fe_sender_location_id = config.host_id;
       fe_on_behalf_of_comp_id = config.on_behalf_id;
       fe_target_comp_id = config.target_id;
-      fe_curr_time = Current_time.get_current_utctimestamp_pico ();
+      fe_curr_time = Current_time.get_current_utctimestamp_nano ();
       fe_max_num_logons_sent = Z.of_int 10;
       fe_application_up = true;
       incoming_seq_num = Z.of_int inseq;

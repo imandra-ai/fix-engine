@@ -74,10 +74,11 @@ let utctimestamp_milli_decoder : fix_utctimestamp_milli Decoders_yojson.Basic.De
     ))]
 
 let utctimestamp_micro_to_json ( ts : fix_utctimestamp_micro )  =
-  ptime_to_json ts
+  ts |> micro_to_ptime |> ptime_to_json
 
 let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.Decode.decoder =
   D.one_of [("ptime_decoder", ptime_decoder
+  |> D.map Timestamp.Micro.of_ptime
   |> validate_with is_valid_utctimestamp_micro "fix_utctimestamp_micro");
   ("timestamp_decoder", (D.field "utc_timestamp_year" int_decoder) >>= fun utc_timestamp_year ->
     (D.field "utc_timestamp_month" int_decoder) >>= fun utc_timestamp_month ->
@@ -98,10 +99,12 @@ let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.De
   ]
 
 let utctimestamp_nano_to_json ( ts : fix_utctimestamp_nano )  =
-ptime_to_json ts
+  ts |> nano_to_ptime |> ptime_to_json
 
-let utctimestamp_nano_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.Decode.decoder =
- ptime_decoder |> validate_with is_valid_utctimestamp_nano "fix_utctimestamp_nano"
+let utctimestamp_nano_decoder : fix_utctimestamp_nano Decoders_yojson.Basic.Decode.decoder =
+  ptime_decoder
+  |> D.map Timestamp.Nano.of_ptime
+  |> validate_with is_valid_utctimestamp_nano "fix_utctimestamp_nano"
 
 let utctimestamp_pico_to_json ( ts : fix_utctimestamp_pico )  =
  ptime_to_json ts

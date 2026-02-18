@@ -84,7 +84,7 @@ let manual_int_data_to_json x : Yojson.Basic.t = match x with
 
 (** These are the messages going in/out of the engine to the owner. *)
 let int_inc_msg_to_json x : Yojson.Basic.t = match x with
-    | IncIntMsg_TimeChange t                            -> `Assoc [ ( "TimeChange",         `Assoc [ ( "new_time"       , utctimestamp_micro_to_json t )]             )]
+    | IncIntMsg_TimeChange t                            -> `Assoc [ ( "TimeChange",         `Assoc [ ( "new_time"       , utctimestamp_nano_to_json t )]             )]
     | IncIntMsg_CreateSession cs                        -> `Assoc [ ( "CreateSession",      `Assoc [ ( "dest_comp_id"   , `String cs.dest_comp_id )])]
     | IncIntMsg_EndSession                              -> `String "EndSession"
     | IncIntMsg_ApplicationData d                       -> `Assoc [ ( "ApplicationData",    `Assoc [ ( "msg"            , ( full_app_msg_to_json d) )] )]
@@ -133,7 +133,7 @@ let fix_engine_state_to_json utctimestamp_to_json s =
     `Assoc [
         ( "curr_mode"                                   , `String (fix_engine_mode_to_string s.fe_curr_mode)    );
         ( "initiator"                                   , bool_opt_to_json s.fe_initiator                       );
-        ( "curr_time"                                   , utctimestamp_micro_to_json s.fe_curr_time                   );
+        ( "curr_time"                                   , utctimestamp_nano_to_json s.fe_curr_time                   );
         ( "comp_id"                                     , `String s.fe_comp_id                                  );
         ( "target_comp_id"                              , `String s.fe_target_comp_id                           );
         ( "incoming_int_msgs"                           , int_inc_msg_opt_to_json s.incoming_int_msg            );
@@ -144,7 +144,7 @@ let fix_engine_state_to_json utctimestamp_to_json s =
         ( "outgoing_fix_msgs"                           , full_top_level_msg_opt_to_json s.outgoing_fix_msg     );
         ( "cache"                                       , cache_entry_list_to_json s.fe_cache                   );
         ( "history"                                     , full_msg_list_to_json s.fe_history                    );
-        ( "last_hearbeat_received"                      , utctimestamp_micro_to_json s.fe_last_data_received          );
+        ( "last_hearbeat_received"                      , utctimestamp_nano_to_json s.fe_last_data_received          );
         ( "heartbeat_interval"                          , duration_to_json s.fe_heartbeat_interval              );
         ( "history_to_send"                             , full_msg_list_to_json s.fe_history_to_send            );
         ( "application_up"                              , `Bool s.fe_application_up                             );

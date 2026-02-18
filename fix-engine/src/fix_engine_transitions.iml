@@ -117,8 +117,14 @@ let run_no_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) 
                |> with_transition_message ( TerminateTransport "Logon failed due to invalid SenderCompID" )
             else if
               (* TODO: better timestamp comparison *)
-              let sending_day, _ps = m.full_msg_header.h_sending_time |> T.to_span |> T.Span.to_d_ps in
-              let current_day, _ps = engine.fe_curr_time |> T.to_span |> T.Span.to_d_ps in
+              let sending_day, _ps =
+                m.full_msg_header.h_sending_time
+                |> Timestamp.Nano.to_ptime
+                |> T.to_span |> T.Span.to_d_ps in
+              let current_day, _ps =
+                engine.fe_curr_time
+                |> Timestamp.Nano.to_ptime
+                |> T.to_span |> T.Span.to_d_ps in
               sending_day <> current_day
             then
               logoff_and_shutdown (Error "Invalid SendingTime in Logon message", engine)

@@ -18,7 +18,7 @@ open struct
         Printf.eprintf "Failed to parse: %s\n%!" s;
         assert false
     in
-    if Datetime.utctimeonly_Equal_milli_milli a b |> not then (
+    if Datetime.utctimestamp_Equal_milli_milli a b |> not then (
       let a1, a2 = a in
       let b1, b2 = b in
       Printf.eprintf "not equal: (%s,%s) vs (%s,%s)\n%!" (Z.to_string a1)
@@ -34,11 +34,8 @@ open struct
         Printf.eprintf "Failed to parse: %s\n%!" s;
         assert false
     in
-    if Datetime.utctimeonly_Equal_micro_micro a b |> not then (
-      let a1, a2 = a in
-      let b1, b2 = b in
-      Printf.eprintf "not equal: (%s,%s) vs (%s,%s)\n%!" (Z.to_string a1)
-        (Z.to_string a2) (Z.to_string b1) (Z.to_string b2);
+    if Datetime.utctimestamp_Equal_micro_micro a b |> not then (
+      Printf.eprintf "not equal micro timestamps\n%!";
       assert false
     )
 end

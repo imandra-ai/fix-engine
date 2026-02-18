@@ -79,7 +79,7 @@ let encode_UTCTimestamp_milli (x:fix_utctimestamp_milli ) : string =
 ;;
 
 let encode_UTCTimestamp_micro (x:fix_utctimestamp_micro ) : string =
-  let ((y, m, d), (hh, mm, ss, us)) = to_date_time_us x in
+  let ((y, m, d), (hh, mm, ss, us)) = x |> micro_to_ptime |> to_date_time_us in
   Printf.sprintf "%04d%02d%02d-%02d:%02d:%02d.%06d"
     (Z.to_int y)
     (Z.to_int m)
@@ -91,7 +91,7 @@ let encode_UTCTimestamp_micro (x:fix_utctimestamp_micro ) : string =
 ;;
 
 let encode_UTCTimestamp_nano (x:fix_utctimestamp_nano ) : string =
-  let ((y, m, d), (hh, mm, ss, ns)) = to_date_time_ns x in
+  let ((y, m, d), (hh, mm, ss, ns)) = x |> nano_to_ptime |> to_date_time_ns in
   Printf.sprintf "%04d%02d%02d-%02d:%02d:%02d.%09d"
     (Z.to_int y)
     (Z.to_int m)
