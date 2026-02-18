@@ -285,9 +285,10 @@ let utctimestamp_Equal_milli_pico (t1 : fix_utctimestamp_milli)
     (t2 : fix_utctimestamp_pico) =
   T.equal t1 (to_millis t2)
 
+(* wait... were we calling `to_millis` on the wrong arg? *)
 let utctimestamp_Equal_micro_milli (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_milli) =
-  T.equal (to_millis t2) t1
+  T.equal (t1 |> Timestamp.Micro.to_ptime |> to_millis) t2
 
 let utctimestamp_Equal_micro_nano (t1 : fix_utctimestamp_micro)
     (t2 : fix_utctimestamp_nano) =
