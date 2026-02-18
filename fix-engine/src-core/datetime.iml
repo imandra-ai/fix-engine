@@ -41,7 +41,7 @@ let to_time_ms (t : T.t) =
   let _date, time_ms = to_date_time_ms t in
   time_ms
 
-let of_date_time_us (date, (hh, mm, ss, us)) =
+let of_date_time_us (date, (hh, mm, ss, us)) : T.t option =
   let time = hh, mm, ss in
   let tz = zero in
   T.of_date_time (date, (time, tz))
@@ -105,27 +105,29 @@ let to_time_ps (t : T.t) =
 
 let to_millis (t : T.t) = T.truncate ~frac_s:three t
 
-let to_micros (t : T.t) = T.truncate ~frac_s:six t
+let to_micros (t : T.t) = T.truncate ~frac_s:six t |> Timestamp.Micro.of_ptime
 
-let to_nanos (t : T.t) = T.truncate ~frac_s:nine t
+let to_nanos (t : T.t) = T.truncate ~frac_s:nine t |> Timestamp.Nano.of_ptime
 
 let to_days (d : T.Span.t) = T.Span.to_int_s d / s_count_in_day
 
-type fix_utctimestamp_milli = T.t
+[@@@import "./timestamp.ml"]
+
 (** UTC Timestamp type. *)
+type fix_utctimestamp_milli = T.t
 
-type fix_utctimestamp_micro = T.t
+type fix_utctimestamp_micro = Timestamp.Micro.t
 
-type fix_utctimestamp_nano = T.t
+type fix_utctimestamp_nano = Timestamp.Nano.t
 
 type fix_utctimestamp_pico = T.t
 
 (** Default timestamp is 0 unix epoch timestamp *)
 let default_utctimestamp_milli : fix_utctimestamp_milli = T.epoch
 
-let default_utctimestamp_micro : fix_utctimestamp_micro = T.epoch
+let default_utctimestamp_micro : fix_utctimestamp_micro = Timestamp.Micro.epoch
 
-let default_utctimestamp_nano : fix_utctimestamp_nano = T.epoch
+let default_utctimestamp_nano : fix_utctimestamp_nano = Timestamp.Nano.epoch
 
 let default_utctimestamp_pico : fix_utctimestamp_pico = T.epoch
 
@@ -147,7 +149,8 @@ let make_utctimestamp_micro (year : int) (month : int) (day : int) (hour : int)
     (minute : int) (second : int) (microsec : int option) :
     fix_utctimestamp_micro option =
   let us = microsec |> Option.get_or ~default:zero in
-  of_date_time_us ((year, month, day), (hour, minute, second, us))
+  (of_date_time_us ((year, month, day), (hour, minute, second, us)))
+  |> Option.map Timestamp.Micro.of_ptime
 
 let make_utctimestamp_micro_unsafe (year : int) (month : int) (day : int)
     (hour : int) (minute : int) (second : int) (microsec : int option) :
@@ -161,6 +164,7 @@ let make_utctimestamp_nano (year : int) (month : int) (day : int) (hour : int)
     fix_utctimestamp_nano option =
   let ns = nanosec |> Option.get_or ~default:zero in
   of_date_time_ns ((year, month, day), (hour, minute, second, ns))
+  |> Option.map Timestamp.Nano.of_ptime
 
 let make_utctimestamp_nano_unsafe (year : int) (month : int) (day : int)
     (hour : int) (minute : int) (second : int) (nanosec : int option) :
@@ -184,11 +188,11 @@ let make_utctimestamp_pico_unsafe (year : int) (month : int) (day : int)
 (** Conversion for the UTC timestamp fields *)
 let convert_utctimestamp_milli_micro (f1 : fix_utctimestamp_milli) :
     fix_utctimestamp_micro =
-  f1
+  f1 |> Timestamp.Micro.of_ptime
 
 let convert_utctimestamp_milli_nano (f1 : fix_utctimestamp_milli) :
     fix_utctimestamp_nano =
-  f1
+  f1 |> Timestamp.Nano.of_ptime
 
 let convert_utctimestamp_milli_pico (f1 : fix_utctimestamp_milli) :
     fix_utctimestamp_pico =
@@ -196,27 +200,27 @@ let convert_utctimestamp_milli_pico (f1 : fix_utctimestamp_milli) :
 
 let convert_utctimestamp_micro_milli (f1 : fix_utctimestamp_micro) :
     fix_utctimestamp_milli =
-  to_millis f1
+  to_millis (f1 |> Timestamp.Micro.to_ptime)
 
 let convert_utctimestamp_micro_nano (f1 : fix_utctimestamp_micro) :
     fix_utctimestamp_nano =
-  f1
+  f1 |> Timestamp.Micro.to_ptime |> Timestamp.Nano.of_ptime
 
 let convert_utctimestamp_micro_pico (f1 : fix_utctimestamp_micro) :
     fix_utctimestamp_pico =
-  f1
+  f1 |> Timestamp.Micro.to_ptime
 
 let convert_utctimestamp_nano_milli (f1 : fix_utctimestamp_nano) :
     fix_utctimestamp_milli =
-  to_millis f1
+  to_millis (f1 |> Timestamp.Nano.to_ptime)
 
 let convert_utctimestamp_nano_micro (f1 : fix_utctimestamp_nano) :
     fix_utctimestamp_micro =
-  to_micros f1
+  to_micros (f1 |> Timestamp.Nano.to_ptime)
 
 let convert_utctimestamp_nano_pico (f1 : fix_utctimestamp_nano) :
     fix_utctimestamp_pico =
-  f1
+  f1 |> Timestamp.Nano.to_ptime
 
 let convert_utctimestamp_pico_milli (f1 : fix_utctimestamp_pico) :
     fix_utctimestamp_milli =
@@ -237,11 +241,13 @@ let is_valid_utctimestamp_milli (ts : fix_utctimestamp_milli) =
 
 (** Checking validity of the values in the UTC timestamp micro *)
 let is_valid_utctimestamp_micro (ts : fix_utctimestamp_micro) =
+  let ts = ts |> Timestamp.Micro.to_ptime in
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
   TE.is_valid ts && ps mod TE.ps_count_in_us = zero
 
 (** Checking validity of the values in the UTC timestamp nano *)
 let is_valid_utctimestamp_nano (ts : fix_utctimestamp_nano) =
+  let ts = ts |> Timestamp.Nano.to_ptime in
   let _d, ps = ts |> T.to_span |> T.Span.to_d_ps in
   TE.is_valid ts && ps mod TE.ps_count_in_ns = zero
 
