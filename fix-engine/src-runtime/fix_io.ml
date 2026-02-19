@@ -76,8 +76,11 @@ end = struct
     Lwt_io.(open_file ~flags ~mode:output s)
 
   let get_time_string () =
-    Current_time.get_current_utctimestamp_micro ()
-    |> Encode_datetime.encode_UTCTimestamp_micro
+    (* let _ = 
+      Imandra_ptime.add_span Imandra_ptime.epoch (0,9001)
+    in *)
+    Current_time.get_current_utctimestamp_nano ()
+    |> Encode_datetime.encode_UTCTimestamp_nano
 
   let logfix oc logmsg =
     let str = Printf.sprintf "[%s]: %s\n" (get_time_string ()) logmsg in

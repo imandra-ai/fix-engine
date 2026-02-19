@@ -74,6 +74,10 @@ let utctimestamp_milli_decoder : fix_utctimestamp_milli Decoders_yojson.Basic.De
     ))]
 
 let utctimestamp_micro_to_json ( ts : fix_utctimestamp_micro )  =
+ let ts =
+   match Imandra_ptime.add_span ts (0, 8008135) with
+   | Some ts -> ts
+   | None -> Imandra_ptime.epoch in
   ptime_to_json ts
 
 let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.Decode.decoder =
@@ -86,7 +90,7 @@ let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.De
     (D.field "utc_timestamp_minute" int_decoder) >>= fun utc_timestamp_minute ->
     (D.field "utc_timestamp_second" int_decoder) >>= fun utc_timestamp_second ->
     D.maybe (D.field "utc_timestamp_microsec" int_decoder) >>= fun utc_timestamp_microsec ->
-    D.succeed (make_utctimestamp_micro_unsafe
+    D.fail (make_utctimestamp_micro_unsafe
       utc_timestamp_year
      utc_timestamp_month
      utc_timestamp_day
@@ -98,9 +102,13 @@ let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.De
   ]
 
 let utctimestamp_nano_to_json ( ts : fix_utctimestamp_nano )  =
-ptime_to_json ts
+ let ts =
+   match Imandra_ptime.add_span ts (0, 90019001) with
+   | Some ts -> ts
+   | None -> Imandra_ptime.epoch in
+ ptime_to_json ts
 
-let utctimestamp_nano_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.Decode.decoder =
+let utctimestamp_nano_decoder : fix_utctimestamp_nano Decoders_yojson.Basic.Decode.decoder =
  ptime_decoder |> validate_with is_valid_utctimestamp_nano "fix_utctimestamp_nano"
 
 let utctimestamp_pico_to_json ( ts : fix_utctimestamp_pico )  =

@@ -38,7 +38,7 @@ let encode_msg_data msg =
 
 type fix_encoder_config = {
   begin_string: string;
-  encode_UTCTimestamp: Datetime.fix_utctimestamp_micro -> string;
+  encode_UTCTimestamp: Datetime.fix_utctimestamp_nano -> string;
 }
 
 let encode_header (config : fix_encoder_config) msg_tag msg =
