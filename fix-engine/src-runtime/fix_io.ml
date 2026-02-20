@@ -76,9 +76,6 @@ end = struct
     Lwt_io.(open_file ~flags ~mode:output s)
 
   let get_time_string () =
-    (* let _ = 
-      Imandra_ptime.add_span Imandra_ptime.epoch (0,9001)
-    in *)
     Current_time.get_current_utctimestamp_nano ()
     |> Encode_datetime.encode_UTCTimestamp_nano
 
