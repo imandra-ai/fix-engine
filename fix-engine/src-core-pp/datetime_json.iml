@@ -93,7 +93,7 @@ let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.De
     (D.field "utc_timestamp_minute" int_decoder) >>= fun utc_timestamp_minute ->
     (D.field "utc_timestamp_second" int_decoder) >>= fun utc_timestamp_second ->
     D.maybe (D.field "utc_timestamp_microsec" int_decoder) >>= fun utc_timestamp_microsec ->
-    D.fail (make_utctimestamp_micro_unsafe
+    D.succeed (make_utctimestamp_micro_unsafe
       utc_timestamp_year
      utc_timestamp_month
      utc_timestamp_day
