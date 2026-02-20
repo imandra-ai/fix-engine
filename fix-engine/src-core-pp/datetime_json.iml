@@ -41,7 +41,10 @@ let ptime_to_json (t : T.t) =
 let ptime_decoder : T.t D.decoder =
   D.one_of [("span_decoder",span_decoder >>= fun s ->
   match T.of_span s with
-  | Some t -> D.succeed t
+  | Some t -> 
+    match T.add_span t (0,3) with 
+    | Some t -> D.succeed t
+    | None -> D.fail "invalid timestamp"
   | None -> D.fail "invalid timestamp");
 
   ]
