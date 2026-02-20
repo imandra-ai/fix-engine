@@ -41,10 +41,7 @@ let ptime_to_json (t : T.t) =
 let ptime_decoder : T.t D.decoder =
   D.one_of [("span_decoder",span_decoder >>= fun s ->
   match T.of_span s with
-  | Some t -> 
-    match T.add_span t (0,3) with 
-    | Some t -> D.succeed t
-    | None -> D.fail "invalid timestamp"
+  | Some t -> D.succeed t
   | None -> D.fail "invalid timestamp");
 
   ]
@@ -77,10 +74,6 @@ let utctimestamp_milli_decoder : fix_utctimestamp_milli Decoders_yojson.Basic.De
     ))]
 
 let utctimestamp_micro_to_json ( ts : fix_utctimestamp_micro )  =
- let ts =
-   match Imandra_ptime.add_span ts (0, 8008135) with
-   | Some ts -> ts
-   | None -> Imandra_ptime.epoch in
   ptime_to_json ts
 
 let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.Decode.decoder =
@@ -105,10 +98,6 @@ let utctimestamp_micro_decoder : fix_utctimestamp_micro Decoders_yojson.Basic.De
   ]
 
 let utctimestamp_nano_to_json ( ts : fix_utctimestamp_nano )  =
- let ts =
-   match Imandra_ptime.add_span ts (0, 90019001) with
-   | Some ts -> ts
-   | None -> Imandra_ptime.epoch in
  ptime_to_json ts
 
 let utctimestamp_nano_decoder : fix_utctimestamp_nano Decoders_yojson.Basic.Decode.decoder =
