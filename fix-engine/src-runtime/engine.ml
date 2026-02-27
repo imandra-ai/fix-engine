@@ -362,9 +362,9 @@ end = struct
     | Pico ->
       let parse_pico =
         if strict then
-          Parse_datetime.parse_UTCTimestamp_nano_strict
+          Parse_datetime.parse_UTCTimestamp_pico_strict
         else
-          Parse_datetime.parse_UTCTimestamp_nano
+          Parse_datetime.parse_UTCTimestamp_pico
       in
       let encode_pico x = x |> Encode_datetime.encode_UTCTimestamp_pico in
       parse_pico, encode_pico
