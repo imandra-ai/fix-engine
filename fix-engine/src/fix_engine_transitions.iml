@@ -331,11 +331,23 @@ let run_active_session ( m, engine : full_valid_fix_msg * fix_engine_state ) =
         if engine.fe_application_up then
             let out_int = match m.full_msg_header.h_poss_resend with
             | Some true -> OutIntMsg_ResendApplicationData app_msg
-            |         _ -> OutIntMsg_ApplicationData app_msg  in {
+            |         _ -> OutIntMsg_ApplicationData app_msg  in
+            (* When configured, reflect the counterparty's OnBehalfOfCompID (115)
+               back as DeliverToCompID (128) on our responses (standard on-behalf-of
+               routing reversal). Captured per inbound message, so it is correct even
+               if 115 varies between orders, or is absent (then no 128 is emitted).
+               When disabled, fe_deliver_to_comp_id is left unchanged. *)
+            let fe_deliver_to_comp_id =
+                if engine.fe_reflect_on_behalf_of then
+                    m.full_msg_header.h_on_behalf_of_comp_id
+                else
+                    engine.fe_deliver_to_comp_id
+            in {
             engine with
                 incoming_seq_num = m.full_msg_header.h_msg_seq_num;
                 outgoing_int_msg = Some out_int;
                 incoming_fix_msg = None;
+                fe_deliver_to_comp_id;
         } else
             begin
                 let biz_reject_data = {
