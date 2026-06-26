@@ -68,6 +68,9 @@ module Decode (D : Decoders.Decode.S) = struct
     let* target_id = field_def "target_id" def_target D.string in
     let* host_id = D.field_opt "host_id" D.string in
     let* on_behalf_id = D.field_opt "on_behalf_id" D.string in
+    let* reflect_on_behalf_of =
+      field_def "reflect_on_behalf_of" false D.bool
+    in
     let* begin_string = field_def "begin_string" "FIX.4.2" D.string in
     let* timer = field_def "timer" 1.0 D.float in
     let* strict_time_precision =
@@ -85,6 +88,7 @@ module Decode (D : Decoders.Decode.S) = struct
           target_id;
           host_id;
           on_behalf_id;
+          reflect_on_behalf_of;
           timer;
           strict_time_precision;
           precision;

@@ -105,6 +105,7 @@ module Internal : sig
     target_id: string;
     host_id: string option;
     on_behalf_id: string option;
+    reflect_on_behalf_of: bool;
     logon_fields: (string * string) list;
     next_expected_msg_seq_num: bool;
     timer: float;
@@ -180,6 +181,7 @@ end = struct
     target_id: string;
     host_id: string option;
     on_behalf_id: string option;
+    reflect_on_behalf_of: bool;
     logon_fields: (string * string) list;
     next_expected_msg_seq_num: bool;
     timer: float;
@@ -379,6 +381,7 @@ end = struct
       fe_comp_id = config.comp_id;
       fe_sender_location_id = config.host_id;
       fe_on_behalf_of_comp_id = config.on_behalf_id;
+      fe_reflect_on_behalf_of = config.reflect_on_behalf_of;
       fe_target_comp_id = config.target_id;
       fe_curr_time = Current_time.get_current_utctimestamp_pico ();
       fe_max_num_logons_sent = Z.of_int 10;
