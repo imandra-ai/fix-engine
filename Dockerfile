@@ -1,3 +1,4 @@
+# afaik, this Dockerfile is just for running tests in Google cloud build
 FROM imandra/imandra-client-switch as fix-engine-build
 
 COPY --chown=opam:nogroup ./fix-engine.opam .
