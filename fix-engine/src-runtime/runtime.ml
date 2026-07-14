@@ -52,6 +52,10 @@ type t = {
   log_file: string option;
   fixio: Fix_io.fix_io option;
   recv: event -> unit Lwt.t;
+  on_logon: unit Lwt_mvar.t option;
+      (** Per-connection signal, filled once the engine reports [LogonSucceeded].
+          [server_handler] uses it to reap a connection that never logs on so it
+          cannot hold the single-connection slot indefinitely (issue #230). *)
 }
 
 type handle = t
@@ -102,7 +106,15 @@ let receive_engine t event =
     let+ () = t.recv (SequenceNumbers { next_in; next_out }) in
     false
   | Engine.TransitionMessage msg, _ ->
-    let+ () = t.recv (TransitionMessage msg) in
+    let* () = t.recv (TransitionMessage msg) in
+    (* Signal a successful logon so the server_handler logon-timeout watcher
+       stops trying to reap this (now productive) connection. *)
+    let+ () =
+      match msg, t.on_logon with
+      | Fix_engine_state.LogonSucceeded _, Some mv when Lwt_mvar.is_empty mv ->
+        Lwt_mvar.put mv ()
+      | _ -> Lwt.return_unit
+    in
     (match msg with
     | TerminateTransport _ -> true
     | _ -> false)
@@ -144,6 +156,15 @@ let with_catch_disconnect t f =
 
 let connection_lock = Lwt_mutex.create ()
 
+(* Maximum time a freshly-accepted connection may hold the single-connection slot
+   without completing a logon. A connection that connects but never sends a valid
+   Logon (or goes half-open) would otherwise hold [connection_lock] forever and
+   wedge the session, rejecting the real client's reconnects (issue #230). This is
+   very generous relative to a real logon (sub-second) while still reaping a dead
+   connection quickly. Could be promoted to Engine.config if per-session tuning is
+   ever needed. *)
+let logon_timeout_s = 30.
+
 let with_locks t f =
   Lwt_mutex.with_lock connection_lock @@ fun () -> with_catch_disconnect t f
 
@@ -162,9 +183,37 @@ let server_handler (t : t) (in_addr : Unix.sockaddr) (inch, outch) =
     let recv = Lwt_mvar.put t.fixio_box in
     let log_file = t.log_file in
     let fixio_thread, fixio = Fix_io.start ~recv ?log_file (inch, outch) in
-    let t = { t with fixio = Some fixio } in
+    (* Fresh per-connection logon signal, filled by [receive_engine]. *)
+    let on_logon = Lwt_mvar.create_empty () in
+    let t = { t with fixio = Some fixio; on_logon = Some on_logon } in
+    (* Reap the connection if it never logs on within [logon_timeout_s], so a
+       connection that grabs the single-connection slot but never completes a
+       logon cannot hold it indefinitely (issue #230). Once the session logs on
+       in time this watcher parks forever and never tears anything down; the
+       connection is then governed by the normal fixio/engine threads. On timeout
+       it resolves, which makes the enclosing [Lwt.pick] resolve, runs
+       [on_disconnect], closes the socket, and releases [connection_lock]. *)
+    let logon_timeout_thread =
+      let* outcome =
+        Lwt.pick
+          [
+            (let* () = Lwt_unix.sleep logon_timeout_s in Lwt.return `Timeout);
+            (let* () = Lwt_mvar.take on_logon in Lwt.return `Logged_on);
+          ]
+      in
+      match outcome with
+      | `Logged_on -> fst (Lwt.task ())
+      | `Timeout ->
+        t.recv
+          (Log
+             (Printf.sprintf
+                "No logon within %.0fs on %s; closing connection to free the FIX \
+                 session slot"
+                logon_timeout_s addr_str))
+    in
     Lwt.finalize
-      (fun () -> Lwt.pick [ fixio_thread; engine_io_thread t ])
+      (fun () ->
+        Lwt.pick [ fixio_thread; engine_io_thread t; logon_timeout_thread ])
       (fun _ -> on_disconnect t addr_str)
 
 let default_session_folder ~(config : Engine.config) =
@@ -218,6 +267,7 @@ let make_state_and_thread ~(session_dir : string option)
       result_box;
       recv;
       log_file;
+      on_logon = None;
     }
   in
   state, engine_thread
