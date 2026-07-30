@@ -355,22 +355,19 @@ end = struct
         | Some x -> Some (Datetime.convert_utctimestamp_nano_pico x)
       in
       let encode_nano x =
-        x |> Datetime.convert_utctimestamp_nano_micro
+        x |> Datetime.convert_utctimestamp_pico_nano
         |> Encode_datetime.encode_UTCTimestamp_nano
       in
       parse_nano, encode_nano
     | Pico ->
       let parse_pico =
         if strict then
-          Parse_datetime.parse_UTCTimestamp_nano_strict
+          Parse_datetime.parse_UTCTimestamp_pico_strict
         else
-          Parse_datetime.parse_UTCTimestamp_nano
+          Parse_datetime.parse_UTCTimestamp_pico
       in
-      let encode_nano x =
-        x |> Datetime.convert_utctimestamp_nano_micro
-        |> Encode_datetime.encode_UTCTimestamp_nano
-      in
-      parse_pico, encode_nano
+      let encode_pico x = x |> Encode_datetime.encode_UTCTimestamp_pico in
+      parse_pico, encode_pico
 
   let make_engine_state (inseq, outseq) config =
     let open Fix_engine_state in

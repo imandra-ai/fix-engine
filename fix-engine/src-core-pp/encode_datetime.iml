@@ -49,7 +49,7 @@ let encode_UTCTimeOnly_micro (x:fix_utctimeonly_micro ) : string =
 ;;
 
 let encode_UTCTimeOnly_nano (x:fix_utctimeonly_nano ) : string =
-  let (hh, mm, ss, ns) = to_time_us x in
+  let (hh, mm, ss, ns) = to_time_ns x in
   Printf.sprintf "%02d:%02d:%02d.%09d"
     (Z.to_int hh)
     (Z.to_int mm)
