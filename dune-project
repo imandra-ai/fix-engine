@@ -1,10 +1,8 @@
-(lang dune 2.5)
-(name fix-engine)
+(lang dune 2.9)
 
-(dialect
- (name imandra)
- (implementation
-  (extension iml)
-  (preprocess  (system "imandra-extract %{input-file}"))
-  (format (system "ocamlformat %{input-file}")))
- (interface (extension "imli")))
+; Composition root only. The fix-engine and model packages -- source,
+; dialect, package stanzas, opam files -- live in the fix-engine-src
+; submodule at src/; defining them here too would make dune reject the
+; workspace ("package fix-engine is defined more than once"). This repo
+; just composes the source with its deps (vendor/imandra-prelude,
+; vendor/imandra-ptime-src) for dev/CI.
