@@ -1,7 +1,7 @@
 # afaik, this Dockerfile is just for running tests in Google cloud build
 FROM imandra/imandra-client-switch as fix-engine-build
 
-COPY --chown=opam:nogroup ./fix-engine.opam .
+COPY --chown=opam:nogroup ./src/fix-engine.opam .
 COPY --chown=opam:nogroup ./vendor/imandra-ptime-src/imandra-ptime.opam ./vendor/imandra-ptime-src/imandra-ptime.opam
 COPY --chown=opam:nogroup ./vendor/imandra-prelude/imandra-prelude.opam ./vendor/imandra-prelude/imandra-prelude.opam
 COPY --chown=opam:nogroup ./Makefile ./Makefile

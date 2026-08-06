@@ -1,6 +1,0 @@
-(library
- (name core_utils_pp)
- (public_name fix-engine.core_utils_pp)
- (wrapped false)
- (flags :standard -open Imandra_prelude -warn-error -A+8+39 -w -33-58)
- (libraries imandra-prelude core ptime.clock.os))

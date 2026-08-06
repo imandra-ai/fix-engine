@@ -4,3 +4,6 @@
 [submodule "vendor/imandra-ptime-src"]
 	path = vendor/imandra-ptime-src
 	url = https://github.com/imandra-ai/imandra-ptime-src.git
+[submodule "fix-engine-src"]
+	path = src
+	url = https://github.com/imandra-ai/fix-engine-src.git
