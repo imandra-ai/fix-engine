@@ -1,7 +1,7 @@
 # Makefile
 
 DUNE_OPTS?= --profile=release
-IMANDRA_SWITCH?=/home/imandra/git/imandra-ai/imandra
+IMANDRA_SWITCH?=/usr/local/var/imandra
 
 imandra-libs-install:
 	cd vendor/imandra-ptime-src && opam install . --switch $(IMANDRA_SWITCH) -y && cd -
