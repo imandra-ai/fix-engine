@@ -1,7 +1,7 @@
 # Makefile
 
 DUNE_OPTS?= --profile=release
-IMANDRA_SWITCH?=/usr/local/var/imandra
+IMANDRA_SWITCH?=/home/imandra/git/imandra-ai/imandra
 
 imandra-libs-install:
 	cd vendor/imandra-ptime && opam install . --switch $(IMANDRA_SWITCH) -y && cd -
@@ -33,6 +33,11 @@ doc:
 
 module_graph.svg: _build/doc/all_modules.docdir/all_modules.dot
 	sed -e 's/rotate=90;//g' "$<" | dot -Tsvg -o $@
+
+# needed for setup on dev machine
+opam-add-staging-repository: _opam
+	opam repository add imandra-staging --switch=. \
+	  git+ssh://git@github.com/imandra-ai/opam-repository-staging.git || true
 
 # Note: keep this opam install command in sync with the Dockerfile
 # opam1-setup - for running in Wercker. Assumes the correct switch is already installed and selected.
