@@ -4,7 +4,7 @@ DUNE_OPTS?= --profile=release
 IMANDRA_SWITCH?=/home/imandra/git/imandra-ai/imandra
 
 imandra-libs-install:
-	cd vendor/imandra-ptime && opam install . --switch $(IMANDRA_SWITCH) -y && cd -
+	cd vendor/imandra-ptime-src && opam install . --switch $(IMANDRA_SWITCH) -y && cd -
 
 imandra-libs-uninstall:
 	opam uninstall imandra-ptime --switch $(IMANDRA_SWITCH)
@@ -43,7 +43,7 @@ opam-add-staging-repository: _opam
 # opam1-setup - for running in Wercker. Assumes the correct switch is already installed and selected.
 opam1-setup:
 	opam install \
-	  ./vendor/imandra-ptime/imandra-ptime.opam \
+	  ./vendor/imandra-ptime-src/imandra-ptime.opam \
 	  ./vendor/imandra-prelude/imandra-prelude.opam \
 	  ./fix-engine.opam \
 	  --deps-only -y
